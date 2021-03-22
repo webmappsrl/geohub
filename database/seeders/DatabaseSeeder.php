@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory()->create([
+            'name' => 'Webmapp Team',
+            'email' => 'team@webmapp.it',
+            'email_verified_at' => now(),
+            'password' => bcrypt('webmapp')
+        ]);
     }
 }
