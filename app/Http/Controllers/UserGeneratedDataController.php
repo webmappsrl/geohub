@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserGeneratedData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UserGeneratedDataController extends Controller
@@ -16,8 +17,10 @@ class UserGeneratedDataController extends Controller
             $createdCount = 0;
             foreach ($json['features'] as $feature) {
                 $userGeneratedData = new UserGeneratedData();
-//                if (isset($feature['geometry']))
-//                    $userGeneratedData->geometry = $feature['geometry'];
+
+                if (isset($feature['geometry'])) {
+                    $userGeneratedData->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($feature['geometry']) . "'))");
+                }
 
                 if (isset($feature['properties']['app']['id'])) {
                     $userGeneratedData->app_id = $feature['properties']['app']['id'];
