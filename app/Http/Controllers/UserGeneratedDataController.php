@@ -34,7 +34,8 @@ class UserGeneratedDataController extends Controller
                         unset($feature['properties']['form_data']['gallery']);
                     }
 
-                    $feature['properties']['form_data']['timestamp'] = $feature['properties']['timestamp'];
+                    if (isset($feature['properties']['timestamp']))
+                        $feature['properties']['form_data']['timestamp'] = $feature['properties']['timestamp'];
 
                     $userGeneratedData->raw_data = json_encode($feature['properties']['form_data']);
                 }

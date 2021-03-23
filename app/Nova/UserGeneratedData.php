@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -48,10 +49,21 @@ class UserGeneratedData extends Resource
             Text::make('App ID', 'app_id')->sortable(),
             Boolean::make('Has content', function ($model) {
                 return isset($model->raw_data);
-            }),
+            })->onlyOnIndex(),
             Boolean::make('Has gallery', function ($model) {
                 return isset($model->raw_gallery);
-            })
+            })->onlyOnIndex(),
+            Text::make('Raw data', function ($model) {
+                $rawData = json_decode($model->raw_data, true);
+                $result = [];
+
+                foreach ($rawData as $key => $value) {
+                    $result[] = $key . ' = ' . json_encode($value);
+                }
+
+                return join('<br>', $result);
+            })->onlyOnDetail()->asHtml(),
+
         ];
     }
 
