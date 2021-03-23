@@ -27,18 +27,14 @@ class UserGeneratedDataController extends Controller
                     unset($feature['properties']['app']);
                 }
 
-                if (isset($feature['properties']['timestamp'])) {
-                    $userGeneratedData->created_at = $feature['properties']['timestamp'];
-                    $userGeneratedData->updated_at = $feature['properties']['timestamp'];
-                    unset($feature['properties']['timestamp']);
-                }
-
                 if (isset($feature['properties']['form_data'])) {
                     if (isset($feature['properties']['form_data']['gallery']) && !empty($feature['properties']['form_data']['gallery'])) {
                         $gallery = explode('_', $feature['properties']['form_data']['gallery']);
                         $userGeneratedData->raw_gallery = json_encode($gallery);
                         unset($feature['properties']['form_data']['gallery']);
                     }
+
+                    $feature['properties']['form_data']['timestamp'] = $feature['properties']['timestamp'];
 
                     $userGeneratedData->raw_data = json_encode($feature['properties']['form_data']);
                 }
