@@ -2,13 +2,12 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Webmapp\RawGallery\RawGallery;
 
 class UserGeneratedData extends Resource
@@ -89,7 +88,9 @@ class UserGeneratedData extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new DateRange('created_at')
+        ];
     }
 
     /**

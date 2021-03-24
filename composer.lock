@@ -4,8 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b648c28d3873095dabc963629b1a40e1",
+    "content-hash": "3b8b21100e3a24da8d06d521c8b98009",
     "packages": [
+        {
+            "name": "ampeco/nova-date-range-filter",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ampeco/nova-date-range-filter.git",
+                "reference": "ed55152f835d5d3540c958367b3dc2abb9a393aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ampeco/nova-date-range-filter/zipball/ed55152f835d5d3540c958367b3dc2abb9a393aa",
+                "reference": "ed55152f835d5d3540c958367b3dc2abb9a393aa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ampeco\\Filters\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ampeco\\Filters\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova date range filter.",
+            "keywords": [
+                "date",
+                "filter",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "source": "https://github.com/ampeco/nova-date-range-filter/tree/master"
+            },
+            "time": "2019-04-05T11:24:56+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
