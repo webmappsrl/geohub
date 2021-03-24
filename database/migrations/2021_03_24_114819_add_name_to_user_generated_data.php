@@ -44,10 +44,12 @@ class AddNameToUserGeneratedData extends Migration
     {
         $data = \App\Models\UserGeneratedData::get();
         foreach ($data as $row) {
-            $json = json_decode($row->raw_data, true);
-            $json['name'] = $row->name;
-            $row->raw_data = json_encode($json);
-            $row->save();
+            if (isset($row->name) && !empty($row->name)) {
+                $json = json_decode($row->raw_data, true);
+                $json['name'] = $row->name;
+                $row->raw_data = json_encode($json);
+                $row->save();
+            }
         }
 
         Schema::table('user_generated_data', function (Blueprint $table) {
