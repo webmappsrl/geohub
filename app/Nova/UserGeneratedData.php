@@ -24,7 +24,7 @@ class UserGeneratedData extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -32,7 +32,8 @@ class UserGeneratedData extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'name',
+        'app_id'
     ];
 
     /**
@@ -45,6 +46,7 @@ class UserGeneratedData extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+            Text::make('Name', 'name')->sortable(),
             DateTime::make('Created At', 'created_at')->sortable(),
             Text::make('App ID', 'app_id')->sortable(),
             Boolean::make('Has content', function ($model) {

@@ -34,6 +34,9 @@ class UserGeneratedDataController extends Controller
                         unset($feature['properties']['form_data']['gallery']);
                     }
 
+                    $userGeneratedData->name = isset($feature['properties']['form_data']['name']) ? $feature['properties']['form_data']['name'] : '';
+                    unset($feature['properties']['form_data']['name']);
+
                     if (isset($feature['properties']['timestamp']))
                         $feature['properties']['form_data']['timestamp'] = $feature['properties']['timestamp'];
 

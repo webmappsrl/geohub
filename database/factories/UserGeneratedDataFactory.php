@@ -25,6 +25,7 @@ class UserGeneratedDataFactory extends Factory
         for ($i = 0; $i < $this->faker->numberBetween(0, 10); $i++) {
             $rawData[strtolower($this->faker->word())] = implode(" ", $this->faker->words($this->faker->randomDigit));
         }
+        $rawData['name'] = implode(" ", $this->faker->words($this->faker->randomDigit));
 
         $rawGallery = [];
         for ($i = 0; $i < $this->faker->numberBetween(0, 5); $i++) {
@@ -37,6 +38,7 @@ class UserGeneratedDataFactory extends Factory
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word),
             'raw_data' => json_encode($rawData),
             'raw_gallery' => json_encode($rawGallery),
+            'name' => $rawData['name']
         ];
     }
 }
