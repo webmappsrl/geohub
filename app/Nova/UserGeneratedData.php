@@ -46,7 +46,7 @@ class UserGeneratedData extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            DateTime::make('Created At', 'created_at')->format('YYYY-MM-DD')->sortable(),
+            DateTime::make('Created At', 'created_at')->sortable(),
             Text::make('App ID', 'app_id')->sortable(),
             Boolean::make('Has content', function ($model) {
                 return isset($model->raw_data);
