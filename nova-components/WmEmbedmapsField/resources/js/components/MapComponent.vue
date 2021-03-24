@@ -124,11 +124,11 @@ export default {
         _style(feature) {
             if (feature.getGeometry().getType() === "Point")
                 return this._getPoiStyle();
-                // else if (
-                //     feature.getGeometry().getType() === "LineString" ||
-                //     feature.getGeometry().getType() === "MultiLineString"
-                // )
-                //     return this._getLineStyle();
+            else if (
+                feature.getGeometry().getType() === "LineString" ||
+                feature.getGeometry().getType() === "MultiLineString"
+            )
+                return this._getLineStyle();
                 // else if (
                 //     feature.getGeometry().getType() === "Polygon" ||
                 //     feature.getGeometry().getType() === "MultiPolygon"
@@ -180,6 +180,38 @@ export default {
 
             return style;
         },
+        _getLineStyle() {
+            let style = [];
+
+            let color = "#ff0000",
+                strokeWidth = 4,
+                lineDash = [],
+                lineCap = 'round',
+                zIndex = 100;
+
+            // style.push(
+            //     ...this._getArrowStyle(
+            //         this._dataSource.getFeatureById(id),
+            //         this._view.getResolution(),
+            //         color,
+            //         zIndex
+            //     )
+            // );
+
+            style.push(
+                new Style({
+                    stroke: new Stroke({
+                        color: color,
+                        width: strokeWidth,
+                        lineDash: lineDash,
+                        lineCap: lineCap,
+                    }),
+                    zIndex: zIndex + 2,
+                })
+            );
+
+            return style;
+        },
         updateSource(geojson) {
             const features = new GeoJSON({
                 featureProjection: 'EPSG:3857',
@@ -189,7 +221,7 @@ export default {
             this.vectorSource.addFeatures(features);
 
             this.view.fit(this.vectorSource.getExtent(), {
-                // padding: [20, 20, 20, 20]
+                padding: [20, 20, 20, 20]
             });
         }
     }

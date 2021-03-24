@@ -75,12 +75,13 @@ class UserGeneratedData extends Resource
                 return json_decode($model->raw_gallery, true);
             })->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
-                $geom = \App\Models\UserGeneratedData::find($model->id)
+                $geom = \App\Models\UserGeneratedData::where('id', '=', $model->id)
                     ->select(
                         DB::raw('ST_AsGeoJSON(geometry) as geom')
                     )
                     ->first()
                     ->geom;
+
                 $feature = [
                     "type" => "Feature",
                     "properties" => [],

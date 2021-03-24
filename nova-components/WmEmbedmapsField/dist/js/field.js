@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 134);
+/******/ 	return __webpack_require__(__webpack_require__.s = 136);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1590,10 +1590,10 @@ function isSorted(arr, opt_func, opt_strict) {
 /* unused harmony export addCommon */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__proj_Projection_js__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__proj_epsg3857_js__ = __webpack_require__(143);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__proj_epsg4326_js__ = __webpack_require__(144);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__proj_projections_js__ = __webpack_require__(145);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__proj_transforms_js__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__proj_epsg3857_js__ = __webpack_require__(145);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__proj_epsg4326_js__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__proj_projections_js__ = __webpack_require__(147);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__proj_transforms_js__ = __webpack_require__(148);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__math_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__sphere_js__ = __webpack_require__(86);
@@ -3428,7 +3428,7 @@ var primaryAction = function (mapBrowserEvent) {
 /* harmony export (immutable) */ __webpack_exports__["f"] = getWorldsAway;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__string_js__ = __webpack_require__(147);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__string_js__ = __webpack_require__(149);
 /**
  * @module ol/coordinate
  */
@@ -3971,7 +3971,7 @@ var getFontParameters = function (fontSpec) {
 /* harmony export (immutable) */ __webpack_exports__["d"] = makeRegular;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GeometryLayout_js__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__GeometryType_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LinearRing_js__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LinearRing_js__ = __webpack_require__(151);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Point_js__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SimpleGeometry_js__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__flat_closest_js__ = __webpack_require__(45);
@@ -9007,7 +9007,7 @@ function inView(layerState, viewState) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Instruction_js__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__geom_GeometryType_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__extent_Relationship_js__ = __webpack_require__(84);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__VectorContext_js__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__VectorContext_js__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__colorlike_js__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__canvas_js__ = __webpack_require__(20);
@@ -10485,7 +10485,7 @@ var Fill = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__events_EventType_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ObjectEventType_js__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__structs_RBush_js__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Source_js__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Source_js__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__State_js__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__VectorEventType_js__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__functions_js__ = __webpack_require__(11);
@@ -11487,7 +11487,7 @@ var VectorSource = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__coordinate_js__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__asserts_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__obj_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__centerconstraint_js__ = __webpack_require__(148);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__centerconstraint_js__ = __webpack_require__(150);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__math_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__resolutionconstraint_js__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__rotationconstraint_js__ = __webpack_require__(65);
@@ -14383,9 +14383,9 @@ var Zoom = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__array_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__flat_segments_js__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__flat_inflate_js__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__flat_interpolate_js__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__flat_interpolate_js__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__flat_intersectsextent_js__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__flat_length_js__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__flat_length_js__ = __webpack_require__(116);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14823,7 +14823,7 @@ var MultiPoint = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RegularShape_js__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RegularShape_js__ = __webpack_require__(120);
 /**
  * @module ol/style/Circle
  */
@@ -15395,7 +15395,7 @@ var Stroke = /** @class */ (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rbush__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rbush__ = __webpack_require__(119);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rbush___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rbush__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_js__ = __webpack_require__(2);
@@ -17072,7 +17072,7 @@ function forEach(flatCoordinates, offset, end, stride, callback) {
 /* harmony export (immutable) */ __webpack_exports__["b"] = linearRingssAreOriented;
 /* harmony export (immutable) */ __webpack_exports__["c"] = orientLinearRings;
 /* harmony export (immutable) */ __webpack_exports__["d"] = orientLinearRingsArray;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reverse_js__ = __webpack_require__(150);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__reverse_js__ = __webpack_require__(152);
 /**
  * @module ol/geom/flat/orient
  */
@@ -17213,7 +17213,7 @@ function orientLinearRingsArray(flatCoordinates, offset, endss, stride, opt_righ
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Map_js__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Map_js__ = __webpack_require__(154);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ObjectEventType_js__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__render_Event_js__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__render_EventType_js__ = __webpack_require__(52);
@@ -17940,9 +17940,9 @@ var RenderEvent = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Collection_js__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__CollectionEventType_js__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__events_EventType_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__layer_Group_js__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__layer_Group_js__ = __webpack_require__(155);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MapBrowserEvent_js__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MapBrowserEventHandler_js__ = __webpack_require__(154);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MapBrowserEventHandler_js__ = __webpack_require__(156);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MapBrowserEventType_js__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MapEvent_js__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MapEventType_js__ = __webpack_require__(54);
@@ -17950,7 +17950,7 @@ var RenderEvent = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ObjectEventType_js__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pointer_EventType_js__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__render_EventType_js__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__TileQueue_js__ = __webpack_require__(155);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__TileQueue_js__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__View_js__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ViewHint_js__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__has_js__ = __webpack_require__(26);
@@ -19564,6 +19564,329 @@ var Rotate = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Control_js__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__events_EventType_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__events_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dom_js__ = __webpack_require__(13);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+/**
+ * @module ol/control/FullScreen
+ */
+
+
+
+
+
+var events = [
+    'fullscreenchange',
+    'webkitfullscreenchange',
+    'MSFullscreenChange',
+];
+/**
+ * @enum {string}
+ */
+var FullScreenEventType = {
+    /**
+     * Triggered after the map entered fullscreen.
+     * @event FullScreenEventType#enterfullscreen
+     * @api
+     */
+    ENTERFULLSCREEN: 'enterfullscreen',
+    /**
+     * Triggered after the map leave fullscreen.
+     * @event FullScreenEventType#leavefullscreen
+     * @api
+     */
+    LEAVEFULLSCREEN: 'leavefullscreen',
+};
+/**
+ * @typedef {Object} Options
+ * @property {string} [className='ol-full-screen'] CSS class name.
+ * @property {string|Text} [label='\u2922'] Text label to use for the button.
+ * Instead of text, also an element (e.g. a `span` element) can be used.
+ * @property {string|Text} [labelActive='\u00d7'] Text label to use for the
+ * button when full-screen is active.
+ * @property {string} [activeClassName=className + '-true'] CSS class name for the button
+ * when full-screen is active.
+ * @property {string} [inactiveClassName=className + '-false'] CSS class name for the button
+ * when full-screen is inactive.
+ * Instead of text, also an element (e.g. a `span` element) can be used.
+ * @property {string} [tipLabel='Toggle full-screen'] Text label to use for the button tip.
+ * @property {boolean} [keys=false] Full keyboard access.
+ * @property {HTMLElement|string} [target] Specify a target if you want the
+ * control to be rendered outside of the map's viewport.
+ * @property {HTMLElement|string} [source] The element to be displayed
+ * fullscreen. When not provided, the element containing the map viewport will
+ * be displayed fullscreen.
+ */
+/**
+ * @classdesc
+ * Provides a button that when clicked fills up the full screen with the map.
+ * The full screen source element is by default the element containing the map viewport unless
+ * overridden by providing the `source` option. In which case, the dom
+ * element introduced using this parameter will be displayed in full screen.
+ *
+ * When in full screen mode, a close button is shown to exit full screen mode.
+ * The [Fullscreen API](http://www.w3.org/TR/fullscreen/) is used to
+ * toggle the map in full screen mode.
+ *
+ * @fires FullScreenEventType#enterfullscreen
+ * @fires FullScreenEventType#leavefullscreen
+ * @api
+ */
+var FullScreen = /** @class */ (function (_super) {
+    __extends(FullScreen, _super);
+    /**
+     * @param {Options=} opt_options Options.
+     */
+    function FullScreen(opt_options) {
+        var _this = this;
+        var options = opt_options ? opt_options : {};
+        _this = _super.call(this, {
+            element: document.createElement('div'),
+            target: options.target,
+        }) || this;
+        /**
+         * @private
+         * @type {string}
+         */
+        _this.cssClassName_ =
+            options.className !== undefined ? options.className : 'ol-full-screen';
+        /**
+         * @private
+         * @type {Array<string>}
+         */
+        _this.activeClassName_ =
+            options.activeClassName !== undefined
+                ? options.activeClassName.split(' ')
+                : [_this.cssClassName_ + '-true'];
+        /**
+         * @private
+         * @type {Array<string>}
+         */
+        _this.inactiveClassName_ =
+            options.inactiveClassName !== undefined
+                ? options.inactiveClassName.split(' ')
+                : [_this.cssClassName_ + '-false'];
+        var label = options.label !== undefined ? options.label : '\u2922';
+        /**
+         * @private
+         * @type {Text}
+         */
+        _this.labelNode_ =
+            typeof label === 'string' ? document.createTextNode(label) : label;
+        var labelActive = options.labelActive !== undefined ? options.labelActive : '\u00d7';
+        /**
+         * @private
+         * @type {Text}
+         */
+        _this.labelActiveNode_ =
+            typeof labelActive === 'string'
+                ? document.createTextNode(labelActive)
+                : labelActive;
+        /**
+         * @private
+         * @type {HTMLElement}
+         */
+        _this.button_ = document.createElement('button');
+        var tipLabel = options.tipLabel ? options.tipLabel : 'Toggle full-screen';
+        _this.setClassName_(_this.button_, isFullScreen());
+        _this.button_.setAttribute('type', 'button');
+        _this.button_.title = tipLabel;
+        _this.button_.appendChild(_this.labelNode_);
+        _this.button_.addEventListener(__WEBPACK_IMPORTED_MODULE_1__events_EventType_js__["a" /* default */].CLICK, _this.handleClick_.bind(_this), false);
+        var cssClasses = _this.cssClassName_ +
+            ' ' +
+            __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */] +
+            ' ' +
+            __WEBPACK_IMPORTED_MODULE_2__css_js__["b" /* CLASS_CONTROL */] +
+            ' ' +
+            (!isFullScreenSupported() ? __WEBPACK_IMPORTED_MODULE_2__css_js__["f" /* CLASS_UNSUPPORTED */] : '');
+        var element = _this.element;
+        element.className = cssClasses;
+        element.appendChild(_this.button_);
+        /**
+         * @private
+         * @type {boolean}
+         */
+        _this.keys_ = options.keys !== undefined ? options.keys : false;
+        /**
+         * @private
+         * @type {HTMLElement|string|undefined}
+         */
+        _this.source_ = options.source;
+        return _this;
+    }
+    /**
+     * @param {MouseEvent} event The event to handle
+     * @private
+     */
+    FullScreen.prototype.handleClick_ = function (event) {
+        event.preventDefault();
+        this.handleFullScreen_();
+    };
+    /**
+     * @private
+     */
+    FullScreen.prototype.handleFullScreen_ = function () {
+        if (!isFullScreenSupported()) {
+            return;
+        }
+        var map = this.getMap();
+        if (!map) {
+            return;
+        }
+        if (isFullScreen()) {
+            exitFullScreen();
+        }
+        else {
+            var element = void 0;
+            if (this.source_) {
+                element =
+                    typeof this.source_ === 'string'
+                        ? document.getElementById(this.source_)
+                        : this.source_;
+            }
+            else {
+                element = map.getTargetElement();
+            }
+            if (this.keys_) {
+                requestFullScreenWithKeys(element);
+            }
+            else {
+                requestFullScreen(element);
+            }
+        }
+    };
+    /**
+     * @private
+     */
+    FullScreen.prototype.handleFullScreenChange_ = function () {
+        var map = this.getMap();
+        if (isFullScreen()) {
+            this.setClassName_(this.button_, true);
+            Object(__WEBPACK_IMPORTED_MODULE_4__dom_js__["g" /* replaceNode */])(this.labelActiveNode_, this.labelNode_);
+            this.dispatchEvent(FullScreenEventType.ENTERFULLSCREEN);
+        }
+        else {
+            this.setClassName_(this.button_, false);
+            Object(__WEBPACK_IMPORTED_MODULE_4__dom_js__["g" /* replaceNode */])(this.labelNode_, this.labelActiveNode_);
+            this.dispatchEvent(FullScreenEventType.LEAVEFULLSCREEN);
+        }
+        if (map) {
+            map.updateSize();
+        }
+    };
+    /**
+     * @param {HTMLElement} element Target element
+     * @param {boolean} fullscreen True if fullscreen class name should be active
+     * @private
+     */
+    FullScreen.prototype.setClassName_ = function (element, fullscreen) {
+        var _a, _b, _c;
+        var activeClassName = this.activeClassName_;
+        var inactiveClassName = this.inactiveClassName_;
+        var nextClassName = fullscreen ? activeClassName : inactiveClassName;
+        (_a = element.classList).remove.apply(_a, activeClassName);
+        (_b = element.classList).remove.apply(_b, inactiveClassName);
+        (_c = element.classList).add.apply(_c, nextClassName);
+    };
+    /**
+     * Remove the control from its current map and attach it to the new map.
+     * Subclasses may set up event handlers to get notified about changes to
+     * the map here.
+     * @param {import("../PluggableMap.js").default} map Map.
+     * @api
+     */
+    FullScreen.prototype.setMap = function (map) {
+        _super.prototype.setMap.call(this, map);
+        if (map) {
+            for (var i = 0, ii = events.length; i < ii; ++i) {
+                this.listenerKeys.push(Object(__WEBPACK_IMPORTED_MODULE_3__events_js__["a" /* listen */])(document, events[i], this.handleFullScreenChange_, this));
+            }
+        }
+    };
+    return FullScreen;
+}(__WEBPACK_IMPORTED_MODULE_0__Control_js__["a" /* default */]));
+/**
+ * @return {boolean} Fullscreen is supported by the current platform.
+ */
+function isFullScreenSupported() {
+    var body = document.body;
+    return !!(body['webkitRequestFullscreen'] ||
+        (body['msRequestFullscreen'] && document['msFullscreenEnabled']) ||
+        (body.requestFullscreen && document.fullscreenEnabled));
+}
+/**
+ * @return {boolean} Element is currently in fullscreen.
+ */
+function isFullScreen() {
+    return !!(document['webkitIsFullScreen'] ||
+        document['msFullscreenElement'] ||
+        document.fullscreenElement);
+}
+/**
+ * Request to fullscreen an element.
+ * @param {HTMLElement} element Element to request fullscreen
+ */
+function requestFullScreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    }
+    else if (element['msRequestFullscreen']) {
+        element['msRequestFullscreen']();
+    }
+    else if (element['webkitRequestFullscreen']) {
+        element['webkitRequestFullscreen']();
+    }
+}
+/**
+ * Request to fullscreen an element with keyboard input.
+ * @param {HTMLElement} element Element to request fullscreen
+ */
+function requestFullScreenWithKeys(element) {
+    if (element['webkitRequestFullscreen']) {
+        element['webkitRequestFullscreen']();
+    }
+    else {
+        requestFullScreen(element);
+    }
+}
+/**
+ * Exit fullscreen.
+ */
+function exitFullScreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    }
+    else if (document['msExitFullscreen']) {
+        document['msExitFullscreen']();
+    }
+    else if (document['webkitExitFullscreen']) {
+        document['webkitExitFullscreen']();
+    }
+}
+/* harmony default export */ __webpack_exports__["a"] = (FullScreen);
+//# sourceMappingURL=FullScreen.js.map
+
+/***/ }),
+/* 102 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /**
  * @module ol/OverlayPositioning
  */
@@ -19587,14 +19910,17 @@ var Rotate = /** @class */ (function (_super) {
 //# sourceMappingURL=OverlayPositioning.js.map
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony export Units */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Control_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__events_EventType_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__geom_Polygon_js__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__proj_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__asserts_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Object_js__ = __webpack_require__(10);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19609,87 +19935,645 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 /**
- * @module ol/control/ZoomToExtent
+ * @module ol/control/ScaleLine
  */
 
 
 
 
+
+
+/**
+ * @type {string}
+ */
+var UNITS_PROP = 'units';
+/**
+ * Units for the scale line. Supported values are `'degrees'`, `'imperial'`,
+ * `'nautical'`, `'metric'`, `'us'`.
+ * @enum {string}
+ */
+var Units = {
+    DEGREES: 'degrees',
+    IMPERIAL: 'imperial',
+    NAUTICAL: 'nautical',
+    METRIC: 'metric',
+    US: 'us',
+};
+/**
+ * @const
+ * @type {Array<number>}
+ */
+var LEADING_DIGITS = [1, 2, 5];
+/**
+ * @const
+ * @type {number}
+ */
+var DEFAULT_DPI = 25.4 / 0.28;
 /**
  * @typedef {Object} Options
- * @property {string} [className='ol-zoom-extent'] Class name.
+ * @property {string} [className='ol-scale-line'] CSS Class name.
+ * @property {number} [minWidth=64] Minimum width in pixels at the OGC default dpi. The width will be
+ * adjusted to match the dpi used.
+ * @property {function(import("../MapEvent.js").default):void} [render] Function called when the control
+ * should be re-rendered. This is called in a `requestAnimationFrame` callback.
  * @property {HTMLElement|string} [target] Specify a target if you want the control
  * to be rendered outside of the map's viewport.
- * @property {string|HTMLElement} [label='E'] Text label to use for the button.
- * Instead of text, also an element (e.g. a `span` element) can be used.
- * @property {string} [tipLabel='Fit to extent'] Text label to use for the button tip.
- * @property {import("../extent.js").Extent} [extent] The extent to zoom to. If undefined the validity
- * extent of the view projection is used.
+ * @property {import("./ScaleLine.js").Units|string} [units='metric'] Units.
+ * @property {boolean} [bar=false] Render scalebars instead of a line.
+ * @property {number} [steps=4] Number of steps the scalebar should use. Use even numbers
+ * for best results. Only applies when `bar` is `true`.
+ * @property {boolean} [text=false] Render the text scale above of the scalebar. Only applies
+ * when `bar` is `true`.
+ * @property {number|undefined} [dpi=undefined] dpi of output device such as printer. Only applies
+ * when `bar` is `true`. If undefined the OGC default screen pixel size of 0.28mm will be assumed.
  */
 /**
  * @classdesc
- * A button control which, when pressed, changes the map view to a specific
- * extent. To style this control use the css selector `.ol-zoom-extent`.
+ * A control displaying rough y-axis distances, calculated for the center of the
+ * viewport. For conformal projections (e.g. EPSG:3857, the default view
+ * projection in OpenLayers), the scale is valid for all directions.
+ * No scale line will be shown when the y-axis distance of a pixel at the
+ * viewport center cannot be calculated in the view projection.
+ * By default the scale line will show in the bottom left portion of the map,
+ * but this can be changed by using the css selector `.ol-scale-line`.
+ * When specifying `bar` as `true`, a scalebar will be rendered instead
+ * of a scaleline.
  *
  * @api
  */
-var ZoomToExtent = /** @class */ (function (_super) {
-    __extends(ZoomToExtent, _super);
+var ScaleLine = /** @class */ (function (_super) {
+    __extends(ScaleLine, _super);
     /**
-     * @param {Options=} opt_options Options.
+     * @param {Options=} opt_options Scale line options.
      */
-    function ZoomToExtent(opt_options) {
+    function ScaleLine(opt_options) {
         var _this = this;
         var options = opt_options ? opt_options : {};
+        var className = options.className !== undefined
+            ? options.className
+            : options.bar
+                ? 'ol-scale-bar'
+                : 'ol-scale-line';
         _this = _super.call(this, {
             element: document.createElement('div'),
+            render: options.render,
             target: options.target,
         }) || this;
         /**
-         * @type {?import("../extent.js").Extent}
-         * @protected
+         * @private
+         * @type {HTMLElement}
          */
-        _this.extent = options.extent ? options.extent : null;
-        var className = options.className !== undefined ? options.className : 'ol-zoom-extent';
-        var label = options.label !== undefined ? options.label : 'E';
-        var tipLabel = options.tipLabel !== undefined ? options.tipLabel : 'Fit to extent';
-        var button = document.createElement('button');
-        button.setAttribute('type', 'button');
-        button.title = tipLabel;
-        button.appendChild(typeof label === 'string' ? document.createTextNode(label) : label);
-        button.addEventListener(__WEBPACK_IMPORTED_MODULE_1__events_EventType_js__["a" /* default */].CLICK, _this.handleClick_.bind(_this), false);
-        var cssClasses = className + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */] + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["b" /* CLASS_CONTROL */];
-        var element = _this.element;
-        element.className = cssClasses;
-        element.appendChild(button);
+        _this.innerElement_ = document.createElement('div');
+        _this.innerElement_.className = className + '-inner';
+        _this.element.className = className + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */];
+        _this.element.appendChild(_this.innerElement_);
+        /**
+         * @private
+         * @type {?import("../View.js").State}
+         */
+        _this.viewState_ = null;
+        /**
+         * @private
+         * @type {number}
+         */
+        _this.minWidth_ = options.minWidth !== undefined ? options.minWidth : 64;
+        /**
+         * @private
+         * @type {boolean}
+         */
+        _this.renderedVisible_ = false;
+        /**
+         * @private
+         * @type {number|undefined}
+         */
+        _this.renderedWidth_ = undefined;
+        /**
+         * @private
+         * @type {string}
+         */
+        _this.renderedHTML_ = '';
+        _this.addEventListener(Object(__WEBPACK_IMPORTED_MODULE_5__Object_js__["b" /* getChangeEventType */])(UNITS_PROP), _this.handleUnitsChanged_);
+        _this.setUnits(options.units || Units.METRIC);
+        /**
+         * @private
+         * @type {boolean}
+         */
+        _this.scaleBar_ = options.bar || false;
+        /**
+         * @private
+         * @type {number}
+         */
+        _this.scaleBarSteps_ = options.steps || 4;
+        /**
+         * @private
+         * @type {boolean}
+         */
+        _this.scaleBarText_ = options.text || false;
+        /**
+         * @private
+         * @type {number|undefined}
+         */
+        _this.dpi_ = options.dpi || undefined;
         return _this;
     }
     /**
-     * @param {MouseEvent} event The event to handle
-     * @private
+     * Return the units to use in the scale line.
+     * @return {import("./ScaleLine.js").Units} The units
+     * to use in the scale line.
+     * @observable
+     * @api
      */
-    ZoomToExtent.prototype.handleClick_ = function (event) {
-        event.preventDefault();
-        this.handleZoomToExtent();
+    ScaleLine.prototype.getUnits = function () {
+        return this.get(UNITS_PROP);
     };
     /**
-     * @protected
+     * @private
      */
-    ZoomToExtent.prototype.handleZoomToExtent = function () {
-        var map = this.getMap();
-        var view = map.getView();
-        var extent = !this.extent
-            ? view.getProjection().getExtent()
-            : this.extent;
-        view.fitInternal(Object(__WEBPACK_IMPORTED_MODULE_3__geom_Polygon_js__["c" /* fromExtent */])(extent));
+    ScaleLine.prototype.handleUnitsChanged_ = function () {
+        this.updateElement_();
     };
-    return ZoomToExtent;
+    /**
+     * Set the units to use in the scale line.
+     * @param {import("./ScaleLine.js").Units} units The units to use in the scale line.
+     * @observable
+     * @api
+     */
+    ScaleLine.prototype.setUnits = function (units) {
+        this.set(UNITS_PROP, units);
+    };
+    /**
+     * Specify the dpi of output device such as printer.
+     * @param {number|undefined} dpi The dpi of output device.
+     * @api
+     */
+    ScaleLine.prototype.setDpi = function (dpi) {
+        this.dpi_ = dpi;
+    };
+    /**
+     * @private
+     */
+    ScaleLine.prototype.updateElement_ = function () {
+        var viewState = this.viewState_;
+        if (!viewState) {
+            if (this.renderedVisible_) {
+                this.element.style.display = 'none';
+                this.renderedVisible_ = false;
+            }
+            return;
+        }
+        var center = viewState.center;
+        var projection = viewState.projection;
+        var units = this.getUnits();
+        var pointResolutionUnits = units == Units.DEGREES ? __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].DEGREES : __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].METERS;
+        var pointResolution = Object(__WEBPACK_IMPORTED_MODULE_3__proj_js__["g" /* getPointResolution */])(projection, viewState.resolution, center, pointResolutionUnits);
+        var minWidth = (this.minWidth_ * (this.dpi_ || DEFAULT_DPI)) / DEFAULT_DPI;
+        var nominalCount = minWidth * pointResolution;
+        var suffix = '';
+        if (units == Units.DEGREES) {
+            var metersPerDegree = __WEBPACK_IMPORTED_MODULE_3__proj_js__["a" /* METERS_PER_UNIT */][__WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].DEGREES];
+            nominalCount *= metersPerDegree;
+            if (nominalCount < metersPerDegree / 60) {
+                suffix = '\u2033'; // seconds
+                pointResolution *= 3600;
+            }
+            else if (nominalCount < metersPerDegree) {
+                suffix = '\u2032'; // minutes
+                pointResolution *= 60;
+            }
+            else {
+                suffix = '\u00b0'; // degrees
+            }
+        }
+        else if (units == Units.IMPERIAL) {
+            if (nominalCount < 0.9144) {
+                suffix = 'in';
+                pointResolution /= 0.0254;
+            }
+            else if (nominalCount < 1609.344) {
+                suffix = 'ft';
+                pointResolution /= 0.3048;
+            }
+            else {
+                suffix = 'mi';
+                pointResolution /= 1609.344;
+            }
+        }
+        else if (units == Units.NAUTICAL) {
+            pointResolution /= 1852;
+            suffix = 'nm';
+        }
+        else if (units == Units.METRIC) {
+            if (nominalCount < 0.001) {
+                suffix = 'μm';
+                pointResolution *= 1000000;
+            }
+            else if (nominalCount < 1) {
+                suffix = 'mm';
+                pointResolution *= 1000;
+            }
+            else if (nominalCount < 1000) {
+                suffix = 'm';
+            }
+            else {
+                suffix = 'km';
+                pointResolution /= 1000;
+            }
+        }
+        else if (units == Units.US) {
+            if (nominalCount < 0.9144) {
+                suffix = 'in';
+                pointResolution *= 39.37;
+            }
+            else if (nominalCount < 1609.344) {
+                suffix = 'ft';
+                pointResolution /= 0.30480061;
+            }
+            else {
+                suffix = 'mi';
+                pointResolution /= 1609.3472;
+            }
+        }
+        else {
+            Object(__WEBPACK_IMPORTED_MODULE_4__asserts_js__["a" /* assert */])(false, 33); // Invalid units
+        }
+        var i = 3 * Math.floor(Math.log(minWidth * pointResolution) / Math.log(10));
+        var count, width, decimalCount;
+        while (true) {
+            decimalCount = Math.floor(i / 3);
+            var decimal = Math.pow(10, decimalCount);
+            count = LEADING_DIGITS[((i % 3) + 3) % 3] * decimal;
+            width = Math.round(count / pointResolution);
+            if (isNaN(width)) {
+                this.element.style.display = 'none';
+                this.renderedVisible_ = false;
+                return;
+            }
+            else if (width >= minWidth) {
+                break;
+            }
+            ++i;
+        }
+        var html;
+        if (this.scaleBar_) {
+            html = this.createScaleBar(width, count, suffix);
+        }
+        else {
+            html = count.toFixed(decimalCount < 0 ? -decimalCount : 0) + ' ' + suffix;
+        }
+        if (this.renderedHTML_ != html) {
+            this.innerElement_.innerHTML = html;
+            this.renderedHTML_ = html;
+        }
+        if (this.renderedWidth_ != width) {
+            this.innerElement_.style.width = width + 'px';
+            this.renderedWidth_ = width;
+        }
+        if (!this.renderedVisible_) {
+            this.element.style.display = '';
+            this.renderedVisible_ = true;
+        }
+    };
+    /**
+     * @private
+     * @param {number} width The current width of the scalebar.
+     * @param {number} scale The current scale.
+     * @param {string} suffix The suffix to append to the scale text.
+     * @returns {string} The stringified HTML of the scalebar.
+     */
+    ScaleLine.prototype.createScaleBar = function (width, scale, suffix) {
+        var mapScale = '1 : ' + Math.round(this.getScaleForResolution()).toLocaleString();
+        var scaleSteps = [];
+        var stepWidth = width / this.scaleBarSteps_;
+        var backgroundColor = '#ffffff';
+        for (var i = 0; i < this.scaleBarSteps_; i++) {
+            if (i === 0) {
+                // create the first marker at position 0
+                scaleSteps.push(this.createMarker('absolute', i));
+            }
+            scaleSteps.push('<div>' +
+                '<div ' +
+                'class="ol-scale-singlebar" ' +
+                'style=' +
+                '"width: ' +
+                stepWidth +
+                'px;' +
+                'background-color: ' +
+                backgroundColor +
+                ';"' +
+                '>' +
+                '</div>' +
+                this.createMarker('relative', i) +
+                /*render text every second step, except when only 2 steps */
+                (i % 2 === 0 || this.scaleBarSteps_ === 2
+                    ? this.createStepText(i, width, false, scale, suffix)
+                    : '') +
+                '</div>');
+            if (i === this.scaleBarSteps_ - 1) {
+                {
+                    /*render text at the end */
+                }
+                scaleSteps.push(this.createStepText(i + 1, width, true, scale, suffix));
+            }
+            // switch colors of steps between black and white
+            if (backgroundColor === '#ffffff') {
+                backgroundColor = '#000000';
+            }
+            else {
+                backgroundColor = '#ffffff';
+            }
+        }
+        var scaleBarText;
+        if (this.scaleBarText_) {
+            scaleBarText =
+                '<div ' +
+                    'class="ol-scale-text" ' +
+                    'style="width: ' +
+                    width +
+                    'px;">' +
+                    mapScale +
+                    '</div>';
+        }
+        else {
+            scaleBarText = '';
+        }
+        var container = '<div ' +
+            'style="display: flex;">' +
+            scaleBarText +
+            scaleSteps.join('') +
+            '</div>';
+        return container;
+    };
+    /**
+     * Creates a marker at given position
+     * @param {string} position - The position, absolute or relative
+     * @param {number} i - The iterator
+     * @returns {string} The stringified div containing the marker
+     */
+    ScaleLine.prototype.createMarker = function (position, i) {
+        var top = position === 'absolute' ? 3 : -10;
+        return ('<div ' +
+            'class="ol-scale-step-marker" ' +
+            'style="position: ' +
+            position +
+            ';' +
+            'top: ' +
+            top +
+            'px;"' +
+            '></div>');
+    };
+    /**
+     * Creates the label for a marker marker at given position
+     * @param {number} i - The iterator
+     * @param {number} width - The width the scalebar will currently use
+     * @param {boolean} isLast - Flag indicating if we add the last step text
+     * @param {number} scale - The current scale for the whole scalebar
+     * @param {string} suffix - The suffix for the scale
+     * @returns {string} The stringified div containing the step text
+     */
+    ScaleLine.prototype.createStepText = function (i, width, isLast, scale, suffix) {
+        var length = i === 0 ? 0 : Math.round((scale / this.scaleBarSteps_) * i * 100) / 100;
+        var lengthString = length + (i === 0 ? '' : ' ' + suffix);
+        var margin = i === 0 ? -3 : (width / this.scaleBarSteps_) * -1;
+        var minWidth = i === 0 ? 0 : (width / this.scaleBarSteps_) * 2;
+        return ('<div ' +
+            'class="ol-scale-step-text" ' +
+            'style="' +
+            'margin-left: ' +
+            margin +
+            'px;' +
+            'text-align: ' +
+            (i === 0 ? 'left' : 'center') +
+            '; ' +
+            'min-width: ' +
+            minWidth +
+            'px;' +
+            'left: ' +
+            (isLast ? width + 'px' : 'unset') +
+            ';"' +
+            '>' +
+            lengthString +
+            '</div>');
+    };
+    /**
+     * Returns the appropriate scale for the given resolution and units.
+     * @return {number} The appropriate scale.
+     */
+    ScaleLine.prototype.getScaleForResolution = function () {
+        var resolution = Object(__WEBPACK_IMPORTED_MODULE_3__proj_js__["g" /* getPointResolution */])(this.viewState_.projection, this.viewState_.resolution, this.viewState_.center);
+        var dpi = this.dpi_ || DEFAULT_DPI;
+        var mpu = this.viewState_.projection.getMetersPerUnit();
+        var inchesPerMeter = 1000 / 25.4;
+        return parseFloat(resolution.toString()) * mpu * inchesPerMeter * dpi;
+    };
+    /**
+     * Update the scale line element.
+     * @param {import("../MapEvent.js").default} mapEvent Map event.
+     * @override
+     */
+    ScaleLine.prototype.render = function (mapEvent) {
+        var frameState = mapEvent.frameState;
+        if (!frameState) {
+            this.viewState_ = null;
+        }
+        else {
+            this.viewState_ = frameState.viewState;
+        }
+        this.updateElement_();
+    };
+    return ScaleLine;
 }(__WEBPACK_IMPORTED_MODULE_0__Control_js__["a" /* default */]));
-/* unused harmony default export */ var _unused_webpack_default_export = (ZoomToExtent);
-//# sourceMappingURL=ZoomToExtent.js.map
+/* harmony default export */ __webpack_exports__["a"] = (ScaleLine);
+//# sourceMappingURL=ScaleLine.js.map
 
 /***/ }),
-/* 103 */
+/* 104 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = defaults;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Collection_js__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__interaction_DoubleClickZoom_js__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interaction_DragPan_js__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__interaction_DragRotate_js__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__interaction_DragZoom_js__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__interaction_KeyboardPan_js__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__interaction_KeyboardZoom_js__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Kinetic_js__ = __webpack_require__(167);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__interaction_MouseWheelZoom_js__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__interaction_PinchRotate_js__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__interaction_PinchZoom_js__ = __webpack_require__(114);
+/* unused harmony reexport DoubleClickZoom */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__interaction_DragAndDrop_js__ = __webpack_require__(168);
+/* unused harmony reexport DragAndDrop */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__interaction_DragBox_js__ = __webpack_require__(109);
+/* unused harmony reexport DragBox */
+/* unused harmony reexport DragPan */
+/* unused harmony reexport DragRotate */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__interaction_DragRotateAndZoom_js__ = __webpack_require__(169);
+/* unused harmony reexport DragRotateAndZoom */
+/* unused harmony reexport DragZoom */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__interaction_Draw_js__ = __webpack_require__(170);
+/* unused harmony reexport Draw */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__interaction_Extent_js__ = __webpack_require__(194);
+/* unused harmony reexport Extent */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__interaction_Interaction_js__ = __webpack_require__(30);
+/* unused harmony reexport Interaction */
+/* unused harmony reexport KeyboardPan */
+/* unused harmony reexport KeyboardZoom */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__interaction_Modify_js__ = __webpack_require__(195);
+/* unused harmony reexport Modify */
+/* unused harmony reexport MouseWheelZoom */
+/* unused harmony reexport PinchRotate */
+/* unused harmony reexport PinchZoom */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__interaction_Pointer_js__ = __webpack_require__(14);
+/* unused harmony reexport Pointer */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__interaction_Select_js__ = __webpack_require__(196);
+/* unused harmony reexport Select */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__interaction_Snap_js__ = __webpack_require__(197);
+/* unused harmony reexport Snap */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__interaction_Translate_js__ = __webpack_require__(198);
+/* unused harmony reexport Translate */
+/**
+ * @module ol/interaction
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @typedef {Object} DefaultsOptions
+ * @property {boolean} [altShiftDragRotate=true] Whether Alt-Shift-drag rotate is
+ * desired.
+ * @property {boolean} [onFocusOnly=false] Interact only when the map has the
+ * focus. This affects the `MouseWheelZoom` and `DragPan` interactions and is
+ * useful when page scroll is desired for maps that do not have the browser's
+ * focus.
+ * @property {boolean} [doubleClickZoom=true] Whether double click zoom is
+ * desired.
+ * @property {boolean} [keyboard=true] Whether keyboard interaction is desired.
+ * @property {boolean} [mouseWheelZoom=true] Whether mousewheel zoom is desired.
+ * @property {boolean} [shiftDragZoom=true] Whether Shift-drag zoom is desired.
+ * @property {boolean} [dragPan=true] Whether drag pan is desired.
+ * @property {boolean} [pinchRotate=true] Whether pinch rotate is desired.
+ * @property {boolean} [pinchZoom=true] Whether pinch zoom is desired.
+ * @property {number} [zoomDelta] Zoom level delta when using keyboard or double click zoom.
+ * @property {number} [zoomDuration] Duration of the zoom animation in
+ * milliseconds.
+ */
+/**
+ * Set of interactions included in maps by default. Specific interactions can be
+ * excluded by setting the appropriate option to false in the constructor
+ * options, but the order of the interactions is fixed.  If you want to specify
+ * a different order for interactions, you will need to create your own
+ * {@link module:ol/interaction/Interaction} instances and insert
+ * them into a {@link module:ol/Collection} in the order you want
+ * before creating your {@link module:ol/Map~Map} instance. Changing the order can
+ * be of interest if the event propagation needs to be stopped at a point.
+ * The default set of interactions, in sequence, is:
+ * * {@link module:ol/interaction/DragRotate~DragRotate}
+ * * {@link module:ol/interaction/DoubleClickZoom~DoubleClickZoom}
+ * * {@link module:ol/interaction/DragPan~DragPan}
+ * * {@link module:ol/interaction/PinchRotate~PinchRotate}
+ * * {@link module:ol/interaction/PinchZoom~PinchZoom}
+ * * {@link module:ol/interaction/KeyboardPan~KeyboardPan}
+ * * {@link module:ol/interaction/KeyboardZoom~KeyboardZoom}
+ * * {@link module:ol/interaction/MouseWheelZoom~MouseWheelZoom}
+ * * {@link module:ol/interaction/DragZoom~DragZoom}
+ *
+ * @param {DefaultsOptions=} opt_options Defaults options.
+ * @return {import("./Collection.js").default<import("./interaction/Interaction.js").default>}
+ * A collection of interactions to be used with the {@link module:ol/Map~Map}
+ * constructor's `interactions` option.
+ * @api
+ */
+function defaults(opt_options) {
+    var options = opt_options ? opt_options : {};
+    var interactions = new __WEBPACK_IMPORTED_MODULE_0__Collection_js__["a" /* default */]();
+    var kinetic = new __WEBPACK_IMPORTED_MODULE_7__Kinetic_js__["a" /* default */](-0.005, 0.05, 100);
+    var altShiftDragRotate = options.altShiftDragRotate !== undefined
+        ? options.altShiftDragRotate
+        : true;
+    if (altShiftDragRotate) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_3__interaction_DragRotate_js__["a" /* default */]());
+    }
+    var doubleClickZoom = options.doubleClickZoom !== undefined ? options.doubleClickZoom : true;
+    if (doubleClickZoom) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_1__interaction_DoubleClickZoom_js__["a" /* default */]({
+            delta: options.zoomDelta,
+            duration: options.zoomDuration,
+        }));
+    }
+    var dragPan = options.dragPan !== undefined ? options.dragPan : true;
+    if (dragPan) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_2__interaction_DragPan_js__["a" /* default */]({
+            onFocusOnly: options.onFocusOnly,
+            kinetic: kinetic,
+        }));
+    }
+    var pinchRotate = options.pinchRotate !== undefined ? options.pinchRotate : true;
+    if (pinchRotate) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_9__interaction_PinchRotate_js__["a" /* default */]());
+    }
+    var pinchZoom = options.pinchZoom !== undefined ? options.pinchZoom : true;
+    if (pinchZoom) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_10__interaction_PinchZoom_js__["a" /* default */]({
+            duration: options.zoomDuration,
+        }));
+    }
+    var keyboard = options.keyboard !== undefined ? options.keyboard : true;
+    if (keyboard) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_5__interaction_KeyboardPan_js__["a" /* default */]());
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_6__interaction_KeyboardZoom_js__["a" /* default */]({
+            delta: options.zoomDelta,
+            duration: options.zoomDuration,
+        }));
+    }
+    var mouseWheelZoom = options.mouseWheelZoom !== undefined ? options.mouseWheelZoom : true;
+    if (mouseWheelZoom) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_8__interaction_MouseWheelZoom_js__["a" /* default */]({
+            onFocusOnly: options.onFocusOnly,
+            duration: options.zoomDuration,
+        }));
+    }
+    var shiftDragZoom = options.shiftDragZoom !== undefined ? options.shiftDragZoom : true;
+    if (shiftDragZoom) {
+        interactions.push(new __WEBPACK_IMPORTED_MODULE_4__interaction_DragZoom_js__["a" /* default */]({
+            duration: options.zoomDuration,
+        }));
+    }
+    return interactions;
+}
+//# sourceMappingURL=interaction.js.map
+
+/***/ }),
+/* 105 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19769,7 +20653,7 @@ var DoubleClickZoom = /** @class */ (function (_super) {
 //# sourceMappingURL=DoubleClickZoom.js.map
 
 /***/ }),
-/* 104 */
+/* 106 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19965,7 +20849,7 @@ var DragPan = /** @class */ (function (_super) {
 //# sourceMappingURL=DragPan.js.map
 
 /***/ }),
-/* 105 */
+/* 107 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20100,11 +20984,11 @@ var DragRotate = /** @class */ (function (_super) {
 //# sourceMappingURL=DragRotate.js.map
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DragBox_js__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__DragBox_js__ = __webpack_require__(109);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__easing_js__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__events_condition_js__ = __webpack_require__(15);
@@ -20211,7 +21095,7 @@ var DragZoom = /** @class */ (function (_super) {
 //# sourceMappingURL=DragZoom.js.map
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20446,7 +21330,7 @@ var DragBox = /** @class */ (function (_super) {
 //# sourceMappingURL=DragBox.js.map
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20586,7 +21470,7 @@ var KeyboardPan = /** @class */ (function (_super) {
 //# sourceMappingURL=KeyboardPan.js.map
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20691,7 +21575,7 @@ var KeyboardZoom = /** @class */ (function (_super) {
 //# sourceMappingURL=KeyboardZoom.js.map
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20962,7 +21846,7 @@ var MouseWheelZoom = /** @class */ (function (_super) {
 //# sourceMappingURL=MouseWheelZoom.js.map
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21126,7 +22010,7 @@ var PinchRotate = /** @class */ (function (_super) {
 //# sourceMappingURL=PinchRotate.js.map
 
 /***/ }),
-/* 112 */
+/* 114 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21269,7 +22153,7 @@ var PinchZoom = /** @class */ (function (_super) {
 //# sourceMappingURL=PinchZoom.js.map
 
 /***/ }),
-/* 113 */
+/* 115 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21455,7 +22339,7 @@ function lineStringsCoordinateAtM(flatCoordinates, offset, ends, stride, m, extr
 //# sourceMappingURL=interpolate.js.map
 
 /***/ }),
-/* 114 */
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21501,7 +22385,7 @@ function linearRingLength(flatCoordinates, offset, end, stride) {
 //# sourceMappingURL=length.js.map
 
 /***/ }),
-/* 115 */
+/* 117 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21515,7 +22399,7 @@ function linearRingLength(flatCoordinates, offset, end, stride) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__flat_simplify_js__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__array_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__flat_inflate_js__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__flat_interpolate_js__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__flat_interpolate_js__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__flat_intersectsextent_js__ = __webpack_require__(51);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -21790,7 +22674,7 @@ var MultiLineString = /** @class */ (function (_super) {
 //# sourceMappingURL=MultiLineString.js.map
 
 /***/ }),
-/* 116 */
+/* 118 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22175,14 +23059,14 @@ var MultiPolygon = /** @class */ (function (_super) {
 //# sourceMappingURL=MultiPolygon.js.map
 
 /***/ }),
-/* 117 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(t,i){ true?module.exports=i():"function"==typeof define&&define.amd?define(i):(t=t||self).RBush=i()}(this,function(){"use strict";function t(t,r,e,a,h){!function t(n,r,e,a,h){for(;a>e;){if(a-e>600){var o=a-e+1,s=r-e+1,l=Math.log(o),f=.5*Math.exp(2*l/3),u=.5*Math.sqrt(l*f*(o-f)/o)*(s-o/2<0?-1:1),m=Math.max(e,Math.floor(r-s*f/o+u)),c=Math.min(a,Math.floor(r+(o-s)*f/o+u));t(n,r,m,c,h)}var p=n[r],d=e,x=a;for(i(n,e,r),h(n[a],p)>0&&i(n,e,a);d<x;){for(i(n,d,x),d++,x--;h(n[d],p)<0;)d++;for(;h(n[x],p)>0;)x--}0===h(n[e],p)?i(n,e,x):i(n,++x,a),x<=r&&(e=x+1),r<=x&&(a=x-1)}}(t,r,e||0,a||t.length-1,h||n)}function i(t,i,n){var r=t[i];t[i]=t[n],t[n]=r}function n(t,i){return t<i?-1:t>i?1:0}var r=function(t){void 0===t&&(t=9),this._maxEntries=Math.max(4,t),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),this.clear()};function e(t,i,n){if(!n)return i.indexOf(t);for(var r=0;r<i.length;r++)if(n(t,i[r]))return r;return-1}function a(t,i){h(t,0,t.children.length,i,t)}function h(t,i,n,r,e){e||(e=p(null)),e.minX=1/0,e.minY=1/0,e.maxX=-1/0,e.maxY=-1/0;for(var a=i;a<n;a++){var h=t.children[a];o(e,t.leaf?r(h):h)}return e}function o(t,i){return t.minX=Math.min(t.minX,i.minX),t.minY=Math.min(t.minY,i.minY),t.maxX=Math.max(t.maxX,i.maxX),t.maxY=Math.max(t.maxY,i.maxY),t}function s(t,i){return t.minX-i.minX}function l(t,i){return t.minY-i.minY}function f(t){return(t.maxX-t.minX)*(t.maxY-t.minY)}function u(t){return t.maxX-t.minX+(t.maxY-t.minY)}function m(t,i){return t.minX<=i.minX&&t.minY<=i.minY&&i.maxX<=t.maxX&&i.maxY<=t.maxY}function c(t,i){return i.minX<=t.maxX&&i.minY<=t.maxY&&i.maxX>=t.minX&&i.maxY>=t.minY}function p(t){return{children:t,height:1,leaf:!0,minX:1/0,minY:1/0,maxX:-1/0,maxY:-1/0}}function d(i,n,r,e,a){for(var h=[n,r];h.length;)if(!((r=h.pop())-(n=h.pop())<=e)){var o=n+Math.ceil((r-n)/e/2)*e;t(i,o,n,r,a),h.push(n,o,o,r)}}return r.prototype.all=function(){return this._all(this.data,[])},r.prototype.search=function(t){var i=this.data,n=[];if(!c(t,i))return n;for(var r=this.toBBox,e=[];i;){for(var a=0;a<i.children.length;a++){var h=i.children[a],o=i.leaf?r(h):h;c(t,o)&&(i.leaf?n.push(h):m(t,o)?this._all(h,n):e.push(h))}i=e.pop()}return n},r.prototype.collides=function(t){var i=this.data;if(!c(t,i))return!1;for(var n=[];i;){for(var r=0;r<i.children.length;r++){var e=i.children[r],a=i.leaf?this.toBBox(e):e;if(c(t,a)){if(i.leaf||m(t,a))return!0;n.push(e)}}i=n.pop()}return!1},r.prototype.load=function(t){if(!t||!t.length)return this;if(t.length<this._minEntries){for(var i=0;i<t.length;i++)this.insert(t[i]);return this}var n=this._build(t.slice(),0,t.length-1,0);if(this.data.children.length)if(this.data.height===n.height)this._splitRoot(this.data,n);else{if(this.data.height<n.height){var r=this.data;this.data=n,n=r}this._insert(n,this.data.height-n.height-1,!0)}else this.data=n;return this},r.prototype.insert=function(t){return t&&this._insert(t,this.data.height-1),this},r.prototype.clear=function(){return this.data=p([]),this},r.prototype.remove=function(t,i){if(!t)return this;for(var n,r,a,h=this.data,o=this.toBBox(t),s=[],l=[];h||s.length;){if(h||(h=s.pop(),r=s[s.length-1],n=l.pop(),a=!0),h.leaf){var f=e(t,h.children,i);if(-1!==f)return h.children.splice(f,1),s.push(h),this._condense(s),this}a||h.leaf||!m(h,o)?r?(n++,h=r.children[n],a=!1):h=null:(s.push(h),l.push(n),n=0,r=h,h=h.children[0])}return this},r.prototype.toBBox=function(t){return t},r.prototype.compareMinX=function(t,i){return t.minX-i.minX},r.prototype.compareMinY=function(t,i){return t.minY-i.minY},r.prototype.toJSON=function(){return this.data},r.prototype.fromJSON=function(t){return this.data=t,this},r.prototype._all=function(t,i){for(var n=[];t;)t.leaf?i.push.apply(i,t.children):n.push.apply(n,t.children),t=n.pop();return i},r.prototype._build=function(t,i,n,r){var e,h=n-i+1,o=this._maxEntries;if(h<=o)return a(e=p(t.slice(i,n+1)),this.toBBox),e;r||(r=Math.ceil(Math.log(h)/Math.log(o)),o=Math.ceil(h/Math.pow(o,r-1))),(e=p([])).leaf=!1,e.height=r;var s=Math.ceil(h/o),l=s*Math.ceil(Math.sqrt(o));d(t,i,n,l,this.compareMinX);for(var f=i;f<=n;f+=l){var u=Math.min(f+l-1,n);d(t,f,u,s,this.compareMinY);for(var m=f;m<=u;m+=s){var c=Math.min(m+s-1,u);e.children.push(this._build(t,m,c,r-1))}}return a(e,this.toBBox),e},r.prototype._chooseSubtree=function(t,i,n,r){for(;r.push(i),!i.leaf&&r.length-1!==n;){for(var e=1/0,a=1/0,h=void 0,o=0;o<i.children.length;o++){var s=i.children[o],l=f(s),u=(m=t,c=s,(Math.max(c.maxX,m.maxX)-Math.min(c.minX,m.minX))*(Math.max(c.maxY,m.maxY)-Math.min(c.minY,m.minY))-l);u<a?(a=u,e=l<e?l:e,h=s):u===a&&l<e&&(e=l,h=s)}i=h||i.children[0]}var m,c;return i},r.prototype._insert=function(t,i,n){var r=n?t:this.toBBox(t),e=[],a=this._chooseSubtree(r,this.data,i,e);for(a.children.push(t),o(a,r);i>=0&&e[i].children.length>this._maxEntries;)this._split(e,i),i--;this._adjustParentBBoxes(r,e,i)},r.prototype._split=function(t,i){var n=t[i],r=n.children.length,e=this._minEntries;this._chooseSplitAxis(n,e,r);var h=this._chooseSplitIndex(n,e,r),o=p(n.children.splice(h,n.children.length-h));o.height=n.height,o.leaf=n.leaf,a(n,this.toBBox),a(o,this.toBBox),i?t[i-1].children.push(o):this._splitRoot(n,o)},r.prototype._splitRoot=function(t,i){this.data=p([t,i]),this.data.height=t.height+1,this.data.leaf=!1,a(this.data,this.toBBox)},r.prototype._chooseSplitIndex=function(t,i,n){for(var r,e,a,o,s,l,u,m=1/0,c=1/0,p=i;p<=n-i;p++){var d=h(t,0,p,this.toBBox),x=h(t,p,n,this.toBBox),v=(e=d,a=x,o=void 0,s=void 0,l=void 0,u=void 0,o=Math.max(e.minX,a.minX),s=Math.max(e.minY,a.minY),l=Math.min(e.maxX,a.maxX),u=Math.min(e.maxY,a.maxY),Math.max(0,l-o)*Math.max(0,u-s)),M=f(d)+f(x);v<m?(m=v,r=p,c=M<c?M:c):v===m&&M<c&&(c=M,r=p)}return r||n-i},r.prototype._chooseSplitAxis=function(t,i,n){var r=t.leaf?this.compareMinX:s,e=t.leaf?this.compareMinY:l;this._allDistMargin(t,i,n,r)<this._allDistMargin(t,i,n,e)&&t.children.sort(r)},r.prototype._allDistMargin=function(t,i,n,r){t.children.sort(r);for(var e=this.toBBox,a=h(t,0,i,e),s=h(t,n-i,n,e),l=u(a)+u(s),f=i;f<n-i;f++){var m=t.children[f];o(a,t.leaf?e(m):m),l+=u(a)}for(var c=n-i-1;c>=i;c--){var p=t.children[c];o(s,t.leaf?e(p):p),l+=u(s)}return l},r.prototype._adjustParentBBoxes=function(t,i,n){for(var r=n;r>=0;r--)o(i[r],t)},r.prototype._condense=function(t){for(var i=t.length-1,n=void 0;i>=0;i--)0===t[i].children.length?i>0?(n=t[i-1].children).splice(n.indexOf(t[i]),1):this.clear():a(t[i],this.toBBox)},r});
 
 
 /***/ }),
-/* 118 */
+/* 120 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22687,7 +23571,7 @@ var RegularShape = /** @class */ (function (_super) {
 //# sourceMappingURL=RegularShape.js.map
 
 /***/ }),
-/* 119 */
+/* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22794,7 +23678,7 @@ var VectorContext = /** @class */ (function () {
 //# sourceMappingURL=VectorContext.js.map
 
 /***/ }),
-/* 120 */
+/* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22802,7 +23686,7 @@ var VectorContext = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Builder_js__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Instruction_js__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__geom_GeometryType_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_TextPlacement_js__ = __webpack_require__(121);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_TextPlacement_js__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__colorlike_js__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__canvas_js__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__util_js__ = __webpack_require__(2);
@@ -23356,7 +24240,7 @@ var CanvasTextBuilder = /** @class */ (function (_super) {
 //# sourceMappingURL=TextBuilder.js.map
 
 /***/ }),
-/* 121 */
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23377,7 +24261,7 @@ var CanvasTextBuilder = /** @class */ (function (_super) {
 //# sourceMappingURL=TextPlacement.js.map
 
 /***/ }),
-/* 122 */
+/* 124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23669,7 +24553,7 @@ var CanvasLayerRenderer = /** @class */ (function (_super) {
 //# sourceMappingURL=Layer.js.map
 
 /***/ }),
-/* 123 */
+/* 125 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23690,7 +24574,7 @@ var CanvasLayerRenderer = /** @class */ (function (_super) {
 //# sourceMappingURL=BuilderType.js.map
 
 /***/ }),
-/* 124 */
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23716,7 +24600,7 @@ var CanvasLayerRenderer = /** @class */ (function (_super) {
 //# sourceMappingURL=IconAnchorUnits.js.map
 
 /***/ }),
-/* 125 */
+/* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23727,7 +24611,7 @@ var CanvasLayerRenderer = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__color_js__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dom_js__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__IconImageCache_js__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Image_js__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Image_js__ = __webpack_require__(128);
 /**
  * @module ol/style/IconImage
  */
@@ -24009,7 +24893,7 @@ function get(image, src, size, crossOrigin, imageState, color) {
 //# sourceMappingURL=IconImage.js.map
 
 /***/ }),
-/* 126 */
+/* 128 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24211,7 +25095,7 @@ function listenImage(image, loadHandler, errorHandler) {
 //# sourceMappingURL=Image.js.map
 
 /***/ }),
-/* 127 */
+/* 129 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24418,7 +25302,7 @@ function adaptAttributions(attributionLike) {
 //# sourceMappingURL=Source.js.map
 
 /***/ }),
-/* 128 */
+/* 130 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24561,7 +25445,7 @@ function createOrUpdate(minX, maxX, minY, maxY, tileRange) {
 //# sourceMappingURL=TileRange.js.map
 
 /***/ }),
-/* 129 */
+/* 131 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24876,7 +25760,7 @@ var Tile = /** @class */ (function (_super) {
 //# sourceMappingURL=Tile.js.map
 
 /***/ }),
-/* 130 */
+/* 132 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24900,7 +25784,7 @@ var ENABLE_RASTER_REPROJECTION = true;
 //# sourceMappingURL=common.js.map
 
 /***/ }),
-/* 131 */
+/* 133 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24925,7 +25809,7 @@ var IMAGE_SMOOTHING_DISABLED = {
 //# sourceMappingURL=common.js.map
 
 /***/ }),
-/* 132 */
+/* 134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24991,7 +25875,7 @@ var TileCache = /** @class */ (function (_super) {
 //# sourceMappingURL=TileCache.js.map
 
 /***/ }),
-/* 133 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25268,36 +26152,36 @@ function transformExtentWithOptions(extent, opt_options) {
 //# sourceMappingURL=Feature.js.map
 
 /***/ }),
-/* 134 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(135);
+__webpack_require__(137);
 module.exports = __webpack_require__(229);
 
 
 /***/ }),
-/* 135 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Nova.booting(function (Vue, router, store) {
-    Vue.component('map-wm-embedmaps-field', __webpack_require__(136));
+    Vue.component('map-wm-embedmaps-field', __webpack_require__(138));
     Vue.component('index-wm-embedmaps-field', __webpack_require__(219));
     Vue.component('detail-wm-embedmaps-field', __webpack_require__(222));
     Vue.component('form-wm-embedmaps-field', __webpack_require__(225));
 });
 
 /***/ }),
-/* 136 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(137)
+  __webpack_require__(139)
 }
 var normalizeComponent = __webpack_require__(49)
 /* script */
-var __vue_script__ = __webpack_require__(142)
+var __vue_script__ = __webpack_require__(144)
 /* template */
 var __vue_template__ = __webpack_require__(218)
 /* template functional */
@@ -25338,17 +26222,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 137 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(138);
+var content = __webpack_require__(140);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(140)("18516618", content, false, {});
+var update = __webpack_require__(142)("18516618", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -25364,12 +26248,12 @@ if(false) {
 }
 
 /***/ }),
-/* 138 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(80)(false);
 // imports
-exports.i(__webpack_require__(139), "");
+exports.i(__webpack_require__(141), "");
 
 // module
 exports.push([module.i, "\n", ""]);
@@ -25378,7 +26262,7 @@ exports.push([module.i, "\n", ""]);
 
 
 /***/ }),
-/* 139 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(80)(false);
@@ -25392,7 +26276,7 @@ exports.push([module.i, ".ol-box {\n  box-sizing: border-box;\n  border-radius: 
 
 
 /***/ }),
-/* 140 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -25411,7 +26295,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(141)
+var listToStyles = __webpack_require__(143)
 
 /*
 type StyleObject = {
@@ -25620,7 +26504,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 141 */
+/* 143 */
 /***/ (function(module, exports) {
 
 /**
@@ -25653,20 +26537,20 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 142 */
+/* 144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ol_View__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ol_Map__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ol_Map__ = __webpack_require__(153);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ol_layer_Tile__ = __webpack_require__(199);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ol_source_XYZ__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ol_proj__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ol_control_Attribution__ = __webpack_require__(68);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ol_control_Zoom__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__ = __webpack_require__(162);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ol_control_FullScreen__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ol_control_FullScreen__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ol_source_Vector__ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_ol_layer_Vector__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__ = __webpack_require__(215);
@@ -25674,7 +26558,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_ol_interaction__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_ol_interaction__ = __webpack_require__(104);
 //
 //
 //
@@ -25792,12 +26676,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:4326", "EPSG:3857");
         },
         _style: function _style(feature) {
-            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle();
-            // else if (
-            //     feature.getGeometry().getType() === "LineString" ||
-            //     feature.getGeometry().getType() === "MultiLineString"
-            // )
-            //     return this._getLineStyle();
+            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle();else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle();
             // else if (
             //     feature.getGeometry().getType() === "Polygon" ||
             //     feature.getGeometry().getType() === "MultiPolygon"
@@ -25836,6 +26715,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return style;
         },
+        _getLineStyle: function _getLineStyle() {
+            var style = [];
+
+            var color = "#ff0000",
+                strokeWidth = 4,
+                lineDash = [],
+                lineCap = 'round',
+                zIndex = 100;
+
+            // style.push(
+            //     ...this._getArrowStyle(
+            //         this._dataSource.getFeatureById(id),
+            //         this._view.getResolution(),
+            //         color,
+            //         zIndex
+            //     )
+            // );
+
+            style.push(new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
+                stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
+                    color: color,
+                    width: strokeWidth,
+                    lineDash: lineDash,
+                    lineCap: lineCap
+                }),
+                zIndex: zIndex + 2
+            }));
+
+            return style;
+        },
         updateSource: function updateSource(geojson) {
             var features = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
                 featureProjection: 'EPSG:3857'
@@ -25845,14 +26754,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.vectorSource.addFeatures(features);
 
             this.view.fit(this.vectorSource.getExtent(), {
-                // padding: [20, 20, 20, 20]
+                padding: [20, 20, 20, 20]
             });
         }
     }
 });
 
 /***/ }),
-/* 143 */
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26015,7 +26924,7 @@ function toEPSG4326(input, opt_output, opt_dimension) {
 //# sourceMappingURL=epsg3857.js.map
 
 /***/ }),
-/* 144 */
+/* 146 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26105,7 +27014,7 @@ var PROJECTIONS = [
 //# sourceMappingURL=epsg4326.js.map
 
 /***/ }),
-/* 145 */
+/* 147 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26146,7 +27055,7 @@ function add(code, projection) {
 //# sourceMappingURL=projections.js.map
 
 /***/ }),
-/* 146 */
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26221,7 +27130,7 @@ function get(sourceCode, destinationCode) {
 //# sourceMappingURL=transforms.js.map
 
 /***/ }),
-/* 147 */
+/* 149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26268,7 +27177,7 @@ function compareVersions(v1, v2) {
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 148 */
+/* 150 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26348,7 +27257,7 @@ function none(center) {
 //# sourceMappingURL=centerconstraint.js.map
 
 /***/ }),
-/* 149 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26510,7 +27419,7 @@ var LinearRing = /** @class */ (function (_super) {
 //# sourceMappingURL=LinearRing.js.map
 
 /***/ }),
-/* 150 */
+/* 152 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26538,15 +27447,15 @@ function coordinates(flatCoordinates, offset, end, stride) {
 //# sourceMappingURL=reverse.js.map
 
 /***/ }),
-/* 151 */
+/* 153 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__renderer_Composite_js__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PluggableMap_js__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__obj_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__control_js__ = __webpack_require__(157);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__interaction_js__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__control_js__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__interaction_js__ = __webpack_require__(104);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26643,7 +27552,7 @@ var Map = /** @class */ (function (_super) {
 //# sourceMappingURL=Map.js.map
 
 /***/ }),
-/* 152 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26869,7 +27778,7 @@ function expireIconCache(map, frameState) {
 //# sourceMappingURL=Map.js.map
 
 /***/ }),
-/* 153 */
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27115,7 +28024,7 @@ var LayerGroup = /** @class */ (function (_super) {
 //# sourceMappingURL=Group.js.map
 
 /***/ }),
-/* 154 */
+/* 156 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27424,13 +28333,13 @@ var MapBrowserEventHandler = /** @class */ (function (_super) {
 //# sourceMappingURL=MapBrowserEventHandler.js.map
 
 /***/ }),
-/* 155 */
+/* 157 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = getTilePriority;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__events_EventType_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__structs_PriorityQueue_js__ = __webpack_require__(156);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__structs_PriorityQueue_js__ = __webpack_require__(158);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TileState_js__ = __webpack_require__(29);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -27588,7 +28497,7 @@ function getTilePriority(frameState, tile, tileSourceKey, tileCenter, tileResolu
 //# sourceMappingURL=TileQueue.js.map
 
 /***/ }),
-/* 156 */
+/* 158 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27837,7 +28746,7 @@ var PriorityQueue = /** @class */ (function () {
 //# sourceMappingURL=PriorityQueue.js.map
 
 /***/ }),
-/* 157 */
+/* 159 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27849,19 +28758,19 @@ var PriorityQueue = /** @class */ (function () {
 /* unused harmony reexport Attribution */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__control_Control_js__ = __webpack_require__(21);
 /* unused harmony reexport Control */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__control_FullScreen_js__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__control_FullScreen_js__ = __webpack_require__(101);
 /* unused harmony reexport FullScreen */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__control_MousePosition_js__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__control_MousePosition_js__ = __webpack_require__(160);
 /* unused harmony reexport MousePosition */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__control_OverviewMap_js__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__control_OverviewMap_js__ = __webpack_require__(161);
 /* unused harmony reexport OverviewMap */
 /* unused harmony reexport Rotate */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__control_ScaleLine_js__ = __webpack_require__(162);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__control_ScaleLine_js__ = __webpack_require__(103);
 /* unused harmony reexport ScaleLine */
 /* unused harmony reexport Zoom */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__control_ZoomSlider_js__ = __webpack_require__(163);
 /* unused harmony reexport ZoomSlider */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__control_ZoomToExtent_js__ = __webpack_require__(102);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__control_ZoomToExtent_js__ = __webpack_require__(164);
 /* unused harmony reexport ZoomToExtent */
 /**
  * @module ol/control
@@ -27929,330 +28838,7 @@ function defaults(opt_options) {
 //# sourceMappingURL=control.js.map
 
 /***/ }),
-/* 158 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Control_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__events_EventType_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__events_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dom_js__ = __webpack_require__(13);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-/**
- * @module ol/control/FullScreen
- */
-
-
-
-
-
-var events = [
-    'fullscreenchange',
-    'webkitfullscreenchange',
-    'MSFullscreenChange',
-];
-/**
- * @enum {string}
- */
-var FullScreenEventType = {
-    /**
-     * Triggered after the map entered fullscreen.
-     * @event FullScreenEventType#enterfullscreen
-     * @api
-     */
-    ENTERFULLSCREEN: 'enterfullscreen',
-    /**
-     * Triggered after the map leave fullscreen.
-     * @event FullScreenEventType#leavefullscreen
-     * @api
-     */
-    LEAVEFULLSCREEN: 'leavefullscreen',
-};
-/**
- * @typedef {Object} Options
- * @property {string} [className='ol-full-screen'] CSS class name.
- * @property {string|Text} [label='\u2922'] Text label to use for the button.
- * Instead of text, also an element (e.g. a `span` element) can be used.
- * @property {string|Text} [labelActive='\u00d7'] Text label to use for the
- * button when full-screen is active.
- * @property {string} [activeClassName=className + '-true'] CSS class name for the button
- * when full-screen is active.
- * @property {string} [inactiveClassName=className + '-false'] CSS class name for the button
- * when full-screen is inactive.
- * Instead of text, also an element (e.g. a `span` element) can be used.
- * @property {string} [tipLabel='Toggle full-screen'] Text label to use for the button tip.
- * @property {boolean} [keys=false] Full keyboard access.
- * @property {HTMLElement|string} [target] Specify a target if you want the
- * control to be rendered outside of the map's viewport.
- * @property {HTMLElement|string} [source] The element to be displayed
- * fullscreen. When not provided, the element containing the map viewport will
- * be displayed fullscreen.
- */
-/**
- * @classdesc
- * Provides a button that when clicked fills up the full screen with the map.
- * The full screen source element is by default the element containing the map viewport unless
- * overridden by providing the `source` option. In which case, the dom
- * element introduced using this parameter will be displayed in full screen.
- *
- * When in full screen mode, a close button is shown to exit full screen mode.
- * The [Fullscreen API](http://www.w3.org/TR/fullscreen/) is used to
- * toggle the map in full screen mode.
- *
- * @fires FullScreenEventType#enterfullscreen
- * @fires FullScreenEventType#leavefullscreen
- * @api
- */
-var FullScreen = /** @class */ (function (_super) {
-    __extends(FullScreen, _super);
-    /**
-     * @param {Options=} opt_options Options.
-     */
-    function FullScreen(opt_options) {
-        var _this = this;
-        var options = opt_options ? opt_options : {};
-        _this = _super.call(this, {
-            element: document.createElement('div'),
-            target: options.target,
-        }) || this;
-        /**
-         * @private
-         * @type {string}
-         */
-        _this.cssClassName_ =
-            options.className !== undefined ? options.className : 'ol-full-screen';
-        /**
-         * @private
-         * @type {Array<string>}
-         */
-        _this.activeClassName_ =
-            options.activeClassName !== undefined
-                ? options.activeClassName.split(' ')
-                : [_this.cssClassName_ + '-true'];
-        /**
-         * @private
-         * @type {Array<string>}
-         */
-        _this.inactiveClassName_ =
-            options.inactiveClassName !== undefined
-                ? options.inactiveClassName.split(' ')
-                : [_this.cssClassName_ + '-false'];
-        var label = options.label !== undefined ? options.label : '\u2922';
-        /**
-         * @private
-         * @type {Text}
-         */
-        _this.labelNode_ =
-            typeof label === 'string' ? document.createTextNode(label) : label;
-        var labelActive = options.labelActive !== undefined ? options.labelActive : '\u00d7';
-        /**
-         * @private
-         * @type {Text}
-         */
-        _this.labelActiveNode_ =
-            typeof labelActive === 'string'
-                ? document.createTextNode(labelActive)
-                : labelActive;
-        /**
-         * @private
-         * @type {HTMLElement}
-         */
-        _this.button_ = document.createElement('button');
-        var tipLabel = options.tipLabel ? options.tipLabel : 'Toggle full-screen';
-        _this.setClassName_(_this.button_, isFullScreen());
-        _this.button_.setAttribute('type', 'button');
-        _this.button_.title = tipLabel;
-        _this.button_.appendChild(_this.labelNode_);
-        _this.button_.addEventListener(__WEBPACK_IMPORTED_MODULE_1__events_EventType_js__["a" /* default */].CLICK, _this.handleClick_.bind(_this), false);
-        var cssClasses = _this.cssClassName_ +
-            ' ' +
-            __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */] +
-            ' ' +
-            __WEBPACK_IMPORTED_MODULE_2__css_js__["b" /* CLASS_CONTROL */] +
-            ' ' +
-            (!isFullScreenSupported() ? __WEBPACK_IMPORTED_MODULE_2__css_js__["f" /* CLASS_UNSUPPORTED */] : '');
-        var element = _this.element;
-        element.className = cssClasses;
-        element.appendChild(_this.button_);
-        /**
-         * @private
-         * @type {boolean}
-         */
-        _this.keys_ = options.keys !== undefined ? options.keys : false;
-        /**
-         * @private
-         * @type {HTMLElement|string|undefined}
-         */
-        _this.source_ = options.source;
-        return _this;
-    }
-    /**
-     * @param {MouseEvent} event The event to handle
-     * @private
-     */
-    FullScreen.prototype.handleClick_ = function (event) {
-        event.preventDefault();
-        this.handleFullScreen_();
-    };
-    /**
-     * @private
-     */
-    FullScreen.prototype.handleFullScreen_ = function () {
-        if (!isFullScreenSupported()) {
-            return;
-        }
-        var map = this.getMap();
-        if (!map) {
-            return;
-        }
-        if (isFullScreen()) {
-            exitFullScreen();
-        }
-        else {
-            var element = void 0;
-            if (this.source_) {
-                element =
-                    typeof this.source_ === 'string'
-                        ? document.getElementById(this.source_)
-                        : this.source_;
-            }
-            else {
-                element = map.getTargetElement();
-            }
-            if (this.keys_) {
-                requestFullScreenWithKeys(element);
-            }
-            else {
-                requestFullScreen(element);
-            }
-        }
-    };
-    /**
-     * @private
-     */
-    FullScreen.prototype.handleFullScreenChange_ = function () {
-        var map = this.getMap();
-        if (isFullScreen()) {
-            this.setClassName_(this.button_, true);
-            Object(__WEBPACK_IMPORTED_MODULE_4__dom_js__["g" /* replaceNode */])(this.labelActiveNode_, this.labelNode_);
-            this.dispatchEvent(FullScreenEventType.ENTERFULLSCREEN);
-        }
-        else {
-            this.setClassName_(this.button_, false);
-            Object(__WEBPACK_IMPORTED_MODULE_4__dom_js__["g" /* replaceNode */])(this.labelNode_, this.labelActiveNode_);
-            this.dispatchEvent(FullScreenEventType.LEAVEFULLSCREEN);
-        }
-        if (map) {
-            map.updateSize();
-        }
-    };
-    /**
-     * @param {HTMLElement} element Target element
-     * @param {boolean} fullscreen True if fullscreen class name should be active
-     * @private
-     */
-    FullScreen.prototype.setClassName_ = function (element, fullscreen) {
-        var _a, _b, _c;
-        var activeClassName = this.activeClassName_;
-        var inactiveClassName = this.inactiveClassName_;
-        var nextClassName = fullscreen ? activeClassName : inactiveClassName;
-        (_a = element.classList).remove.apply(_a, activeClassName);
-        (_b = element.classList).remove.apply(_b, inactiveClassName);
-        (_c = element.classList).add.apply(_c, nextClassName);
-    };
-    /**
-     * Remove the control from its current map and attach it to the new map.
-     * Subclasses may set up event handlers to get notified about changes to
-     * the map here.
-     * @param {import("../PluggableMap.js").default} map Map.
-     * @api
-     */
-    FullScreen.prototype.setMap = function (map) {
-        _super.prototype.setMap.call(this, map);
-        if (map) {
-            for (var i = 0, ii = events.length; i < ii; ++i) {
-                this.listenerKeys.push(Object(__WEBPACK_IMPORTED_MODULE_3__events_js__["a" /* listen */])(document, events[i], this.handleFullScreenChange_, this));
-            }
-        }
-    };
-    return FullScreen;
-}(__WEBPACK_IMPORTED_MODULE_0__Control_js__["a" /* default */]));
-/**
- * @return {boolean} Fullscreen is supported by the current platform.
- */
-function isFullScreenSupported() {
-    var body = document.body;
-    return !!(body['webkitRequestFullscreen'] ||
-        (body['msRequestFullscreen'] && document['msFullscreenEnabled']) ||
-        (body.requestFullscreen && document.fullscreenEnabled));
-}
-/**
- * @return {boolean} Element is currently in fullscreen.
- */
-function isFullScreen() {
-    return !!(document['webkitIsFullScreen'] ||
-        document['msFullscreenElement'] ||
-        document.fullscreenElement);
-}
-/**
- * Request to fullscreen an element.
- * @param {HTMLElement} element Element to request fullscreen
- */
-function requestFullScreen(element) {
-    if (element.requestFullscreen) {
-        element.requestFullscreen();
-    }
-    else if (element['msRequestFullscreen']) {
-        element['msRequestFullscreen']();
-    }
-    else if (element['webkitRequestFullscreen']) {
-        element['webkitRequestFullscreen']();
-    }
-}
-/**
- * Request to fullscreen an element with keyboard input.
- * @param {HTMLElement} element Element to request fullscreen
- */
-function requestFullScreenWithKeys(element) {
-    if (element['webkitRequestFullscreen']) {
-        element['webkitRequestFullscreen']();
-    }
-    else {
-        requestFullScreen(element);
-    }
-}
-/**
- * Exit fullscreen.
- */
-function exitFullScreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    }
-    else if (document['msExitFullscreen']) {
-        document['msExitFullscreen']();
-    }
-    else if (document['webkitExitFullscreen']) {
-        document['webkitExitFullscreen']();
-    }
-}
-/* harmony default export */ __webpack_exports__["a"] = (FullScreen);
-//# sourceMappingURL=FullScreen.js.map
-
-/***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28510,7 +29096,7 @@ var MousePosition = /** @class */ (function (_super) {
 //# sourceMappingURL=MousePosition.js.map
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28520,8 +29106,8 @@ var MousePosition = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MapEventType_js__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MapProperty_js__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ObjectEventType_js__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Overlay_js__ = __webpack_require__(161);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__OverlayPositioning_js__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Overlay_js__ = __webpack_require__(162);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__OverlayPositioning_js__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__PluggableMap_js__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__View_js__ = __webpack_require__(60);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ViewProperty_js__ = __webpack_require__(82);
@@ -29091,13 +29677,13 @@ var OverviewMap = /** @class */ (function (_super) {
 //# sourceMappingURL=OverviewMap.js.map
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Object_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MapEventType_js__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__OverlayPositioning_js__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__OverlayPositioning_js__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__css_js__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__events_js__ = __webpack_require__(9);
@@ -29626,482 +30212,6 @@ var Overlay = /** @class */ (function (_super) {
 //# sourceMappingURL=Overlay.js.map
 
 /***/ }),
-/* 162 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export Units */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Control_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__proj_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__asserts_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Object_js__ = __webpack_require__(10);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-/**
- * @module ol/control/ScaleLine
- */
-
-
-
-
-
-
-/**
- * @type {string}
- */
-var UNITS_PROP = 'units';
-/**
- * Units for the scale line. Supported values are `'degrees'`, `'imperial'`,
- * `'nautical'`, `'metric'`, `'us'`.
- * @enum {string}
- */
-var Units = {
-    DEGREES: 'degrees',
-    IMPERIAL: 'imperial',
-    NAUTICAL: 'nautical',
-    METRIC: 'metric',
-    US: 'us',
-};
-/**
- * @const
- * @type {Array<number>}
- */
-var LEADING_DIGITS = [1, 2, 5];
-/**
- * @const
- * @type {number}
- */
-var DEFAULT_DPI = 25.4 / 0.28;
-/**
- * @typedef {Object} Options
- * @property {string} [className='ol-scale-line'] CSS Class name.
- * @property {number} [minWidth=64] Minimum width in pixels at the OGC default dpi. The width will be
- * adjusted to match the dpi used.
- * @property {function(import("../MapEvent.js").default):void} [render] Function called when the control
- * should be re-rendered. This is called in a `requestAnimationFrame` callback.
- * @property {HTMLElement|string} [target] Specify a target if you want the control
- * to be rendered outside of the map's viewport.
- * @property {import("./ScaleLine.js").Units|string} [units='metric'] Units.
- * @property {boolean} [bar=false] Render scalebars instead of a line.
- * @property {number} [steps=4] Number of steps the scalebar should use. Use even numbers
- * for best results. Only applies when `bar` is `true`.
- * @property {boolean} [text=false] Render the text scale above of the scalebar. Only applies
- * when `bar` is `true`.
- * @property {number|undefined} [dpi=undefined] dpi of output device such as printer. Only applies
- * when `bar` is `true`. If undefined the OGC default screen pixel size of 0.28mm will be assumed.
- */
-/**
- * @classdesc
- * A control displaying rough y-axis distances, calculated for the center of the
- * viewport. For conformal projections (e.g. EPSG:3857, the default view
- * projection in OpenLayers), the scale is valid for all directions.
- * No scale line will be shown when the y-axis distance of a pixel at the
- * viewport center cannot be calculated in the view projection.
- * By default the scale line will show in the bottom left portion of the map,
- * but this can be changed by using the css selector `.ol-scale-line`.
- * When specifying `bar` as `true`, a scalebar will be rendered instead
- * of a scaleline.
- *
- * @api
- */
-var ScaleLine = /** @class */ (function (_super) {
-    __extends(ScaleLine, _super);
-    /**
-     * @param {Options=} opt_options Scale line options.
-     */
-    function ScaleLine(opt_options) {
-        var _this = this;
-        var options = opt_options ? opt_options : {};
-        var className = options.className !== undefined
-            ? options.className
-            : options.bar
-                ? 'ol-scale-bar'
-                : 'ol-scale-line';
-        _this = _super.call(this, {
-            element: document.createElement('div'),
-            render: options.render,
-            target: options.target,
-        }) || this;
-        /**
-         * @private
-         * @type {HTMLElement}
-         */
-        _this.innerElement_ = document.createElement('div');
-        _this.innerElement_.className = className + '-inner';
-        _this.element.className = className + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */];
-        _this.element.appendChild(_this.innerElement_);
-        /**
-         * @private
-         * @type {?import("../View.js").State}
-         */
-        _this.viewState_ = null;
-        /**
-         * @private
-         * @type {number}
-         */
-        _this.minWidth_ = options.minWidth !== undefined ? options.minWidth : 64;
-        /**
-         * @private
-         * @type {boolean}
-         */
-        _this.renderedVisible_ = false;
-        /**
-         * @private
-         * @type {number|undefined}
-         */
-        _this.renderedWidth_ = undefined;
-        /**
-         * @private
-         * @type {string}
-         */
-        _this.renderedHTML_ = '';
-        _this.addEventListener(Object(__WEBPACK_IMPORTED_MODULE_5__Object_js__["b" /* getChangeEventType */])(UNITS_PROP), _this.handleUnitsChanged_);
-        _this.setUnits(options.units || Units.METRIC);
-        /**
-         * @private
-         * @type {boolean}
-         */
-        _this.scaleBar_ = options.bar || false;
-        /**
-         * @private
-         * @type {number}
-         */
-        _this.scaleBarSteps_ = options.steps || 4;
-        /**
-         * @private
-         * @type {boolean}
-         */
-        _this.scaleBarText_ = options.text || false;
-        /**
-         * @private
-         * @type {number|undefined}
-         */
-        _this.dpi_ = options.dpi || undefined;
-        return _this;
-    }
-    /**
-     * Return the units to use in the scale line.
-     * @return {import("./ScaleLine.js").Units} The units
-     * to use in the scale line.
-     * @observable
-     * @api
-     */
-    ScaleLine.prototype.getUnits = function () {
-        return this.get(UNITS_PROP);
-    };
-    /**
-     * @private
-     */
-    ScaleLine.prototype.handleUnitsChanged_ = function () {
-        this.updateElement_();
-    };
-    /**
-     * Set the units to use in the scale line.
-     * @param {import("./ScaleLine.js").Units} units The units to use in the scale line.
-     * @observable
-     * @api
-     */
-    ScaleLine.prototype.setUnits = function (units) {
-        this.set(UNITS_PROP, units);
-    };
-    /**
-     * Specify the dpi of output device such as printer.
-     * @param {number|undefined} dpi The dpi of output device.
-     * @api
-     */
-    ScaleLine.prototype.setDpi = function (dpi) {
-        this.dpi_ = dpi;
-    };
-    /**
-     * @private
-     */
-    ScaleLine.prototype.updateElement_ = function () {
-        var viewState = this.viewState_;
-        if (!viewState) {
-            if (this.renderedVisible_) {
-                this.element.style.display = 'none';
-                this.renderedVisible_ = false;
-            }
-            return;
-        }
-        var center = viewState.center;
-        var projection = viewState.projection;
-        var units = this.getUnits();
-        var pointResolutionUnits = units == Units.DEGREES ? __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].DEGREES : __WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].METERS;
-        var pointResolution = Object(__WEBPACK_IMPORTED_MODULE_3__proj_js__["g" /* getPointResolution */])(projection, viewState.resolution, center, pointResolutionUnits);
-        var minWidth = (this.minWidth_ * (this.dpi_ || DEFAULT_DPI)) / DEFAULT_DPI;
-        var nominalCount = minWidth * pointResolution;
-        var suffix = '';
-        if (units == Units.DEGREES) {
-            var metersPerDegree = __WEBPACK_IMPORTED_MODULE_3__proj_js__["a" /* METERS_PER_UNIT */][__WEBPACK_IMPORTED_MODULE_1__proj_Units_js__["b" /* default */].DEGREES];
-            nominalCount *= metersPerDegree;
-            if (nominalCount < metersPerDegree / 60) {
-                suffix = '\u2033'; // seconds
-                pointResolution *= 3600;
-            }
-            else if (nominalCount < metersPerDegree) {
-                suffix = '\u2032'; // minutes
-                pointResolution *= 60;
-            }
-            else {
-                suffix = '\u00b0'; // degrees
-            }
-        }
-        else if (units == Units.IMPERIAL) {
-            if (nominalCount < 0.9144) {
-                suffix = 'in';
-                pointResolution /= 0.0254;
-            }
-            else if (nominalCount < 1609.344) {
-                suffix = 'ft';
-                pointResolution /= 0.3048;
-            }
-            else {
-                suffix = 'mi';
-                pointResolution /= 1609.344;
-            }
-        }
-        else if (units == Units.NAUTICAL) {
-            pointResolution /= 1852;
-            suffix = 'nm';
-        }
-        else if (units == Units.METRIC) {
-            if (nominalCount < 0.001) {
-                suffix = 'μm';
-                pointResolution *= 1000000;
-            }
-            else if (nominalCount < 1) {
-                suffix = 'mm';
-                pointResolution *= 1000;
-            }
-            else if (nominalCount < 1000) {
-                suffix = 'm';
-            }
-            else {
-                suffix = 'km';
-                pointResolution /= 1000;
-            }
-        }
-        else if (units == Units.US) {
-            if (nominalCount < 0.9144) {
-                suffix = 'in';
-                pointResolution *= 39.37;
-            }
-            else if (nominalCount < 1609.344) {
-                suffix = 'ft';
-                pointResolution /= 0.30480061;
-            }
-            else {
-                suffix = 'mi';
-                pointResolution /= 1609.3472;
-            }
-        }
-        else {
-            Object(__WEBPACK_IMPORTED_MODULE_4__asserts_js__["a" /* assert */])(false, 33); // Invalid units
-        }
-        var i = 3 * Math.floor(Math.log(minWidth * pointResolution) / Math.log(10));
-        var count, width, decimalCount;
-        while (true) {
-            decimalCount = Math.floor(i / 3);
-            var decimal = Math.pow(10, decimalCount);
-            count = LEADING_DIGITS[((i % 3) + 3) % 3] * decimal;
-            width = Math.round(count / pointResolution);
-            if (isNaN(width)) {
-                this.element.style.display = 'none';
-                this.renderedVisible_ = false;
-                return;
-            }
-            else if (width >= minWidth) {
-                break;
-            }
-            ++i;
-        }
-        var html;
-        if (this.scaleBar_) {
-            html = this.createScaleBar(width, count, suffix);
-        }
-        else {
-            html = count.toFixed(decimalCount < 0 ? -decimalCount : 0) + ' ' + suffix;
-        }
-        if (this.renderedHTML_ != html) {
-            this.innerElement_.innerHTML = html;
-            this.renderedHTML_ = html;
-        }
-        if (this.renderedWidth_ != width) {
-            this.innerElement_.style.width = width + 'px';
-            this.renderedWidth_ = width;
-        }
-        if (!this.renderedVisible_) {
-            this.element.style.display = '';
-            this.renderedVisible_ = true;
-        }
-    };
-    /**
-     * @private
-     * @param {number} width The current width of the scalebar.
-     * @param {number} scale The current scale.
-     * @param {string} suffix The suffix to append to the scale text.
-     * @returns {string} The stringified HTML of the scalebar.
-     */
-    ScaleLine.prototype.createScaleBar = function (width, scale, suffix) {
-        var mapScale = '1 : ' + Math.round(this.getScaleForResolution()).toLocaleString();
-        var scaleSteps = [];
-        var stepWidth = width / this.scaleBarSteps_;
-        var backgroundColor = '#ffffff';
-        for (var i = 0; i < this.scaleBarSteps_; i++) {
-            if (i === 0) {
-                // create the first marker at position 0
-                scaleSteps.push(this.createMarker('absolute', i));
-            }
-            scaleSteps.push('<div>' +
-                '<div ' +
-                'class="ol-scale-singlebar" ' +
-                'style=' +
-                '"width: ' +
-                stepWidth +
-                'px;' +
-                'background-color: ' +
-                backgroundColor +
-                ';"' +
-                '>' +
-                '</div>' +
-                this.createMarker('relative', i) +
-                /*render text every second step, except when only 2 steps */
-                (i % 2 === 0 || this.scaleBarSteps_ === 2
-                    ? this.createStepText(i, width, false, scale, suffix)
-                    : '') +
-                '</div>');
-            if (i === this.scaleBarSteps_ - 1) {
-                {
-                    /*render text at the end */
-                }
-                scaleSteps.push(this.createStepText(i + 1, width, true, scale, suffix));
-            }
-            // switch colors of steps between black and white
-            if (backgroundColor === '#ffffff') {
-                backgroundColor = '#000000';
-            }
-            else {
-                backgroundColor = '#ffffff';
-            }
-        }
-        var scaleBarText;
-        if (this.scaleBarText_) {
-            scaleBarText =
-                '<div ' +
-                    'class="ol-scale-text" ' +
-                    'style="width: ' +
-                    width +
-                    'px;">' +
-                    mapScale +
-                    '</div>';
-        }
-        else {
-            scaleBarText = '';
-        }
-        var container = '<div ' +
-            'style="display: flex;">' +
-            scaleBarText +
-            scaleSteps.join('') +
-            '</div>';
-        return container;
-    };
-    /**
-     * Creates a marker at given position
-     * @param {string} position - The position, absolute or relative
-     * @param {number} i - The iterator
-     * @returns {string} The stringified div containing the marker
-     */
-    ScaleLine.prototype.createMarker = function (position, i) {
-        var top = position === 'absolute' ? 3 : -10;
-        return ('<div ' +
-            'class="ol-scale-step-marker" ' +
-            'style="position: ' +
-            position +
-            ';' +
-            'top: ' +
-            top +
-            'px;"' +
-            '></div>');
-    };
-    /**
-     * Creates the label for a marker marker at given position
-     * @param {number} i - The iterator
-     * @param {number} width - The width the scalebar will currently use
-     * @param {boolean} isLast - Flag indicating if we add the last step text
-     * @param {number} scale - The current scale for the whole scalebar
-     * @param {string} suffix - The suffix for the scale
-     * @returns {string} The stringified div containing the step text
-     */
-    ScaleLine.prototype.createStepText = function (i, width, isLast, scale, suffix) {
-        var length = i === 0 ? 0 : Math.round((scale / this.scaleBarSteps_) * i * 100) / 100;
-        var lengthString = length + (i === 0 ? '' : ' ' + suffix);
-        var margin = i === 0 ? -3 : (width / this.scaleBarSteps_) * -1;
-        var minWidth = i === 0 ? 0 : (width / this.scaleBarSteps_) * 2;
-        return ('<div ' +
-            'class="ol-scale-step-text" ' +
-            'style="' +
-            'margin-left: ' +
-            margin +
-            'px;' +
-            'text-align: ' +
-            (i === 0 ? 'left' : 'center') +
-            '; ' +
-            'min-width: ' +
-            minWidth +
-            'px;' +
-            'left: ' +
-            (isLast ? width + 'px' : 'unset') +
-            ';"' +
-            '>' +
-            lengthString +
-            '</div>');
-    };
-    /**
-     * Returns the appropriate scale for the given resolution and units.
-     * @return {number} The appropriate scale.
-     */
-    ScaleLine.prototype.getScaleForResolution = function () {
-        var resolution = Object(__WEBPACK_IMPORTED_MODULE_3__proj_js__["g" /* getPointResolution */])(this.viewState_.projection, this.viewState_.resolution, this.viewState_.center);
-        var dpi = this.dpi_ || DEFAULT_DPI;
-        var mpu = this.viewState_.projection.getMetersPerUnit();
-        var inchesPerMeter = 1000 / 25.4;
-        return parseFloat(resolution.toString()) * mpu * inchesPerMeter * dpi;
-    };
-    /**
-     * Update the scale line element.
-     * @param {import("../MapEvent.js").default} mapEvent Map event.
-     * @override
-     */
-    ScaleLine.prototype.render = function (mapEvent) {
-        var frameState = mapEvent.frameState;
-        if (!frameState) {
-            this.viewState_ = null;
-        }
-        else {
-            this.viewState_ = frameState.viewState;
-        }
-        this.updateElement_();
-    };
-    return ScaleLine;
-}(__WEBPACK_IMPORTED_MODULE_0__Control_js__["a" /* default */]));
-/* harmony default export */ __webpack_exports__["a"] = (ScaleLine);
-//# sourceMappingURL=ScaleLine.js.map
-
-/***/ }),
 /* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -30455,187 +30565,102 @@ var ZoomSlider = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = defaults;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Collection_js__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__interaction_DoubleClickZoom_js__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interaction_DragPan_js__ = __webpack_require__(104);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__interaction_DragRotate_js__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__interaction_DragZoom_js__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__interaction_KeyboardPan_js__ = __webpack_require__(108);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__interaction_KeyboardZoom_js__ = __webpack_require__(109);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Kinetic_js__ = __webpack_require__(167);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__interaction_MouseWheelZoom_js__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__interaction_PinchRotate_js__ = __webpack_require__(111);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__interaction_PinchZoom_js__ = __webpack_require__(112);
-/* unused harmony reexport DoubleClickZoom */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__interaction_DragAndDrop_js__ = __webpack_require__(168);
-/* unused harmony reexport DragAndDrop */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__interaction_DragBox_js__ = __webpack_require__(107);
-/* unused harmony reexport DragBox */
-/* unused harmony reexport DragPan */
-/* unused harmony reexport DragRotate */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__interaction_DragRotateAndZoom_js__ = __webpack_require__(169);
-/* unused harmony reexport DragRotateAndZoom */
-/* unused harmony reexport DragZoom */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__interaction_Draw_js__ = __webpack_require__(170);
-/* unused harmony reexport Draw */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__interaction_Extent_js__ = __webpack_require__(194);
-/* unused harmony reexport Extent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__interaction_Interaction_js__ = __webpack_require__(30);
-/* unused harmony reexport Interaction */
-/* unused harmony reexport KeyboardPan */
-/* unused harmony reexport KeyboardZoom */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__interaction_Modify_js__ = __webpack_require__(195);
-/* unused harmony reexport Modify */
-/* unused harmony reexport MouseWheelZoom */
-/* unused harmony reexport PinchRotate */
-/* unused harmony reexport PinchZoom */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__interaction_Pointer_js__ = __webpack_require__(14);
-/* unused harmony reexport Pointer */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__interaction_Select_js__ = __webpack_require__(196);
-/* unused harmony reexport Select */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__interaction_Snap_js__ = __webpack_require__(197);
-/* unused harmony reexport Snap */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__interaction_Translate_js__ = __webpack_require__(198);
-/* unused harmony reexport Translate */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Control_js__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__events_EventType_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__geom_Polygon_js__ = __webpack_require__(18);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /**
- * @module ol/interaction
+ * @module ol/control/ZoomToExtent
  */
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
- * @typedef {Object} DefaultsOptions
- * @property {boolean} [altShiftDragRotate=true] Whether Alt-Shift-drag rotate is
- * desired.
- * @property {boolean} [onFocusOnly=false] Interact only when the map has the
- * focus. This affects the `MouseWheelZoom` and `DragPan` interactions and is
- * useful when page scroll is desired for maps that do not have the browser's
- * focus.
- * @property {boolean} [doubleClickZoom=true] Whether double click zoom is
- * desired.
- * @property {boolean} [keyboard=true] Whether keyboard interaction is desired.
- * @property {boolean} [mouseWheelZoom=true] Whether mousewheel zoom is desired.
- * @property {boolean} [shiftDragZoom=true] Whether Shift-drag zoom is desired.
- * @property {boolean} [dragPan=true] Whether drag pan is desired.
- * @property {boolean} [pinchRotate=true] Whether pinch rotate is desired.
- * @property {boolean} [pinchZoom=true] Whether pinch zoom is desired.
- * @property {number} [zoomDelta] Zoom level delta when using keyboard or double click zoom.
- * @property {number} [zoomDuration] Duration of the zoom animation in
- * milliseconds.
+ * @typedef {Object} Options
+ * @property {string} [className='ol-zoom-extent'] Class name.
+ * @property {HTMLElement|string} [target] Specify a target if you want the control
+ * to be rendered outside of the map's viewport.
+ * @property {string|HTMLElement} [label='E'] Text label to use for the button.
+ * Instead of text, also an element (e.g. a `span` element) can be used.
+ * @property {string} [tipLabel='Fit to extent'] Text label to use for the button tip.
+ * @property {import("../extent.js").Extent} [extent] The extent to zoom to. If undefined the validity
+ * extent of the view projection is used.
  */
 /**
- * Set of interactions included in maps by default. Specific interactions can be
- * excluded by setting the appropriate option to false in the constructor
- * options, but the order of the interactions is fixed.  If you want to specify
- * a different order for interactions, you will need to create your own
- * {@link module:ol/interaction/Interaction} instances and insert
- * them into a {@link module:ol/Collection} in the order you want
- * before creating your {@link module:ol/Map~Map} instance. Changing the order can
- * be of interest if the event propagation needs to be stopped at a point.
- * The default set of interactions, in sequence, is:
- * * {@link module:ol/interaction/DragRotate~DragRotate}
- * * {@link module:ol/interaction/DoubleClickZoom~DoubleClickZoom}
- * * {@link module:ol/interaction/DragPan~DragPan}
- * * {@link module:ol/interaction/PinchRotate~PinchRotate}
- * * {@link module:ol/interaction/PinchZoom~PinchZoom}
- * * {@link module:ol/interaction/KeyboardPan~KeyboardPan}
- * * {@link module:ol/interaction/KeyboardZoom~KeyboardZoom}
- * * {@link module:ol/interaction/MouseWheelZoom~MouseWheelZoom}
- * * {@link module:ol/interaction/DragZoom~DragZoom}
+ * @classdesc
+ * A button control which, when pressed, changes the map view to a specific
+ * extent. To style this control use the css selector `.ol-zoom-extent`.
  *
- * @param {DefaultsOptions=} opt_options Defaults options.
- * @return {import("./Collection.js").default<import("./interaction/Interaction.js").default>}
- * A collection of interactions to be used with the {@link module:ol/Map~Map}
- * constructor's `interactions` option.
  * @api
  */
-function defaults(opt_options) {
-    var options = opt_options ? opt_options : {};
-    var interactions = new __WEBPACK_IMPORTED_MODULE_0__Collection_js__["a" /* default */]();
-    var kinetic = new __WEBPACK_IMPORTED_MODULE_7__Kinetic_js__["a" /* default */](-0.005, 0.05, 100);
-    var altShiftDragRotate = options.altShiftDragRotate !== undefined
-        ? options.altShiftDragRotate
-        : true;
-    if (altShiftDragRotate) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_3__interaction_DragRotate_js__["a" /* default */]());
+var ZoomToExtent = /** @class */ (function (_super) {
+    __extends(ZoomToExtent, _super);
+    /**
+     * @param {Options=} opt_options Options.
+     */
+    function ZoomToExtent(opt_options) {
+        var _this = this;
+        var options = opt_options ? opt_options : {};
+        _this = _super.call(this, {
+            element: document.createElement('div'),
+            target: options.target,
+        }) || this;
+        /**
+         * @type {?import("../extent.js").Extent}
+         * @protected
+         */
+        _this.extent = options.extent ? options.extent : null;
+        var className = options.className !== undefined ? options.className : 'ol-zoom-extent';
+        var label = options.label !== undefined ? options.label : 'E';
+        var tipLabel = options.tipLabel !== undefined ? options.tipLabel : 'Fit to extent';
+        var button = document.createElement('button');
+        button.setAttribute('type', 'button');
+        button.title = tipLabel;
+        button.appendChild(typeof label === 'string' ? document.createTextNode(label) : label);
+        button.addEventListener(__WEBPACK_IMPORTED_MODULE_1__events_EventType_js__["a" /* default */].CLICK, _this.handleClick_.bind(_this), false);
+        var cssClasses = className + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["e" /* CLASS_UNSELECTABLE */] + ' ' + __WEBPACK_IMPORTED_MODULE_2__css_js__["b" /* CLASS_CONTROL */];
+        var element = _this.element;
+        element.className = cssClasses;
+        element.appendChild(button);
+        return _this;
     }
-    var doubleClickZoom = options.doubleClickZoom !== undefined ? options.doubleClickZoom : true;
-    if (doubleClickZoom) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_1__interaction_DoubleClickZoom_js__["a" /* default */]({
-            delta: options.zoomDelta,
-            duration: options.zoomDuration,
-        }));
-    }
-    var dragPan = options.dragPan !== undefined ? options.dragPan : true;
-    if (dragPan) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_2__interaction_DragPan_js__["a" /* default */]({
-            onFocusOnly: options.onFocusOnly,
-            kinetic: kinetic,
-        }));
-    }
-    var pinchRotate = options.pinchRotate !== undefined ? options.pinchRotate : true;
-    if (pinchRotate) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_9__interaction_PinchRotate_js__["a" /* default */]());
-    }
-    var pinchZoom = options.pinchZoom !== undefined ? options.pinchZoom : true;
-    if (pinchZoom) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_10__interaction_PinchZoom_js__["a" /* default */]({
-            duration: options.zoomDuration,
-        }));
-    }
-    var keyboard = options.keyboard !== undefined ? options.keyboard : true;
-    if (keyboard) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_5__interaction_KeyboardPan_js__["a" /* default */]());
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_6__interaction_KeyboardZoom_js__["a" /* default */]({
-            delta: options.zoomDelta,
-            duration: options.zoomDuration,
-        }));
-    }
-    var mouseWheelZoom = options.mouseWheelZoom !== undefined ? options.mouseWheelZoom : true;
-    if (mouseWheelZoom) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_8__interaction_MouseWheelZoom_js__["a" /* default */]({
-            onFocusOnly: options.onFocusOnly,
-            duration: options.zoomDuration,
-        }));
-    }
-    var shiftDragZoom = options.shiftDragZoom !== undefined ? options.shiftDragZoom : true;
-    if (shiftDragZoom) {
-        interactions.push(new __WEBPACK_IMPORTED_MODULE_4__interaction_DragZoom_js__["a" /* default */]({
-            duration: options.zoomDuration,
-        }));
-    }
-    return interactions;
-}
-//# sourceMappingURL=interaction.js.map
+    /**
+     * @param {MouseEvent} event The event to handle
+     * @private
+     */
+    ZoomToExtent.prototype.handleClick_ = function (event) {
+        event.preventDefault();
+        this.handleZoomToExtent();
+    };
+    /**
+     * @protected
+     */
+    ZoomToExtent.prototype.handleZoomToExtent = function () {
+        var map = this.getMap();
+        var view = map.getView();
+        var extent = !this.extent
+            ? view.getProjection().getExtent()
+            : this.extent;
+        view.fitInternal(Object(__WEBPACK_IMPORTED_MODULE_3__geom_Polygon_js__["c" /* fromExtent */])(extent));
+    };
+    return ZoomToExtent;
+}(__WEBPACK_IMPORTED_MODULE_0__Control_js__["a" /* default */]));
+/* unused harmony default export */ var _unused_webpack_default_export = (ZoomToExtent);
+//# sourceMappingURL=ZoomToExtent.js.map
 
 /***/ }),
 /* 165 */
@@ -31386,9 +31411,9 @@ var DragRotateAndZoom = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__geom_LineString_js__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MapBrowserEvent_js__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MapBrowserEventType_js__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__geom_MultiLineString_js__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__geom_MultiLineString_js__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__geom_MultiPoint_js__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__geom_MultiPolygon_js__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__geom_MultiPolygon_js__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__geom_Point_js__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__Pointer_js__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__geom_Polygon_js__ = __webpack_require__(18);
@@ -32877,7 +32902,7 @@ function linearRingss(flatCoordinates, offset, endss, stride) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Layer_js__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rbush__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rbush__ = __webpack_require__(119);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rbush___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rbush__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__obj_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_Style_js__ = __webpack_require__(34);
@@ -33132,7 +33157,7 @@ var BaseVectorLayer = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__render_canvas_BuilderGroup_js__ = __webpack_require__(175);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layer_js__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Layer_js__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__render_canvas_ExecutorGroup_js__ = __webpack_require__(181);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ViewHint_js__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__transform_js__ = __webpack_require__(19);
@@ -33693,7 +33718,7 @@ var CanvasVectorLayerRenderer = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ImageBuilder_js__ = __webpack_require__(176);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LineStringBuilder_js__ = __webpack_require__(177);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__PolygonBuilder_js__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__TextBuilder_js__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__TextBuilder_js__ = __webpack_require__(122);
 /**
  * @module ol/render/canvas/BuilderGroup
  */
@@ -34710,7 +34735,7 @@ var LayerRenderer = /** @class */ (function (_super) {
 
 "use strict";
 /* unused harmony export getPixelIndexArray */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BuilderType_js__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BuilderType_js__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Executor_js__ = __webpack_require__(182);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__transform_js__ = __webpack_require__(19);
@@ -35058,14 +35083,14 @@ function getPixelIndexArray(radius) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Instruction_js__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TextBuilder_js__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TextBuilder_js__ = __webpack_require__(122);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__has_js__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__transform_js__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__canvas_js__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__geom_flat_textpath_js__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__array_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__geom_flat_length_js__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__geom_flat_length_js__ = __webpack_require__(116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__geom_flat_transform_js__ = __webpack_require__(31);
 /**
  * @module ol/render/canvas/Executor
@@ -36124,7 +36149,7 @@ function drawTextOnPath(flatCoordinates, offset, end, stride, text, startM, maxA
 /* harmony export (immutable) */ __webpack_exports__["b"] = hitDetect;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Immediate_js__ = __webpack_require__(185);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__geom_GeometryType_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_IconAnchorUnits_js__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_IconAnchorUnits_js__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_js__ = __webpack_require__(186);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dom_js__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__extent_js__ = __webpack_require__(0);
@@ -36289,7 +36314,7 @@ function hitDetect(pixel, features, imageData) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__geom_GeometryType_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VectorContext_js__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VectorContext_js__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__colorlike_js__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__transform_js__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__canvas_js__ = __webpack_require__(20);
@@ -37260,11 +37285,11 @@ var CanvasImmediateRenderer = /** @class */ (function (_super) {
 /* unused harmony reexport Fill */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_Icon_js__ = __webpack_require__(187);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__style_Icon_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_IconImage_js__ = __webpack_require__(125);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_IconImage_js__ = __webpack_require__(127);
 /* unused harmony reexport IconImage */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__style_Image_js__ = __webpack_require__(75);
 /* unused harmony reexport Image */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__style_RegularShape_js__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__style_RegularShape_js__ = __webpack_require__(120);
 /* unused harmony reexport RegularShape */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__style_Stroke_js__ = __webpack_require__(76);
 /* unused harmony reexport Stroke */
@@ -37292,13 +37317,13 @@ var CanvasImmediateRenderer = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__events_EventType_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__IconAnchorUnits_js__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__IconAnchorUnits_js__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__IconOrigin_js__ = __webpack_require__(188);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ImageState_js__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Image_js__ = __webpack_require__(75);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__color_js__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__asserts_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__IconImage_js__ = __webpack_require__(125);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__IconImage_js__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__util_js__ = __webpack_require__(2);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -37852,7 +37877,7 @@ var ImageBase = /** @class */ (function (_super) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Fill_js__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TextPlacement_js__ = __webpack_require__(121);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TextPlacement_js__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__size_js__ = __webpack_require__(41);
 /**
  * @module ol/style/Text
@@ -38349,7 +38374,7 @@ var Text = /** @class */ (function () {
 /* harmony export (immutable) */ __webpack_exports__["b"] = getSquaredTolerance;
 /* harmony export (immutable) */ __webpack_exports__["c"] = getTolerance;
 /* harmony export (immutable) */ __webpack_exports__["d"] = renderFeature;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__render_canvas_BuilderType_js__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__render_canvas_BuilderType_js__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__geom_GeometryType_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ImageState_js__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_js__ = __webpack_require__(2);
@@ -42490,8 +42515,8 @@ var BaseTileLayer = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Layer_js__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TileRange_js__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Layer_js__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TileRange_js__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TileState_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__transform_js__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__obj_js__ = __webpack_require__(4);
@@ -43142,11 +43167,11 @@ var XYZ = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__events_EventType_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ImageTile_js__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reproj_Tile_js__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TileCache_js__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TileCache_js__ = __webpack_require__(134);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__TileState_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__UrlTile_js__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__reproj_common_js__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__common_js__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__reproj_common_js__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__common_js__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__proj_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__tilecoord_js__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__tilegrid_js__ = __webpack_require__(79);
@@ -43586,10 +43611,10 @@ function defaultTileLoadFunction(imageTile, src) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile_js__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile_js__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TileState_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dom_js__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Image_js__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Image_js__ = __webpack_require__(128);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -43740,9 +43765,9 @@ function getBlankImage() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_js__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_js__ = __webpack_require__(132);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__events_EventType_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Tile_js__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Tile_js__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TileState_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Triangulation_js__ = __webpack_require__(207);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__reproj_js__ = __webpack_require__(208);
@@ -44399,7 +44424,7 @@ var Triangulation = /** @class */ (function () {
 /* unused harmony export calculateSourceResolution */
 /* harmony export (immutable) */ __webpack_exports__["a"] = calculateSourceExtentResolution;
 /* harmony export (immutable) */ __webpack_exports__["b"] = render;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__source_common_js__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__source_common_js__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__obj_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__extent_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dom_js__ = __webpack_require__(13);
@@ -45236,8 +45261,8 @@ var UrlTile = /** @class */ (function (_super) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TileSourceEvent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__events_Event_js__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Source_js__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TileCache_js__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Source_js__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TileCache_js__ = __webpack_require__(134);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TileState_js__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__asserts_js__ = __webpack_require__(8);
@@ -45598,7 +45623,7 @@ var TileSourceEvent = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TileRange_js__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TileRange_js__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_js__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__asserts_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__math_js__ = __webpack_require__(3);
@@ -46263,15 +46288,15 @@ function expandUrl(url) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__geom_GeometryType_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__JSONFeature_js__ = __webpack_require__(217);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__geom_LineString_js__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__geom_MultiLineString_js__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__geom_MultiLineString_js__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__geom_MultiPoint_js__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__geom_MultiPolygon_js__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__geom_MultiPolygon_js__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__geom_Point_js__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__geom_Polygon_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__asserts_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__obj_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__proj_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__Feature_js__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__Feature_js__ = __webpack_require__(135);
 /**
  * @module ol/format/GeoJSON
  */
@@ -47122,7 +47147,7 @@ function cloneGeometries(geometries) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Feature_js__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Feature_js__ = __webpack_require__(135);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FormatType_js__ = __webpack_require__(71);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_js__ = __webpack_require__(2);
 var __extends = (this && this.__extends) || (function () {
