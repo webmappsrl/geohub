@@ -16,7 +16,8 @@
         "laravel/framework": "^8.12",
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
-        "webmapp/raw-gallery": "*"
+        "webmapp/raw-gallery": "*",
+        "webmapp/wm-embedmaps-field": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -70,6 +71,10 @@
         {
             "type": "path",
             "url": "./nova-components/RawGallery"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/WmEmbedmapsField"
         }
     ]
 }

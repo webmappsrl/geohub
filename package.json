@@ -9,7 +9,9 @@
         "prod": "npm run production",
         "production": "mix --production",
         "build-raw-gallery": "cd nova-components/RawGallery && npm run dev",
-        "build-raw-gallery-prod": "cd nova-components/RawGallery && npm run prod"
+        "build-raw-gallery-prod": "cd nova-components/RawGallery && npm run prod",
+        "build-wm-embedmaps-field": "cd nova-components/WmEmbedmapsField && npm run dev",
+        "build-wm-embedmaps-field-prod": "cd nova-components/WmEmbedmapsField && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",

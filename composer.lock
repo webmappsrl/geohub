@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b8b21100e3a24da8d06d521c8b98009",
+    "content-hash": "fda4061df14866b9920b1d95d506f6e7",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -6023,6 +6023,42 @@
             "autoload": {
                 "psr-4": {
                     "Webmapp\\RawGallery\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "webmapp/wm-embedmaps-field",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/WmEmbedmapsField",
+                "reference": "e382e8b11ad1e768ec346358a14452a9bbee23b5"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webmapp\\WmEmbedmapsField\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmapp\\WmEmbedmapsField\\": "src/"
                 }
             },
             "license": [
