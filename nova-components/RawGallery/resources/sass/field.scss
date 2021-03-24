@@ -1,0 +1,21 @@
+// Nova Tool CSS
+.raw-gallery-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .raw-gallery-image {
+        width: 80px;
+        height: 80px;
+        overflow: hidden;
+        border-radius: 5px;
+        margin: 10px;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}

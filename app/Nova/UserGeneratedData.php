@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Webmapp\RawGallery\RawGallery;
 
 class UserGeneratedData extends Resource
 {
@@ -63,7 +64,9 @@ class UserGeneratedData extends Resource
 
                 return join('<br>', $result);
             })->onlyOnDetail()->asHtml(),
-
+            RawGallery::make('Gallery', function ($model) {
+                return json_decode($model->raw_gallery, true);
+            })->onlyOnDetail()
         ];
     }
 

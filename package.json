@@ -7,7 +7,9 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "build-raw-gallery": "cd nova-components/RawGallery && npm run dev",
+        "build-raw-gallery-prod": "cd nova-components/RawGallery && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",
