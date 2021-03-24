@@ -20,8 +20,15 @@ class AddNameToUserGeneratedData extends Migration
         $data = \App\Models\UserGeneratedData::get();
         foreach ($data as $row) {
             $json = json_decode($row->raw_data, true);
-            $name = isset($json['name']) ? $json['name'] : '';
-            unset($json['name']);
+            $name = isset($json['name'])
+                ? $json['name']
+                : (isset($json['title'])
+                    ? $json['title']
+                    : '');
+            if (isset($json['name']))
+                unset($json['name']);
+            elseif (isset($json['title']))
+                unset($json['title']);
             $row->name = $name;
             $row->raw_data = $json;
             $row->save();
