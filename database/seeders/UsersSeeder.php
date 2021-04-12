@@ -54,5 +54,11 @@ class UsersSeeder extends Seeder {
             'email_verified_at' => now(),
             'password' => bcrypt('webmapp')
         ]);
+        User::factory()->create([
+            'name' => 'Laura Roth',
+            'email' => 'lauraroth72@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('')
+        ]);
     }
 }
