@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmulateUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/')->name('home');
+Route::prefix('/emulatedUser')->name('emulatedUser.')->group(function () {
+    Route::get('/restore', [EmulateUserController::class, 'restore'])->name('restore');
 });
