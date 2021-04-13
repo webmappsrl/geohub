@@ -36,7 +36,6 @@ class AddRolesAndUsers extends Migration {
             'edit_permission',
             'delete_permission',
             'view_role',
-            'view_self_role',
             'create_role',
             'edit_role',
             'delete_role',

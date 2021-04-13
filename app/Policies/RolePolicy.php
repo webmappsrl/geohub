@@ -20,13 +20,13 @@ class RolePolicy {
     public function viewAny(User $user): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_roles');
+        return $user->can('view_role');
     }
 
     public function view(User $user, Role $model): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_roles');
+        return $user->can('view_role');
     }
 
     public function create(User $user): bool {

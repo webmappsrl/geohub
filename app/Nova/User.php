@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Nova\Actions\EmulateUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
@@ -61,12 +62,15 @@ class User extends Resource {
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-            //            MorphToMany::make('Roles', 'roles', Role::class),
-            //            MorphToMany::make('Permissions', 'permissions', Permission::class),
+            RoleSelect::make('Role', 'roles')->showOnCreating(function () {
+                $user = \App\Models\User::getEmulatedUser();
 
-            //            RoleBooleanGroup::make('Roles'),
-            RoleSelect::make('Role', 'roles'),
-            //            PermissionBooleanGroup::make('Permissions'),
+                return $user->hasRole('Admin');
+            })->showOnUpdating(function () {
+                $user = \App\Models\User::getEmulatedUser();
+
+                return $user->hasRole('Admin');
+            }),
         ];
     }
 

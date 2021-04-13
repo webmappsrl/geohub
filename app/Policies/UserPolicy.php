@@ -19,13 +19,15 @@ class UserPolicy {
     public function viewAny(User $user): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_users');
+        return $user->can('view_user') ||
+            $user->can('view_self_user');
     }
 
     public function view(User $user, User $model): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_users');
+        return $user->can('view_user') ||
+            ($user->id === $model->id && $user->can('view_self_user'));
     }
 
     public function create(User $user): bool {
@@ -37,7 +39,8 @@ class UserPolicy {
     public function update(User $user, User $model): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('edit_user');
+        return $user->can('edit_user') ||
+            ($user->id === $model->id && $user->can('view_self_user'));
     }
 
     public function delete(User $user, User $model): bool {

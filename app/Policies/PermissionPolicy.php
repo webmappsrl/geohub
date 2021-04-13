@@ -20,13 +20,13 @@ class PermissionPolicy {
     public function viewAny(User $user): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_permissions');
+        return $user->can('view_permission');
     }
 
     public function view(User $user, Permission $model): bool {
         $user = User::getEmulatedUser($user);
 
-        return $user->can('view_permissions');
+        return $user->can('view_permission');
     }
 
     public function create(User $user): bool {
