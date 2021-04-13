@@ -1,4 +1,9 @@
 <dropdown-trigger class="h-9 flex items-center">
+    <?php
+    use App\Models\User;
+    $user = User::getEmulatedUser();
+    $loggedUser = User::getLoggedUser();
+    ?>
     @isset($user->email)
         <img
             src="https://secure.gravatar.com/avatar/{{ md5(\Illuminate\Support\Str::lower($user->email)) }}?size=512"
@@ -14,9 +19,29 @@
 <dropdown-menu slot="menu" width="200" direction="rtl">
     <ul class="list-reset">
         <li>
-            <a href="{{ route('nova.logout') }}" class="block no-underline text-90 hover:bg-30 p-3">
-                {{ __('Logout') }}
-            </a>
+            <router-link :to="{
+                name: 'detail',
+                params: {
+                    resourceName: 'users',
+                    resourceId: '{{ $user->id }}'
+                }
+            }" class="block no-underline text-90 hover:bg-30 p-3"
+                         id="wm-user-profile-button">
+                {{ __('Profile') }}
+            </router-link>
         </li>
+        @if ($user->id !== $loggedUser->id)
+            <li>
+                <a href="{{ route('emulatedUser.restore') }}" class="block no-underline text-90 hover:bg-30 p-3">
+                    {{ __('Restore User') }}
+                </a>
+            </li>
+        @else
+            <li>
+                <a href="{{ route('nova.logout') }}" class="block no-underline text-90 hover:bg-30 p-3">
+                    {{ __('Logout') }}
+                </a>
+            </li>
+        @endif
     </ul>
 </dropdown-menu>

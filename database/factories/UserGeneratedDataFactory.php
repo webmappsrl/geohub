@@ -5,8 +5,7 @@ namespace Database\Factories;
 use App\Models\UserGeneratedData;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserGeneratedDataFactory extends Factory
-{
+class UserGeneratedDataFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,10 +18,9 @@ class UserGeneratedDataFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         $rawData = [];
-        for ($i = 0; $i < $this->faker->numberBetween(0, 10); $i++) {
+        for ($i = 0; $i < $this->faker->numberBetween(1, 10); $i++) {
             $rawData[strtolower($this->faker->word())] = implode(" ", $this->faker->words($this->faker->randomDigit));
         }
         $rawData['name'] = implode(" ", $this->faker->words($this->faker->randomDigit));
