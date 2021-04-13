@@ -2,20 +2,22 @@
 
 namespace App\Providers;
 
+use App\Policies\PermissionPolicy;
+use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Silvanite\NovaToolPermissions\NovaToolPermissions;
+use Vyuldashev\NovaPermission\NovaPermissionTool;
 
-class NovaServiceProvider extends NovaApplicationServiceProvider
-{
+class NovaServiceProvider extends NovaApplicationServiceProvider {
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         parent::boot();
     }
 
@@ -24,8 +26,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function routes()
-    {
+    protected function routes() {
         Nova::routes()
             ->withAuthenticationRoutes()
             ->withPasswordResetRoutes()
@@ -39,12 +40,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function gate()
-    {
+    protected function gate() {
         Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                'team@webmapp.it'
-            ]);
+            return true;
+            //            in_array($user->email, [
+            //                'team@webmapp.it'
+            //            ]);
         });
     }
 
@@ -53,8 +54,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    protected function cards()
-    {
+    protected function cards() {
         return [
             new Help,
         ];
@@ -65,8 +65,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    protected function dashboards()
-    {
+    protected function dashboards() {
         return [];
     }
 
@@ -75,9 +74,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    public function tools()
-    {
-        return [];
+    public function tools(): array {
+        return [
+            NovaPermissionTool::make()
+                ->rolePolicy(RolePolicy::class)
+                ->permissionPolicy(PermissionPolicy::class)
+        ];
     }
 
     /**
@@ -85,8 +87,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         //
     }
 }

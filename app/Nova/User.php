@@ -4,10 +4,14 @@ namespace App\Nova;
 
 use App\Nova\Actions\EmulateUser;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Vyuldashev\NovaPermission\Permission;
+use Vyuldashev\NovaPermission\PermissionBooleanGroup;
+use Vyuldashev\NovaPermission\Role;
+use Vyuldashev\NovaPermission\RoleBooleanGroup;
+use Vyuldashev\NovaPermission\RoleSelect;
 
 class User extends Resource {
     /**
@@ -56,6 +60,13 @@ class User extends Resource {
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
+
+            //            MorphToMany::make('Roles', 'roles', Role::class),
+            //            MorphToMany::make('Permissions', 'permissions', Permission::class),
+
+            //            RoleBooleanGroup::make('Roles'),
+            RoleSelect::make('Role', 'roles'),
+            //            PermissionBooleanGroup::make('Permissions'),
         ];
     }
 
