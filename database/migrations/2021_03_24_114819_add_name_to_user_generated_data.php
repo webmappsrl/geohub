@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\UserGeneratedData;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddNameToUserGeneratedData extends Migration {
@@ -16,7 +16,7 @@ class AddNameToUserGeneratedData extends Migration {
             $table->text('name')->default('');
         });
 
-        $data = UserGeneratedData::get();
+        $data = DB::table('user_generated_data')->get();
         foreach ($data as $row) {
             $json = json_decode($row->raw_data, true);
             $name = isset($json['name'])

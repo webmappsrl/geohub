@@ -18,7 +18,8 @@
         "laravel/tinker": "^2.5",
         "vyuldashev/nova-permission": "^2.11",
         "webmapp/raw-gallery": "*",
-        "webmapp/wm-embedmaps-field": "*"
+        "webmapp/wm-embedmaps-field": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
