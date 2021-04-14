@@ -5,50 +5,50 @@ namespace App\Nova;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
-use Webmapp\RawGallery\RawGallery;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class UserGeneratedData extends Resource
-{
+class UgcTrack extends Resource {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\UserGeneratedData::class;
-
+    public static $model = \App\Models\UgcTrack::class;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
-
+    public static $title = 'id';
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name',
-        'app_id'
+        'id',
     ];
+
+    public static function group() {
+        return __('User Generated Content');
+    }
 
     /**
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request) {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Text::make(__('Name'), 'name')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             Text::make(__('App ID'), 'app_id')->sortable(),
@@ -56,7 +56,9 @@ class UserGeneratedData extends Resource
                 return isset($model->raw_data);
             })->onlyOnIndex(),
             Boolean::make(__('Has gallery'), function ($model) {
-                return isset($model->raw_gallery);
+                $gallery = $model->ugc_media;
+
+                return count($gallery) > 0;
             })->onlyOnIndex(),
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
@@ -71,11 +73,8 @@ class UserGeneratedData extends Resource
 
                 return join('<br>', $result);
             })->onlyOnDetail()->asHtml(),
-            RawGallery::make(__('Gallery'), function ($model) {
-                return json_decode($model->raw_gallery, true);
-            })->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
-                $geom = \App\Models\UserGeneratedData::where('id', '=', $model->id)
+                $geom = \App\Models\UgcTrack::where('id', '=', $model->id)
                     ->select(
                         DB::raw('ST_AsGeoJSON(geometry) as geom')
                     )
@@ -97,10 +96,10 @@ class UserGeneratedData extends Resource
      * Get the cards available for the request.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -108,10 +107,10 @@ class UserGeneratedData extends Resource
      * Get the filters available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [
             new DateRange('created_at')
         ];
@@ -121,10 +120,10 @@ class UserGeneratedData extends Resource
      * Get the lenses available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -132,10 +131,10 @@ class UserGeneratedData extends Resource
      * Get the actions available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }

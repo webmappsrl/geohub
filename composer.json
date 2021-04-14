@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "ampeco/nova-date-range-filter": "^0.1.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -18,7 +18,8 @@
         "laravel/tinker": "^2.5",
         "vyuldashev/nova-permission": "^2.11",
         "webmapp/raw-gallery": "*",
-        "webmapp/wm-embedmaps-field": "*"
+        "webmapp/wm-embedmaps-field": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -43,7 +44,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "database/MigrationsHelpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -2,9 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AddRolesAndUsers extends Migration {
     /**
@@ -24,7 +22,7 @@ class AddRolesAndUsers extends Migration {
      *
      * @return array
      */
-    public function addDefaultPermissions(): array {
+    private function addDefaultPermissions(): array {
         $tableName = config('permission.table_names')['permissions'];
         $permissions = [
             'view_user',
@@ -77,7 +75,7 @@ class AddRolesAndUsers extends Migration {
      *
      * @return array
      */
-    public function addDefaultRoles(array $permissionsMap): array {
+    private function addDefaultRoles(array $permissionsMap): array {
         $tableNames = config('permission.table_names');
         $rolesTableName = $tableNames['roles'];
         $roleHasPermissionTableName = $tableNames['role_has_permissions'];
@@ -134,7 +132,7 @@ class AddRolesAndUsers extends Migration {
      *
      * @param array $rolesMap
      */
-    public function addDefaultUsers(array $rolesMap) {
+    private function addDefaultUsers(array $rolesMap) {
         $users = [
             [
                 'name' => 'Webmapp Team',

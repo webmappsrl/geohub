@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserGeneratedData extends Model
-{
+class UgcTrack extends Model {
     use HasFactory;
+
+    public function ugc_media() {
+        return $this->belongsToMany(UgcMedia::class);
+    }
 }

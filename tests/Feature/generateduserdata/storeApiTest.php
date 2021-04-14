@@ -2,26 +2,23 @@
 
 namespace Tests\Feature\generateduserdata;
 
-use App\Models\UserGeneratedData;
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class storeApiTest extends TestCase
-{
-
+class storeApiTest extends TestCase {
     use RefreshDatabase;
 
-    public function testWithNoData()
-    {
-        $count = count(UserGeneratedData::get());
+    public function testWithNoData() {
+        $count = count(UgcPoi::get()) + count(UgcTrack::get());
         $response = $this->post('/api/usergenerateddata/store', []);
         $this->assertSame($response->status(), 422);
-        $this->assertCount($count, UserGeneratedData::get());
+        $this->assertSame($count, count(UgcPoi::get()) + count(UgcTrack::get()));
     }
 
-    public function testWithAPoi()
-    {
+    public function testWithAPoi() {
         $appId = 'it.webmapp.test';
         $formData = [
             "name" => "Test name"
@@ -48,14 +45,16 @@ class storeApiTest extends TestCase
         $response = $this->postJson('/api/usergenerateddata/store', $data);
         $this->assertSame($response->status(), 201);
 
-        $this->assertCount(1, UserGeneratedData::get());
-        $newContent = UserGeneratedData::first();
+        $this->assertCount(0, UgcTrack::get());
+        $this->assertCount(1, UgcPoi::get());
+        $newContent = UgcPoi::first();
         $this->assertSame($appId, $newContent->app_id);
+        $this->assertSame($formData['name'], $newContent->name);
+        unset($formData['name']); // This must have been moved in the name field
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 
-    public function testWithATrack()
-    {
+    public function testWithATrack() {
         $appId = 'it.webmapp.test';
         $formData = [
             "name" => "Test name"
@@ -82,9 +81,12 @@ class storeApiTest extends TestCase
         $response = $this->postJson('/api/usergenerateddata/store', $data);
         $response->assertStatus(201);
 
-        $this->assertCount(1, UserGeneratedData::get());
-        $newContent = UserGeneratedData::first();
+        $this->assertCount(0, UgcPoi::get());
+        $this->assertCount(1, UgcTrack::get());
+        $newContent = UgcTrack::first();
         $this->assertSame($appId, $newContent->app_id);
+        $this->assertSame($formData['name'], $newContent->name);
+        unset($formData['name']); // This must have been moved in the name field
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 }
