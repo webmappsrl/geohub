@@ -2,6 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Nova\Dashboards\MainDashboard;
+use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcTracksPerDay;
+use App\Nova\Metrics\NewUsers;
+use App\Nova\Metrics\TotalUgc;
+use App\Nova\Metrics\TotalUsers;
+use App\Nova\Metrics\NewUgcMedia;
+use App\Nova\Metrics\NewUgcPois;
+use App\Nova\Metrics\NewUgcTracks;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -55,9 +66,25 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      * @return array
      */
     protected function cards() {
-        return [
-            new Help,
-        ];
+        $cards = [];
+        $currentUser = User::getEmulatedUser();
+
+        if ($currentUser->hasRole('Admin')) {
+            $cards[] = new TotalUsers();
+            $cards[] = new NewUsers();
+        }
+
+        $cards[] = new TotalUgc();
+        $cards[] = new NewUgcTracks();
+        $cards[] = new NewUgcPois();
+        $cards[] = new NewUgcMedia();
+        if ($currentUser->hasRole('Admin')) {
+            $cards[] = new NewUgcTracksPerDay();
+            $cards[] = new NewUgcPoisPerDay();
+            $cards[] = new NewUgcMediaPerDay();
+        }
+
+        return $cards;;
     }
 
     /**

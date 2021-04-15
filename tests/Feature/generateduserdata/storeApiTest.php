@@ -4,6 +4,7 @@ namespace Tests\Feature\generateduserdata;
 
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -11,7 +12,13 @@ use Tests\TestCase;
 class storeApiTest extends TestCase {
     use RefreshDatabase;
 
+    public function testWithoutAuthentication() {
+        $response = $this->post('/api/usergenerateddata/store', []);
+        $this->assertSame(401, $response->status());
+    }
+
     public function testWithNoData() {
+        $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $count = count(UgcPoi::get()) + count(UgcTrack::get());
         $response = $this->post('/api/usergenerateddata/store', []);
         $this->assertSame($response->status(), 422);
@@ -19,6 +26,7 @@ class storeApiTest extends TestCase {
     }
 
     public function testWithAPoi() {
+        $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
             "name" => "Test name"
@@ -55,6 +63,7 @@ class storeApiTest extends TestCase {
     }
 
     public function testWithATrack() {
+        $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
             "name" => "Test name"
