@@ -2,11 +2,11 @@
 
 namespace App\Nova\Metrics;
 
-use App\Models\UgcTrack;
+use App\Models\UgcMedia;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class UserGeneratedContentTracks extends Value {
+class NewUgcMedia extends Value {
     /**
      * Calculate the value of the metric.
      *
@@ -15,7 +15,7 @@ class UserGeneratedContentTracks extends Value {
      * @return mixed
      */
     public function calculate(NovaRequest $request) {
-        return $this->count($request, UgcTrack::class);
+        return $this->count($request, UgcMedia::class);
     }
 
     /**
@@ -50,6 +50,6 @@ class UserGeneratedContentTracks extends Value {
      * @return string
      */
     public function uriKey() {
-        return 'user-generated-content-tracks';
+        return 'user-generated-content-media';
     }
 }

@@ -4,12 +4,15 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Nova\Dashboards\MainDashboard;
+use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcTracksPerDay;
 use App\Nova\Metrics\NewUsers;
-use App\Nova\Metrics\TotalUserGeneratedContent;
+use App\Nova\Metrics\TotalUgc;
 use App\Nova\Metrics\TotalUsers;
-use App\Nova\Metrics\UserGeneratedContentMedia;
-use App\Nova\Metrics\UserGeneratedContentPois;
-use App\Nova\Metrics\UserGeneratedContentTracks;
+use App\Nova\Metrics\NewUgcMedia;
+use App\Nova\Metrics\NewUgcPois;
+use App\Nova\Metrics\NewUgcTracks;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -71,10 +74,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
             $cards[] = new NewUsers();
         }
 
-        $cards[] = new TotalUserGeneratedContent();
-        $cards[] = new UserGeneratedContentTracks();
-        $cards[] = new UserGeneratedContentPois();
-        $cards[] = new UserGeneratedContentMedia();
+        $cards[] = new TotalUgc();
+        $cards[] = new NewUgcTracks();
+        $cards[] = new NewUgcPois();
+        $cards[] = new NewUgcMedia();
+        if ($currentUser->hasRole('Admin')) {
+            $cards[] = new NewUgcTracksPerDay();
+            $cards[] = new NewUgcPoisPerDay();
+            $cards[] = new NewUgcMediaPerDay();
+        }
 
         return $cards;;
     }

@@ -6,7 +6,7 @@ use App\Models\UgcPoi;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class UserGeneratedContentPois extends Value {
+class NewUgcPois extends Value {
     /**
      * Calculate the value of the metric.
      *

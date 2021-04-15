@@ -4,9 +4,9 @@ namespace App\Nova\Metrics;
 
 use App\Models\UgcMedia;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Metrics\Value;
+use Laravel\Nova\Metrics\Trend;
 
-class UserGeneratedContentMedia extends Value {
+class NewUgcMediaPerDay extends Trend {
     /**
      * Calculate the value of the metric.
      *
@@ -15,7 +15,7 @@ class UserGeneratedContentMedia extends Value {
      * @return mixed
      */
     public function calculate(NovaRequest $request) {
-        return $this->count($request, UgcMedia::class);
+        return $this->countByDays($request, UgcMedia::class);
     }
 
     /**
@@ -27,11 +27,7 @@ class UserGeneratedContentMedia extends Value {
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
-            365 => __('365 Days'),
-            'TODAY' => __('Today'),
-            'MTD' => __('Month To Date'),
-            'QTD' => __('Quarter To Date'),
-            'YTD' => __('Year To Date'),
+            90 => __('90 Days'),
         ];
     }
 
@@ -50,6 +46,6 @@ class UserGeneratedContentMedia extends Value {
      * @return string
      */
     public function uriKey() {
-        return 'user-generated-content-media';
+        return 'new-ugc-media-per-day';
     }
 }

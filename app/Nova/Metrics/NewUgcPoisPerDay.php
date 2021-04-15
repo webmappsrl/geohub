@@ -2,22 +2,20 @@
 
 namespace App\Nova\Metrics;
 
-use App\Models\UgcMedia;
 use App\Models\UgcPoi;
-use App\Models\UgcTrack;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Metrics\Value;
+use Laravel\Nova\Metrics\Trend;
 
-class TotalUserGeneratedContent extends Value {
+class NewUgcPoisPerDay extends Trend {
     /**
      * Calculate the value of the metric.
      *
-     * @param NovaRequest $request
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      *
      * @return mixed
      */
     public function calculate(NovaRequest $request) {
-        return $this->result(UgcTrack::get()->count() + UgcPoi::get()->count() + UgcMedia::get()->count());
+        return $this->countByDays($request, UgcPoi::class);
     }
 
     /**
@@ -26,7 +24,11 @@ class TotalUserGeneratedContent extends Value {
      * @return array
      */
     public function ranges() {
-        return [];
+        return [
+            30 => __('30 Days'),
+            60 => __('60 Days'),
+            90 => __('90 Days'),
+        ];
     }
 
     /**
@@ -44,6 +46,6 @@ class TotalUserGeneratedContent extends Value {
      * @return string
      */
     public function uriKey() {
-        return 'total-user-generated-content';
+        return 'new-ugc-pois-per-day';
     }
 }
