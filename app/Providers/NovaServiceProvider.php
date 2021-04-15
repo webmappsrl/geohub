@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Nova\Dashboards\MainDashboard;
+use App\Nova\Metrics\NewUsers;
+use App\Nova\Metrics\TotalUserGeneratedContent;
+use App\Nova\Metrics\TotalUsers;
+use App\Nova\Metrics\UserGeneratedContentMedia;
+use App\Nova\Metrics\UserGeneratedContentPois;
+use App\Nova\Metrics\UserGeneratedContentTracks;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -55,9 +63,20 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      * @return array
      */
     protected function cards() {
-        return [
-            new Help,
-        ];
+        $cards = [];
+        $currentUser = User::getEmulatedUser();
+
+        if ($currentUser->hasRole('Admin')) {
+            $cards[] = new TotalUsers();
+            $cards[] = new NewUsers();
+        }
+
+        $cards[] = new TotalUserGeneratedContent();
+        $cards[] = new UserGeneratedContentTracks();
+        $cards[] = new UserGeneratedContentPois();
+        $cards[] = new UserGeneratedContentMedia();
+
+        return $cards;;
     }
 
     /**
