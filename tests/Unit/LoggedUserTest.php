@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class loggedUserTest extends TestCase {
+class LoggedUserTest extends TestCase {
     use RefreshDatabase;
 
     public function testLoggedUserWithNoLogin() {
