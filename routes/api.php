@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -15,9 +15,22 @@ use App\Http\Controllers\UserGeneratedDataController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::group([
+    'middleware' => 'auth.jwt',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
 });
 
-Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
-Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
+/**
+ * Here should go all the api that need authentication
+ */
+Route::group([
+    'middleware' => 'auth.jwt',
+], function ($router) {
+    Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
+    Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
+});
