@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller {
     /**
@@ -36,7 +39,12 @@ class AuthController extends Controller {
      * @return JsonResponse
      */
     public function me(): JsonResponse {
-        return response()->json(auth('api')->user());
+        $user = auth('api')->user();
+        $roles = array_map(function ($value) {
+            return strtolower($value);
+        }, $user->roles->pluck('name')->toArray());
+
+        return response()->json(array_merge($user->toArray(), ['roles' => $roles]));
     }
 
     /**
