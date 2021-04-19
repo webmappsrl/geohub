@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
@@ -44,13 +45,14 @@ class UgcMedia extends Resource {
      */
     public function fields(Request $request) {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
+            //            ID::make(__('ID'), 'id')->sortable(),
+            Image::make('Image', 'relative_url')->disk('public'),
             Text::make(__('Name'), function ($model) {
                 $relativeUrl = $model->relative_url;
 
                 return last(explode('/', $relativeUrl));
             }),
-            Image::make('Image', 'relative_url')->disk('public')
+            BelongsTo::make(__('Creator'), 'user', User::class),
         ];
     }
 

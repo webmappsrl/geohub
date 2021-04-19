@@ -39,6 +39,18 @@ class User extends Authenticatable implements JWTSubject {
         'email_verified_at' => 'datetime',
     ];
 
+    public function ugc_pois() {
+        return $this->hasMany(UgcPoi::class);
+    }
+
+    public function ugc_tracks() {
+        return $this->hasMany(UgcTrack::class);
+    }
+
+    public function ugc_medias() {
+        return $this->hasMany(UgcMedia::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
