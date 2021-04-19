@@ -5,8 +5,11 @@ namespace App\Providers;
 use App\Models\User;
 use App\Nova\Dashboards\MainDashboard;
 use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcMediaByLoggedUser;
 use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcPoisByLoggedUser;
 use App\Nova\Metrics\NewUgcTracksPerDay;
+use App\Nova\Metrics\NewUgcTracksByLoggedUser;
 use App\Nova\Metrics\NewUsers;
 use App\Nova\Metrics\TotalUgc;
 use App\Nova\Metrics\TotalUsers;
@@ -72,16 +75,20 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
         if ($currentUser->hasRole('Admin')) {
             $cards[] = new TotalUsers();
             $cards[] = new NewUsers();
-        }
-
-        $cards[] = new TotalUgc();
-        $cards[] = new NewUgcTracks();
-        $cards[] = new NewUgcPois();
-        $cards[] = new NewUgcMedia();
-        if ($currentUser->hasRole('Admin')) {
+            $cards[] = new TotalUgc();
+            $cards[] = new NewUgcTracks();
+            $cards[] = new NewUgcPois();
+            $cards[] = new NewUgcMedia();
             $cards[] = new NewUgcTracksPerDay();
             $cards[] = new NewUgcPoisPerDay();
             $cards[] = new NewUgcMediaPerDay();
+        }
+
+        if ($currentUser->hasRole('Admin') ||
+            $currentUser->hasRole('Editor')) {
+            $cards[] = new NewUgcTracksByLoggedUser();
+            $cards[] = new NewUgcPoisByLoggedUser();
+            $cards[] = new NewUgcMediaByLoggedUser();
         }
 
         return $cards;;

@@ -11,4 +11,8 @@ class UgcTrack extends Model {
     public function ugc_media() {
         return $this->belongsToMany(UgcMedia::class);
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

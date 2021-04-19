@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -47,9 +48,10 @@ class UgcPoi extends Resource {
      */
     public function fields(Request $request) {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
+            //            ID::make(__('ID'), 'id')->sortable(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Text::make(__('Name'), 'name')->sortable(),
+            BelongsTo::make(__('Creator'), 'user', User::class),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             Text::make(__('App ID'), 'app_id')->sortable(),
             Boolean::make(__('Has content'), function ($model) {
