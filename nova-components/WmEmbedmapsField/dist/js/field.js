@@ -26588,7 +26588,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: 'WmMapContainer',
     components: {},
     props: {
-        geojson: String
+        feature: String,
+        related: String
     },
     data: function data() {
         return {
@@ -26651,15 +26652,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 pinchRotate: true,
                 pinchZoom: true
             }).getArray()
-
         });
 
-        this.updateSource(this.geojson);
+        this.updateSource();
     },
 
     watch: {
         geojson: function geojson(value) {
-            this.updateSource(value);
+            this.updateSource();
+        },
+        related: function related(value) {
+            this.updateSource();
         }
     },
     methods: {
@@ -26676,7 +26679,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:4326", "EPSG:3857");
         },
         _style: function _style(feature) {
-            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle();else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle();
+            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle(feature);else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle(feature);
             // else if (
             //     feature.getGeometry().getType() === "Polygon" ||
             //     feature.getGeometry().getType() === "MultiPolygon"
@@ -26684,16 +26687,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //     return this._getPolygonStyle();
             else return [];
         },
-        _getPoiStyle: function _getPoiStyle() {
+        _getPoiStyle: function _getPoiStyle(feature) {
+            var isRelated = feature.getId() + "" !== "wm-main-feature";
             var style = void 0,
-                color = "#ff0000";
+                color = isRelated ? "#66b3ff" : "#ff0000";
 
-            var maxRadius = 1.7,
-                minRadius = 1,
+            var maxRadius = isRelated ? 1.2 : 1.7,
+                minRadius = isRelated ? 0.7 : 1,
                 minZoom = 8,
                 currentZoom = this.view.getZoom(),
                 zoomFactor = currentZoom < minZoom ? minRadius : (maxRadius - minRadius) / (16 - minZoom) * (currentZoom - minZoom) + minRadius,
-                borderSize = 3;
+                borderSize = isRelated ? 2 : 3;
 
             style = [new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
                 image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
@@ -26704,34 +26708,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         width: 1
                     })
                 }),
-                zIndex: 100
+                zIndex: isRelated ? 100 : 200
             }), new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
                 image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
                     radius: 7 * zoomFactor - borderSize / 2,
                     fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({ color: color })
                 }),
-                zIndex: 101
+                zIndex: isRelated ? 101 : 201
             })];
 
             return style;
         },
-        _getLineStyle: function _getLineStyle() {
+        _getLineStyle: function _getLineStyle(feature) {
+            var isRelated = feature.getId() + "" !== "wm-main-feature";
             var style = [];
 
-            var color = "#ff0000",
-                strokeWidth = 4,
+            var color = isRelated ? "#66b3ff" : "#ff0000",
+                strokeWidth = isRelated ? 2 : 4,
                 lineDash = [],
                 lineCap = 'round',
-                zIndex = 100;
-
-            // style.push(
-            //     ...this._getArrowStyle(
-            //         this._dataSource.getFeatureById(id),
-            //         this._view.getResolution(),
-            //         color,
-            //         zIndex
-            //     )
-            // );
+                zIndex = isRelated ? 100 : 200;
 
             style.push(new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
                 stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
@@ -26745,15 +26741,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return style;
         },
-        updateSource: function updateSource(geojson) {
+        updateSource: function updateSource() {
+            this.vectorSource.clear();
+
             var features = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
                 featureProjection: 'EPSG:3857'
-            }).readFeatures(geojson);
-
-            this.vectorSource.clear();
+            }).readFeatures(this.feature);
+            features[0].setId('wm-main-feature');
             this.vectorSource.addFeatures(features);
 
-            this.view.fit(this.vectorSource.getExtent(), {
+            var extent = this.vectorSource.getExtent();
+
+            if (typeof this.related !== 'undefined' && this.related.type === 'FeatureCollection' && typeof this.related.features !== 'undefined' && typeof this.related.features.length === 'number' && this.related.features.length > 0) {
+                var related = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
+                    featureProjection: 'EPSG:3857'
+                }).readFeatures(this.related);
+                this.vectorSource.addFeatures(related);
+            }
+
+            this.view.fit(extent, {
                 padding: [20, 20, 20, 20]
             });
         }
@@ -47521,6 +47527,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['resource', 'resourceName', 'resourceId', 'field']
@@ -47542,10 +47554,21 @@ var render = function() {
         "template",
         { slot: "value" },
         [
-          _c("map-wm-embedmaps-field", {
-            staticClass: "wm-embedmaps-field-map-container",
-            attrs: { geojson: _vm.field.value }
-          })
+          _vm.field.value && _vm.field.value["feature"]
+            ? _c("map-wm-embedmaps-field", {
+                staticClass: "wm-embedmaps-field-map-container",
+                attrs: {
+                  feature: _vm.field.value["feature"],
+                  related: _vm.field.value["related"]
+                    ? _vm.field.value["related"]
+                    : []
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.field.value || !_vm.field.value["feature"]
+            ? _c("span", [_vm._v("\n            -\n        ")])
+            : _vm._e()
         ],
         1
       )

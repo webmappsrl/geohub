@@ -3,7 +3,13 @@
         <template slot="value">
             <map-wm-embedmaps-field
                 class="wm-embedmaps-field-map-container"
-                :geojson="field.value"></map-wm-embedmaps-field>
+                v-if="field.value && field.value['feature']"
+                :feature="field.value['feature']"
+                :related="field.value['related'] ? field.value['related'] : []"
+            ></map-wm-embedmaps-field>
+            <span v-if="!field.value || !field.value['feature']">
+                -
+            </span>
         </template>
     </panel-item>
 </template>

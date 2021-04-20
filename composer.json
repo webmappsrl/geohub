@@ -19,7 +19,6 @@
         "laravel/tinker": "^2.5",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
-        "webmapp/raw-gallery": "*",
         "webmapp/wm-embedmaps-field": "*"
     },
     "require-dev": {
@@ -73,10 +72,6 @@
         {
             "type": "path",
             "url": "./nova"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/RawGallery"
         },
         {
             "type": "path",

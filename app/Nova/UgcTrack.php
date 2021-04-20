@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
@@ -49,7 +50,6 @@ class UgcTrack extends Resource {
     public function fields(Request $request) {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
-            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make(__('Creator'), 'user', User::class),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
@@ -76,21 +76,12 @@ class UgcTrack extends Resource {
                 return join('<br>', $result);
             })->onlyOnDetail()->asHtml(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
-                $geom = \App\Models\UgcTrack::where('id', '=', $model->id)
-                    ->select(
-                        DB::raw('ST_AsGeoJSON(geometry) as geom')
-                    )
-                    ->first()
-                    ->geom;
-
-                $feature = [
-                    "type" => "Feature",
-                    "properties" => [],
-                    "geometry" => json_decode($geom, true)
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson()
                 ];
-
-                return json_encode($feature);
-            })->onlyOnDetail()
+            })->onlyOnDetail(),
+            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
         ];
     }
 

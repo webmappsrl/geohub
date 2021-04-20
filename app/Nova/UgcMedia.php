@@ -5,10 +5,12 @@ namespace App\Nova;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class UgcMedia extends Resource {
     /**
@@ -53,6 +55,15 @@ class UgcMedia extends Resource {
                 return last(explode('/', $relativeUrl));
             }),
             BelongsTo::make(__('Creator'), 'user', User::class),
+            Boolean::make(__('Has geometry'), function ($model) {
+                return isset($model->geometry);
+            })->onlyOnIndex(),
+            WmEmbedmapsField::make(__('Map'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson()
+                ];
+            })->onlyOnDetail(),
         ];
     }
 
