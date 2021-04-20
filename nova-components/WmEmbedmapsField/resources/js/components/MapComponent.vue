@@ -27,7 +27,8 @@ export default {
     name: 'WmMapContainer',
     components: {},
     props: {
-        geojson: String
+        feature: String,
+        related: String
     },
     data: () => ({
         map: null,
@@ -98,14 +99,16 @@ export default {
                     pinchRotate: true,
                     pinchZoom: true,
                 }).getArray()
-
         });
 
-        this.updateSource(this.geojson)
+        this.updateSource();
     },
     watch: {
         geojson(value) {
-            this.updateSource(value);
+            this.updateSource();
+        },
+        related(value) {
+            this.updateSource();
         }
     },
     methods: {
@@ -123,12 +126,12 @@ export default {
         },
         _style(feature) {
             if (feature.getGeometry().getType() === "Point")
-                return this._getPoiStyle();
+                return this._getPoiStyle(feature);
             else if (
                 feature.getGeometry().getType() === "LineString" ||
                 feature.getGeometry().getType() === "MultiLineString"
             )
-                return this._getLineStyle();
+                return this._getLineStyle(feature);
                 // else if (
                 //     feature.getGeometry().getType() === "Polygon" ||
                 //     feature.getGeometry().getType() === "MultiPolygon"
@@ -136,12 +139,13 @@ export default {
             //     return this._getPolygonStyle();
             else return [];
         },
-        _getPoiStyle() {
+        _getPoiStyle(feature) {
+            const isRelated = feature.getId() + "" !== "wm-main-feature";
             let style,
-                color = "#ff0000";
+                color = isRelated ? "#66b3ff" : "#ff0000";
 
-            let maxRadius = 1.7,
-                minRadius = 1,
+            let maxRadius = isRelated ? 1.2 : 1.7,
+                minRadius = isRelated ? 0.7 : 1,
                 minZoom = 8,
                 currentZoom = this.view.getZoom(),
                 zoomFactor =
@@ -150,7 +154,7 @@ export default {
                         : ((maxRadius - minRadius) / (16 - minZoom)) *
                         (currentZoom - minZoom) +
                         minRadius,
-                borderSize = 3;
+                borderSize = isRelated ? 2 : 3;
 
             style = [
                 new Style({
@@ -165,7 +169,7 @@ export default {
                             width: 1,
                         }),
                     }),
-                    zIndex: 100,
+                    zIndex: isRelated ? 100 : 200,
                 }),
                 new Style({
                     image: new CircleStyle({
@@ -174,29 +178,21 @@ export default {
                             borderSize / 2,
                         fill: new Fill({color: color}),
                     }),
-                    zIndex: 101,
+                    zIndex: isRelated ? 101 : 201,
                 })
             ];
 
             return style;
         },
-        _getLineStyle() {
+        _getLineStyle(feature) {
+            const isRelated = feature.getId() + "" !== "wm-main-feature";
             let style = [];
 
-            let color = "#ff0000",
-                strokeWidth = 4,
+            let color = isRelated ? "#66b3ff" : "#ff0000",
+                strokeWidth = isRelated ? 2 : 4,
                 lineDash = [],
                 lineCap = 'round',
-                zIndex = 100;
-
-            // style.push(
-            //     ...this._getArrowStyle(
-            //         this._dataSource.getFeatureById(id),
-            //         this._view.getResolution(),
-            //         color,
-            //         zIndex
-            //     )
-            // );
+                zIndex = isRelated ? 100 : 200;
 
             style.push(
                 new Style({
@@ -212,15 +208,29 @@ export default {
 
             return style;
         },
-        updateSource(geojson) {
+        updateSource() {
+            this.vectorSource.clear();
+
             const features = new GeoJSON({
                 featureProjection: 'EPSG:3857',
-            }).readFeatures(geojson);
-
-            this.vectorSource.clear();
+            }).readFeatures(this.feature);
+            features[0].setId('wm-main-feature');
             this.vectorSource.addFeatures(features);
 
-            this.view.fit(this.vectorSource.getExtent(), {
+            const extent = this.vectorSource.getExtent();
+
+            if (typeof this.related !== 'undefined'
+                && this.related.type === 'FeatureCollection'
+                && typeof this.related.features !== 'undefined'
+                && typeof this.related.features.length === 'number'
+                && this.related.features.length > 0) {
+                const related = new GeoJSON({
+                    featureProjection: 'EPSG:3857',
+                }).readFeatures(this.related);
+                this.vectorSource.addFeatures(related);
+            }
+
+            this.view.fit(extent, {
                 padding: [20, 20, 20, 20]
             });
         }

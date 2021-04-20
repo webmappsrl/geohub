@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UgcTrack extends Model {
-    use HasFactory;
+    use HasFactory, GeometryFeatureTrait;
 
     public function ugc_media() {
         return $this->belongsToMany(UgcMedia::class);
