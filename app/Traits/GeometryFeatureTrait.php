@@ -58,7 +58,6 @@ trait GeometryFeatureTrait {
                     $model->geometry
                 ]
             );
-            Log::info($result);
             foreach ($result as $row) {
                 $geojson = $class::find($row->id)->getGeojson();
                 if (isset($geojson))
