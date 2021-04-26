@@ -89,7 +89,7 @@ class UserGeneratedDataController extends Controller {
                     if (isset($feature['geometry']['type']) && $feature['geometry']['type'] === 'Point')
                         $geometry = json_encode($feature['geometry']);
                     foreach ($gallery as $rawImage) {
-                        $mediaId = $this->_storeUgcMedia($rawImage, $userGeneratedData->app_id, $user, $geometry, $user);
+                        $mediaId = $this->_storeUgcMedia($rawImage, $userGeneratedData->app_id, $user, $geometry);
                         $userGeneratedData->ugc_media()->attach($mediaId);
                     }
                     $userGeneratedData->save();
