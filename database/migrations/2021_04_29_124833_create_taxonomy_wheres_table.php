@@ -17,11 +17,11 @@ class CreateTaxonomyWheresTable extends Migration
             $table->id();
             $table->timestamps();
             $table->text('name')->nullable();
-            $table->geometry('geometry_multipolygon')->nullable();
-            $table->unsignedBigInteger('geo_import_id')->nullable()
-                ->references("id")
-                ->on("geo_import");
-            $table->string('source_id')->nullable();;
+            $table->geometry('geom')->nullable();
+            // ImportAndSync* Class name used to import data. When is null it means that is not imported and can be
+            // edited by user interface.
+            $table->string('import_method')->nullable();
+            $table->string('source_id')->nullable();
         });
     }
 
