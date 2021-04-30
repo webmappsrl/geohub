@@ -3,15 +3,18 @@
 namespace Tests\Unit;
 
 use App\Models\TaxonomyWhere;
+/*use Illuminate\Foundation\Testing\RefreshDatabase;*/
 use PHPUnit\Framework\TestCase;
 
 class TaxonomyWhereTest extends TestCase
 {
+    /*use RefreshDatabase;*/
     /**
      * A basic unit test example.
      *
      * @return void
      */
+
     public function testIsEditableByUserInterface()
     {
         $where = new TaxonomyWhere(array('name'=>'fake'));

@@ -17,7 +17,7 @@ class CreateTaxonomyWheresTable extends Migration
             $table->id();
             $table->timestamps();
             $table->text('name')->nullable();
-            $table->geometry('geom')->nullable();
+            $table->geometry('geometry')->nullable();
             // ImportAndSync* Class name used to import data. When is null it means that is not imported and can be
             // edited by user interface.
             $table->string('import_method')->nullable();

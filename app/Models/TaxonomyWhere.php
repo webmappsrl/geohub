@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaxonomyWhere extends Model
 {
     use HasFactory;
+
     protected $table='taxonomy_wheres';
     protected $fillable=[
         'name',
