@@ -80,13 +80,15 @@ public function handle()
         //Step 2 : Save shape file content in temporary table
         $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
         $this->info("Table $table created");
+        // ADD admin_level 4 (subnazionale)
+        $this->addAdministrativeLevelToTemporaryTable(4,$table);
 
 
         //Step 5 : Call sync_table method
         $import_method = "regioni_italiane";
         $model_name = "TaxonomyWhere";
         $source_id_field = "cod_reg";
-        $mapping = ['den_reg' => 'name', 'geom' => 'geometry'];
+        $mapping = ['den_reg' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -108,13 +110,15 @@ public function handle()
         //Step 2 : Save shape file content in temporary table
         $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
         $this->info("Table $table created");
+        // ADD admin_level 6 (subregionale)
+        $this->addAdministrativeLevelToTemporaryTable(6,$table);
 
 
         //Step 5 : Call sync_table method
         $import_method = "province_italiane";
         $model_name = "TaxonomyWhere";
         $source_id_field = "cod_prov";
-        $mapping = ['den_uts' => 'name', 'geom' => 'geometry'];
+        $mapping = ['den_uts' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -136,13 +140,15 @@ public function handle()
         //Step 2 : Save shape file content in temporary table
         $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
         $this->info("Table $table created");
+        // ADD admin_level 8 (comune)
+        $this->addAdministrativeLevelToTemporaryTable(8,$table);
 
 
         //Step 5 : Call sync_table method
         $import_method = "comuni_italiani";
         $model_name = "TaxonomyWhere";
         $source_id_field = "pro_com_t";
-        $mapping = ['comune' => 'name', 'geom' => 'geometry'];
+        $mapping = ['comune' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -187,6 +193,19 @@ public function handle()
         $command = "shp2pgsql -c -s $srid  $shape $table | $psql";
         exec($command);
         return $table;
+    }
+
+    /*
+     * This method adds column 'admin_level' with $admin_level value to all existing records.
+     * If 'admin_level' column is already existing it updates values.
+     */
+    public function addAdministrativeLevelToTemporaryTable($admin_level,$table) {
+        $first = DB::table($table)->first();
+        if(!array_key_exists('admin_level',get_object_vars($first))) {
+            DB::statement(DB::raw("ALTER TABLE $table ADD COLUMN admin_level integer"));
+        }
+        // UPDATE
+        DB::statement(DB::raw("UPDATE $table SET admin_level=$admin_level"));
     }
 
 }

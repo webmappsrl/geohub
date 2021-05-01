@@ -23,6 +23,7 @@ class CreateTaxonomyWheresTable extends Migration
             // edited by user interface.
             $table->string('import_method')->nullable();
             $table->string('source_id')->nullable();
+            $table->integer('admin_level')->nullable();
         });
     }
 
