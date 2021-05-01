@@ -13,6 +13,7 @@ class CreateTaxonomyWheresTable extends Migration
      */
     public function up()
     {
+        // TODO: approfondire postgist https://github.com/mstaack/laravel-postgis
         Schema::create('taxonomy_wheres', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
