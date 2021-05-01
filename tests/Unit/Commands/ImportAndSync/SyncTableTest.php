@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class SyncTableTest extends TestCase
 {
-    
+
 	public function testSyncTableTaxonomyWhereWhenElementIsMissing(){
 
     	//Step 0 : Contextual info
