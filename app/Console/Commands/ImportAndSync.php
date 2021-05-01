@@ -16,7 +16,7 @@ class ImportAndSync extends Command
 * @var string
 */
 protected $signature = 'geohub:import_and_sync 
-                        {import_method : Method used to import data. Available: comuni_italiani}
+                        {import_method : Method used to import data. Available: regioni_italiane, province_italiane, comuni_italiani}
                         {--shp= : Path to shape file. Used by some import method.}';
 
 /**
@@ -48,83 +48,145 @@ public function handle()
     $method = $this->argument('import_method');
     switch ($method) {
 
+        case 'regioni_italiane':
+            $this->regioniItaliane();
+            break;
+        case 'province_italiane':
+            $this->provinceItaliane();
+            break;
         case 'comuni_italiani':
-        $this->comuniItaliani();
-        break;
+            $this->comuniItaliani();
+            break;
 
         default:
-        $this->error('Invalid method '.$method.'. Available methods: comuni_italiani');
+        $this->error('Invalid method '.$method.'. Available methods: regioni_italiane, province_italiane, comuni_italiani');
         break;
     }
     return 0;
 }
 
-private function comuniItaliani (){
+    private function regioniItaliane (){
 
-    //Step 1 : CHECK Parameter
-    // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
-    $this->info('Processing comuni italiani');
-    // SHP FILE is mandatory
-    $shape = $this->option('shp');
-    if(empty($shape)) {
-        $this->error('For this method shp option is mandatory');
-        die();
-    }
-
-    //Step 2 : Save shape file content in temporary table
-    $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
-    $this->info("Table $table created");
-
-
-    //Step 5 : Call sync_table method
-    $import_method = "comuni_italiani";
-    $model_name = "TaxonomyWhere";
-    $source_id_field = "pro_com_t";
-    $mapping = ['comune' => 'name', 'geom' => 'geometry'];
-    $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
-
-    //Step 6 : Remove temporary table
-    Schema::dropIfExists($table);
-    $this->info("Table $table Dropped");
-}
-
-public function syncTable($import_method, $tmp_table_name, $model_name, $source_id_field, $mapping){
-    $model_class_name = '\\App\\Models\\'.$model_name;
-    //$model = new $model_class_name();
-    $offset=0;
-    $step=10;
-    $new_items = DB::table($tmp_table_name)->offset($offset)->take($step)->get();
-    while($new_items->count()>0){
-        foreach ($new_items as $new_item) {
-            $source_id=$new_item->$source_id_field;
-            $item=$model_class_name::where('import_method',$import_method)->
-            where('source_id',$source_id)->
-            firstOrCreate();
-            $item->import_method=$import_method;
-            $item->source_id=$source_id;
-            foreach($mapping as $k => $v) {
-                $item->$v = $new_item->$k;
-            }
-            $item->save();
+        //Step 1 : CHECK Parameter
+        // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
+        $this->info('Processing regioni italiane');
+        // SHP FILE is mandatory
+        $shape = $this->option('shp');
+        if(empty($shape)) {
+            $this->error('For this method shp option is mandatory');
+            die();
         }
-        $offset+=$step;
-        $new_items = DB::table($tmp_table_name)->offset($offset)->take($step)->get();
-    }
-}
 
-public function createTemporaryTableFromShape($shape,$srid) {
-    $table = 'removeme_'.substr(str_shuffle(MD5(microtime())), 0, 5);
-    $psql = '';
-    if(!empty(env('DB_PASSWORD'))) {
-        $psql.="PGPASSWORD=".env("DB_PASSWORD");
+        //Step 2 : Save shape file content in temporary table
+        $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
+        $this->info("Table $table created");
+
+
+        //Step 5 : Call sync_table method
+        $import_method = "regioni_italiane";
+        $model_name = "TaxonomyWhere";
+        $source_id_field = "cod_reg";
+        $mapping = ['den_reg' => 'name', 'geom' => 'geometry'];
+        $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
+
+        //Step 6 : Remove temporary table
+        Schema::dropIfExists($table);
+        $this->info("Table $table Dropped");
     }
-    $psql .= " psql -h ".env("DB_HOST")." -p ".env("DB_PORT")." -d ".env("DB_DATABASE");
-    if(!empty(env('DB_USERNAME'))) {
-        $psql .= " -U ".env("DB_USERNAME");
+    private function provinceItaliane (){
+
+        //Step 1 : CHECK Parameter
+        // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
+        $this->info('Processing province italiane');
+        // SHP FILE is mandatory
+        $shape = $this->option('shp');
+        if(empty($shape)) {
+            $this->error('For this method shp option is mandatory');
+            die();
+        }
+
+        //Step 2 : Save shape file content in temporary table
+        $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
+        $this->info("Table $table created");
+
+
+        //Step 5 : Call sync_table method
+        $import_method = "province_italiane";
+        $model_name = "TaxonomyWhere";
+        $source_id_field = "cod_prov";
+        $mapping = ['den_uts' => 'name', 'geom' => 'geometry'];
+        $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
+
+        //Step 6 : Remove temporary table
+        Schema::dropIfExists($table);
+        $this->info("Table $table Dropped");
     }
-    $command = "shp2pgsql -c -s $srid  $shape $table | $psql";
-    exec($command);
-    return $table;
-}
+    private function comuniItaliani (){
+
+        //Step 1 : CHECK Parameter
+        // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
+        $this->info('Processing comuni italiani');
+        // SHP FILE is mandatory
+        $shape = $this->option('shp');
+        if(empty($shape)) {
+            $this->error('For this method shp option is mandatory');
+            die();
+        }
+
+        //Step 2 : Save shape file content in temporary table
+        $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
+        $this->info("Table $table created");
+
+
+        //Step 5 : Call sync_table method
+        $import_method = "comuni_italiani";
+        $model_name = "TaxonomyWhere";
+        $source_id_field = "pro_com_t";
+        $mapping = ['comune' => 'name', 'geom' => 'geometry'];
+        $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
+
+        //Step 6 : Remove temporary table
+        Schema::dropIfExists($table);
+        $this->info("Table $table Dropped");
+    }
+
+    public function syncTable($import_method, $tmp_table_name, $model_name, $source_id_field, $mapping){
+        $model_class_name = '\\App\\Models\\'.$model_name;
+        //$model = new $model_class_name();
+        $offset=0;
+        $step=10;
+        $new_items = DB::table($tmp_table_name)->offset($offset)->take($step)->get();
+        while($new_items->count()>0){
+            foreach ($new_items as $new_item) {
+                $source_id=$new_item->$source_id_field;
+                $item=$model_class_name::where('import_method',$import_method)->
+                where('source_id',$source_id)->
+                firstOrCreate();
+                $item->import_method=$import_method;
+                $item->source_id=$source_id;
+                foreach($mapping as $k => $v) {
+                    $item->$v = $new_item->$k;
+                }
+                $item->save();
+            }
+            $offset+=$step;
+            $new_items = DB::table($tmp_table_name)->offset($offset)->take($step)->get();
+        }
+    }
+
+    public function createTemporaryTableFromShape($shape,$srid) {
+        $table = 'removeme_'.substr(str_shuffle(MD5(microtime())), 0, 5);
+        $psql = '';
+        if(!empty(env('DB_PASSWORD'))) {
+            $psql.="PGPASSWORD=".env("DB_PASSWORD");
+        }
+        $psql .= " psql -h ".env("DB_HOST")." -p ".env("DB_PORT")." -d ".env("DB_DATABASE");
+        if(!empty(env('DB_USERNAME'))) {
+            $psql .= " -U ".env("DB_USERNAME");
+        }
+        $command = "shp2pgsql -c -s $srid  $shape $table | $psql";
+        exec($command);
+        return $table;
+    }
 
 }
