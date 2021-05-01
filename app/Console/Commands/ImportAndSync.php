@@ -60,7 +60,8 @@ public function handle()
 }
 
 private function comuniItaliani (){
-//Step 1 : CHECK Parameter
+
+    //Step 1 : CHECK Parameter
     // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
     $this->info('Processing comuni italiani');
     // SHP FILE is mandatory
@@ -70,17 +71,19 @@ private function comuniItaliani (){
         die();
     }
 
-//Step 2 : Save shape file content in temporary table
+    //Step 2 : Save shape file content in temporary table
     $table=$this->createTemporaryTableFromShape($shape,'32632:4326');
+    $this->info("Table $table created");
 
-//Step 5 : Call sync_table method
+
+    //Step 5 : Call sync_table method
     $import_method = "comuni_italiani";
     $model_name = "TaxonomyWhere";
     $source_id_field = "pro_com_t";
     $mapping = ['comune' => 'name', 'geom' => 'geometry'];
     $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
-//Step 6 : Remove temporary table
+    //Step 6 : Remove temporary table
     Schema::dropIfExists($table);
     $this->info("Table $table Dropped");
 }
@@ -109,8 +112,8 @@ public function syncTable($import_method, $tmp_table_name, $model_name, $source_
     }
 }
 
-private function createTemporaryTableFromShape($shape,$srid) {
-    $table = substr(str_shuffle(MD5(microtime())), 0, 5);
+public function createTemporaryTableFromShape($shape,$srid) {
+    $table = 'removeme_'.substr(str_shuffle(MD5(microtime())), 0, 5);
     $psql = '';
     if(!empty(env('DB_PASSWORD'))) {
         $psql.="PGPASSWORD=".env("DB_PASSWORD");
@@ -121,7 +124,6 @@ private function createTemporaryTableFromShape($shape,$srid) {
     }
     $command = "shp2pgsql -c -s $srid  $shape $table | $psql";
     exec($command);
-    $this->info("Table $table created");
     return $table;
 }
 
