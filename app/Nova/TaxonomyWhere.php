@@ -47,11 +47,10 @@ class TaxonomyWhere extends Resource {
     public function fields(Request $request) {
         return [
             Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Source ID'), 'source_id')->sortable(),
-            Text::make(__('Import method'), 'import_method')->sortable(),
+            Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Number::make(__('Admin level'), 'admin_level')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
