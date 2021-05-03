@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'version' => '0.0.9',
+    'version' => '0.0.10',
 
     /*
     |--------------------------------------------------------------------------
@@ -186,6 +186,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        /*
+         * Webmapp Service Providers...
+         */
+        App\Providers\HoquServiceProvider::class
 
     ],
 

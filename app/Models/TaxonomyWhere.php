@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\Log;
  * @package App\Models
  *
  * @property string import_method
- * @property int id
+ * @property int    id
  */
-class TaxonomyWhere extends Model
-{
+class TaxonomyWhere extends Model {
     use HasFactory, GeometryFeatureTrait;
 
     protected $table = 'taxonomy_wheres';
@@ -28,8 +27,7 @@ class TaxonomyWhere extends Model
     ];
     private HoquServiceProvider $hoquServiceProvider;
 
-    public function __construct(array $attributes = [])
-    {
+    public function __construct(array $attributes = []) {
         parent::__construct($attributes);
         $this->hoquServiceProvider = App::make('App\Providers\HoquServiceProvider');
     }
@@ -39,8 +37,7 @@ class TaxonomyWhere extends Model
      *
      * @return bool
      */
-    public function isEditableByUserInterface(): bool
-    {
+    public function isEditableByUserInterface(): bool {
         return !$this->isImportedByExternalData();
     }
 
@@ -49,20 +46,16 @@ class TaxonomyWhere extends Model
      *
      * @return bool
      */
-    public function isImportedByExternalData(): bool
-    {
+    public function isImportedByExternalData(): bool {
         return !is_null($this->import_method);
     }
 
-    public function save(array $options = [])
-    {
+    public function save(array $options = []) {
         parent::save($options);
         try {
             $this->hoquServiceProvider->store('update_geomixer_taxonomy_where', ['id' => $this->id]);
         } catch (\Exception $e) {
             Log::error('An error occurred during a store operation: ' . $e->getMessage());
         }
-
     }
-
 }

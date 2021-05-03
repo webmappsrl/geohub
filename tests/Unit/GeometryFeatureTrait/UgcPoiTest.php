@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\GeometryFeatureTrait;
+namespace Tests\Unit;
 
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
