@@ -110,7 +110,7 @@ class HoquServiceProvider extends ServiceProvider {
         $error = curl_error($ch);
         curl_close($ch);
         if ($code >= 400)
-            throw new HttpException('Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
+            throw new HttpException($code, 'Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
 
         if ($code === 201)
             return [];
@@ -145,7 +145,7 @@ class HoquServiceProvider extends ServiceProvider {
         $error = curl_error($ch);
         curl_close($ch);
         if ($code >= 400)
-            throw new HttpException('Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
+            throw new HttpException($code, 'Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
 
         return $code;
     }
@@ -179,7 +179,7 @@ class HoquServiceProvider extends ServiceProvider {
         $error = curl_error($ch);
         curl_close($ch);
         if ($code >= 400)
-            throw new HttpException('Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
+            throw new HttpException($code, 'Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
 
         return $code;
     }
@@ -214,7 +214,7 @@ class HoquServiceProvider extends ServiceProvider {
         $error = curl_error($ch);
         curl_close($ch);
         if ($code >= 400)
-            throw new HttpException('Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
+            throw new HttpException($code, 'Error ' . $code . ' calling ' . config('hoqu.base_url') . ': ' . $error);
 
         return $code;
     }
