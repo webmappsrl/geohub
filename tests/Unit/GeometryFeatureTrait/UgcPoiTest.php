@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\GeometryFeatureTrait;
 
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class UgcPoiTest extends TestCase {
+class UgcPoiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testGetGeojsonWithoutGeometry() {
+    public function testGetGeojsonWithoutGeometry()
+    {
         $poi = UgcPoi::factory([
             'geometry' => null
         ])->create();
@@ -24,7 +26,8 @@ class UgcPoiTest extends TestCase {
         $this->assertNull($geojson);
     }
 
-    public function testGetGeojsonWithGeometry() {
+    public function testGetGeojsonWithGeometry()
+    {
         $poi = UgcPoi::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
@@ -46,7 +49,8 @@ class UgcPoiTest extends TestCase {
         $this->assertSame(json_encode([11, 43]), json_encode($geojson['geometry']['coordinates']));
     }
 
-    public function testGetRelatedUgcWithNoRelated() {
+    public function testGetRelatedUgcWithNoRelated()
+    {
         $poi = UgcPoi::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
@@ -62,7 +66,8 @@ class UgcPoiTest extends TestCase {
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function testGetRelatedUgcWithRelated() {
+    public function testGetRelatedUgcWithRelated()
+    {
         $user = User::factory(1)->create()->first();
         $poi = UgcPoi::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),

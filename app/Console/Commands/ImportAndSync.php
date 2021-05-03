@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
 
-class ImportAndSync extends Command {
+class ImportAndSync extends Command
+{
     /**
      * The name and signature of the console command.
      *
@@ -29,7 +30,8 @@ class ImportAndSync extends Command {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -38,7 +40,8 @@ class ImportAndSync extends Command {
      *
      * @return int
      */
-    public function handle() {
+    public function handle()
+    {
         $method = $this->argument('import_method');
         switch ($method) {
             case 'regioni_italiane':
@@ -59,7 +62,8 @@ class ImportAndSync extends Command {
         return 0;
     }
 
-    private function regioniItaliane() {
+    private function regioniItaliane()
+    {
         //Step 1 : CHECK Parameter
         // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
         $this->info('Processing regioni italiane');
@@ -88,7 +92,8 @@ class ImportAndSync extends Command {
         $this->info("Table $table Dropped");
     }
 
-    private function provinceItaliane() {
+    private function provinceItaliane()
+    {
         //Step 1 : CHECK Parameter
         // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
         $this->info('Processing province italiane');
@@ -117,7 +122,8 @@ class ImportAndSync extends Command {
         $this->info("Table $table Dropped");
     }
 
-    private function comuniItaliani() {
+    private function comuniItaliani()
+    {
         //Step 1 : CHECK Parameter
         // https://www.istat.it/storage/cartografia/confini_amministrativi/non_generalizzati/Limiti01012021.zip
         $this->info('Processing comuni italiani');
@@ -149,14 +155,15 @@ class ImportAndSync extends Command {
     /**
      * Sync the rows of the temporary table with the given model name.
      *
-     * @param string $import_method   the method used to import the temporary table rows
-     * @param string $tmp_table_name  the temporary table name
-     * @param string $model_name      the model where to import the new rows
+     * @param string $import_method the method used to import the temporary table rows
+     * @param string $tmp_table_name the temporary table name
+     * @param string $model_name the model where to import the new rows
      * @param string $source_id_field the id used in the source table. This is used to track the
      *                                row to let us update it when needed
-     * @param array  $mapping         the mapping to use when import the rows. [`tmp_table_key` => `model_table_key`]
+     * @param array $mapping the mapping to use when import the rows. [`tmp_table_key` => `model_table_key`]
      */
-    public function syncTable(string $import_method, string $tmp_table_name, string $model_name, string $source_id_field, array $mapping): void {
+    public function syncTable(string $import_method, string $tmp_table_name, string $model_name, string $source_id_field, array $mapping): void
+    {
         $model_class_name = '\\App\\Models\\' . $model_name;
         //$model = new $model_class_name();
         $offset = 0;
@@ -186,11 +193,12 @@ class ImportAndSync extends Command {
      * given shapefile
      *
      * @param string $shape the shapefile url in a zip format
-     * @param string $srid  the srid format of the shapefile
+     * @param string $srid the srid format of the shapefile
      *
      * @return string the name of the created table
      */
-    public function createTemporaryTableFromShape(string $shape, string $srid): string {
+    public function createTemporaryTableFromShape(string $shape, string $srid): string
+    {
         $table = 'removeme_' . substr(str_shuffle(MD5(microtime())), 0, 5);
         $psql = '';
         if (!empty(env('DB_PASSWORD')))
@@ -210,10 +218,11 @@ class ImportAndSync extends Command {
      * This method adds the 'admin_level' column with $admin_level value to all existing records.
      * If 'admin_level' column is already existing it updates its values.
      *
-     * @param int    $admin_level
+     * @param int $admin_level
      * @param string $table the table to update
      */
-    public function addAdministrativeLevelToTemporaryTable(int $admin_level, string $table) {
+    public function addAdministrativeLevelToTemporaryTable(int $admin_level, string $table)
+    {
         $first = DB::table($table)->first();
         if (!array_key_exists('admin_level', get_object_vars($first))) {
             DB::statement(DB::raw("ALTER TABLE $table ADD COLUMN admin_level integer"));

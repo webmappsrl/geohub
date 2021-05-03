@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.5",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
-        "webmapp/wm-embedmaps-field": "*"
+        "webmapp/wm-embedmaps-field": "*",
+      "ext-curl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
