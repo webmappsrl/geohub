@@ -26585,185 +26585,179 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'WmMapContainer',
-    components: {},
-    props: {
-        feature: String,
-        related: String
+  name: 'WmMapContainer',
+  components: {},
+  props: {
+    feature: String,
+    related: String
+  },
+  data: function data() {
+    return {
+      map: null,
+      view: null,
+      vectorLayer: null,
+      vectorSource: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.vectorSource = new __WEBPACK_IMPORTED_MODULE_9_ol_source_Vector__["a" /* default */]({
+      features: []
+    });
+    this.vectorLayer = new __WEBPACK_IMPORTED_MODULE_10_ol_layer_Vector__["a" /* default */]({
+      source: this.vectorSource,
+      visible: true,
+      style: function style(feature) {
+        return _this._style(feature);
+      },
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: 50
+    });
+
+    this.view = new __WEBPACK_IMPORTED_MODULE_0_ol_View__["a" /* default */]({
+      center: this._fromLonLat([10.4, 43, 71]),
+      maxZoom: 17,
+      minZoom: 3,
+      projection: "EPSG:3857",
+      constrainOnlyCenter: true,
+      zoom: 6
+    });
+    this.map = new __WEBPACK_IMPORTED_MODULE_1_ol_Map__["a" /* default */]({
+      target: this.$refs['wm-map-root'],
+      layers: [new __WEBPACK_IMPORTED_MODULE_2_ol_layer_Tile__["a" /* default */]({
+        source: new __WEBPACK_IMPORTED_MODULE_3_ol_source_XYZ__["a" /* default */]({
+          maxZoom: 21,
+          minZoom: 1,
+          tileUrlFunction: function tileUrlFunction(c) {
+            return 'https://api.webmapp.it/tiles/' + c[0] + "/" + c[1] + "/" + c[2] + ".png";
+          },
+          projection: "EPSG:3857",
+          tileSize: [256, 256],
+          attributions: ["© <a href='https://webmapp.it' target='_blank'>Webmapp</a>", "© <a href='http://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a>"]
+        })
+      }), this.vectorLayer],
+      view: this.view,
+      controls: [new __WEBPACK_IMPORTED_MODULE_6_ol_control_Zoom__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_8_ol_control_FullScreen__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_5_ol_control_Attribution__["a" /* default */]({
+        collapsed: false,
+        collapsible: false
+      })],
+      interactions: Object(__WEBPACK_IMPORTED_MODULE_16_ol_interaction__["a" /* defaults */])({
+        mouseWheelZoom: false,
+        doubleClickZoom: true,
+        shiftDragZoom: true,
+        dragPan: true,
+        altShiftDragRotate: true,
+        pinchRotate: true,
+        pinchZoom: true
+      }).getArray()
+    });
+
+    this.updateSource();
+  },
+
+  watch: {
+    geojson: function geojson(value) {
+      this.updateSource();
     },
-    data: function data() {
-        return {
-            map: null,
-            view: null,
-            vectorLayer: null,
-            vectorSource: null
-        };
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        this.vectorSource = new __WEBPACK_IMPORTED_MODULE_9_ol_source_Vector__["a" /* default */]({
-            features: []
-        });
-        this.vectorLayer = new __WEBPACK_IMPORTED_MODULE_10_ol_layer_Vector__["a" /* default */]({
-            source: this.vectorSource,
-            visible: true,
-            style: function style(feature) {
-                return _this._style(feature);
-            },
-            updateWhileAnimating: true,
-            updateWhileInteracting: true,
-            zIndex: 50
-        });
-
-        this.view = new __WEBPACK_IMPORTED_MODULE_0_ol_View__["a" /* default */]({
-            center: this._fromLonLat([10.4, 43, 71]),
-            maxZoom: 17,
-            minZoom: 3,
-            projection: "EPSG:3857",
-            constrainOnlyCenter: true,
-            zoom: 6
-        });
-        this.map = new __WEBPACK_IMPORTED_MODULE_1_ol_Map__["a" /* default */]({
-            target: this.$refs['wm-map-root'],
-            layers: [new __WEBPACK_IMPORTED_MODULE_2_ol_layer_Tile__["a" /* default */]({
-                source: new __WEBPACK_IMPORTED_MODULE_3_ol_source_XYZ__["a" /* default */]({
-                    maxZoom: 21,
-                    minZoom: 1,
-                    tileUrlFunction: function tileUrlFunction(c) {
-                        return 'https://api.webmapp.it/tiles/' + c[0] + "/" + c[1] + "/" + c[2] + ".png";
-                    },
-                    projection: "EPSG:3857",
-                    tileSize: [256, 256],
-                    attributions: ["© <a href='https://webmapp.it' target='_blank'>Webmapp</a>", "© <a href='http://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a>"]
-                })
-            }), this.vectorLayer],
-            view: this.view,
-            controls: [new __WEBPACK_IMPORTED_MODULE_6_ol_control_Zoom__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_8_ol_control_FullScreen__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_5_ol_control_Attribution__["a" /* default */]({
-                collapsed: false,
-                collapsible: false
-            })],
-            interactions: Object(__WEBPACK_IMPORTED_MODULE_16_ol_interaction__["a" /* defaults */])({
-                mouseWheelZoom: false,
-                doubleClickZoom: true,
-                shiftDragZoom: true,
-                dragPan: true,
-                altShiftDragRotate: true,
-                pinchRotate: true,
-                pinchZoom: true
-            }).getArray()
-        });
-
-        this.updateSource();
-    },
-
-    watch: {
-        geojson: function geojson(value) {
-            this.updateSource();
-        },
-        related: function related(value) {
-            this.updateSource();
-        }
-    },
-    methods: {
-        _toLonLat: function _toLonLat(coordinates) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["n" /* transform */])(coordinates, "EPSG:3857", "EPSG:4326");
-        },
-        _fromLonLat: function _fromLonLat(coordinates) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["n" /* transform */])(coordinates, "EPSG:4326", "EPSG:3857");
-        },
-        _extentToLonLat: function _extentToLonLat(extent) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:3857", "EPSG:4326");
-        },
-        _extentFromLonLat: function _extentFromLonLat(extent) {
-            return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:4326", "EPSG:3857");
-        },
-        _style: function _style(feature) {
-            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle(feature);else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle(feature);
-            // else if (
-            //     feature.getGeometry().getType() === "Polygon" ||
-            //     feature.getGeometry().getType() === "MultiPolygon"
-            // )
-            //     return this._getPolygonStyle();
-            else return [];
-        },
-        _getPoiStyle: function _getPoiStyle(feature) {
-            var isRelated = feature.getId() + "" !== "wm-main-feature";
-            var style = void 0,
-                color = isRelated ? "#66b3ff" : "#ff0000";
-
-            var maxRadius = isRelated ? 1.2 : 1.7,
-                minRadius = isRelated ? 0.7 : 1,
-                minZoom = 8,
-                currentZoom = this.view.getZoom(),
-                zoomFactor = currentZoom < minZoom ? minRadius : (maxRadius - minRadius) / (16 - minZoom) * (currentZoom - minZoom) + minRadius,
-                borderSize = isRelated ? 2 : 3;
-
-            style = [new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
-                image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
-                    radius: 7 * zoomFactor + borderSize / 2,
-                    fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({ color: "#fff" }),
-                    stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
-                        color: "rgba(125, 125, 125, 0.75)",
-                        width: 1
-                    })
-                }),
-                zIndex: isRelated ? 100 : 200
-            }), new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
-                image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
-                    radius: 7 * zoomFactor - borderSize / 2,
-                    fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({ color: color })
-                }),
-                zIndex: isRelated ? 101 : 201
-            })];
-
-            return style;
-        },
-        _getLineStyle: function _getLineStyle(feature) {
-            var isRelated = feature.getId() + "" !== "wm-main-feature";
-            var style = [];
-
-            var color = isRelated ? "#66b3ff" : "#ff0000",
-                strokeWidth = isRelated ? 2 : 4,
-                lineDash = [],
-                lineCap = 'round',
-                zIndex = isRelated ? 100 : 200;
-
-            style.push(new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
-                stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
-                    color: color,
-                    width: strokeWidth,
-                    lineDash: lineDash,
-                    lineCap: lineCap
-                }),
-                zIndex: zIndex + 2
-            }));
-
-            return style;
-        },
-        updateSource: function updateSource() {
-            this.vectorSource.clear();
-
-            var features = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
-                featureProjection: 'EPSG:3857'
-            }).readFeatures(this.feature);
-            features[0].setId('wm-main-feature');
-            this.vectorSource.addFeatures(features);
-
-            var extent = this.vectorSource.getExtent();
-
-            if (typeof this.related !== 'undefined' && this.related.type === 'FeatureCollection' && typeof this.related.features !== 'undefined' && typeof this.related.features.length === 'number' && this.related.features.length > 0) {
-                var related = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
-                    featureProjection: 'EPSG:3857'
-                }).readFeatures(this.related);
-                this.vectorSource.addFeatures(related);
-            }
-
-            this.view.fit(extent, {
-                padding: [20, 20, 20, 20]
-            });
-        }
+    related: function related(value) {
+      this.updateSource();
     }
+  },
+  methods: {
+    _toLonLat: function _toLonLat(coordinates) {
+      return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["n" /* transform */])(coordinates, "EPSG:3857", "EPSG:4326");
+    },
+    _fromLonLat: function _fromLonLat(coordinates) {
+      return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["n" /* transform */])(coordinates, "EPSG:4326", "EPSG:3857");
+    },
+    _extentToLonLat: function _extentToLonLat(extent) {
+      return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:3857", "EPSG:4326");
+    },
+    _extentFromLonLat: function _extentFromLonLat(extent) {
+      return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:4326", "EPSG:3857");
+    },
+    _style: function _style(feature) {
+      if (feature.getGeometry().getType() === "Point") return this._getPoiStyle(feature);else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle(feature);else if (feature.getGeometry().getType() === "Polygon" || feature.getGeometry().getType() === "MultiPolygon") return this._getPolygonStyle();else return [];
+    },
+    _getPoiStyle: function _getPoiStyle(feature) {
+      var isRelated = feature.getId() + "" !== "wm-main-feature";
+      var style = void 0,
+          color = isRelated ? "#66b3ff" : "#ff0000";
+
+      var maxRadius = isRelated ? 1.2 : 1.7,
+          minRadius = isRelated ? 0.7 : 1,
+          minZoom = 8,
+          currentZoom = this.view.getZoom(),
+          zoomFactor = currentZoom < minZoom ? minRadius : (maxRadius - minRadius) / (16 - minZoom) * (currentZoom - minZoom) + minRadius,
+          borderSize = isRelated ? 2 : 3;
+
+      style = [new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
+        image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
+          radius: 7 * zoomFactor + borderSize / 2,
+          fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({ color: "#fff" }),
+          stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
+            color: "rgba(125, 125, 125, 0.75)",
+            width: 1
+          })
+        }),
+        zIndex: isRelated ? 100 : 200
+      }), new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
+        image: new __WEBPACK_IMPORTED_MODULE_13_ol_style_Circle__["a" /* default */]({
+          radius: 7 * zoomFactor - borderSize / 2,
+          fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({ color: color })
+        }),
+        zIndex: isRelated ? 101 : 201
+      })];
+
+      return style;
+    },
+    _getLineStyle: function _getLineStyle(feature) {
+      var isRelated = feature.getId() + "" !== "wm-main-feature";
+      var style = [];
+
+      var color = isRelated ? "#66b3ff" : "#ff0000",
+          strokeWidth = isRelated ? 2 : 4,
+          lineDash = [],
+          lineCap = 'round',
+          zIndex = isRelated ? 100 : 200;
+
+      style.push(new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
+        stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
+          color: color,
+          width: strokeWidth,
+          lineDash: lineDash,
+          lineCap: lineCap
+        }),
+        zIndex: zIndex + 2
+      }));
+
+      return style;
+    },
+    updateSource: function updateSource() {
+      this.vectorSource.clear();
+
+      var features = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
+        featureProjection: 'EPSG:3857'
+      }).readFeatures(this.feature);
+      features[0].setId('wm-main-feature');
+      this.vectorSource.addFeatures(features);
+
+      var extent = this.vectorSource.getExtent();
+
+      if (typeof this.related !== 'undefined' && this.related.type === 'FeatureCollection' && typeof this.related.features !== 'undefined' && typeof this.related.features.length === 'number' && this.related.features.length > 0) {
+        var related = new __WEBPACK_IMPORTED_MODULE_11_ol_format_GeoJSON__["a" /* default */]({
+          featureProjection: 'EPSG:3857'
+        }).readFeatures(this.related);
+        this.vectorSource.addFeatures(related);
+      }
+
+      this.view.fit(extent, {
+        padding: [20, 20, 20, 20]
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -50423,7 +50417,7 @@ exports.default = {
       return Nova.request({
         url: '/nova-api/' + this.resourceName + '/detach',
         method: 'delete',
-        params: (0, _extends3.default)({}, this.queryString, { resources: mapResources(resources) })
+        params: (0, _extends3.default)({}, this.queryString, { resources: mapResources(resources) }, { pivots: mapPivots(resources) })
       }).then(function () {
         _this3.deleteModalOpen = false;
         _this3.getResources();
@@ -50596,6 +50590,12 @@ function mapResources(resources) {
   return _.map(resources, function (resource) {
     return resource.id.value;
   });
+}
+
+function mapPivots(resources) {
+  return _.filter(_.map(resources, function (resource) {
+    return resource.id.pivotValue;
+  }));
 }
 
 /***/ }),
