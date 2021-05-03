@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\GeometryFeatureTrait;
 
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class UgcTrackTest extends TestCase {
+class UgcTrackTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testGetGeojsonWithoutGeometry() {
+    public function testGetGeojsonWithoutGeometry()
+    {
         $track = UgcTrack::factory([
             'geometry' => null
         ])->create();
@@ -24,7 +26,8 @@ class UgcTrackTest extends TestCase {
         $this->assertNull($geojson);
     }
 
-    public function testGetGeojsonWithGeometry() {
+    public function testGetGeojsonWithGeometry()
+    {
         $track = UgcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
         ])->create();
@@ -46,7 +49,8 @@ class UgcTrackTest extends TestCase {
         $this->assertSame(json_encode([[11, 43], [12, 43], [12, 44], [11, 44]]), json_encode($geojson['geometry']['coordinates']));
     }
 
-    public function testGetRelatedUgcWithNoRelated() {
+    public function testGetRelatedUgcWithNoRelated()
+    {
         $track = UgcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
         ])->create();
@@ -62,7 +66,8 @@ class UgcTrackTest extends TestCase {
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function testGetRelatedUgcWithRelated() {
+    public function testGetRelatedUgcWithRelated()
+    {
         $user = User::factory(1)->create()->first();
         $track = UgcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),

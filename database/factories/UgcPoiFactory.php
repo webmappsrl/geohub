@@ -2,25 +2,27 @@
 
 namespace Database\Factories;
 
-use App\Models\UgcTrack;
+use App\Models\UgcPoi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
-class UGCTrackFactory extends Factory {
+class UgcPoiFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = UgcTrack::class;
+    protected $model = UgcPoi::class;
 
     /**
      * Define the model's default state.
      *
      * @return array
      */
-    public function definition() {
-        $geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))");
+    public function definition()
+    {
+        $geometry = DB::raw("(ST_GeomFromText('POINT(11 43)'))");
 
         $rawData = [];
         for ($i = 0; $i < $this->faker->numberBetween(1, 10); $i++) {

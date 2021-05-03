@@ -6,7 +6,8 @@ use App\Models\UgcMedia;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
-class UGCMediaFactory extends Factory {
+class UgcMediaFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,7 +20,8 @@ class UGCMediaFactory extends Factory {
      *
      * @return array
      */
-    public function definition() {
+    public function definition()
+    {
         $geometry = null;
         if ($this->faker->numberBetween(1, 2) === 1)
             $geometry = DB::raw("(ST_GeomFromText('POINT(11 43)'))");
