@@ -62,12 +62,14 @@ class HoquServiceProvider extends ServiceProvider {
      *
      * @param string $endpoint the HOQU endpoint
      * @param array  $payload  the payload
+     * @param bool   $isPut    true if the curl should perform a put operation
      *
      * @return false|resource
      */
-    private function _getCurl(string $endpoint, array $payload) {
+    private function _getCurl(string $endpoint, array $payload, bool $isPut = false) {
         $ch = curl_init(config('hoqu.base_url') . $endpoint);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        if ($isPut)
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->_getHeaders());
@@ -103,7 +105,7 @@ class HoquServiceProvider extends ServiceProvider {
             'accept_instances' => json_encode($acceptInstances)
         ];
 
-        $ch = $this->_getCurl(PULL_ENDPOINT, $payload);
+        $ch = $this->_getCurl(PULL_ENDPOINT, $payload, true);
         $result = curl_exec($ch);
 
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -138,7 +140,7 @@ class HoquServiceProvider extends ServiceProvider {
             'id_task' => $jobId
         ];
 
-        $ch = $this->_getCurl(UPDATE_DONE_ENDPOINT, $payload);
+        $ch = $this->_getCurl(UPDATE_DONE_ENDPOINT, $payload, true);
         $result = curl_exec($ch);
 
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -172,7 +174,7 @@ class HoquServiceProvider extends ServiceProvider {
             'id_task' => $jobId
         ];
 
-        $ch = $this->_getCurl(UPDATE_ERROR_ENDPOINT, $payload);
+        $ch = $this->_getCurl(UPDATE_ERROR_ENDPOINT, $payload, true);
         $result = curl_exec($ch);
 
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
