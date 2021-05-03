@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string import_method
  */
-class TaxonomyWhere extends Model {
-    use HasFactory;
+class TaxonomyWhere extends Model
+{
+    use HasFactory, GeometryFeatureTrait;
 
     protected $table = 'taxonomy_wheres';
     protected $fillable = [
@@ -26,7 +28,8 @@ class TaxonomyWhere extends Model {
      *
      * @return bool
      */
-    public function isEditableByUserInterface(): bool {
+    public function isEditableByUserInterface(): bool
+    {
         return !$this->isImportedByExternalData();
     }
 
@@ -35,7 +38,8 @@ class TaxonomyWhere extends Model {
      *
      * @return bool
      */
-    public function isImportedByExternalData(): bool {
+    public function isImportedByExternalData(): bool
+    {
         return !is_null($this->import_method);
     }
 }
