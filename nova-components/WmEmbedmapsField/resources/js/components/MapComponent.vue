@@ -132,11 +132,11 @@ export default {
                 feature.getGeometry().getType() === "MultiLineString"
             )
                 return this._getLineStyle(feature);
-                // else if (
-                //     feature.getGeometry().getType() === "Polygon" ||
-                //     feature.getGeometry().getType() === "MultiPolygon"
-                // )
-            //     return this._getPolygonStyle();
+            else if (
+                feature.getGeometry().getType() === "Polygon" ||
+                feature.getGeometry().getType() === "MultiPolygon"
+            )
+                return this._getPolygonStyle(feature);
             else return [];
         },
         _getPoiStyle(feature) {
@@ -203,6 +203,37 @@ export default {
                         lineCap: lineCap,
                     }),
                     zIndex: zIndex + 2,
+                })
+            );
+
+            return style;
+        },
+        _getPolygonStyle(feature) {
+            const isRelated = feature.getId() + "" !== "wm-main-feature";
+
+            let style = [],
+                color = isRelated ? "#66b3ff" : "#ff0000",
+                colorRgb = isRelated ? "102, 179, 255" : "255, 0, 0",
+                fillOpacity = 0.3,
+                strokeWidth = 2,
+                strokeOpacity = 1,
+                lineDash = [],
+                fillColor = '';
+
+            fillColor = "rgba(" + colorRgb + "," + fillOpacity + ")";
+            color = "rgba(" + colorRgb + "," + strokeOpacity + ")";
+
+            style.push(
+                new Style({
+                    fill: new Fill({
+                        color: fillColor,
+                    }),
+                    stroke: new Stroke({
+                        color: color,
+                        width: strokeWidth,
+                        lineDash: lineDash,
+                    }),
+                    zIndex: isRelated ? 100 : 200,
                 })
             );
 

@@ -26679,13 +26679,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return Object(__WEBPACK_IMPORTED_MODULE_4_ol_proj__["o" /* transformExtent */])(extent, "EPSG:4326", "EPSG:3857");
         },
         _style: function _style(feature) {
-            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle(feature);else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle(feature);
-            // else if (
-            //     feature.getGeometry().getType() === "Polygon" ||
-            //     feature.getGeometry().getType() === "MultiPolygon"
-            // )
-            //     return this._getPolygonStyle();
-            else return [];
+            if (feature.getGeometry().getType() === "Point") return this._getPoiStyle(feature);else if (feature.getGeometry().getType() === "LineString" || feature.getGeometry().getType() === "MultiLineString") return this._getLineStyle(feature);else if (feature.getGeometry().getType() === "Polygon" || feature.getGeometry().getType() === "MultiPolygon") return this._getPolygonStyle(feature);else return [];
         },
         _getPoiStyle: function _getPoiStyle(feature) {
             var isRelated = feature.getId() + "" !== "wm-main-feature";
@@ -26737,6 +26731,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     lineCap: lineCap
                 }),
                 zIndex: zIndex + 2
+            }));
+
+            return style;
+        },
+        _getPolygonStyle: function _getPolygonStyle(feature) {
+            var isRelated = feature.getId() + "" !== "wm-main-feature";
+
+            var style = [],
+                color = isRelated ? "#66b3ff" : "#ff0000",
+                colorRgb = isRelated ? "102, 179, 255" : "255, 0, 0",
+                fillOpacity = 0.3,
+                strokeWidth = 2,
+                strokeOpacity = 1,
+                lineDash = [],
+                fillColor = '';
+
+            fillColor = "rgba(" + colorRgb + "," + fillOpacity + ")";
+            color = "rgba(" + colorRgb + "," + strokeOpacity + ")";
+
+            style.push(new __WEBPACK_IMPORTED_MODULE_12_ol_style_Style__["c" /* default */]({
+                fill: new __WEBPACK_IMPORTED_MODULE_15_ol_style_Fill__["a" /* default */]({
+                    color: fillColor
+                }),
+                stroke: new __WEBPACK_IMPORTED_MODULE_14_ol_style_Stroke__["a" /* default */]({
+                    color: color,
+                    width: strokeWidth,
+                    lineDash: lineDash
+                }),
+                zIndex: isRelated ? 100 : 200
             }));
 
             return style;
