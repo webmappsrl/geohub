@@ -187,6 +187,11 @@ return [
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Webmapp Service Providers...
+         */
+        App\Providers\HoquServiceProvider::class
+
     ],
 
     /*
