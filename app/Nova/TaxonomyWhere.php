@@ -5,26 +5,24 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class TaxonomyWhere extends Resource
-{
+class TaxonomyWhere extends Resource {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = \App\Models\TaxonomyWhere::class;
-
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'Name';
-
     /**
      * The columns that should be searched.
      *
@@ -35,8 +33,7 @@ class TaxonomyWhere extends Resource
         'admin_level'
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Taxonomies');
     }
 
@@ -44,13 +41,15 @@ class TaxonomyWhere extends Resource
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request) {
         return [
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Source ID'), 'source_id')->sortable(),
+            Text::make(__('Import method'), 'import_method')->sortable(),
+            Number::make(__('Admin level'), 'admin_level')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
 
             WmEmbedmapsField::make(__('Map'), function ($model) {
@@ -65,10 +64,10 @@ class TaxonomyWhere extends Resource
      * Get the cards available for the request.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -76,10 +75,10 @@ class TaxonomyWhere extends Resource
      * Get the filters available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [];
     }
 
@@ -87,10 +86,10 @@ class TaxonomyWhere extends Resource
      * Get the lenses available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -98,10 +97,10 @@ class TaxonomyWhere extends Resource
      * Get the actions available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }
