@@ -2,10 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Providers\GeohubServiceProvider;
+use Doctrine\DBAL\Exception;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -97,4 +101,6 @@ class UgcPoiTest extends TestCase
         $this->assertIsArray($geojson['features']);
         $this->assertCount(2, $geojson['features']);
     }
+
+    
 }

@@ -6,7 +6,6 @@ use App\Models\TaxonomyWhere;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 

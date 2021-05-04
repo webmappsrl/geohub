@@ -6,13 +6,20 @@ use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\ServiceProvider;
 
-class UserGeneratedDataController extends Controller {
+class UserGeneratedDataController extends Controller
+{
+
     /**
      * Perform a store of a new user generated data
      *
@@ -20,7 +27,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @return JsonResponse|void
      */
-    public function store(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse
+    {
         $json = json_decode($request->getContent(), true);
 
         if (isset($json['type']) && $json['type'] === 'FeatureCollection' && isset($json['features']) && is_array($json['features'])) {
@@ -40,15 +48,20 @@ class UserGeneratedDataController extends Controller {
     /**
      * Store a new User Generated Content and handle the media store and association
      *
-     * @param array     $feature the base feature to use to create the UGC
-     * @param User|null $user    the user creator of the data
+     * @param array $feature the base feature to use to create the UGC
+     * @param User|null $user the user creator of the data
      */
-    private function _storeUgc(array $feature, User $user = null) {
+    private function _storeUgc(array $feature, User $user = null)
+    {
+        $ugcType = null;
         $userGeneratedData = null;
-        if (!isset($feature['geometry']['type']) || $feature['geometry']['type'] === 'Point')
+        if (!isset($feature['geometry']['type']) || $feature['geometry']['type'] === 'Point') {
             $userGeneratedData = new UgcPoi();
-        else if (isset($feature['geometry']['type']) && $feature['geometry']['type'] === 'LineString')
+            $ugcType = 'ugc_poi';
+        } else if (isset($feature['geometry']['type']) && $feature['geometry']['type'] === 'LineString') {
             $userGeneratedData = new UgcTrack();
+            $ugcType = 'ugc_track';
+        }
 
         if (!is_null($userGeneratedData)) {
             if (isset($feature['geometry']))
@@ -60,11 +73,7 @@ class UserGeneratedDataController extends Controller {
             }
 
             if (isset($feature['properties']['form_data'])) {
-                $userGeneratedData->name = isset($feature['properties']['form_data']['name'])
-                    ? $feature['properties']['form_data']['name']
-                    : (isset($feature['properties']['form_data']['title'])
-                        ? $feature['properties']['form_data']['title']
-                        : '');
+                $userGeneratedData->name = $feature['properties']['form_data']['name'] ?? ($feature['properties']['form_data']['title'] ?? '');
                 if (isset($feature['properties']['form_data']['name']))
                     unset($feature['properties']['form_data']['name']);
                 elseif (isset($feature['properties']['form_data']['title']))
@@ -79,7 +88,6 @@ class UserGeneratedDataController extends Controller {
             if ($user)
                 $userGeneratedData->user()->associate($user);
 
-            $userGeneratedData->save();
 
             if (isset($feature['properties']['form_data']['gallery']) &&
                 !empty($feature['properties']['form_data']['gallery'])) {
@@ -92,23 +100,28 @@ class UserGeneratedDataController extends Controller {
                         $mediaId = $this->_storeUgcMedia($rawImage, $userGeneratedData->app_id, $user, $geometry);
                         $userGeneratedData->ugc_media()->attach($mediaId);
                     }
-                    $userGeneratedData->save();
                 }
             }
+            $userGeneratedData->save();
+
+            $hoquService = app(HoquServiceProvider::class);
+            $hoquService->store('update_ugc_taxonomy_where', ['id' => $userGeneratedData->id, 'type' => $ugcType]);
+
         }
     }
 
     /**
      * Store a new UGC Media
      *
-     * @param string      $base64 the media
+     * @param string $base64 the media
      * @param string|null $appId
-     * @param User|null   $user   the creator of the media
+     * @param User|null $user the creator of the media
      * @param string|null $geometry
      *
      * @return mixed the stored media id
      */
-    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null) {
+    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null)
+    {
         $baseImageName = 'media/images/ugc/image_';
         $maxId = DB::table('ugc_media')->max('id');
         if (is_null($maxId)) $maxId = 0;
@@ -136,6 +149,9 @@ class UserGeneratedDataController extends Controller {
             $newMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . $geometry . "'))");
 
         $newMedia->save();
+
+        $hoquService = app(HoquServiceProvider::class);
+        $hoquService->store('update_ugc_taxonomy_where', ['id' => $newMedia->id, 'type' => 'ugc_media']);
 
         return $newMedia->id;
     }
