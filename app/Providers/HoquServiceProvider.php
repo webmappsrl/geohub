@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
+define('GET_ENDPOINT', '/api/taxonomy_where/{id}');
 define('PULL_ENDPOINT', '/api/pull');
 define('STORE_ENDPOINT', '/api/store');
 define('UPDATE_DONE_ENDPOINT', '/api/updateDone');
@@ -19,13 +20,15 @@ define('UPDATE_ERROR_ENDPOINT', '/api/updateError');
  *
  * @package App\Providers
  */
-class HoquServiceProvider extends ServiceProvider {
+class HoquServiceProvider extends ServiceProvider
+{
     /**
      * Register services.
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         $this->app->singleton(HoquServiceProvider::class, function ($app) {
             return new HoquServiceProvider($app);
         });
@@ -36,7 +39,8 @@ class HoquServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
     }
 
     /**
@@ -46,7 +50,8 @@ class HoquServiceProvider extends ServiceProvider {
      *
      * @throws MissingMandatoryParametersException
      */
-    private function _getHeaders(): array {
+    private function _getHeaders(): array
+    {
         if (!config('hoqu.token'))
             throw new MissingMandatoryParametersException('A token with UPDATE and PULL permissions is needed to perform an HOQU operation but none was provided. You can add it in the HOQU_TOKEN env variable');
 
@@ -61,12 +66,13 @@ class HoquServiceProvider extends ServiceProvider {
      * Create a curl request ready to be executed
      *
      * @param string $endpoint the HOQU endpoint
-     * @param array  $payload  the payload
-     * @param bool   $isPut    true if the curl should perform a put operation
+     * @param array $payload the payload
+     * @param bool $isPut true if the curl should perform a put operation
      *
      * @return false|resource
      */
-    private function _getCurl(string $endpoint, array $payload, bool $isPut = false) {
+    private function _getCurl(string $endpoint, array $payload, bool $isPut = false)
+    {
         $ch = curl_init(config('hoqu.base_url') . $endpoint);
         if ($isPut)
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
@@ -93,7 +99,8 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws MissingMandatoryParametersException
      * @throws HttpException
      */
-    public function pull(array $jobs, array $acceptInstances = null): array {
+    public function pull(array $jobs, array $acceptInstances = null): array
+    {
         if (is_null($acceptInstances)) $acceptInstances = [config('hoqu.geohub_domain')];
 
         Log::debug('Performing pull from HOQU:');
@@ -123,15 +130,16 @@ class HoquServiceProvider extends ServiceProvider {
     /**
      * Perform a HOQU Update Done operation
      *
-     * @param int    $jobId the job just completed
-     * @param string $log   the log generated from the job execution
+     * @param int $jobId the job just completed
+     * @param string $log the log generated from the job execution
      *
      * @return int the api call result
      *
      * @throws MissingMandatoryParametersException
      * @throws HttpException
      */
-    public function updateDone(int $jobId, string $log = ''): int {
+    public function updateDone(int $jobId, string $log = ''): int
+    {
         Log::debug('Performing updateDone from HOQU');
 
         $payload = [
@@ -155,16 +163,17 @@ class HoquServiceProvider extends ServiceProvider {
     /**
      * Perform a HOQU Update Done operation
      *
-     * @param int    $jobId    the job just completed
+     * @param int $jobId the job just completed
      * @param string $errorLog the error generated from the job execution
-     * @param string $log      the log generated from the job execution
+     * @param string $log the log generated from the job execution
      *
      * @return mixed
      *
      * @throws MissingMandatoryParametersException
      * @throws HttpException
      */
-    public function updateError(int $jobId, string $errorLog, string $log = '') {
+    public function updateError(int $jobId, string $errorLog, string $log = '')
+    {
         Log::debug('Performing updateError from HOQU');
 
         $payload = [
@@ -189,8 +198,8 @@ class HoquServiceProvider extends ServiceProvider {
     /**
      * Perform a store operation on HOQU
      *
-     * @param string $job    the job to store
-     * @param array  $params the job parameters
+     * @param string $job the job to store
+     * @param array $params the job parameters
      *
      * @return int  the HTTP code
      *
@@ -198,7 +207,8 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws HttpException
      */
 
-    public function store(string $job, array $params): int {
+    public function store(string $job, array $params): int
+    {
         $instance = config('hoqu.geohub_domain');
 
         Log::debug('Performing store to HOQU:');
