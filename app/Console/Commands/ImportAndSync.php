@@ -202,11 +202,13 @@ class ImportAndSync extends Command
         $table = 'removeme_' . substr(str_shuffle(MD5(microtime())), 0, 5);
         $psql = '';
         if (!empty(env('DB_PASSWORD')))
-            $psql .= "PGPASSWORD=" . env("DB_PASSWORD");
+            $psql .= "PGPASSWORD=" . config("database.connections." . config("database.default") . ".password");
 
-        $psql .= " psql -h " . env("DB_HOST") . " -p " . env("DB_PORT") . " -d " . env("DB_DATABASE");
-        if (!empty(env('DB_USERNAME')))
-            $psql .= " -U " . env("DB_USERNAME");
+        $psql .= " psql -h " . config("database.connections." . config("database.default") . ".host");
+        $psql .= " -p " . config("database.connections." . config("database.default") . ".port");
+        $psql .= " -d " . config("database.connections." . config("database.default") . ".database");
+        if (!empty(config("database.connections." . config("database.default") . ".username")))
+            $psql .= " -U " . config("database.connections." . config("database.default") . ".username");
 
         $command = "shp2pgsql -c -s $srid $shape $table | $psql";
         exec($command);
