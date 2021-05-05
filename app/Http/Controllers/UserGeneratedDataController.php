@@ -7,6 +7,7 @@ use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
+use App\Traits\GeometryFeatureTrait;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -16,9 +17,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use function PHPUnit\Framework\isNull;
 
 class UserGeneratedDataController extends Controller
 {
+    use GeometryFeatureTrait;
 
     /**
      * Perform a store of a new user generated data
@@ -154,5 +157,38 @@ class UserGeneratedDataController extends Controller
         $hoquService->store('update_ugc_taxonomy_where', ['id' => $newMedia->id, 'type' => 'ugc_media']);
 
         return $newMedia->id;
+    }
+
+    /**
+     * Get Ugc by ID as geoJson
+     * @param int $id the Ugc id
+     *
+     * @return JsonResponse return the Ugc geojson
+     *
+     */
+    public function getGeojsonFromUgc(int $id)
+    {
+        $apiUrl = explode("/", request()->path());
+        switch ($apiUrl[2]) {
+            case 'poi':
+                $model = "\App\Models\UgcPoi";
+                break;
+            case 'track':
+                $model = "\App\Models\UgcTrack";
+                break;
+            case 'media':
+                $model = "\App\Models\UgcMedia";
+                break;
+            default:
+                return response()->json(['code' => 400, 'error' => "Invalid type ' . $apiUrl[2] . '. Available types: poi, track, media"], 400);
+        }
+
+        $ugc = $model::find($id);
+        $ugc = !is_null($ugc) ? $ugc->getGeojson() : null;
+        if (is_null($ugc))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($ugc, 200);
+
     }
 }
