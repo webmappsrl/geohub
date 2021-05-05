@@ -28,4 +28,9 @@ class UgcPoi extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function taxonomy_where()
+    {
+        return $this->belongsToMany(TaxonomyWhere::class);
+    }
 }

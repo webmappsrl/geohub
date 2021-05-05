@@ -191,4 +191,31 @@ class UserGeneratedDataController extends Controller
         return response()->json($ugc, 200);
 
     }
+
+    /**
+     *  Associate UcgFeature to TaxonomyWhere
+     *
+     * @param Request $request the request
+     *
+     * @return JsonResponse
+     */
+
+    //TODO controllare metodo per associazione taxonomy where con UgcFeature. Api già aggiunta in api.php . Controllare migrations e modelli se vanno bene :)
+    public function associateTaxonomyWhereWithUgcFeature(Request $request)
+    {
+        $apiUrl = explode("/", request()->path());
+        switch ($apiUrl[2]) {
+            case 'poi':
+                $model = "\App\Models\UgcPoi";
+                break;
+            case 'track':
+                $model = "\App\Models\UgcTrack";
+                break;
+            case 'media':
+                $model = "\App\Models\UgcMedia";
+                break;
+            default:
+                return response()->json(['code' => 400, 'error' => "Invalid type ' . $apiUrl[2] . '. Available types: poi, track, media"], 400);
+        }
+    }
 }

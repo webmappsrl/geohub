@@ -63,4 +63,19 @@ class TaxonomyWhere extends Model
             Log::error('An error occurred during a store operation: ' . $e->getMessage());
         }
     }
+
+    public function ugc_pois()
+    {
+        return $this->belongsToMany(UgcPoi::class);
+    }
+
+    public function ugc_tracks()
+    {
+        return $this->belongsToMany(UgcTrack::class);
+    }
+
+    public function ugc_media()
+    {
+        return $this->belongsToMany(UgcMedia::class);
+    }
 }

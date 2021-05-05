@@ -46,12 +46,15 @@ Route::name('api.')->group(function () {
     Route::prefix('ugc')->name('ugc.')->group(function () {
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getGeoJsonFromUgc'])->name('geojson');
+            Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getGeoJsonFromUgc'])->name('geojson');
+            Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getGeoJsonFromUgc'])->name('geojson');
+            Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
     });
 });
