@@ -6,6 +6,7 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -15,10 +16,9 @@ use Illuminate\Support\Facades\Log;
  * @package App\Models
  *
  * @property string import_method
- * @property int id
+ * @property int    id
  */
-class TaxonomyWhere extends Model
-{
+class TaxonomyWhere extends Model {
     use HasFactory, GeometryFeatureTrait;
 
     protected $table = 'taxonomy_wheres';
@@ -28,8 +28,7 @@ class TaxonomyWhere extends Model
     ];
     private HoquServiceProvider $hoquServiceProvider;
 
-    public function __construct(array $attributes = [])
-    {
+    public function __construct(array $attributes = []) {
         parent::__construct($attributes);
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
@@ -39,8 +38,7 @@ class TaxonomyWhere extends Model
      *
      * @return bool
      */
-    public function isEditableByUserInterface(): bool
-    {
+    public function isEditableByUserInterface(): bool {
         return !$this->isImportedByExternalData();
     }
 
@@ -49,13 +47,11 @@ class TaxonomyWhere extends Model
      *
      * @return bool
      */
-    public function isImportedByExternalData(): bool
-    {
+    public function isImportedByExternalData(): bool {
         return !is_null($this->import_method);
     }
 
-    public function save(array $options = [])
-    {
+    public function save(array $options = []) {
         parent::save($options);
         try {
             $this->hoquServiceProvider->store('update_geomixer_taxonomy_where', ['id' => $this->id]);
@@ -64,18 +60,15 @@ class TaxonomyWhere extends Model
         }
     }
 
-    public function ugc_pois()
-    {
+    public function ugc_pois(): BelongsToMany {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks()
-    {
+    public function ugc_tracks(): BelongsToMany {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function ugc_media()
-    {
+    public function ugc_media(): BelongsToMany {
         return $this->belongsToMany(UgcMedia::class);
     }
 }

@@ -5,23 +5,33 @@ namespace App\Models;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class UgcTrack extends Model
-{
+/**
+ * Class UgcTrack
+ *
+ * @package App\Models
+ *
+ * @property int    id
+ * @property string app_id
+ * @property string relative_url
+ * @property string geometry
+ * @property string name
+ * @property string raw_data
+ */
+class UgcTrack extends Model {
     use HasFactory, GeometryFeatureTrait;
 
-    public function ugc_media()
-    {
+    public function ugc_media(): BelongsToMany {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function user()
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_where()
-    {
+    public function taxonomy_wheres(): BelongsToMany {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 }
