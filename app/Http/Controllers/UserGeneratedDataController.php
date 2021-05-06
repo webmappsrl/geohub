@@ -106,7 +106,7 @@ class UserGeneratedDataController extends Controller {
             $userGeneratedData->save();
 
             $hoquService = app(HoquServiceProvider::class);
-            $hoquService->store('update_ugc_taxonomy_where', ['id' => $userGeneratedData->id, 'type' => $ugcType]);
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $userGeneratedData->id, 'type' => $ugcType]);
         }
     }
 

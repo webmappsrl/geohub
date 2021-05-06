@@ -5,33 +5,38 @@ namespace App\Nova;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class UgcMedia extends Resource {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\UgcMedia::class;
+    public static string $model = \App\Models\UgcMedia::class;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'id',
+        'name'
+    ];
+    public static array $searchRelations = [
+        'taxonomy_wheres' => ['name']
     ];
 
     public static function group() {
@@ -41,11 +46,11 @@ class UgcMedia extends Resource {
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request): array {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             Image::make('Image', 'relative_url')->disk('public'),
@@ -58,6 +63,7 @@ class UgcMedia extends Resource {
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })->onlyOnIndex(),
+            BelongsToMany::make(__('Taxonomy wheres')),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
@@ -70,22 +76,22 @@ class UgcMedia extends Resource {
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request): array {
         return [];
     }
 
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request): array {
         return [
             new DateRange('created_at')
         ];
@@ -94,22 +100,22 @@ class UgcMedia extends Resource {
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request): array {
         return [];
     }
 
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request): array {
         return [];
     }
 }
