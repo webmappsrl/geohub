@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\generateduserdata;
+namespace Tests\Feature\GeneratedUserData;
 
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Mockery;
 use Tests\TestCase;
 
-class storeApiTest extends TestCase {
+class StoreApiTest extends TestCase {
     use RefreshDatabase;
 
     private function _getHoquServiceProviderMock() {
@@ -116,7 +116,7 @@ class storeApiTest extends TestCase {
             $mock->shouldReceive('store')
                 ->once()
                 ->with('update_ugc_taxonomy_wheres', Mockery::on(function ($option) {
-                    return is_array($option) && isset($option['id']) && isset($option['type']) && $option['type'] === 'ugc_poi';
+                    return is_array($option) && isset($option['id']) && isset($option['type']) && $option['type'] === 'poi';
                 }))
                 ->andReturn(201);
         });
@@ -152,7 +152,7 @@ class storeApiTest extends TestCase {
             $mock->shouldReceive('store')
                 ->once()
                 ->with('update_ugc_taxonomy_wheres', Mockery::on(function ($option) {
-                    return is_array($option) && isset($option['id']) && isset($option['type']) && $option['type'] === 'ugc_track';
+                    return is_array($option) && isset($option['id']) && isset($option['type']) && $option['type'] === 'track';
                 }))
                 ->andReturn(201);
         });
