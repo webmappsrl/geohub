@@ -5,14 +5,17 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
-trait GeometryFeatureTrait {
+trait GeometryFeatureTrait
+{
     /**
      * Calculate the geojson on a model with geometry
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $type = get_class($this);
         $geom = $type::where('id', '=', $this->id)
             ->select(
@@ -22,13 +25,17 @@ trait GeometryFeatureTrait {
             ->geom;
 
         if (isset($geom)) {
-            return [
+            $geoJson = [
                 "type" => "Feature",
-                "properties" => [
-                    'id' => $type . "_" . $this->id
-                ],
+                "properties" => [],
                 "geometry" => json_decode($geom, true)
             ];
+            $keys = Schema::getColumnListing($this->getTable());
+            foreach ($keys as $value) {
+                if ($value != 'geometry')
+                    $geoJson['properties'][$value] = $this->$value;
+            }
+            return $geoJson;
         } else return null;
     }
 
@@ -37,7 +44,8 @@ trait GeometryFeatureTrait {
      *
      * @return array
      */
-    public function getRelatedUgcGeojson(): array {
+    public function getRelatedUgcGeojson(): array
+    {
         $classes = ['App\Models\UgcPoi' => 'ugc_pois', 'App\Models\UgcTrack' => 'ugc_tracks', 'App\Models\UgcMedia' => 'ugc_media'];
         $modelType = get_class($this);
         $model = $modelType::find($this->id);

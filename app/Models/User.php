@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -39,15 +40,15 @@ class User extends Authenticatable implements JWTSubject {
         'email_verified_at' => 'datetime',
     ];
 
-    public function ugc_pois() {
+    public function ugc_pois(): HasMany {
         return $this->hasMany(UgcPoi::class);
     }
 
-    public function ugc_tracks() {
+    public function ugc_tracks(): HasMany {
         return $this->hasMany(UgcTrack::class);
     }
 
-    public function ugc_medias() {
+    public function ugc_medias(): HasMany {
         return $this->hasMany(UgcMedia::class);
     }
 
@@ -65,7 +66,7 @@ class User extends Authenticatable implements JWTSubject {
      *
      * @return array
      */
-    public function getJWTCustomClaims() {
+    public function getJWTCustomClaims(): array {
         return [];
     }
 

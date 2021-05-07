@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-curl": "*",
         "ext-json": "*",
         "ampeco/nova-date-range-filter": "^0.1.1",
         "fideloper/proxy": "^4.4",
@@ -17,10 +18,10 @@
         "laravel/framework": "^8.12",
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
+        "titasgailius/search-relations": "^1.0",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
-        "webmapp/wm-embedmaps-field": "*",
-      "ext-curl": "*"
+        "webmapp/wm-embedmaps-field": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
+use App\Traits\GeometryFeatureTrait;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +17,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserGeneratedDataController extends Controller {
+    use GeometryFeatureTrait;
+
     /**
      * Perform a store of a new user generated data
      *
@@ -43,12 +49,16 @@ class UserGeneratedDataController extends Controller {
      * @param array     $feature the base feature to use to create the UGC
      * @param User|null $user    the user creator of the data
      */
-    private function _storeUgc(array $feature, User $user = null) {
+    private function _storeUgc(array $feature, User $user = null): void {
+        $ugcType = null;
         $userGeneratedData = null;
-        if (!isset($feature['geometry']['type']) || $feature['geometry']['type'] === 'Point')
+        if (!isset($feature['geometry']['type']) || $feature['geometry']['type'] === 'Point') {
             $userGeneratedData = new UgcPoi();
-        else if (isset($feature['geometry']['type']) && $feature['geometry']['type'] === 'LineString')
+            $ugcType = 'poi';
+        } else if (isset($feature['geometry']['type']) && $feature['geometry']['type'] === 'LineString') {
             $userGeneratedData = new UgcTrack();
+            $ugcType = 'track';
+        }
 
         if (!is_null($userGeneratedData)) {
             if (isset($feature['geometry']))
@@ -60,11 +70,7 @@ class UserGeneratedDataController extends Controller {
             }
 
             if (isset($feature['properties']['form_data'])) {
-                $userGeneratedData->name = isset($feature['properties']['form_data']['name'])
-                    ? $feature['properties']['form_data']['name']
-                    : (isset($feature['properties']['form_data']['title'])
-                        ? $feature['properties']['form_data']['title']
-                        : '');
+                $userGeneratedData->name = $feature['properties']['form_data']['name'] ?? ($feature['properties']['form_data']['title'] ?? '');
                 if (isset($feature['properties']['form_data']['name']))
                     unset($feature['properties']['form_data']['name']);
                 elseif (isset($feature['properties']['form_data']['title']))
@@ -73,12 +79,16 @@ class UserGeneratedDataController extends Controller {
                 if (isset($feature['properties']['timestamp']))
                     $feature['properties']['form_data']['timestamp'] = $feature['properties']['timestamp'];
 
-                $userGeneratedData->raw_data = json_encode($feature['properties']['form_data']);
+                $data = $feature['properties']['form_data'];
+                if (isset($data['gallery'])) unset($data['gallery']);
+
+                $userGeneratedData->raw_data = json_encode($data);
             }
 
             if ($user)
                 $userGeneratedData->user()->associate($user);
 
+            // This is needed to make sure the media attachment work
             $userGeneratedData->save();
 
             if (isset($feature['properties']['form_data']['gallery']) &&
@@ -92,9 +102,12 @@ class UserGeneratedDataController extends Controller {
                         $mediaId = $this->_storeUgcMedia($rawImage, $userGeneratedData->app_id, $user, $geometry);
                         $userGeneratedData->ugc_media()->attach($mediaId);
                     }
-                    $userGeneratedData->save();
                 }
             }
+            $userGeneratedData->save();
+
+            $hoquService = app(HoquServiceProvider::class);
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $userGeneratedData->id, 'type' => $ugcType]);
         }
     }
 
@@ -106,9 +119,9 @@ class UserGeneratedDataController extends Controller {
      * @param User|null   $user   the creator of the media
      * @param string|null $geometry
      *
-     * @return mixed the stored media id
+     * @return int the stored media id
      */
-    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null) {
+    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null): int {
         $baseImageName = 'media/images/ugc/image_';
         $maxId = DB::table('ugc_media')->max('id');
         if (is_null($maxId)) $maxId = 0;
@@ -137,6 +150,101 @@ class UserGeneratedDataController extends Controller {
 
         $newMedia->save();
 
+        $hoquService = app(HoquServiceProvider::class);
+        $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $newMedia->id, 'type' => 'media']);
+
         return $newMedia->id;
+    }
+
+    /**
+     * Calculate the model class name of a ugc from its type
+     *
+     * @param string $type the ugc type
+     *
+     * @return string the model class name
+     *
+     * @throws Exception
+     */
+    private function _getUgcModelFromType(string $type): string {
+        switch ($type) {
+            case 'poi':
+                $model = "\App\Models\UgcPoi";
+                break;
+            case 'track':
+                $model = "\App\Models\UgcTrack";
+                break;
+            case 'media':
+                $model = "\App\Models\UgcMedia";
+                break;
+            default:
+                throw new Exception("Invalid type ' . $type . '. Available types: poi, track, media");
+        }
+
+        return $model;
+    }
+
+    /**
+     * Get Ugc by ID as geoJson
+     *
+     * @param int $id the Ugc id
+     *
+     * @return JsonResponse return the Ugc geojson
+     */
+    public function getUgcGeojson(int $id): JsonResponse {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getUgcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $ugc = $model::find($id);
+        $ugc = !is_null($ugc) ? $ugc->getGeojson() : null;
+        if (is_null($ugc))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($ugc);
+    }
+
+    /**
+     *  Associate UcgFeature to TaxonomyWhere
+     *
+     * @param Request $request the request
+     *
+     * @return JsonResponse
+     */
+    public function associateTaxonomyWhereWithUgcFeature(Request $request): JsonResponse {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getUgcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $params = $request->all();
+
+        if (!isset($params['id']) || empty($params['id']))
+            return response()->json([
+                'code' => 400,
+                'message' => "The parameter 'id' is missing but required. The operation can not be completed"
+            ], 400);
+
+        $id = $params['id'];
+
+        if (!isset($params['where_ids']) || empty($params['where_ids']) || !is_array($params['where_ids']))
+            $whereIds = [];
+        else $whereIds = $params['where_ids'];
+
+        $ugc = $model::find($id);
+        $validIds = [];
+        foreach ($whereIds as $whereId) {
+            $where = TaxonomyWhere::find($whereId);
+            if (!is_null($where))
+                $validIds[] = $whereId;
+        }
+
+        $ugc->taxonomy_wheres()->sync($validIds);
+
+        return response()->json([]);
     }
 }

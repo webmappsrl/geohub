@@ -6,6 +6,7 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -29,7 +30,7 @@ class TaxonomyWhere extends Model {
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        $this->hoquServiceProvider = App::make('App\Providers\HoquServiceProvider');
+        $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
     /**
@@ -57,5 +58,17 @@ class TaxonomyWhere extends Model {
         } catch (\Exception $e) {
             Log::error('An error occurred during a store operation: ' . $e->getMessage());
         }
+    }
+
+    public function ugc_pois(): BelongsToMany {
+        return $this->belongsToMany(UgcPoi::class);
+    }
+
+    public function ugc_tracks(): BelongsToMany {
+        return $this->belongsToMany(UgcTrack::class);
+    }
+
+    public function ugc_media(): BelongsToMany {
+        return $this->belongsToMany(UgcMedia::class);
     }
 }

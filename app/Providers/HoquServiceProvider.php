@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
+define('GET_ENDPOINT', '/api/taxonomy_where/{id}');
 define('PULL_ENDPOINT', '/api/pull');
 define('STORE_ENDPOINT', '/api/store');
 define('UPDATE_DONE_ENDPOINT', '/api/updateDone');
@@ -96,13 +97,13 @@ class HoquServiceProvider extends ServiceProvider {
     public function pull(array $jobs, array $acceptInstances = null): array {
         if (is_null($acceptInstances)) $acceptInstances = [config('hoqu.geohub_domain')];
 
-        Log::debug('Performing pull from HOQU:');
+        Log::debug('Pulling a new job from HOQU:');
         Log::debug('  instances: ' . json_encode($acceptInstances));
 
         $payload = [
             'id_server' => config('hoqu.server_id'),
             'task_available' => $jobs,
-            'accept_instances' => json_encode($acceptInstances)
+            'accept_instances' => $acceptInstances
         ];
 
         $ch = $this->_getCurl(PULL_ENDPOINT, $payload, true);
@@ -132,7 +133,7 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws HttpException
      */
     public function updateDone(int $jobId, string $log = ''): int {
-        Log::debug('Performing updateDone from HOQU');
+        Log::debug('Performing updateDone to HOQU');
 
         $payload = [
             'id_server' => config('hoqu.server_id'),
@@ -165,7 +166,7 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws HttpException
      */
     public function updateError(int $jobId, string $errorLog, string $log = '') {
-        Log::debug('Performing updateError from HOQU');
+        Log::debug('Performing updateError to HOQU');
 
         $payload = [
             'id_server' => config('hoqu.server_id'),
@@ -197,11 +198,10 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws MissingMandatoryParametersException
      * @throws HttpException
      */
-
     public function store(string $job, array $params): int {
         $instance = config('hoqu.geohub_domain');
 
-        Log::debug('Performing store to HOQU:');
+        Log::debug('Storing a new job to HOQU:');
 
         $payload = [
             'instance' => $instance,

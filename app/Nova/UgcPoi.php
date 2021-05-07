@@ -4,36 +4,34 @@ namespace App\Nova;
 
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class UgcPoi extends Resource {
+    use SearchesRelations;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\UgcPoi::class;
+    public static string $model = \App\Models\UgcPoi::class;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'id';
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
-        'id',
+        'name'
+    ];
+    public static array $searchRelations = [
+        'taxonomy_wheres' => ['name']
     ];
 
     public static function group() {
@@ -47,13 +45,14 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request): array {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make(__('Creator'), 'user', User::class),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             Text::make(__('App ID'), 'app_id')->sortable(),
+            BelongsToMany::make(__('Taxonomy wheres'))->searchable(),
             Boolean::make(__('Has content'), function ($model) {
                 return isset($model->raw_data);
             })->onlyOnIndex(),
@@ -92,7 +91,7 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request): array {
         return [];
     }
 
@@ -103,7 +102,7 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request): array {
         return [
             new DateRange('created_at')
         ];
@@ -116,7 +115,7 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request): array {
         return [];
     }
 
@@ -127,7 +126,7 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request): array {
         return [];
     }
 }
