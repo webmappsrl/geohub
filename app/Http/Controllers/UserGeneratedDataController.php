@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
@@ -235,7 +236,14 @@ class UserGeneratedDataController extends Controller {
         else $whereIds = $params['where_ids'];
 
         $ugc = $model::find($id);
-        $ugc->taxonomy_wheres()->sync($whereIds);
+        $validIds = [];
+        foreach ($whereIds as $whereId) {
+            $where = TaxonomyWhere::find($whereId);
+            if (!is_null($where))
+                $validIds[] = $whereId;
+        }
+
+        $ugc->taxonomy_wheres()->sync($validIds);
 
         return response()->json([]);
     }
