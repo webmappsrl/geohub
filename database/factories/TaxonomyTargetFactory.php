@@ -25,11 +25,12 @@ class TaxonomyTargetFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'excerpt' => $this->faker->Str::random(10),
+            'excerpt' => $this->faker->text(90),
+            'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit,
-            'source' => Str::random(10),
+            'source' => $this->faker->text(100),
             'admin_level' => $this->faker->randomDigit,
-            'import_method' => Str::random(10),
+            'import_method' => $this->faker->name(),
         ];
     }
 }
