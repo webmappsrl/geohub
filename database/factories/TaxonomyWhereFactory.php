@@ -27,8 +27,11 @@ class TaxonomyWhereFactory extends Factory
 
         return [
             'name' => $this->faker->name(),
-            'source_id' => $this->faker->randomDigit,
-            'admin_level' => $this->faker->randomDigit,
+            'excerpt' => $this->faker->text(90),
+            'description' => $this->faker->text(),
+            'source' => $this->faker->text(100),
+            'source_id' => $this->faker->randomDigit(),
+            'admin_level' => $this->faker->randomDigit(),
             'import_method' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('MULTIPOLYGON(((11 43, 12 43, 12 44, 11 44, 11 43)))'))"),
         ];

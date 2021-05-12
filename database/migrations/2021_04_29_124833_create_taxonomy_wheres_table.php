@@ -17,13 +17,21 @@ class CreateTaxonomyWheresTable extends Migration
         Schema::create('taxonomy_wheres', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->integer('user_id')->unsigned();
             $table->text('name')->nullable();
+            $table->text('description')->nullable();
+            $table->text('excerpt')->nullable();
             $table->multiPolygon('geometry')->nullable();
             // ImportAndSync* Class name used to import data. When is null it means that is not imported and can be
             // edited by user interface.
             $table->string('import_method')->nullable();
             $table->string('source_id')->nullable();
+            $table->text('source')->nullable();
             $table->integer('admin_level')->nullable();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 

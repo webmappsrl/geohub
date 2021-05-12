@@ -16,8 +16,8 @@ class TaxonomyTheme extends Model
 
     public function save(array $options = [])
     {
-        static::creating(function ($taxonomyTarget) {
-            $taxonomyTarget->author()->associate(User::getEmulatedUser());
+        static::creating(function ($taxonomyTheme) {
+            $taxonomyTheme->author()->associate(User::getEmulatedUser());
         });
         parent::save($options);
     }
