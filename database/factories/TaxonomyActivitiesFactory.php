@@ -2,19 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyPoiType;
+use App\Models\TaxonomyActivity;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
-class TaxonomyPoiTypeFactory extends Factory
+class TaxonomyActivitiesFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = TaxonomyPoiType::class;
+    protected $model = TaxonomyActivity::class;
 
     /**
      * Define the model's default state.
