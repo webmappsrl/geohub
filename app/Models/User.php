@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
-{
+class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable, HasRoles;
 
     /**
@@ -41,23 +40,19 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function ugc_pois(): HasMany
-    {
+    public function ugc_pois(): HasMany {
         return $this->hasMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): HasMany
-    {
+    public function ugc_tracks(): HasMany {
         return $this->hasMany(UgcTrack::class);
     }
 
-    public function ugc_medias(): HasMany
-    {
+    public function ugc_medias(): HasMany {
         return $this->hasMany(UgcMedia::class);
     }
 
-    public function taxonomy_targets(): HasMany
-    {
+    public function taxonomy_targets(): HasMany {
         return $this->hasMany(TaxonomyTarget::class);
     }
 
@@ -66,8 +61,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return mixed
      */
-    public function getJWTIdentifier()
-    {
+    public function getJWTIdentifier() {
         return $this->getKey();
     }
 
@@ -76,8 +70,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims(): array
-    {
+    public function getJWTCustomClaims(): array {
         return [];
     }
 
@@ -86,8 +79,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return User
      */
-    public static function getLoggedUser(): ?User
-    {
+    public static function getLoggedUser(): ?User {
         return isset(auth()->user()->id)
             ? User::find(auth()->user()->id)
             : null;
@@ -98,10 +90,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param User|null $user
      *
-     * @return User
+     * @return User|null
      */
-    public static function getEmulatedUser(User $user = null): User
-    {
+    public static function getEmulatedUser(User $user = null): ?User {
         if (!isset($user)) $user = self::getLoggedUser();
 
         $result = $user;
@@ -117,8 +108,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param int $userId the user to emulate
      */
-    public static function emulateUser(int $userId)
-    {
+    public static function emulateUser(int $userId) {
         if (!is_null(User::find($userId)))
             session(['emulate_user_id' => $userId]);
     }
@@ -126,10 +116,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Restore the emulated user to the logged user
      */
-    public static function restoreEmulatedUser()
-    {
+    public static function restoreEmulatedUser() {
         session(['emulate_user_id' => null]);
     }
-
-
 }
