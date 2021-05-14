@@ -11,14 +11,15 @@ class ImportEcMedia extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'geoghub:import_ec_media 
+                            {url : Url or path of the image to store in the server}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Use this command to import image from external resources.';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,7 @@ class ImportEcMedia extends Command
      */
     public function handle()
     {
+        echo $this->argument('url');
         return 0;
     }
 }
