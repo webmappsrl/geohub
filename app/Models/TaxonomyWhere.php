@@ -91,13 +91,8 @@ class TaxonomyWhere extends Model
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function ecMedia(): BelongsToMany
+    public function ecMedia()
     {
-        return $this->belongsToMany(EcMedia::class);
-    }
-
-    public function media()
-    {
-        return $this->morphedByMany(EcMedia::class, 'whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 }

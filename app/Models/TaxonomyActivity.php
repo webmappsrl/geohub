@@ -25,8 +25,8 @@ class TaxonomyActivity extends Model
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ecMedia(): BelongsToMany
+    public function ecMedia()
     {
-        return $this->belongsToMany(EcMedia::class);
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EcMediaTaxonomyActivity extends Migration
+class TaxonomyActivityable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class EcMediaTaxonomyActivity extends Migration
      */
     public function up()
     {
-        Schema::create('ec_media_taxonomy_activity', function (Blueprint $table) {
-            $table->id();
-            $table->integer('ec_media_id')->unsigned();
+        Schema::create('taxonomy_activityables', function (Blueprint $table) {
+            $table->integer('taxonomy_activityable_id')->unsigned();
             $table->integer('taxonomy_activity_id')->unsigned();
-            $table->foreign('ec_media_id')
-                ->references('id')
-                ->on('ec_media');
+            $table->string('taxonomy_activityable_type');
             $table->foreign('taxonomy_activity_id')
                 ->references('id')
                 ->on('taxonomy_activities');
@@ -33,6 +30,6 @@ class EcMediaTaxonomyActivity extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_media_taxonomy_activity');
+        Schema::dropIfExists('taxonomy_activityables');
     }
 }

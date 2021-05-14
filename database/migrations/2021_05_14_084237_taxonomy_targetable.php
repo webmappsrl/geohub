@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EcMediaTaxonomyTarget extends Migration
+class TaxonomyTargetable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class EcMediaTaxonomyTarget extends Migration
      */
     public function up()
     {
-        Schema::create('ec_media_taxonomy_target', function (Blueprint $table) {
-            $table->id();
-            $table->integer('ec_media_id')->unsigned();
+        Schema::create('taxonomy_targetables', function (Blueprint $table) {
+            $table->integer('taxonomy_targetable_id')->unsigned();
             $table->integer('taxonomy_target_id')->unsigned();
-            $table->foreign('ec_media_id')
-                ->references('id')
-                ->on('ec_media');
+            $table->string('taxonomy_targetable_type');
             $table->foreign('taxonomy_target_id')
                 ->references('id')
                 ->on('taxonomy_targets');
@@ -33,6 +30,6 @@ class EcMediaTaxonomyTarget extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_media_taxonomy_target');
+        Schema::dropIfExists('taxonomy_targetables');
     }
 }

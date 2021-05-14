@@ -13,28 +13,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @package App\Models
  *
- * @property int    id
+ * @property int id
  * @property string app_id
  * @property string relative_url
  * @property string geometry
  * @property string name
  */
-class UgcMedia extends Model {
+class UgcMedia extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
-    public function ugc_pois(): BelongsToMany {
+    public function ugc_pois(): BelongsToMany
+    {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): BelongsToMany {
+    public function ugc_tracks(): BelongsToMany
+    {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
-        return $this->belongsToMany(TaxonomyWhere::class);
-    }
+    /**public function taxonomy_wheres(): BelongsToMany {
+     * return $this->belongsToMany(TaxonomyWhere::class);
+     * }**/
+
+    
 }
