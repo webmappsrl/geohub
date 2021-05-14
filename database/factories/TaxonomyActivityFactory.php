@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\TaxonomyActivity;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TaxonomyActivitiesFactory extends Factory
+class TaxonomyActivityFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -27,7 +27,6 @@ class TaxonomyActivitiesFactory extends Factory
             'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
-            'admin_level' => $this->faker->randomDigit(),
             'import_method' => $this->faker->name(),
         ];
     }

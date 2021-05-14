@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Class TaxonomyWhere
@@ -93,5 +94,10 @@ class TaxonomyWhere extends Model
     public function ecMedia(): BelongsToMany
     {
         return $this->belongsToMany(EcMedia::class);
+    }
+
+    public function media()
+    {
+        return $this->morphedByMany(EcMedia::class, 'whereable');
     }
 }

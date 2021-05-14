@@ -27,7 +27,6 @@ class TaxonomyThemeFactory extends Factory
             'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
-            'admin_level' => $this->faker->randomDigit(),
             'import_method' => $this->faker->name(),
         ];
     }

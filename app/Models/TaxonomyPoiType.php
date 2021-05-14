@@ -13,7 +13,9 @@ class TaxonomyPoiType extends Model
     public function save(array $options = [])
     {
         static::creating(function ($taxonomyPoiType) {
-            $taxonomyPoiType->author()->associate(User::getEmulatedUser());
+            $user = User::getEmulatedUser();
+            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            $taxonomyPoiType->author()->associate($user);
         });
         parent::save($options);
     }

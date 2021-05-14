@@ -15,7 +15,9 @@ class TaxonomyTarget extends Model
     public function save(array $options = [])
     {
         static::creating(function ($taxonomyTarget) {
-            $taxonomyTarget->author()->associate(User::getEmulatedUser());
+            $user = User::getEmulatedUser();
+            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            $taxonomyTarget->author()->associate($user);
         });
         parent::save($options);
     }

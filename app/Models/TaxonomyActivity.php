@@ -13,7 +13,9 @@ class TaxonomyActivity extends Model
     public function save(array $options = [])
     {
         static::creating(function ($taxonomyActivity) {
-            $taxonomyActivity->author()->associate(User::getEmulatedUser());
+            $user = User::getEmulatedUser();
+            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            $taxonomyActivity->author()->associate($user);
         });
         parent::save($options);
     }

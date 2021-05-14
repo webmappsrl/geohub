@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\EcMedia;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EcMediaFactory extends Factory
@@ -27,7 +28,7 @@ class EcMediaFactory extends Factory
             'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
-            'admin_level' => $this->faker->randomDigit(),
+            'user_id' => User::all()->random()->id,
             'import_method' => $this->faker->name(),
         ];
     }

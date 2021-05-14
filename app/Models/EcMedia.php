@@ -44,10 +44,18 @@ class EcMedia extends Model
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 
+    public function whereable()
+    {
+        return $this->morphToMany(TaxonomyWhere::class, 'whereable');
+    }
+
     public function save(array $options = [])
     {
-        static::creating(function ($taxonomyActivity) {
-            $taxonomyActivity->author()->associate(User::getEmulatedUser());
+
+        static::creating(function ($ecMedia) {
+            $user = User::getEmulatedUser();
+            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            $ecMedia->author()->associate($user);
         });
         parent::save($options);
     }
