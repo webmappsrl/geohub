@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EditorialContentController;
 use App\Http\Controllers\TaxonomyWhereController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
@@ -54,6 +55,11 @@ Route::name('api.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
+        });
+    });
+    Route::prefix('ec')->name('ec.')->group(function () {
+        Route::prefix('media')->name('media.')->group(function () {
+            Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('geojson');
         });
     });
 });
