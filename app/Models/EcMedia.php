@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Providers\HoquServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class EcMedia extends Model
 {
@@ -14,6 +16,14 @@ class EcMedia extends Model
      */
     protected $fillable = ['name', 'url'];
 
+    private HoquServiceProvider $hoquServiceProvider;
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->hoquServiceProvider = app(HoquServiceProvider::class);
+    }
+
     public function save(array $options = [])
     {
         static::creating(function ($ecMedia) {
@@ -23,6 +33,11 @@ class EcMedia extends Model
 
         });
         parent::save($options);
+        try {
+            $this->hoquServiceProvider->store('enrich_ec_media', ['id' => $this->id]);
+        } catch (\Exception $e) {
+            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+        }
     }
 
     public function author()
