@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\EcMedia;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,8 +13,9 @@ class ImportEcMedia extends Command
      *
      * @var string
      */
-    protected $signature = 'geoghub:import_ec_media
-                            {url : Url or path of the image to store in the server}';
+    protected $signature = 'geohub:import_ec_media
+                            {url : Url or path of the image to store in the server}
+                            {name? : the name of the imported EcMedia}';
 
     /**
      * The console command description.
@@ -40,15 +42,27 @@ class ImportEcMedia extends Command
     public function handle()
     {
         $url = $this->argument('url');
-        $path = "/public/EcMedia/";
+        $path = 'ec_media/';
         $file = @file_get_contents($url);
+        $fileName = basename($this->argument('url'));
         if ($file === FALSE)
             return $this->error('Error, file does not exists');
         $contents = file_get_contents($url);
-        $name = substr($url, strrpos($url, '/') + 1);
-        Storage::put($path . substr(str_shuffle(MD5(microtime())), 0, 5), $contents);
+        
+        if ($this->argument('name')) {
+            $newEcmedia = EcMedia::create(['name' => $this->argument('name'), 'url' => '']);
+            $newEcmedia->url = $path . $newEcmedia->id;
+            $newEcmedia->save();
+        } else {
+            $newEcmedia = EcMedia::create(['name' => $fileName, 'url' => '']);
+            $newEcmedia->url = $path . $newEcmedia->id;
+            $newEcmedia->save();
+        }
+
+        Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
 
         $this->info("File uploaded correctly");
+
         return 0;
     }
 }

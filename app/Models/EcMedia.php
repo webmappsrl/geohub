@@ -9,6 +9,11 @@ class EcMedia extends Model
 {
     use HasFactory;
 
+    /**
+     * @var array
+     */
+    protected $fillable = ['name', 'url'];
+
     public function save(array $options = [])
     {
         static::creating(function ($ecMedia) {

@@ -54,7 +54,7 @@ class TaxonomyWhere extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Text::make(__('Excerpt'), 'excerpt'),
-            Text::make(__('Source'), 'source'),
+            Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Number::make(__('Admin level'), 'admin_level')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
