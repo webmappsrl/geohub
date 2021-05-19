@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class EditorialContentController extends Controller
 {
@@ -66,5 +67,30 @@ class EditorialContentController extends Controller
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
 
         return response()->json($ec);
+    }
+
+    /**
+     * Get Ec image by ID
+     *
+     * @param int $id the Ec id
+     *
+     * @return JsonResponse return the Ec Image
+     */
+    public function getEcImage(int $id)
+    {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $ec = $model::find($id);
+        if (is_null($ec))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        $headers = array();
+        $imagePath = public_path() . '/storage/' . $ec->url;
+        return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
 }

@@ -59,7 +59,8 @@ Route::name('api.')->group(function () {
     });
     Route::prefix('ec')->name('ec.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('geojson');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('json');
+            Route::get("/image/{id}", [EditorialContentController::class, 'getEcImage'])->name('image');
         });
     });
 });
