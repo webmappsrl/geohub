@@ -30,6 +30,7 @@ class EcMediaFactory extends Factory
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
             'import_method' => $this->faker->name(),
+            'url' => $this->faker->text(100),
         ];
     }
 }

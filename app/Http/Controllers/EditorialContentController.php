@@ -8,6 +8,7 @@ use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\User;
+use \App\Models\TaxonomyWhere;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Exception;
@@ -97,11 +98,21 @@ class EditorialContentController extends Controller
     /**
      * @param Request $request the request with data from geomixer POST
      */
-    public function enrichEcImage(Request $request, $id)
+    public function updateEcMedia(Request $request, $id)
     {
         $ecMedia = EcMedia::find($id);
+        if (is_null($ecMedia))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        if (is_null($request->url))
+            return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
         $ecMedia->url = $request->url;
-        $ecMedia->geometry = $request->geometry['coordinates'];
+
+        if (!is_null($request->geometry))
+            $ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
+
+        if (!empty($request->where_ids)) {
+            $ecMedia->taxonomyWheres()->sync($request->where_ids);
+        }
         $ecMedia->save();
     }
 }
