@@ -61,6 +61,7 @@ Route::name('api.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('json');
             Route::get("/image/{id}", [EditorialContentController::class, 'getEcImage'])->name('image');
+            Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
     });
 });

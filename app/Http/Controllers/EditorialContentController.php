@@ -93,4 +93,15 @@ class EditorialContentController extends Controller
         $imagePath = public_path() . '/storage/' . $ec->url;
         return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
+
+    /**
+     * @param Request $request the request with data from geomixer POST
+     */
+    public function enrichEcImage(Request $request, $id)
+    {
+        $ecMedia = EcMedia::find($id);
+        $ecMedia->url = $request->url;
+        $ecMedia->geometry = $request->geometry['coordinates'];
+        $ecMedia->save();
+    }
 }
