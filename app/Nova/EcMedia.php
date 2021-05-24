@@ -4,11 +4,15 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+
 
 class EcMedia extends Resource
 {
@@ -51,6 +55,7 @@ class EcMedia extends Resource
     {
         return [
             Text::make(__('Name'), 'name')->sortable(),
+            //MorphToMany::make('TaxonomyWhere', 'taxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Text::make(__('Excerpt'), 'excerpt'),
@@ -58,6 +63,11 @@ class EcMedia extends Resource
             Image::make('url'),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            WmEmbedmapsField::make(__('Map'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                ];
+            })->onlyOnDetail(),
         ];
     }
 

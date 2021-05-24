@@ -6,10 +6,11 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Traits\GeometryFeatureTrait;
 
 class EcMedia extends Model
 {
-    use HasFactory;
+    use HasFactory, GeometryFeatureTrait;
 
     /**
      * @var array

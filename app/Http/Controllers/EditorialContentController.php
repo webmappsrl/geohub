@@ -95,8 +95,10 @@ class EditorialContentController extends Controller
         return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
 
-    /**
+    /** Update the ec media with new data from Geomixer
+     *
      * @param Request $request the request with data from geomixer POST
+     * @param int $id the id of the EcMedia
      */
     public function updateEcMedia(Request $request, $id)
     {
@@ -115,4 +117,5 @@ class EditorialContentController extends Controller
         }
         $ecMedia->save();
     }
+
 }
