@@ -99,6 +99,22 @@ class MediaTest extends TestCase
         $this->assertSame($ecMedia->id, $medias->first()->id);
     }
 
+    public function testSendThumbnailsToEcMedia()
+    {
+        $ecMedia = EcMedia::factory()->create();
+        $payload = [
+            'url' => 'test_url',
+            'thumbnail_urls' => [['108x148' => 'url'], ['138x158' => 'url2']],
+        ];
+        $result = $this->putJson('/api/ec/media/update/' . $ecMedia->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $newEcMedia = EcMedia::find($ecMedia->id);
+        
+        $this->assertSame($newEcMedia->thumbnails, json_encode($payload['thumbnail_urls']));
+    }
+
     public function testDeleteLocalImage()
     {
         $ecMedia = EcMedia::factory()->create();
