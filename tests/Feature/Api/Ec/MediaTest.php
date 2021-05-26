@@ -9,6 +9,7 @@ use App\Providers\HoquJobs\TaxonomyWhereJobsServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MediaTest extends TestCase
@@ -96,6 +97,30 @@ class MediaTest extends TestCase
         $medias = $where->ecMedia;
         $this->assertCount(1, $medias);
         $this->assertSame($ecMedia->id, $medias->first()->id);
+    }
+
+    public function testDeleteLocalImage()
+    {
+
+        $ecMedia = EcMedia::factory()->create();
+        $actualUrl = $ecMedia->url;
+        $payload = [
+            'url' => 'test',
+        ];
+        $this->assertFileExists(Storage::disk('public')->path($ecMedia->url));
+
+        $result = $this->putJson('/api/ec/media/update/' . $ecMedia->id, $payload);
+        $ecMediaUpdated = EcMedia::find($ecMedia->id);
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+
+        $this->assertEquals($payload['url'], $ecMediaUpdated->url);
+        //$this->assertFileExists(Storage::disk('s3')->path($ecMedia->url));
+
+        Storage::disk('public')->delete($actualUrl);
+        $this->assertFileDoesNotExist(Storage::disk('public')->path($ecMedia->url));
+
+
     }
 
 

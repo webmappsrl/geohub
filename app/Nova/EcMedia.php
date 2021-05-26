@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -55,7 +56,7 @@ class EcMedia extends Resource
     {
         return [
             Text::make(__('Name'), 'name')->sortable(),
-            //MorphToMany::make('TaxonomyWhere', 'taxonomyWheres'),
+            MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Text::make(__('Excerpt'), 'excerpt'),

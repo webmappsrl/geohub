@@ -103,8 +103,10 @@ class EditorialContentController extends Controller
     public function updateEcMedia(Request $request, $id)
     {
         $ecMedia = EcMedia::find($id);
+
         if (is_null($ecMedia))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        $actualUrl = $ecMedia->url;
         if (is_null($request->url))
             return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
         $ecMedia->url = $request->url;
@@ -116,6 +118,8 @@ class EditorialContentController extends Controller
             $ecMedia->taxonomyWheres()->sync($request->where_ids);
         }
         $ecMedia->save();
+        if (Storage::disk('s3')->exists($request->url))
+            Storage::disk('public')->delete($actualUrl);
     }
 
 }
