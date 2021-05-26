@@ -101,7 +101,6 @@ class MediaTest extends TestCase
 
     public function testDeleteLocalImage()
     {
-
         $ecMedia = EcMedia::factory()->create();
         $actualUrl = $ecMedia->url;
         $payload = [
@@ -115,12 +114,10 @@ class MediaTest extends TestCase
         $this->assertIsString($result->getContent());
 
         $this->assertEquals($payload['url'], $ecMediaUpdated->url);
-        //$this->assertFileExists(Storage::disk('s3')->path($ecMedia->url));
+        //$this->assertFileExists(Storage::cloud()->url($ecMedia->url));
 
         Storage::disk('public')->delete($actualUrl);
         $this->assertFileDoesNotExist(Storage::disk('public')->path($ecMedia->url));
-
-
     }
 
 

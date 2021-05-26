@@ -118,8 +118,8 @@ class EditorialContentController extends Controller
             $ecMedia->taxonomyWheres()->sync($request->where_ids);
         }
         $ecMedia->save();
-        if (Storage::disk('s3')->exists($request->url))
-            Storage::disk('public')->delete($actualUrl);
+        /**if (Storage::disk('s3')->exists($request->url))
+         * Storage::disk('public')->delete($actualUrl);**/
     }
 
 }
