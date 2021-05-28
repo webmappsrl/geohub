@@ -15,7 +15,7 @@ class AddTaxonomyFieldsOnWhere extends Migration {
             $table->text('description')->nullable();
             $table->text('excerpt')->nullable();
             $table->text('source')->nullable();
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
 
             $table->foreign('user_id')
                 ->references('id')
