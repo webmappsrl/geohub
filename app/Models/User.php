@@ -52,6 +52,10 @@ class User extends Authenticatable implements JWTSubject {
         return $this->hasMany(UgcMedia::class);
     }
 
+    public function taxonomy_targets(): HasMany {
+        return $this->hasMany(TaxonomyTarget::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -86,9 +90,9 @@ class User extends Authenticatable implements JWTSubject {
      *
      * @param User|null $user
      *
-     * @return User
+     * @return User|null
      */
-    public static function getEmulatedUser(User $user = null): User {
+    public static function getEmulatedUser(User $user = null): ?User {
         if (!isset($user)) $user = self::getLoggedUser();
 
         $result = $user;

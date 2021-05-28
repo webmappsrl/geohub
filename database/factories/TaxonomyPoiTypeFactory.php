@@ -2,20 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyWhere;
+use App\Models\TaxonomyPoiType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class TaxonomyWhereFactory extends Factory
+class TaxonomyPoiTypeFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = TaxonomyWhere::class;
-
+    protected $model = TaxonomyPoiType::class;
 
     /**
      * Define the model's default state.
@@ -24,16 +23,13 @@ class TaxonomyWhereFactory extends Factory
      */
     public function definition()
     {
-
         return [
             'name' => $this->faker->name(),
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
-            'source' => $this->faker->text(100),
             'source_id' => $this->faker->randomDigit(),
-            'admin_level' => $this->faker->randomDigit(),
+            'source' => $this->faker->text(100),
             'import_method' => $this->faker->name(),
-            'geometry' => DB::raw("(ST_GeomFromText('MULTIPOLYGON(((10 45, 11 45, 11 46, 11 46, 10 45)))'))"),
         ];
     }
 }

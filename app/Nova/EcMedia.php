@@ -4,25 +4,33 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\MorphMany;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class TaxonomyWhere extends Resource
+
+class EcMedia extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static string $model = \App\Models\TaxonomyWhere::class;
+    public static $model = \App\Models\EcMedia::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -30,34 +38,32 @@ class TaxonomyWhere extends Resource
      */
     public static $search = [
         'name',
-        'admin_level',
         'author'
     ];
 
     public static function group()
     {
-        return __('Taxonomies');
+        return __('Editorial Content');
     }
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param Request $request
-     *
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function fields(Request $request): array
+    public function fields(Request $request)
     {
         return [
             Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Text::make(__('Excerpt'), 'excerpt'),
-            Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Number::make(__('Admin level'), 'admin_level')->sortable(),
+            Text::make(__('Source'), 'source'),
+            Image::make('url'),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
@@ -69,11 +75,10 @@ class TaxonomyWhere extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
-     *
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function cards(Request $request): array
+    public function cards(Request $request)
     {
         return [];
     }
@@ -81,11 +86,10 @@ class TaxonomyWhere extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
-     *
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function filters(Request $request): array
+    public function filters(Request $request)
     {
         return [];
     }
@@ -93,11 +97,10 @@ class TaxonomyWhere extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
-     *
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function lenses(Request $request): array
+    public function lenses(Request $request)
     {
         return [];
     }
@@ -105,11 +108,10 @@ class TaxonomyWhere extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
-     *
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public function actions(Request $request): array
+    public function actions(Request $request)
     {
         return [];
     }
