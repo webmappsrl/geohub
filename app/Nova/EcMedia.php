@@ -5,6 +5,7 @@ namespace App\Nova;
 use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
@@ -59,7 +60,20 @@ class EcMedia extends Resource {
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
-            Image::make('url'),
+            Text::make('Url', function () {
+                $url = $this->model()->url;
+                if (substr($url, 0, 4) !== 'http')
+                    $url = Storage::disk('public')->url($url);
+
+                return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
+            })->asHtml(),
+            ExternalImage::make('Image', function () {
+                $url = $this->model()->url;
+                if (substr($url, 0, 4) !== 'http')
+                    $url = Storage::disk('public')->url($url);
+
+                return $url;
+            })->withMeta(['width' => 500]),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
