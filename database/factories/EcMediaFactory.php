@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TaxonomyWhere;
 
-class EcMediaFactory extends Factory
-{
+class EcMediaFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -23,11 +22,18 @@ class EcMediaFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
+        Storage::disk('public')->put('/ec_media_test/test_108x137.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x137.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test_108x148.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x148.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test_100x200.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_100x200.jpg'));
         Storage::disk('public')->put('/ec_media_test/test.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test.jpg'));
 
-        return [
+        $url108x137 = Storage::disk('public')->url('/ec_media_test/test_108x137.jpg');
+        $url108x148 = Storage::disk('public')->url('/ec_media_test/test_108x148.jpg');
+        $url100x200 = Storage::disk('public')->url('/ec_media_test/test_100x200.jpg');
+        $url = Storage::disk('public')->url('/ec_media_test/test.jpg');
+
+        $result = [
             'name' => $this->faker->name(),
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
@@ -38,5 +44,14 @@ class EcMediaFactory extends Factory
             'url' => '/ec_media_test/test.jpg',
             'geometry' => DB::raw('ST_MakePoint(10, 45)'),
         ];
+
+        $result['thumbnails'] = json_encode([
+            '108x137' => $url108x137,
+            '108x148' => $url108x148,
+            '100x200' => $url100x200,
+            'original' => $url
+        ]);
+
+        return $result;
     }
 }

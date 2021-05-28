@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "205ebb3348bdf410e0878dee8fa4aa0d",
+    "content-hash": "f35e60543233f5b3fe2f788cd21208ac",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -283,6 +283,51 @@
                 "source": "https://github.com/cakephp/chronos"
             },
             "time": "2021-04-07T01:06:46+00:00"
+        },
+        {
+            "name": "chaseconey/nova-external-image",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chaseconey/nova-external-image.git",
+                "reference": "13f08d153d11dbd86a457a31142b88bb30b6ab36"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chaseconey/nova-external-image/zipball/13f08d153d11dbd86a457a31142b88bb30b6ab36",
+                "reference": "13f08d153d11dbd86a457a31142b88bb30b6ab36",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Chaseconey\\ExternalImage\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Chaseconey\\ExternalImage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/chaseconey/nova-external-image/issues",
+                "source": "https://github.com/chaseconey/nova-external-image/tree/master"
+            },
+            "time": "2020-08-15T01:49:08+00:00"
         },
         {
             "name": "doctrine/cache",
