@@ -117,14 +117,14 @@ class EditorialContentController extends Controller
         if (!empty($request->where_ids)) {
             $ecMedia->taxonomyWheres()->sync($request->where_ids);
         }
-        
+
         if (!empty($request->thumbnail_urls)) {
             $ecMedia->thumbnails = $request->thumbnail_urls;
         }
 
         $ecMedia->save();
-        /**if (Storage::disk('s3')->exists($request->url))
-         * Storage::disk('public')->delete($actualUrl);**/
+        if (Storage::disk('s3')->exists($request->url))
+            Storage::disk('public')->delete($actualUrl);
     }
 
 }

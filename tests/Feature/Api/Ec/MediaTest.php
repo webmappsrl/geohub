@@ -111,7 +111,7 @@ class MediaTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertIsString($result->getContent());
         $newEcMedia = EcMedia::find($ecMedia->id);
-        
+
         $this->assertSame($newEcMedia->thumbnails, json_encode($payload['thumbnail_urls']));
     }
 
@@ -130,7 +130,7 @@ class MediaTest extends TestCase
         $this->assertIsString($result->getContent());
 
         $this->assertEquals($payload['url'], $ecMediaUpdated->url);
-        //$this->assertFileExists(Storage::cloud()->url($ecMedia->url));
+        $this->assertFileExists(Storage::cloud()->url($ecMedia->url));
 
         Storage::disk('public')->delete($actualUrl);
         $this->assertFileDoesNotExist(Storage::disk('public')->path($ecMedia->url));
