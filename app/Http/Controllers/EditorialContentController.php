@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
-class EditorialContentController extends Controller
-{
+class EditorialContentController extends Controller {
     /**
      * Calculate the model class name of a ugc from its type
      *
@@ -28,8 +27,7 @@ class EditorialContentController extends Controller
      *
      * @throws Exception
      */
-    private function _getEcModelFromType(string $type): string
-    {
+    private function _getEcModelFromType(string $type): string {
         switch ($type) {
             case 'poi':
                 $model = "\App\Models\EcPoi";
@@ -54,8 +52,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse return the Ec info
      */
-    public function getEcjson(int $id): JsonResponse
-    {
+    public function getEcjson(int $id): JsonResponse {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -77,8 +74,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse return the Ec Image
      */
-    public function getEcImage(int $id)
-    {
+    public function getEcImage(int $id) {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -92,16 +88,16 @@ class EditorialContentController extends Controller
 
         $headers = array();
         $imagePath = public_path() . '/storage/' . $ec->url;
+
         return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
 
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int $id the id of the EcMedia
+     * @param int     $id      the id of the EcMedia
      */
-    public function updateEcMedia(Request $request, $id)
-    {
+    public function updateEcMedia(Request $request, $id) {
         $ecMedia = EcMedia::find($id);
 
         if (is_null($ecMedia))
@@ -123,8 +119,14 @@ class EditorialContentController extends Controller
         }
 
         $ecMedia->save();
-        if (Storage::disk('s3')->exists($request->url))
-            Storage::disk('public')->delete($actualUrl);
-    }
 
+        try {
+            $headers = get_headers($request->url);
+
+            if (stripos($headers[0], "200 OK") >= 0)
+                Storage::disk('public')->delete($actualUrl);
+        } catch (Exception $e) {
+            Log::warning($e->getMessage());
+        }
+    }
 }
