@@ -60,6 +60,7 @@ class EcMedia extends Resource {
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
+            Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
             Text::make('Url', function () {
                 $url = $this->model()->url;
                 if (substr($url, 0, 4) !== 'http')
