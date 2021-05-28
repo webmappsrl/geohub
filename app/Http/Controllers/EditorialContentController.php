@@ -107,8 +107,12 @@ class EditorialContentController extends Controller {
             return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
         $ecMedia->url = $request->url;
 
-        if (!is_null($request->geometry))
+        if (!is_null($request->geometry)
+            && is_array($request->geometry)
+            && isset($request->geometry['type'])
+            && isset($request->geometry['coordinates'])) {
             $ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
+        }
 
         if (!empty($request->where_ids)) {
             $ecMedia->taxonomyWheres()->sync($request->where_ids);
