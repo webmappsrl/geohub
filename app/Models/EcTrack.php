@@ -11,6 +11,7 @@ class EcTrack extends Model
 {
     use HasFactory, GeometryFeatureTrait;
 
+    protected $fillable = ['name', 'geometry'];
     private HoquServiceProvider $hoquServiceProvider;
 
     public function __construct(array $attributes = [])
@@ -23,7 +24,7 @@ class EcTrack extends Model
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
-    
+
     public function taxonomyWheres()
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
