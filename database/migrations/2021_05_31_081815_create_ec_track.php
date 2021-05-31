@@ -13,7 +13,7 @@ class CreateEcTrack extends Migration
      */
     public function up()
     {
-        Schema::create('ec_track', function (Blueprint $table) {
+        Schema::create('ec_tracks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->text('name');
@@ -39,6 +39,6 @@ class CreateEcTrack extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ec_track');
+        Schema::dropIfExists('ec_tracks');
     }
 }
