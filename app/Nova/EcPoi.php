@@ -57,12 +57,13 @@ class EcPoi extends Resource
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () {
+                $model = $this->model();
                 return [
-                    'feature' => $model->getGeojson(),
+                    'feature' => $model->id ? $model->getGeojson() : null,
                 ];
-            })->onlyOnDetail(),
+            })->hideFromIndex(),
         ];
     }
 

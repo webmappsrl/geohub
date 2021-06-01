@@ -62,7 +62,7 @@ class EcTrack extends Resource
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),

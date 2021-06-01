@@ -55,7 +55,7 @@ class TaxonomyActivity extends Resource
             Text::make(__('Excerpt'), 'excerpt'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            DateTime::make(__('Upsated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
         ];
     }
 

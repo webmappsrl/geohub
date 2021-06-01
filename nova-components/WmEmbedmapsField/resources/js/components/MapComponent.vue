@@ -28,7 +28,8 @@ export default {
     components: {},
     props: {
         feature: String,
-        related: String
+        related: String,
+        editable: Boolean
     },
     data: () => ({
         map: null,
@@ -101,10 +102,16 @@ export default {
                 }).getArray()
         });
 
+        if (this.editable) {
+            this.map.on('click', (event) => {
+                this.feature.geometry.coordinates = this._toLonLat(event.coordinate);
+                this.updateSource(true);
+            });
+        }
         this.updateSource();
     },
     watch: {
-        geojson(value) {
+        feature(value) {
             this.updateSource();
         },
         related(value) {
@@ -239,7 +246,7 @@ export default {
 
             return style;
         },
-        updateSource() {
+        updateSource(skip_fit) {
             this.vectorSource.clear();
 
             const features = new GeoJSON({
@@ -261,9 +268,11 @@ export default {
                 this.vectorSource.addFeatures(related);
             }
 
-            this.view.fit(extent, {
-                padding: [20, 20, 20, 20]
-            });
+            if (!skip_fit) {
+                this.view.fit(extent, {
+                    padding: [20, 20, 20, 20]
+                });
+            }
         }
     }
 }

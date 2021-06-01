@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\EcPoi;
 use Illuminate\Http\Request;
 
+/**
+ * @todo: eliminare e integrare in EditorialContentController.
+ */
 class EcPoiController extends Controller
 {
     /**
