@@ -28,7 +28,7 @@ class EcPoiFactory extends Factory
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
             'user_id' => User::all()->random()->id,
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(10.420866161584854 43.72623122270797)'))"),
+            'geometry' => DB::raw("(ST_GeomFromText('POINT(10.43 43.70)'))"),
         ];
     }
 }

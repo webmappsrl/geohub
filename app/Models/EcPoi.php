@@ -7,10 +7,13 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EcPoi extends Model
 {
     use HasFactory, GeometryFeatureTrait;
+
+    protected $fillable = ['name'];
 
     private HoquServiceProvider $hoquServiceProvider;
 
@@ -29,17 +32,22 @@ class EcPoi extends Model
             }
             $ecPoi->author()->associate($user);
 
-            // try {
-            //     $this->hoquServiceProvider->store('enrich_ec_media', ['id' => $this->id]);
-            // } catch (\Exception $e) {
-            //     Log::error('An error occurred during a store operation: ' . $e->getMessage());
-            // }
+            try {
+                $this->hoquServiceProvider->store('enrich_ec_poi', ['id' => $this->id]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            }
         });
 
-        $geometry = $this->attributes["geometry"];
-        static::updating(function ($ecPoi) use ($geometry) {
-            $this->attributes["geometry"] = DB::raw($geometry);
-        });
+        /**
+         * @todo: E2E test.
+         */
+        if (isset($this->attributes['nova_form'])) {
+            $geometry = $this->attributes["geometry"];
+            static::updating(function ($ecPoi) use ($geometry) {
+                $this->attributes["geometry"] = DB::raw($geometry);
+            });
+        }
 
         parent::save($options);
     }

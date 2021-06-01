@@ -68,6 +68,29 @@ class EditorialContentController extends Controller {
     }
 
     /**
+     * Get Ec info by ID
+     *
+     * @param int $id the Ec id
+     *
+     * @return JsonResponse return the Ec info
+     */
+    public function getEcGeoJson(int $id): JsonResponse {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $ec = $model::find($id);
+        if (is_null($ec)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($ec->getGeojson());
+    }
+
+    /**
      * Get Ec image by ID
      *
      * @param int $id the Ec id

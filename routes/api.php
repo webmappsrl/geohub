@@ -63,5 +63,8 @@ Route::name('api.')->group(function () {
             Route::get("/image/{id}", [EditorialContentController::class, 'getEcImage'])->name('image');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
+        Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('json');
+        });
     });
 });
