@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
 
-class EcMedia extends Model {
+class EcMedia extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
     /**
@@ -17,12 +18,14 @@ class EcMedia extends Model {
     protected $fillable = ['name', 'url'];
     private HoquServiceProvider $hoquServiceProvider;
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         static::creating(function ($ecMedia) {
             $user = User::getEmulatedUser();
             if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
@@ -37,31 +40,38 @@ class EcMedia extends Model {
         parent::save($options);
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function taxonomyActivities() {
+    public function taxonomyActivities()
+    {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function taxonomyPoiTypes() {
+    public function taxonomyPoiTypes()
+    {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function taxonomyTargets() {
+    public function taxonomyTargets()
+    {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes() {
+    public function taxonomyThemes()
+    {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyWhens() {
+    public function taxonomyWhens()
+    {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyWheres() {
+    public function taxonomyWheres()
+    {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 }
