@@ -47714,7 +47714,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fill: function fill(formData) {
             var lat = this.value.feature.geometry.coordinates[0],
                 lng = this.value.feature.geometry.coordinates[1];
-            formData.append(this.field.attribute, "ST_GeomFromText('POINT(" + lat + " " + lng + ")')");
+            formData.append(this.field.attribute, "nova_form:ST_GeomFromText('POINT(" + lat + " " + lng + ")')");
         }
     }
 });

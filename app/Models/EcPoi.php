@@ -42,10 +42,11 @@ class EcPoi extends Model
         /**
          * @todo: E2E test.
          */
-        if (isset($this->attributes['nova_form'])) {
-            $geometry = $this->attributes["geometry"];
-            static::updating(function ($ecPoi) use ($geometry) {
-                $this->attributes["geometry"] = DB::raw($geometry);
+        $geometry = @$this->attributes["geometry"];
+        if (strpos($geometry, 'nova_form:') === 0) {
+            list(, $value) = explode(':', $geometry);
+            static::updating(function () use ($value) {
+                $this->attributes["geometry"] = DB::raw($value);
             });
         }
 

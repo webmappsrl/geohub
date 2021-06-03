@@ -38,7 +38,7 @@ export default {
         fill(formData) {
             let lat = this.value.feature.geometry.coordinates[0],
                 lng = this.value.feature.geometry.coordinates[1];
-            formData.append(this.field.attribute, "ST_GeomFromText('POINT(" + lat + " " + lng + ")')");
+            formData.append(this.field.attribute, `nova_form:ST_GeomFromText('POINT(${lat} ${lng})')`);
         }
     }
 };
