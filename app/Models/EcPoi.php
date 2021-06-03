@@ -38,10 +38,7 @@ class EcPoi extends Model
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
-
-        /**
-         * @todo: E2E test.
-         */
+        
         $geometry = @$this->attributes["geometry"];
         if (strpos($geometry, 'nova_form:') === 0) {
             list(, $value) = explode(':', $geometry);

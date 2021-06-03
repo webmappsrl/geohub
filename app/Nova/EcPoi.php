@@ -63,7 +63,7 @@ class EcPoi extends Resource
                 return [
                     'feature' => $model->id ? $model->getGeojson() : '{"type":"Point","coordinates":[11,43]}',
                 ];
-            })->hideFromIndex(),
+            })->required()->hideFromIndex(),
         ];
     }
 
