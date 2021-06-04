@@ -166,6 +166,11 @@ class EditorialContentController extends Controller
         }
     }
 
+    /** Update the ec track with new data from Geomixer
+     *
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id the id of the EcTrack
+     */
     public function updateEcTrack(Request $request, $id)
     {
         $ecTrack = EcTrack::find($id);

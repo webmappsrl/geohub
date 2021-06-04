@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
@@ -60,7 +61,8 @@ class EcTrack extends Resource
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
-            Text::make(__('Distance Comp'), 'distance_comp')->sortable(),
+            Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
@@ -69,9 +71,6 @@ class EcTrack extends Resource
                 ];
             })->onlyOnDetail(),
         ];
-
-        if (isset($this->model()->thumbnails))
-            $fields[] = Panel::make("Thumbnails", $this->_getThumbnailsFields());
 
         return $fields;
     }

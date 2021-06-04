@@ -21,9 +21,27 @@ class EcTrack extends Model
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
+    /**protected static function booted()
+     * {
+     * parent::booted();
+     * static::creating(function ($ecTrack) {
+     * Log::info(get_class($ecTrack));
+     * $user = User::getEmulatedUser();
+     * if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+     * $ecTrack->author()->associate($user);
+     *
+     * try {
+     * $this->hoquServiceProvider->store('enrich_ec_track', ['id' => $this->id]);
+     * } catch (\Exception $e) {
+     * Log::error('An error occurred during a store operation: ' . $e->getMessage());
+     * }
+     * });
+     * }**/
+
     public function save(array $options = [])
     {
         static::creating(function ($ecTrack) {
+            Log::info($ecTrack);
             $user = User::getEmulatedUser();
             if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
             $ecTrack->author()->associate($user);
