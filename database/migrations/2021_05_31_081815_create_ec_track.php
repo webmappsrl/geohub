@@ -23,7 +23,7 @@ class CreateEcTrack extends Migration
             $table->string('source_id')->nullable();
             $table->string('import_method')->nullable();
             $table->text('source')->nullable();
-            $table->float('distance_comp');
+            $table->float('distance_comp')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')
