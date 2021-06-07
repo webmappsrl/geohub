@@ -65,6 +65,7 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('json');
+            Route::put("/update/{id}", [EditorialContentController::class, 'updateEcPoi'])->name('update');
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('json');
