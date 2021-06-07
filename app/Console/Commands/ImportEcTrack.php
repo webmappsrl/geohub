@@ -53,20 +53,6 @@ class ImportEcTrack extends Command
         $feature = json_decode($contents);
         $geometry = $feature->geometry;
 
-
-        /**$command = "ogr2ogr -f PostgreSQL PG:\"";
-         * $command .= "dbname='" . config("database.connections." . config("database.default") . ".database") . "' ";
-         * $command .= "host='" . config("database.connections." . config("database.default") . ".host") . "' ";
-         * $command .= "port='" . config("database.connections." . config("database.default") . ".port") . "' ";
-         * $command .= "user='" . config("database.connections." . config("database.default") . ".username") . "' ";
-         * $command .= "password='" . config("database.connections." . config("database.default") . ".password") . "' ";
-         * $command .= "table=ec_tracks";
-         * $command .= "\" $fileName -sql \"Select * From tracks\" ";
-         * dd($command);
-         * $result = exec($command);
-         * dd($result);**/
-
-
         if ($this->argument('name')) {
             $newEcTrack = EcTrack::create([
                 'name' => $this->argument('name'),
