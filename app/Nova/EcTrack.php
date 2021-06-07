@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -62,10 +63,13 @@ class EcTrack extends Resource
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            /**File::make('Geometry (Carica un geoJson)', 'geometry', function (Request $request) {
-             * $content = file_get_contents($request->geometry);
-             * return $content;
-             * })->hideWhenUpdating(),**/
+            File::make('geojson')->store(function (Request $request, $model) {
+                $content = json_decode(file_get_contents($request->geojson));
+                $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "'))");
+                return [
+                    'geometry' => $geometry,
+                ];
+            })->hideFromDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
