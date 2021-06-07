@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ImportEcTrack extends Command
 {
@@ -14,7 +15,7 @@ class ImportEcTrack extends Command
      * @var string
      */
     protected $signature = 'geohub:import_ec_track,
-                            {path : the path of the GPX file to import}
+                            {path : the path of the Geojson file to import}
                             {user_id : the user id creating the new import}
                             {name? : the name of the imported EcTrack}';
 
@@ -49,24 +50,19 @@ class ImportEcTrack extends Command
         if ($file === FALSE)
             return $this->error('Error, file does not exists');
         $contents = file_get_contents($url);
+        $feature = json_decode($contents);
+        $geometry = $feature->geometry;
 
-        $command = "ogr2ogr -f PostgreSQL PG:\"";
-        $command .= "dbname='" . config("database.connections." . config("database.default") . ".database") . "' ";
-        $command .= "host='" . config("database.connections." . config("database.default") . ".host") . "' ";
-        $command .= "port='" . config("database.connections." . config("database.default") . ".port") . "' ";
-        $command .= "user='" . config("database.connections." . config("database.default") . ".username") . "' ";
-        $command .= "password='" . config("database.connections." . config("database.default") . ".password") . "' ";
-        //$command .= "table=ec_tracks";
-        $command .= "\" $fileName -sql \"Select * From tracks\" ";
-
-        //dd($command);
-        $result = exec($command);
-        dd($result);
         if ($this->argument('name')) {
-            $newEcTrack = EcTrack::create(['name' => $this->argument('name'), 'user_id' => $this->argument('user_id'), 'geometry' => $geometry]);
+            $newEcTrack = EcTrack::create([
+                'name' => $this->argument('name'),
+                'user_id' => $this->argument('user_id'),
+                'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
             $newEcTrack->save();
         } else {
-            $newEcTrack = EcTrack::create(['name' => $fileName, 'user_id' => $this->argument('user_id'), 'geometry' => $geometry]);
+            $newEcTrack = EcTrack::create([
+                'name' => $fileName, 'user_id' => $this->argument('user_id'),
+                'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
             $newEcTrack->save();
         }
         return 0;
