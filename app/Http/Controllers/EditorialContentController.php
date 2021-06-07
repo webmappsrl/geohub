@@ -139,10 +139,12 @@ class EditorialContentController extends Controller
             return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
         $ecMedia->url = $request->url;
 
-        if (!is_null($request->geometry)
+        if (
+            !is_null($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
-            && isset($request->geometry['coordinates'])) {
+            && isset($request->geometry['coordinates'])
+        ) {
             $ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
 
@@ -181,6 +183,34 @@ class EditorialContentController extends Controller
         }
         $ecTrack->distance_comp = $request->distance_comp;
         $ecTrack->save();
+    }
 
+    /** Update the ec media with new data from Geomixer
+     *
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id the id of the EcMedia
+     */
+    public function updateEcPoi(Request $request, $id)
+    {
+        $ecPoi = EcPoi::find($id);
+
+        if (is_null($ecPoi)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        if (
+            !is_null($request->geometry)
+            && is_array($request->geometry)
+            && isset($request->geometry['type'])
+            && isset($request->geometry['coordinates'])
+        ) {
+            $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
+        }
+
+        if (!empty($request->where_ids)) {
+            $ecPoi->taxonomyWheres()->sync($request->where_ids);
+        }
+
+        $ecPoi->save();
     }
 }
