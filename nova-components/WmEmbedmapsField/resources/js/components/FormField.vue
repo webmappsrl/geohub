@@ -7,8 +7,8 @@
         <template slot="field">
             <map-wm-embedmaps-field
                 class="wm-embedmaps-field-map-container"
-                v-if="field.value && field.value['feature']"
                 :feature="field.value['feature']"
+                v-model="field.value['feature']"
                 :editable="true"
                 :related="field.value['related'] ? field.value['related'] : []"
             ></map-wm-embedmaps-field>
@@ -29,6 +29,10 @@ export default {
          * Set the initial, internal value for the field.
          */
         setInitialValue() {
+            if (!this.field.value)
+                this.field.value = {};
+            if (!this.field.value.feature)
+                this.field.value.feature = {};
             this.value = this.field.value || "";
         },
 
@@ -36,9 +40,7 @@ export default {
          * Fill the given FormData object with the field's internal value.
          */
         fill(formData) {
-            let lat = this.value.feature.geometry.coordinates[0],
-                lng = this.value.feature.geometry.coordinates[1];
-            formData.append(this.field.attribute, `nova_form:ST_GeomFromText('POINT(${lat} ${lng})')`);
+            formData.append(this.field.attribute, this.value.feature.geometry.coordinates);
         }
     }
 };

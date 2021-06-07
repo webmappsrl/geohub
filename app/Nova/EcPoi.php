@@ -61,7 +61,7 @@ class EcPoi extends Resource
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
                 $model = $this->model();
                 return [
-                    'feature' => $model->id ? $model->getGeojson() : '{"type":"Point","coordinates":[11,43]}',
+                    'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
         ];

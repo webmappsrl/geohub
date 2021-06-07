@@ -39,13 +39,13 @@ class EcPoi extends Model
             }
         });
         
-        $geometry = @$this->attributes["geometry"];
-        if (strpos($geometry, 'nova_form:') === 0) {
-            list(, $value) = explode(':', $geometry);
-            static::updating(function () use ($value) {
-                $this->attributes["geometry"] = DB::raw($value);
-            });
-        }
+        static::updating(function () {
+            try {
+                $this->hoquServiceProvider->store('enrich_ec_poi', ['id' => $this->id]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            }
+        });
 
         parent::save($options);
     }
