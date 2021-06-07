@@ -5,6 +5,7 @@ namespace Tests\Feature\Api\Ec;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
+use App\Models\UgcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,6 +13,22 @@ use Tests\TestCase;
 class TrackTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function testGetGeoJson()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.geojson", ['id' => $ecTrack->id]));
+        $this->assertSame(200, $response->status());
+        $json = $response->json();
+        $this->assertArrayHasKey('type', $json);
+        $this->assertSame('Feature', $json["type"]);
+    }
+
+    public function testGetGeoJsonMissingId()
+    {
+        $response = $this->get(route("api.ec.track.geojson", ['id' => 1]));
+        $this->assertSame(404, $response->status());
+    }
 
     public function testNoIdReturnCode404()
     {

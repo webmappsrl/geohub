@@ -59,15 +59,15 @@ Route::name('api.')->group(function () {
     });
     Route::prefix('ec')->name('ec.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('json');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('geojson');
             Route::get("/image/{id}", [EditorialContentController::class, 'getEcImage'])->name('image');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('json');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
         });
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('json');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
         });
     });
