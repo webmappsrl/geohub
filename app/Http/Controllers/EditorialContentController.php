@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
-class EditorialContentController extends Controller {
+class EditorialContentController extends Controller
+{
+
+    use GeometryFeatureTrait;
+
     /**
      * Calculate the model class name of a ugc from its type
      *
@@ -27,7 +31,8 @@ class EditorialContentController extends Controller {
      *
      * @throws Exception
      */
-    private function _getEcModelFromType(string $type): string {
+    private function _getEcModelFromType(string $type): string
+    {
         switch ($type) {
             case 'poi':
                 $model = "\App\Models\EcPoi";
@@ -52,7 +57,8 @@ class EditorialContentController extends Controller {
      *
      * @return JsonResponse return the Ec info
      */
-    public function getEcjson(int $id): JsonResponse {
+    public function getEcjson(int $id): JsonResponse
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -63,8 +69,32 @@ class EditorialContentController extends Controller {
         $ec = $model::find($id);
         if (is_null($ec))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-
+        $ec = $ec->getGeojson();
         return response()->json($ec);
+    }
+
+    /**
+     * Get Ec info by ID
+     *
+     * @param int $id the Ec id
+     *
+     * @return JsonResponse return the Ec info
+     */
+    public function getEcGeoJson(int $id): JsonResponse
+    {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $ec = $model::find($id);
+        if (is_null($ec)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($ec->getGeojson());
     }
 
     /**
@@ -74,7 +104,8 @@ class EditorialContentController extends Controller {
      *
      * @return JsonResponse return the Ec Image
      */
-    public function getEcImage(int $id) {
+    public function getEcImage(int $id)
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -95,9 +126,10 @@ class EditorialContentController extends Controller {
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
+     * @param int $id the id of the EcMedia
      */
-    public function updateEcMedia(Request $request, $id) {
+    public function updateEcMedia(Request $request, $id)
+    {
         $ecMedia = EcMedia::find($id);
 
         if (is_null($ecMedia))
@@ -107,10 +139,12 @@ class EditorialContentController extends Controller {
             return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
         $ecMedia->url = $request->url;
 
-        if (!is_null($request->geometry)
+        if (
+            !is_null($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
-            && isset($request->geometry['coordinates'])) {
+            && isset($request->geometry['coordinates'])
+        ) {
             $ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
 
@@ -132,5 +166,51 @@ class EditorialContentController extends Controller {
         } catch (Exception $e) {
             Log::warning($e->getMessage());
         }
+    }
+
+    /** Update the ec track with new data from Geomixer
+     *
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id the id of the EcTrack
+     */
+    public function updateEcTrack(Request $request, $id)
+    {
+        $ecTrack = EcTrack::find($id);
+        if (is_null($ecTrack))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        if (!empty($request->where_ids)) {
+            $ecTrack->taxonomyWheres()->sync($request->where_ids);
+        }
+        $ecTrack->distance_comp = $request->distance_comp;
+        $ecTrack->save();
+    }
+
+    /** Update the ec media with new data from Geomixer
+     *
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id the id of the EcMedia
+     */
+    public function updateEcPoi(Request $request, $id)
+    {
+        $ecPoi = EcPoi::find($id);
+
+        if (is_null($ecPoi)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        if (
+            !is_null($request->geometry)
+            && is_array($request->geometry)
+            && isset($request->geometry['type'])
+            && isset($request->geometry['coordinates'])
+        ) {
+            $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
+        }
+
+        if (!empty($request->where_ids)) {
+            $ecPoi->taxonomyWheres()->sync($request->where_ids);
+        }
+
+        $ecPoi->save();
     }
 }

@@ -28,7 +28,8 @@ export default {
     components: {},
     props: {
         feature: String,
-        related: String
+        related: String,
+        editable: Boolean
     },
     data: () => ({
         map: null,
@@ -52,7 +53,7 @@ export default {
         });
 
         this.view = new View({
-            center: this._fromLonLat([10.4, 43, 71]),
+            center: this._fromLonLat([10.4, 43]),
             maxZoom: 17,
             minZoom: 3,
             projection: "EPSG:3857",
@@ -101,11 +102,27 @@ export default {
                 }).getArray()
         });
 
+        if (this.editable) {
+            this.map.on('click', (event) => {
+                if (!this.feature) {
+                    this.feature = {};
+                }
+                if (!this.feature.type) this.feature.type = 'Feature';
+                if (!this.feature.properties) this.feature.properties = {};
+                if (!this.feature.geometry) {
+                    this.feature.geometry = {
+                        type: "Point",
+                    };
+                }
+                this.feature.geometry.coordinates = this._toLonLat(event.coordinate);
+                this.updateSource(true);
+            });
+        }
         this.updateSource();
     },
     watch: {
-        geojson(value) {
-            this.updateSource();
+        feature(value) {
+            //this.updateSource();
         },
         related(value) {
             this.updateSource();
@@ -239,31 +256,34 @@ export default {
 
             return style;
         },
-        updateSource() {
+        updateSource(skip_fit) {
             this.vectorSource.clear();
-
-            const features = new GeoJSON({
-                featureProjection: 'EPSG:3857',
-            }).readFeatures(this.feature);
-            features[0].setId('wm-main-feature');
-            this.vectorSource.addFeatures(features);
-
-            const extent = this.vectorSource.getExtent();
-
-            if (typeof this.related !== 'undefined'
-                && this.related.type === 'FeatureCollection'
-                && typeof this.related.features !== 'undefined'
-                && typeof this.related.features.length === 'number'
-                && this.related.features.length > 0) {
-                const related = new GeoJSON({
+            if (!!this.feature && !!this.feature.geometry) {
+                const features = new GeoJSON({
                     featureProjection: 'EPSG:3857',
-                }).readFeatures(this.related);
-                this.vectorSource.addFeatures(related);
-            }
+                }).readFeatures(this.feature);
+                features[0].setId('wm-main-feature');
+                this.vectorSource.addFeatures(features);
 
-            this.view.fit(extent, {
-                padding: [20, 20, 20, 20]
-            });
+                const extent = this.vectorSource.getExtent();
+
+                if (typeof this.related !== 'undefined'
+                    && this.related.type === 'FeatureCollection'
+                    && typeof this.related.features !== 'undefined'
+                    && typeof this.related.features.length === 'number'
+                    && this.related.features.length > 0) {
+                    const related = new GeoJSON({
+                        featureProjection: 'EPSG:3857',
+                    }).readFeatures(this.related);
+                    this.vectorSource.addFeatures(related);
+                }
+
+                if (!skip_fit) {
+                    this.view.fit(extent, {
+                        padding: [20, 20, 20, 20]
+                    });
+                }
+            }
         }
     }
 }
