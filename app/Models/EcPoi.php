@@ -7,7 +7,6 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EcPoi extends Model
@@ -92,5 +91,10 @@ class EcPoi extends Model
     public function taxonomyPoiTypes()
     {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
+    }
+
+    public function evidence_image()
+    {
+        return $this->belongsTo(EcMedia::class, "evidence_image", "id");
     }
 }

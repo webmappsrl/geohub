@@ -2,18 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class EcTrackTest extends TestCase {
+class EcTrackTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testSaveEcPoiOk() {
+    public function testSaveEcTrackOk()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -25,7 +27,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testSaveEcPoiError() {
+    public function testSaveEcTrackError()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -37,5 +40,18 @@ class EcTrackTest extends TestCase {
         $ecTrack = new EcTrack(['name' => 'testName']);
         $ecTrack->id = 1;
         $ecTrack->save();
+    }
+
+    public function testAssociateEvidenceImageToTrack()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $this->assertIsObject($ecTrack);
+
+        EcMedia::factory(50)->create();
+        $ecMedia = EcMedia::all()->random();
+        $ecTrack->evidence_image = $ecMedia->id;
+        $ecTrack->save();
+
+        $this->assertEquals($ecTrack->evidence_image, $ecMedia->id);
     }
 }

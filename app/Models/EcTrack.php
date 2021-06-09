@@ -78,4 +78,9 @@ class EcTrack extends Model
     {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
+
+    public function evidence_image()
+    {
+        return $this->belongsTo(EcMedia::class, "evidence_image", "id");
+    }
 }

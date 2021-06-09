@@ -107,4 +107,14 @@ class EcMedia extends Model
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
+
+    public function evidence_image_ec_pois()
+    {
+        return $this->hasMany(EcPoi::class);
+    }
+
+    public function evidence_image_ec_tracks()
+    {
+        return $this->hasMany(EcTrack::class);
+    }
 }
