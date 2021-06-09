@@ -55,7 +55,6 @@ class EcPoi extends Resource
         return [
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->required()->sortable(),
-            MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
