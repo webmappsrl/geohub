@@ -6,7 +6,7 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 
@@ -80,8 +80,8 @@ class EcTrack extends Model
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function feature_image(): HasOne
+    public function featureImage(): BelongsTo
     {
-        return $this->hasOne(EcMedia::class, 'feature_image', 'id');
+        return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 }

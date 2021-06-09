@@ -2,8 +2,10 @@
 
 namespace App\Nova;
 
+use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
@@ -76,8 +78,16 @@ class EcTrack extends Resource
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '--';
+                if (substr($url, 0, 4) !== 'http') {
+                    $url = Storage::disk('public')->url($url);
+                }
+
+                return $url;
+            })->withMeta(['width' => 500])->hideWhenCreating()->hideWhenUpdating(),
             AttachMany::make('EcMedia'),
-            Text::make('feature_image'),
             new Panel('Relations', $this->taxonomies()),
         ];
 

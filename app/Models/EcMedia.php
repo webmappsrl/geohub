@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EcMedia extends Model
 {
@@ -108,13 +109,13 @@ class EcMedia extends Model
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function featureImageEcPois()
+    public function featureImageEcPois(): HasMany
     {
         return $this->hasMany(EcPoi::class, 'feature_image');
     }
 
-    public function feature_image_ec_tracks()
+    public function featureImageEcTracks(): HasMany
     {
-        return $this->hasMany(EcTrack::class);
+        return $this->hasMany(EcTrack::class, 'feature_image');
     }
 }

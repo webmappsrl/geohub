@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -69,11 +68,12 @@ class EcPoi extends Resource
                     'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
-            BelongsTo::make('Feature Image', 'featureImage', EcMedia::class)->onlyOnForms(),
-            ExternalImage::make('Feature Image', function () {
-                $url = $this->model()->featureImage->url;
-                if (substr($url, 0, 4) !== 'http')
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '--';
+                if (substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
+                }
 
                 return $url;
             })->withMeta(['width' => 500])->hideWhenCreating()->hideWhenUpdating(),
