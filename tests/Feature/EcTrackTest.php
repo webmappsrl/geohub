@@ -42,16 +42,16 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testAssociateEvidenceImageToTrack()
+    public function testAssociateFeatureImageToTrack()
     {
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
         EcMedia::factory(50)->create();
         $ecMedia = EcMedia::all()->random();
-        $ecTrack->evidence_image = $ecMedia->id;
+        $ecTrack->feature_image = $ecMedia->id;
         $ecTrack->save();
 
-        $this->assertEquals($ecTrack->evidence_image, $ecMedia->id);
+        $this->assertEquals($ecTrack->feature_image, $ecMedia->id);
     }
 }

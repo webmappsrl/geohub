@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEvidenceImageToEcTracks extends Migration
+class AddFeatureImageToEcPois extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddEvidenceImageToEcTracks extends Migration
      */
     public function up()
     {
-        Schema::table('ec_tracks', function (Blueprint $table) {
-            $table->integer('evidence_image')->nullable()->unsigned();
-            $table->foreign('evidence_image')
+        Schema::table('ec_pois', function (Blueprint $table) {
+            $table->integer('feature_image')->nullable()->unsigned();
+            $table->foreign('feature_image')
                 ->references('id')
                 ->on('ec_media')
                 ->onDelete('cascade');
@@ -29,8 +29,8 @@ class AddEvidenceImageToEcTracks extends Migration
      */
     public function down()
     {
-        Schema::table('ec_tracks', function (Blueprint $table) {
-            $table->dropColumn('evidence_image');
+        Schema::table('ec_pois', function (Blueprint $table) {
+            $table->dropColumn('feature_image');
         });
     }
 }

@@ -43,16 +43,16 @@ class EcPoiTest extends TestCase
         $ecPoi->save();
     }
 
-    public function testAssociateEvidenceImageToPoi()
+    public function testAssociateFeatureImageToPoi()
     {
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
 
         EcMedia::factory(50)->create();
         $ecMedia = EcMedia::all()->random();
-        $ecPoi->evidence_image = $ecMedia->id;
+        $ecPoi->feature_image = $ecMedia->id;
         $ecPoi->save();
 
-        $this->assertEquals($ecPoi->evidence_image, $ecMedia->id);
+        $this->assertEquals($ecPoi->feature_image, $ecMedia->id);
     }
 }

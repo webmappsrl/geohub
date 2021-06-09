@@ -6,6 +6,7 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 
@@ -93,8 +94,8 @@ class EcPoi extends Model
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function evidence_image()
+    public function feature_image(): HasOne
     {
-        return $this->belongsTo(EcMedia::class, 'evidence_image', 'id');
+        return $this->hasOne(EcMedia::class, 'feature_image', 'id');
     }
 }

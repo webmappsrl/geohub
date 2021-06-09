@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -67,8 +68,8 @@ class EcPoi extends Resource
                     'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
+            Text::make('feature_image'),
             AttachMany::make('EcMedia'),
-            BelongsTo::make(__('Evidence image'), 'evidence_image', EcMedia::class)->sortable()->searchable(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }
