@@ -6,7 +6,8 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Http\JsonResponse;
 use App\Models\TaxonomyWhere;
 
-class TaxonomyWhereController extends Controller {
+class TaxonomyWhereController extends Controller
+{
     use GeometryFeatureTrait;
 
     /**
@@ -17,11 +18,31 @@ class TaxonomyWhereController extends Controller {
      * @return JsonResponse return the TaxonomyWhere geoJson
      *
      */
-    public function getGeoJsonFromTaxonomyWhere(int $id): JsonResponse {
+    public function getGeoJsonFromTaxonomyWhere(int $id): JsonResponse
+    {
         $taxonomyWhere = TaxonomyWhere::find($id);
         $taxonomyWhere = !is_null($taxonomyWhere) ? $taxonomyWhere->getGeojson() : null;
         if (is_null($taxonomyWhere))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($taxonomyWhere, 200);
+    }
+
+    /**
+     * Get TaxonomyWhere by Identifier as geoJson
+     *
+     * @param string $identifier the TaxonomyWhere identifier
+     *
+     * @return JsonResponse return the TaxonomyWhere geoJson
+     *
+     */
+    public function getGeoJsonFromTaxonomyWhereIdentifier(string $identifier): JsonResponse
+    {
+        $taxonomyWhere = TaxonomyWhere::where('identifier', $identifier)->first();
+        $taxonomyWhere = !is_null($taxonomyWhere) ? $taxonomyWhere->getGeojson() : null;
+        if (is_null($taxonomyWhere)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         return response()->json($taxonomyWhere, 200);
     }

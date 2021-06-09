@@ -13,7 +13,6 @@ class WhereTest extends TestCase
 
     public function testGetGeoJson()
     {
-
         $taxonomyWhere = TaxonomyWhere::factory()->create();
         $response = $this->get(route("api.taxonomy.where.geojson", ['id' => $taxonomyWhere->id]));
         $this->assertSame(200, $response->status());
@@ -26,5 +25,15 @@ class WhereTest extends TestCase
     {
         $response = $this->get(route("api.taxonomy.where.geojson", ['id' => 1]));
         $this->assertSame(404, $response->status());
+    }
+
+    public function testGetGeoJsonByIdentifier()
+    {
+        $taxonomyWhere = TaxonomyWhere::factory()->create();
+        $response = $this->get(route("api.taxonomy.where.geojson.idt", ['identifier' => $taxonomyWhere->identifier]));
+        $this->assertSame(200, $response->status());
+        $json = $response->json();
+        $this->assertArrayHasKey('type', $json);
+        $this->assertSame('Feature', $json["type"]);
     }
 }
