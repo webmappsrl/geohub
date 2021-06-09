@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class TaxonomyWhen extends Model
 {
@@ -14,9 +14,16 @@ class TaxonomyWhen extends Model
     {
         static::creating(function ($taxonomyWhen) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($user)) {
+                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            }
             $taxonomyWhen->author()->associate($user);
+
+            if (null !== $taxonomyWhen->identifier) {
+                $taxonomyWhen->identifier = Str::slug($taxonomyWhen->identifier, '-');
+            }
         });
+
         parent::save($options);
     }
 

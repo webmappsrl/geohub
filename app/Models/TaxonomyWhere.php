@@ -7,9 +7,8 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Str;
 
 /**
  * Class TaxonomyWhere
@@ -60,9 +59,16 @@ class TaxonomyWhere extends Model
     {
         static::creating(function ($taxonomyWhere) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($user)) {
+                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            }
             $taxonomyWhere->author()->associate($user);
+
+            if (null !== $taxonomyWhere->identifier) {
+                $taxonomyWhere->identifier = Str::slug($taxonomyWhere->identifier, '-');
+            }
         });
+
         parent::save($options);
         try {
             $this->hoquServiceProvider->store('update_geomixer_taxonomy_where', ['id' => $this->id]);
