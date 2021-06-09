@@ -6,10 +6,8 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -70,6 +68,7 @@ class EcPoi extends Resource
                 ];
             })->required()->hideFromIndex(),
             AttachMany::make('EcMedia'),
+            BelongsTo::make(__('Evidence image'), 'evidence_image', EcMedia::class)->sortable()->searchable(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }

@@ -95,6 +95,6 @@ class EcPoi extends Model
 
     public function evidence_image()
     {
-        return $this->belongsTo(EcMedia::class, "evidence_image", "id");
+        return $this->belongsTo(EcMedia::class, 'evidence_image', 'id');
     }
 }
