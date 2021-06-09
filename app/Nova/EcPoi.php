@@ -70,13 +70,13 @@ class EcPoi extends Resource
             })->required()->hideFromIndex(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
-                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '--';
-                if (substr($url, 0, 4) !== 'http') {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
 
                 return $url;
-            })->withMeta(['width' => 500])->hideWhenCreating()->hideWhenUpdating(),
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
