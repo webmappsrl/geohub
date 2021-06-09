@@ -94,8 +94,8 @@ class EcPoi extends Model
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function feature_image(): HasOne
+    public function featureImage()
     {
-        return $this->hasOne(EcMedia::class, 'feature_image', 'id');
+        return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 }

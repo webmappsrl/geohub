@@ -108,9 +108,9 @@ class EcMedia extends Model
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function feature_image_ec_pois()
+    public function featureImageEcPois()
     {
-        return $this->belongsToMany(EcPoi::class);
+        return $this->hasMany(EcPoi::class, 'feature_image');
     }
 
     public function feature_image_ec_tracks()

@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
@@ -67,7 +69,14 @@ class EcPoi extends Resource
                     'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
-            Text::make('feature_image'),
+            BelongsTo::make('Feature Image', 'featureImage', EcMedia::class)->onlyOnForms(),
+            ExternalImage::make('Feature Image', function () {
+                $url = $this->model()->featureImage->url;
+                if (substr($url, 0, 4) !== 'http')
+                    $url = Storage::disk('public')->url($url);
+
+                return $url;
+            })->withMeta(['width' => 500])->hideWhenCreating()->hideWhenUpdating(),
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
