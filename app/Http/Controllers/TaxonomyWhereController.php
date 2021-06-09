@@ -22,8 +22,9 @@ class TaxonomyWhereController extends Controller
     {
         $taxonomyWhere = TaxonomyWhere::find($id);
         $taxonomyWhere = !is_null($taxonomyWhere) ? $taxonomyWhere->getGeojson() : null;
-        if (is_null($taxonomyWhere))
+        if (is_null($taxonomyWhere)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         return response()->json($taxonomyWhere, 200);
     }
