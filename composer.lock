@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f35e60543233f5b3fe2f788cd21208ac",
+    "content-hash": "f3b88a929aba594b1f511f14d2c77d4e",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -328,6 +328,51 @@
                 "source": "https://github.com/chaseconey/nova-external-image/tree/master"
             },
             "time": "2020-08-15T01:49:08+00:00"
+        },
+        {
+            "name": "dillingham/nova-attach-many",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dillingham/nova-attach-many.git",
+                "reference": "3a34356c9ad071b4fd7797b41e3942ac8d1f77e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dillingham/nova-attach-many/zipball/3a34356c9ad071b4fd7797b41e3942ac8d1f77e9",
+                "reference": "3a34356c9ad071b4fd7797b41e3942ac8d1f77e9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NovaAttachMany\\Providers\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NovaAttachMany\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Attach Many Nova field",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/dillingham/nova-attach-many/issues",
+                "source": "https://github.com/dillingham/nova-attach-many/tree/1.3.0"
+            },
+            "time": "2021-03-26T05:44:06+00:00"
         },
         {
             "name": "doctrine/cache",
