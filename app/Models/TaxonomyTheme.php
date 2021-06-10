@@ -18,7 +18,9 @@ class TaxonomyTheme extends Model
                 $user = User::where('email', '=', 'team@webmapp.it')->first();
             }
             $taxonomyTheme->author()->associate($user);
+        });
 
+        static::saving(function ($taxonomyTheme) {
             if (null !== $taxonomyTheme->identifier) {
                 $taxonomyTheme->identifier = Str::slug($taxonomyTheme->identifier, '-');
             }

@@ -63,7 +63,9 @@ class TaxonomyWhere extends Model
                 $user = User::where('email', '=', 'team@webmapp.it')->first();
             }
             $taxonomyWhere->author()->associate($user);
+        });
 
+        static::saving(function ($taxonomyWhere) {
             if (null !== $taxonomyWhere->identifier) {
                 $taxonomyWhere->identifier = Str::slug($taxonomyWhere->identifier, '-');
             }

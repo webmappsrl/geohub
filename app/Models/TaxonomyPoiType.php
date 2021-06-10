@@ -18,7 +18,9 @@ class TaxonomyPoiType extends Model
                 $user = User::where('email', '=', 'team@webmapp.it')->first();
             }
             $taxonomyPoiType->author()->associate($user);
+        });
 
+        static::saving(function ($taxonomyPoiType) {
             if (null !== $taxonomyPoiType->identifier) {
                 $taxonomyPoiType->identifier = Str::slug($taxonomyPoiType->identifier, '-');
             }

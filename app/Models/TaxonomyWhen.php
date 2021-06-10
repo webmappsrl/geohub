@@ -18,7 +18,9 @@ class TaxonomyWhen extends Model
                 $user = User::where('email', '=', 'team@webmapp.it')->first();
             }
             $taxonomyWhen->author()->associate($user);
+        });
 
+        static::saving(function ($taxonomyWhen) {
             if (null !== $taxonomyWhen->identifier) {
                 $taxonomyWhen->identifier = Str::slug($taxonomyWhen->identifier, '-');
             }

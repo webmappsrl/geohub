@@ -14,22 +14,22 @@ class AddIdentifierToTaxonomies extends Migration
     public function up()
     {
         Schema::table('taxonomy_activities', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
         Schema::table('taxonomy_poi_types', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
         Schema::table('taxonomy_targets', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
         Schema::table('taxonomy_themes', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
         Schema::table('taxonomy_whens', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
         Schema::table('taxonomy_wheres', function (Blueprint $table) {
-            $table->text('identifier')->nullable();
+            $table->text('identifier')->unique()->nullable();
         });
     }
 

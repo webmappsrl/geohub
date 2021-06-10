@@ -18,7 +18,9 @@ class TaxonomyActivity extends Model
                 $user = User::where('email', '=', 'team@webmapp.it')->first();
             }
             $taxonomyActivity->author()->associate($user);
+        });
 
+        static::saving(function ($taxonomyActivity) {
             if (null !== $taxonomyActivity->identifier) {
                 $taxonomyActivity->identifier = Str::slug($taxonomyActivity->identifier, '-');
             }
