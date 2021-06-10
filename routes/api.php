@@ -94,6 +94,9 @@ Route::name('api.')->group(function () {
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcPoi'])->name('update');
+            Route::prefix('download')->group(function () {
+                Route::get("/{id}/{type?}", [EditorialContentController::class, 'download'])->name('download');
+            });
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');

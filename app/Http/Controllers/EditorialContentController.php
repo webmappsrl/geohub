@@ -7,15 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use App\Models\User;
-use \App\Models\TaxonomyWhere;
-use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class EditorialContentController extends Controller
 {
@@ -212,5 +208,45 @@ class EditorialContentController extends Controller
         }
 
         $ecPoi->save();
+    }
+
+    /**
+     * Return geometry formatted by $format.
+     * 
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id
+     * @param string $format
+     * 
+     * @return Response
+     */
+    public function download(Request $request, int $id, string $format = 'geojson')
+    {
+        $ecPoi = EcPoi::find($id);
+
+        $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        if (is_null($ecPoi)) {
+            return $response;
+        }
+
+        $headers = [];
+        switch ($format) {
+            case 'gpx';
+                $headers['Content-Type'] = 'application/vnd.api+json';
+                $content = $ecPoi->getGpx();
+                $response = response($content);
+                break;
+            case 'kml';
+                $headers['Content-Type'] = 'application/xml';
+                $content = $ecPoi->getKml();
+                $response = response()->kml($content);
+                break;
+            default:
+                $headers['Content-Type'] = 'application/vnd.api+json';
+                $content = $ecPoi->getGeojson();
+                $response = response()->json($content);
+                break;
+        }
+
+        return $response;
     }
 }
