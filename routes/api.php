@@ -67,6 +67,8 @@ Route::name('api.')->group(function () {
         Route::prefix('where')->name('where.')->group(function () {
             Route::get("/geojson/{id}", [TaxonomyWhereController::class, 'getGeoJsonFromTaxonomyWhere'])->name('geojson');
             Route::get("/geojson/idt/{identifier}", [TaxonomyWhereController::class, 'getGeoJsonFromTaxonomyWhereIdentifier'])->name('geojson.idt');
+            Route::get("/{id}", [TaxonomyWhereController::class, 'getTaxonomyWhere'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyWhereController::class, 'getTaxonomyWhereFromIdentifier'])->name('json.idt');
         });
     });
     Route::prefix('ugc')->name('ugc.')->group(function () {

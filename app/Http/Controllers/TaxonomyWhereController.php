@@ -47,4 +47,40 @@ class TaxonomyWhereController extends Controller
 
         return response()->json($taxonomyWhere, 200);
     }
+
+    /**
+     * Get TaxonomyWhere by ID
+     *
+     * @param int $id the TaxonomyWhere id
+     *
+     * @return JsonResponse return the TaxonomyWhere
+     *
+     */
+    public function getTaxonomyWhere(int $id): JsonResponse
+    {
+        $taxonomyWhere = TaxonomyWhere::find($id);
+        if (is_null($taxonomyWhere)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($taxonomyWhere, 200);
+    }
+
+    /**
+     * Get TaxonomyWhere by Identifier
+     *
+     * @param string $identifier the TaxonomyWhere identifier
+     *
+     * @return JsonResponse return the TaxonomyWhere
+     *
+     */
+    public function getTaxonomyWhereFromIdentifier(string $identifier): JsonResponse
+    {
+        $taxonomyWhere = TaxonomyWhere::where('identifier', $identifier)->first();
+        if (is_null($taxonomyWhere)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($taxonomyWhere, 200);
+    }
 }

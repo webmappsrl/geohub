@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\Taxonomy;
 use App\Models\TaxonomyWhere;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class WhereTest extends TestCase
@@ -36,6 +35,29 @@ class WhereTest extends TestCase
         $json = $response->json();
         $this->assertArrayHasKey('type', $json);
         $this->assertSame('Feature', $json["type"]);
+    }
+
+    public function testGetJson()
+    {
+        $this->withoutExceptionHandling();
+        $taxonomyWhen = TaxonomyWhere::factory()->create();
+        $response = $this->get(route("api.taxonomy.where.json", ['id' => $taxonomyWhen->id]));
+        $this->assertSame(200, $response->status());
+        $this->assertIsObject($response);
+    }
+
+    public function testGetJsonMissingId()
+    {
+        $response = $this->get(route("api.taxonomy.where.json", ['id' => 1]));
+        $this->assertSame(404, $response->status());
+    }
+
+    public function testGetJsonByIdentifier()
+    {
+        $taxonomyWhen = TaxonomyWhere::factory()->create();
+        $response = $this->get(route("api.taxonomy.where.json.idt", ['identifier' => $taxonomyWhen->identifier]));
+        $this->assertSame(200, $response->status());
+        $this->assertIsObject($response);
     }
 
     public function testIdentifierFormat()
