@@ -60,6 +60,8 @@ class EcPoi extends Resource
             BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
+            Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
