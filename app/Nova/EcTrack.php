@@ -2,17 +2,18 @@
 
 namespace App\Nova;
 
+use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
@@ -55,15 +56,15 @@ class EcTrack extends Resource
     public function fields(Request $request)
     {
         $fields = [
+            new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->sortable(),
-            MorphToMany::make('TaxonomyWheres'),
-            MorphToMany::make('TaxonomyActivities'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            File::make('geojson')->store(function (Request $request, $model) {
+            File::make('Geojson')->store(function (Request $request, $model) {
                 $content = json_decode(file_get_contents($request->geojson));
                 $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "'))");
                 return [
@@ -77,9 +78,42 @@ class EcTrack extends Resource
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                    $url = Storage::disk('public')->url($url);
+                }
+
+                return $url;
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            AttachMany::make('EcMedia'),
+            new Panel('Relations', $this->taxonomies()),
         ];
 
         return $fields;
+    }
+
+    protected function taxonomies()
+    {
+        return [
+            MorphToMany::make('TaxonomyWheres'),
+            MorphToMany::make('TaxonomyActivities'),
+            MorphToMany::make('TaxonomyTargets'),
+            MorphToMany::make('TaxonomyWhens'),
+            MorphToMany::make('TaxonomyThemes'),
+        ];
+    }
+
+    protected function attach_taxonomy()
+    {
+        return [
+            AttachMany::make('TaxonomyWheres'),
+            AttachMany::make('TaxonomyActivities'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyWhens'),
+            AttachMany::make('TaxonomyThemes'),
+        ];
     }
 
     /**

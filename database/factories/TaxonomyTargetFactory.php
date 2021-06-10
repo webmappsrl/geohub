@@ -23,10 +23,12 @@ class TaxonomyTargetFactory extends Factory
      */
     public function definition()
     {
+        $name = $this->faker->name();
         return [
-            'name' => $this->faker->name(),
+            'name' => $name,
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
+            'identifier' => $name,
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'import_method' => $this->faker->name(),

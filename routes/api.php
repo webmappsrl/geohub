@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EditorialContentController;
+use App\Http\Controllers\TaxonomyActivityController;
+use App\Http\Controllers\TaxonomyPoiTypeController;
+use App\Http\Controllers\TaxonomyTargetController;
+use App\Http\Controllers\TaxonomyThemeController;
+use App\Http\Controllers\TaxonomyWhenController;
 use App\Http\Controllers\TaxonomyWhereController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
@@ -39,8 +44,31 @@ Route::name('api.')->group(function () {
     });
 
     Route::prefix('taxonomy')->name('taxonomy.')->group(function () {
+        Route::prefix('activity')->name('activity.')->group(function () {
+            Route::get("/{id}", [TaxonomyActivityController::class, 'getTaxonomyActivity'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyActivityController::class, 'getTaxonomyActivityFromIdentifier'])->name('json.idt');
+        });
+        Route::prefix('poi_type')->name('poi_type.')->group(function () {
+            Route::get("/{id}", [TaxonomyPoiTypeController::class, 'getTaxonomyPoiType'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyPoiTypeController::class, 'getTaxonomyPoiTypeFromIdentifier'])->name('json.idt');
+        });
+        Route::prefix('target')->name('target.')->group(function () {
+            Route::get("/{id}", [TaxonomyTargetController::class, 'getTaxonomyTarget'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyTargetController::class, 'getTaxonomyTargetFromIdentifier'])->name('json.idt');
+        });
+        Route::prefix('theme')->name('theme.')->group(function () {
+            Route::get("/{id}", [TaxonomyThemeController::class, 'getTaxonomyTheme'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyThemeController::class, 'getTaxonomyThemeFromIdentifier'])->name('json.idt');
+        });
+        Route::prefix('when')->name('when.')->group(function () {
+            Route::get("/{id}", [TaxonomyWhenController::class, 'getTaxonomyWhen'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyWhenController::class, 'getTaxonomyWhenFromIdentifier'])->name('json.idt');
+        });
         Route::prefix('where')->name('where.')->group(function () {
             Route::get("/geojson/{id}", [TaxonomyWhereController::class, 'getGeoJsonFromTaxonomyWhere'])->name('geojson');
+            Route::get("/geojson/idt/{identifier}", [TaxonomyWhereController::class, 'getGeoJsonFromTaxonomyWhereIdentifier'])->name('geojson.idt');
+            Route::get("/{id}", [TaxonomyWhereController::class, 'getTaxonomyWhere'])->name('json');
+            Route::get("/idt/{identifier}", [TaxonomyWhereController::class, 'getTaxonomyWhereFromIdentifier'])->name('json.idt');
         });
     });
     Route::prefix('ugc')->name('ugc.')->group(function () {

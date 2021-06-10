@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
@@ -40,5 +40,27 @@ class EcPoiTest extends TestCase
         $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl']);
         $ecPoi->id = 1;
         $ecPoi->save();
+    }
+
+    public function testAssociateFeatureImageToPoi()
+    {
+        $ecPoi = EcPoi::factory()->create();
+        $this->assertIsObject($ecPoi);
+
+        EcMedia::factory(2)->create();
+        $ecMedia = EcMedia::all()->random();
+        $ecPoi->feature_image = $ecMedia->id;
+        $ecPoi->save();
+
+        $this->assertEquals($ecPoi->feature_image, $ecMedia->id);
+    }
+
+    public function testContactFields()
+    {
+        $ecPoi = EcPoi::factory()->create([
+            'contact_phone' => '+3902123456',
+            'contact_email' => 'info@poi.com',
+        ]);
+        $this->assertIsObject($ecPoi);
     }
 }

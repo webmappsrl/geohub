@@ -2,13 +2,16 @@
 
 namespace App\Nova;
 
+use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
+use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcPoi extends Resource
@@ -45,17 +48,20 @@ class EcPoi extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
     {
         return [
+            new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->required()->sortable(),
-            MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
+            Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -64,13 +70,48 @@ class EcPoi extends Resource
                     'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                    $url = Storage::disk('public')->url($url);
+                }
+
+                return $url;
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            AttachMany::make('EcMedia'),
+            new Panel('Relations', $this->taxonomies()),
+        ];
+    }
+
+    protected function taxonomies()
+    {
+        return [
+            MorphToMany::make('TaxonomyWheres'),
+            MorphToMany::make('TaxonomyActivities'),
+            MorphToMany::make('TaxonomyTargets'),
+            MorphToMany::make('TaxonomyWhens'),
+            MorphToMany::make('TaxonomyThemes'),
+            MorphToMany::make('TaxonomyPoiTypes'),
+        ];
+    }
+
+    protected function attach_taxonomy()
+    {
+        return [
+            AttachMany::make('TaxonomyWheres'),
+            AttachMany::make('TaxonomyActivities'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyWhens'),
+            AttachMany::make('TaxonomyThemes'),
+            AttachMany::make('TaxonomyPoiTypes'),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -81,7 +122,7 @@ class EcPoi extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -92,7 +133,7 @@ class EcPoi extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -103,7 +144,7 @@ class EcPoi extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

@@ -14,7 +14,7 @@ class ImportEcTrack extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:import_ec_track,
+    protected $signature = 'geohub:import_ec_track
                             {path : the path of the Geojson file to import}
                             {user_id : the user id creating the new import}
                             {name? : the name of the imported EcTrack}';
@@ -59,12 +59,14 @@ class ImportEcTrack extends Command
                 'user_id' => $this->argument('user_id'),
                 'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
             $newEcTrack->save();
+            $this->info("File uploaded correctly");
         } else {
             $newEcTrack = EcTrack::create([
                 'name' => $fileName, 'user_id' => $this->argument('user_id'),
                 'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
             $newEcTrack->save();
         }
+
         return 0;
     }
 }

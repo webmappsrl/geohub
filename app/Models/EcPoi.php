@@ -6,19 +6,23 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 
-class EcPoi extends Model {
+class EcPoi extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
     protected $fillable = ['name'];
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
     }
 
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::booted();
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
@@ -45,15 +49,53 @@ class EcPoi extends Model {
         });
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         parent::save($options);
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function taxonomyWheres() {
+    public function ecMedia(): BelongsToMany
+    {
+        return $this->belongsToMany(EcMedia::class);
+    }
+
+    public function taxonomyWheres()
+    {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
+    }
+
+    public function taxonomyWhens()
+    {
+        return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
+    }
+
+    public function taxonomyTargets()
+    {
+        return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
+    }
+
+    public function taxonomyThemes()
+    {
+        return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
+    }
+
+    public function taxonomyActivities()
+    {
+        return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
+    }
+
+    public function taxonomyPoiTypes()
+    {
+        return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
+    }
+
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 }
