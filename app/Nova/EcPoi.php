@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -80,6 +81,16 @@ class EcPoi extends Resource
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             AttachMany::make('EcMedia'),
+            /**
+             * @todo: in progress
+             */
+            // File::make('audio')->store(function (Request $request, $model) {
+            //     $content = json_decode(file_get_contents($request->geojson));
+            //     $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->audio) . "'))");
+            //     return [
+            //         'geometry' => $geometry,
+            //     ];
+            // })->hideFromIndex(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }
