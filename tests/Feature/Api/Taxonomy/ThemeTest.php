@@ -10,7 +10,7 @@ class ThemeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testGetGeoJson()
+    public function testGetJson()
     {
         $taxonomyTheme = TaxonomyTheme::factory()->create();
         $response = $this->get(route("api.taxonomy.theme.json", ['id' => $taxonomyTheme->id]));
@@ -18,13 +18,13 @@ class ThemeTest extends TestCase
         $this->assertIsObject($response);
     }
 
-    public function testGetGeoJsonMissingId()
+    public function testGetJsonMissingId()
     {
         $response = $this->get(route("api.taxonomy.theme.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testGetGeoJsonByIdentifier()
+    public function testGetJsonByIdentifier()
     {
         $taxonomyTheme = TaxonomyTheme::factory()->create();
         $response = $this->get(route("api.taxonomy.theme.json.idt", ['identifier' => $taxonomyTheme->identifier]));

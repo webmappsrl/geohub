@@ -36,4 +36,10 @@ class WhereTest extends TestCase
         $this->assertArrayHasKey('type', $json);
         $this->assertSame('Feature', $json["type"]);
     }
+
+    public function testIdentifierFormat()
+    {
+        $taxonomyWhere = TaxonomyWhere::factory()->create(['identifier' => "Testo dell'identifier di prova"]);
+        $this->assertEquals($taxonomyWhere->identifier, "testo-dellidentifier-di-prova");
+    }
 }

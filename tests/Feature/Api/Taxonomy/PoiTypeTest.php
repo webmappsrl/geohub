@@ -10,7 +10,7 @@ class PoiTypeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testGetGeoJson()
+    public function testGetJson()
     {
         $taxonomyPoiType = TaxonomyPoiType::factory()->create();
         $response = $this->get(route("api.taxonomy.poi_type.json", ['id' => $taxonomyPoiType->id]));
@@ -18,13 +18,13 @@ class PoiTypeTest extends TestCase
         $this->assertIsObject($response);
     }
 
-    public function testGetGeoJsonMissingId()
+    public function testGetJsonMissingId()
     {
         $response = $this->get(route("api.taxonomy.poi_type.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testGetGeoJsonByIdentifier()
+    public function testGetJsonByIdentifier()
     {
         $taxonomyPoiType = TaxonomyPoiType::factory()->create();
         $response = $this->get(route("api.taxonomy.poi_type.json.idt", ['identifier' => $taxonomyPoiType->identifier]));

@@ -10,7 +10,7 @@ class TargetTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testGetGeoJson()
+    public function testGetJson()
     {
         $taxonomyTarget = TaxonomyTarget::factory()->create();
         $response = $this->get(route("api.taxonomy.target.json", ['id' => $taxonomyTarget->id]));
@@ -18,13 +18,13 @@ class TargetTest extends TestCase
         $this->assertIsObject($response);
     }
 
-    public function testGetGeoJsonMissingId()
+    public function testGetJsonMissingId()
     {
         $response = $this->get(route("api.taxonomy.target.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testGetGeoJsonByIdentifier()
+    public function testGetJsonByIdentifier()
     {
         $taxonomyTarget = TaxonomyTarget::factory()->create();
         $response = $this->get(route("api.taxonomy.target.json.idt", ['identifier' => $taxonomyTarget->identifier]));
