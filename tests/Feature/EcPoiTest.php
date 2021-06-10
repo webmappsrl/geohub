@@ -7,7 +7,6 @@ use App\Models\EcPoi;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
@@ -54,5 +53,14 @@ class EcPoiTest extends TestCase
         $ecPoi->save();
 
         $this->assertEquals($ecPoi->feature_image, $ecMedia->id);
+    }
+
+    public function testContactFields()
+    {
+        $ecPoi = EcPoi::factory()->create([
+            'contact_phone' => '+3902123456',
+            'contact_email' => 'info@poi.com',
+        ]);
+        $this->assertIsObject($ecPoi);
     }
 }
