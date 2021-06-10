@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\Taxonomy;
 
 use App\Models\TaxonomyActivity;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,5 +32,27 @@ class ActivityTest extends TestCase
         $response = $this->get(route("api.taxonomy.activity.json.idt", ['identifier' => $taxonomyActivity->identifier]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
+    }
+
+    public function testIdentifierFormat()
+    {
+        $taxonomyActivity = TaxonomyActivity::factory()->create(['identifier' => "Testo dell'identifier di prova"]);
+        $this->assertEquals($taxonomyActivity->identifier, "testo-dellidentifier-di-prova");
+    }
+
+    public function testIdentifierUniqueness()
+    {
+        TaxonomyActivity::factory()->create(['identifier' => "identifier"]);
+        $taxonomyActivitySecond = TaxonomyActivity::factory()->create(['identifier' => NULL]);
+        $taxonomyActivityThird = TaxonomyActivity::factory()->create(['identifier' => NULL]);
+        $this->assertEquals($taxonomyActivitySecond->identifier, $taxonomyActivityThird->identifier);
+        $this->assertNull($taxonomyActivitySecond->identifier);
+        $this->assertNull($taxonomyActivityThird->identifier);
+
+        try {
+            TaxonomyActivity::factory()->create(['identifier' => "identifier"]);
+        } catch (Exception $e) {
+            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
+        }
     }
 }

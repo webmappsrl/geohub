@@ -47,7 +47,7 @@ class EcTrackTest extends TestCase
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
-        EcMedia::factory(50)->create();
+        EcMedia::factory(2)->create();
         $ecMedia = EcMedia::all()->random();
         $ecTrack->feature_image = $ecMedia->id;
         $ecTrack->save();

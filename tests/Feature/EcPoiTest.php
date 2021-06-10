@@ -48,7 +48,7 @@ class EcPoiTest extends TestCase
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
 
-        EcMedia::factory(50)->create();
+        EcMedia::factory(2)->create();
         $ecMedia = EcMedia::all()->random();
         $ecPoi->feature_image = $ecMedia->id;
         $ecPoi->save();
