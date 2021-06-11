@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3b88a929aba594b1f511f14d2c77d4e",
+    "content-hash": "ff265a90edcf3a9018178b27feb08fd6",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -328,6 +328,52 @@
                 "source": "https://github.com/chaseconey/nova-external-image/tree/master"
             },
             "time": "2020-08-15T01:49:08+00:00"
+        },
+        {
+            "name": "davidpiesse/nova-audio",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidpiesse/nova-audio.git",
+                "reference": "684163447fb2a0348d58a85535ef129c024bc6a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davidpiesse/nova-audio/zipball/684163447fb2a0348d58a85535ef129c024bc6a6",
+                "reference": "684163447fb2a0348d58a85535ef129c024bc6a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Davidpiesse\\Audio\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Davidpiesse\\Audio\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Audio Field for Laravel Nova",
+            "keywords": [
+                "audio",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/davidpiesse/nova-audio/issues",
+                "source": "https://github.com/davidpiesse/nova-audio/tree/master"
+            },
+            "time": "2020-04-27T07:39:34+00:00"
         },
         {
             "name": "dillingham/nova-attach-many",

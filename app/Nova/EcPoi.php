@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Chaseconey\ExternalImage\ExternalImage;
+use Davidpiesse\Audio\Audio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
@@ -95,13 +96,14 @@ class EcPoi extends Resource
             /**
              * @todo: in progress
              */
-            // File::make('audio')->store(function (Request $request, $model) {
-            //     $content = json_decode(file_get_contents($request->geojson));
-            //     $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->audio) . "'))");
-            //     return [
-            //         'geometry' => $geometry,
-            //     ];
-            // })->hideFromIndex(),
+            // Audio::make('audio')->store(function (Request $request, $model) {
+            //     $file = $request->file('audio');
+            //     $filename = sha1($file->getClientOriginalName());
+            //     //$file->storeAs('tracks/audio/' . $model->id, $filename, 'public');
+            //     $url = Storage::disk('public')->url($filename);
+
+            //     return $url;
+            // })->hideFromIndex()->hideWhenCreating(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }

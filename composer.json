@@ -13,6 +13,7 @@
         "ext-json": "*",
         "ampeco/nova-date-range-filter": "^0.1.1",
         "chaseconey/nova-external-image": "^0.3.0",
+        "davidpiesse/nova-audio": "^0.0.3",
         "dillingham/nova-attach-many": "^1.3",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
