@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class EcTrack extends Model
 {
@@ -52,6 +53,15 @@ class EcTrack extends Model
     public function author()
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
+    }
+
+    public function uploadAudio($file)
+    {
+        $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+        $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;
+        Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+
+        return Storage::cloud()->url($cloudPath);
     }
 
     public function ecMedia(): BelongsToMany
