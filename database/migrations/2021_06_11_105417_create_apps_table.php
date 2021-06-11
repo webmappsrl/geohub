@@ -16,6 +16,10 @@ class CreateAppsTable extends Migration
         Schema::create('apps', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            // APP section (config.json)
+            $table->string('name');
+            $table->string('app_id')->unique();
+            $table->string('customerName');
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign("user_id")

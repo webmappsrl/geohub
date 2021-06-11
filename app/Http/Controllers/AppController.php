@@ -8,78 +8,24 @@ use Illuminate\Http\Request;
 class AppController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Models\App  $app
      * @return \Illuminate\Http\Response
      */
-    public function show(App $app)
+    public function config(int $id)
     {
-        //
-    }
+        $app = App::find($id);
+        if(is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+        $data=[];
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\App  $app
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(App $app)
-    {
-        //
-    }
+        // APP section
+        $data['APP']['name']=$app->name;
+        $data['APP']['id']=$app->app_id;
+        $data['APP']['customerName']=$app->customerName;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\App  $app
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, App $app)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\App  $app
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(App $app)
-    {
-        //
+        return response()->json($data, 200);
     }
 }
