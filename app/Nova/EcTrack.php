@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
@@ -62,7 +63,7 @@ class EcTrack extends Resource
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Textarea::make(__('Excerpt'), 'excerpt')->help(
                 __('Make it less than 255 characters')
             )->rows(2)->withMeta([

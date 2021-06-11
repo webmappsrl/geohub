@@ -26,6 +26,7 @@
         "titasgailius/search-relations": "^1.0",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
+        "waynestate/nova-ckeditor4-field": "^0.7.0",
         "webmapp/wm-embedmaps-field": "*"
     },
     "require-dev": {
