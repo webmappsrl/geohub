@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Yna\NovaSwatches\Swatches;
 
 class TaxonomyWhere extends Resource
 {
@@ -53,6 +54,7 @@ class TaxonomyWhere extends Resource
             Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
+            Swatches::make('Color'),
             Text::make(__('Excerpt'), 'excerpt'),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),

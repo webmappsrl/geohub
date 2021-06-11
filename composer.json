@@ -24,7 +24,8 @@
         "titasgailius/search-relations": "^1.0",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
-        "webmapp/wm-embedmaps-field": "*"
+        "webmapp/wm-embedmaps-field": "*",
+        "ynacorp/nova-swatches": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
