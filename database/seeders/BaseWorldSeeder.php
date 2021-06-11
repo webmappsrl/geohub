@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
@@ -71,6 +72,9 @@ class BaseWorldSeeder extends Seeder
 
         // TRACKS
         EcTrack::factory(10)->create();
+
+        // APP
+        App::factory(10)->create();
 
     }
 }

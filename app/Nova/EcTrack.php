@@ -2,18 +2,22 @@
 
 namespace App\Nova;
 
+use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
@@ -60,8 +64,15 @@ class EcTrack extends Resource
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
+            Textarea::make(__('Excerpt'), 'excerpt')->help(
+                __('Make it less than 255 characters')
+            )->rows(2)->withMeta([
+                'extraAttributes' => [
+                    'maxlength' => 255,
+                    'placeholder' => __('Make it less than 255 characters'),
+                ]
+            ])->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -87,6 +98,25 @@ class EcTrack extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            
+            Text::make(__('Audio'), 'audio', function () {
+                $pathinfo = pathinfo($this->model()->audio);
+                if (isset($pathinfo['extension'])) {
+                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathinfo['extension']];
+                }
+
+                return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
+            })->asHtml()->onlyOnDetail(),
+            File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                $file = $request->file('audio');
+                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+                $cloudPath = 'ectrack/audio/' . $model->id . '/' . $filename;
+                Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+
+                return Storage::cloud()->url($cloudPath);
+            })->onlyOnForms(),
+            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];

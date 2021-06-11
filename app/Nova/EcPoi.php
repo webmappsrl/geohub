@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
+use Davidpiesse\Audio\Audio;
 use ElevateDigital\CharcountedFields\TextCounted;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
@@ -98,17 +100,26 @@ class EcPoi extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            
+            Text::make(__('Audio'), 'audio', function () {
+                $pathinfo = pathinfo($this->model()->audio);
+                if (isset($pathinfo['extension'])) {
+                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathinfo['extension']];
+                }
+
+                return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
+            })->asHtml()->onlyOnDetail(),
+            File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                $file = $request->file('audio');
+                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+                $cloudPath = 'ecpoi/audio/' . $model->id . '/' . $filename;
+                Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+
+                return Storage::cloud()->url($cloudPath);
+            })->onlyOnForms(),
+            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+
             AttachMany::make('EcMedia'),
-            /**
-             * @todo: in progress
-             */
-            // File::make('audio')->store(function (Request $request, $model) {
-            //     $content = json_decode(file_get_contents($request->geojson));
-            //     $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->audio) . "'))");
-            //     return [
-            //         'geometry' => $geometry,
-            //     ];
-            // })->hideFromIndex(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }

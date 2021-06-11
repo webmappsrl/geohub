@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
+define('CONTENT_TYPE_AUDIO_MAPPING', [
+    'mp3' => 'audio/mpeg',
+    'ogg' => 'audio/ogg',
+    'wav' => 'audio/wav',
+]);
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

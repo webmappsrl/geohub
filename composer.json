@@ -12,6 +12,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ampeco/nova-date-range-filter": "^0.1.1",
+        "cdbeaton/boolean-tick": "dev-master",
         "chaseconey/nova-external-image": "^0.3.0",
         "dillingham/nova-attach-many": "^1.3",
         "elevate-digital/nova-charcounted-fields": "dev-master",
@@ -21,11 +22,14 @@
         "laravel/framework": "^8.12",
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "numaxlab/nova-ckeditor5-classic": "^1.1",
         "titasgailius/search-relations": "^1.0",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
-        "webmapp/wm-embedmaps-field": "*",
         "ynacorp/nova-swatches": "^1.0"
+        "waynestate/nova-ckeditor4-field": "^0.7.0",
+        "webmapp/wm-embedmaps-field": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

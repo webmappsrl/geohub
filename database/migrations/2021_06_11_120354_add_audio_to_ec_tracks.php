@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAudioToEcPois extends Migration
+class AddAudioToEcTracks extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddAudioToEcPois extends Migration
      */
     public function up()
     {
-        Schema::table('ec_pois', function (Blueprint $table) {
+        Schema::table('ec_tracks', function (Blueprint $table) {
             $table->text('audio')->nullable();
         });
     }
@@ -25,7 +25,7 @@ class AddAudioToEcPois extends Migration
      */
     public function down()
     {
-        Schema::table('ec_pois', function (Blueprint $table) {
+        Schema::table('ec_tracks', function (Blueprint $table) {
             $table->dropColumn('audio');
         });
     }
