@@ -115,8 +115,8 @@ class EcTrack extends Resource
 
                 return Storage::cloud()->url($cloudPath);
             })->onlyOnForms(),
-            BooleanTick::make(__('Audio'), 'audio')->showOnIndex(),
-            
+            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
