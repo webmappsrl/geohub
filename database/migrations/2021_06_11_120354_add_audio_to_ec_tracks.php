@@ -14,7 +14,7 @@ class AddAudioToEcTracks extends Migration
     public function up()
     {
         Schema::table('ec_tracks', function (Blueprint $table) {
-            $table->binary('audio')->nullable();
+            $table->text('audio')->nullable();
         });
     }
 

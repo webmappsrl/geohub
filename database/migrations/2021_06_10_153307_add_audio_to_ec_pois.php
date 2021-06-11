@@ -14,7 +14,7 @@ class AddAudioToEcPois extends Migration
     public function up()
     {
         Schema::table('ec_pois', function (Blueprint $table) {
-            $table->binary('audio')->nullable();
+            $table->text('audio')->nullable();
         });
     }
 
