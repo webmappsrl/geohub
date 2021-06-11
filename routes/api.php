@@ -8,6 +8,7 @@ use App\Http\Controllers\TaxonomyTargetController;
 use App\Http\Controllers\TaxonomyThemeController;
 use App\Http\Controllers\TaxonomyWhenController;
 use App\Http\Controllers\TaxonomyWhereController;
+use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -43,6 +44,10 @@ Route::name('api.')->group(function () {
         Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
     });
 
+
+    /**
+     * Taxnomies API
+     */
     Route::prefix('taxonomy')->name('taxonomy.')->group(function () {
         Route::prefix('activity')->name('activity.')->group(function () {
             Route::get("/{id}", [TaxonomyActivityController::class, 'getTaxonomyActivity'])->name('json');
@@ -71,6 +76,10 @@ Route::name('api.')->group(function () {
             Route::get("/idt/{identifier}", [TaxonomyWhereController::class, 'getTaxonomyWhereFromIdentifier'])->name('json.idt');
         });
     });
+
+    /**
+     * Ugc API
+     */
     Route::prefix('ugc')->name('ugc.')->group(function () {
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
@@ -85,6 +94,10 @@ Route::name('api.')->group(function () {
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
     });
+
+    /**
+     * ec API
+     */
     Route::prefix('ec')->name('ec.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcjson'])->name('geojson');
@@ -103,4 +116,15 @@ Route::name('api.')->group(function () {
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
         });
     });
+    /**
+     * APP API
+     */
+    Route::prefix('app')->name('app.')->group(function () {
+        Route::prefix('elbrus')->name('elbrus.')->group(function () {
+            Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+        });
+    });
+
+
+
 });

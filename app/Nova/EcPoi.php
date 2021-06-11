@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 
@@ -65,11 +66,7 @@ class EcPoi extends Resource
             Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Textarea::make(__('Description'), 'description')->hideFromIndex()->hideFromDetail()->help('You can use HTML code here'),
-            Text::make('Description', function () {
-                $description = $this->model()->description;
-                return $description;
-            })->asHtml(),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
@@ -100,7 +97,7 @@ class EcPoi extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-            
+
             Text::make(__('Audio'), 'audio', function () {
                 $pathinfo = pathinfo($this->model()->audio);
                 if (isset($pathinfo['extension'])) {

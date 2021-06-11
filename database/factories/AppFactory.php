@@ -22,6 +22,9 @@ class AppFactory extends Factory
     public function definition()
     {
         return [
+            'name' => $this->faker->name(),
+            'app_id' => 'it.webmapp.'.$this->faker->unique()->slug(),
+            'customerName' => $this->faker->name(),
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }

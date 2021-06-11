@@ -1,90 +1,91 @@
 {
-    "name": "laravel/laravel",
-    "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": [
-        "framework",
-        "laravel"
-    ],
-    "license": "MIT",
-    "require": {
-        "php": "^7.4|^8.0",
-        "ext-curl": "*",
-        "ext-json": "*",
-        "ampeco/nova-date-range-filter": "^0.1.1",
-        "cdbeaton/boolean-tick": "dev-master",
-        "chaseconey/nova-external-image": "^0.3.0",
-        "dillingham/nova-attach-many": "^1.3",
-        "elevate-digital/nova-charcounted-fields": "dev-master",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^8.12",
-        "laravel/nova": "*",
-        "laravel/tinker": "^2.5",
-        "league/flysystem-aws-s3-v3": "~1.0",
-        "numaxlab/nova-ckeditor5-classic": "^1.1",
-        "titasgailius/search-relations": "^1.0",
-        "tymon/jwt-auth": "^1.0",
-        "vyuldashev/nova-permission": "^2.11",
-        "waynestate/nova-ckeditor4-field": "^0.7.0",
-        "webmapp/wm-embedmaps-field": "*"
+  "name": "laravel/laravel",
+  "type": "project",
+  "description": "The Laravel Framework.",
+  "keywords": [
+    "framework",
+    "laravel"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ampeco/nova-date-range-filter": "^0.1.1",
+    "cdbeaton/boolean-tick": "dev-master",
+    "chaseconey/nova-external-image": "^0.3.0",
+    "dillingham/nova-attach-many": "^1.3",
+    "elevate-digital/nova-charcounted-fields": "dev-master",
+    "fideloper/proxy": "^4.4",
+    "fruitcake/laravel-cors": "^2.0",
+    "guzzlehttp/guzzle": "^7.0.1",
+    "laravel/framework": "^8.12",
+    "laravel/nova": "*",
+    "laravel/tinker": "^2.5",
+    "league/flysystem-aws-s3-v3": "~1.0",
+    "numaxlab/nova-ckeditor5-classic": "^1.1",
+    "titasgailius/search-relations": "^1.0",
+    "tymon/jwt-auth": "^1.0",
+    "vyuldashev/nova-permission": "^2.11",
+    "ynacorp/nova-swatches": "^1.0",
+    "waynestate/nova-ckeditor4-field": "^0.7.0",
+    "webmapp/wm-embedmaps-field": "*"
+  },
+  "require-dev": {
+    "facade/ignition": "^2.5",
+    "fakerphp/faker": "^1.9.1",
+    "laravel/sail": "^1.0.1",
+    "mockery/mockery": "^1.4.2",
+    "nunomaduro/collision": "^5.0",
+    "phpunit/phpunit": "^9.3.3"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
     },
-    "require-dev": {
-        "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "database/MigrationsHelpers.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
-        ]
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./nova"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/WmEmbedmapsField"
-        }
+    "files": [
+      "database/MigrationsHelpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "./nova"
+    },
+    {
+      "type": "path",
+      "url": "./nova-components/WmEmbedmapsField"
+    }
+  ]
 }
