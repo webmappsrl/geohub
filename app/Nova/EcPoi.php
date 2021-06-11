@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use Chaseconey\ExternalImage\ExternalImage;
 use Davidpiesse\Audio\Audio;
+use ElevateDigital\CharcountedFields\TextCounted;
+use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
@@ -16,6 +18,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+
 
 class EcPoi extends Resource
 {
@@ -61,8 +64,12 @@ class EcPoi extends Resource
             Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Textarea::make(__('Description'), 'description')->hideFromIndex()->hideFromDetail()->help('You can use HTML code here'),
+            Text::make('Description', function () {
+                $description = $this->model()->description;
+                return $description;
+            })->asHtml(),
+            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
