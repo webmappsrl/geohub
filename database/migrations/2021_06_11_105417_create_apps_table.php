@@ -21,6 +21,11 @@ class CreateAppsTable extends Migration
             $table->string('app_id')->unique();
             $table->string('customerName');
 
+            // MAP section
+            $table->integer('maxZoom')->default(16);
+            $table->integer('minZoom')->default(12);
+            $table->integer('defZoom')->default(12);
+
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign("user_id")
                 ->references("id")

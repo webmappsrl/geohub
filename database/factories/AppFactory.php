@@ -25,6 +25,9 @@ class AppFactory extends Factory
             'name' => $this->faker->name(),
             'app_id' => 'it.webmapp.'.$this->faker->unique()->slug(),
             'customerName' => $this->faker->name(),
+            'maxZoom' => $this->faker->numberBetween(15,19),
+            'defZoom' => $this->faker->numberBetween(12,14),
+            'minZoom' => $this->faker->numberBetween(9,11),
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }

@@ -48,4 +48,21 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals($app->customerName,$json->APP->customerName);
 
     }
+
+    /**
+     * Test minZoom, maxZoom, defZoom in MAP section
+     */
+    public function testSectionMapZoom() {
+
+        $app=App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->MAP));
+        $this->assertEquals($app->maxZoom,$json->MAP->maxZoom);
+        $this->assertEquals($app->defZoom,$json->MAP->defZoom);
+        $this->assertEquals($app->minZoom,$json->MAP->minZoom);
+
+    }
 }

@@ -26,6 +26,11 @@ class AppController extends Controller
         $data['APP']['id']=$app->app_id;
         $data['APP']['customerName']=$app->customerName;
 
+        // MAP section
+        $data['MAP']['defZoom']=$app->defZoom;
+        $data['MAP']['maxZoom']=$app->maxZoom;
+        $data['MAP']['minZoom']=$app->minZoom;
+
         return response()->json($data, 200);
     }
 }
