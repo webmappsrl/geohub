@@ -99,7 +99,6 @@ class EcPoi extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-            AttachMany::make('EcMedia'),
             /**
              * @todo: in progress
              */
@@ -111,6 +110,7 @@ class EcPoi extends Resource
 
             //     return $url;
             // })->hideFromIndex()->hideWhenCreating(),
+            AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
     }

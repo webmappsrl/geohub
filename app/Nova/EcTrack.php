@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Chaseconey\ExternalImage\ExternalImage;
+use Davidpiesse\Audio\Audio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -87,6 +88,17 @@ class EcTrack extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            /**
+             * @todo: in progress
+             */
+            // Audio::make('audio')->store(function (Request $request, $model) {
+            //     $file = $request->file('audio');
+            //     $filename = sha1($file->getClientOriginalName());
+            //     //$file->storeAs('tracks/audio/' . $model->id, $filename, 'public');
+            //     $url = Storage::disk('public')->url($filename);
+
+            //     return $url;
+            // })->hideFromIndex()->hideWhenCreating(),
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
