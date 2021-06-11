@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -63,7 +64,7 @@ class EcPoi extends Resource
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
-            Text::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail(),
+            Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
             Text::make('Related Urls', function () {
                 $urls = $this->model()->related_url;
                 $html_url = '';
