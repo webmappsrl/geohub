@@ -109,11 +109,8 @@ class EcTrack extends Resource
             })->asHtml()->onlyOnDetail(),
             File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
                 $file = $request->file('audio');
-                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-                $cloudPath = 'ectrack/audio/' . $model->id . '/' . $filename;
-                Storage::disk('s3')->put($cloudPath, file_get_contents($file));
 
-                return Storage::cloud()->url($cloudPath);
+                return $model->uploadAudio($file);
             })->onlyOnForms(),
             BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
 
