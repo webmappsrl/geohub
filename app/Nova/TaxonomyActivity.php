@@ -7,6 +7,7 @@ use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Yna\NovaSwatches\Swatches;
 
@@ -55,6 +56,7 @@ class TaxonomyActivity extends Resource
             Text::make(__('Description'), 'description'),
             //Text::make('Icon'),
             Swatches::make('Color'),
+            Number::make('Zindex'),
             Text::make(__('Excerpt'), 'excerpt'),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),

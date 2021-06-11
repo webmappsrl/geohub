@@ -56,6 +56,7 @@ class TaxonomyTarget extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Swatches::make('Color'),
+            Number::make('Zindex'),
             Text::make(__('Excerpt'), 'excerpt'),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
