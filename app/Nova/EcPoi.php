@@ -99,17 +99,25 @@ class EcPoi extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-            /**
-             * @todo: in progress
-             */
-            // Audio::make('audio')->store(function (Request $request, $model) {
-            //     $file = $request->file('audio');
-            //     $filename = sha1($file->getClientOriginalName());
-            //     //$file->storeAs('tracks/audio/' . $model->id, $filename, 'public');
-            //     $url = Storage::disk('public')->url($filename);
+            
+            Text::make(__('Audio'), 'audio', function () {
+                $pathinfo = pathinfo($this->model()->audio);
+                if (isset($pathinfo['extension'])) {
+                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathinfo['extension']];
+                }
 
-            //     return $url;
-            // })->hideFromIndex()->hideWhenCreating(),
+                return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
+            })->asHtml()->onlyOnDetail(),
+            File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                $file = $request->file('audio');
+                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+                $cloudPath = 'ecpoi/audio/' . $model->id . '/' . $filename;
+                Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+
+                return Storage::cloud()->url($cloudPath);
+            })->onlyOnForms(),
+            BooleanTick::make(__('Audio'), 'audio')->showOnIndex(),
+
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
