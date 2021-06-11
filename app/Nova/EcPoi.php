@@ -63,6 +63,16 @@ class EcPoi extends Resource
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
+            Text::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail(),
+            Text::make('Related Urls', function () {
+                $urls = $this->model()->related_url;
+                $html_url = '';
+                $urls = explode(';', $urls);
+                foreach ($urls as $url) {
+                    $html_url .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
+                }
+                return $html_url;
+            })->asHtml()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -110,7 +120,7 @@ class EcPoi extends Resource
     protected function attach_taxonomy()
     {
         return [
-            AttachMany::make('TaxonomyWheres')->rules('min:5', 'max:10', 'size:10'),
+            AttachMany::make('TaxonomyWheres'),
             AttachMany::make('TaxonomyActivities'),
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyWhens'),
