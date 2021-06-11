@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
 
 class TaxonomyActivity extends Resource
@@ -53,7 +54,7 @@ class TaxonomyActivity extends Resource
         return [
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Description'), 'description'),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             //Text::make('Icon'),
             Swatches::make('Color'),
             Number::make('Zindex'),
@@ -62,6 +63,7 @@ class TaxonomyActivity extends Resource
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+
         ];
     }
 

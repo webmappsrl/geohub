@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
@@ -54,7 +55,7 @@ class TaxonomyTarget extends Resource
         return [
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Description'), 'description'),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),
             Number::make('Zindex'),
             Text::make(__('Excerpt'), 'excerpt'),
