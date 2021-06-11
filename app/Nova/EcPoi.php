@@ -97,7 +97,7 @@ class EcPoi extends Resource
     protected function attach_taxonomy()
     {
         return [
-            AttachMany::make('TaxonomyWheres'),
+            AttachMany::make('TaxonomyWheres')->rules('min:5', 'max:10', 'size:10'),
             AttachMany::make('TaxonomyActivities'),
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyWhens'),
