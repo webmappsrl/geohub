@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class TaxonomyPoiType extends Model
 {
@@ -14,9 +14,18 @@ class TaxonomyPoiType extends Model
     {
         static::creating(function ($taxonomyPoiType) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($user)) {
+                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            }
             $taxonomyPoiType->author()->associate($user);
         });
+
+        static::saving(function ($taxonomyPoiType) {
+            if (null !== $taxonomyPoiType->identifier) {
+                $taxonomyPoiType->identifier = Str::slug($taxonomyPoiType->identifier, '-');
+            }
+        });
+        
         parent::save($options);
     }
 

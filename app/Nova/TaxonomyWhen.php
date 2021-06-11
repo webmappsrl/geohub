@@ -53,6 +53,7 @@ class TaxonomyWhen extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Description'), 'description'),
             Text::make(__('Excerpt'), 'excerpt'),
+            Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),

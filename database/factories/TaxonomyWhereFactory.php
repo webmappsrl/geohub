@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\TaxonomyWhere;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TaxonomyWhereFactory extends Factory
 {
@@ -16,7 +15,6 @@ class TaxonomyWhereFactory extends Factory
      */
     protected $model = TaxonomyWhere::class;
 
-
     /**
      * Define the model's default state.
      *
@@ -24,11 +22,12 @@ class TaxonomyWhereFactory extends Factory
      */
     public function definition()
     {
-
+        $name = $this->faker->name();
         return [
-            'name' => $this->faker->name(),
+            'name' => $name,
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
+            'identifier' => $name,
             'source' => $this->faker->text(100),
             'source_id' => $this->faker->randomDigit(),
             'admin_level' => $this->faker->randomDigit(),

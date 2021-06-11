@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TaxonomyTarget extends Model
 {
@@ -16,9 +14,18 @@ class TaxonomyTarget extends Model
     {
         static::creating(function ($taxonomyTarget) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($user)) {
+                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            }
             $taxonomyTarget->author()->associate($user);
         });
+
+        static::saving(function ($taxonomyTarget) {
+            if (null !== $taxonomyTarget->identifier) {
+                $taxonomyTarget->identifier = Str::slug($taxonomyTarget->identifier, '-');
+            }
+        });
+
         parent::save($options);
     }
 

@@ -7,14 +7,17 @@ use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
     /**
      * Register any application services.
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         //
     }
 
@@ -23,7 +26,8 @@ class AppServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         UgcMedia::deleting(function ($model) {
             $model->ugc_tracks()->sync([]);
             $model->ugc_pois()->sync([]);
@@ -38,6 +42,22 @@ class AppServiceProvider extends ServiceProvider {
         UgcPoi::deleting(function ($model) {
             $model->ugc_media()->sync([]);
             $model->taxonomy_wheres()->sync([]);
+        });
+
+        /**
+         * Response::kml()
+         */
+        Response::macro('kml', function ($value) {
+            $header = <<<HEADER
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Placemark>
+HEADER;
+            $footer = <<<HEADER
+</Placemark>
+</kml>
+HEADER;
+            return Response::make($header . $value . $footer);
         });
     }
 }

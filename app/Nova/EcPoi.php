@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -61,6 +61,8 @@ class EcPoi extends Resource
             BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
+            Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -69,15 +71,26 @@ class EcPoi extends Resource
                     'feature' => $model->id ? $model->getGeojson() : NULL,
                 ];
             })->required()->hideFromIndex(),
-            BelongsTo::make('Feature Image', 'featureImage', EcMedia::class)->onlyOnForms(),
-            ExternalImage::make('Feature Image', function () {
-                $url = $this->model()->featureImage->url;
-                if (substr($url, 0, 4) !== 'http')
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
+                }
 
                 return $url;
-            })->withMeta(['width' => 500])->hideWhenCreating()->hideWhenUpdating(),
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             AttachMany::make('EcMedia'),
+            /**
+             * @todo: in progress
+             */
+            // File::make('audio')->store(function (Request $request, $model) {
+            //     $content = json_decode(file_get_contents($request->geojson));
+            //     $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->audio) . "'))");
+            //     return [
+            //         'geometry' => $geometry,
+            //     ];
+            // })->hideFromIndex(),
             new Panel('Relations', $this->taxonomies()),
         ];
     }
