@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -62,7 +63,14 @@ class EcTrack extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
             Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Textarea::make(__('Excerpt'), 'excerpt')->help(
+                __('Make it less than 255 characters')
+            )->rows(2)->withMeta([
+                'extraAttributes' => [
+                    'maxlength' => 255,
+                    'placeholder' => __('Make it less than 255 characters'),
+                ]
+            ])->hideFromIndex(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {

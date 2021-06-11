@@ -38,6 +38,10 @@ class EcTrack extends Model
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
+        
+        static::saving(function ($ecTrack) {
+            $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
+        });
     }
 
     public function save(array $options = [])
