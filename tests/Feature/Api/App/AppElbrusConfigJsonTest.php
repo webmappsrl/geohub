@@ -100,20 +100,6 @@ class AppElbrusConfigJsonTest extends TestCase
 
     }
 
-    //            "OPTIONS": {
-//                "baseUrl": "https://k.webmapp.it/caipontedera/",
-//    "startUrl": "/main/explore",
-//    "beBaseUrl": "http://caipontedera.be.webmapp.it/",
-//    "showEditLink": true,
-//    "skipRouteIndexDownload": true,
-//    "poiMinRadius": 0.5,
-//    "poiMaxRadius": 1.2,
-//    "poiIconZoom": 16,
-//    "poiIconRadius": 1,
-//    "poiMinZoom": 13,
-//    "poiLabelMinZoom": 10.5,
-//    "showTrackRefLabel": true
-//
     /**
      * Test OPTIONS section
      */
@@ -125,7 +111,6 @@ class AppElbrusConfigJsonTest extends TestCase
         $json = json_decode($result->getContent());
 
         $this->assertTrue(isset($json->OPTIONS));
-        $this->assertEquals($app->fontFamilyHeader,$json->THEME->fontFamilyHeader);
         $fields = [
             'startUrl',
             'showEditLink',
@@ -144,5 +129,26 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals('https://geohub.webmapp.it/api/app/elbrus/'.$app->id.'/',$json->OPTIONS->baseUrl);
     }
 
+    /**
+     * Test TABLES section
+     */
+    public function testSectionTables() {
+
+        $app=App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->TABLES));
+        $this->assertTrue(isset($json->TABLES->details));
+        $fields = [
+            'showGpxDownload',
+            'showKmlDownload',
+            'showRelatedPoi',
+        ];
+        foreach($fields as $field) {
+            $this->assertEquals($app->$field,$json->TABLES->details->$field);
+        }
+    }
 
 }

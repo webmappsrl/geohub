@@ -45,6 +45,11 @@ class CreateAppsTable extends Migration
             $table->float('poiLabelMinZoom')->default(10.5);
             $table->boolean('showTrackRefLabel')->default(false);
 
+            // TABLE section
+            $table->boolean('showGpxDownload')->default(false);
+            $table->boolean('showKmlDownload')->default(false);
+            $table->boolean('showRelatedPoi')->default(false);
+
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign("user_id")
                 ->references("id")

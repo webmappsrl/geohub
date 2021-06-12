@@ -55,6 +55,11 @@ class AppController extends Controller
         $data['OPTIONS']['poiLabelMinZoom']=$app->poiLabelMinZoom;
         $data['OPTIONS']['showTrackRefLabel']=$app->showTrackRefLabel;
 
+        // TABLES section
+        $data['TABLES']['details']['showGpxDownload']=$app->showGpxDownload;
+        $data['TABLES']['details']['showKmlDownload']=$app->showKmlDownload;
+        $data['TABLES']['details']['showRelatedPoi']=$app->showRelatedPoi;
+
         return response()->json($data, 200);
     }
 }

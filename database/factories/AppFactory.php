@@ -45,6 +45,9 @@ class AppFactory extends Factory
             'poiMinZoom' => 13,
             'poiLabelMinZoom' => 10.5,
             'showTrackRefLabel' => false,
+            'showGpxDownload' => false,
+            'showKmlDownload' => false,
+            'showRelatedPoi' => false,
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }
