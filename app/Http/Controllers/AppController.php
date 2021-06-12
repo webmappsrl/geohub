@@ -26,10 +26,15 @@ class AppController extends Controller
         $data['APP']['id']=$app->app_id;
         $data['APP']['customerName']=$app->customerName;
 
-        // MAP section
+        // MAP section (zoom)
         $data['MAP']['defZoom']=$app->defZoom;
         $data['MAP']['maxZoom']=$app->maxZoom;
         $data['MAP']['minZoom']=$app->minZoom;
+
+        // Map section layers
+        $data['MAP']['layers']['label']='Mappa';
+        $data['MAP']['layers']['type']='maptile';
+        $data['MAP']['layers']['tilesUrl']='https://api.webmapp.it/tiles/';
 
         return response()->json($data, 200);
     }
