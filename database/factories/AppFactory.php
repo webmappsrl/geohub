@@ -28,6 +28,10 @@ class AppFactory extends Factory
             'maxZoom' => $this->faker->numberBetween(15,19),
             'defZoom' => $this->faker->numberBetween(12,14),
             'minZoom' => $this->faker->numberBetween(9,11),
+            'fontFamilyHeader' => 'Roboto',
+            'fontFamilyContent' => 'Roboto',
+            'defaultFeatureColor' => $this->faker->hexColor(),
+            'primary' => $this->faker->hexColor(),
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }

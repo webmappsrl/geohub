@@ -36,6 +36,12 @@ class AppController extends Controller
         $data['MAP']['layers']['type']='maptile';
         $data['MAP']['layers']['tilesUrl']='https://api.webmapp.it/tiles/';
 
+        // THEME section
+        $data['THEME']['fontFamilyHeader']=$app->fontFamilyHeader;
+        $data['THEME']['fontFamilyContent']=$app->fontFamilyContent;
+        $data['THEME']['defaultFeatureColor']=$app->defaultFeatureColor;
+        $data['THEME']['primary']=$app->primary;
+
         return response()->json($data, 200);
     }
 }

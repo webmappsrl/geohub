@@ -81,4 +81,21 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals('maptile',$json->MAP->layers->type);
         $this->assertEquals('https://api.webmapp.it/tiles/',$json->MAP->layers->tilesUrl);
     }
+
+    /**
+     * Test layers in MAP section
+     */
+    public function testSectionTheme() {
+
+        $app=App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertEquals($app->fontFamilyHeader,$json->THEME->fontFamilyHeader);
+        $this->assertEquals($app->fontFamilyContent,$json->THEME->fontFamilyContent);
+        $this->assertEquals($app->defaultFeatureColor,$json->THEME->defaultFeatureColor);
+        $this->assertEquals($app->primary,$json->THEME->primary);
+
+    }
 }
