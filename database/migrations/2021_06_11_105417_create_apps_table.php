@@ -33,6 +33,17 @@ class CreateAppsTable extends Migration
             $table->string('defaultFeatureColor')->default('#de1b0d');
             $table->string('primary')->default('#de1b0d');
 
+            // OPTIONS section
+            $table->string('startUrl')->default('/main/explore');
+            $table->boolean('showEditLink')->default(false);
+            $table->boolean('skipRouteIndexDownload')->default(true);
+            $table->float('poiMinRadius')->default(0.5);
+            $table->float('poiMaxRadius')->default(1.2);
+            $table->float('poiIconZoom')->default(16);
+            $table->float('poiIconRadius')->default(1);
+            $table->float('poiMinZoom')->default(13);
+            $table->float('poiLabelMinZoom')->default(10.5);
+            $table->boolean('showTrackRefLabel')->default(false);
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign("user_id")

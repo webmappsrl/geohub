@@ -83,7 +83,7 @@ class AppElbrusConfigJsonTest extends TestCase
     }
 
     /**
-     * Test layers in MAP section
+     * Test THEME section
      */
     public function testSectionTheme() {
 
@@ -92,10 +92,57 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
+        $this->assertTrue(isset($json->THEME));
         $this->assertEquals($app->fontFamilyHeader,$json->THEME->fontFamilyHeader);
         $this->assertEquals($app->fontFamilyContent,$json->THEME->fontFamilyContent);
         $this->assertEquals($app->defaultFeatureColor,$json->THEME->defaultFeatureColor);
         $this->assertEquals($app->primary,$json->THEME->primary);
 
     }
+
+    //            "OPTIONS": {
+//                "baseUrl": "https://k.webmapp.it/caipontedera/",
+//    "startUrl": "/main/explore",
+//    "beBaseUrl": "http://caipontedera.be.webmapp.it/",
+//    "showEditLink": true,
+//    "skipRouteIndexDownload": true,
+//    "poiMinRadius": 0.5,
+//    "poiMaxRadius": 1.2,
+//    "poiIconZoom": 16,
+//    "poiIconRadius": 1,
+//    "poiMinZoom": 13,
+//    "poiLabelMinZoom": 10.5,
+//    "showTrackRefLabel": true
+//
+    /**
+     * Test OPTIONS section
+     */
+    public function testSectionOptions() {
+
+        $app=App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->OPTIONS));
+        $this->assertEquals($app->fontFamilyHeader,$json->THEME->fontFamilyHeader);
+        $fields = [
+            'startUrl',
+            'showEditLink',
+            'skipRouteIndexDownload',
+            'poiMinRadius',
+            'poiMaxRadius',
+            'poiIconZoom',
+            'poiIconRadius',
+            'poiMinZoom',
+            'poiLabelMinZoom',
+            'showTrackRefLabel',
+        ];
+        foreach($fields as $field) {
+            $this->assertEquals($app->$field,$json->OPTIONS->$field);
+        }
+        $this->assertEquals('https://geohub.webmapp.it/api/app/elbrus/'.$app->id.'/',$json->OPTIONS->baseUrl);
+    }
+
+
 }

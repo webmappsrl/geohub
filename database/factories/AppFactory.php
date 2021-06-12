@@ -21,6 +21,9 @@ class AppFactory extends Factory
      */
     public function definition()
     {
+
+
+
         return [
             'name' => $this->faker->name(),
             'app_id' => 'it.webmapp.'.$this->faker->unique()->slug(),
@@ -32,6 +35,16 @@ class AppFactory extends Factory
             'fontFamilyContent' => 'Roboto',
             'defaultFeatureColor' => $this->faker->hexColor(),
             'primary' => $this->faker->hexColor(),
+            'startUrl' => '/main/explore',
+            'showEditLink' => false,
+            'skipRouteIndexDownload' => true,
+            'poiMinRadius' => 0.5,
+            'poiMaxRadius' => 1.2,
+            'poiIconZoom' => 16,
+            'poiIconRadius' => 1,
+            'poiMinZoom' => 13,
+            'poiLabelMinZoom' => 10.5,
+            'showTrackRefLabel' => false,
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }

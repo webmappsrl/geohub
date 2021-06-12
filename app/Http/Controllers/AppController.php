@@ -42,6 +42,19 @@ class AppController extends Controller
         $data['THEME']['defaultFeatureColor']=$app->defaultFeatureColor;
         $data['THEME']['primary']=$app->primary;
 
+        // OPTIONS section
+        $data['OPTIONS']['baseUrl']='https://geohub.webmapp.it/api/app/elbrus/'.$app->id.'/';
+        $data['OPTIONS']['startUrl']=$app->startUrl;
+        $data['OPTIONS']['showEditLink']=$app->showEditLink;
+        $data['OPTIONS']['skipRouteIndexDownload']=$app->skipRouteIndexDownload;
+        $data['OPTIONS']['poiMinRadius']=$app->poiMinRadius;
+        $data['OPTIONS']['poiMaxRadius']=$app->poiMaxRadius;
+        $data['OPTIONS']['poiIconZoom']=$app->poiIconZoom;
+        $data['OPTIONS']['poiIconRadius']=$app->poiIconRadius;
+        $data['OPTIONS']['poiMinZoom']=$app->poiMinZoom;
+        $data['OPTIONS']['poiLabelMinZoom']=$app->poiLabelMinZoom;
+        $data['OPTIONS']['showTrackRefLabel']=$app->showTrackRefLabel;
+
         return response()->json($data, 200);
     }
 }
