@@ -151,4 +151,32 @@ class AppElbrusConfigJsonTest extends TestCase
         }
     }
 
+    /**
+     * Test ROUTING section enabled
+     */
+    public function testRoutingSectionEnabled() {
+        $app=App::factory()->create(['enableRouting'=>true]);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->ROUTING));
+        $this->assertTrue($json->ROUTING->enable);
+    }
+
+    /**
+     * Test ROUTING section disabled
+     */
+    public function testRoutingSectionDisabled() {
+
+        $app=App::factory()->create(['enableRouting'=>false]);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->ROUTING));
+        $this->assertFalse($json->ROUTING->enable);
+
+    }
+
 }

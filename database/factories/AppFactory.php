@@ -22,8 +22,6 @@ class AppFactory extends Factory
     public function definition()
     {
 
-
-
         return [
             'name' => $this->faker->name(),
             'app_id' => 'it.webmapp.'.$this->faker->unique()->slug(),
@@ -48,6 +46,7 @@ class AppFactory extends Factory
             'showGpxDownload' => false,
             'showKmlDownload' => false,
             'showRelatedPoi' => false,
+            'enableRouting' => false,
             'user_id' => \App\Models\User::all()->random()->id,
         ];
     }

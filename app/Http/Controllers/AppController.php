@@ -60,6 +60,9 @@ class AppController extends Controller
         $data['TABLES']['details']['showKmlDownload']=$app->showKmlDownload;
         $data['TABLES']['details']['showRelatedPoi']=$app->showRelatedPoi;
 
+        // ROUTING section
+        $data['ROUTING']['enable']=$app->enableRouting;
+
         return response()->json($data, 200);
     }
 }
