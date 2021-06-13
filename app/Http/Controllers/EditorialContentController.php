@@ -115,6 +115,30 @@ class EditorialContentController extends Controller
     }
 
     /**
+     * Controller for API api/app/elbrus/{app_id}/geojson/ec_track_{poi_id}.geojson
+     *
+     * @param int $app_id
+     * @param int $poi_id
+     * @return JsonResponse
+     */
+    public function getElbrusTrackGeojson(int $app_id, int $track_id): JsonResponse {
+        $app = App::find($app_id);
+        $track = EcTrack::find($track_id);
+        if (is_null($app) || is_null($track)) {
+            return response()->json(['code'=>404,'error'=>'Not found'],404);
+        }
+        $geojson=$track->getGeojson();
+        // MAPPING COLON
+        $fields = [
+            'ele_from','ele_to','ele_max', 'ele_min', 'duration_forward', 'duration_backward'
+        ];
+        foreach ($fields as $field) {
+            $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,$field);
+        }
+        return response()->json($geojson,200);
+    }
+
+    /**
      * Convert $geojson['properties']['example_nocolon'] to
      * $geojson['properties']['example:colon']. If parameter $field_with_colon is left null
      * then is derived from $filed using the rule "_" -> ":"
