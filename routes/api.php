@@ -117,11 +117,18 @@ Route::name('api.')->group(function () {
         });
     });
     /**
-     * APP API
+     * APP API (/app/*)
      */
     Route::prefix('app')->name('app.')->group(function () {
+        /**
+         * APP ELBRUS API (/api/app/elbrus/*)
+         * app/elbrus/{id}/config.php
+         * app/elbrus/{id}/geojson/ec_poi_{id}.geojson
+         * app/elbrus/{id}/geojson/ec_track_{id}.geojson
+         */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
         });
     });
 

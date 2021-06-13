@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\App;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\EcMedia;
@@ -91,6 +92,45 @@ class EditorialContentController extends Controller
         }
 
         return response()->json($ec->getGeojson());
+    }
+
+    /**
+     * Controller for API api/app/elbrus/{app_id}/geojson/ec_poi_{poi_id}.geojson
+     *
+     * @param int $app_id
+     * @param int $poi_id
+     * @return JsonResponse
+     */
+    public function getElbrusPoiGeojson(int $app_id, int $poi_id): JsonResponse {
+        $app = App::find($app_id);
+        $poi = EcPoi::find($poi_id);
+        if (is_null($app) || is_null($poi)) {
+            return response()->json(['code'=>404,'error'=>'Not found'],404);
+        }
+        $geojson=$poi->getGeojson();
+        // MAPPING
+        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,'contact_phone');
+        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,'contact_email');
+        return response()->json($geojson,200);
+    }
+
+    /**
+     * Convert $geojson['properties']['example_nocolon'] to
+     * $geojson['properties']['example:colon']. If parameter $field_with_colon is left null
+     * then is derived from $filed using the rule "_" -> ":"
+     *
+     * @param $geojson
+     * @param $field
+     * @param null $field_with_colon
+     */
+    private function _mapGeojsonPropertyForElbrusApi($geojson,$field,$field_with_colon=null) {
+        if(isset($geojson['properties'][$field])) {
+            if(is_null($field_with_colon)) {
+                $field_with_colon = preg_replace('/_/',':',$field);
+            }
+            $geojson['properties'][$field_with_colon]=$geojson['properties'][$field];
+        }
+        return $geojson;
     }
 
     /**
