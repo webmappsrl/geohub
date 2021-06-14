@@ -2,17 +2,28 @@
 
 namespace App\Nova;
 
+use App\Providers\WmpIconProvider;
+use Bernhardh\NovaIconSelect\IconProvider;
+use Bernhardh\NovaIconSelect\NovaIconSelect;
+use Chaseconey\ExternalImage\ExternalImage;
+use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\MorphOne;
+use Laravel\Nova\Fields\MorphTo;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
 class TaxonomyWhere extends Resource
 {
+
     /**
      * The model the resource corresponds to.
      *
@@ -57,11 +68,20 @@ class TaxonomyWhere extends Resource
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),
             Number::make('Zindex'),
-            Text::make(__('Excerpt'), 'excerpt'),
+            NovaIconSelect::make("Icon")->setIconProvider(WmpIconProvider::class),
+            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Number::make(__('Admin level'), 'admin_level')->sortable(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                    $url = Storage::disk('public')->url($url);
+                }
+                return $url;
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [

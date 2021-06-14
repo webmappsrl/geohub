@@ -18,7 +18,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class EcMedia extends Resource {
+class EcMedia extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -41,7 +42,8 @@ class EcMedia extends Resource {
         'author'
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Editorial Content');
     }
 
@@ -52,7 +54,8 @@ class EcMedia extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         $fields = [
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
@@ -95,7 +98,8 @@ class EcMedia extends Resource {
      *
      * @return array with the thumbnails fields
      */
-    private function _getThumbnailsFields(): array {
+    private function _getThumbnailsFields(): array
+    {
         $model = $this->model();
         $thumbnails = json_decode($model->thumbnails, true);
         $fields = [];
@@ -118,7 +122,8 @@ class EcMedia extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request)
+    {
         return [];
     }
 
@@ -129,7 +134,8 @@ class EcMedia extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request)
+    {
         return [];
     }
 
@@ -140,7 +146,8 @@ class EcMedia extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request)
+    {
         return [];
     }
 
@@ -151,7 +158,8 @@ class EcMedia extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         return [];
     }
 }

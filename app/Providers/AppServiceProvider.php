@@ -10,7 +10,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
 define('CONTENT_TYPE_AUDIO_MAPPING', [
+    'mpeg' => 'audio/mpeg',
     'mp3' => 'audio/mpeg',
+    'mp4' => 'audio/mpeg',
     'ogg' => 'audio/ogg',
     'wav' => 'audio/wav',
 ]);
@@ -53,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Response::kml()
          */
-        Response::macro('kml', function ($value) {
+        Response::macro('kml', function ($value, int $status = 200, array $headers = [], array $options = []) {
             $header = <<<HEADER
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -63,7 +65,23 @@ HEADER;
 </Placemark>
 </kml>
 HEADER;
-            return Response::make($header . $value . $footer);
+            return Response::make($header . $value . $footer, $status, $headers, $options);
+        });
+
+        /**
+         * Response::gpx()
+         */
+        Response::macro('gpx', function ($value, int $status = 200, array $headers = [], array $options = []) {
+            $header = <<<HEADER
+<?xml version="1.0"?>
+<gpx version="1.1" creator="GDAL 2.2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogr="http://osgeo.org/gdal" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<trk>
+HEADER;
+            $footer = <<<HEADER
+</trk>
+</gpx>
+HEADER;
+            return Response::make($header . $value . $footer, $status, $headers, $options);
         });
     }
 }

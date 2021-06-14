@@ -4,8 +4,6 @@ namespace App\Nova;
 
 use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
-use Davidpiesse\Audio\Audio;
-use ElevateDigital\CharcountedFields\TextCounted;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -94,10 +92,8 @@ class EcPoi extends Resource
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
-
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-
             Text::make(__('Audio'), 'audio', function () {
                 $pathinfo = pathinfo($this->model()->audio);
                 if (isset($pathinfo['extension'])) {
@@ -110,7 +106,7 @@ class EcPoi extends Resource
                 $file = $request->file('audio');
 
                 return $model->uploadAudio($file);
-            })->onlyOnForms(),
+            })->acceptedTypes('.mpeg|.mp3|.mp4|.ogg|.wav')->onlyOnForms(),
             BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
 
             AttachMany::make('EcMedia'),

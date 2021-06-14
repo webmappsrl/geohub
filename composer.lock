@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "e255ac37d8d9a604a5a37f9cf4bbba90",
+  "content-hash": "6a772babc1824289362bb11fb7f92b7e",
   "packages": [
     {
       "name": "ampeco/nova-date-range-filter",
@@ -197,6 +197,51 @@
         "source": "https://github.com/aws/aws-sdk-php/tree/3.184.1"
       },
       "time": "2021-06-10T18:19:17+00:00"
+    },
+    {
+      "name": "bernhardh/nova-icon-select",
+      "version": "1.0.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/bernhardh/nova-icon-select.git",
+        "reference": "e4821dd5a5753ee80ddb76dddb0226f2aede627f"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/bernhardh/nova-icon-select/zipball/e4821dd5a5753ee80ddb76dddb0226f2aede627f",
+        "reference": "e4821dd5a5753ee80ddb76dddb0226f2aede627f",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=7.1.0"
+      },
+      "type": "library",
+      "extra": {
+        "laravel": {
+          "providers": [
+            "Bernhardh\\NovaIconSelect\\FieldServiceProvider"
+          ]
+        }
+      },
+      "autoload": {
+        "psr-4": {
+          "Bernhardh\\NovaIconSelect\\": "src/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "description": "A larvel nova icon select field",
+      "keywords": [
+        "laravel",
+        "nova"
+      ],
+      "support": {
+        "issues": "https://github.com/bernhardh/nova-icon-select/issues",
+        "source": "https://github.com/bernhardh/nova-icon-select/tree/1.0.0"
+      },
+      "time": "2020-12-22T20:10:11+00:00"
     },
     {
       "name": "brick/math",
@@ -2668,6 +2713,47 @@
         "source": "https://github.com/namshi/jose/tree/master"
       },
       "time": "2016-12-05T07:27:31+00:00"
+    },
+    {
+      "name": "ndamiens/gisconverter",
+      "version": "v1.0.7",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/ndamiens/gisconverter.git",
+        "reference": "a740c05b3476cd96a5c72d53e226eb070fa0b350"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/ndamiens/gisconverter/zipball/a740c05b3476cd96a5c72d53e226eb070fa0b350",
+        "reference": "a740c05b3476cd96a5c72d53e226eb070fa0b350",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.3.0"
+      },
+      "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.0.x-dev"
+        }
+      },
+      "autoload": {
+        "psr-0": {
+          "Symm\\Gisconverter": "src/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "BSD-Source-Code"
+      ],
+      "description": "A php library to convert vector geometries between different formats",
+      "support": {
+        "source": "https://github.com/ndamiens/gisconverter/tree/v1.0.7"
+      },
+      "time": "2019-07-02T22:01:50+00:00"
     },
     {
       "name": "nesbot/carbon",
