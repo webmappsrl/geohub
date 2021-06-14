@@ -68,7 +68,6 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $geojson = json_decode($result->content(), true);
         $this->assertEquals('ec_poi_'.$poi->id,$geojson['properties']['id']);
     }
-
     public function testTaxonomyFieldWithActivity() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();

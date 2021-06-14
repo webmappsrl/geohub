@@ -126,11 +126,8 @@ class EditorialContentController extends Controller
         return response()->json($geojson, 200);
     }
 
-    private function _getTaxonomies($obj) {
+    private function _getTaxonomies($obj, $names=['activity','theme','where','who','when','webmapp_category']) {
         $taxonomies=[];
-        $names=[
-            'activity','theme','where','who','when','webmapp_category'
-        ];
         foreach($names as $name) {
             switch($name){
                 case 'activity':
@@ -178,12 +175,16 @@ class EditorialContentController extends Controller
         }
         $geojson = $track->getGeojson();
         // MAPPING COLON
+        $geojson['properties']['id']='ec_track_'.$track->id;
         $fields = [
             'ele_from', 'ele_to', 'ele_max', 'ele_min', 'duration_forward', 'duration_backward'
         ];
         foreach ($fields as $field) {
             $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, $field);
         }
+        // Add Taxonomies
+        $taxonomies=$this->_getTaxonomies($track,$names=['activity','theme','where','who','when']);
+        $geojson['properties']['taxonomy']=$taxonomies;
         return response()->json($geojson, 200);
     }
 
