@@ -103,7 +103,7 @@ class EcTrack extends Resource
                 $file = $request->file('audio');
 
                 return $model->uploadAudio($file);
-            })->acceptedTypes('.mpeg|.mp3|.mp4|.ogg|.wav')->onlyOnForms(),
+            })->acceptedTypes('audio/*')->onlyOnForms(),
             BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
 
             AttachMany::make('EcMedia'),
