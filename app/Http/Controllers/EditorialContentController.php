@@ -312,7 +312,7 @@ class EditorialContentController extends Controller
                 $headers['Content-Type'] = 'application/vnd.api+json';
                 $headers['Content-Disposition'] = 'attachment; filename="download.gpx"';
                 $content = $ecPoi->getGpx();
-                $response = response($content, 200, $headers);
+                $response = response()->gpx($content, 200, $headers);
                 break;
             case 'kml';
                 $headers['Content-Type'] = 'application/xml';
