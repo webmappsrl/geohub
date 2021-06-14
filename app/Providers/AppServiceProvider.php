@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Response::kml()
          */
-        Response::macro('kml', function ($value) {
+        Response::macro('kml', function ($value, int $status = 200, array $headers = [], array $options = []) {
             $header = <<<HEADER
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -63,7 +63,7 @@ HEADER;
 </Placemark>
 </kml>
 HEADER;
-            return Response::make($header . $value . $footer);
+            return Response::make($header . $value . $footer, $status, $headers, $options);
         });
     }
 }

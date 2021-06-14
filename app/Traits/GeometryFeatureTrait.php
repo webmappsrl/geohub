@@ -12,9 +12,9 @@ trait GeometryFeatureTrait
      *
      * @return array
      */
-    public function getGeojson(): ?array
+    public function getGeojson($url = ''): ?array
     {
-        return $this->formatGeometry();
+        return $this->formatGeometry('geojson', $url);
     }
 
     /**
@@ -22,9 +22,9 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getKml(): ?string
+    public function getKml($url = ''): ?string
     {
-        return $this->formatGeometry('kml');
+        return $this->formatGeometry('kml', $url);
     }
 
     /**
@@ -32,9 +32,9 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getGpx(): ?string
+    public function getGpx($url = ''): ?string
     {
-        return $this->formatGeometry('gpx');
+        return $this->formatGeometry('gpx', $url);
     }
 
     /**
@@ -44,7 +44,7 @@ trait GeometryFeatureTrait
      * 
      * @return array|string
      */
-    protected function formatGeometry($format = 'geojson')
+    protected function formatGeometry($format = 'geojson', $url = '')
     {
         $model = get_class($this);
         switch ($format) {
@@ -108,6 +108,7 @@ trait GeometryFeatureTrait
                             $formattedGeometry['properties'][$value] = $this->$value;
                         }
                     }
+                    $formattedGeometry['properties']['geojson_url'] = $url;
                     break;
             }
 

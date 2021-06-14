@@ -293,21 +293,25 @@ class EditorialContentController extends Controller
         }
 
         $headers = [];
+        $url = url()->current();
         switch ($format) {
             case 'gpx';
                 $headers['Content-Type'] = 'application/vnd.api+json';
-                $content = $ecPoi->getGpx();
-                $response = response($content);
+                $headers['Content-Disposition'] = 'attachment; filename="download.gpx"';
+                $content = $ecPoi->getGpx($url);
+                $response = response($content, 200, $headers);
                 break;
             case 'kml';
                 $headers['Content-Type'] = 'application/xml';
-                $content = $ecPoi->getKml();
-                $response = response()->kml($content);
+                $headers['Content-Disposition'] = 'attachment; filename="download.kml"';
+                $content = $ecPoi->getKml($url);
+                $response = response()->kml($content, 200, $headers);
                 break;
             default:
                 $headers['Content-Type'] = 'application/vnd.api+json';
-                $content = $ecPoi->getGeojson();
-                $response = response()->json($content);
+                $headers['Content-Disposition'] = 'attachment; filename="download.geojson"';
+                $content = $ecPoi->getGeojson($url);
+                $response = response()->json($content, 200, $headers);
                 break;
         }
 
