@@ -51,7 +51,7 @@ class CreateAppsTable extends Migration
             $table->boolean('showRelatedPoi')->default(false);
 
             // ROUTING
-            $table->boolean('enableRouting')->default('false');
+            $table->boolean('enableRouting')->default(false);
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign("user_id")
