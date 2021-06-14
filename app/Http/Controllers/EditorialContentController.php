@@ -91,7 +91,13 @@ class EditorialContentController extends Controller
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
 
-        return response()->json($ec->getGeojson());
+        $downloadUrls = [
+            'geojson' => route('api.ec.poi.download', ['id' => $id, 'type' => 'geojson']),
+            'kml' => route('api.ec.poi.download', ['id' => $id, 'type' => 'kml']),
+            'gpx' => route('api.ec.poi.download', ['id' => $id, 'type' => 'gpx']),
+        ];
+
+        return response()->json($ec->getGeojson($downloadUrls));
     }
 
     /**
@@ -101,17 +107,18 @@ class EditorialContentController extends Controller
      * @param int $poi_id
      * @return JsonResponse
      */
-    public function getElbrusPoiGeojson(int $app_id, int $poi_id): JsonResponse {
+    public function getElbrusPoiGeojson(int $app_id, int $poi_id): JsonResponse
+    {
         $app = App::find($app_id);
         $poi = EcPoi::find($poi_id);
         if (is_null($app) || is_null($poi)) {
-            return response()->json(['code'=>404,'error'=>'Not found'],404);
+            return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
-        $geojson=$poi->getGeojson();
+        $geojson = $poi->getGeojson();
         // MAPPING
-        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,'contact_phone');
-        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,'contact_email');
-        return response()->json($geojson,200);
+        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_phone');
+        $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_email');
+        return response()->json($geojson, 200);
     }
 
     /**
@@ -121,21 +128,22 @@ class EditorialContentController extends Controller
      * @param int $poi_id
      * @return JsonResponse
      */
-    public function getElbrusTrackGeojson(int $app_id, int $track_id): JsonResponse {
+    public function getElbrusTrackGeojson(int $app_id, int $track_id): JsonResponse
+    {
         $app = App::find($app_id);
         $track = EcTrack::find($track_id);
         if (is_null($app) || is_null($track)) {
-            return response()->json(['code'=>404,'error'=>'Not found'],404);
+            return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
-        $geojson=$track->getGeojson();
+        $geojson = $track->getGeojson();
         // MAPPING COLON
         $fields = [
-            'ele_from','ele_to','ele_max', 'ele_min', 'duration_forward', 'duration_backward'
+            'ele_from', 'ele_to', 'ele_max', 'ele_min', 'duration_forward', 'duration_backward'
         ];
         foreach ($fields as $field) {
-            $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson,$field);
+            $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, $field);
         }
-        return response()->json($geojson,200);
+        return response()->json($geojson, 200);
     }
 
     /**
@@ -147,12 +155,13 @@ class EditorialContentController extends Controller
      * @param $field
      * @param null $field_with_colon
      */
-    private function _mapGeojsonPropertyForElbrusApi($geojson,$field,$field_with_colon=null) {
-        if(isset($geojson['properties'][$field])) {
-            if(is_null($field_with_colon)) {
-                $field_with_colon = preg_replace('/_/',':',$field);
+    private function _mapGeojsonPropertyForElbrusApi($geojson, $field, $field_with_colon = null)
+    {
+        if (isset($geojson['properties'][$field])) {
+            if (is_null($field_with_colon)) {
+                $field_with_colon = preg_replace('/_/', ':', $field);
             }
-            $geojson['properties'][$field_with_colon]=$geojson['properties'][$field];
+            $geojson['properties'][$field_with_colon] = $geojson['properties'][$field];
         }
         return $geojson;
     }
@@ -293,24 +302,28 @@ class EditorialContentController extends Controller
         }
 
         $headers = [];
-        $url = url()->current();
+        $downloadUrls = [
+            'geojson' => route('api.ec.poi.download', ['id' => $id, 'type' => 'geojson']),
+            'kml' => route('api.ec.poi.download', ['id' => $id, 'type' => 'kml']),
+            'gpx' => route('api.ec.poi.download', ['id' => $id, 'type' => 'gpx']),
+        ];
         switch ($format) {
             case 'gpx';
                 $headers['Content-Type'] = 'application/vnd.api+json';
                 $headers['Content-Disposition'] = 'attachment; filename="download.gpx"';
-                $content = $ecPoi->getGpx($url);
+                $content = $ecPoi->getGpx();
                 $response = response($content, 200, $headers);
                 break;
             case 'kml';
                 $headers['Content-Type'] = 'application/xml';
                 $headers['Content-Disposition'] = 'attachment; filename="download.kml"';
-                $content = $ecPoi->getKml($url);
+                $content = $ecPoi->getKml();
                 $response = response()->kml($content, 200, $headers);
                 break;
             default:
                 $headers['Content-Type'] = 'application/vnd.api+json';
                 $headers['Content-Disposition'] = 'attachment; filename="download.geojson"';
-                $content = $ecPoi->getGeojson($url);
+                $content = $ecPoi->getGeojson($downloadUrls);
                 $response = response()->json($content, 200, $headers);
                 break;
         }

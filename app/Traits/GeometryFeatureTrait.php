@@ -12,9 +12,9 @@ trait GeometryFeatureTrait
      *
      * @return array
      */
-    public function getGeojson($url = ''): ?array
+    public function getGeojson($downloadUrls = []): ?array
     {
-        return $this->formatGeometry('geojson', $url);
+        return $this->formatGeometry('geojson', $downloadUrls);
     }
 
     /**
@@ -22,9 +22,9 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getKml($url = ''): ?string
+    public function getKml()
     {
-        return $this->formatGeometry('kml', $url);
+        return $this->formatGeometry('kml');
     }
 
     /**
@@ -32,9 +32,9 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getGpx($url = ''): ?string
+    public function getGpx()
     {
-        return $this->formatGeometry('gpx', $url);
+        return $this->formatGeometry('gpx');
     }
 
     /**
@@ -44,7 +44,7 @@ trait GeometryFeatureTrait
      * 
      * @return array|string
      */
-    protected function formatGeometry($format = 'geojson', $url = '')
+    protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
     {
         $model = get_class($this);
         switch ($format) {
@@ -108,7 +108,11 @@ trait GeometryFeatureTrait
                             $formattedGeometry['properties'][$value] = $this->$value;
                         }
                     }
-                    $formattedGeometry['properties']['geojson_url'] = $url;
+                    if (count($downloadUrls)) {
+                        $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
+                        $formattedGeometry['properties']['kml'] = $downloadUrls['kml'];
+                        $formattedGeometry['properties']['gpx'] = $downloadUrls['gpx'];
+                    }
                     break;
             }
 
