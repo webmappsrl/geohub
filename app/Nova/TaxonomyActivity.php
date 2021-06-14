@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
 
@@ -58,7 +59,14 @@ class TaxonomyActivity extends Resource
             //Text::make('Icon'),
             Swatches::make('Color'),
             Number::make('Zindex'),
-            Text::make(__('Excerpt'), 'excerpt'),
+            Textarea::make(__('Excerpt'), 'excerpt')->help(
+                __('Make it less than 255 characters')
+            )->rows(2)->withMeta([
+                'extraAttributes' => [
+                    'maxlength' => 255,
+                    'placeholder' => __('Make it less than 255 characters'),
+                ]
+            ])->hideFromIndex(),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),

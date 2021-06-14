@@ -7,6 +7,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
@@ -57,7 +58,14 @@ class TaxonomyWhere extends Resource
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),
             Number::make('Zindex'),
-            Text::make(__('Excerpt'), 'excerpt'),
+            Textarea::make(__('Excerpt'), 'excerpt')->help(
+                __('Make it less than 255 characters')
+            )->rows(2)->withMeta([
+                'extraAttributes' => [
+                    'maxlength' => 255,
+                    'placeholder' => __('Make it less than 255 characters'),
+                ]
+            ])->hideFromIndex(),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
