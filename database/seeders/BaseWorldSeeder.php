@@ -11,9 +11,11 @@ use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
+use App\Models\User;
 use App\Nova\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BaseWorldSeeder
@@ -75,6 +77,18 @@ class BaseWorldSeeder extends Seeder
 
         // APP
         App::factory(10)->create();
+
+        // Complex case for APP
+        $user = User::factory()->create();
+        $activity = TaxonomyActivity::factory()->create();
+        $track = EcTrack::factory()->create(); $track->user_id=$user->id;$track->save();
+        $track->taxonomyActivities()->attach([$activity->id]);
+        $track1 = EcTrack::factory()->create(); $track1->user_id=$user->id;$track1->save();
+        $track1->taxonomyActivities()->attach([$activity->id]);
+        $app = App::factory()->create(); $app->user_id=$user->id;$app->save();
+
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
+
 
     }
 }

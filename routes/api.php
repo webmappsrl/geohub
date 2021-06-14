@@ -8,6 +8,7 @@ use App\Http\Controllers\TaxonomyTargetController;
 use App\Http\Controllers\TaxonomyThemeController;
 use App\Http\Controllers\TaxonomyWhenController;
 use App\Http\Controllers\TaxonomyWhereController;
+use App\Http\Controllers\ApiElbrusTaxonomyController;
 use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
@@ -123,13 +124,15 @@ Route::name('api.')->group(function () {
         /**
          * APP ELBRUS API (/api/app/elbrus/*)
          * app/elbrus/{id}/config.php
-         * app/elbrus/{id}/geojson/ec_poi_{id}.geojson
-         * app/elbrus/{id}/geojson/ec_track_{id}.geojson
+         * app/elbrus/{app_id}/geojson/ec_poi_{poi_id}.geojson
+         * app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
+         * app/elbrus/{app_id}/{taxonomy_name}.json
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
+            Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
         });
     });
 
