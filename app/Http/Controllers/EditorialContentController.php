@@ -116,9 +116,50 @@ class EditorialContentController extends Controller
         }
         $geojson = $poi->getGeojson();
         // MAPPING
+        $geojson['properties']['id']='ec_poi_'.$poi->id;
         $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_phone');
         $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_email');
+
+        // Add Taxonomies
+        $taxonomies=$this->_getTaxonomies($poi);
+        $geojson['properties']['taxonomy']=$taxonomies;
         return response()->json($geojson, 200);
+    }
+
+    private function _getTaxonomies($obj) {
+        $taxonomies=[];
+        $names=[
+            'activity','theme','where','who','when','webmapp_category'
+        ];
+        foreach($names as $name) {
+            switch($name){
+                case 'activity':
+                    $terms = $obj->taxonomyActivities()->pluck('id')->toArray();
+                    break;
+                case 'theme':
+                    $terms = $obj->taxonomyThemes()->pluck('id')->toArray();
+                    break;
+                case 'where':
+                    $terms = $obj->taxonomyWheres()->pluck('id')->toArray();
+                    break;
+                case 'who':
+                    $terms = $obj->taxonomyTargets()->pluck('id')->toArray();
+                    break;
+                case 'when':
+                    $terms = $obj->taxonomyWhens()->pluck('id')->toArray();
+                    break;
+                case 'webmapp_category':
+                    $terms = $obj->taxonomyPoiTypes()->pluck('id')->toArray();
+                    break;
+            }
+            if(count($terms)>0) {
+                foreach ($terms as $term) {
+                    $taxonomies[$name][]=$name.'_'.$term;
+                }
+            }
+
+        }
+        return $taxonomies;
     }
 
     /**
