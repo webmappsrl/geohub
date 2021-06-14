@@ -2,7 +2,10 @@
 
 namespace App\Nova;
 
+use App\Providers\WmpIconProvider;
+use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
+use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Avatar;
@@ -58,17 +61,10 @@ class TaxonomyActivity extends Resource
             Text::make(__('Name'), 'name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-            //Text::make('Icon'),
             Swatches::make('Color'),
             Number::make('Zindex'),
-            Textarea::make(__('Excerpt'), 'excerpt')->help(
-                __('Make it less than 255 characters')
-            )->rows(2)->withMeta([
-                'extraAttributes' => [
-                    'maxlength' => 255,
-                    'placeholder' => __('Make it less than 255 characters'),
-                ]
-            ])->hideFromIndex(),
+            NovaIconSelect::make("Icon")->setIconProvider(WmpIconProvider::class),
+            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
