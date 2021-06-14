@@ -24,6 +24,7 @@
     "laravel/nova": "*",
     "laravel/tinker": "^2.5",
     "league/flysystem-aws-s3-v3": "~1.0",
+    "ndamiens/gisconverter": "^1.0",
     "numaxlab/nova-ckeditor5-classic": "^1.1",
     "titasgailius/search-relations": "^1.0",
     "tymon/jwt-auth": "^1.0",

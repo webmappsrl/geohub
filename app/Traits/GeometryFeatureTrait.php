@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Symm\Gisconverter\Decoders\WKT;
+use Symm\Gisconverter\Gisconverter;
 
 trait GeometryFeatureTrait
 {
@@ -12,9 +14,9 @@ trait GeometryFeatureTrait
      *
      * @return array
      */
-    public function getGeojson(): ?array
+    public function getGeojson($downloadUrls = []): ?array
     {
-        return $this->formatGeometry();
+        return $this->formatGeometry('geojson', $downloadUrls);
     }
 
     /**
@@ -22,7 +24,7 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getKml(): ?string
+    public function getKml()
     {
         return $this->formatGeometry('kml');
     }
@@ -32,7 +34,7 @@ trait GeometryFeatureTrait
      *
      * @return string
      */
-    public function getGpx(): ?string
+    public function getGpx()
     {
         return $this->formatGeometry('gpx');
     }
@@ -44,7 +46,7 @@ trait GeometryFeatureTrait
      * 
      * @return array|string
      */
-    protected function formatGeometry($format = 'geojson')
+    protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
     {
         $model = get_class($this);
         switch ($format) {
@@ -53,6 +55,9 @@ trait GeometryFeatureTrait
                  * @todo: trovare la funzione corretta!
                  */
                 $formatCommand = 'ST_AsGeoJSON(geometry)';
+                $decoder = new WKT();
+                $geometry = $decoder->geomFromText('MULTIPOLYGON(((10 10,10 20,20 20,20 15,10 10)))');
+
                 break;
             case 'kml':
                 $formatCommand = 'ST_AsKML(geometry)';
@@ -72,16 +77,8 @@ trait GeometryFeatureTrait
             $keys = Schema::getColumnListing($this->getTable());
             switch ($format) {
                 case 'gpx':
-                    $formattedGeometry = [
-                        "type" => "Feature",
-                        "properties" => [],
-                        "geometry" => json_decode($geom, true)
-                    ];
-                    foreach ($keys as $value) {
-                        if ($value != 'geometry') {
-                            $formattedGeometry['properties'][$value] = $this->$value;
-                        }
-                    }
+                    $decoder = new WKT();
+                    $formattedGeometry = Gisconverter::geojsonToGpx($geom);
                     break;
                 case 'kml':
                     $name = $description = '';
@@ -107,6 +104,11 @@ trait GeometryFeatureTrait
                         if ($value != 'geometry') {
                             $formattedGeometry['properties'][$value] = $this->$value;
                         }
+                    }
+                    if (count($downloadUrls)) {
+                        $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
+                        $formattedGeometry['properties']['kml'] = $downloadUrls['kml'];
+                        $formattedGeometry['properties']['gpx'] = $downloadUrls['gpx'];
                     }
                     break;
             }
