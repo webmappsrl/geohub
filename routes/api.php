@@ -109,12 +109,15 @@ Route::name('api.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcPoi'])->name('update');
             Route::prefix('download')->group(function () {
-                Route::get("/{id}/{type?}", [EditorialContentController::class, 'download'])->name('download');
+                Route::get("/{id}/{type?}", [EditorialContentController::class, 'downloadEcPoi'])->name('download');
             });
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
+            Route::prefix('download')->group(function () {
+                Route::get("/{id}/{type?}", [EditorialContentController::class, 'downloadEcTrack'])->name('download');
+            });
         });
     });
     /**

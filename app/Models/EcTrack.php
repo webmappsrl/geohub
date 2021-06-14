@@ -17,6 +17,24 @@ class EcTrack extends Model
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'distance_comp' => 'float',
+        'distance' => 'float',
+        'ascent' => 'float',
+        'descent' => 'float',
+        'ele_from' => 'float',
+        'ele_to' => 'float',
+        'ele_min' => 'float',
+        'ele_max' => 'float',
+        'duration_forward' => 'float',
+        'duration_backward' => 'float',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -39,9 +57,21 @@ class EcTrack extends Model
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
-        
+
         static::saving(function ($ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
+        });
+
+        static::updated(function ($ecTrack) {
+            $changes = $ecTrack->getChanges();
+            if (in_array('geometry', $changes)) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
+            }
         });
     }
 
