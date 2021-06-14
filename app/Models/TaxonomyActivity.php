@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class TaxonomyActivity extends Model
@@ -25,7 +26,7 @@ class TaxonomyActivity extends Model
                 $taxonomyActivity->identifier = Str::slug($taxonomyActivity->identifier, '-');
             }
         });
-        
+
         parent::save($options);
     }
 
@@ -42,5 +43,10 @@ class TaxonomyActivity extends Model
     public function ecTrack()
     {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
+    }
+
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 }

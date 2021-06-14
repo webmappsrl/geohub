@@ -6,6 +6,7 @@ use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -113,4 +114,11 @@ class TaxonomyWhere extends Model
     {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
+
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
+
+
 }

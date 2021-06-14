@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -68,6 +70,14 @@ class TaxonomyPoiType extends Resource
             ])->hideFromIndex(),
             Text::make(__('Identifier'), 'identifier'),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            ExternalImage::make(__('Feature Image'), function () {
+                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                    $url = Storage::disk('public')->url($url);
+                }
+                return $url;
+            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
         ];

@@ -94,10 +94,8 @@ class EcPoi extends Resource
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
-
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-
             Text::make(__('Audio'), 'audio', function () {
                 $pathinfo = pathinfo($this->model()->audio);
                 if (isset($pathinfo['extension'])) {
