@@ -10,7 +10,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
 define('CONTENT_TYPE_AUDIO_MAPPING', [
+    'mpeg' => 'audio/mpeg',
     'mp3' => 'audio/mpeg',
+    'mp4' => 'audio/mpeg',
     'ogg' => 'audio/ogg',
     'wav' => 'audio/wav',
 ]);
