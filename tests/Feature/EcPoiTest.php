@@ -44,6 +44,12 @@ class EcPoiTest extends TestCase
 
     public function testAssociateFeatureImageToPoi()
     {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_poi', ['id' => 1])
+                ->andReturn(201);
+        });
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
 
@@ -57,10 +63,9 @@ class EcPoiTest extends TestCase
 
     public function testContactFields()
     {
-        $ecPoi = EcPoi::factory()->create([
-            'contact_phone' => '+3902123456',
-            'contact_email' => 'info@poi.com',
-        ]);
+        $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
+        $this->assertNotEmpty($ecPoi->contact_phone);
+        $this->assertNotEmpty($ecPoi->contact_email);
     }
 }

@@ -333,7 +333,7 @@ class EditorialContentController extends Controller
      * 
      * @return Response
      */
-    public function download(Request $request, int $id, string $format = 'geojson')
+    public function downloadEcPoi(Request $request, int $id, string $format = 'geojson')
     {
         $ecPoi = EcPoi::find($id);
 
@@ -365,6 +365,54 @@ class EditorialContentController extends Controller
                 $headers['Content-Type'] = 'application/vnd.api+json';
                 $headers['Content-Disposition'] = 'attachment; filename="' . $ecPoi->id . '.geojson"';
                 $content = $ecPoi->getGeojson($downloadUrls);
+                $response = response()->json($content, 200, $headers);
+                break;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Return geometry formatted by $format.
+     * 
+     * @param Request $request the request with data from geomixer POST
+     * @param int $id
+     * @param string $format
+     * 
+     * @return Response
+     */
+    public function downloadEcTrack(Request $request, int $id, string $format = 'geojson')
+    {
+        $ecTrack = EcTrack::find($id);
+
+        $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        if (is_null($ecTrack)) {
+            return $response;
+        }
+
+        $headers = [];
+        $downloadUrls = [
+            'geojson' => route('api.ec.track.download', ['id' => $id, 'type' => 'geojson']),
+            'kml' => route('api.ec.track.download', ['id' => $id, 'type' => 'kml']),
+            'gpx' => route('api.ec.track.download', ['id' => $id, 'type' => 'gpx']),
+        ];
+        switch ($format) {
+            case 'gpx';
+                $headers['Content-Type'] = 'application/vnd.api+json';
+                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.gpx"';
+                $content = $ecTrack->getGpx();
+                $response = response()->gpx($content, 200, $headers);
+                break;
+            case 'kml';
+                $headers['Content-Type'] = 'application/xml';
+                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.kml"';
+                $content = $ecTrack->getKml();
+                $response = response()->kml($content, 200, $headers);
+                break;
+            default:
+                $headers['Content-Type'] = 'application/vnd.api+json';
+                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.geojson"';
+                $content = $ecTrack->getGeojson($downloadUrls);
                 $response = response()->json($content, 200, $headers);
                 break;
         }
