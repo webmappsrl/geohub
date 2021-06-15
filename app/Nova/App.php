@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -99,7 +100,10 @@ class App extends Resource
     protected function option_panel()
     {
         return [
-            Text::make(__('Start Url'), 'startUrl')->default('/main/explore'),
+            Select::make(__('Start Url'), 'startUrl')->options([
+                '/main/explore' => 'Home',
+                '/main/map' => 'Map',
+            ])->default('/main/explore'),
             Toggle::make(__('Show Edit Link'), 'showEditLink')->trueValue('On')->falseValue('Off')->default(false)->onlyOnForms(),
             Toggle::make(__('Skip Route Index Download'), 'skipRouteIndexDownload')->trueValue('On')->falseValue('Off')->default(true)->onlyOnForms(),
             NovaSliderField::make(__('Poi Min Radius'), 'poiMinRadius')->min(0.1)->max(3.5)->default(0.5)->interval(0.1)->onlyOnForms(),
