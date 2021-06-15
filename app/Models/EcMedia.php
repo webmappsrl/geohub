@@ -118,4 +118,5 @@ class EcMedia extends Model
     {
         return $this->hasMany(EcTrack::class, 'feature_image');
     }
+
 }

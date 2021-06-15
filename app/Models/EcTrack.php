@@ -9,12 +9,31 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class EcTrack extends Model
 {
     use HasFactory, GeometryFeatureTrait;
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'distance_comp' => 'float',
+        'distance' => 'float',
+        'ascent' => 'float',
+        'descent' => 'float',
+        'ele_from' => 'float',
+        'ele_to' => 'float',
+        'ele_min' => 'float',
+        'ele_max' => 'float',
+        'duration_forward' => 'float',
+        'duration_backward' => 'float',
+    ];
 
     public function __construct(array $attributes = [])
     {
@@ -38,6 +57,22 @@ class EcTrack extends Model
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
+
+        static::saving(function ($ecTrack) {
+            $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
+        });
+
+        static::updated(function ($ecTrack) {
+            $changes = $ecTrack->getChanges();
+            if (in_array('geometry', $changes)) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
+            }
+        });
     }
 
     public function save(array $options = [])
@@ -48,6 +83,15 @@ class EcTrack extends Model
     public function author()
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
+    }
+
+    public function uploadAudio($file)
+    {
+        $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+        $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;
+        Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+
+        return Storage::cloud()->url($cloudPath);
     }
 
     public function ecMedia(): BelongsToMany

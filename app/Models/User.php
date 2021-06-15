@@ -4,11 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * Class User
+ *
+ * @package App\Models
+ *
+ * @property string email
+ * @property string name
+ * @property string password
+ * @property string email_verified_at
+ */
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable, HasRoles;
 
@@ -54,6 +66,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function taxonomy_targets(): HasMany {
         return $this->hasMany(TaxonomyTarget::class);
+    }
+
+    public function roles(): MorphToMany {
+        return $this->morphToMany(Role::class, 'model', 'model_has_roles');
     }
 
     /**

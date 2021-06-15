@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class TaxonomyWhen extends Model
@@ -37,5 +38,10 @@ class TaxonomyWhen extends Model
     public function ecMedia()
     {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+    }
+
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 }

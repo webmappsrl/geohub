@@ -33,6 +33,7 @@ class TaxonomyWhereFactory extends Factory
             'admin_level' => $this->faker->randomDigit(),
             'import_method' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('MULTIPOLYGON(((10 45, 11 45, 11 46, 11 46, 10 45)))'))"),
+            'color' => $this->faker->hexColor(),
         ];
     }
 }

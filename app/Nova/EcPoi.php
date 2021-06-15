@@ -2,17 +2,23 @@
 
 namespace App\Nova;
 
+use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
+use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+
 
 class EcPoi extends Resource
 {
@@ -58,10 +64,20 @@ class EcPoi extends Resource
             Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
+            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
+            Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
+            Text::make('Related Urls', function () {
+                $urls = $this->model()->related_url;
+                $html_url = '';
+                $urls = explode(';', $urls);
+                foreach ($urls as $url) {
+                    $html_url .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
+                }
+                return $html_url;
+            })->asHtml()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -76,9 +92,23 @@ class EcPoi extends Resource
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
-
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            Text::make(__('Audio'), 'audio', function () {
+                $pathinfo = pathinfo($this->model()->audio);
+                if (isset($pathinfo['extension'])) {
+                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathinfo['extension']];
+                }
+
+                return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
+            })->asHtml()->onlyOnDetail(),
+            File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                $file = $request->file('audio');
+
+                return $model->uploadAudio($file);
+            })->acceptedTypes('audio/*')->onlyOnForms(),
+            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];

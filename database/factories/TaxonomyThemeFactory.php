@@ -30,6 +30,7 @@ class TaxonomyThemeFactory extends Factory
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'import_method' => $this->faker->name(),
+            'color' => $this->faker->hexColor(),
         ];
     }
 }

@@ -23,6 +23,10 @@ class EcTrackFactory extends Factory
      */
     public function definition()
     {
+        $lat1 = $this->faker->randomFloat(2, 11, 13);
+        $lat2 = $this->faker->randomFloat(2, 11, 13);
+        $lng1 = $this->faker->randomFloat(2, 42, 45);
+        $lng2 = $this->faker->randomFloat(2, 42, 45);
         return [
             'name' => $this->faker->name(),
             'excerpt' => $this->faker->text(90),
@@ -31,7 +35,16 @@ class EcTrackFactory extends Factory
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
             'import_method' => $this->faker->name(),
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING($lat1 $lng1, $lat2 $lng1, $lat2 $lng2, $lat1 $lng2)'))"),
+            'distance' => $this->faker->randomFloat(1, 10, 25),
+            'ascent' => $this->faker->randomFloat(0, 300, 1000),
+            'descent' => $this->faker->randomFloat(0, 300, 1000),
+            'ele_min' => $this->faker->randomFloat(0, 0, 3000),
+            'ele_max' => $this->faker->randomFloat(0, 3000, 5000),
+            'ele_from' => $this->faker->randomFloat(0, 0, 3000),
+            'ele_to' => $this->faker->randomFloat(0, 3000, 5000),
+            'duration_forward' => $this->faker->randomFloat(0, 30, 300),
+            'duration_backward' => $this->faker->randomFloat(0, 30, 300),
         ];
     }
 }
