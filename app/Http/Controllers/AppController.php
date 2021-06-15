@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppController extends Controller
 {
@@ -30,6 +31,9 @@ class AppController extends Controller
         $data['MAP']['defZoom']=$app->defZoom;
         $data['MAP']['maxZoom']=$app->maxZoom;
         $data['MAP']['minZoom']=$app->minZoom;
+
+        // MAP section (bbox)
+        $data['MAP']['bbox']=$this->_getBBox($app);
 
         // Map section layers
         $data['MAP']['layers']['label']='Mappa';
@@ -64,5 +68,31 @@ class AppController extends Controller
         $data['ROUTING']['enable']=$app->enableRouting;
 
         return response()->json($data, 200);
+    }
+
+    /**
+     * Returns bbox array
+     * [lon0,lat0,lon1,lat1]
+     * @param App $app
+     * @return array
+     */
+    private function _getBBox(App $app): array {
+        $bbox=[];
+        $q = "select ST_Extent(geometry::geometry) as bbox from ec_tracks where user_id=$app->user_id;";
+        //$q = "select name,ST_AsGeojson(geometry) as bbox from ec_tracks where user_id=$app->user_id;";
+        $res = DB::select($q);
+        if(count($res)>0) {
+            if(!is_null($res[0]->bbox)) {
+                preg_match('/\((.*?)\)/', $res[0]->bbox, $match);
+                $coords = $match[1];
+                $coord_array=explode(',',$coords);
+                $coord_min_str=$coord_array[0];
+                $coord_max_str=$coord_array[1];
+                $coord_min=explode(' ',$coord_min_str);
+                $coord_max=explode(' ',$coord_max_str);
+                $bbox=[$coord_min[0],$coord_min[1],$coord_max[0],$coord_max[1]];
+            }
+        }
+        return $bbox;
     }
 }
