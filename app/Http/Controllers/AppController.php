@@ -68,7 +68,7 @@ class AppController extends Controller
         $data['ROUTING']['enable']=$app->enableRouting;
 
         // REPORT SECION
-        $data['REPORT']=$this->_getReportSection();
+        $data['REPORTS']=$this->_getReportSection();
 
         // GEOLOCATIONS SECTION
         $data['GEOLOCATION']['record']['enable']=true;
