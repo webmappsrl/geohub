@@ -26,7 +26,7 @@ use App\Http\Controllers\UserGeneratedDataController;
 
 Route::name('api.')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
-    Route::middleware('throttle:10,1')->post('/auth/signup', [AuthController::class, 'signup']);
+    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup']);
     Route::group([
         'middleware' => 'auth.jwt',
         'prefix' => 'auth'
