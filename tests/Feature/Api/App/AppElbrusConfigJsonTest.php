@@ -116,17 +116,17 @@ class AppElbrusConfigJsonTest extends TestCase {
     ]
     }
      */
-    public function testSectionReport() {
+    public function testSectionReports() {
         $app = App::factory()->create();
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
-        $this->assertTrue(isset($json->REPORT));
-        $this->assertTrue($json->REPORT->enable);
-        $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store',$json->REPORT->url);
-        $this->assertIsArray($json->REPORT->items);
-        $this->assertCount(1,$json->REPORT->items);
+        $this->assertTrue(isset($json->REPORTS));
+        $this->assertTrue($json->REPORTS->enable);
+        $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store',$json->REPORTS->url);
+        $this->assertIsArray($json->REPORTS->items);
+        $this->assertCount(1,$json->REPORTS->items);
     }
 
     /**
