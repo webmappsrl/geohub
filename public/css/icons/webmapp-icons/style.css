@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp-icons';
-  src:  url('fonts/webmapp-icons.eot?sfxi4y');
-  src:  url('fonts/webmapp-icons.eot?sfxi4y#iefix') format('embedded-opentype'),
-    url('fonts/webmapp-icons.ttf?sfxi4y') format('truetype'),
-    url('fonts/webmapp-icons.woff?sfxi4y') format('woff'),
-    url('fonts/webmapp-icons.svg?sfxi4y#webmapp-icons') format('svg');
+  src:  url('fonts/webmapp-icons.eot?jia7sz');
+  src:  url('fonts/webmapp-icons.eot?jia7sz#iefix') format('embedded-opentype'),
+    url('fonts/webmapp-icons.ttf?jia7sz') format('truetype'),
+    url('fonts/webmapp-icons.woff?jia7sz') format('woff'),
+    url('fonts/webmapp-icons.svg?jia7sz#webmapp-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.webmapp-icon-activities:before {
+  content: "\e940";
+}
+.webmapp-icon-background:before {
+  content: "\e941";
+}
+.webmapp-icon-document:before {
+  content: "\e942";
+}
+.webmapp-icon-list:before {
+  content: "\e943";
+}
+.webmapp-icon-microphone:before {
+  content: "\e944";
+}
+.webmapp-icon-pause:before {
+  content: "\e945";
+}
+.webmapp-icon-play:before {
+  content: "\e946";
+}
+.webmapp-icon-stop:before {
+  content: "\e947";
+}
+.webmapp-icon-track:before {
+  content: "\e948";
+}
 .webmapp-icon-add-user:before {
   content: "\e900";
 }
@@ -105,6 +132,33 @@
 }
 .webmapp-icon-user:before {
   content: "\e91a";
+}
+.webmapp-icon-activities-outline:before {
+  content: "\e949";
+}
+.webmapp-icon-background-outline:before {
+  content: "\e94a";
+}
+.webmapp-icon-document-outline:before {
+  content: "\e94b";
+}
+.webmapp-icon-list-outline:before {
+  content: "\e94c";
+}
+.webmapp-icon-microphone-outline:before {
+  content: "\e94d";
+}
+.webmapp-icon-pause-outline:before {
+  content: "\e94e";
+}
+.webmapp-icon-play-outline:before {
+  content: "\e94f";
+}
+.webmapp-icon-stop-outline:before {
+  content: "\e950";
+}
+.webmapp-icon-track-outline:before {
+  content: "\e951";
 }
 .webmapp-icon-arrow-left-outline:before {
   content: "\e91b";
