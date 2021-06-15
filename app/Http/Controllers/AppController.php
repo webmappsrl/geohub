@@ -36,9 +36,9 @@ class AppController extends Controller
         $data['MAP']['bbox']=$this->_getBBox($app);
 
         // Map section layers
-        $data['MAP']['layers']['label']='Mappa';
-        $data['MAP']['layers']['type']='maptile';
-        $data['MAP']['layers']['tilesUrl']='https://api.webmapp.it/tiles/';
+        $data['MAP']['layers'][0]['label']='Mappa';
+        $data['MAP']['layers'][0]['type']='maptile';
+        $data['MAP']['layers'][0]['tilesUrl']='https://api.webmapp.it/tiles/';
 
         // THEME section
         $data['THEME']['fontFamilyHeader']=$app->fontFamilyHeader;

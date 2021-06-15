@@ -71,9 +71,10 @@ class AppElbrusConfigJsonTest extends TestCase {
         $json = json_decode($result->getContent());
 
         $this->assertTrue(isset($json->MAP->layers));
-        $this->assertEquals('Mappa', $json->MAP->layers->label);
-        $this->assertEquals('maptile', $json->MAP->layers->type);
-        $this->assertEquals('https://api.webmapp.it/tiles/', $json->MAP->layers->tilesUrl);
+        $this->assertIsArray($json->MAP->layers);
+        $this->assertEquals('Mappa', $json->MAP->layers[0]->label);
+        $this->assertEquals('maptile', $json->MAP->layers[0]->type);
+        $this->assertEquals('https://api.webmapp.it/tiles/', $json->MAP->layers[0]->tilesUrl);
     }
 
     /**
