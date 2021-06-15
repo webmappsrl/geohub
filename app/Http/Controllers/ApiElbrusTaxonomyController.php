@@ -48,6 +48,7 @@ class ApiElbrusTaxonomyController extends Controller
                         break;
                     case 'where':
                         $tax = TaxonomyWhere::find($tid)->toArray();
+                        unset($tax['geometry']);
                         break;
                     case 'who':
                         $tax = TaxonomyTarget::find($tid)->toArray();
