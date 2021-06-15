@@ -67,7 +67,61 @@ class AppController extends Controller
         // ROUTING section
         $data['ROUTING']['enable']=$app->enableRouting;
 
+        // REPORT SECION
+        $data['REPORT']=$this->_getReportSection();
+
+        // GEOLOCATIONS SECTION
+        $data['GEOLOCATION']['record']['enable']=true;
+        $data['GEOLOCATION']['record']['export']=true;
+        $data['GEOLOCATION']['record']['uploadUrl']='https://geohub.webmapp.it/api/usergenerateddata/store';
+
+        // AUTH section
+        $data['AUTH']['enable']=true;
+        $data['AUTH']['loginToGeohub']=true;
+
         return response()->json($data, 200);
+    }
+
+    private function _getReportSection() {
+        $json_string = <<<EOT
+ {
+    "enable": true,
+    "url": "https://geohub.webmapp.it/api/usergenerateddata/store",
+    "items": [
+    {
+    "title": "Crea un nuovo waypoint",
+    "success": "Waypoint creato con successo",
+    "url": "https://geohub.webmapp.it/api/usergenerateddata/store",
+    "type": "geohub",
+    "fields": [
+    {
+    "label": "Nome",
+    "name": "title",
+    "mandatory": true,
+    "type": "text",
+    "placeholder": "Scrivi qua il nome del waypoint"
+    },
+    {
+    "label": "Descrizione",
+    "name": "description",
+    "mandatory": true,
+    "type": "textarea",
+    "placeholder": "Descrivi brevemente il waypoint"
+    },
+    {
+    "label": "Foto",
+    "name": "gallery",
+    "mandatory": false,
+    "type": "gallery",
+    "limit": 5,
+    "placeholder": "Aggiungi qualche foto descrittiva del waypoint"
+    }
+    ]
+    }
+    ]
+    }
+EOT;
+    return json_decode($json_string,true);
     }
 
     /**
