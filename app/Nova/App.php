@@ -89,9 +89,34 @@ class App extends Resource
     protected function theme_panel()
     {
         return [
-            /**todo implementare select per fonts**/
-            Text::make(__('Font Family Header'), 'fontFamilyHeader')->default('Roboto Slab'),
-            Text::make(__('Font Family Content'), 'fontFamilyContent')->default('Roboto'),
+            Select::make(__('Font Family Header'), 'fontFamilyHeader')->options([
+                'Helvetica' => ['label' => 'Helvetica'],
+                'Lato' => ['label' => 'Lato'],
+                'Merriweather' => ['label' => 'Merriweather'],
+                'Montserrat' => ['label' => 'Montserrat'],
+                'Montserrat Light' => ['label' => 'Montserrat Light'],
+                'Noto Sans' => ['label' => 'Noto Sans'],
+                'Noto Serif' => ['label' => 'Noto Serif'],
+                'Open Sans' => ['label' => 'Roboto'],
+                'Roboto' => ['label' => 'Noto Serif'],
+                'Roboto Slab' => ['label' => 'Roboto Slab'],
+                'Sora' => ['label' => 'Sora'],
+                'Source Sans Pro' => ['label' => 'Source Sans Pro']
+            ])->default('Roboto Slab'),
+            Select::make(__('Font Family Content'), 'fontFamilyContent')->options([
+                'Helvetica' => ['label' => 'Helvetica'],
+                'Lato' => ['label' => 'Lato'],
+                'Merriweather' => ['label' => 'Merriweather'],
+                'Montserrat' => ['label' => 'Montserrat'],
+                'Montserrat Light' => ['label' => 'Montserrat Light'],
+                'Noto Sans' => ['label' => 'Noto Sans'],
+                'Noto Serif' => ['label' => 'Noto Serif'],
+                'Open Sans' => ['label' => 'Open Sans'],
+                'Roboto' => ['label' => 'Roboto'],
+                'Roboto Slab' => ['label' => 'Roboto Slab'],
+                'Sora' => ['label' => 'Sora'],
+                'Source Sans Pro' => ['label' => 'Source Sans Pro']
+            ])->default('Roboto'),
             Swatches::make(__('Default Feature Color'), 'defaultFeatureColor')->default('#de1b0d'),
             Swatches::make(__('Primary'), 'primary')->default('#de1b0d'),
         ];
