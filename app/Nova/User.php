@@ -14,7 +14,8 @@ use Vyuldashev\NovaPermission\Role;
 use Vyuldashev\NovaPermission\RoleBooleanGroup;
 use Vyuldashev\NovaPermission\RoleSelect;
 
-class User extends Resource {
+class User extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -36,6 +37,11 @@ class User extends Resource {
         'id', 'name', 'email',
     ];
 
+    public static function group()
+    {
+        return __('Admin');
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -43,7 +49,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
             //            ID::make()->sortable(),
             //            Gravatar::make()->maxWidth(50),
@@ -81,7 +88,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -92,7 +100,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [];
     }
 
@@ -103,7 +112,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -114,7 +124,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [
             (new EmulateUser())
                 ->canSee(function ($request) {
