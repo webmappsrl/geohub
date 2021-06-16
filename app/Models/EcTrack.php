@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -92,6 +93,20 @@ class EcTrack extends Model
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
 
         return Storage::cloud()->url($cloudPath);
+    }
+
+    /**
+     * @param string json encoded geometry.
+     */
+    public function fileToGeometry($fileContent = '')
+    {
+        $geometry = null;
+        if ($fileContent) {
+            $content = json_decode($fileContent);
+            $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "')))");
+        }
+
+        return $geometry;
     }
 
     public function ecMedia(): BelongsToMany

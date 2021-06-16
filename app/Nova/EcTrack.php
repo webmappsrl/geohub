@@ -68,8 +68,8 @@ class EcTrack extends Resource
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
-                $content = json_decode(file_get_contents($request->geojson));
-                $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "'))");
+                $content = file_get_contents($request->geojson);
+                $geometry = $model->fileToGeometry($content);
                 return [
                     'geometry' => $geometry,
                 ];
