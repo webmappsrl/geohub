@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symm\Gisconverter\Decoders\WKT;
+use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
 {
@@ -100,10 +103,48 @@ class EcTrack extends Model
      */
     public function fileToGeometry($fileContent = '')
     {
-        $geometry = null;
+        $geometry = $contentType = null;
         if ($fileContent) {
-            $content = json_decode($fileContent);
-            $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "')))");
+            if (substr($fileContent, 0, 5) == "<?xml") {
+                $geojson = '';
+                try {
+                    $geojson = Gisconverter::gpxToGeojson($fileContent);
+                } catch (Exception $ec) {
+                    /** @todo: gestire */
+                }
+
+                try {
+                    $geojson = Gisconverter::kmlToGeojson($fileContent);
+                } catch (Exception $ec) {
+                    /** @todo: gestire */
+                }
+
+                $content = json_decode($geojson);
+                $contentType = @$content->type;
+            } else {
+                $content = json_decode($fileContent);
+                $isJson = json_last_error() === JSON_ERROR_NONE;
+                if ($isJson) {
+                    $contentType = $content->type;
+                }
+            }
+
+            if ($contentType) {
+                switch ($contentType) {
+                    case "GeometryCollection":
+                        $contentGeometry = $content->geometries;
+                        $geometry = DB::raw("ST_GeomFromGeoJSON(ST_CollectionExtract(ST_GeomFromText('GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(0 0)))'),1))");
+                        break;
+                    case "FeatureCollection":
+                        $contentGeometry = $content->features[0]->geometry;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                    default:
+                        $contentGeometry = $content->geometry;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                }
+            }
         }
 
         return $geometry;

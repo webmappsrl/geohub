@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Placemark>
+        <name>Dr. Mose Stracke</name>
+        <description>Et veritatis itaque impedit maiores aut. Sed illum eum ex at totam beatae commodi. Deleniti ut autem est vel repudiandae. Non ut blanditiis illo voluptas et reiciendis velit.</description>
+        <Point>
+            <coordinates>10.43,43.7</coordinates>
+        </Point>
+    </Placemark>
+</kml>

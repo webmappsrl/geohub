@@ -50,15 +50,6 @@ trait GeometryFeatureTrait
     {
         $model = get_class($this);
         switch ($format) {
-            case 'gpx':
-                /**
-                 * @todo: trovare la funzione corretta!
-                 */
-                $formatCommand = 'ST_AsGeoJSON(geometry)';
-                $decoder = new WKT();
-                $geometry = $decoder->geomFromText('MULTIPOLYGON(((10 10,10 20,20 20,20 15,10 10)))');
-
-                break;
             case 'kml':
                 $formatCommand = 'ST_AsKML(geometry)';
                 break;
@@ -77,7 +68,6 @@ trait GeometryFeatureTrait
             $keys = Schema::getColumnListing($this->getTable());
             switch ($format) {
                 case 'gpx':
-                    $decoder = new WKT();
                     $formattedGeometry = Gisconverter::geojsonToGpx($geom);
                     break;
                 case 'kml':
