@@ -25,13 +25,15 @@ use Laravel\Nova\NovaApplicationServiceProvider;
 use Silvanite\NovaToolPermissions\NovaToolPermissions;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
 
-class NovaServiceProvider extends NovaApplicationServiceProvider {
+class NovaServiceProvider extends NovaApplicationServiceProvider
+{
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         parent::boot();
     }
 
@@ -40,7 +42,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function routes() {
+    protected function routes()
+    {
         Nova::routes()
             ->withAuthenticationRoutes()
             ->withPasswordResetRoutes()
@@ -54,7 +57,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function gate() {
+    protected function gate()
+    {
         Gate::define('viewNova', function ($user) {
             return true;
             //            in_array($user->email, [
@@ -68,7 +72,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function cards() {
+    protected function cards()
+    {
         $cards = [];
         $currentUser = User::getEmulatedUser();
 
@@ -99,7 +104,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function dashboards() {
+    protected function dashboards()
+    {
         return [];
     }
 
@@ -108,7 +114,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    public function tools(): array {
+    public function tools(): array
+    {
         return [
             NovaPermissionTool::make()
                 ->rolePolicy(RolePolicy::class)
@@ -121,7 +128,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    public function register() {
-        //
+    public function register()
+    {
+        Nova::sortResourcesBy(function ($resource) {
+            return $resource::$priority ?? 99999;
+        });
     }
 }

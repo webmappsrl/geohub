@@ -60,7 +60,8 @@
       "Database\\Seeders\\": "database/seeders/"
     },
     "files": [
-      "database/MigrationsHelpers.php"
+      "database/MigrationsHelpers.php",
+      "app/Providers/ResourceManager.php"
     ]
   },
   "autoload-dev": {

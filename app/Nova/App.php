@@ -16,6 +16,7 @@ use Yna\NovaSwatches\Swatches;
 
 class App extends Resource
 {
+    
     /**
      * The model the resource corresponds to.
      *
@@ -41,7 +42,7 @@ class App extends Resource
 
     public static function group()
     {
-        return __('Admin');
+        return __('Editorial Content');
     }
 
     /**
@@ -103,6 +104,7 @@ class App extends Resource
                 'Sora' => ['label' => 'Sora'],
                 'Source Sans Pro' => ['label' => 'Source Sans Pro']
             ])->default('Roboto Slab'),
+
             Select::make(__('Font Family Content'), 'fontFamilyContent')->options([
                 'Helvetica' => ['label' => 'Helvetica'],
                 'Lato' => ['label' => 'Lato'],
