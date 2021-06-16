@@ -44,12 +44,6 @@ class EcPoiTest extends TestCase
 
     public function testAssociateFeatureImageToPoi()
     {
-        $this->mock(HoquServiceProvider::class, function ($mock) {
-            $mock->shouldReceive('store')
-                ->once()
-                ->with('enrich_ec_poi', ['id' => 1])
-                ->andReturn(201);
-        });
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
 
