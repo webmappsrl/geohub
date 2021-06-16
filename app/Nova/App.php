@@ -14,6 +14,7 @@ use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Yna\NovaSwatches\Swatches;
 
+
 class App extends Resource
 {
 
@@ -119,7 +120,7 @@ class App extends Resource
                 'Sora' => ['label' => 'Sora'],
                 'Source Sans Pro' => ['label' => 'Source Sans Pro']
             ])->default('Roboto')->hideFromIndex(),
-            
+
             Swatches::make(__('Default Feature Color'), 'defaultFeatureColor')->default('#de1b0d')->hideFromIndex(),
             Swatches::make(__('Primary'), 'primary')->default('#de1b0d')->hideFromIndex(),
         ];

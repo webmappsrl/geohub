@@ -11,75 +11,26 @@ class AddFieldsUXUIToTaxonomies extends Migration
      *
      * @return void
      */
+
+
     public function up()
     {
-        Schema::table('taxonomy_wheres', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
+        $taxonomies = ['taxonomy_wheres', 'taxonomy_whens', 'taxonomy_themes', 'taxonomy_activities', 'taxonomy_targets', 'taxonomy_poi_types'];
 
-        });
-        Schema::table('taxonomy_whens', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
-        });
-        Schema::table('taxonomy_themes', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
-        });
-        Schema::table('taxonomy_activities', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
-        });
-        Schema::table('taxonomy_poi_types', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
-        });
-        Schema::table('taxonomy_targets', function (Blueprint $table) {
-            $table->integer('stroke_with')->nullable()->unsigned();
-            $table->integer('stroke_opacity')->nullable()->unsigned();
-            $table->integer('line_dash')->nullable()->unsigned();
-            $table->integer('min_visible_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes_zoom')->nullable()->unsigned();
-            $table->integer('min_sizes')->nullable()->unsigned();
-            $table->integer('max_sizes')->nullable()->unsigned();
-            $table->integer('icon_zoom')->nullable()->unsigned();
-            $table->integer('icon_sizes')->nullable()->unsigned();
-        });
+        foreach ($taxonomies as $taxonomy) {
+            Schema::table($taxonomy, function (Blueprint $table) {
+                $table->float('stroke_width')->nullable()->unsigned();
+                $table->float('stroke_opacity')->nullable()->unsigned();
+                $table->text('line_dash')->nullable()->unsigned();
+                $table->float('min_visible_zoom')->nullable()->unsigned();
+                $table->float('min_size_zoom')->nullable()->unsigned();
+                $table->float('min_size')->nullable()->unsigned();
+                $table->float('max_size')->nullable()->unsigned();
+                $table->float('icon_zoom')->nullable()->unsigned();
+                $table->float('icon_size')->nullable()->unsigned();
+            });
+        }
+
     }
 
     /**

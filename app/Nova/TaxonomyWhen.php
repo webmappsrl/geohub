@@ -87,25 +87,24 @@ class TaxonomyWhen extends Resource
     protected function ux_ui_panel()
     {
         return [
-            NovaSliderField::make(__('Stroke With'), 'stroke_with')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Line Dash'), 'line_dash')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Min Visible Zoom'), 'min_visible_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Max Sizes Zoom'), 'min_sizes_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Min Sizes'), 'min_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Max Sizes'), 'max_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Sizes'), 'icon_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Stroke Width'), 'stroke_width')->min(0.5)->max(10)->default(2.5)->interval(0.5)->onlyOnForms(),
+            NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(0)->max(1)->default(0)->interval(0.01)->onlyOnForms(),
+            Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator'),
+            NovaSliderField::make(__('Min Visible Zoom'), 'min_visible_zoom')->min(5)->max(19)->default(5)->onlyOnForms(),
+            NovaSliderField::make(__('Max Sizes Zoom'), 'min_size_zoom')->min(5)->max(19)->default(19)->onlyOnForms(),
+            NovaSliderField::make(__('Min Size'), 'min_size')->min(0.1)->max(4)->default(1)->onlyOnForms(),
+            NovaSliderField::make(__('Max Size'), 'max_size')->min(0.1)->max(4)->default(4)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(0)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Size'), 'icon_size')->min(0.1)->max(4)->default(0.1)->onlyOnForms(),
 
-            Number::make(__('Stroke With'), 'stroke_with')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Stroke Width'), 'stroke_width')->hideWhenUpdating()->hideWhenCreating(),
             Number::make(__('Stroke Opacity'), 'stroke_opacity')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Line Dash'), 'line_dash')->hideWhenUpdating()->hideWhenCreating(),
             Number::make(__('Min Visible Zoom'), 'min_visible_zoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Max Sizes Zoom'), 'min_sizes_zoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Min Sizes'), 'min_sizes')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Max Sizes'), 'max_sizes')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Max Size Zoom'), 'min_size_zoom')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Min Size'), 'min_size')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Max Size'), 'max_size')->hideWhenUpdating()->hideWhenCreating(),
             Number::make(__('Icon Zoom'), 'icon_zoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Icon Sizes'), 'icon_sizes')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Icon Size'), 'icon_size')->hideWhenUpdating()->hideWhenCreating(),
         ];
     }
 

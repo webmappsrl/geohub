@@ -18,6 +18,7 @@ use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
 use Vyuldashev\NovaPermission\Permission;
@@ -49,43 +50,82 @@ class ResourceManager extends Tool
         $request = request();
         $groups = Nova::groups($request);
 
+        $adminArray = [];
+        $adminResources = [
+            User::class,
+            Role::class,
+            Permission::class,
+        ];
+        $editorialContentArray = [];
+        $editorialContentResources = [
+            App::class,
+            EcMedia::class,
+            EcTrack::class,
+            EcPoi::class,
+        ];
+
+        $UgcArray = [];
+        $UgcResources = [
+            UgcPoi::class,
+            UgcTrack::class,
+            UgcMedia::class,
+        ];
+
+        $TaxonomiesArray = [];
+        $TaxonomiesResources = [
+            TaxonomyWhere::class,
+            TaxonomyActivity::class,
+            TaxonomyPoiType::class,
+            TaxonomyWhen::class,
+            TaxonomyTarget::class,
+            TaxonomyTheme::class,
+        ];
+
+        foreach ($adminResources as $resource) {
+            if ($resource::authorizedToViewAny($request)) {
+                $adminArray [] = $resource;
+            }
+        }
+
+        foreach ($editorialContentResources as $resource) {
+            if ($resource::authorizedToViewAny($request)) {
+                $editorialContentArray [] = $resource;
+            }
+        }
+
+        foreach ($UgcResources as $resource) {
+            if ($resource::authorizedToViewAny($request)) {
+                $UgcArray [] = $resource;
+            }
+        }
+
+        foreach ($TaxonomiesResources as $resource) {
+            if ($resource::authorizedToViewAny($request)) {
+                $TaxonomiesArray [] = $resource;
+            }
+        }
+
+
         $newNavigation = collect([
-            'Editorial Content' => collect([
-                App::class,
-                EcMedia::class,
-                EcTrack::class,
-                EcPoi::class,
-            ]),
-
-            'Taxonomies' => collect([
-                TaxonomyWhere::class,
-                TaxonomyActivity::class,
-                TaxonomyPoiType::class,
-                TaxonomyWhen::class,
-                TaxonomyTarget::class,
-                TaxonomyTheme::class,
-            ]),
-
-            'Admin' => collect([
-                User::class,
-                Role::class,
-                Permission::class,
-            ]),
-
-            'User Generated Content' => collect([
-                UgcPoi::class,
-                UgcTrack::class,
-                UgcMedia::class,
-            ]),
+            'Editorial Content' => collect($editorialContentArray),
+            'Taxonomies' => collect($TaxonomiesArray),
+            'User Generated Content' => collect($UgcArray),
+            'Admin' => collect($adminArray),
 
         ]);
+
+        foreach ($newNavigation as $group => $collection) {
+            if (count($collection) == 0) {
+                $newNavigation->forget($group);
+            }
+        }
 
         return view('nova::resources.navigation', [
             'navigation' => $newNavigation,
             'groups' => $groups,
         ]);
     }
-    
+
     /** OLD FUNCTION
      * public function renderNavigation()
      * {
