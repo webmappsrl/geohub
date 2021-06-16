@@ -15,6 +15,8 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
+use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
 
@@ -77,6 +79,33 @@ class TaxonomyTheme extends Resource
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+
+            new Panel('UX/UI', $this->ux_ui_panel()),
+        ];
+    }
+
+    protected function ux_ui_panel()
+    {
+        return [
+            NovaSliderField::make(__('Stroke With'), 'stroke_with')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Line Dash'), 'line_dash')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Min Visible Zoom'), 'min_visible_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Max Sizes Zoom'), 'min_sizes_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Min Sizes'), 'min_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Max Sizes'), 'max_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(16)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Sizes'), 'icon_sizes')->min(5)->max(19)->default(16)->onlyOnForms(),
+
+            Number::make(__('Stroke With'), 'stroke_with')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Stroke Opacity'), 'stroke_opacity')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Line Dash'), 'line_dash')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Min Visible Zoom'), 'min_visible_zoom')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Max Sizes Zoom'), 'min_sizes_zoom')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Min Sizes'), 'min_sizes')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Max Sizes'), 'max_sizes')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Icon Zoom'), 'icon_zoom')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Icon Sizes'), 'icon_sizes')->hideWhenUpdating()->hideWhenCreating(),
         ];
     }
 

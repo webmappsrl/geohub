@@ -16,7 +16,7 @@ use Yna\NovaSwatches\Swatches;
 
 class App extends Resource
 {
-    
+
     /**
      * The model the resource corresponds to.
      *
@@ -81,9 +81,9 @@ class App extends Resource
             NovaSliderField::make(__('Min Zoom'), 'minZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
             NovaSliderField::make(__('Def Zoom'), 'defZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
 
-            Number::make(__('Max Zoom'), 'maxZoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Min Zoom'), 'minZoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Def Zoom'), 'defZoom')->hideWhenUpdating()->hideWhenCreating(),
+            Number::make(__('Max Zoom'), 'maxZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Min Zoom'), 'minZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Def Zoom'), 'defZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
         ];
     }
 
@@ -103,7 +103,7 @@ class App extends Resource
                 'Roboto Slab' => ['label' => 'Roboto Slab'],
                 'Sora' => ['label' => 'Sora'],
                 'Source Sans Pro' => ['label' => 'Source Sans Pro']
-            ])->default('Roboto Slab'),
+            ])->default('Roboto Slab')->hideFromIndex(),
 
             Select::make(__('Font Family Content'), 'fontFamilyContent')->options([
                 'Helvetica' => ['label' => 'Helvetica'],
@@ -118,9 +118,10 @@ class App extends Resource
                 'Roboto Slab' => ['label' => 'Roboto Slab'],
                 'Sora' => ['label' => 'Sora'],
                 'Source Sans Pro' => ['label' => 'Source Sans Pro']
-            ])->default('Roboto'),
-            Swatches::make(__('Default Feature Color'), 'defaultFeatureColor')->default('#de1b0d'),
-            Swatches::make(__('Primary'), 'primary')->default('#de1b0d'),
+            ])->default('Roboto')->hideFromIndex(),
+            
+            Swatches::make(__('Default Feature Color'), 'defaultFeatureColor')->default('#de1b0d')->hideFromIndex(),
+            Swatches::make(__('Primary'), 'primary')->default('#de1b0d')->hideFromIndex(),
         ];
     }
 
@@ -131,6 +132,7 @@ class App extends Resource
                 '/main/explore' => 'Home',
                 '/main/map' => 'Map',
             ])->default('/main/explore'),
+
             Toggle::make(__('Show Edit Link'), 'showEditLink')->trueValue('On')->falseValue('Off')->default(false)->onlyOnForms(),
             Toggle::make(__('Skip Route Index Download'), 'skipRouteIndexDownload')->trueValue('On')->falseValue('Off')->default(true)->onlyOnForms(),
             NovaSliderField::make(__('Poi Min Radius'), 'poiMinRadius')->min(0.1)->max(3.5)->default(0.5)->interval(0.1)->onlyOnForms(),
@@ -139,30 +141,31 @@ class App extends Resource
             NovaSliderField::make(__('Poi Icon Radius'), 'poiIconRadius')->min(0.1)->max(3.5)->default(1)->interval(0.1)->onlyOnForms(),
             NovaSliderField::make(__('Poi Min Zoom'), 'poiMinZoom')->min(5)->max(19)->default(13)->interval(0.1)->onlyOnForms(),
             NovaSliderField::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->min(5)->max(19)->default(10.5)->interval(0.1)->onlyOnForms(),
-            Toggle::make(__('Show Track Ref Label'), 'showTrackRefLabel')->trueValue('On')->falseValue('Off')->default(false),
 
-            Number::make(__('Poi Min Radius'), 'poiMinRadius')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Poi Max Radius'), 'poiMaxRadius')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Poi Icon Zoom'), 'poiIconZoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Poi Icon Radius'), 'poiIconRadius')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Poi Min Zoom'), 'poiMinZoom')->hideWhenUpdating()->hideWhenCreating(),
-            Number::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->hideWhenUpdating()->hideWhenCreating(),
+            Toggle::make(__('Show Track Ref Label'), 'showTrackRefLabel')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+
+            Number::make(__('Poi Min Radius'), 'poiMinRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Max Radius'), 'poiMaxRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Icon Zoom'), 'poiIconZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Icon Radius'), 'poiIconRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Min Zoom'), 'poiMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
         ];
     }
 
     protected function table_panel()
     {
         return [
-            Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false),
-            Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false),
-            Toggle::make(__('Show Related POI'), 'showRelatedPoi')->trueValue('On')->falseValue('Off')->default(false),
+            Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Show Related POI'), 'showRelatedPoi')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
     protected function routing_panel()
     {
         return [
-            Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false),
+            Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 

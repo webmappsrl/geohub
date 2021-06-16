@@ -85,6 +85,7 @@ class ResourceManager extends Tool
             'groups' => $groups,
         ]);
     }
+    
     /** OLD FUNCTION
      * public function renderNavigation()
      * {
