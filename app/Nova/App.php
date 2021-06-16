@@ -63,6 +63,7 @@ class App extends Resource
             new Panel('Options', $this->option_panel()),
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
+            new Panel('API', $this->api_panel()),
         ];
     }
 
@@ -167,6 +168,19 @@ class App extends Resource
     {
         return [
             Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+        ];
+    }
+
+    protected function api_panel()
+    {
+        return [
+            Text::make(__('API List'), function () {
+                return '<a href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/activity.json" target="_blank">Activity</a><br>
+                    <a href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/theme.json" target="_blank">Theme</a><br>
+                    <a href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/when.json" target="_blank">When</a><br>
+                    <a href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/where.json" target="_blank">Activity</a><br>
+                    <a href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a><br>';
+            })->asHtml()->onlyOnDetail()
         ];
     }
 
