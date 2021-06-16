@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Nova\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -81,13 +82,21 @@ class BaseWorldSeeder extends Seeder
         // Complex case for APP
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
-        $track = EcTrack::factory()->create(); $track->user_id=$user->id;$track->save();
+
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track->user_id=$user->id;
+        $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
-        $track1 = EcTrack::factory()->create(); $track1->user_id=$user->id;$track1->save();
+
+        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1->user_id=$user->id;
+        $track1->save();
         $track1->taxonomyActivities()->attach([$activity->id]);
+
         $app = App::factory()->create(); $app->user_id=$user->id;$app->save();
 
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/config.json to test it from browser.");
 
 
     }

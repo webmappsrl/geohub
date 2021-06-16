@@ -249,4 +249,27 @@ class AppElbrusTaxonomyTest extends TestCase
         $this->assertCount(2,$json_term['items']['track']);
     }
 
+    public function testWhereTaxonomyHasNoGeometry() {
+        // CONTEXT: create user, activity,track,app and relations
+        $user = User::factory()->create();
+        $where = TaxonomyWhere::factory()->create();
+        $track = EcTrack::factory()->create(); $track->user_id=$user->id;$track->save();
+        $track->taxonomyWheres()->attach([$where->id]);
+        $app = App::factory()->create(); $app->user_id=$user->id;$app->save();
+
+        $uri = "api/app/elbrus/$app->id/taxonomies/where.json";
+        $result = $this->getJson($uri);
+        $this->assertEquals(200,$result->getStatusCode());
+
+        $json = json_decode($result->content(),true);
+
+        $this->assertArrayHasKey('where_'.$where->id,$json);
+        $this->assertCount(1,$json);
+
+        $json_term = $json['where_'.$where->id];
+
+        $this->assertFalse(isset($json_term['geometry']));
+
+    }
+
 }

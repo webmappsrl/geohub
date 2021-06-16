@@ -26,6 +26,7 @@ use App\Http\Controllers\UserGeneratedDataController;
 
 Route::name('api.')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup']);
     Route::group([
         'middleware' => 'auth.jwt',
         'prefix' => 'auth'
@@ -45,9 +46,8 @@ Route::name('api.')->group(function () {
         Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
     });
 
-
     /**
-     * Taxnomies API
+     * Taxonomies API
      */
     Route::prefix('taxonomy')->name('taxonomy.')->group(function () {
         Route::prefix('activity')->name('activity.')->group(function () {
@@ -120,6 +120,7 @@ Route::name('api.')->group(function () {
             });
         });
     });
+
     /**
      * APP API (/app/*)
      */
@@ -138,7 +139,4 @@ Route::name('api.')->group(function () {
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
         });
     });
-
-
-
 });

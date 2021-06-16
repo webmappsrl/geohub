@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Api\App;
 
+use App\Models\EcTrack;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\App;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AppElbrusConfigJsonTest extends TestCase {
@@ -68,9 +71,108 @@ class AppElbrusConfigJsonTest extends TestCase {
         $json = json_decode($result->getContent());
 
         $this->assertTrue(isset($json->MAP->layers));
-        $this->assertEquals('Mappa', $json->MAP->layers->label);
-        $this->assertEquals('maptile', $json->MAP->layers->type);
-        $this->assertEquals('https://api.webmapp.it/tiles/', $json->MAP->layers->tilesUrl);
+        $this->assertIsArray($json->MAP->layers);
+        $this->assertEquals('Mappa', $json->MAP->layers[0]->label);
+        $this->assertEquals('maptile', $json->MAP->layers[0]->type);
+        $this->assertEquals('https://api.webmapp.it/tiles/', $json->MAP->layers[0]->tilesUrl);
+    }
+
+    /**
+     * Test REPORT section
+     *   "REPORTS": {
+    "enable": true,
+    "url": "https://geohub.webmapp.it/api/usergenerateddata/store",
+    "items": [
+    {
+    "title": "Crea un nuovo waypoint",
+    "success": "Waypoint creato con successo",
+    "url": "https://geohub.webmapp.it/api/usergenerateddata/store",
+    "type": "geohub",
+    "fields": [
+    {
+    "label": "Nome",
+    "name": "title",
+    "mandatory": true,
+    "type": "text",
+    "placeholder": "Scrivi qua il nome del waypoint"
+    },
+    {
+    "label": "Descrizione",
+    "name": "description",
+    "mandatory": true,
+    "type": "textarea",
+    "placeholder": "Descrivi brevemente il waypoint"
+    },
+    {
+    "label": "Foto",
+    "name": "gallery",
+    "mandatory": false,
+    "type": "gallery",
+    "limit": 5,
+    "placeholder": "Aggiungi qualche foto descrittiva del waypoint"
+    }
+    ]
+    }
+    ]
+    }
+     */
+    public function testSectionReports() {
+        $app = App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->REPORTS));
+        $this->assertTrue($json->REPORTS->enable);
+        $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store',$json->REPORTS->url);
+        $this->assertIsArray($json->REPORTS->items);
+        $this->assertCount(1,$json->REPORTS->items);
+    }
+
+    /**
+     * Test GEOLOCATION section
+     *
+     *
+     "GEOLOCATION": {
+    "record": {
+    "enable": true,
+    "export": true,
+    "uploadUrl": "https://geohub.webmapp.it/api/usergenerateddata/store"
+    }
+    }
+     */
+    public function testSectionGeolocation() {
+        $app = App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->GEOLOCATION));
+        $this->assertTrue(isset($json->GEOLOCATION->record));
+        $this->assertTrue($json->GEOLOCATION->record->enable);
+        $this->assertTrue($json->GEOLOCATION->record->export);
+        $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store',$json->GEOLOCATION->record->uploadUrl);
+
+    }
+
+    /**
+     * Test AUTH section
+     *
+     "AUTH": {
+    "enable": true,
+    "loginToGeohub": true
+    }
+     *
+     */
+    public function testSectionAuth() {
+        $app = App::factory()->create();
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->AUTH));
+        $this->assertTrue($json->AUTH->enable);
+        $this->assertTrue($json->AUTH->loginToGeohub);
     }
 
     /**
@@ -162,5 +264,62 @@ class AppElbrusConfigJsonTest extends TestCase {
 
         $this->assertTrue(isset($json->ROUTING));
         $this->assertFalse($json->ROUTING->enable);
+    }
+
+    public function testBBoxWithOneTrackSquare() {
+        $user=User::factory()->create();
+        $app=App::factory()->create();
+        $app->user_id=$user->id; $app->save();
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 10 10)'))")]);
+        $track->user_id=$user->id; $track->save();
+
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->MAP->bbox));
+        $this->assertEquals(0,$json->MAP->bbox[0]);
+        $this->assertEquals(0,$json->MAP->bbox[1]);
+        $this->assertEquals(10,$json->MAP->bbox[2]);
+        $this->assertEquals(10,$json->MAP->bbox[3]);
+
+    }
+    public function testBBoxWithOneTrackRectangle() {
+        $user=User::factory()->create();
+        $app=App::factory()->create();
+        $app->user_id=$user->id; $app->save();
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0, 3 4)'))")]);
+        $track->user_id=$user->id; $track->save();
+
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->MAP->bbox));
+        $this->assertEquals(1,$json->MAP->bbox[0]);
+        $this->assertEquals(0,$json->MAP->bbox[1]);
+        $this->assertEquals(3,$json->MAP->bbox[2]);
+        $this->assertEquals(4,$json->MAP->bbox[3]);
+
+    }
+    public function testBBoxWithTwoTrack() {
+        $user=User::factory()->create();
+        $app=App::factory()->create();
+        $app->user_id=$user->id; $app->save();
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track->user_id=$user->id; $track->save();
+        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1->user_id=$user->id; $track1->save();
+
+        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = json_decode($result->getContent());
+
+        $this->assertTrue(isset($json->MAP->bbox));
+        $this->assertEquals(0,$json->MAP->bbox[0]);
+        $this->assertEquals(0,$json->MAP->bbox[1]);
+        $this->assertEquals(3,$json->MAP->bbox[2]);
+        $this->assertEquals(3,$json->MAP->bbox[3]);
+
     }
 }
