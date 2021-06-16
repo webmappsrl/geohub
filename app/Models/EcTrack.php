@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symm\Gisconverter\Decoders\WKT;
 
 class EcTrack extends Model
 {
@@ -103,7 +104,15 @@ class EcTrack extends Model
         $geometry = null;
         if ($fileContent) {
             $content = json_decode($fileContent);
-            $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "')))");
+            switch ($content->type) {
+                case "FeatureCollection":
+                    $contentGeometry = $content->features[0]->geometry;
+                    break;
+                default:
+                    $contentGeometry = $content->geometry;
+                    break;
+            }
+            $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
         }
 
         return $geometry;

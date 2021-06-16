@@ -100,6 +100,26 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
+    public function testLoadFeatureCollectionGeojsonFile()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $this->assertIsObject($ecTrack);
+
+        $name = 'featureCollection.geojson';
+        $stub = __DIR__ . '/Stubs/' . $name;
+        $path = sys_get_temp_dir() . '/' . $name;
+
+        copy($stub, $path);
+
+        $file = new UploadedFile($path, $name, 'application/json', null, true);
+        $content = $file->getContent();
+        $this->assertJson($content);
+      
+        $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->geometry = $geometry;
+        $ecTrack->save();
+    }
+
     // public function testLoadGpxFile()
     // {
     //     $ecTrack = EcTrack::factory()->create();
