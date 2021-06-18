@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use Davidpiesse\NovaToggle\Toggle;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -17,6 +19,16 @@ use Yna\NovaSwatches\Swatches;
 
 class App extends Resource
 {
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->hasRole('Admin')) {
+            $query = parent::indexQuery($request, $query);
+            return $query;
+        } else {
+            $query = parent::indexQuery($request, $query);
+            return $query->where('user_id', $request->user()->id);
+        }
+    }
 
     /**
      * The model the resource corresponds to.
@@ -24,6 +36,7 @@ class App extends Resource
      * @var string
      */
     public static $model = \App\Models\App::class;
+
 
     /**
      * The single value that should be used to represent the resource when being displayed.
