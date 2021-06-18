@@ -21,12 +21,14 @@ class App extends Resource
 {
     public static function indexQuery(NovaRequest $request, $query)
     {
-        if ($request->user()->hasRole('Admin')) {
+        $user = \App\Models\User::getEmulatedUser();
+        if ($user->hasRole('Admin')) {
             $query = parent::indexQuery($request, $query);
             return $query;
         } else {
+
             $query = parent::indexQuery($request, $query);
-            return $query->where('user_id', $request->user()->id);
+            return $query->where('user_id', $user->id);
         }
     }
 
