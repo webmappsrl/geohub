@@ -15,6 +15,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
+use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
 
@@ -27,7 +28,6 @@ class App extends Resource
             $query = parent::indexQuery($request, $query);
             return $query;
         } else {
-
             $query = parent::indexQuery($request, $query);
             return $query->where('user_id', $user->id);
         }
@@ -70,6 +70,7 @@ class App extends Resource
      */
     public function fields(Request $request)
     {
+
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -80,7 +81,9 @@ class App extends Resource
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('API', $this->api_panel()),
+
         ];
+
     }
 
     protected function app_panel()
@@ -198,16 +201,18 @@ class App extends Resource
                     <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/where.json" target="_blank">Activity</a>
                     <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a>';
             })->asHtml()->onlyOnDetail(),
-            Text::make(__('API List (Tracks)'), function () {
-
-                $html = '';
+            Text::make(__('API List (Tracks)'), function ($tracks) {
                 $tracks = \App\Models\EcTrack::where('user_id', $this->model()->user_id)->get();
+                $html = '';
                 foreach ($tracks as $track) {
                     $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/' . $this->model()->id . '/geojson/ec_track_' . $track->id . '.geojson">' . $track->name . '</a>';
                 }
                 return $html;
             })->asHtml()->onlyOnDetail(),
+
+
         ];
+
     }
 
     /**

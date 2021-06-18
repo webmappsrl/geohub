@@ -669,14 +669,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    metaInfo: function metaInfo() {
-        return {
-            title: 'Import'
-        };
-    },
-    mounted: function mounted() {
-        //
-    }
+  metaInfo: function metaInfo() {
+    return {
+      title: 'Import'
+    };
+  },
+  mounted: function mounted() {
+    //
+  }
 });
 
 /***/ }),
@@ -724,13 +724,11 @@ var render = function() {
           _c(
             "h1",
             { staticClass: "text-white text-4xl text-90 font-light mb-6" },
-            [_vm._v("\n            We're in a black hole.\n        ")]
+            [_vm._v("\n      We're in a black hole. test\n    ")]
           ),
           _vm._v(" "),
           _c("p", { staticClass: "text-white-50% text-lg" }, [
-            _vm._v(
-              "\n            You can edit this tool's component at:\n            "
-            ),
+            _vm._v("\n      You can edit this tool's component at:\n      "),
             _c(
               "code",
               {
@@ -739,7 +737,7 @@ var render = function() {
               },
               [
                 _vm._v(
-                  "\n                /nova-components/Import/resources/js/components/Tool.vue\n            "
+                  "\n        /nova-components/Import/resources/js/components/Tool.vue\n      "
                 )
               ]
             )
