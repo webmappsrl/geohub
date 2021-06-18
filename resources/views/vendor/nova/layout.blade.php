@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ mix('app.css', 'vendor/nova') }}">
     <link rel="stylesheet" href="{{ asset('css/icons/webmapp-icons/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fonts/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <!-- Tool Styles -->
     @foreach(\Laravel\Nova\Nova::availableStyles(request()) as $name => $path)

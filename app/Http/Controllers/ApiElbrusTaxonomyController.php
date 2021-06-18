@@ -17,29 +17,30 @@ use Illuminate\Support\Facades\DB;
 class ApiElbrusTaxonomyController extends Controller
 {
     private $names = [
-        'activity','where','when','who','theme','webmapp_category'
+        'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 
-    public function getTerms(int $app_id,string $taxonomy_name): JsonResponse {
-        $json=[];
-        $code=200;
-        if(!in_array($taxonomy_name,$this->names)) {
-            $code=400;
-            $json=['code'=>$code,'error'=>'Taxonomy name not valid'];
-            return response()->json($json,$code);
+    public function getTerms(int $app_id, string $taxonomy_name): JsonResponse
+    {
+        $json = [];
+        $code = 200;
+        if (!in_array($taxonomy_name, $this->names)) {
+            $code = 400;
+            $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
+            return response()->json($json, $code);
         }
-        $app=App::find($app_id);
-        if(is_null($app)) {
-            $code=404;
-            $json=['code'=>$code,'App NOT found'];
-            return response()->json($json,$code);
+        $app = App::find($app_id);
+        if (is_null($app)) {
+            $code = 404;
+            $json = ['code' => $code, 'App NOT found'];
+            return response()->json($json, $code);
         }
 
-        $terms = $this->_termsByUserId($app,$taxonomy_name);
+        $terms = $this->_termsByUserId($app, $taxonomy_name);
 
-        if(count($terms)>0) {
+        if (count($terms) > 0) {
             foreach ($terms as $tid => $items) {
-                switch($taxonomy_name) {
+                switch ($taxonomy_name) {
                     case 'activity':
                         $tax = TaxonomyActivity::find($tid)->toArray();
                         break;
@@ -61,17 +62,18 @@ class ApiElbrusTaxonomyController extends Controller
                         break;
                 }
                 $tax['items'] = $items;
-                $tax['id'] = $taxonomy_name.'_'.$tid;
-                $json[$taxonomy_name.'_'.$tid]=$tax;
+                $tax['id'] = $taxonomy_name . '_' . $tid;
+                $json[$taxonomy_name . '_' . $tid] = $tax;
             }
         }
 
-        return response()->json($json,$code);
+        return response()->json($json, $code);
     }
 
-    private function _termsByUserId($app,$taxonomy_name) {
+    private function _termsByUserId($app, $taxonomy_name)
+    {
         $terms = [];
-        switch($taxonomy_name) {
+        switch ($taxonomy_name) {
             case 'activity':
                 $table = 'taxonomy_activityables';
                 $tid = 'taxonomy_activity_id';
@@ -110,7 +112,7 @@ class ApiElbrusTaxonomyController extends Controller
                 break;
             default:
                 $table = 'taxonomy_ables';
-                $tid = 'taxonomy__id';
+                $tid = 'taxonomy_id';
                 $fid = 'taxonomy_able_id';
                 $type = 'taxonomy_able_type';
 
@@ -121,9 +123,9 @@ class ApiElbrusTaxonomyController extends Controller
          WHERE $type='App\Models\EcTrack' 
          AND $fid IN (select id from ec_tracks where user_id=$app->user_id)
          ");
-        if(count($res)>0) {
-            foreach($res as $item) {
-                $terms[$item->tid]['track'][]='ec_track_'.$item->fid;
+        if (count($res) > 0) {
+            foreach ($res as $item) {
+                $terms[$item->tid]['track'][] = 'ec_track_' . $item->fid;
             }
         }
         return $terms;
