@@ -17,6 +17,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 /**
  * Class BaseWorldSeeder
@@ -80,7 +81,26 @@ class BaseWorldSeeder extends Seeder
         App::factory(10)->create();
 
         // Complex case for APP
-        $user = User::factory()->create();
+        $user=User::where('email','=','editor@webmapp.it')->first();
+        if(is_null($user)) {
+            $user = User::factory()->create([
+                'email'=>'editor@webmapp.it',
+                'name'=>'Editor Webmapp',
+                'password'=>bcrypt('webmapp'),
+            ]);
+            // Give Editor role
+            $res = DB::select("SELECT id from roles where name='Editor'");
+            $editor_id = $res[0]->id;
+            $tableNames = config('permission.table_names');
+            $modelHasRolesTableName = $tableNames['model_has_roles'];
+            DB::table($modelHasRolesTableName)->insert([
+                'role_id' => $editor_id,
+                'model_id' => $user->id,
+                'model_type' => User::class
+            ]);
+
+        }
+
         $activity = TaxonomyActivity::factory()->create();
 
         $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
