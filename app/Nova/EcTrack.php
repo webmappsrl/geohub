@@ -5,6 +5,7 @@ namespace App\Nova;
 use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -70,9 +71,11 @@ class EcTrack extends Resource
             File::make('Geojson')->store(function (Request $request, $model) {
                 $content = file_get_contents($request->geojson);
                 $geometry = $model->fileToGeometry($content);
-                return [
+                return $geometry ? [
                     'geometry' => $geometry,
-                ];
+                ] : function() {
+                    throw new Exception(__("Il file caricato non è valido."));
+                };
             })->hideFromDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),

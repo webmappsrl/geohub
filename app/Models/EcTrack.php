@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symm\Gisconverter\Decoders\WKT;
+use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
@@ -117,20 +118,23 @@ class EcTrack extends Model
         if ($fileContent) {
             if (substr($fileContent, 0, 5) == "<?xml") {
                 $geojson = '';
-                try {
-                    $geojson = Gisconverter::gpxToGeojson($fileContent);
-                } catch (Exception $ec) {
-                    /** @todo: gestire */
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::gpxToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
                 }
 
-                try {
-                    $geojson = Gisconverter::kmlToGeojson($fileContent);
-                } catch (Exception $ec) {
-                    /** @todo: gestire */
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::kmlToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
                 }
-
-                $content = json_decode($geojson);
-                $contentType = @$content->type;
             } else {
                 $content = json_decode($fileContent);
                 $isJson = json_last_error() === JSON_ERROR_NONE;
@@ -141,12 +145,12 @@ class EcTrack extends Model
 
             if ($contentType) {
                 switch ($contentType) {
-                    case "GeometryCollection":
-                        $contentGeometry = $content->geometries;
-                        $geometry = DB::raw("ST_GeomFromGeoJSON(ST_CollectionExtract(ST_GeomFromText('GEOMETRYCOLLECTION(GEOMETRYCOLLECTION(POINT(0 0)))'),1))");
-                        break;
                     case "FeatureCollection":
                         $contentGeometry = $content->features[0]->geometry;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                    case "LineString":
+                        $contentGeometry = $content;
                         $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
                         break;
                     default:

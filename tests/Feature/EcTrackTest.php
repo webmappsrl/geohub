@@ -16,6 +16,7 @@ use Symm\Gisconverter\Decoders\WKT;
 use Symm\Gisconverter\Geometry\Geometry;
 use Symm\Gisconverter\Geometry\LineString;
 use Symm\Gisconverter\Geometry\Point;
+use Symm\Gisconverter\Gisconverter;
 
 class EcTrackTest extends TestCase
 {
@@ -116,6 +117,24 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
         $this->assertJson($content);
+        $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->geometry = $geometry;
+        $ecTrack->save();
+    }
+
+    public function testLoadGpxFile()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $this->assertIsObject($ecTrack);
+
+        $name = 'ec_track.gpx';
+        $stub = __DIR__ . '/Stubs/' . $name;
+        $path = sys_get_temp_dir() . '/' . $name;
+
+        copy($stub, $path);
+
+        $file = new UploadedFile($path, $name, 'application/json', null, true);
+        $content = $file->getContent();
 
         $geometry = $ecTrack->fileToGeometry($content);
         $ecTrack->geometry = $geometry;
@@ -193,4 +212,22 @@ class EcTrackTest extends TestCase
     //     $ecTrack->geometry = $geometry;
     //     $ecTrack->save();
     // }
+    public function testLoadKmlFile()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $this->assertIsObject($ecTrack);
+
+        $name = 'ec_track.kml';
+        $stub = __DIR__ . '/Stubs/' . $name;
+        $path = sys_get_temp_dir() . '/' . $name;
+
+        copy($stub, $path);
+
+        $file = new UploadedFile($path, $name, 'application/json', null, true);
+        $content = $file->getContent();
+
+        $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->geometry = $geometry;
+        $ecTrack->save();
+    }
 }

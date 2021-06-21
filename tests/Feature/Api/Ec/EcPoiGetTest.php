@@ -85,7 +85,5 @@ KML;
         $kmlResponse = $result->getContent();
 
         $this->assertEquals($kmlResponse, $kml);
-        
-        // $this->assertEquals("geojson", $json->type);
     }
 }
