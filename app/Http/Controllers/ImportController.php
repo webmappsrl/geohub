@@ -13,11 +13,11 @@ class ImportController extends Controller
     public function importGeojson(Request $request)
     {
         if (!$request->geojson)
-            return 'Nessun File caricato';
+            return "Nessun File caricato. <a href='/import'>Torna a import</a>";
         $features = (file_get_contents($request->geojson));
         $features = json_decode($features);
         if ($features->type == "Feature")
-            return 'Il file caricato è una singola Feature. Caricare un geojson FeatureCollection';
+            return "Il file caricato è una singola Feature. Caricare un geojson FeatureCollection. <a href='/import'>Torna a import</a>";
         else
             return view('ImportPreview', ['features' => $features]);
     }
