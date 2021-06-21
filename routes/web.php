@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmulateUserController;
+use App\Http\Controllers\ImportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +19,4 @@ Route::get('/')->name('home');
 Route::prefix('/emulatedUser')->name('emulatedUser.')->group(function () {
     Route::get('/restore', [EmulateUserController::class, 'restore'])->name('restore');
 });
+Route::post('import/geojson', [ImportController::class, 'importGeojson'])->name('import');

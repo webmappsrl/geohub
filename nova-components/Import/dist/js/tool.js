@@ -169,7 +169,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
 
 // exports
 
@@ -657,8 +657,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    };
+  },
   metaInfo: function metaInfo() {
     return {
       title: 'Import'
@@ -699,33 +705,48 @@ var render = function() {
             _c("li", [_vm._v("geojson (FeatureCollection)")])
           ]),
           _vm._v(" "),
-          _c("form", { attrs: { action: "", method: "GET" } }, [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col text-center" }, [
-                _c("input", {
-                  attrs: {
-                    type: "file",
-                    id: "file-geojson",
-                    name: "geojson",
-                    accept: ".geojson"
-                  }
-                }),
-                _vm._v(" "),
-                _c("br")
+          _c(
+            "form",
+            {
+              attrs: {
+                action: "import/geojson",
+                method: "POST",
+                enctype: "multipart/form-data"
+              }
+            },
+            [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col text-center" }, [
+                  _c("input", {
+                    attrs: {
+                      type: "file",
+                      id: "file-geojson",
+                      name: "geojson",
+                      accept: ".geojson"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: { type: "hidden", name: "_token" },
+                    domProps: { value: _vm.csrf }
+                  }),
+                  _vm._v(" "),
+                  _c("br")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-right" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-default text-right",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Confirm")]
+                )
               ])
-            ]),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-right" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-default text-right",
-                  attrs: { type: "submit" }
-                },
-                [_vm._v("Confirm")]
-              )
-            ])
-          ])
+            ]
+          )
         ]
       )
     ],

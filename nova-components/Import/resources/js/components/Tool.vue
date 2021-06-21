@@ -8,10 +8,11 @@
       <ul class="text-white">
         <li>geojson (FeatureCollection)</li>
       </ul>
-      <form action="" method="GET">
+      <form action="import/geojson" method="POST" enctype="multipart/form-data">
         <div class="row">
           <div class="col text-center">
             <input type="file" id="file-geojson" name="geojson" accept=".geojson">
+            <input type="hidden" name="_token" :value="csrf">
             <br>
           </div>
         </div>
@@ -25,6 +26,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    }
+  },
   metaInfo() {
     return {
       title: 'Import',
