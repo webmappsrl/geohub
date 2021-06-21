@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\EcMedia;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
@@ -74,7 +76,7 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
         $this->assertJson($content);
-      
+
         $geometry = $ecTrack->fileToGeometry($content);
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
@@ -94,7 +96,7 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
         $this->assertJson($content);
-      
+
         $geometry = $ecTrack->fileToGeometry($content);
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
@@ -114,10 +116,41 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
         $this->assertJson($content);
-      
+
         $geometry = $ecTrack->fileToGeometry($content);
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
+    }
+
+    /**
+     * 0.1.8.05 Come GC voglio che le tassonomie WHERE si aggiornino automaticamente
+     * quando cambio la geometria del Track perché altrimenti sarebbero potenzialmente sbagliate
+     */
+    public function testEcTrackChangeGeometry()
+    {
+
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+        $ecTrack = new EcTrack(['name' => 'testName']);
+        $ecTrack->id = 1;
+        $ecTrack->save();
+
+        // ALTRO MOCK
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+
+        $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
+        $ecTrack->geometry = $new_geometry;
+        $ecTrack->save();
+
     }
 
     // public function testLoadGpxFile()
@@ -135,7 +168,7 @@ class EcTrackTest extends TestCase
     //     $content = $file->getContent();
 
     //     $decoder = new WKT();
-      
+
     //     $geometry = $ecTrack->fileToGeometry($content);
     //     $ecTrack->geometry = $geometry;
     //     $ecTrack->save();
@@ -155,7 +188,7 @@ class EcTrackTest extends TestCase
     //     $file = new UploadedFile($path, $name, 'application/json', null, true);
     //     $content = $file->getContent();
     //     $this->assertJson($content);
-      
+
     //     $geometry = $ecTrack->fileToGeometry($content);
     //     $ecTrack->geometry = $geometry;
     //     $ecTrack->save();

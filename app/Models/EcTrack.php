@@ -66,17 +66,27 @@ class EcTrack extends Model
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
         });
 
-        static::updated(function ($ecTrack) {
-            $changes = $ecTrack->getChanges();
-            if (in_array('geometry', $changes)) {
-                try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
-                }
+        static::updating(function ($ecTrack) {
+            try {
+                $hoquServiceProvider = app(HoquServiceProvider::class);
+                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
+
+        /**
+         * static::updated(function ($ecTrack) {
+         * $changes = $ecTrack->getChanges();
+         * if (in_array('geometry', $changes)) {
+         * try {
+         * $hoquServiceProvider = app(HoquServiceProvider::class);
+         * $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+         * } catch (\Exception $e) {
+         * Log::error('An error occurred during a store operation: ' . $e->getMessage());
+         * }
+         * }
+         * }); **/
     }
 
     public function save(array $options = [])
