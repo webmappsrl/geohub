@@ -81,7 +81,7 @@ class App extends Resource
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('API', $this->api_panel()),
-
+            new Panel ('Maps', $this->maps_panel()),
         ];
 
     }
@@ -213,6 +213,17 @@ class App extends Resource
 
         ];
 
+    }
+
+    protected function maps_panel()
+    {
+        return [
+            WmEmbedmapsField::make(__('Map'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                ];
+            })->onlyOnDetail(),
+        ];
     }
 
     /**
