@@ -19,4 +19,9 @@ class ImportController extends Controller
         else
             return view('ImportPreview', ['features' => $features]);
     }
+
+    public function saveImport(Request $request)
+    {
+        dd($request->toArray());
+    }
 }
