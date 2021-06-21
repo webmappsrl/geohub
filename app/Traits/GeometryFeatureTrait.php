@@ -49,17 +49,9 @@ trait GeometryFeatureTrait
     protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
     {
         $model = get_class($this);
-        switch ($format) {
-            case 'kml':
-                $formatCommand = 'ST_AsKML(geometry)';
-                break;
-            default:
-                $formatCommand = 'ST_AsGeoJSON(geometry)';
-                break;
-        }
         $geom = $model::where('id', '=', $this->id)
             ->select(
-                DB::raw($formatCommand . ' as geom')
+                DB::raw("ST_AsGeoJSON(geometry) as geom")
             )
             ->first()
             ->geom;
@@ -71,6 +63,7 @@ trait GeometryFeatureTrait
                     $formattedGeometry = Gisconverter::geojsonToGpx($geom);
                     break;
                 case 'kml':
+                    $formattedGeometry = Gisconverter::geojsonToKml($geom);
                     $name = $description = '';
                     foreach ($keys as $value) {
                         if ($value == 'name') {
@@ -82,7 +75,7 @@ trait GeometryFeatureTrait
                             continue;
                         }
                     }
-                    $formattedGeometry = $name . $description . $geom;
+                    $formattedGeometry = $name . $description . $formattedGeometry;
                     break;
                 default:
                     $formattedGeometry = [

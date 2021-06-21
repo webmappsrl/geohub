@@ -63,8 +63,8 @@ class BaseWorldSeeder extends Seeder
         TaxonomyPoiType::factory(10)->create();
 
         // TODO: taxonomy where with command (must be enrtiched by geomixer through local HOQU and GEOMIXER instance)
-        Artisan::call('geohub:import_and_sync',[
-            'import_method'=>'regioni_italiane',
+        Artisan::call('geohub:import_and_sync', [
+            'import_method' => 'regioni_italiane',
             '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84'
         ]);
 
@@ -81,12 +81,12 @@ class BaseWorldSeeder extends Seeder
         App::factory(10)->create();
 
         // Complex case for APP
-        $user=User::where('email','=','editor@webmapp.it')->first();
-        if(is_null($user)) {
+        $user = User::where('email', '=', 'editor@webmapp.it')->first();
+        if (is_null($user)) {
             $user = User::factory()->create([
-                'email'=>'editor@webmapp.it',
-                'name'=>'Editor Webmapp',
-                'password'=>bcrypt('webmapp'),
+                'email' => 'editor@webmapp.it',
+                'name' => 'Editor Webmapp',
+                'password' => bcrypt('webmapp'),
             ]);
             // Give Editor role
             $res = DB::select("SELECT id from roles where name='Editor'");
@@ -98,26 +98,25 @@ class BaseWorldSeeder extends Seeder
                 'model_id' => $user->id,
                 'model_type' => User::class
             ]);
-
         }
 
         $activity = TaxonomyActivity::factory()->create();
 
-        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
-        $track->user_id=$user->id;
+        $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track->user_id = $user->id;
         $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
 
-        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
-        $track1->user_id=$user->id;
+        $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1->user_id = $user->id;
         $track1->save();
         $track1->taxonomyActivities()->attach([$activity->id]);
 
-        $app = App::factory()->create(); $app->user_id=$user->id;$app->save();
+        $app = App::factory()->create();
+        $app->user_id = $user->id;
+        $app->save();
 
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/config.json to test it from browser.");
-
-
     }
 }
