@@ -432,6 +432,7 @@
     </style>
 </head>
 <body class="antialiased">
+@php $jsonFeature = json_encode($features) @endphp
 
 @foreach($features->features as $feature)
 
@@ -447,11 +448,7 @@
     <a class="btn btn-default btn-danger mx-2" href="/import">Annulla</a>
     <form action="/import/confirm" method="POST">
         @csrf
-        @php
-            foreach ($features->features as $feature){
-        echo '<input type="hidden" name="Features[]" value="'.$feature.'">';
-    }
-        @endphp
+        <input type="hidden" name="features" value="{{$jsonFeature}}"/>
         <button type="submit" class="btn btn-default btn-primary mx-2">Conferma</button>
     </form>
 </div>
