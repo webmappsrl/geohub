@@ -117,7 +117,16 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
         $this->assertJson($content);
+
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+
         $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->id = 1;
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
     }
@@ -136,7 +145,15 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
 
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+
         $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->id = 1;
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
     }
@@ -169,49 +186,8 @@ class EcTrackTest extends TestCase
         $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
         $ecTrack->geometry = $new_geometry;
         $ecTrack->save();
-
     }
 
-    // public function testLoadGpxFile()
-    // {
-    //     $ecTrack = EcTrack::factory()->create();
-    //     $this->assertIsObject($ecTrack);
-
-    //     $name = 'file.gpx';
-    //     $stub = __DIR__ . '/Stubs/' . $name;
-    //     $path = sys_get_temp_dir() . '/' . $name;
-
-    //     copy($stub, $path);
-
-    //     $file = new UploadedFile($path, $name, 'application/json', null, true);
-    //     $content = $file->getContent();
-
-    //     $decoder = new WKT();
-
-    //     $geometry = $ecTrack->fileToGeometry($content);
-    //     $ecTrack->geometry = $geometry;
-    //     $ecTrack->save();
-    // }
-
-    // public function testLoadKmlFile()
-    // {
-    //     $ecTrack = EcTrack::factory()->create();
-    //     $this->assertIsObject($ecTrack);
-
-    //     $stub = __DIR__ . '/Stubs/kml.geojson';
-    //     $name = 'kml.geojson';
-    //     $path = sys_get_temp_dir() . '/' . $name;
-
-    //     copy($stub, $path);
-
-    //     $file = new UploadedFile($path, $name, 'application/json', null, true);
-    //     $content = $file->getContent();
-    //     $this->assertJson($content);
-
-    //     $geometry = $ecTrack->fileToGeometry($content);
-    //     $ecTrack->geometry = $geometry;
-    //     $ecTrack->save();
-    // }
     public function testLoadKmlFile()
     {
         $ecTrack = EcTrack::factory()->create();
@@ -226,8 +202,40 @@ class EcTrackTest extends TestCase
         $file = new UploadedFile($path, $name, 'application/json', null, true);
         $content = $file->getContent();
 
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+
         $geometry = $ecTrack->fileToGeometry($content);
+        $ecTrack->id = 1;
         $ecTrack->geometry = $geometry;
         $ecTrack->save();
+    }
+
+    public function testOsmidFields()
+    {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_track', ['id' => 1])
+                ->andReturn(201);
+        });
+
+        $data['id'] = 1;
+        $data['source_id'] = '126402';
+        $data['import_method'] = 'osm';
+        $data['source'] = 'osm';
+        // $data['geometry'] = null;
+
+        $ecTrack = EcTrack::factory()->create($data);
+        // $this->assertIsObject($ecTrack);
+        // $this->assertNotEmpty($ecTrack->geometry);
+        // $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
+        // $this->assertEquals('126402', $properties['source_id']);
+        // $this->assertEquals('osm', $properties['source']);
+        // $this->assertEquals('osm', $properties['import_method']);
     }
 }
