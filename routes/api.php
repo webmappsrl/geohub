@@ -116,7 +116,8 @@ Route::name('api.')->group(function () {
             Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
             Route::prefix('download')->group(function () {
-                Route::get("/{id}/{type?}", [EditorialContentController::class, 'downloadEcTrack'])->name('download');
+                Route::get("/{type}/{id}", [EditorialContentController::class, 'downloadEcTrack'])->name('download.type');
+                Route::get("/{id}", [EditorialContentController::class, 'downloadEcTrack'])->name('download');
             });
         });
     });

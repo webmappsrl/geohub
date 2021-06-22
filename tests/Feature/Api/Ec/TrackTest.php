@@ -84,7 +84,7 @@ class TrackTest extends TestCase
 KML;
 
         $ecTrack = EcTrack::factory()->create($data);
-        $result = $this->getJson('/api/ec/track/download/' . $ecTrack->id . '/gpx', []);
+        $result = $this->getJson('/api/ec/track/download/gpx/' . $ecTrack->id, []);
         $this->assertEquals(200, $result->getStatusCode());
         
         $gpxResponse = $result->getContent();
@@ -104,7 +104,7 @@ KML;
 </kml>
 KML;
         $ecTrack = EcTrack::factory()->create($data);
-        $result = $this->getJson('/api/ec/track/download/' . $ecTrack->id . '/kml', []);
+        $result = $this->getJson('/api/ec/track/download/kml/' . $ecTrack->id, []);
         $this->assertEquals(200, $result->getStatusCode());
         
         $kmlResponse = $result->getContent();

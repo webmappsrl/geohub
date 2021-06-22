@@ -116,20 +116,21 @@ class EditorialContentController extends Controller
         }
         $geojson = $poi->getGeojson();
         // MAPPING
-        $geojson['properties']['id']='ec_poi_'.$poi->id;
+        $geojson['properties']['id'] = 'ec_poi_' . $poi->id;
         $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_phone');
         $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, 'contact_email');
 
         // Add Taxonomies
-        $taxonomies=$this->_getTaxonomies($poi);
-        $geojson['properties']['taxonomy']=$taxonomies;
+        $taxonomies = $this->_getTaxonomies($poi);
+        $geojson['properties']['taxonomy'] = $taxonomies;
         return response()->json($geojson, 200);
     }
 
-    private function _getTaxonomies($obj, $names=['activity','theme','where','who','when','webmapp_category']) {
-        $taxonomies=[];
-        foreach($names as $name) {
-            switch($name){
+    private function _getTaxonomies($obj, $names = ['activity', 'theme', 'where', 'who', 'when', 'webmapp_category'])
+    {
+        $taxonomies = [];
+        foreach ($names as $name) {
+            switch ($name) {
                 case 'activity':
                     $terms = $obj->taxonomyActivities()->pluck('id')->toArray();
                     break;
@@ -149,12 +150,11 @@ class EditorialContentController extends Controller
                     $terms = $obj->taxonomyPoiTypes()->pluck('id')->toArray();
                     break;
             }
-            if(count($terms)>0) {
+            if (count($terms) > 0) {
                 foreach ($terms as $term) {
-                    $taxonomies[$name][]=$name.'_'.$term;
+                    $taxonomies[$name][] = $name . '_' . $term;
                 }
             }
-
         }
         return $taxonomies;
     }
@@ -175,7 +175,7 @@ class EditorialContentController extends Controller
         }
         $geojson = $track->getGeojson();
         // MAPPING COLON
-        $geojson['properties']['id']='ec_track_'.$track->id;
+        $geojson['properties']['id'] = 'ec_track_' . $track->id;
         $fields = [
             'ele_from', 'ele_to', 'ele_max', 'ele_min', 'duration_forward', 'duration_backward'
         ];
@@ -183,8 +183,8 @@ class EditorialContentController extends Controller
             $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, $field);
         }
         // Add Taxonomies
-        $taxonomies=$this->_getTaxonomies($track,$names=['activity','theme','where','who','when']);
-        $geojson['properties']['taxonomy']=$taxonomies;
+        $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
+        $geojson['properties']['taxonomy'] = $taxonomies;
         return response()->json($geojson, 200);
     }
 
@@ -382,8 +382,13 @@ class EditorialContentController extends Controller
      * 
      * @return Response
      */
-    public function downloadEcTrack(Request $request, int $id, string $format = 'geojson')
+    public function downloadEcTrack(Request $request, string $format = 'geojson', int $id = 0)
     {
+        if (intval($format) > 0) {
+            $id = intval($format);
+            $format = 'geojson';
+        }
+
         $ecTrack = EcTrack::find($id);
 
         $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
@@ -393,9 +398,9 @@ class EditorialContentController extends Controller
 
         $headers = [];
         $downloadUrls = [
-            'geojson' => route('api.ec.track.download', ['id' => $id, 'type' => 'geojson']),
-            'kml' => route('api.ec.track.download', ['id' => $id, 'type' => 'kml']),
-            'gpx' => route('api.ec.track.download', ['id' => $id, 'type' => 'gpx']),
+            'geojson' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'geojson']),
+            'kml' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'kml']),
+            'gpx' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'gpx']),
         ];
         switch ($format) {
             case 'gpx';
