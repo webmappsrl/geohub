@@ -2,12 +2,9 @@
 
 namespace Tests\Feature\Api\Ec;
 
-use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
-use App\Models\UgcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TrackTest extends TestCase
@@ -71,5 +68,12 @@ class TrackTest extends TestCase
         $tracks = $where->ecTrack;
         $this->assertCount(1, $tracks);
         $this->assertSame($ecTrack->id, $tracks->first()->id);
+    }
+
+    public function testDownloadGpxData()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $result = $this->getJson('/api/ec/track/download/' . $ecTrack->id . '/gpx', []);
+        $this->assertEquals(200, $result->getStatusCode());
     }
 }
