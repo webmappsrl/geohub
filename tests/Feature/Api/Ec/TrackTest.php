@@ -84,10 +84,10 @@ class TrackTest extends TestCase
 KML;
 
         $ecTrack = EcTrack::factory()->create($data);
-        $result = $this->getJson('/api/ec/track/download/gpx/' . $ecTrack->id, []);
-        $this->assertEquals(200, $result->getStatusCode());
-        
-        $gpxResponse = $result->getContent();
+        $response = $this->get(route("api.ec.track.download.type", ['type' => 'gpx', 'id' => $ecTrack->id]));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $gpxResponse = $response->getContent();
 
         $this->assertEquals($gpxResponse, $gpx);
     }
@@ -104,11 +104,33 @@ KML;
 </kml>
 KML;
         $ecTrack = EcTrack::factory()->create($data);
-        $result = $this->getJson('/api/ec/track/download/kml/' . $ecTrack->id, []);
-        $this->assertEquals(200, $result->getStatusCode());
+        $response = $this->get(route("api.ec.track.download.type", ['type' => 'kml', 'id' => $ecTrack->id]));
+        $this->assertEquals(200, $response->getStatusCode());
         
-        $kmlResponse = $result->getContent();
+        $kmlResponse = $response->getContent();
 
         $this->assertEquals($kmlResponse, $kml);
+    }
+
+    public function testOsmidFields()
+    {
+        $data['source_id'] = '126402';
+        $data['import_method'] = 'osm';
+        $data['source'] = 'osm';
+
+        $ecTrack = EcTrack::factory()->create($data);
+        $response = $this->get(route("api.ec.track.geojson", ['id' => $ecTrack->id]));
+        $this->assertSame(200, $response->status());
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertEquals('126402', $properties['source_id']);
+        $this->assertEquals('osm', $properties['source']);
+        $this->assertEquals('osm', $properties['import_method']);
     }
 }
