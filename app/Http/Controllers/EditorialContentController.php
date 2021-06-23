@@ -54,30 +54,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse return the Ec info
      */
-    public function getEcjson(int $id): JsonResponse
-    {
-        $apiUrl = explode("/", request()->path());
-        try {
-            $model = $this->_getEcModelFromType($apiUrl[2]);
-        } catch (Exception $e) {
-            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
-        }
-
-        $ec = $model::find($id);
-        if (is_null($ec))
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        $ec = $ec->getGeojson();
-        return response()->json($ec);
-    }
-
-    /**
-     * Get Ec info by ID
-     *
-     * @param int $id the Ec id
-     *
-     * @return JsonResponse return the Ec info
-     */
-    public function getEcGeoJson(int $id): JsonResponse
+    public function getEcJson(int $id): JsonResponse
     {
         $apiUrl = explode("/", request()->path());
         try {
@@ -91,11 +68,13 @@ class EditorialContentController extends Controller
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
 
-        $downloadUrls = [
-            'geojson' => route('api.ec.poi.download', ['id' => $id, 'type' => 'geojson']),
-            'kml' => route('api.ec.poi.download', ['id' => $id, 'type' => 'kml']),
-            'gpx' => route('api.ec.poi.download', ['id' => $id, 'type' => 'gpx']),
-        ];
+        if ('media' !== $apiUrl[2]) {
+            $downloadUrls = [
+                'geojson' => route('api.ec.' . $apiUrl[2] . '.download.geojson', ['id' => $id]),
+                'gpx' => route('api.ec.' . $apiUrl[2] . '.download.gpx', ['id' => $id]),
+                'kml' => route('api.ec.' . $apiUrl[2] . '.download.kml', ['id' => $id]),
+            ];
+        }
 
         return response()->json($ec->getGeojson($downloadUrls));
     }
@@ -345,9 +324,9 @@ class EditorialContentController extends Controller
 
         $headers = [];
         $downloadUrls = [
-            'geojson' => route('api.ec.poi.download', ['id' => $id, 'type' => 'geojson']),
-            'kml' => route('api.ec.poi.download', ['id' => $id, 'type' => 'kml']),
-            'gpx' => route('api.ec.poi.download', ['id' => $id, 'type' => 'gpx']),
+            'geojson' => route('api.ec.poi.download.geojson', ['id' => $id]),
+            'gpx' => route('api.ec.poi.download.gpx', ['id' => $id]),
+            'kml' => route('api.ec.poi.download.kml', ['id' => $id]),
         ];
         switch ($format) {
             case 'gpx';
@@ -374,55 +353,138 @@ class EditorialContentController extends Controller
     }
 
     /**
-     * Return geometry formatted by $format.
+     * Return EcTrack JSON.
      * 
-     * @param Request $request the request with data from geomixer POST
+     * @param Request
      * @param int $id
-     * @param string $format
+     * @param array $headers
      * 
-     * @return Response
+     * @return Response.
      */
-    public function downloadEcTrack(Request $request, string $format = 'geojson', int $id = 0)
+    public function viewEcGeojson(Request $request, int $id, array $headers = [])
     {
-        if (intval($format) > 0) {
-            $id = intval($format);
-            $format = 'geojson';
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
         }
 
-        $ecTrack = EcTrack::find($id);
-
         $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        if (is_null($ecTrack)) {
+
+        $ec = $model::find($id);
+        if (is_null($ec)) {
             return $response;
         }
 
-        $headers = [];
         $downloadUrls = [
-            'geojson' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'geojson']),
-            'kml' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'kml']),
-            'gpx' => route('api.ec.track.download.type', ['id' => $id, 'type' => 'gpx']),
+            'geojson' => route('api.ec.' . $apiUrl[2] . '.download.geojson', ['id' => $id]),
+            'gpx' => route('api.ec.' . $apiUrl[2] . '.download.gpx', ['id' => $id]),
+            'kml' => route('api.ec.' . $apiUrl[2] . '.download.kml', ['id' => $id]),
         ];
-        switch ($format) {
-            case 'gpx';
-                $headers['Content-Type'] = 'application/vnd.api+json';
-                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.gpx"';
-                $content = $ecTrack->getGpx();
-                $response = response()->gpx($content, 200, $headers);
-                break;
-            case 'kml';
-                $headers['Content-Type'] = 'application/xml';
-                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.kml"';
-                $content = $ecTrack->getKml();
-                $response = response()->kml($content, 200, $headers);
-                break;
-            default:
-                $headers['Content-Type'] = 'application/vnd.api+json';
-                $headers['Content-Disposition'] = 'attachment; filename="' . $ecTrack->id . '.geojson"';
-                $content = $ecTrack->getGeojson($downloadUrls);
-                $response = response()->json($content, 200, $headers);
-                break;
-        }
+        $content = $ec->getGeojson($downloadUrls);
+        $response = response()->json($content, 200, $headers);
 
         return $response;
+    }
+
+    /**
+     * @param Request
+     * @param int $id
+     * @param array $headers
+     * 
+     * @return Response.
+     */
+    public function viewEcGpx(Request $request, int $id, array $headers = [])
+    {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        $ec = $model::find($id);
+        if (is_null($ec)) {
+            return $response;
+        }
+
+        $content = $ec->getGpx();
+        $response = response()->gpx($content, 200, $headers);
+
+        return $response;
+    }
+
+    /**
+     * @param Request
+     * @param int $id
+     * @param array $headers
+     * 
+     * @return Response.
+     */
+    public function viewEcKml(Request $request, int $id, array $headers = [])
+    {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getEcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        $ec = $model::find($id);
+        if (is_null($ec)) {
+            return $response;
+        }
+
+        $content = $ec->getKml();
+        $response = response()->kml($content, 200, $headers);
+
+        return $response;
+    }
+
+    /**
+     * @param Request
+     * @param int $id
+     * 
+     * @return Response.
+     */
+    public function downloadEcGeojson(Request $request, int $id)
+    {
+        $headers['Content-Type'] = 'application/vnd.api+json';
+        $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.geojson"';
+
+        return $this->viewEcGeojson($request, $id, $headers);
+    }
+
+    /**
+     * @param Request
+     * @param int $id
+     * 
+     * @return Response.
+     */
+    public function downloadEcGpx(Request $request, int $id)
+    {
+        $headers['Content-Type'] = 'application/xml';
+        $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.gpx"';
+
+        return $this->viewEcGpx($request, $id, $headers);
+    }
+
+    /**
+     * @param Request
+     * @param int $id
+     * 
+     * @return Response.
+     */
+    public function downloadEcKml(Request $request, int $id)
+    {
+        $headers['Content-Type'] = 'application/xml';
+        $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
+
+        return $this->viewEcKml($request, $id, $headers);
     }
 }

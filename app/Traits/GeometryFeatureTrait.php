@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Symm\Gisconverter\Decoders\WKT;
 use Symm\Gisconverter\Gisconverter;
 
 trait GeometryFeatureTrait
@@ -89,9 +88,9 @@ trait GeometryFeatureTrait
                         }
                     }
                     if (count($downloadUrls)) {
-                        $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
-                        $formattedGeometry['properties']['kml'] = $downloadUrls['kml'];
-                        $formattedGeometry['properties']['gpx'] = $downloadUrls['gpx'];
+                        $formattedGeometry['properties']['download_geojson'] = $downloadUrls['geojson'];
+                        $formattedGeometry['properties']['download_kml'] = $downloadUrls['kml'];
+                        $formattedGeometry['properties']['download_gpx'] = $downloadUrls['gpx'];
                     }
                     break;
             }
