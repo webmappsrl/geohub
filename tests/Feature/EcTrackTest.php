@@ -224,15 +224,16 @@ class EcTrackTest extends TestCase
                 ->andReturn(201);
         });
 
-        $data['id'] = 1;
-        $data['source_id'] = '126402';
-        $data['import_method'] = 'osm';
-        $data['source'] = 'osm';
-        // $data['geometry'] = null;
+        $ecTrack = EcTrack::factory()->create();
+        $ecTrack->id = 1;
+        $ecTrack->source_id = 'relation/126402';
+        $ecTrack->import_method = 'osm';
+        $ecTrack->save();
+        
+        $this->assertIsObject($ecTrack);
+        $this->assertNotEmpty($ecTrack->geometry);
 
-        $ecTrack = EcTrack::factory()->create($data);
-        // $this->assertIsObject($ecTrack);
-        // $this->assertNotEmpty($ecTrack->geometry);
+        
         // $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
         // $this->assertEquals('126402', $properties['source_id']);
         // $this->assertEquals('osm', $properties['source']);

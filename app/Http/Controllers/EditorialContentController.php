@@ -266,12 +266,29 @@ class EditorialContentController extends Controller
     public function updateEcTrack(Request $request, $id)
     {
         $ecTrack = EcTrack::find($id);
-        if (is_null($ecTrack))
+        if (is_null($ecTrack)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
         if (!empty($request->where_ids)) {
             $ecTrack->taxonomyWheres()->sync($request->where_ids);
         }
+
+        /**
+         * @todo: ATTENZIONE al loop sul salvataggio della geometry!!!
+         */
+        if (
+            !is_null($request->geometry)
+            && is_array($request->geometry)
+            && isset($request->geometry['type'])
+            && isset($request->geometry['coordinates'])
+        ) {
+            $ecTrack->skip_update = true;
+            $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
+        }
+
         $ecTrack->distance_comp = $request->distance_comp;
+
         $ecTrack->save();
     }
 
