@@ -79,10 +79,10 @@ KML;
         $ecPoi = EcPoi::factory()->create($data);
         $this->assertIsObject($ecPoi);
 
-        $result = $this->getJson('/api/ec/poi/download/' . $ecPoi->id . '/kml', []);
-        $this->assertEquals(200, $result->getStatusCode());
+        $response = $this->get(route("api.ec.poi.download.kml", ['id' => $ecPoi->id]));
+        $this->assertEquals(200, $response->getStatusCode());
         
-        $kmlResponse = $result->getContent();
+        $kmlResponse = $response->getContent();
 
         $this->assertEquals($kmlResponse, $kml);
     }

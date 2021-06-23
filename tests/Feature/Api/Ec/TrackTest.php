@@ -15,7 +15,7 @@ class TrackTest extends TestCase
     public function testGetGeoJson()
     {
         $ecTrack = EcTrack::factory()->create();
-        $response = $this->get(route("api.ec.track.geojson", ['id' => $ecTrack->id]));
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
         $this->assertSame(200, $response->status());
         $json = $response->json();
         $this->assertArrayHasKey('type', $json);
@@ -24,7 +24,7 @@ class TrackTest extends TestCase
 
     public function testGetGeoJsonMissingId()
     {
-        $response = $this->get(route("api.ec.track.geojson", ['id' => 1]));
+        $response = $this->get(route("api.ec.track.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
@@ -84,7 +84,7 @@ class TrackTest extends TestCase
 KML;
 
         $ecTrack = EcTrack::factory()->create($data);
-        $response = $this->get(route("api.ec.track.download.type", ['type' => 'gpx', 'id' => $ecTrack->id]));
+        $response = $this->get(route("api.ec.track.download.gpx", ['id' => $ecTrack->id]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $gpxResponse = $response->getContent();
@@ -104,7 +104,7 @@ KML;
 </kml>
 KML;
         $ecTrack = EcTrack::factory()->create($data);
-        $response = $this->get(route("api.ec.track.download.type", ['type' => 'kml', 'id' => $ecTrack->id]));
+        $response = $this->get(route("api.ec.track.download.kml", ['id' => $ecTrack->id]));
         $this->assertEquals(200, $response->getStatusCode());
         
         $kmlResponse = $response->getContent();
@@ -119,7 +119,7 @@ KML;
         $data['source'] = 'osm';
 
         $ecTrack = EcTrack::factory()->create($data);
-        $response = $this->get(route("api.ec.track.geojson", ['id' => $ecTrack->id]));
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
         $this->assertSame(200, $response->status());
 
         $content = $response->getContent();
