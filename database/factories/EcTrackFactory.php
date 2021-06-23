@@ -29,6 +29,7 @@ class EcTrackFactory extends Factory
         $lng2 = $this->faker->randomFloat(2, 42, 45);
         return [
             'name' => $this->faker->name(),
+            'osm_id' => $this->faker->name(),
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit(),

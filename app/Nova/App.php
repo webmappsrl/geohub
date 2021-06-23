@@ -205,7 +205,14 @@ class App extends Resource
                 $tracks = \App\Models\EcTrack::where('user_id', $this->model()->user_id)->get();
                 $html = '';
                 foreach ($tracks as $track) {
+                    $html .= '<div style="display:flex;margin-top:15px">';
+                    $html .= '<div class="col-3">';
                     $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/' . $this->model()->id . '/geojson/ec_track_' . $track->id . '.geojson">' . $track->name . '</a>';
+                    $html .= '</div>';
+                    $html .= '<div class="col-3">';
+                    $html .= '<a class="btn btn-default btn-secondary mx-2" href="/resources/ec-tracks/' . $track->id . '/edit">Modifica Track</a>';
+                    $html .= '</div>';
+                    $html .= '</div>';
                 }
                 return $html;
             })->asHtml()->onlyOnDetail(),
