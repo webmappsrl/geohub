@@ -79,12 +79,11 @@ class EcTrack extends Resource
             })->hideFromDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            WmEmbedmapsField::make(__('Map'), 'geometry', function () {
-                $model = $this->model();
+            WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
-                    'feature' => $model->id ? $model->getGeojson() : NULL,
+                    'feature' => $model->getGeojson(),
                 ];
-            })->required()->hideFromIndex(),
+            })->onlyOnDetail(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
