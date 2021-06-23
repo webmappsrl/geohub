@@ -73,7 +73,7 @@ class EcTrack extends Resource
                 $geometry = $model->fileToGeometry($content);
                 return $geometry ? [
                     'geometry' => $geometry,
-                ] : function() {
+                ] : function () {
                     throw new Exception(__("Il file caricato non è valido."));
                 };
             })->hideFromDetail(),
@@ -93,7 +93,7 @@ class EcTrack extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-            
+
             Text::make(__('Audio'), 'audio', function () {
                 $pathinfo = pathinfo($this->model()->audio);
                 if (isset($pathinfo['extension'])) {

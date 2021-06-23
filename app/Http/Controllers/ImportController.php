@@ -28,10 +28,18 @@ class ImportController extends Controller
         $features = json_decode($request->features);
         foreach ($features->features as $feature) {
             $geometryTracks = json_encode($feature->geometry);
-            EcTrack::create([
-                'name' => $feature->properties->name,
-                'geometry' => DB::raw("(ST_GeomFromGeoJSON('$geometryTracks'))"),
-                'import_method' => 'massive_import']);
+            if (isset($feature->properties->name)) {
+                EcTrack::create([
+                    'name' => $feature->properties->name,
+                    'geometry' => DB::raw("(ST_GeomFromGeoJSON('$geometryTracks'))"),
+                    'import_method' => 'massive_import']);
+            } else {
+                EcTrack::create([
+                    'name' => 'ecTrack_' . date('Y-m-d'),
+                    'geometry' => DB::raw("(ST_GeomFromGeoJSON('$geometryTracks'))"),
+                    'import_method' => 'massive_import']);
+            }
+
         }
         return "Import eseguito con successo <a href='/import'>torna a import</a>";
     }
