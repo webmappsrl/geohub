@@ -435,8 +435,9 @@
 @php $jsonFeature = json_encode($features) @endphp
 
 @foreach($features->features as $feature)
-
-    <h2>Feature Name: {{$feature->properties->name}}</h2>
+    @if(isset($feature->properties->name))
+        <h2>Feature Name: {{$feature->properties->name}}</h2>
+    @endif
     <p>Feature Type: {{$feature->geometry->type}}</p>
     <ul>
         @foreach($feature->geometry->coordinates as $geom)
