@@ -62,6 +62,7 @@ class EcTrack extends Resource
         $fields = [
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('Osm ID'), 'osm_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
