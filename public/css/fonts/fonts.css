@@ -124,3 +124,75 @@
     font-weight: normal;
     font-style: normal;
 }
+
+
+/*SELECT STYLE*/
+#fontFamilyHeader option {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#fontFamilyHeader option[value="Helvetica"],
+#fontFamilyContent option[value="Helvetica"] {
+    font-family: Helvetica;
+}
+
+#fontFamilyHeader option[value="Lato"],
+#fontFamilyContent option[value="Lato"] {
+    font-family: Lato;
+}
+
+#fontFamilyHeader option[value="Merriweather"],
+#fontFamilyContent option[value="Merriweather"] {
+    font-family: Merriweather;
+}
+
+#fontFamilyHeader option[value="Montserrat"],
+#fontFamilyContent option[value="Montserrat"] {
+    font-family: Montserrat;
+}
+
+#fontFamilyHeader option[value="Montserrat Light"],
+#fontFamilyContent option[value="Montserrat Light"] {
+    font-family: Montserrat Light;
+}
+
+#fontFamilyHeader option[value="Noto Sans"],
+#fontFamilyContent option[value="Noto Sans"] {
+    font-family: Noto Sans;
+}
+
+#fontFamilyHeader option[value="Noto Serif"],
+#fontFamilyContent option[value="Noto Serif"] {
+    font-family: Noto Serif;
+}
+
+#fontFamilyHeader option[value="Open Sans"],
+#fontFamilyContent option[value="Open Sans"] {
+    font-family: Open Sans;
+}
+
+#fontFamilyHeader option[value="Roboto"],
+#fontFamilyContent option[value="Roboto"] {
+    font-family: Roboto;
+}
+
+#fontFamilyHeader option[value="Roboto Slab"],
+#fontFamilyContent option[value="Roboto Slab"] {
+    font-family: Roboto Slab;
+}
+
+#fontFamilyHeader option[value="Rubik"],
+#fontFamilyContent option[value="Rubik"] {
+    font-family: Rubik;
+}
+
+#fontFamilyHeader option[value="Sora"],
+#fontFamilyContent option[value="Sora"] {
+    font-family: Sora;
+}
+
+#fontFamilyHeader option[value="Source Sans Pro"],
+#fontFamilyContent option[value="Source Sans Pro"] {
+    font-family: Source Sans Pro;
+}
