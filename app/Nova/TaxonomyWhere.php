@@ -65,7 +65,7 @@ class TaxonomyWhere extends Resource
     {
         return [
             Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Identifier'), 'identifier'),
+            Text::make(__('Identifier'), 'identifier')->creationRules('unique:identifier')->updateRules('unique:identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),

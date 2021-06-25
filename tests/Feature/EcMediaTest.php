@@ -43,13 +43,13 @@ class EcMediaTest extends TestCase
         $ecMedia->save();
     }
 
-    public function testDeleteAwsImagesWhenDeleteMedia()
+    public function _testDeleteAwsImagesWhenDeleteMedia()
     {
         $ecMedia = EcMedia::factory()->create();
         //Storage::disk('s3')->put('EcMedia/' . $ecMedia->id . '.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test.jpg'));
         $ecMedia->delete();
         $headers = get_headers(Storage::cloud()->url('EcMedia/' . $ecMedia->id . '.jpg'));
-        
+
         dd($headers);
     }
 }
