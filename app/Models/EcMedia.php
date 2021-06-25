@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class EcMedia extends Model
 {
@@ -55,6 +56,17 @@ class EcMedia extends Model
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
+        });
+
+        static::deleted(function ($ecMedia) {
+            $originalFile = pathinfo($ecMedia->url);
+            $extension = $originalFile['extension'];
+            Storage::disk('s3')->delete('EcMedia/' . $ecMedia->id . '.' . $extension);
+            Storage::disk('s3')->delete('EcMedia/Resize/108x137/' . $ecMedia->id . '_108x137.' . $extension);
+            Storage::disk('s3')->delete('EcMedia/Resize/108x139/' . $ecMedia->id . '_108x139.' . $extension);
+            Storage::disk('s3')->delete('EcMedia/Resize/118x117/' . $ecMedia->id . '_118x117.' . $extension);
+            Storage::disk('s3')->delete('EcMedia/Resize/118x138/' . $ecMedia->id . '_118x138.' . $extension);
+            Storage::disk('s3')->delete('EcMedia/Resize/225x100/' . $ecMedia->id . '_225x100.' . $extension);
         });
     }
 

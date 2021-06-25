@@ -34,7 +34,8 @@
         "waynestate/nova-ckeditor4-field": "^0.7.0",
         "webmapp/wm-embedmaps-field": "*",
         "ynacorp/nova-swatches": "^1.0",
-        "webmapp/import": "*"
+        "webmapp/import": "*",
+      "ext-fileinfo": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
