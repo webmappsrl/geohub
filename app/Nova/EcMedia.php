@@ -14,6 +14,7 @@ use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -60,8 +61,8 @@ class EcMedia extends Resource
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
+            Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
             Text::make('Url', function () {
