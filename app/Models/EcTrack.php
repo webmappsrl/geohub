@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symm\Gisconverter\Decoders\WKT;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
@@ -68,11 +67,14 @@ class EcTrack extends Model
         });
 
         static::updating(function ($ecTrack) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-            } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            $skip_update = $ecTrack->skip_update;
+            if (!$skip_update) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
             }
         });
 
