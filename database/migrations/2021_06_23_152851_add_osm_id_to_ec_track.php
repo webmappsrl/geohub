@@ -14,7 +14,8 @@ class AddOsmIdToEcTrack extends Migration
     public function up()
     {
         Schema::table('ec_tracks', function (Blueprint $table) {
-            $table->text('osm_id')->nullable();
+            $table->text('source_id')->nullable();
+            $table->text('import_method')->nullable();
         });
     }
 
@@ -26,7 +27,8 @@ class AddOsmIdToEcTrack extends Migration
     public function down()
     {
         Schema::table('ec_tracks', function (Blueprint $table) {
-            $table->dropColumn('osm_id')->nullable();
+            $table->dropColumn('source_id')->nullable();
+            $table->dropColumn('import_method')->nullable();
         });
     }
 }
