@@ -39,10 +39,11 @@ class ImportImagesList extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return array the ids of created media
      */
     public function handle()
     {
+        $createdEcMedia = [];
         $allowedMimeTypes = ['jpeg', 'gif', 'png', 'bmp', 'svg', 'jpg'];
 
         $url = $this->argument('url');
@@ -69,6 +70,7 @@ class ImportImagesList extends Command
                 $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
                 $newEcmedia->save();
                 $this->info("Created EcMedia with id : $newEcmedia->id");
+                $createdEcMedia[] = $newEcmedia->id;
                 unlink(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
             }
         }
@@ -79,5 +81,6 @@ class ImportImagesList extends Command
         } catch (ErrorException $e) {
             $this->info("directory non eliminata. Alcuni file sono ancora presenti nella cartella temporanea");
         }
+        return $createdEcMedia;
     }
 }
