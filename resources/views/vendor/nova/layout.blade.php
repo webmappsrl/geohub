@@ -35,8 +35,18 @@
     @endforeach
 </head>
 <body class="min-w-site bg-40 text-90 font-medium min-h-full">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        @foreach($errors->all('<p>:message</p>') as $error)
+            {{ $error }}
+        @endforeach
+    </div>
+@endif
+
+
 <div id="nova">
     <div v-cloak class="flex min-h-screen">
+
         <!-- Sidebar -->
         <div class="min-h-screen flex-none pt-header min-h-screen w-sidebar bg-grad-sidebar px-6">
             <a href="{{ \Laravel\Nova\Nova::path() }}">
@@ -69,6 +79,11 @@
             </div>
 
             <div data-testid="content" class="px-view py-view mx-auto">
+                @if (isset($_GET['success-ok']) && $_GET['success-ok'] == 1)
+                    <div class="alert alert-success import-success">
+                        <p>Import completato con successo </p>
+                    </div>
+                @endif
                 @yield('content')
 
                 @include('nova::partials.footer')

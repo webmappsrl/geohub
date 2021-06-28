@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EcTrack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -41,6 +42,6 @@ class ImportController extends Controller
             }
 
         }
-        return "Import eseguito con successo <a href='/import'>torna a import</a>";
+        return redirect('/resources/ec-tracks')->with('status', 'Profile updated!');
     }
 }
