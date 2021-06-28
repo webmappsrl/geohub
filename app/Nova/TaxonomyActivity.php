@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -60,6 +61,18 @@ class TaxonomyActivity extends Resource
     public function fields(Request $request)
     {
         return [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create TaxonomyActivity
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+
+
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update TaxonomyActivity
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -84,6 +97,7 @@ class TaxonomyActivity extends Resource
 
         ];
     }
+
 
     protected function ux_ui_panel()
     {

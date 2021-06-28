@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Panel;
 use Vyuldashev\NovaPermission\Permission;
 use Vyuldashev\NovaPermission\PermissionBooleanGroup;
 use Vyuldashev\NovaPermission\Role;
@@ -54,6 +56,18 @@ class User extends Resource
     public function fields(Request $request): array
     {
         return [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create User
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+
+
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update User
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
             //            ID::make()->sortable(),
             //            Gravatar::make()->maxWidth(50),
             Text::make('Name')
@@ -84,6 +98,7 @@ class User extends Resource
             \Laravel\Nova\Fields\HasMany::make('EcTracks'),
         ];
     }
+
 
     /**
      * Get the cards available for the request.

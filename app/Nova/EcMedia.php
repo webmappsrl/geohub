@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphMany;
@@ -58,6 +59,18 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create EcMedia
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update EcMedia
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),

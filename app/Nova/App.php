@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -72,6 +73,7 @@ class App extends Resource
     {
 
         return [
+            new Panel('Actions', $this->action_panel()),
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
@@ -84,6 +86,25 @@ class App extends Resource
             new Panel ('Maps', $this->maps_panel()),
         ];
 
+    }
+
+    protected function action_panel()
+    {
+        return [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create App
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+
+
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update App
+      </span>
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+        ];
     }
 
     protected function app_panel()

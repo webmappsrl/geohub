@@ -9,6 +9,7 @@ use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
@@ -61,6 +62,17 @@ class TaxonomyTarget extends Resource
     public function fields(Request $request)
     {
         return [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create TaxonomyTarget
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+            
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update TaxonomyTarget
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -84,6 +96,7 @@ class TaxonomyTarget extends Resource
             new Panel('UX/UI', $this->ux_ui_panel()),
         ];
     }
+
 
     protected function ux_ui_panel()
     {
