@@ -152,6 +152,30 @@ class EditorialContentController extends Controller
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
+        return response()->json($this->_getElbrusTracksGeojsonComplete($app_id,$track_id), 200);
+    }
+
+    /**
+     * Controller for API api/app/elbrus/{app_id}/geojson/ec_track_{poi_id}.json
+     *
+     * @param int $app_id
+     * @param int $poi_id
+     * @return JsonResponse
+     */
+    public function getElbrusTrackJson(int $app_id, int $track_id): JsonResponse
+    {
+        $app = App::find($app_id);
+        $track = EcTrack::find($track_id);
+        if (is_null($app) || is_null($track)) {
+            return response()->json(['code' => 404, 'error' => 'Not found'], 404);
+        }
+        $geojson = $this->_getElbrusTracksGeojsonComplete($app_id,$track_id);
+        return response()->json($geojson['properties'], 200);
+    }
+
+    private function _getElbrusTracksGeojsonComplete(int $app_id, int $track_id): array {
+        $app = App::find($app_id);
+        $track = EcTrack::find($track_id);
         $geojson = $track->getGeojson();
         // MAPPING COLON
         $geojson['properties']['id'] = 'ec_track_' . $track->id;
@@ -164,7 +188,7 @@ class EditorialContentController extends Controller
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
-        return response()->json($geojson, 200);
+        return $geojson;
     }
 
     /**

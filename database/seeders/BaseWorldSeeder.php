@@ -118,5 +118,6 @@ class BaseWorldSeeder extends Seeder
 
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/config.json to test it from browser.");
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/geojson/ec_track_$track1->id.json to test it from browser.");
     }
 }

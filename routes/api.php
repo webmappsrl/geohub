@@ -139,15 +139,17 @@ Route::name('api.')->group(function () {
     Route::prefix('app')->name('app.')->group(function () {
         /**
          * APP ELBRUS API (/api/app/elbrus/*)
-         * app/elbrus/{id}/config.php
+         * app/elbrus/{id}/config.json
          * app/elbrus/{app_id}/geojson/ec_poi_{poi_id}.geojson
          * app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
+         * app/elbrus/{app_id}/geojson/ec_track_{track_id}.json
          * app/elbrus/{app_id}/{taxonomy_name}.json
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
+            Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson/ec_track/json');
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
         });
     });
