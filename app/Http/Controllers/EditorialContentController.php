@@ -287,6 +287,9 @@ class EditorialContentController extends Controller
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
+        if(isset($request->ele_max)) {
+            $ecTrack->ele_max = $request->ele_max;
+        }
         $ecTrack->distance_comp = $request->distance_comp;
 
         $ecTrack->save();
