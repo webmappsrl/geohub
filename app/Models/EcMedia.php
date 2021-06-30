@@ -136,15 +136,16 @@ class EcMedia extends Model
      *
      * @return string
      */
-    public function getJson(): string {
+    public function getJson(): string
+    {
         $json = [
             'id' => $this->id,
             'url' => $this->url,
             'caption' => $this->description,
-            'api_url' => route('api.ec.media.geojson',['id'=>$this->id],true),
-            'sizes' => json_decode($this->thumbnails,true),
+            'api_url' => route('api.ec.media.geojson', ['id' => $this->id], true),
+            'sizes' => json_decode($this->thumbnails, true),
         ];
+        
         return json_encode($json);
     }
-
 }
