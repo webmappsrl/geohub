@@ -88,9 +88,9 @@ trait GeometryFeatureTrait
                         }
                     }
                     if (count($downloadUrls)) {
-                        $formattedGeometry['properties']['download_geojson'] = $downloadUrls['geojson'];
-                        $formattedGeometry['properties']['download_kml'] = $downloadUrls['kml'];
-                        $formattedGeometry['properties']['download_gpx'] = $downloadUrls['gpx'];
+                        $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
+                        $formattedGeometry['properties']['kml_url'] = $downloadUrls['kml'];
+                        $formattedGeometry['properties']['gpx_url'] = $downloadUrls['gpx'];
                     }
                     break;
             }

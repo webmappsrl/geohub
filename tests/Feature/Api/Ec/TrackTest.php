@@ -149,4 +149,85 @@ KML;
         $this->assertEquals('osm', $properties['source']);
         $this->assertEquals('osm', $properties['import_method']);
     }
+
+    public function testExistsDownloadGeojsonUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['geojson_url']);
+        $this->assertStringContainsString('http', $properties['geojson_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['geojson_url']);
+        $this->assertStringContainsString('download', $properties['geojson_url']);
+    }
+
+    public function testExistsDownloadGpxUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['gpx_url']);
+        $this->assertStringContainsString('http', $properties['gpx_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['gpx_url']);
+        $this->assertStringContainsString('download', $properties['gpx_url']);
+        $this->assertStringContainsString('.gpx', $properties['gpx_url']);
+    }
+
+    public function testExistsDownloadKmlUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['kml_url']);
+        $this->assertStringContainsString('http', $properties['kml_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['kml_url']);
+        $this->assertStringContainsString('download', $properties['kml_url']);
+        $this->assertStringContainsString('.kml', $properties['kml_url']);
+    }
+
+    public function testViewGpxOfTrack()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.view.gpx", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertStringContainsString('<?xml', $content);
+        $this->assertStringContainsString('<gpx', $content);
+        $this->assertStringContainsString('<trk', $content);
+        $this->assertStringContainsString('<trkseg', $content);
+    }
+
+    public function testViewKmlOfTrack()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.view.kml", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertStringContainsString('<?xml', $content);
+        $this->assertStringContainsString('kml', $content);
+        $this->assertStringContainsString('<Placemark', $content);
+        $this->assertStringContainsString('<name', $content);
+        $this->assertStringContainsString('<description', $content);
+    }
 }
