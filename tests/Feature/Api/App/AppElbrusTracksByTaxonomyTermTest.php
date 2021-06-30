@@ -20,7 +20,6 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase
      */
     public function testGetTracksByTaxonomyTerm()
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
         $track1 = EcTrack::factory()->create();
