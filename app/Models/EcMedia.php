@@ -131,4 +131,20 @@ class EcMedia extends Model
         return $this->hasMany(EcTrack::class, 'feature_image');
     }
 
+    /**
+     * Return json to be used in features API.
+     *
+     * @return string
+     */
+    public function getJson(): string {
+        $json = [
+            'id' => $this->id,
+            'url' => $this->url,
+            'caption' => $this->description,
+            'api_url' => route('api.ec.media.geojson',['id'=>$this->id],true),
+            'sizes' => json_decode($this->thumbnails,true),
+        ];
+        return json_encode($json);
+    }
+
 }
