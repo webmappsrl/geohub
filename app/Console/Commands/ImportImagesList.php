@@ -61,10 +61,12 @@ class ImportImagesList extends Command
         $this->info("file unzipped in $tmpzip");
         $fileList = scandir($tmpzip);
         unset($fileList[0], $fileList[1]);
+
         foreach ($fileList as $file) {
             if ($file == '__MACOSX') {
                 continue;
             } elseif (is_dir($tmpzip . '/' . $file)) {
+
                 $dirFileList = scandir($tmpzip . '/' . $file);
                 unset($dirFileList[0], $dirFileList[1]);
                 foreach ($dirFileList as $dirFile) {
@@ -95,7 +97,6 @@ class ImportImagesList extends Command
                         }
                     }
                 }
-
             } else {
                 $pathInfoFile = pathinfo($file);
                 $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
@@ -115,8 +116,9 @@ class ImportImagesList extends Command
                 } catch (ErrorException $e) {
                     $this->info("directory non eliminata. Alcuni file sono ancora presenti nella cartella temporanea");
                 }
-                return $createdEcMedia;
+
             }
         }
+        return $createdEcMedia;
     }
 }
