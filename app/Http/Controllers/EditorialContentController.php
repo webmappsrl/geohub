@@ -86,7 +86,9 @@ class EditorialContentController extends Controller
                     $gallery[] = json_decode($media->getJson(), true);
                 }
 
-                $geojson['properties']['imageGallery'] = $gallery;
+                if (count($gallery)) {
+                    $geojson['properties']['imageGallery'] = $gallery;
+                }
             }
         } else {
             $geojson = $ec->getGeojson([]);
