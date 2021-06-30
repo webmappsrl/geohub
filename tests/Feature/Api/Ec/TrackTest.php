@@ -167,4 +167,23 @@ KML;
         $this->assertStringContainsString($ecTrack->id, $properties['geojson_url']);
         $this->assertStringContainsString('download', $properties['geojson_url']);
     }
+
+    public function testExistsDownloadKmlUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['kml_url']);
+        $this->assertStringContainsString('http', $properties['kml_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['kml_url']);
+        $this->assertStringContainsString('download', $properties['kml_url']);
+        $this->assertStringContainsString('.kml', $properties['kml_url']);
+    }
 }
