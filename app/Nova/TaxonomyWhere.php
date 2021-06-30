@@ -65,18 +65,7 @@ class TaxonomyWhere extends Resource
     public function fields(Request $request): array
     {
         return [
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
-        Create TaxonomyWhere
-      </button>
-      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
-
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
-        Update TaxonomyWhere
-      </button>
-      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+            
 
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Identifier'), 'identifier')->creationRules('unique:identifier')->updateRules('unique:identifier'),

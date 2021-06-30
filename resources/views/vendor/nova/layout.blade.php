@@ -101,6 +101,8 @@
 <!-- Build Nova Instance -->
 <script>
     window.Nova = new CreateNova(config)
+
+
 </script>
 
 <!-- Tool Scripts -->

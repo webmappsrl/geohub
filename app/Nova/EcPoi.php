@@ -61,22 +61,7 @@ class EcPoi extends Resource
     public function fields(Request $request)
     {
         return [
-            new Panel('Actions', $this->action_panel()),
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-   <button type="submit" class="button-fixed btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
-        Create EcPoi
-      </span>
-      </button>
-      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
-
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-    <a tabindex="0" class="btn btn-link dim cursor-pointer text-80 ml-auto mr-6">
-      <button type="submit" class="button-fixed btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
-        Update EcPoi
-      </span>
-      </button>
-      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+            
 
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->required()->sortable(),

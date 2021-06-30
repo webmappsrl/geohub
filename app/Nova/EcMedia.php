@@ -59,17 +59,7 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
-        Create EcMedia
-      </button>
-      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
-        Update EcMedia
-      </button>
-      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+            
 
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
