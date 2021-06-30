@@ -32,3 +32,20 @@ div[data-testid='content'] {
     border: 1px solid transparent;
     border-radius: .25rem;
 }
+
+.button-fixed {
+    position: fixed;
+    right: 5%;
+    top: 7%;
+    z-index: 10;
+}
+
+.box-fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    padding: 10px 30px;
+    border-top-left-radius: 5px;
+    box-shadow: 5px 10px #888888;
+}
