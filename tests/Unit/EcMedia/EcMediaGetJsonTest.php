@@ -19,7 +19,6 @@ class EcMediaGetJsonTest extends TestCase
         $this->assertIsString($json_string);
         $json = json_decode($json_string, true);
 
-
         $this->assertEquals($media->id, $json['id']);
         $this->assertEquals($media->url, $json['url']);
         $this->assertEquals($media->description, $json['caption']);
