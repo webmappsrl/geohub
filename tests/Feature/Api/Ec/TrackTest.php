@@ -168,6 +168,25 @@ KML;
         $this->assertStringContainsString('download', $properties['geojson_url']);
     }
 
+    public function testExistsDownloadGpxUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['gpx_url']);
+        $this->assertStringContainsString('http', $properties['gpx_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['gpx_url']);
+        $this->assertStringContainsString('download', $properties['gpx_url']);
+        $this->assertStringContainsString('.gpx', $properties['gpx_url']);
+    }
+
     public function testExistsDownloadKmlUrl()
     {
         $ecTrack = EcTrack::factory()->create();

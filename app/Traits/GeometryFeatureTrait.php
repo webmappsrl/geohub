@@ -90,7 +90,7 @@ trait GeometryFeatureTrait
                     if (count($downloadUrls)) {
                         $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
                         $formattedGeometry['properties']['kml_url'] = $downloadUrls['kml'];
-                        $formattedGeometry['properties']['download_gpx'] = $downloadUrls['gpx'];
+                        $formattedGeometry['properties']['gpx_url'] = $downloadUrls['gpx'];
                     }
                     break;
             }
