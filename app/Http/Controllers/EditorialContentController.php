@@ -80,6 +80,7 @@ class EditorialContentController extends Controller
             }
 
             if ($ec->ecMedia) {
+                $gallery = [];
                 $ecMedia = $ec->ecMedia;
                 foreach ($ecMedia as $media) {
                     $gallery[] = json_decode($media->getJson(), true);

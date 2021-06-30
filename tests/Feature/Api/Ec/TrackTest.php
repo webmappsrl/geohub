@@ -276,6 +276,7 @@ KML;
 
     public function testFeatureImageWithoutImage()
     {
+        $this->withoutExceptionHandling();
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
