@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhere;
 use App\Models\TaxonomyWhen;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class ApiElbrusTaxonomyController extends Controller
 {
@@ -115,7 +116,6 @@ class ApiElbrusTaxonomyController extends Controller
                 $tid = 'taxonomy_id';
                 $fid = 'taxonomy_able_id';
                 $type = 'taxonomy_able_type';
-
         }
         $res = DB::select("
          SELECT $tid as tid, $fid as fid 
@@ -129,5 +129,72 @@ class ApiElbrusTaxonomyController extends Controller
             }
         }
         return $terms;
+    }
+
+    public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse
+    {
+        $json = [];
+        $code = 200;
+
+        $json['tracks'] = [];
+
+        if (!in_array($taxonomy_name, $this->names)) {
+            $code = 400;
+            $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
+            return response()->json($json, $code);
+        }
+
+        $app = App::find($app_id);
+        if (is_null($app)) {
+            $code = 404;
+            $json = ['code' => $code, 'App NOT found'];
+            return response()->json($json, $code);
+        }
+
+        $term = $this->_getTermByTaxonomy($taxonomy_name, $term_id);
+        if (is_null($term)) {
+            $code = 404;
+            $json = ['code' => $code, 'Term NOT found in taxonomy ' . $taxonomy_name];
+            return response()->json($json, $code);
+        }
+
+        $tracks = $app->listTracksByTerm($term);
+
+        $json['tracks'] = $tracks;
+
+        return response()->json($json, $code);
+    }
+
+    protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id)
+    {
+        $tax = null;
+
+        switch ($taxonomy_name) {
+            case 'activity':
+                $term = TaxonomyActivity::find($term_id);
+                break;
+            case 'theme':
+                $term = TaxonomyTheme::find($term_id);
+                break;
+            case 'where':
+                $term = TaxonomyWhere::find($term_id);
+                unset($term['geometry']);
+                break;
+            case 'who':
+                $term = TaxonomyTarget::find($term_id);
+                break;
+            case 'when':
+                $term = TaxonomyWhen::find($term_id);
+                break;
+            case 'webmapp_category':
+                $term = TaxonomyPoiType::find($term_id);
+                break;
+        }
+
+        if ($term) {
+            $tax = $term->toArray();
+        }
+
+        return $tax;
     }
 }

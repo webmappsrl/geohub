@@ -41,4 +41,20 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
+
+    /**
+     * @todo: differenziare la tassonomia "taxonomyActivities" !!!
+     */
+    public function listTracksByTerm($term)
+    {
+        $query = EcTrack::select('id', 'name', 'excerpt', 'feature_image', 'distance')
+            ->where('user_id', $this->user_id)
+            ->whereHas('taxonomyActivities', function ($q) use ($term) {
+                $q->where('id', $term);
+            });
+
+        $tracks = $query->get();
+
+        return $tracks->toArray();
+    }
 }
