@@ -61,18 +61,7 @@ class TaxonomyWhen extends Resource
     public function fields(Request $request)
     {
         return [
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
-        Create TaxonomyWhen
-      </button>
-      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
-
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
-        Update TaxonomyWhen
-      </button>
-      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+            
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),

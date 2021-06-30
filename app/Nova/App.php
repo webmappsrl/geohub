@@ -73,19 +73,7 @@ class App extends Resource
     {
 
         return [
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-   <button type="submit" class="button-fixed btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
-        Create App
-      </button>
-      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
-
-            Heading::make('<div class="flex items-center" style="text-align: right;display: block;">
-      <button type="submit" class="button-fixed btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
-        Update App
-      </span>
-      </button>
-      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+            
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
