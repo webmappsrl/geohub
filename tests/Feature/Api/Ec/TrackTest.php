@@ -205,4 +205,14 @@ KML;
         $this->assertStringContainsString('download', $properties['kml_url']);
         $this->assertStringContainsString('.kml', $properties['kml_url']);
     }
+
+    public function testViewKmlOfTrack()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.view.kml", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertStringContainsString('<?xml', $content);
+        $this->assertStringContainsString('kml', $content);
+    }
 }
