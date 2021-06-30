@@ -206,6 +206,18 @@ KML;
         $this->assertStringContainsString('.kml', $properties['kml_url']);
     }
 
+    public function testViewGpxOfTrack()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.view.gpx", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertStringContainsString('<?xml', $content);
+        $this->assertStringContainsString('<gpx', $content);
+        $this->assertStringContainsString('<trk', $content);
+        $this->assertStringContainsString('<trkseg', $content);
+    }
+
     public function testViewKmlOfTrack()
     {
         $ecTrack = EcTrack::factory()->create();
@@ -214,5 +226,8 @@ KML;
         $content = $response->getContent();
         $this->assertStringContainsString('<?xml', $content);
         $this->assertStringContainsString('kml', $content);
+        $this->assertStringContainsString('<Placemark', $content);
+        $this->assertStringContainsString('<name', $content);
+        $this->assertStringContainsString('<description', $content);
     }
 }
