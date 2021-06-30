@@ -62,25 +62,61 @@ class ImportImagesList extends Command
         $fileList = scandir($tmpzip);
         unset($fileList[0], $fileList[1]);
         foreach ($fileList as $file) {
-            $pathInfoFile = pathinfo($file);
-            $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
-            if (in_array($pathInfoFile['extension'], $allowedMimeTypes)) {
-                $newEcmedia = EcMedia::create(['name' => $pathInfoFile['filename'], 'url' => '']);
-                Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
-                $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
-                $newEcmedia->save();
-                $this->info("Created EcMedia with id : $newEcmedia->id");
-                $createdEcMedia[] = $newEcmedia->id;
-                unlink(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
+            if ($file == '__MACOSX') {
+                continue;
+            } elseif (is_dir($tmpzip . '/' . $file)) {
+                $dirFileList = scandir($tmpzip . '/' . $file);
+                unset($dirFileList[0], $dirFileList[1]);
+                foreach ($dirFileList as $dirFile) {
+                    if ($dirFile == '.DS_Store') {
+                        $DsStoreFile = array_search('.DS_Store', $dirFileList);
+                        unset($dirFileList[$DsStoreFile]);
+                        unlink(base_path() . '/storage/tmp/imported_images/' . $file . '/.DS_Store');
+                        continue;
+                    }
+
+                    $pathInfoFile = pathinfo($dirFile);
+                    $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $file . '/' . $pathInfoFile['basename']);
+                    if (in_array($pathInfoFile['extension'], $allowedMimeTypes)) {
+                        $newEcmedia = EcMedia::create(['name' => $pathInfoFile['filename'], 'url' => '']);
+                        Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
+                        $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
+                        $newEcmedia->save();
+                        $this->info("Created EcMedia with id : $newEcmedia->id");
+                        $createdEcMedia[] = $newEcmedia->id;
+                        unlink(base_path() . '/storage/tmp/imported_images/' . $file . '/' . $pathInfoFile['basename']);
+                        try {
+                            rmdir(base_path() . '/storage/tmp/imported_images/' . $dirFile);
+                            rmdir(base_path() . '/storage/tmp/imported_images');
+                            rmdir(base_path() . '/storage/tmp');
+                            $this->info("directory eliminata");
+                        } catch (ErrorException $e) {
+                            $this->info("directory non eliminata. Alcuni file sono ancora presenti nella cartella temporanea");
+                        }
+                    }
+                }
+
+            } else {
+                $pathInfoFile = pathinfo($file);
+                $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
+                if (in_array($pathInfoFile['extension'], $allowedMimeTypes)) {
+                    $newEcmedia = EcMedia::create(['name' => $pathInfoFile['filename'], 'url' => '']);
+                    Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
+                    $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
+                    $newEcmedia->save();
+                    $this->info("Created EcMedia with id : $newEcmedia->id");
+                    $createdEcMedia[] = $newEcmedia->id;
+                    unlink(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
+                }
+                try {
+                    rmdir(base_path() . '/storage/tmp/imported_images');
+                    rmdir(base_path() . '/storage/tmp');
+                    $this->info("directory eliminata");
+                } catch (ErrorException $e) {
+                    $this->info("directory non eliminata. Alcuni file sono ancora presenti nella cartella temporanea");
+                }
+                return $createdEcMedia;
             }
         }
-        try {
-            rmdir(base_path() . '/storage/tmp/imported_images');
-            rmdir(base_path() . '/storage/tmp');
-            $this->info("directory eliminata");
-        } catch (ErrorException $e) {
-            $this->info("directory non eliminata. Alcuni file sono ancora presenti nella cartella temporanea");
-        }
-        return $createdEcMedia;
     }
 }
