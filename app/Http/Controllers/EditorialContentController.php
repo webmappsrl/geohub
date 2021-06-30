@@ -350,6 +350,9 @@ class EditorialContentController extends Controller
         if (isset($request->ele_max)) {
             $ecTrack->ele_max = $request->ele_max;
         }
+        if (isset($request->ele_min)) {
+            $ecTrack->ele_min = $request->ele_min;
+        }
         $ecTrack->distance_comp = $request->distance_comp;
 
         $ecTrack->save();

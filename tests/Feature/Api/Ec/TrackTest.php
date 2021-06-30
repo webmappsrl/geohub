@@ -69,6 +69,22 @@ class TrackTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ele_max);
     }
 
+    public function testUpdateEleMin()
+    {
+        $ecTrack = EcTrack::factory()->create(['ele_min' => 0]);
+        $payload = [
+            'ele_min' => 100,
+        ];
+
+        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $ecTrackUpdated = EcTrack::find($ecTrack->id);
+
+        $this->assertEquals(100, $ecTrackUpdated->ele_min);
+    }
+
     public function testSendWheresIdsUpdateWhereRelation()
     {
         $ecTrack = EcTrack::factory()->create();
