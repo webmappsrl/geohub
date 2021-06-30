@@ -75,11 +75,19 @@ class EditorialContentController extends Controller
                 'kml' => route('api.ec.' . $apiUrl[2] . '.download.kml', ['id' => $id]),
             ];
             $geojson = $ec->getGeojson($downloadUrls);
-            if($ec->featureImage) {
-                $geojson['properties']['image']=json_decode($ec->featureImage->getJson(),true);
+            if ($ec->featureImage) {
+                $geojson['properties']['image'] = json_decode($ec->featureImage->getJson(), true);
             }
-        }
-        else {
+
+            if ($ec->ecMedia) {
+                $ecMedia = $ec->ecMedia;
+                foreach ($ecMedia as $media) {
+                    $gallery[] = json_decode($media->getJson(), true);
+                }
+
+                $geojson['properties']['imageGallery'] = $gallery;
+            }
+        } else {
             $geojson = $ec->getGeojson([]);
         }
 
@@ -159,7 +167,7 @@ class EditorialContentController extends Controller
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
-        return response()->json($this->_getElbrusTracksGeojsonComplete($app_id,$track_id), 200);
+        return response()->json($this->_getElbrusTracksGeojsonComplete($app_id, $track_id), 200);
     }
 
     /**
@@ -176,11 +184,12 @@ class EditorialContentController extends Controller
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
-        $geojson = $this->_getElbrusTracksGeojsonComplete($app_id,$track_id);
+        $geojson = $this->_getElbrusTracksGeojsonComplete($app_id, $track_id);
         return response()->json($geojson['properties'], 200);
     }
 
-    private function _getElbrusTracksGeojsonComplete(int $app_id, int $track_id): array {
+    private function _getElbrusTracksGeojsonComplete(int $app_id, int $track_id): array
+    {
         $app = App::find($app_id);
         $track = EcTrack::find($track_id);
         $geojson = $track->getGeojson();
@@ -193,8 +202,8 @@ class EditorialContentController extends Controller
             $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, $field);
         }
         // Add featureImage
-        if($track->featureImage) {
-            $geojson['properties']['image']=json_decode($track->featureImage->getJson(),true);
+        if ($track->featureImage) {
+            $geojson['properties']['image'] = json_decode($track->featureImage->getJson(), true);
         }
 
         // Add Taxonomies
@@ -323,7 +332,7 @@ class EditorialContentController extends Controller
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
-        if(isset($request->ele_max)) {
+        if (isset($request->ele_max)) {
             $ecTrack->ele_max = $request->ele_max;
         }
         $ecTrack->distance_comp = $request->distance_comp;

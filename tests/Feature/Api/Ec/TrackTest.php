@@ -55,7 +55,7 @@ class TrackTest extends TestCase
 
     public function testUpdateEleMax()
     {
-        $ecTrack = EcTrack::factory()->create(['ele_max'=>0]);
+        $ecTrack = EcTrack::factory()->create(['ele_max' => 0]);
         $payload = [
             'ele_max' => 100,
         ];
@@ -123,7 +123,7 @@ KML;
         $ecTrack = EcTrack::factory()->create($data);
         $response = $this->get(route("api.ec.track.download.kml", ['id' => $ecTrack->id]));
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $kmlResponse = $response->getContent();
 
         $this->assertEquals($kmlResponse, $kml);
@@ -155,7 +155,7 @@ KML;
     {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
-        
+
         $content = $response->getContent();
         $this->assertJson($content);
 
@@ -173,7 +173,7 @@ KML;
     {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
-        
+
         $content = $response->getContent();
         $this->assertJson($content);
 
@@ -192,7 +192,7 @@ KML;
     {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
-        
+
         $content = $response->getContent();
         $this->assertJson($content);
 
@@ -211,7 +211,7 @@ KML;
     {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.view.gpx", ['id' => $ecTrack->id]));
-        
+
         $content = $response->getContent();
         $this->assertStringContainsString('<?xml', $content);
         $this->assertStringContainsString('<gpx', $content);
@@ -223,7 +223,7 @@ KML;
     {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.view.kml", ['id' => $ecTrack->id]));
-        
+
         $content = $response->getContent();
         $this->assertStringContainsString('<?xml', $content);
         $this->assertStringContainsString('kml', $content);
@@ -232,12 +232,13 @@ KML;
         $this->assertStringContainsString('<description', $content);
     }
 
-    public function testFeatureImageWithImage() {
+    public function testFeatureImageWithImage()
+    {
         $media = EcMedia::factory()->create();
-        $api_url = route('api.ec.media.geojson',['id'=>$media->id],true);
+        $api_url = route('api.ec.media.geojson', ['id' => $media->id], true);
 
         $ecTrack = EcTrack::factory()->create();
-        $ecTrack->featureImage()->associate($media->id);
+        $ecTrack->featureImage()->associate($media);
         $ecTrack->save();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -248,33 +249,33 @@ KML;
         $properties = $json['properties'];
         $this->assertIsArray($properties);
 
-        $this->assertArrayHasKey('image',$properties);
+        $this->assertArrayHasKey('image', $properties);
         $this->assertIsArray($properties['image']);
-        $image=$properties['image'];
+        $image = $properties['image'];
 
-        $this->assertArrayHasKey('id',$image);
-        $this->assertArrayHasKey('url',$image);
-        $this->assertArrayHasKey('api_url',$image);
-        $this->assertArrayHasKey('caption',$image);
-        $this->assertArrayHasKey('sizes',$image);
+        $this->assertArrayHasKey('id', $image);
+        $this->assertArrayHasKey('url', $image);
+        $this->assertArrayHasKey('api_url', $image);
+        $this->assertArrayHasKey('caption', $image);
+        $this->assertArrayHasKey('sizes', $image);
 
-        $this->assertEquals($media->id,$image['id']);
-        $this->assertEquals($media->description,$image['caption']);
-        $this->assertEquals($media->url,$image['url']);
-        $this->assertEquals($api_url,$image['api_url']);
+        $this->assertEquals($media->id, $image['id']);
+        $this->assertEquals($media->description, $image['caption']);
+        $this->assertEquals($media->url, $image['url']);
+        $this->assertEquals($api_url, $image['api_url']);
 
         // SIZES
         $this->assertIsArray($image['sizes']);
-        $this->assertCount(4,$image['sizes']);
+        $this->assertCount(4, $image['sizes']);
 
-        $this->assertArrayHasKey('108x137',$image['sizes']);
-        $this->assertArrayHasKey('108x148',$image['sizes']);
-        $this->assertArrayHasKey('100x200',$image['sizes']);
-        $this->assertArrayHasKey('original',$image['sizes']);
-
+        $this->assertArrayHasKey('108x137', $image['sizes']);
+        $this->assertArrayHasKey('108x148', $image['sizes']);
+        $this->assertArrayHasKey('100x200', $image['sizes']);
+        $this->assertArrayHasKey('original', $image['sizes']);
     }
 
-    public function testFeatureImageWithoutImage() {
+    public function testFeatureImageWithoutImage()
+    {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -285,7 +286,107 @@ KML;
         $properties = $json['properties'];
         $this->assertIsArray($properties);
 
-        $this->assertArrayNotHasKey('image',$properties);
+        $this->assertArrayNotHasKey('image', $properties);
+    }
 
+    public function testGalleryWithImage()
+    {
+        $media1 = EcMedia::factory()->create();
+        $media2 = EcMedia::factory()->create();
+        $media3 = EcMedia::factory()->create();
+        $api_url1 = route('api.ec.media.geojson', ['id' => $media1], true);
+        $api_url2 = route('api.ec.media.geojson', ['id' => $media2], true);
+        $api_url3 = route('api.ec.media.geojson', ['id' => $media3], true);
+
+        $ecTrack = EcTrack::factory()->create();
+        $ecTrack->ecMedia()->attach($media1);
+        $ecTrack->ecMedia()->attach($media2);
+        $ecTrack->ecMedia()->attach($media3);
+        $ecTrack->save();
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('imageGallery', $properties);
+        $this->assertIsArray($properties['imageGallery']);
+        $gallery = $properties['imageGallery'];
+
+        $this->assertIsArray($gallery);
+        $this->assertCount(3, $gallery);
+        $this->assertArrayHasKey('id', $gallery[0]);
+        $this->assertArrayHasKey('url', $gallery[0]);
+        $this->assertArrayHasKey('api_url', $gallery[0]);
+        $this->assertArrayHasKey('caption', $gallery[0]);
+        $this->assertArrayHasKey('sizes', $gallery[0]);
+
+        $this->assertArrayHasKey('id', $gallery[1]);
+        $this->assertArrayHasKey('url', $gallery[1]);
+        $this->assertArrayHasKey('api_url', $gallery[1]);
+        $this->assertArrayHasKey('caption', $gallery[1]);
+        $this->assertArrayHasKey('sizes', $gallery[1]);
+
+        $this->assertArrayHasKey('id', $gallery[2]);
+        $this->assertArrayHasKey('url', $gallery[2]);
+        $this->assertArrayHasKey('api_url', $gallery[2]);
+        $this->assertArrayHasKey('caption', $gallery[2]);
+        $this->assertArrayHasKey('sizes', $gallery[2]);
+
+        $this->assertEquals($media1->id, $gallery[0]['id']);
+        $this->assertEquals($media1->description, $gallery[0]['caption']);
+        $this->assertEquals($media1->url, $gallery[0]['url']);
+        $this->assertEquals($api_url1, $gallery[0]['api_url']);
+
+        $this->assertEquals($media2->id, $gallery[1]['id']);
+        $this->assertEquals($media2->description, $gallery[1]['caption']);
+        $this->assertEquals($media2->url, $gallery[1]['url']);
+        $this->assertEquals($api_url2, $gallery[1]['api_url']);
+
+        $this->assertEquals($media3->id, $gallery[2]['id']);
+        $this->assertEquals($media3->description, $gallery[2]['caption']);
+        $this->assertEquals($media3->url, $gallery[2]['url']);
+        $this->assertEquals($api_url3, $gallery[2]['api_url']);
+
+        // SIZES
+        $this->assertIsArray($gallery[0]['sizes']);
+        $this->assertCount(4, $gallery[0]['sizes']);
+        $this->assertArrayHasKey('108x137', $gallery[0]['sizes']);
+        $this->assertArrayHasKey('108x148', $gallery[0]['sizes']);
+        $this->assertArrayHasKey('100x200', $gallery[0]['sizes']);
+        $this->assertArrayHasKey('original', $gallery[0]['sizes']);
+
+        $this->assertIsArray($gallery[1]['sizes']);
+        $this->assertCount(4, $gallery[1]['sizes']);
+        $this->assertArrayHasKey('108x137', $gallery[1]['sizes']);
+        $this->assertArrayHasKey('108x148', $gallery[1]['sizes']);
+        $this->assertArrayHasKey('100x200', $gallery[1]['sizes']);
+        $this->assertArrayHasKey('original', $gallery[1]['sizes']);
+
+        $this->assertIsArray($gallery[2]['sizes']);
+        $this->assertCount(4, $gallery[2]['sizes']);
+        $this->assertArrayHasKey('108x137', $gallery[2]['sizes']);
+        $this->assertArrayHasKey('108x148', $gallery[2]['sizes']);
+        $this->assertArrayHasKey('100x200', $gallery[2]['sizes']);
+        $this->assertArrayHasKey('original', $gallery[2]['sizes']);
+    }
+
+    public function testGalleryWithoutImage()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayNotHasKey('imageGallery', $properties);
     }
 }

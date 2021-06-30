@@ -148,7 +148,7 @@ class AppElbrusEcTrackJsonTest extends TestCase
         $api_url = route('api.ec.media.geojson',['id'=>$media->id],true);
 
         $ecTrack = EcTrack::factory()->create();
-        $ecTrack->featureImage()->associate($media->id);
+        $ecTrack->featureImage()->associate($media);
         $ecTrack->save();
 
         $app = App::factory()->create();
