@@ -25,6 +25,12 @@ div[data-testid='content'] {
     border-color: #c3e6cb;
 }
 
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
 .alert {
     position: relative;
     padding: .75rem 1.25rem;

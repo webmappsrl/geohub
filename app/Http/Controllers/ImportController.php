@@ -14,11 +14,11 @@ class ImportController extends Controller
     public function importGeojson(Request $request)
     {
         if (!$request->geojson)
-            return "Nessun File caricato. <a href='/import'>Torna a import</a>";
+            return redirect('/import?error-import=no-file');
         $features = (file_get_contents($request->geojson));
         $features = json_decode($features);
         if ($features->type == "Feature")
-            return "Il file caricato è una singola Feature. Caricare un geojson FeatureCollection. <a href='/import'>Torna a import</a>";
+            return redirect('/import?error-import=no-collection');
         else
             return view('ImportPreview', ['features' => $features]);
     }
@@ -42,6 +42,6 @@ class ImportController extends Controller
             }
 
         }
-        return redirect('/resources/ec-tracks')->with('status', 'Profile updated!');
+        return redirect('/resources/ec-tracks?success-import=1');
     }
 }

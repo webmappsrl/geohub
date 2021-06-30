@@ -21,7 +21,7 @@ class ImportTest extends TestCase
         ]);
         $controller = new ImportController;
         $response = $controller->importGeojson($request);
-        $this->assertEquals($response, "Nessun File caricato. <a href='/import'>Torna a import</a>");
+        $this->followingRedirects()->get('/import?error-import=no-collection')->assertStatus(200);
     }
 
     public function testImportSingleFeature()
@@ -33,7 +33,7 @@ class ImportTest extends TestCase
         $controller = new ImportController;
         $response = $controller->importGeojson($request);
 
-        $this->assertEquals($response, "Il file caricato è una singola Feature. Caricare un geojson FeatureCollection. <a href='/import'>Torna a import</a>");
+        $this->followingRedirects()->get('/resources/ec-tracks?success-import=1')->assertStatus(200);
     }
 
 

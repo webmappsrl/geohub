@@ -79,11 +79,8 @@
             </div>
 
             <div data-testid="content" class="px-view py-view mx-auto">
-                @if (isset($_GET['success-ok']) && $_GET['success-ok'] == 1)
-                    <div class="alert alert-success import-success">
-                        <p>Import completato con successo </p>
-                    </div>
-                @endif
+                @include('nova::partials.alerts')
+
                 @yield('content')
 
                 @include('nova::partials.footer')
