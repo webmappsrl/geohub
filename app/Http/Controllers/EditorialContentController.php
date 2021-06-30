@@ -209,6 +209,18 @@ class EditorialContentController extends Controller
             $geojson['properties']['image'] = json_decode($track->featureImage->getJson(), true);
         }
 
+        if ($track->ecMedia) {
+            $gallery = [];
+            $ecMedia = $track->ecMedia;
+            foreach ($ecMedia as $media) {
+                $gallery[] = json_decode($media->getJson(), true);
+            }
+
+            if (count($gallery)) {
+                $geojson['properties']['imageGallery'] = $gallery;
+            }
+        }
+
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
