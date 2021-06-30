@@ -119,7 +119,7 @@ Route::name('api.')->group(function () {
             });
         });
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
+            Route::get("/{id}.geojson", [EditorialContentController::class, 'getEcJson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
             Route::get("/{id}", [EditorialContentController::class, 'getEcJson'])->name('json');

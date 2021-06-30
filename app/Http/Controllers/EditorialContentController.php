@@ -74,9 +74,16 @@ class EditorialContentController extends Controller
                 'gpx' => route('api.ec.' . $apiUrl[2] . '.download.gpx', ['id' => $id]),
                 'kml' => route('api.ec.' . $apiUrl[2] . '.download.kml', ['id' => $id]),
             ];
+            $geojson = $ec->getGeojson($downloadUrls);
+            if($ec->featureImage) {
+                $geojson['properties']['image']=json_decode($ec->featureImage->getJson(),true);
+            }
+        }
+        else {
+            $geojson = $ec->getGeojson([]);
         }
 
-        return response()->json($ec->getGeojson($downloadUrls));
+        return response()->json($geojson);
     }
 
     /**
@@ -185,6 +192,11 @@ class EditorialContentController extends Controller
         foreach ($fields as $field) {
             $geojson = $this->_mapGeojsonPropertyForElbrusApi($geojson, $field);
         }
+        // Add featureImage
+        if($track->featureImage) {
+            $geojson['properties']['image']=json_decode($track->featureImage->getJson(),true);
+        }
+
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;

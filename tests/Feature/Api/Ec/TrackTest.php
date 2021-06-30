@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Ec;
 
+use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -229,5 +230,62 @@ KML;
         $this->assertStringContainsString('<Placemark', $content);
         $this->assertStringContainsString('<name', $content);
         $this->assertStringContainsString('<description', $content);
+    }
+
+    public function testFeatureImageWithImage() {
+        $media = EcMedia::factory()->create();
+        $api_url = route('api.ec.media.geojson',['id'=>$media->id],true);
+
+        $ecTrack = EcTrack::factory()->create();
+        $ecTrack->featureImage()->associate($media->id);
+        $ecTrack->save();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('image',$properties);
+        $this->assertIsArray($properties['image']);
+        $image=$properties['image'];
+
+        $this->assertArrayHasKey('id',$image);
+        $this->assertArrayHasKey('url',$image);
+        $this->assertArrayHasKey('api_url',$image);
+        $this->assertArrayHasKey('caption',$image);
+        $this->assertArrayHasKey('sizes',$image);
+
+        $this->assertEquals($media->id,$image['id']);
+        $this->assertEquals($media->description,$image['caption']);
+        $this->assertEquals($media->url,$image['url']);
+        $this->assertEquals($api_url,$image['api_url']);
+
+        // SIZES
+        $this->assertIsArray($image['sizes']);
+        $this->assertCount(4,$image['sizes']);
+
+        $this->assertArrayHasKey('108x137',$image['sizes']);
+        $this->assertArrayHasKey('108x148',$image['sizes']);
+        $this->assertArrayHasKey('100x200',$image['sizes']);
+        $this->assertArrayHasKey('original',$image['sizes']);
+
+    }
+
+    public function testFeatureImageWithoutImage() {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayNotHasKey('image',$properties);
+
     }
 }
