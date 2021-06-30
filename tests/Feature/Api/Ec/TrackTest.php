@@ -149,4 +149,22 @@ KML;
         $this->assertEquals('osm', $properties['source']);
         $this->assertEquals('osm', $properties['import_method']);
     }
+
+    public function testExistsDownloadGeojsonUrl()
+    {
+        $ecTrack = EcTrack::factory()->create();
+        $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
+        
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertIsString($properties['geojson_url']);
+        $this->assertStringContainsString('http', $properties['geojson_url']);
+        $this->assertStringContainsString($ecTrack->id, $properties['geojson_url']);
+        $this->assertStringContainsString('download', $properties['geojson_url']);
+    }
 }
