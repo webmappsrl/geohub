@@ -36,7 +36,7 @@ class EcTrack extends Model {
         'duration_forward' => 'float',
         'duration_backward' => 'float',
     ];
-    private bool $skip_update = false;
+    public bool $skip_update = false;
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
