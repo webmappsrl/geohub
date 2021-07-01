@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\App;
 
 use App\Models\App;
+use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
@@ -145,5 +146,68 @@ class AppElbrusEcTrackGeojsonTest extends TestCase {
         $this->assertEquals('when_'.$when->id,$geojson['properties']['taxonomy']['when'][0]);
         $this->assertEquals('where_'.$where->id,$geojson['properties']['taxonomy']['where'][0]);
     }
+
+    public function testFeatureImageWithImage() {
+
+        $media = EcMedia::factory()->create();
+        $api_url = route('api.ec.media.geojson',['id'=>$media->id],true);
+
+        $ecTrack = EcTrack::factory()->create();
+        $ecTrack->featureImage()->associate($media);
+        $ecTrack->save();
+
+        $app = App::factory()->create();
+        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.geojson', []);
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('image',$properties);
+        $this->assertIsArray($properties['image']);
+        $image=$properties['image'];
+
+        $this->assertArrayHasKey('id',$image);
+        $this->assertArrayHasKey('url',$image);
+        $this->assertArrayHasKey('api_url',$image);
+        $this->assertArrayHasKey('caption',$image);
+        $this->assertArrayHasKey('sizes',$image);
+
+        $this->assertEquals($media->id,$image['id']);
+        $this->assertEquals($media->description,$image['caption']);
+        $this->assertEquals($media->url,$image['url']);
+        $this->assertEquals($api_url,$image['api_url']);
+
+        // SIZES
+        $this->assertIsArray($image['sizes']);
+        $this->assertCount(4,$image['sizes']);
+
+        $this->assertArrayHasKey('108x137',$image['sizes']);
+        $this->assertArrayHasKey('108x148',$image['sizes']);
+        $this->assertArrayHasKey('100x200',$image['sizes']);
+        $this->assertArrayHasKey('original',$image['sizes']);
+
+    }
+
+    public function testFeatureImageWithoutImage() {
+        $ecTrack = EcTrack::factory()->create();
+
+        $app = App::factory()->create();
+        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.geojson', []);
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayNotHasKey('image',$properties);
+
+    }
+
 
 }

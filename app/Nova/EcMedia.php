@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -57,11 +59,13 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
+            
+
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Description'), 'description')->hideFromIndex(),
-            Text::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
+            Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
+            Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
             Text::make('Url', function () {

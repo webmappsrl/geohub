@@ -17,6 +17,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 /**
  * Class BaseWorldSeeder
@@ -62,8 +63,8 @@ class BaseWorldSeeder extends Seeder
         TaxonomyPoiType::factory(10)->create();
 
         // TODO: taxonomy where with command (must be enrtiched by geomixer through local HOQU and GEOMIXER instance)
-        Artisan::call('geohub:import_and_sync',[
-            'import_method'=>'regioni_italiane',
+        Artisan::call('geohub:import_and_sync', [
+            'import_method' => 'regioni_italiane',
             '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84'
         ]);
 
@@ -80,24 +81,55 @@ class BaseWorldSeeder extends Seeder
         App::factory(10)->create();
 
         // Complex case for APP
-        $user = User::factory()->create();
-        $activity = TaxonomyActivity::factory()->create();
+        $user = User::where('email', '=', 'editor@webmapp.it')->first();
+        if (is_null($user)) {
+            $user = User::factory()->create([
+                'email' => 'editor@webmapp.it',
+                'name' => 'Editor Webmapp',
+                'password' => bcrypt('webmapp'),
+            ]);
+            // Give Editor role
+            $res = DB::select("SELECT id from roles where name='Editor'");
+            $editor_id = $res[0]->id;
+            $tableNames = config('permission.table_names');
+            $modelHasRolesTableName = $tableNames['model_has_roles'];
+            DB::table($modelHasRolesTableName)->insert([
+                'role_id' => $editor_id,
+                'model_id' => $user->id,
+                'model_type' => User::class
+            ]);
+        }
 
-        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
-        $track->user_id=$user->id;
+        $activity = TaxonomyActivity::factory()->create();
+        $media = EcMedia::factory()->create();
+        $media1 = EcMedia::factory()->create();
+        $media2 = EcMedia::factory()->create();
+
+        $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track->user_id = $user->id;
+        $track->featureImage()->associate($media);
+        $track->ecMedia()->attach($media1);
+        $track->ecMedia()->attach($media2);
         $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
 
-        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
-        $track1->user_id=$user->id;
+        $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1->user_id = $user->id;
+        $track1->featureImage()->associate($media);
+        $track1->ecMedia()->attach($media1);
+        $track1->ecMedia()->attach($media2);
         $track1->save();
         $track1->taxonomyActivities()->attach([$activity->id]);
 
-        $app = App::factory()->create(); $app->user_id=$user->id;$app->save();
+        $app = App::factory()->create();
+        $app->user_id = $user->id;
+        $app->save();
 
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/track_activity_$activity->id.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/config.json to test it from browser.");
-
-
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/geojson/ec_track_$track1->id.json to test it from browser.");
+        Log::info("Access to http://geohub.test/api/ec/track/$track1->id to test it from browser.");
+        Log::info("Access to http://geohub.test/api/ec/track/$track1->id.geojson to test it from browser.");
     }
 }

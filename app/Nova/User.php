@@ -3,18 +3,23 @@
 namespace App\Nova;
 
 use App\Nova\Actions\EmulateUser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Panel;
 use Vyuldashev\NovaPermission\Permission;
 use Vyuldashev\NovaPermission\PermissionBooleanGroup;
 use Vyuldashev\NovaPermission\Role;
 use Vyuldashev\NovaPermission\RoleBooleanGroup;
 use Vyuldashev\NovaPermission\RoleSelect;
 
-class User extends Resource {
+class User extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -36,6 +41,11 @@ class User extends Resource {
         'id', 'name', 'email',
     ];
 
+    public static function group()
+    {
+        return __('Admin');
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -43,8 +53,10 @@ class User extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
+            
             //            ID::make()->sortable(),
             //            Gravatar::make()->maxWidth(50),
             Text::make('Name')
@@ -71,8 +83,11 @@ class User extends Resource {
 
                 return $user->hasRole('Admin');
             }),
+            \Laravel\Nova\Fields\HasMany::make('Apps'),
+            \Laravel\Nova\Fields\HasMany::make('EcTracks'),
         ];
     }
+
 
     /**
      * Get the cards available for the request.
@@ -81,7 +96,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -92,7 +108,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [];
     }
 
@@ -103,7 +120,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -114,7 +132,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [
             (new EmulateUser())
                 ->canSee(function ($request) {

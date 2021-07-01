@@ -106,17 +106,29 @@ Route::name('api.')->group(function () {
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
+            Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
+            Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
+            Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcJson'])->name('json');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcPoi'])->name('update');
             Route::prefix('download')->group(function () {
-                Route::get("/{id}/{type?}", [EditorialContentController::class, 'downloadEcPoi'])->name('download');
+                Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
+                Route::get("/{id}.gpx", [EditorialContentController::class, 'downloadEcGpx'])->name('download.gpx');
+                Route::get("/{id}.kml", [EditorialContentController::class, 'downloadEcKml'])->name('download.kml');
+                Route::get("/{id}", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
             });
         });
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{id}", [EditorialContentController::class, 'getEcGeoJson'])->name('geojson');
+            Route::get("/{id}.geojson", [EditorialContentController::class, 'getEcJson'])->name('view.geojson');
+            Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
+            Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
+            Route::get("/{id}", [EditorialContentController::class, 'getEcJson'])->name('json');
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
             Route::prefix('download')->group(function () {
-                Route::get("/{id}/{type?}", [EditorialContentController::class, 'downloadEcTrack'])->name('download');
+                Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
+                Route::get("/{id}.gpx", [EditorialContentController::class, 'downloadEcGpx'])->name('download.gpx');
+                Route::get("/{id}.kml", [EditorialContentController::class, 'downloadEcKml'])->name('download.kml');
+                Route::get("/{id}", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
             });
         });
     });
@@ -127,15 +139,18 @@ Route::name('api.')->group(function () {
     Route::prefix('app')->name('app.')->group(function () {
         /**
          * APP ELBRUS API (/api/app/elbrus/*)
-         * app/elbrus/{id}/config.php
+         * app/elbrus/{id}/config.json
          * app/elbrus/{app_id}/geojson/ec_poi_{poi_id}.geojson
          * app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
+         * app/elbrus/{app_id}/geojson/ec_track_{track_id}.json
          * app/elbrus/{app_id}/{taxonomy_name}.json
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
+            Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson/ec_track/json');
+            Route::get("/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json", [ApiElbrusTaxonomyController::class, 'getTracksByAppAndTerm'])->name('track.taxonomies');
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
         });
     });

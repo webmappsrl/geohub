@@ -27,4 +27,36 @@ class App extends Model
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
+    public function getGeojson()
+    {
+        $tracks = EcTrack::where('user_id', $this->user_id)->get();
+
+        if (!is_null($tracks)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($tracks as $track) {
+                $features[] = $track->getGeojson();
+            }
+            $geoJson["features"] = $features;
+            return json_encode($geoJson);
+        }
+    }
+
+    /**
+     * @todo: differenziare la tassonomia "taxonomyActivities" !!!
+     */
+    public function listTracksByTerm($term)
+    {
+        $query = EcTrack::where('user_id', $this->user_id)
+            ->whereHas('taxonomyActivities', function ($q) use ($term) {
+                $q->where('id', $term);
+            });
+
+        $tracks = $query->get();
+        $tracks_array = [];
+        foreach($tracks as $track) {
+            $tracks_array[] = json_decode($track->getJson(),true);
+        }
+        return $tracks_array;
+    }
 }

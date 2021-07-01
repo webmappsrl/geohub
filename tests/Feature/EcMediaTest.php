@@ -8,6 +8,7 @@ use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class EcMediaTest extends TestCase
@@ -40,5 +41,15 @@ class EcMediaTest extends TestCase
         $ecMedia = new EcMedia(['name' => 'testName', 'url' => 'testUrl']);
         $ecMedia->id = 1;
         $ecMedia->save();
+    }
+
+    public function _testDeleteAwsImagesWhenDeleteMedia()
+    {
+        $ecMedia = EcMedia::factory()->create();
+        //Storage::disk('s3')->put('EcMedia/' . $ecMedia->id . '.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test.jpg'));
+        $ecMedia->delete();
+        $headers = get_headers(Storage::cloud()->url('EcMedia/' . $ecMedia->id . '.jpg'));
+
+        dd($headers);
     }
 }

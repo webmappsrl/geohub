@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -60,6 +61,8 @@ class EcPoi extends Resource
     public function fields(Request $request)
     {
         return [
+            
+
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -113,6 +116,26 @@ class EcPoi extends Resource
             new Panel('Relations', $this->taxonomies()),
         ];
     }
+
+    protected function action_panel()
+    {
+        return [
+            Heading::make('<div class="flex items-center">
+   <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
+        Create App
+      </button>
+      </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
+
+
+            Heading::make('<div class="flex items-center">
+      <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
+        Update App
+      </span>
+      </button>
+      </div>')->asHtml()->showOnUpdating()->hideWhenCreating()->hideFromDetail(),
+        ];
+    }
+
 
     protected function taxonomies()
     {

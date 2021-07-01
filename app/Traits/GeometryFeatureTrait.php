@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Symm\Gisconverter\Decoders\WKT;
 use Symm\Gisconverter\Gisconverter;
 
 trait GeometryFeatureTrait
@@ -49,26 +48,9 @@ trait GeometryFeatureTrait
     protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
     {
         $model = get_class($this);
-        switch ($format) {
-            case 'gpx':
-                /**
-                 * @todo: trovare la funzione corretta!
-                 */
-                $formatCommand = 'ST_AsGeoJSON(geometry)';
-                $decoder = new WKT();
-                $geometry = $decoder->geomFromText('MULTIPOLYGON(((10 10,10 20,20 20,20 15,10 10)))');
-
-                break;
-            case 'kml':
-                $formatCommand = 'ST_AsKML(geometry)';
-                break;
-            default:
-                $formatCommand = 'ST_AsGeoJSON(geometry)';
-                break;
-        }
         $geom = $model::where('id', '=', $this->id)
             ->select(
-                DB::raw($formatCommand . ' as geom')
+                DB::raw("ST_AsGeoJSON(geometry) as geom")
             )
             ->first()
             ->geom;
@@ -77,10 +59,10 @@ trait GeometryFeatureTrait
             $keys = Schema::getColumnListing($this->getTable());
             switch ($format) {
                 case 'gpx':
-                    $decoder = new WKT();
                     $formattedGeometry = Gisconverter::geojsonToGpx($geom);
                     break;
                 case 'kml':
+                    $formattedGeometry = Gisconverter::geojsonToKml($geom);
                     $name = $description = '';
                     foreach ($keys as $value) {
                         if ($value == 'name') {
@@ -92,7 +74,7 @@ trait GeometryFeatureTrait
                             continue;
                         }
                     }
-                    $formattedGeometry = $name . $description . $geom;
+                    $formattedGeometry = $name . $description . $formattedGeometry;
                     break;
                 default:
                     $formattedGeometry = [
@@ -107,8 +89,8 @@ trait GeometryFeatureTrait
                     }
                     if (count($downloadUrls)) {
                         $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
-                        $formattedGeometry['properties']['kml'] = $downloadUrls['kml'];
-                        $formattedGeometry['properties']['gpx'] = $downloadUrls['gpx'];
+                        $formattedGeometry['properties']['kml_url'] = $downloadUrls['kml'];
+                        $formattedGeometry['properties']['gpx_url'] = $downloadUrls['gpx'];
                     }
                     break;
             }

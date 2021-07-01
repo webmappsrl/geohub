@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symm\Gisconverter\Exceptions\InvalidText;
+use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
 {
@@ -62,9 +66,9 @@ class EcTrack extends Model
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
         });
 
-        static::updated(function ($ecTrack) {
-            $changes = $ecTrack->getChanges();
-            if (in_array('geometry', $changes)) {
+        static::updating(function ($ecTrack) {
+            $skip_update = $ecTrack->skip_update;
+            if (!$skip_update) {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
@@ -73,6 +77,19 @@ class EcTrack extends Model
                 }
             }
         });
+
+        /**
+         * static::updated(function ($ecTrack) {
+         * $changes = $ecTrack->getChanges();
+         * if (in_array('geometry', $changes)) {
+         * try {
+         * $hoquServiceProvider = app(HoquServiceProvider::class);
+         * $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+         * } catch (\Exception $e) {
+         * Log::error('An error occurred during a store operation: ' . $e->getMessage());
+         * }
+         * }
+         * }); **/
     }
 
     public function save(array $options = [])
@@ -92,6 +109,61 @@ class EcTrack extends Model
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
 
         return Storage::cloud()->url($cloudPath);
+    }
+
+    /**
+     * @param string json encoded geometry.
+     */
+    public function fileToGeometry($fileContent = '')
+    {
+        $geometry = $contentType = null;
+        if ($fileContent) {
+            if (substr($fileContent, 0, 5) == "<?xml") {
+                $geojson = '';
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::gpxToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
+                }
+
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::kmlToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
+                }
+            } else {
+                $content = json_decode($fileContent);
+                $isJson = json_last_error() === JSON_ERROR_NONE;
+                if ($isJson) {
+                    $contentType = $content->type;
+                }
+            }
+
+            if ($contentType) {
+                switch ($contentType) {
+                    case "FeatureCollection":
+                        $contentGeometry = $content->features[0]->geometry;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                    case "LineString":
+                        $contentGeometry = $content;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                    default:
+                        $contentGeometry = $content->geometry;
+                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        break;
+                }
+            }
+        }
+
+        return $geometry;
     }
 
     public function ecMedia(): BelongsToMany
@@ -127,5 +199,36 @@ class EcTrack extends Model
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
+
+    /**
+     * Json with properties for API
+     * TODO: unit TEST
+     * @return string
+     */
+    public function getJson(): string {
+        $array = $this->toArray();
+        // Feature Image
+        if($this->featureImage) {
+            $array['image']=json_decode($this->featureImage->getJson(),true);
+        }
+        // Gallery
+        if ($this->ecMedia) {
+            $gallery = [];
+            $ecMedia = $this->ecMedia;
+            foreach ($ecMedia as $media) {
+                $gallery[] = json_decode($media->getJson(), true);
+            }
+            if (count($gallery)) {
+                $array['imageGallery'] = $gallery;
+            }
+        }
+
+        // Elbrus Mapping (_ -> ;)
+        $fields = ['ele:from','ele:to','ele:min','ele:max', 'duration:forward','duration:backward'];
+        foreach($fields as $field) {
+            $array[$field]=$array[preg_replace('/:/','_',$field)];
+        }
+        return json_encode($array);
     }
 }

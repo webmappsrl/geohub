@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ mix('app.css', 'vendor/nova') }}">
     <link rel="stylesheet" href="{{ asset('css/icons/webmapp-icons/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fonts/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <!-- Tool Styles -->
     @foreach(\Laravel\Nova\Nova::availableStyles(request()) as $name => $path)
@@ -34,8 +35,18 @@
     @endforeach
 </head>
 <body class="min-w-site bg-40 text-90 font-medium min-h-full">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        @foreach($errors->all('<p>:message</p>') as $error)
+            {{ $error }}
+        @endforeach
+    </div>
+@endif
+
+
 <div id="nova">
     <div v-cloak class="flex min-h-screen">
+
         <!-- Sidebar -->
         <div class="min-h-screen flex-none pt-header min-h-screen w-sidebar bg-grad-sidebar px-6">
             <a href="{{ \Laravel\Nova\Nova::path() }}">
@@ -68,6 +79,8 @@
             </div>
 
             <div data-testid="content" class="px-view py-view mx-auto">
+                @include('nova::partials.alerts')
+
                 @yield('content')
 
                 @include('nova::partials.footer')
@@ -88,6 +101,8 @@
 <!-- Build Nova Instance -->
 <script>
     window.Nova = new CreateNova(config)
+
+
 </script>
 
 <!-- Tool Scripts -->

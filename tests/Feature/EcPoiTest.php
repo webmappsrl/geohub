@@ -7,6 +7,7 @@ use App\Models\EcPoi;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
@@ -27,6 +28,38 @@ class EcPoiTest extends TestCase
         $ecPoi->save();
     }
 
+    /**
+     * 0.1.7.11 Come GC voglio che le tassonomie WHERE si aggiornino automaticamente
+     * quando cambio la geometria del punto perché altrimenti sarebbero potenzialmente sbagliate
+     */
+    public function testEcPoiChangeGeometry()
+    {
+
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_poi', ['id' => 1])
+                ->andReturn(201);
+        });
+        $geometry = DB::raw("(ST_GeomFromText('POINT(10 43)'))");
+        $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl','geometry'=>$geometry]);
+        $ecPoi->id = 1;
+        $ecPoi->save();
+
+        // ALTRO MOCK
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('enrich_ec_poi', ['id' => 1])
+                ->andReturn(201);
+        });
+
+        $new_geometry = DB::raw("(ST_GeomFromText('POINT(11 44)'))");
+        $ecPoi->geometry= $new_geometry;
+        $ecPoi->save();
+
+    }
+
     public function testSaveEcPoiError()
     {
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -44,12 +77,6 @@ class EcPoiTest extends TestCase
 
     public function testAssociateFeatureImageToPoi()
     {
-        $this->mock(HoquServiceProvider::class, function ($mock) {
-            $mock->shouldReceive('store')
-                ->once()
-                ->with('enrich_ec_poi', ['id' => 1])
-                ->andReturn(201);
-        });
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
 

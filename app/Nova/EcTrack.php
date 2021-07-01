@@ -5,6 +5,7 @@ namespace App\Nova;
 use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -59,8 +61,12 @@ class EcTrack extends Resource
     public function fields(Request $request)
     {
         $fields = [
+           
+
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('Import Method'), 'import_method'),
+            Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
@@ -68,11 +74,13 @@ class EcTrack extends Resource
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
-                $content = json_decode(file_get_contents($request->geojson));
-                $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($content->geometry) . "'))");
-                return [
+                $content = file_get_contents($request->geojson);
+                $geometry = $model->fileToGeometry($content);
+                return $geometry ? [
                     'geometry' => $geometry,
-                ];
+                ] : function () {
+                    throw new Exception(__("Il file caricato non è valido."));
+                };
             })->hideFromDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
@@ -90,7 +98,7 @@ class EcTrack extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
-            
+
             Text::make(__('Audio'), 'audio', function () {
                 $pathinfo = pathinfo($this->model()->audio);
                 if (isset($pathinfo['extension'])) {
@@ -112,6 +120,7 @@ class EcTrack extends Resource
 
         return $fields;
     }
+
 
     protected function taxonomies()
     {
