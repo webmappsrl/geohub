@@ -47,14 +47,16 @@ class App extends Model
      */
     public function listTracksByTerm($term)
     {
-        $query = EcTrack::select('id', 'name', 'excerpt', 'feature_image', 'distance')
-            ->where('user_id', $this->user_id)
+        $query = EcTrack::where('user_id', $this->user_id)
             ->whereHas('taxonomyActivities', function ($q) use ($term) {
                 $q->where('id', $term);
             });
 
         $tracks = $query->get();
-
-        return $tracks->toArray();
+        $tracks_array = [];
+        foreach($tracks as $track) {
+            $tracks_array[] = json_decode($track->getJson(),true);
+        }
+        return $tracks_array;
     }
 }

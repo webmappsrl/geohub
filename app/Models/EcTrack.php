@@ -200,4 +200,35 @@ class EcTrack extends Model
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
+
+    /**
+     * Json with properties for API
+     * TODO: unit TEST
+     * @return string
+     */
+    public function getJson(): string {
+        $array = $this->toArray();
+        // Feature Image
+        if($this->featureImage) {
+            $array['image']=json_decode($this->featureImage->getJson(),true);
+        }
+        // Gallery
+        if ($this->ecMedia) {
+            $gallery = [];
+            $ecMedia = $this->ecMedia;
+            foreach ($ecMedia as $media) {
+                $gallery[] = json_decode($media->getJson(), true);
+            }
+            if (count($gallery)) {
+                $array['imageGallery'] = $gallery;
+            }
+        }
+
+        // Elbrus Mapping (_ -> ;)
+        $fields = ['ele:from','ele:to','ele:min','ele:max', 'duration:forward','duration:backward'];
+        foreach($fields as $field) {
+            $array[$field]=$array[preg_replace('/:/','_',$field)];
+        }
+        return json_encode($array);
+    }
 }

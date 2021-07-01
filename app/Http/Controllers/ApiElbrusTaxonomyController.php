@@ -160,9 +160,7 @@ class ApiElbrusTaxonomyController extends Controller
 
         $tracks = $app->listTracksByTerm($term);
 
-        $json['tracks'] = $tracks;
-
-        return response()->json($json, $code);
+        return response()->json($tracks, $code);
     }
 
     protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id)

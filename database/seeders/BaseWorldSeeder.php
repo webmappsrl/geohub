@@ -102,16 +102,22 @@ class BaseWorldSeeder extends Seeder
 
         $activity = TaxonomyActivity::factory()->create();
         $media = EcMedia::factory()->create();
+        $media1 = EcMedia::factory()->create();
+        $media2 = EcMedia::factory()->create();
 
         $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
         $track->user_id = $user->id;
         $track->featureImage()->associate($media);
+        $track->ecMedia()->attach($media1);
+        $track->ecMedia()->attach($media2);
         $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
 
         $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
         $track1->user_id = $user->id;
         $track1->featureImage()->associate($media);
+        $track1->ecMedia()->attach($media1);
+        $track1->ecMedia()->attach($media2);
         $track1->save();
         $track1->taxonomyActivities()->attach([$activity->id]);
 
@@ -120,6 +126,7 @@ class BaseWorldSeeder extends Seeder
         $app->save();
 
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/activity.json to test it from browser.");
+        Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/taxonomies/track_activity_$activity->id.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/config.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/app/elbrus/$app->id/geojson/ec_track_$track1->id.json to test it from browser.");
         Log::info("Access to http://geohub.test/api/ec/track/$track1->id to test it from browser.");
