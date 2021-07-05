@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,13 +11,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model {
-    use HasFactory, GeometryFeatureTrait;
+    use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
+
+    public $translatable = ['name', 'description', 'excerpt'];
     /**
      * The attributes that should be cast.
      *
