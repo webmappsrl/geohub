@@ -23,6 +23,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
+use Tsungsoft\ErrorMessage\ErrorMessage;
 
 class TaxonomyWhere extends Resource
 {
@@ -65,10 +66,10 @@ class TaxonomyWhere extends Resource
     public function fields(Request $request): array
     {
         return [
-            
+            ErrorMessage::make('Error'),
 
             Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Identifier'), 'identifier')->creationRules('unique:identifier')->updateRules('unique:identifier'),
+            Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),
@@ -95,6 +96,7 @@ class TaxonomyWhere extends Resource
             })->onlyOnDetail(),
 
             new Panel('UX/UI', $this->ux_ui_panel()),
+
         ];
     }
 

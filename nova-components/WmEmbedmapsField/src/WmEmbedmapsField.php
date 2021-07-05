@@ -21,9 +21,11 @@ class WmEmbedmapsField extends Field
         $requestAttribute,
         $model,
         $attribute
-    ) {
+    )
+    {
+        $geometryType = $model::$geometryType ?? 'Point';
 
-        if ($request->exists($requestAttribute)) {
+        if ($request->exists($requestAttribute) && $geometryType === 'Point') {
             list($lat, $lng) = explode(',', $request[$requestAttribute]);
             $model->{$attribute} = DB::raw("ST_GeomFromText('POINT($lat $lng)')");
         }

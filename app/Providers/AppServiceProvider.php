@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 
+\Spatie\NovaTranslatable\Translatable::defaultLocales(['it', 'en']);
+
 define('CONTENT_TYPE_AUDIO_MAPPING', [
     'mpeg' => 'audio/mpeg',
     'mp3' => 'audio/mpeg',

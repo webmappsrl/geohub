@@ -19,17 +19,16 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
-
-class App extends Resource
-{
-    public static function indexQuery(NovaRequest $request, $query)
-    {
+class App extends Resource {
+    public static function indexQuery(NovaRequest $request, $query) {
         $user = \App\Models\User::getEmulatedUser();
         if ($user->hasRole('Admin')) {
             $query = parent::indexQuery($request, $query);
+
             return $query;
         } else {
             $query = parent::indexQuery($request, $query);
+
             return $query->where('user_id', $user->id);
         }
     }
@@ -40,15 +39,12 @@ class App extends Resource
      * @var string
      */
     public static $model = \App\Models\App::class;
-
-
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
-
     /**
      * The columns that should be searched.
      *
@@ -58,8 +54,7 @@ class App extends Resource
         'name',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Editorial Content');
     }
 
@@ -67,13 +62,12 @@ class App extends Resource
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function fields(Request $request)
-    {
-
+    public function fields(Request $request) {
         return [
-            
+
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
@@ -85,11 +79,9 @@ class App extends Resource
             new Panel('API', $this->api_panel()),
             new Panel ('Maps', $this->maps_panel()),
         ];
-
     }
 
-    protected function app_panel()
-    {
+    protected function app_panel() {
         return [
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
@@ -97,8 +89,7 @@ class App extends Resource
         ];
     }
 
-    protected function map_panel()
-    {
+    protected function map_panel() {
         return [
             NovaSliderField::make(__('Max Zoom'), 'maxZoom')->min(5)->max(19)->default(16)->onlyOnForms(),
             NovaSliderField::make(__('Min Zoom'), 'minZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
@@ -110,8 +101,7 @@ class App extends Resource
         ];
     }
 
-    protected function theme_panel()
-    {
+    protected function theme_panel() {
         return [
             Select::make(__('Font Family Header'), 'fontFamilyHeader')->options([
                 'Helvetica' => ['label' => 'Helvetica'],
@@ -148,8 +138,7 @@ class App extends Resource
         ];
     }
 
-    protected function option_panel()
-    {
+    protected function option_panel() {
         return [
             Select::make(__('Start Url'), 'startUrl')->options([
                 '/main/explore' => 'Home',
@@ -176,8 +165,7 @@ class App extends Resource
         ];
     }
 
-    protected function table_panel()
-    {
+    protected function table_panel() {
         return [
             Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
             Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
@@ -185,15 +173,13 @@ class App extends Resource
         ];
     }
 
-    protected function routing_panel()
-    {
+    protected function routing_panel() {
         return [
             Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
-    protected function api_panel()
-    {
+    protected function api_panel() {
         return [
             Text::make(__('API List'), function () {
                 return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
@@ -216,20 +202,18 @@ class App extends Resource
                     $html .= '</div>';
                     $html .= '</div>';
                 }
+
                 return $html;
             })->asHtml()->onlyOnDetail(),
 
-
         ];
-
     }
 
-    protected function maps_panel()
-    {
+    protected function maps_panel() {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
-                    'feature' => $model->getGeojson(),
+                    'features' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
         ];
@@ -239,10 +223,10 @@ class App extends Resource
      * Get the cards available for the request.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -250,10 +234,10 @@ class App extends Resource
      * Get the filters available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [];
     }
 
@@ -261,10 +245,10 @@ class App extends Resource
      * Get the lenses available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -272,10 +256,10 @@ class App extends Resource
      * Get the actions available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }

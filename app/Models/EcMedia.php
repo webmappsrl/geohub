@@ -58,15 +58,23 @@ class EcMedia extends Model
             }
         });
 
-        static::deleted(function ($ecMedia) {
-            $originalFile = pathinfo($ecMedia->url);
-            $extension = $originalFile['extension'];
-            Storage::disk('s3')->delete('EcMedia/' . $ecMedia->id . '.' . $extension);
-            Storage::disk('s3')->delete('EcMedia/Resize/108x137/' . $ecMedia->id . '_108x137.' . $extension);
-            Storage::disk('s3')->delete('EcMedia/Resize/108x139/' . $ecMedia->id . '_108x139.' . $extension);
-            Storage::disk('s3')->delete('EcMedia/Resize/118x117/' . $ecMedia->id . '_118x117.' . $extension);
-            Storage::disk('s3')->delete('EcMedia/Resize/118x138/' . $ecMedia->id . '_118x138.' . $extension);
-            Storage::disk('s3')->delete('EcMedia/Resize/225x100/' . $ecMedia->id . '_225x100.' . $extension);
+        static::deleting(function ($ecMedia) {
+            try {
+                $hoquServiceProvider = app(HoquServiceProvider::class);
+                $hoquServiceProvider->store('delete_ec_media_images', ['url' => $ecMedia->url, 'thumbnails' => $ecMedia->thumbnails]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            }
+            /**
+             * $originalFile = pathinfo($ecMedia->url);
+             * $extension = $originalFile['extension'];
+             * Storage::disk('s3')->delete('EcMedia/' . $ecMedia->id . '.' . $extension);
+             * Storage::disk('s3')->delete('EcMedia/Resize/108x137/' . $ecMedia->id . '_108x137.' . $extension);
+             * Storage::disk('s3')->delete('EcMedia/Resize/108x139/' . $ecMedia->id . '_108x139.' . $extension);
+             * Storage::disk('s3')->delete('EcMedia/Resize/118x117/' . $ecMedia->id . '_118x117.' . $extension);
+             * Storage::disk('s3')->delete('EcMedia/Resize/118x138/' . $ecMedia->id . '_118x138.' . $extension);
+             * Storage::disk('s3')->delete('EcMedia/Resize/225x100/' . $ecMedia->id . '_225x100.' . $extension);
+             **/
         });
     }
 
@@ -145,7 +153,7 @@ class EcMedia extends Model
             'api_url' => route('api.ec.media.geojson', ['id' => $this->id], true),
             'sizes' => json_decode($this->thumbnails, true),
         ];
-        
+
         return json_encode($json);
     }
 }
