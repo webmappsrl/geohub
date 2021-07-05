@@ -33,6 +33,7 @@
         "spatie/laravel-translatable": "^4.6",
         "spatie/nova-translatable": "^3.0",
         "titasgailius/search-relations": "^1.0",
+        "tsungsoft/error-message": "^0.0.3",
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
         "waynestate/nova-ckeditor4-field": "^0.7.0",
