@@ -28,6 +28,7 @@ export default {
     components: {},
     props: {
         feature: String,
+        features: String,
         related: String,
         editable: Boolean
     },
@@ -157,7 +158,7 @@ export default {
             else return [];
         },
         _getPoiStyle(feature) {
-            const isRelated = feature.getId() + "" !== "wm-main-feature";
+            const isRelated = feature.getId() + "" !== "wm-main-feature" && !!this.feature && !this.features && !!this.related;
             let style,
                 color = isRelated ? "#66b3ff" : "#ff0000";
 
@@ -202,7 +203,7 @@ export default {
             return style;
         },
         _getLineStyle(feature) {
-            const isRelated = feature.getId() + "" !== "wm-main-feature";
+            const isRelated = feature.getId() + "" !== "wm-main-feature" && !!this.feature && !this.features && !!this.related;
             let style = [];
 
             let color = isRelated ? "#66b3ff" : "#ff0000",
@@ -226,7 +227,7 @@ export default {
             return style;
         },
         _getPolygonStyle(feature) {
-            const isRelated = feature.getId() + "" !== "wm-main-feature";
+            const isRelated = feature.getId() + "" !== "wm-main-feature" && !!this.feature && !this.features && !!this.related;
 
             let style = [],
                 color = isRelated ? "#66b3ff" : "#ff0000",
@@ -277,6 +278,21 @@ export default {
                     }).readFeatures(this.related);
                     this.vectorSource.addFeatures(related);
                 }
+
+                if (!skip_fit) {
+                    this.view.fit(extent, {
+                        padding: [20, 20, 20, 20]
+                    });
+                }
+            }
+
+            if (!!this.features && this.features.type === 'FeatureCollection') {
+                const features = new GeoJSON({
+                    featureProjection: 'EPSG:3857',
+                }).readFeatures(this.features);
+                this.vectorSource.addFeatures(features);
+
+                const extent = this.vectorSource.getExtent();
 
                 if (!skip_fit) {
                     this.view.fit(extent, {
