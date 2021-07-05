@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
@@ -18,6 +19,7 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Spatie\NovaTranslatable\Translatable;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -64,13 +66,17 @@ class EcTrack extends Resource
            
 
             new Panel('Taxonomies', $this->attach_taxonomy()),
-            Text::make(__('Name'), 'name')->sortable(),
+
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')->sortable(),
+                CKEditor::make(__('Description'), 'description')->hideFromIndex(),
+                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+            ]),
+    
             Text::make(__('Import Method'), 'import_method'),
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
