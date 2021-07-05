@@ -36,7 +36,7 @@ class EcTrackFactory extends Factory
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
             'import_method' => $this->faker->name(),
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING($lat1 $lng1, $lat2 $lng1, $lat2 $lng2, $lat1 $lng2)'))"),
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING($lat1 $lng1 0, $lat2 $lng1 0, $lat2 $lng2 0, $lat1 $lng2 0)'))"),
             'distance' => $this->faker->randomFloat(1, 10, 25),
             'ascent' => $this->faker->randomFloat(0, 300, 1000),
             'descent' => $this->faker->randomFloat(0, 300, 1000),

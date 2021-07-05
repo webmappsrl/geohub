@@ -343,7 +343,7 @@ class EditorialContentController extends Controller
             && isset($request->geometry['type'])
             && isset($request->geometry['coordinates'])
         ) {
-            $ecTrack->skip_update = true;
+            //$ecTrack->skip_update = true;
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
