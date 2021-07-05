@@ -32,22 +32,22 @@ class TaxonomyWhen extends Model
         parent::save($options);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($taxonomyWhen) {
-            $validateTaxonomyWhen = TaxonomyWhen::where('identifier', 'LIKE', $taxonomyWhen->identifier)->first();
-            if (!$validateTaxonomyWhen == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-        static::updating(function ($taxonomyWhen) {
-            $validateTaxonomyWhen = TaxonomyWhen::where('identifier', 'LIKE', $taxonomyWhen->identifier)->first();
-            if (!$validateTaxonomyWhen == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-    }
+    /**protected static function boot()
+     * {
+     * parent::boot();
+     * static::creating(function ($taxonomyWhen) {
+     * $validateTaxonomyWhen = TaxonomyWhen::where('identifier', 'LIKE', $taxonomyWhen->identifier)->first();
+     * if (!$validateTaxonomyWhen == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * static::updating(function ($taxonomyWhen) {
+     * $validateTaxonomyWhen = TaxonomyWhen::where('identifier', 'LIKE', $taxonomyWhen->identifier)->first();
+     * if (!$validateTaxonomyWhen == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * }**/
 
     public function author()
     {
