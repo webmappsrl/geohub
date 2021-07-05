@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,13 +11,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
-class EcTrack extends Model {
-    use HasFactory, GeometryFeatureTrait;
+class EcTrack extends Model
+{
+    use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
+
+    public $translatable = ['name', 'description', 'excerpt'];
     /**
      * The attributes that should be cast.
      *
@@ -36,13 +39,19 @@ class EcTrack extends Model {
         'duration_forward' => 'float',
         'duration_backward' => 'float',
     ];
-    private bool $skip_update = false;
+    public bool $skip_update = false;
 
-    public function __construct(array $attributes = []) {
+
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
     }
 
-    protected static function booted() {
+    public static string $geometryType = 'LineString';
+   
+
+    protected static function booted()
+    {
         parent::booted();
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
@@ -88,15 +97,18 @@ class EcTrack extends Model {
          * }); **/
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         parent::save($options);
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function uploadAudio($file) {
+    public function uploadAudio($file)
+    {
         $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
         $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
@@ -107,7 +119,8 @@ class EcTrack extends Model {
     /**
      * @param string json encoded geometry.
      */
-    public function fileToGeometry($fileContent = '') {
+    public function fileToGeometry($fileContent = '')
+    {
         $geometry = $contentType = null;
         if ($fileContent) {
             if (substr($fileContent, 0, 5) == "<?xml") {
@@ -158,31 +171,38 @@ class EcTrack extends Model {
         return $geometry;
     }
 
-    public function ecMedia(): BelongsToMany {
+    public function ecMedia(): BelongsToMany
+    {
         return $this->belongsToMany(EcMedia::class);
     }
 
-    public function taxonomyWheres() {
+    public function taxonomyWheres()
+    {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function taxonomyWhens() {
+    public function taxonomyWhens()
+    {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyTargets() {
+    public function taxonomyTargets()
+    {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes() {
+    public function taxonomyThemes()
+    {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyActivities() {
+    public function taxonomyActivities()
+    {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
@@ -192,7 +212,8 @@ class EcTrack extends Model {
      *
      * @return string
      */
-    public function getJson(): string {
+    public function getJson(): string
+    {
         $array = $this->toArray();
         // Feature Image
         if ($this->featureImage) {

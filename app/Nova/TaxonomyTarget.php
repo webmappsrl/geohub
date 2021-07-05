@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
+use Tsungsoft\ErrorMessage\ErrorMessage;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
@@ -62,7 +63,7 @@ class TaxonomyTarget extends Resource
     public function fields(Request $request)
     {
         return [
-            
+            ErrorMessage::make('Error'),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),

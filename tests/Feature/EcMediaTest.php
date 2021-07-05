@@ -43,13 +43,20 @@ class EcMediaTest extends TestCase
         $ecMedia->save();
     }
 
-    public function _testDeleteAwsImagesWhenDeleteMedia()
+    public function testDeleteEcMediaOk()
     {
         $ecMedia = EcMedia::factory()->create();
-        //Storage::disk('s3')->put('EcMedia/' . $ecMedia->id . '.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test.jpg'));
-        $ecMedia->delete();
-        $headers = get_headers(Storage::cloud()->url('EcMedia/' . $ecMedia->id . '.jpg'));
+        $this->mock(HoquServiceProvider::class, function ($mock) use ($ecMedia) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->with('delete_ec_media_images', ['url' => $ecMedia->url, 'thumbnails' => $ecMedia->thumbnails])
+                ->andReturn(201);
+        });
 
-        dd($headers);
+        $ecMedia->id = 1;
+        $ecMedia->save();
+        $ecMedia->delete();
     }
+
+
 }

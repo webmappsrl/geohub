@@ -5,6 +5,7 @@ namespace App\Traits;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Symm\Gisconverter\Gisconverter;
+use function PHPUnit\Framework\arrayHasKey;
 
 trait GeometryFeatureTrait
 {
@@ -85,6 +86,14 @@ trait GeometryFeatureTrait
                     foreach ($keys as $value) {
                         if ($value != 'geometry') {
                             $formattedGeometry['properties'][$value] = $this->$value;
+                        }
+                    }
+                    // Override translated content
+                    if(in_array('Spatie\Translatable\HasTranslations',class_uses($this))) {
+                        if(count($this->getTranslations())>0) {
+                            foreach ($this->getTranslations() as $field => $content) {
+                                $formattedGeometry['properties'][$field]=$content;
+                            }
                         }
                     }
                     if (count($downloadUrls)) {
