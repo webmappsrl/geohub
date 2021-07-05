@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "727b52b1517e1e5ade71bf24e68d8c66",
+    "content-hash": "7f0c925cd7774c0c24fb7adfc1c7f5a6",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -6889,6 +6889,51 @@
                 "source": "https://github.com/TitasGailius/nova-search-relations/tree/1.0.6"
             },
             "time": "2020-10-09T09:25:10+00:00"
+        },
+        {
+            "name": "tsungsoft/error-message",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anditsung/laravel-nova-error-message.git",
+                "reference": "f5d849e0f360f1b0c9cf2bf533c88c7f0e1b439c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anditsung/laravel-nova-error-message/zipball/f5d849e0f360f1b0c9cf2bf533c88c7f0e1b439c",
+                "reference": "f5d849e0f360f1b0c9cf2bf533c88c7f0e1b439c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tsungsoft\\ErrorMessage\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tsungsoft\\ErrorMessage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/anditsung/laravel-nova-error-message/issues",
+                "source": "https://github.com/anditsung/laravel-nova-error-message/tree/master"
+            },
+            "time": "2019-10-31T05:13:30+00:00"
         },
         {
             "name": "tymon/jwt-auth",

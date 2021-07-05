@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class TaxonomyWhere
@@ -34,6 +36,23 @@ class TaxonomyWhere extends Model
     {
         parent::__construct($attributes);
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($taxonomyWhere) {
+            $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
+            if (!$validateTaxonomyWhere == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
+        static::updating(function ($taxonomyWhere) {
+            $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
+            if (!$validateTaxonomyWhere == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
     }
 
     /**
@@ -120,5 +139,11 @@ class TaxonomyWhere extends Model
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
+    private static function validationError($message)
+    {
+        $messageBag = new MessageBag;
+        $messageBag->add('error', __($message));
 
+        throw  ValidationException::withMessages($messageBag->getMessages());
+    }
 }

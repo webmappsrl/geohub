@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class TaxonomyPoiType extends Model
 {
@@ -30,6 +32,23 @@ class TaxonomyPoiType extends Model
         parent::save($options);
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($taxonomyPoiType) {
+            $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
+            if (!$validateTaxonomyPoiType == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
+        static::updating(function ($taxonomyPoiType) {
+            $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
+            if (!$validateTaxonomyPoiType == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
+    }
+
     public function author()
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
@@ -43,6 +62,14 @@ class TaxonomyPoiType extends Model
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
+
+    private static function validationError($message)
+    {
+        $messageBag = new MessageBag;
+        $messageBag->add('error', __($message));
+
+        throw  ValidationException::withMessages($messageBag->getMessages());
     }
 }
 
