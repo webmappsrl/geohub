@@ -88,8 +88,8 @@ class EcTrackUpdateTest extends TestCase
     }
 
     public function testUpdate3DGeometry() {
-        // $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,3],[4,5,6],[7,8,9]]}')";
-        $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2],[4,5],[7,8]]}')";
+        $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
+        // $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2],[4,5],[7,8]]}')";
         $track = EcTrack::factory()->create(['geometry'=>DB::raw($query)]);
 
         $geojson = $track->getGeoJson();
@@ -108,14 +108,17 @@ class EcTrackUpdateTest extends TestCase
         $coord=$geom['coordinates'];
         $this->assertCount(3,$coord);
         foreach ($coord as $point) {
-            $this->assertCount(2,$point);
+            $this->assertCount(3,$point);
         }
         $this->assertEquals(1,$coord[0][0]);
         $this->assertEquals(2,$coord[0][1]);
+        $this->assertEquals(0,$coord[0][2]);
         $this->assertEquals(4,$coord[1][0]);
         $this->assertEquals(5,$coord[1][1]);
+        $this->assertEquals(0,$coord[1][2]);
         $this->assertEquals(7,$coord[2][0]);
         $this->assertEquals(8,$coord[2][1]);
+        $this->assertEquals(0,$coord[2][2]);
 
         // Update geometry with 3D
         $payload = [

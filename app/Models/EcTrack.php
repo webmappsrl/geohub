@@ -154,15 +154,15 @@ class EcTrack extends Model
                 switch ($contentType) {
                     case "FeatureCollection":
                         $contentGeometry = $content->features[0]->geometry;
-                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
                         break;
                     case "LineString":
                         $contentGeometry = $content;
-                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
                         break;
                     default:
                         $contentGeometry = $content->geometry;
-                        $geometry = DB::raw("(ST_Force2D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
                         break;
                 }
             }

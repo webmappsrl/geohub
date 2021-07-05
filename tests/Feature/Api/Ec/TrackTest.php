@@ -33,7 +33,7 @@ class TrackTest extends TestCase
     {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
-        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43,12 43,12 44,11 44)'))");
+        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
         $gpx = <<<KML
 <?xml version="1.0"?>
 <gpx version="1.1" creator="GDAL 2.2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogr="http://osgeo.org/gdal" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
@@ -54,7 +54,7 @@ KML;
     {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
-        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43,12 43,12 44,11 44)'))");
+        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
         $kml = <<<KML
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
