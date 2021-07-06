@@ -32,31 +32,31 @@ class TaxonomyActivity extends Model
         parent::save($options);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($taxonomyActivity) {
-
-            if ($taxonomyActivity->identifier == null)
-                $validateTaxonomyActivity = TaxonomyActivity::whereNull('identifier')->first();
-            else
-                $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
-
-            if (!$validateTaxonomyActivity == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-        static::updating(function ($taxonomyActivity) {
-            if ($taxonomyActivity->identifier == null)
-                $validateTaxonomyActivity = TaxonomyActivity::whereNull('identifier')->first();
-            else
-                $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
-
-            if (!$validateTaxonomyActivity == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-    }
+    /**protected static function boot()
+     * {
+     * parent::boot();
+     * static::creating(function ($taxonomyActivity) {
+     *
+     * if ($taxonomyActivity->identifier == null)
+     * $validateTaxonomyActivity = TaxonomyActivity::whereNull('identifier')->first();
+     * else
+     * $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
+     *
+     * if (!$validateTaxonomyActivity == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * static::updating(function ($taxonomyActivity) {
+     * if ($taxonomyActivity->identifier == null)
+     * $validateTaxonomyActivity = TaxonomyActivity::whereNull('identifier')->first();
+     * else
+     * $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
+     *
+     * if (!$validateTaxonomyActivity == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * }**/
 
     public function author()
     {

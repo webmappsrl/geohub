@@ -38,31 +38,31 @@ class TaxonomyWhere extends Model
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($taxonomyWhere) {
-
-            if ($taxonomyWhere->identifier == null)
-                $validateTaxonomyWhere = TaxonomyWhere::whereNull('identifier')->first();
-            else
-                $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
-
-            if (!$validateTaxonomyWhere == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-        static::updating(function ($taxonomyWhere) {
-            if ($taxonomyWhere->identifier == null)
-                $validateTaxonomyWhere = TaxonomyWhere::whereNull('identifier')->first();
-            else
-                $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
-
-            if (!$validateTaxonomyWhere == null) {
-                self::validationError("The inserted 'identifier' field already exists.");
-            }
-        });
-    }
+    /**protected static function boot()
+     * {
+     * parent::boot();
+     * static::creating(function ($taxonomyWhere) {
+     *
+     * if ($taxonomyWhere->identifier == null)
+     * $validateTaxonomyWhere = TaxonomyWhere::whereNull('identifier')->first();
+     * else
+     * $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
+     *
+     * if (!$validateTaxonomyWhere == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * static::updating(function ($taxonomyWhere) {
+     * if ($taxonomyWhere->identifier == null)
+     * $validateTaxonomyWhere = TaxonomyWhere::whereNull('identifier')->first();
+     * else
+     * $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
+     *
+     * if (!$validateTaxonomyWhere == null) {
+     * self::validationError("The inserted 'identifier' field already exists.");
+     * }
+     * });
+     * }**/
 
     /**
      * All the taxonomy where imported using a sync command are not editable
