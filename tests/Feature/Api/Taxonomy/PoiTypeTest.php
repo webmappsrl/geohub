@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class PoiTypeTest extends TestCase
@@ -47,11 +49,7 @@ class PoiTypeTest extends TestCase
         $this->assertEquals($taxonomyPoiTypeSecond->identifier, $taxonomyPoiTypeThird->identifier);
         $this->assertNull($taxonomyPoiTypeSecond->identifier);
         $this->assertNull($taxonomyPoiTypeThird->identifier);
-
-        try {
-            TaxonomyPoiType::factory()->create(['identifier' => "identifier"]);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
-        }
+        $this->expectException(ValidationException::class);
+        TaxonomyPoiType::factory()->create(['identifier' => "identifier"]);
     }
 }

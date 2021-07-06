@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyWhere;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class WhereTest extends TestCase
@@ -74,11 +76,7 @@ class WhereTest extends TestCase
         $this->assertEquals($taxonomyWhereSecond->identifier, $taxonomyWhereThird->identifier);
         $this->assertNull($taxonomyWhereSecond->identifier);
         $this->assertNull($taxonomyWhereThird->identifier);
-
-        try {
-            TaxonomyWhere::factory()->create(['identifier' => "identifier"]);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
-        }
+        $this->expectException(ValidationException::class);
+        TaxonomyWhere::factory()->create(['identifier' => "identifier"]);
     }
 }

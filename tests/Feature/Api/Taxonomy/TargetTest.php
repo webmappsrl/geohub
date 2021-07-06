@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyTarget;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class TargetTest extends TestCase
@@ -47,11 +49,7 @@ class TargetTest extends TestCase
         $this->assertEquals($taxonomyTargetSecond->identifier, $taxonomyTargetThird->identifier);
         $this->assertNull($taxonomyTargetSecond->identifier);
         $this->assertNull($taxonomyTargetThird->identifier);
-
-        try {
-            TaxonomyTarget::factory()->create(['identifier' => "identifier"]);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
-        }
+        $this->expectException(ValidationException::class);
+        TaxonomyTarget::factory()->create(['identifier' => "identifier"]);
     }
 }

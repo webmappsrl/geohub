@@ -29,86 +29,11 @@ class TrackTest extends TestCase
         $this->assertSame(404, $response->status());
     }
 
-    public function testNoIdReturnCode404()
-    {
-        $result = $this->putJson('/api/ec/track/update/0', []);
-
-        $this->assertEquals(404, $result->getStatusCode());
-    }
-
-    public function testSendDistanceCompUpdateFieldDistanceComp()
-    {
-        $ecTrack = EcTrack::factory()->create();
-        $newDistance = 123;
-        $payload = [
-            'distance_comp' => $newDistance,
-        ];
-
-        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
-
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsString($result->getContent());
-        $ecTrackUpdated = EcTrack::find($ecTrack->id);
-
-        $this->assertEquals($newDistance, $ecTrackUpdated->distance_comp);
-    }
-
-    public function testUpdateEleMax()
-    {
-        $ecTrack = EcTrack::factory()->create(['ele_max' => 0]);
-        $payload = [
-            'ele_max' => 100,
-        ];
-
-        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
-
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsString($result->getContent());
-        $ecTrackUpdated = EcTrack::find($ecTrack->id);
-
-        $this->assertEquals(100, $ecTrackUpdated->ele_max);
-    }
-
-    public function testUpdateEleMin()
-    {
-        $ecTrack = EcTrack::factory()->create(['ele_min' => 0]);
-        $payload = [
-            'ele_min' => 100,
-        ];
-
-        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
-
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsString($result->getContent());
-        $ecTrackUpdated = EcTrack::find($ecTrack->id);
-
-        $this->assertEquals(100, $ecTrackUpdated->ele_min);
-    }
-
-    public function testSendWheresIdsUpdateWhereRelation()
-    {
-        $ecTrack = EcTrack::factory()->create();
-        $where = TaxonomyWhere::factory()->create();
-
-        $payload = [
-            'where_ids' => [$where->id],
-        ];
-        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
-
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsString($result->getContent());
-
-        $where = TaxonomyWhere::find($where->id);
-        $tracks = $where->ecTrack;
-        $this->assertCount(1, $tracks);
-        $this->assertSame($ecTrack->id, $tracks->first()->id);
-    }
-
     public function testDownloadGpxData()
     {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
-        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43,12 43,12 44,11 44)'))");
+        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
         $gpx = <<<KML
 <?xml version="1.0"?>
 <gpx version="1.1" creator="GDAL 2.2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogr="http://osgeo.org/gdal" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
@@ -129,7 +54,7 @@ KML;
     {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
-        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43,12 43,12 44,11 44)'))");
+        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
         $kml = <<<KML
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">

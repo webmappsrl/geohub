@@ -270,7 +270,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $user=User::factory()->create();
         $app=App::factory()->create();
         $app->user_id=$user->id; $app->save();
-        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 10 10)'))")]);
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0 0, 10 10 0)'))")]);
         $track->user_id=$user->id; $track->save();
 
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
@@ -288,7 +288,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $user=User::factory()->create();
         $app=App::factory()->create();
         $app->user_id=$user->id; $app->save();
-        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0, 3 4)'))")]);
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0 0, 3 4 0)'))")]);
         $track->user_id=$user->id; $track->save();
 
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
@@ -306,9 +306,9 @@ class AppElbrusConfigJsonTest extends TestCase {
         $user=User::factory()->create();
         $app=App::factory()->create();
         $app->user_id=$user->id; $app->save();
-        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0 0, 1 1 0)'))")]);
         $track->user_id=$user->id; $track->save();
-        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1=EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 0, 3 3 0)'))")]);
         $track1->user_id=$user->id; $track1->save();
 
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);

@@ -32,22 +32,28 @@ class TaxonomyPoiType extends Model
         parent::save($options);
     }
 
-    /**protected static function boot()
-     * {
-     * parent::boot();
-     * static::creating(function ($taxonomyPoiType) {
-     * $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
-     * if (!$validateTaxonomyPoiType == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * static::updating(function ($taxonomyPoiType) {
-     * $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
-     * if (!$validateTaxonomyPoiType == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * }**/
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($taxonomyPoiType) {
+
+            if ($taxonomyPoiType->identifier != null) {
+                $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
+                if (!$validateTaxonomyPoiType == null) {
+                    self::validationError("The inserted 'identifier' field already exists.");
+                }
+            }
+
+        });
+        static::updating(function ($taxonomyPoiType) {
+            if ($taxonomyPoiType->identifier != null) {
+                $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
+                if (!$validateTaxonomyPoiType == null) {
+                    self::validationError("The inserted 'identifier' field already exists.");
+                }
+            }
+        });
+    }
 
     public function author()
     {

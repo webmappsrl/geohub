@@ -1,5 +1,12 @@
 .w-sidebar {
     position: fixed !important;
+    overflow-y: scroll;
+    width: 15rem;
+
+}
+
+.min-h-screen.w-sidebar {
+    height: 200px;
 }
 
 .content {

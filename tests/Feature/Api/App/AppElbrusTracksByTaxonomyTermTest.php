@@ -33,7 +33,7 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase
 
         $track2 = EcTrack::factory()->create();
         $track2->user_id = $user->id;
-        $track1->featureImage()->associate($image);
+        $track2->featureImage()->associate($image);
         $track2->ecMedia()->attach($image);
         $track2->save();
         $track2->taxonomyActivities()->attach([$activity->id]);
@@ -46,20 +46,20 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase
         $result = $this->getJson($uri);
         $this->assertEquals(200, $result->getStatusCode());
 
-        $tracks= json_decode($result->content(), true);
+        $tracks = json_decode($result->content(), true);
         $this->assertIsArray($tracks);
 
         $this->assertCount(2, $tracks);
 
         $fields = [
-            'id','description','excerpt','source_id','import_method','source','distance','ascent','descent',
-            'ele_from','ele_to','ele_min','ele_max', 'duration_forward','duration_backward',
-            'ele:from','ele:to','ele:min','ele:max', 'duration:forward','duration:backward',
-            'image','imageGallery'
+            'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent',
+            'ele_from', 'ele_to', 'ele_min', 'ele_max', 'duration_forward', 'duration_backward',
+            'ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward',
+            'image', 'imageGallery'
         ];
 
-        foreach($fields as $field) {
-            $this->assertArrayHasKey($field,$tracks[0]);
+        foreach ($fields as $field) {
+            $this->assertArrayHasKey($field, $tracks[0]);
         }
 
         $this->assertEquals($track1->id, $tracks[0]['id']);

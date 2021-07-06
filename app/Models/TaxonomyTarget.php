@@ -32,22 +32,28 @@ class TaxonomyTarget extends Model
         parent::save($options);
     }
 
-    /**protected static function boot()
-     * {
-     * parent::boot();
-     * static::creating(function ($taxonomyTarget) {
-     * $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
-     * if (!$validateTaxonomyTarget == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * static::updating(function ($taxonomyTarget) {
-     * $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
-     * if (!$validateTaxonomyTarget == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * }**/
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($taxonomyTarget) {
+
+            if ($taxonomyTarget->identifier != null) {
+                $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
+                if (!$validateTaxonomyTarget == null) {
+                    self::validationError("The inserted 'identifier' field already exists.");
+                }
+            }
+
+        });
+        static::updating(function ($taxonomyTarget) {
+            if ($taxonomyTarget->identifier != null) {
+                $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
+                if (!$validateTaxonomyTarget == null) {
+                    self::validationError("The inserted 'identifier' field already exists.");
+                }
+            }
+        });
+    }
 
     public function author()
     {
