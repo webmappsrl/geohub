@@ -209,5 +209,55 @@ class AppElbrusEcTrackGeojsonTest extends TestCase {
 
     }
 
+    public function testGpxField() {
+        $ecTrack = EcTrack::factory()->create();
+
+        $app = App::factory()->create();
+        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.geojson', []);
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $this->assertIsArray($json);
+
+        $this->assertArrayHasKey('properties',$json);
+        $json = $json['properties'];
+
+        $this->assertArrayHasKey('gpx_url',$json);
+        $this->assertIsString($json['gpx_url']);
+        $this->assertStringContainsString('http', $json['gpx_url']);
+        $this->assertStringContainsString($ecTrack->id, $json['gpx_url']);
+        $this->assertStringContainsString('download', $json['gpx_url']);
+        $this->assertStringContainsString('.gpx', $json['gpx_url']);
+
+
+    }
+    public function testKmlField() {
+        $ecTrack = EcTrack::factory()->create();
+
+        $app = App::factory()->create();
+        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.geojson', []);
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $this->assertIsArray($json);
+
+        $this->assertArrayHasKey('properties',$json);
+        $json = $json['properties'];
+
+
+        $this->assertArrayHasKey('kml_url',$json);
+        $this->assertIsString($json['kml_url']);
+        $this->assertStringContainsString('http', $json['kml_url']);
+        $this->assertStringContainsString($ecTrack->id, $json['kml_url']);
+        $this->assertStringContainsString('download', $json['kml_url']);
+        $this->assertStringContainsString('.kml', $json['kml_url']);
+
+
+    }
+
 
 }

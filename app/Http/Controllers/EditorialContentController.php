@@ -217,6 +217,8 @@ class EditorialContentController extends Controller {
             if (count($gallery)) {
                 $geojson['properties']['imageGallery'] = $gallery;
             }
+            $geojson['properties']['gpx_url']=route('api.ec.track.download.gpx',['id'=>$track_id]);
+            $geojson['properties']['kml_url']=route('api.ec.track.download.kml',['id'=>$track_id]);
         }
 
         // Add Taxonomies
