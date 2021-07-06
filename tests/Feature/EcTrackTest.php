@@ -183,7 +183,7 @@ class EcTrackTest extends TestCase
                 ->andReturn(201);
         });
 
-        $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
+        $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44 0, 12 45 0, 13 46 0)'))");
         $ecTrack->geometry = $new_geometry;
         $ecTrack->save();
     }

@@ -105,7 +105,7 @@ class BaseWorldSeeder extends Seeder
         $media1 = EcMedia::factory()->create();
         $media2 = EcMedia::factory()->create();
 
-        $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0, 1 1)'))")]);
+        $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0 0, 1 1 1)'))")]);
         $track->user_id = $user->id;
         $track->featureImage()->associate($media);
         $track->ecMedia()->attach($media1);
@@ -113,7 +113,7 @@ class BaseWorldSeeder extends Seeder
         $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
 
-        $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2, 3 3)'))")]);
+        $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 2, 3 3 3)'))")]);
         $track1->user_id = $user->id;
         $track1->featureImage()->associate($media);
         $track1->ecMedia()->attach($media1);
