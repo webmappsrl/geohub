@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyTheme;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class ThemeTest extends TestCase
@@ -47,11 +49,7 @@ class ThemeTest extends TestCase
         $this->assertEquals($taxonomyThemeSecond->identifier, $taxonomyThemeThird->identifier);
         $this->assertNull($taxonomyThemeSecond->identifier);
         $this->assertNull($taxonomyThemeThird->identifier);
-
-        try {
-            TaxonomyTheme::factory()->create(['identifier' => "identifier"]);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
-        }
+        $this->expectException(ValidationException::class);
+        TaxonomyTheme::factory()->create(['identifier' => "identifier"]);
     }
 }

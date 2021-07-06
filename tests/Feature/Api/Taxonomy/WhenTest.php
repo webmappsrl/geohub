@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyWhen;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class WhenTest extends TestCase
@@ -48,11 +50,7 @@ class WhenTest extends TestCase
         $this->assertEquals($taxonomyWhenSecond->identifier, $taxonomyWhenThird->identifier);
         $this->assertNull($taxonomyWhenSecond->identifier);
         $this->assertNull($taxonomyWhenThird->identifier);
-
-        try {
-            TaxonomyWhen::factory()->create(['identifier' => "identifier"]);
-        } catch (Exception $e) {
-            $this->assertEquals($e->getCode(), '23505', "SQLSTATE[23505]: Unique violation error");
-        }
+        $this->expectException(ValidationException::class);
+        TaxonomyWhen::factory()->create(['identifier' => "identifier"]);
     }
 }
