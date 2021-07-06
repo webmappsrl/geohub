@@ -32,22 +32,31 @@ class TaxonomyTheme extends Model
         parent::save($options);
     }
 
-    /**protected static function boot()
-     * {
-     * parent::boot();
-     * static::creating(function ($taxonomyTheme) {
-     * $validateTaxonomyTheme = TaxonomyTheme::where('identifier', 'LIKE', $taxonomyTheme->identifier)->first();
-     * if (!$validateTaxonomyTheme == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * static::updating(function ($taxonomyTheme) {
-     * $validateTaxonomyTheme = TaxonomyTheme::where('identifier', 'LIKE', $taxonomyTheme->identifier)->first();
-     * if (!$validateTaxonomyTheme == null) {
-     * self::validationError("The inserted 'identifier' field already exists.");
-     * }
-     * });
-     * }**/
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($taxonomyTheme) {
+
+            if ($taxonomyTheme->identifier == null)
+                $validateTaxonomyTheme = TaxonomyTheme::whereNull('identifier')->first();
+            else
+                $validateTaxonomyTheme = TaxonomyTheme::where('identifier', 'LIKE', $taxonomyTheme->identifier)->first();
+
+            if (!$validateTaxonomyTheme == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
+        static::updating(function ($taxonomyTheme) {
+            if ($taxonomyTheme->identifier == null)
+                $validateTaxonomyTheme = TaxonomyTheme::whereNull('identifier')->first();
+            else
+                $validateTaxonomyTheme = TaxonomyTheme::where('identifier', 'LIKE', $taxonomyTheme->identifier)->first();
+
+            if (!$validateTaxonomyTheme == null) {
+                self::validationError("The inserted 'identifier' field already exists.");
+            }
+        });
+    }
 
     public function author()
     {
