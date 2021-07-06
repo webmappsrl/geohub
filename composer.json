@@ -30,6 +30,7 @@
         "ndamiens/gisconverter": "^1.0",
         "numaxlab/nova-ckeditor5-classic": "^1.1",
         "robertboes/nova-slider-field": "^0.1.1",
+        "spatie/db-dumper": "^2.21",
         "spatie/laravel-translatable": "^4.6",
         "spatie/nova-translatable": "^3.0",
         "titasgailius/search-relations": "^1.0",
