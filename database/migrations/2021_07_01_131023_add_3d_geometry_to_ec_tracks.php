@@ -16,7 +16,7 @@ class Add3dGeometryToEcTracks extends Migration
     {
         $sql = 'ALTER TABLE ec_tracks
                 ALTER COLUMN geometry TYPE geometry(LineStringZ)
-                USING geometry::geometry(LineStringZ);';
+                USING ST_force3D(geometry::geometry);';
         DB::statement($sql);
     }
 
