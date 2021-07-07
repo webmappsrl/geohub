@@ -353,13 +353,24 @@ class EditorialContentController extends Controller
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
-        if (isset($request->ele_max)) {
-            $ecTrack->ele_max = $request->ele_max;
+        $fields = [
+            'distance_comp',
+            'distance',
+            'ele_min',
+            'ele_max',
+            'ele_from',
+            'ele_to',
+            'ascent',
+            'descent',
+            'duration_forward',
+            'duration_backward',
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($request->$field)) {
+                $ecTrack->$field = $request->$field;
+            }
         }
-        if (isset($request->ele_min)) {
-            $ecTrack->ele_min = $request->ele_min;
-        }
-        $ecTrack->distance_comp = $request->distance_comp;
 
         $ecTrack->skip_update = true;
         $ecTrack->save();
