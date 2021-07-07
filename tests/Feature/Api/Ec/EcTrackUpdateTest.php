@@ -84,8 +84,6 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ascent);
     }
 
-
-
     public function testSendWheresIdsUpdateWhereRelation()
     {
         $ecTrack = EcTrack::factory()->create();
@@ -105,42 +103,43 @@ class EcTrackUpdateTest extends TestCase
         $this->assertSame($ecTrack->id, $tracks->first()->id);
     }
 
-    public function testUpdate3DGeometry() {
+    public function testUpdate3DGeometry()
+    {
         $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
         // $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2],[4,5],[7,8]]}')";
-        $track = EcTrack::factory()->create(['geometry'=>DB::raw($query)]);
+        $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
 
         $geojson = $track->getGeoJson();
 
         $this->assertIsArray($geojson);
-        $this->assertArrayHasKey('type',$geojson);
-        $this->assertArrayHasKey('properties',$geojson);
-        $this->assertArrayHasKey('geometry',$geojson);
+        $this->assertArrayHasKey('type', $geojson);
+        $this->assertArrayHasKey('properties', $geojson);
+        $this->assertArrayHasKey('geometry', $geojson);
 
         // Check geometry before update
         $geom = $geojson['geometry'];
         $this->assertIsArray($geom);
-        $this->assertArrayHasKey('type',$geom);
-        $this->assertArrayHasKey('coordinates',$geom);
-        $this->assertEquals('LineString',$geom['type']);
-        $coord=$geom['coordinates'];
-        $this->assertCount(3,$coord);
+        $this->assertArrayHasKey('type', $geom);
+        $this->assertArrayHasKey('coordinates', $geom);
+        $this->assertEquals('LineString', $geom['type']);
+        $coord = $geom['coordinates'];
+        $this->assertCount(3, $coord);
         foreach ($coord as $point) {
-            $this->assertCount(3,$point);
+            $this->assertCount(3, $point);
         }
-        $this->assertEquals(1,$coord[0][0]);
-        $this->assertEquals(2,$coord[0][1]);
-        $this->assertEquals(0,$coord[0][2]);
-        $this->assertEquals(4,$coord[1][0]);
-        $this->assertEquals(5,$coord[1][1]);
-        $this->assertEquals(0,$coord[1][2]);
-        $this->assertEquals(7,$coord[2][0]);
-        $this->assertEquals(8,$coord[2][1]);
-        $this->assertEquals(0,$coord[2][2]);
+        $this->assertEquals(1, $coord[0][0]);
+        $this->assertEquals(2, $coord[0][1]);
+        $this->assertEquals(0, $coord[0][2]);
+        $this->assertEquals(4, $coord[1][0]);
+        $this->assertEquals(5, $coord[1][1]);
+        $this->assertEquals(0, $coord[1][2]);
+        $this->assertEquals(7, $coord[2][0]);
+        $this->assertEquals(8, $coord[2][1]);
+        $this->assertEquals(0, $coord[2][2]);
 
         // Update geometry with 3D
         $payload = [
-            'geometry' => json_decode('{"type":"LineString","coordinates":[[1,2,3],[4,5,6],[7,8,9]]}',true)
+            'geometry' => json_decode('{"type":"LineString","coordinates":[[1,2,3],[4,5,6],[7,8,9]]}', true)
         ];
         $result = $this->putJson('/api/ec/track/update/' . $track->id, $payload);
         $this->assertEquals(200, $result->getStatusCode());
@@ -151,31 +150,28 @@ class EcTrackUpdateTest extends TestCase
         $geojson = $track_updated->getGeoJson();
 
         $this->assertIsArray($geojson);
-        $this->assertArrayHasKey('type',$geojson);
-        $this->assertArrayHasKey('properties',$geojson);
-        $this->assertArrayHasKey('geometry',$geojson);
+        $this->assertArrayHasKey('type', $geojson);
+        $this->assertArrayHasKey('properties', $geojson);
+        $this->assertArrayHasKey('geometry', $geojson);
 
         $geom = $geojson['geometry'];
         $this->assertIsArray($geom);
-        $this->assertArrayHasKey('type',$geom);
-        $this->assertArrayHasKey('coordinates',$geom);
-        $this->assertEquals('LineString',$geom['type']);
-        $coord=$geom['coordinates'];
-        $this->assertCount(3,$coord);
+        $this->assertArrayHasKey('type', $geom);
+        $this->assertArrayHasKey('coordinates', $geom);
+        $this->assertEquals('LineString', $geom['type']);
+        $coord = $geom['coordinates'];
+        $this->assertCount(3, $coord);
         foreach ($coord as $point) {
-            $this->assertCount(3,$point);
+            $this->assertCount(3, $point);
         }
-        $this->assertEquals(1,$coord[0][0]);
-        $this->assertEquals(2,$coord[0][1]);
-        $this->assertEquals(3,$coord[0][2]);
-        $this->assertEquals(4,$coord[1][0]);
-        $this->assertEquals(5,$coord[1][1]);
-        $this->assertEquals(6,$coord[1][2]);
-        $this->assertEquals(7,$coord[2][0]);
-        $this->assertEquals(8,$coord[2][1]);
-        $this->assertEquals(9,$coord[2][2]);
-
+        $this->assertEquals(1, $coord[0][0]);
+        $this->assertEquals(2, $coord[0][1]);
+        $this->assertEquals(3, $coord[0][2]);
+        $this->assertEquals(4, $coord[1][0]);
+        $this->assertEquals(5, $coord[1][1]);
+        $this->assertEquals(6, $coord[1][2]);
+        $this->assertEquals(7, $coord[2][0]);
+        $this->assertEquals(8, $coord[2][1]);
+        $this->assertEquals(9, $coord[2][2]);
     }
-
-
 }

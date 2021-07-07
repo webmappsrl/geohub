@@ -7,27 +7,29 @@ use App\Models\UgcTrack;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Mockery;
 use Tests\TestCase;
 
-class StoreApiTest extends TestCase {
+class StoreApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    private function _getHoquServiceProviderMock() {
+    private function _getHoquServiceProviderMock()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
         });
     }
 
-    public function testWithoutAuthentication() {
+    public function testWithoutAuthentication()
+    {
         $response = $this->post('/api/usergenerateddata/store', []);
         $this->assertSame(401, $response->status());
     }
 
-    public function testWithNoData() {
+    public function testWithNoData()
+    {
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $count = count(UgcPoi::get()) + count(UgcTrack::get());
         $response = $this->post('/api/usergenerateddata/store', []);
@@ -35,7 +37,8 @@ class StoreApiTest extends TestCase {
         $this->assertSame($count, count(UgcPoi::get()) + count(UgcTrack::get()));
     }
 
-    public function testWithAPoi() {
+    public function testWithAPoi()
+    {
         $this->_getHoquServiceProviderMock();
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
@@ -73,7 +76,8 @@ class StoreApiTest extends TestCase {
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 
-    public function testWithATrack() {
+    public function testWithATrack()
+    {
         $this->_getHoquServiceProviderMock();
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
@@ -111,7 +115,8 @@ class StoreApiTest extends TestCase {
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 
-    public function testSaveUgcPoiTriggerHoquStore() {
+    public function testSaveUgcPoiTriggerHoquStore()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -147,7 +152,8 @@ class StoreApiTest extends TestCase {
         $response = $this->postJson('/api/usergenerateddata/store', $data);
     }
 
-    public function testSaveUgcTrackTriggerHoquStore() {
+    public function testSaveUgcTrackTriggerHoquStore()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
