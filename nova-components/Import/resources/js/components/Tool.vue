@@ -2,7 +2,7 @@
   <div>
     <heading class="mb-6">Import</heading>
 
-    <card class="bg-90 flex flex-col text-white" style="min-height: 300px;padding:5rem">
+    <card class="bg-dark bg-90 flex flex-col text-white" style="min-height: 300px;padding:5rem">
       <p class="text-white mb-2">Import massivo di dati: da questa interfaccia é possibile
         caricare file di dati da importare nel geohub. Al momento sono ammessi i seguenti tipi di file:</p>
       <ul class="text-white">

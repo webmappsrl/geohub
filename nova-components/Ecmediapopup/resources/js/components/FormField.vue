@@ -4,8 +4,10 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EcMediaModal">
         Select EcMedia
       </button>
+
+
       <div id="EcMediaModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Modal title</h5>
@@ -14,7 +16,38 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>Modal body text goes here.</p>
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="associatedMedia-tab" data-toggle="tab" href="#associatedMedia"
+                     role="tab"
+                     aria-controls="associatedMedia"
+                     aria-selected="true">Media associati alla Track</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="uploadMedia-tab" data-toggle="tab" href="#uploadMedia" role="tab"
+                     aria-controls="uploadMedia"
+                     aria-selected="false">Carica Media</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="associatedMedia" role="tabpanel"
+                     aria-labelledby="associatedMedia-tab">
+                  <div class="row pt-2">
+                    <div class="col-md-6">
+                      Media images
+                    </div>
+                    <div class="col-md-6">
+                      Medei maps
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="uploadMedia" role="tabpanel" aria-labelledby="uploadMedia-tab">
+                  <div class="row pt-2">
+                    <div class="col-md-12"></div>
+                    uploadMedia
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary">Save changes</button>

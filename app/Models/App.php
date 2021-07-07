@@ -44,11 +44,42 @@ class App extends Model {
     /**
      * @todo: differenziare la tassonomia "taxonomyActivities" !!!
      */
-    public function listTracksByTerm($term) {
-        $query = EcTrack::where('user_id', $this->user_id)
-            ->whereHas('taxonomyActivities', function ($q) use ($term) {
-                $q->where('id', $term);
-            });
+    public function listTracksByTerm($term,$taxonomy_name) {
+
+        switch($taxonomy_name) {
+            case 'activity':
+                $query = EcTrack::where('user_id', $this->user_id)
+                    ->whereHas('taxonomyActivities', function ($q) use ($term) {
+                        $q->where('id', $term);
+                    });
+                break;
+            case 'where':
+                $query = EcTrack::where('user_id', $this->user_id)
+                    ->whereHas('taxonomyWheres', function ($q) use ($term) {
+                        $q->where('id', $term);
+                    });
+                break;
+            case 'when':
+                $query = EcTrack::where('user_id', $this->user_id)
+                    ->whereHas('taxonomyWhens', function ($q) use ($term) {
+                        $q->where('id', $term);
+                    });
+                break;
+            case 'target':
+                $query = EcTrack::where('user_id', $this->user_id)
+                    ->whereHas('taxonomyTargets', function ($q) use ($term) {
+                        $q->where('id', $term);
+                    });
+                break;
+            case 'theme':
+                $query = EcTrack::where('user_id', $this->user_id)
+                    ->whereHas('taxonomyThemes', function ($q) use ($term) {
+                        $q->where('id', $term);
+                    });
+                break;
+            default:
+                throw new \Exception('Wrong taxonomy name: '.$taxonomy_name);
+        }
 
         $tracks = $query->get();
         $tracks_array = [];

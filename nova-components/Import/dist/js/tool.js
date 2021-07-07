@@ -691,7 +691,7 @@ var render = function() {
       _c(
         "card",
         {
-          staticClass: "bg-90 flex flex-col text-white",
+          staticClass: "bg-dark bg-90 flex flex-col text-white",
           staticStyle: { "min-height": "300px", padding: "5rem" }
         },
         [
