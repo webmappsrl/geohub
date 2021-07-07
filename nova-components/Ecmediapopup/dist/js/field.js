@@ -1116,6 +1116,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -27546,7 +27555,7 @@ var render = function() {
                 _c("div", { staticClass: "modal-content" }, [
                   _c("div", { staticClass: "modal-header" }, [
                     _c("h5", { staticClass: "modal-title" }, [
-                      _vm._v("Modal title")
+                      _vm._v("EcMedia")
                     ]),
                     _vm._v(" "),
                     _c(
@@ -27632,15 +27641,20 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "row pt-2" }, [
-                              _c("div", { staticClass: "col-md-6" }, [
+                              _c("div", { staticClass: "col-md-6 p-2" }, [
                                 _vm._v(
-                                  "\n                    Media images\n                  "
-                                )
+                                  "\n                    Seleziona i media georeferenziati nellevicinanze della traccia\n                    "
+                                ),
+                                _c("br"),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "row list-image" }, [
+                                  _c("div", { staticClass: "col-md-3" })
+                                ])
                               ]),
                               _vm._v(" "),
-                              _c("div", { staticClass: "col-md-6" }, [
+                              _c("div", { staticClass: "col-md-6 p-2" }, [
                                 _vm._v(
-                                  "\n                    Medei maps\n                  "
+                                  "\n                    Media MAP\n                  "
                                 )
                               ])
                             ])
@@ -27659,9 +27673,25 @@ var render = function() {
                           },
                           [
                             _c("div", { staticClass: "row pt-2" }, [
-                              _c("div", { staticClass: "col-md-12" }),
-                              _vm._v(
-                                "\n                  uploadMedia\n                "
+                              _c(
+                                "div",
+                                { staticClass: "col-md-12 py-5 text-center" },
+                                [
+                                  _c("b", [_vm._v("Trascina")]),
+                                  _vm._v(" i file da caricare"),
+                                  _c("br"),
+                                  _vm._v("\n                    oppure"),
+                                  _c("br"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: { type: "button" }
+                                    },
+                                    [_vm._v("Scegli file")]
+                                  )
+                                ]
                               )
                             ])
                           ]

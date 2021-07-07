@@ -10,7 +10,7 @@
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Modal title</h5>
+              <h5 class="modal-title">EcMedia</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -33,18 +33,27 @@
                 <div class="tab-pane fade show active" id="associatedMedia" role="tabpanel"
                      aria-labelledby="associatedMedia-tab">
                   <div class="row pt-2">
-                    <div class="col-md-6">
-                      Media images
+                    <div class="col-md-6 p-2">
+                      Seleziona i media georeferenziati nellevicinanze della traccia
+                      <br>
+                      <div class="row list-image">
+                        <div class="col-md-3">
+
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      Medei maps
+                    <div class="col-md-6 p-2">
+                      Media MAP
                     </div>
                   </div>
                 </div>
                 <div class="tab-pane fade" id="uploadMedia" role="tabpanel" aria-labelledby="uploadMedia-tab">
                   <div class="row pt-2">
-                    <div class="col-md-12"></div>
-                    uploadMedia
+                    <div class="col-md-12 py-5 text-center">
+                      <b>Trascina</b> i file da caricare<br>
+                      oppure<br>
+                      <button type="button" class="btn btn-primary">Scegli file</button>
+                    </div>
                   </div>
                 </div>
               </div>
