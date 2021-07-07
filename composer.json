@@ -40,7 +40,8 @@
         "waynestate/nova-ckeditor4-field": "^0.7.0",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0"
+        "ynacorp/nova-swatches": "^1.0",
+        "webmapp/ecmediapopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -110,6 +111,10 @@
         {
             "type": "path",
             "url": "./nova-components/Import"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecmediapopup"
         }
     ]
 }

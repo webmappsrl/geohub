@@ -21,6 +21,7 @@ use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Spatie\NovaTranslatable\Translatable;
 use Waynestate\Nova\CKEditor;
+use Webmapp\Ecmediapopup\Ecmediapopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
@@ -76,6 +77,7 @@ class EcTrack extends Resource
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
+            Ecmediapopup::make(__('Ecmediapop')),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
