@@ -9,7 +9,27 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Modal body text goes here.</p>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="associatedMedia-tab" data-toggle="tab" href="#associatedMedia" role="tab"
+                 aria-controls="associatedMedia"
+                 aria-selected="true">Media associati alla Track</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="uploadMedia-tab" data-toggle="tab" href="#uploadMedia" role="tab"
+                 aria-controls="uploadMedia"
+                 aria-selected="false">Carica Media</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="associatedMedia" role="tabpanel"
+                 aria-labelledby="associatedMedia-tab">
+              associatedMedia
+            </div>
+            <div class="tab-pane fade" id="uploadMedia" role="tabpanel" aria-labelledby="uploadMedia-tab">
+              uploadMedia
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary">Save changes</button>

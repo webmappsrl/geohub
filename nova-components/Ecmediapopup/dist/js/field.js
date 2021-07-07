@@ -277,7 +277,7 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -651,6 +651,26 @@ module.exports = function listToStyles (parentId, list) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 10 */
@@ -703,7 +723,82 @@ var staticRenderFns = [
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _c("p", [_vm._v("Modal body text goes here.")])
+                _c(
+                  "ul",
+                  {
+                    staticClass: "nav nav-tabs",
+                    attrs: { id: "myTab", role: "tablist" }
+                  },
+                  [
+                    _c("li", { staticClass: "nav-item" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "nav-link active",
+                          attrs: {
+                            id: "associatedMedia-tab",
+                            "data-toggle": "tab",
+                            href: "#associatedMedia",
+                            role: "tab",
+                            "aria-controls": "associatedMedia",
+                            "aria-selected": "true"
+                          }
+                        },
+                        [_vm._v("Media associati alla Track")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "nav-item" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "nav-link",
+                          attrs: {
+                            id: "uploadMedia-tab",
+                            "data-toggle": "tab",
+                            href: "#uploadMedia",
+                            role: "tab",
+                            "aria-controls": "uploadMedia",
+                            "aria-selected": "false"
+                          }
+                        },
+                        [_vm._v("Carica Media")]
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-content", attrs: { id: "myTabContent" } },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tab-pane fade show active",
+                        attrs: {
+                          id: "associatedMedia",
+                          role: "tabpanel",
+                          "aria-labelledby": "associatedMedia-tab"
+                        }
+                      },
+                      [_vm._v("\n            associatedMedia\n          ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tab-pane fade",
+                        attrs: {
+                          id: "uploadMedia",
+                          role: "tabpanel",
+                          "aria-labelledby": "uploadMedia-tab"
+                        }
+                      },
+                      [_vm._v("\n            uploadMedia\n          ")]
+                    )
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
@@ -959,6 +1054,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_nova___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_nova__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModalEcMedia__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ModalEcMedia___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ModalEcMedia__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27410,7 +27538,10 @@ var render = function() {
           [
             _c(
               "div",
-              { staticClass: "modal-dialog", attrs: { role: "document" } },
+              {
+                staticClass: "modal-dialog modal-lg",
+                attrs: { role: "document" }
+              },
               [
                 _c("div", { staticClass: "modal-content" }, [
                   _c("div", { staticClass: "modal-header" }, [
@@ -27437,7 +27568,106 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("p", [_vm._v("Modal body text goes here.")])
+                    _c(
+                      "ul",
+                      {
+                        staticClass: "nav nav-tabs",
+                        attrs: { id: "myTab", role: "tablist" }
+                      },
+                      [
+                        _c("li", { staticClass: "nav-item" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "nav-link active",
+                              attrs: {
+                                id: "associatedMedia-tab",
+                                "data-toggle": "tab",
+                                href: "#associatedMedia",
+                                role: "tab",
+                                "aria-controls": "associatedMedia",
+                                "aria-selected": "true"
+                              }
+                            },
+                            [_vm._v("Media associati alla Track")]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("li", { staticClass: "nav-item" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "nav-link",
+                              attrs: {
+                                id: "uploadMedia-tab",
+                                "data-toggle": "tab",
+                                href: "#uploadMedia",
+                                role: "tab",
+                                "aria-controls": "uploadMedia",
+                                "aria-selected": "false"
+                              }
+                            },
+                            [_vm._v("Carica Media")]
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "tab-content",
+                        attrs: { id: "myTabContent" }
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "tab-pane fade show active",
+                            attrs: {
+                              id: "associatedMedia",
+                              role: "tabpanel",
+                              "aria-labelledby": "associatedMedia-tab"
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "row pt-2" }, [
+                              _c("div", { staticClass: "col-md-6" }, [
+                                _vm._v(
+                                  "\n                    Media images\n                  "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-6" }, [
+                                _vm._v(
+                                  "\n                    Medei maps\n                  "
+                                )
+                              ])
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "tab-pane fade",
+                            attrs: {
+                              id: "uploadMedia",
+                              role: "tabpanel",
+                              "aria-labelledby": "uploadMedia-tab"
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "row pt-2" }, [
+                              _c("div", { staticClass: "col-md-12" }),
+                              _vm._v(
+                                "\n                  uploadMedia\n                "
+                              )
+                            ])
+                          ]
+                        )
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-footer" }, [
