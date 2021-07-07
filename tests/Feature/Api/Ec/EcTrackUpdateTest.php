@@ -100,6 +100,38 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->descent);
     }
 
+    public function testUpdateDurationForward()
+    {
+        $ecTrack = EcTrack::factory()->create(['duration_forward' => 1]);
+        $payload = [
+            'duration_forward' => 60,
+        ];
+
+        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $ecTrackUpdated = EcTrack::find($ecTrack->id);
+
+        $this->assertEquals(60, $ecTrackUpdated->duration_forward);
+    }
+
+    public function testUpdateDurationBackward()
+    {
+        $ecTrack = EcTrack::factory()->create(['duration_backward' => 1]);
+        $payload = [
+            'duration_backward' => 60,
+        ];
+
+        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $ecTrackUpdated = EcTrack::find($ecTrack->id);
+
+        $this->assertEquals(60, $ecTrackUpdated->duration_backward);
+    }
+
     public function testSendWheresIdsUpdateWhereRelation()
     {
         $ecTrack = EcTrack::factory()->create();
