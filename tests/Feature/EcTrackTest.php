@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\EcMedia;
-use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
@@ -12,11 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
-use Symm\Gisconverter\Decoders\WKT;
-use Symm\Gisconverter\Geometry\Geometry;
-use Symm\Gisconverter\Geometry\LineString;
-use Symm\Gisconverter\Geometry\Point;
-use Symm\Gisconverter\Gisconverter;
 
 class EcTrackTest extends TestCase
 {
