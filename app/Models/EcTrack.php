@@ -21,7 +21,7 @@ class EcTrack extends Model
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
 
-    public $translatable = ['name', 'description', 'excerpt'];
+    public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     /**
      * The attributes that should be cast.
      *

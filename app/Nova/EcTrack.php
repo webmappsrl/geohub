@@ -70,6 +70,8 @@ class EcTrack extends Resource
                 Text::make(__('Name'), 'name')->sortable(),
                 CKEditor::make(__('Description'), 'description')->hideFromIndex(),
                 TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+                Text::make(__('Difficulty'), 'difficulty')->sortable(),
+
             ]),
 
             Text::make(__('Import Method'), 'import_method'),
