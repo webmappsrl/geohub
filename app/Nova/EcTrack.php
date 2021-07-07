@@ -23,22 +23,19 @@ use Spatie\NovaTranslatable\Translatable;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class EcTrack extends Resource
-{
+class EcTrack extends Resource {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = \App\Models\EcTrack::class;
-
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
-
     /**
      * The columns that should be searched.
      *
@@ -48,8 +45,7 @@ class EcTrack extends Resource
         'name',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Editorial Content');
     }
 
@@ -57,12 +53,11 @@ class EcTrack extends Resource
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request) {
         $fields = [
-
 
             new Panel('Taxonomies', $this->attach_taxonomy()),
 
@@ -83,6 +78,7 @@ class EcTrack extends Resource
             File::make('Geojson')->store(function (Request $request, $model) {
                 $content = file_get_contents($request->geojson);
                 $geometry = $model->fileToGeometry($content);
+
                 return $geometry ? [
                     'geometry' => $geometry,
                 ] : function () {
@@ -128,9 +124,7 @@ class EcTrack extends Resource
         return $fields;
     }
 
-
-    protected function taxonomies()
-    {
+    protected function taxonomies() {
         return [
             MorphToMany::make('TaxonomyWheres'),
             MorphToMany::make('TaxonomyActivities'),
@@ -140,8 +134,7 @@ class EcTrack extends Resource
         ];
     }
 
-    protected function attach_taxonomy()
-    {
+    protected function attach_taxonomy() {
         return [
             AttachMany::make('TaxonomyWheres'),
             AttachMany::make('TaxonomyActivities'),
@@ -155,10 +148,10 @@ class EcTrack extends Resource
      * Get the cards available for the request.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -166,10 +159,10 @@ class EcTrack extends Resource
      * Get the filters available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [];
     }
 
@@ -177,10 +170,10 @@ class EcTrack extends Resource
      * Get the lenses available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -188,10 +181,10 @@ class EcTrack extends Resource
      * Get the actions available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }
