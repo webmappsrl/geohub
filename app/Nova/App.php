@@ -212,8 +212,10 @@ class App extends Resource {
     protected function maps_panel() {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
+                Log::info($model->getGeojson());
+
                 return [
-                    'features' => $model->getGeojson(),
+                    'features' => json_decode($model->getGeojson()),
                 ];
             })->onlyOnDetail(),
         ];

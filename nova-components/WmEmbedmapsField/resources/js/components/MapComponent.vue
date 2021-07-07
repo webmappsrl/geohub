@@ -27,9 +27,9 @@ export default {
     name: 'WmMapContainer',
     components: {},
     props: {
-        feature: String,
-        features: String,
-        related: String,
+        feature: Object,
+        features: Object,
+        related: Object,
         editable: Boolean
     },
     data: () => ({
@@ -75,7 +75,7 @@ export default {
                         tileSize: [256, 256],
                         attributions: [
                             "© <a href='https://webmapp.it' target='_blank'>Webmapp</a>",
-                            "© <a href='http://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a>"
+                            "© <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a>"
                         ]
                     })
                 }),
@@ -122,10 +122,9 @@ export default {
         this.updateSource();
     },
     watch: {
-        feature(value) {
-            //this.updateSource();
+        feature() {
         },
-        related(value) {
+        related() {
             this.updateSource();
         }
     },
@@ -286,7 +285,16 @@ export default {
                 }
             }
 
-            if (!!this.features && this.features.type === 'FeatureCollection') {
+            if (!!this.features && this.features['type'] === 'FeatureCollection') {
+                let featureCollection = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                for (let i in this.features['features']) {
+                    if (!!this.features['features'][i] && !!this.features['features'][i].geometry)
+                        featureCollection.features.push(this.features['features'][i]);
+                }
+                this.features = featureCollection;
                 const features = new GeoJSON({
                     featureProjection: 'EPSG:3857',
                 }).readFeatures(this.features);
