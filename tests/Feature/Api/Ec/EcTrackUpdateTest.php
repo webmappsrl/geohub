@@ -84,6 +84,22 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ascent);
     }
 
+    public function testUpdateDescent()
+    {
+        $ecTrack = EcTrack::factory()->create(['descent' => 1]);
+        $payload = [
+            'descent' => 100,
+        ];
+
+        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $ecTrackUpdated = EcTrack::find($ecTrack->id);
+
+        $this->assertEquals(100, $ecTrackUpdated->descent);
+    }
+
     public function testSendWheresIdsUpdateWhereRelation()
     {
         $ecTrack = EcTrack::factory()->create();
