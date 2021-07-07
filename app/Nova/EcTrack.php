@@ -24,7 +24,8 @@ use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapopup\Ecmediapopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class EcTrack extends Resource {
+class EcTrack extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -46,7 +47,8 @@ class EcTrack extends Resource {
         'name',
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Editorial Content');
     }
 
@@ -57,7 +59,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request)
+    {
         $fields = [
 
             new Panel('Taxonomies', $this->attach_taxonomy()),
@@ -74,7 +77,7 @@ class EcTrack extends Resource {
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Ecmediapopup::make(__('Ecmediapop')),
+            //Ecmediapopup::make(__('Ecmediapop'),)->onlyOnForms(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -126,7 +129,8 @@ class EcTrack extends Resource {
         return $fields;
     }
 
-    protected function taxonomies() {
+    protected function taxonomies()
+    {
         return [
             MorphToMany::make('TaxonomyWheres'),
             MorphToMany::make('TaxonomyActivities'),
@@ -136,7 +140,8 @@ class EcTrack extends Resource {
         ];
     }
 
-    protected function attach_taxonomy() {
+    protected function attach_taxonomy()
+    {
         return [
             AttachMany::make('TaxonomyWheres'),
             AttachMany::make('TaxonomyActivities'),
@@ -153,7 +158,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request)
+    {
         return [];
     }
 
@@ -164,7 +170,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request)
+    {
         return [];
     }
 
@@ -175,7 +182,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request)
+    {
         return [];
     }
 
@@ -186,7 +194,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         return [];
     }
 }
