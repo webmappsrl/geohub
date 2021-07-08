@@ -13,7 +13,9 @@
         "build-wm-embedmaps-field": "cd nova-components/WmEmbedmapsField && npm run dev",
         "build-wm-embedmaps-field-prod": "cd nova-components/WmEmbedmapsField && npm run prod",
         "build-import": "cd nova-components/Import && npm run dev",
-        "build-import-prod": "cd nova-components/Import && npm run prod"
+        "build-import-prod": "cd nova-components/Import && npm run prod",
+        "build-ecmediapopup": "cd nova-components/Ecmediapopup && npm run dev",
+        "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",
@@ -25,6 +27,7 @@
         "sass-loader": "^10.2.0"
     },
     "dependencies": {
-        "cypress": "^7.1.0"
+        "cypress": "^7.1.0",
+        "portal-vue": "^2.1.7"
     }
 }

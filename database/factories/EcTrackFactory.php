@@ -37,6 +37,10 @@ class EcTrackFactory extends Factory
             'user_id' => User::all()->random()->id,
             'import_method' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING($lat1 $lng1 0, $lat2 $lng1 0, $lat2 $lng2 0, $lat1 $lng2 0)'))"),
+            'difficulty' => [
+                'it' => $this->faker->randomElement(['bassa','media','alta']),
+                'en' => $this->faker->randomElement(['low','medium','high'])
+            ],
             'distance' => $this->faker->randomFloat(1, 10, 25),
             'ascent' => $this->faker->randomFloat(0, 300, 1000),
             'descent' => $this->faker->randomFloat(0, 300, 1000),

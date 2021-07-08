@@ -21,7 +21,7 @@ class EcTrack extends Model
 
     protected $fillable = ['name', 'geometry', 'distance_comp'];
 
-    public $translatable = ['name', 'description', 'excerpt'];
+    public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     /**
      * The attributes that should be cast.
      *
@@ -36,9 +36,9 @@ class EcTrack extends Model
         'ele_to' => 'float',
         'ele_min' => 'float',
         'ele_max' => 'float',
-        'duration_forward' => 'float',
-        'duration_backward' => 'float',
-    ];
+        'duration_forward' => 'int',
+        'duration_backward' => 'int',
+        ];
     public bool $skip_update = false;
 
 

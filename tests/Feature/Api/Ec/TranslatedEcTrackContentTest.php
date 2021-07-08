@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api\Ec;
 
 use App\Models\App;
 use App\Models\EcMedia;
