@@ -37,8 +37,8 @@ class EcTrackEleInfoGetApiTest extends TestCase
         'ele_max' => 100,
         'ele_from' => 100,
         'ele_to' => 100,
-        'duration_forward' => '1:00',
-        'duration_backward' => '1:00'
+        'duration_forward' => 100,
+        'duration_backward' => 100
     ];
 
     public function testEcTrackDownloadGeojson() {

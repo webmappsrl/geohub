@@ -19,8 +19,8 @@ class EcTracksUpdateEleInfoFieldsTest extends TestCase
         'ele_max' => 100,
         'ele_from' => 100,
         'ele_to' => 100,
-        'duration_forward' => '1:00',
-        'duration_backward' => '1:00'
+        'duration_forward' => 100,
+        'duration_backward' => 100
     ];
 
     private $updated_fields = [
@@ -31,8 +31,8 @@ class EcTracksUpdateEleInfoFieldsTest extends TestCase
         'ele_max' => 200,
         'ele_from' => 200,
         'ele_to' => 200,
-        'duration_forward' => '2:00',
-        'duration_backward' => '2:00'
+        'duration_forward' => 200,
+        'duration_backward' => 200
     ];
 
     public function testDistance() {
