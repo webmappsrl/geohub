@@ -262,10 +262,11 @@ class EditorialContentController extends Controller
      *
      * @param int $id the Ec id
      *
-     * @return JsonResponse return the Ec Image
      */
     public function getEcImage(int $id)
     {
+
+
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -277,9 +278,17 @@ class EditorialContentController extends Controller
         if (is_null($ec))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
 
-        $headers = array();
-        $imagePath = public_path() . '/storage/' . $ec->url;
 
+        // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
+
+        if(preg_match('/\.amazonaws\.com\//',$ec->url)) {
+            $explode = explode('.amazonaws.com/', $ec->url);
+            $url = end($explode);
+            Log::info($url);
+            // TODO: cambiare name (non si capisce perchè!!!!)
+            return Storage::disk('s3')->download($url, 'name' . '.jpg');
+        }
+        // TODO: cambiare name (non si capisce perchè!!!!)
         return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
 
