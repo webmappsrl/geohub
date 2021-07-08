@@ -96,6 +96,6 @@ form .flex-1.flex.items-center.relative {
     box-shadow: unset;
 }
 
-.modal-backdrop {
-    display: none !important;
+.fixed.pin.bg-80.z-20.opacity-75 {
+    display: none;
 }
