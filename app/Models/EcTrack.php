@@ -36,9 +36,9 @@ class EcTrack extends Model
         'ele_to' => 'float',
         'ele_min' => 'float',
         'ele_max' => 'float',
-        'duration_forward' => 'float',
-        'duration_backward' => 'float',
-    ];
+        'duration_forward' => 'int',
+        'duration_backward' => 'int',
+        ];
     public bool $skip_update = false;
 
 
