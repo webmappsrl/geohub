@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/icons/webmapp-icons/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fonts/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.css') }}">
+<!--<link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.css') }}">-->
 
 
     <!-- Tool Styles -->
@@ -97,11 +97,11 @@
 </script>
 
 <!-- Scripts -->
-<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+<!--<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>-->
 <script src="{{ mix('manifest.js', 'vendor/nova') }}"></script>
 <script src="{{ mix('vendor.js', 'vendor/nova') }}"></script>
 <script src="{{ mix('app.js', 'vendor/nova') }}"></script>
-<script src="{{ asset('js/bootstrap/bootstrap.js') }}"></script>
+<!--<script src="{{ asset('js/bootstrap/bootstrap.js') }}"></script>-->
 
 <!-- Build Nova Instance -->
 <script>
