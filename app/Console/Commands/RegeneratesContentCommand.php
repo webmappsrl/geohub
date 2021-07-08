@@ -16,7 +16,8 @@ class RegeneratesContentCommand extends Command
      * @var string
      */
     protected $signature = 'geohub:regenerates
-                            {model : Name of the model class that must be regenerated (EcTrack, EcMEdia)} ';
+                            {model : Name of the model class that must be regenerated (EcTrack, EcMEdia)}
+                            {--id= : Pass the model id that must be regenerated}';
 
     /**
      * The console command description.
@@ -43,19 +44,23 @@ class RegeneratesContentCommand extends Command
     public function handle()
     {
         $model = $this->argument('model');
+        $id = $this->option('id');
         switch ($model) {
             case 'EcTrack':
                 $this->info('Sending store to HOQU for EcTrack');
-                $tracks = EcTrack::all();
-                if(count($tracks)==0) {
-                    $this->warn('No EcTracks found in geohub');
+                if (isset($id)) {
+                    $tracks = EcTrack::all()->where('id', $id)->toArray();
+                } else {
+                    $tracks = EcTrack::all()->toArray();
                 }
-                else {
+                if (count($tracks) == 0) {
+                    $this->warn('No EcTracks found in geohub');
+                } else {
                     foreach ($tracks as $track) {
-                        $this->info('Hoqu Store for track:'.$track->id);
+                        $this->info('Hoqu Store for track:' . $track['id']);
                         try {
                             $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
+                            $hoquServiceProvider->store('enrich_ec_track', ['id' => $track['id']]);
                         } catch (\Exception $e) {
                             Log::error('An error occurred during a store operation: ' . $e->getMessage());
                         }
@@ -64,16 +69,19 @@ class RegeneratesContentCommand extends Command
                 break;
             case 'EcMedia':
                 $this->info('Sending store to HOQU for EcMedia');
-                $medias = EcMedia::all();
-                if(count($medias)==0) {
-                    $this->warn('No EcTracks found in geohub');
+                if (isset($id)) {
+                    $medias = EcMedia::all()->where('id', $id)->toArray();
+                } else {
+                    $medias = EcMedia::all();
                 }
-                else {
+                if (count($medias) == 0) {
+                    $this->warn('No EcTracks found in geohub');
+                } else {
                     foreach ($medias as $media) {
-                        $this->info('Hoqu Store for track:'.$media->id);
+                        $this->info('Hoqu Store for track:' . $media['id']);
                         try {
                             $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_media', ['id' => $media->id]);
+                            $hoquServiceProvider->store('enrich_ec_media', ['id' => $media['id']]);
                         } catch (\Exception $e) {
                             Log::error('An error occurred during a store operation: ' . $e->getMessage());
                         }
@@ -84,6 +92,7 @@ class RegeneratesContentCommand extends Command
                 $this->error('Invalid model ' . $model . '. Available model: EcTrack, EcMedia');
                 break;
         }
+
         return 0;
     }
 }
