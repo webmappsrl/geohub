@@ -45,22 +45,24 @@ class RegeneratesContentCommand extends Command
     {
         $model = $this->argument('model');
         $id = $this->option('id');
+        $msg = '';
         switch ($model) {
             case 'EcTrack':
                 $this->info('Sending store to HOQU for EcTrack');
                 if (isset($id)) {
-                    $tracks = EcTrack::all()->where('id', $id)->toArray();
+                    $tracks = EcTrack::all()->where('id', $id);
+                    $msg = ' with id ' . $id;
                 } else {
-                    $tracks = EcTrack::all()->toArray();
+                    $tracks = EcTrack::all();
                 }
                 if (count($tracks) == 0) {
-                    $this->warn('No EcTracks found in geohub');
+                    $this->warn('No EcTracks found in geohub' . $msg);
                 } else {
                     foreach ($tracks as $track) {
-                        $this->info('Hoqu Store for track:' . $track['id']);
+                        $this->info('Hoqu Store for track: ' . $track->id);
                         try {
                             $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_track', ['id' => $track['id']]);
+                            $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
                         } catch (\Exception $e) {
                             Log::error('An error occurred during a store operation: ' . $e->getMessage());
                         }
@@ -70,18 +72,19 @@ class RegeneratesContentCommand extends Command
             case 'EcMedia':
                 $this->info('Sending store to HOQU for EcMedia');
                 if (isset($id)) {
-                    $medias = EcMedia::all()->where('id', $id)->toArray();
+                    $medias = EcMedia::all()->where('id', $id);
+                    $msg = ' with id ' . $id;
                 } else {
                     $medias = EcMedia::all();
                 }
                 if (count($medias) == 0) {
-                    $this->warn('No EcTracks found in geohub');
+                    $this->warn('No EcMedia found in geohub' . $msg);
                 } else {
                     foreach ($medias as $media) {
-                        $this->info('Hoqu Store for track:' . $media['id']);
+                        $this->info('Hoqu Store for media: ' . $media->id);
                         try {
                             $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_media', ['id' => $media['id']]);
+                            $hoquServiceProvider->store('enrich_ec_media', ['id' => $media->id]);
                         } catch (\Exception $e) {
                             Log::error('An error occurred during a store operation: ' . $e->getMessage());
                         }
