@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use NovaButton\Button;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcMedia extends Resource
@@ -59,8 +60,6 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
-            
-
             Text::make(__('Name'), 'name')->sortable(),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -89,10 +88,15 @@ class EcMedia extends Resource
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
+
+            Button::make(__('Regenerate'), 'regenerate-ec-media')
+                ->style('success')
+                ->exceptOnForms(),
         ];
 
-        if (isset($this->model()->thumbnails))
+        if (isset($this->model()->thumbnails)) {
             $fields[] = Panel::make("Thumbnails", $this->_getThumbnailsFields());
+        }
 
         return $fields;
     }

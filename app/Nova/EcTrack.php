@@ -23,6 +23,7 @@ use Spatie\NovaTranslatable\Translatable;
 use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapopup\Ecmediapopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use NovaButton\Button;
 
 class EcTrack extends Resource
 {
@@ -121,6 +122,10 @@ class EcTrack extends Resource
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
             BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+
+            Button::make(__('Regenerate'), 'regenerate-ec-track')
+                ->style('success')
+                ->exceptOnForms(),
 
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
