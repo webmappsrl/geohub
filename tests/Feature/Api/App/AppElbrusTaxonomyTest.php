@@ -127,6 +127,7 @@ class AppElbrusTaxonomyTest extends TestCase {
         $names = ['activity', 'where', 'when', 'who', 'theme'];
         $names1 = $names;
         foreach ($names as $name) {
+            $i18n = false;
             $user = User::factory()->create();
             $track = EcTrack::factory()->create();
             $track->user_id = $user->id;
@@ -135,10 +136,12 @@ class AppElbrusTaxonomyTest extends TestCase {
                 case 'activity':
                     $tax = TaxonomyActivity::factory()->create();
                     $track->taxonomyActivities()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'where':
                     $tax = TaxonomyWhere::factory()->create();
                     $track->taxonomyWheres()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'when':
                     $tax = TaxonomyWhen::factory()->create();
@@ -169,8 +172,13 @@ class AppElbrusTaxonomyTest extends TestCase {
 
             $json_term = $json[$name . '_' . $tax->id];
             $this->assertEquals($name . '_' . $tax->id, $json_term['id']);
-            $this->assertEquals($tax->name, $json_term['name']['it']);
-            $this->assertEquals($tax->description, $json_term['description']['it']);
+            if ($i18n) {
+                $this->assertEquals($tax->name, $json_term['name']['it']);
+                $this->assertEquals($tax->description, $json_term['description']['it']);
+            } else {
+                $this->assertEquals($tax->name, $json_term['name']);
+                $this->assertEquals($tax->description, $json_term['description']);
+            }
             $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
 
             // Check other taxonomies
@@ -213,14 +221,14 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
 
         $json_term = $json['activity_' . $activity1->id];
         $this->assertEquals('activity_' . $activity1->id, $json_term['id']);
-        $this->assertEquals($activity1->name, $json_term['name']);
-        $this->assertEquals($activity1->description, $json_term['description']);
+        $this->assertEquals($activity1->name, $json_term['name']['it']);
+        $this->assertEquals($activity1->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
     }
 
@@ -254,8 +262,8 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertTrue(in_array('ec_track_' . $track->id, $json_term['items']['track']));
         $this->assertTrue(in_array('ec_track_' . $track1->id, $json_term['items']['track']));
         $this->assertCount(2, $json_term['items']['track']);
