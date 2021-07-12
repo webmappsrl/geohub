@@ -120,7 +120,7 @@ class EcTrack extends Resource
             })->acceptedTypes('audio/*')->onlyOnForms(),
             Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
-            Link::make('geojson', 'id')->showOnIndex()->hideWhenUpdating()->hideWhenCreating()
+            Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
                 ->url(function () {
                     return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
                 })

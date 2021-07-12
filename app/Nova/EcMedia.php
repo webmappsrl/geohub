@@ -6,6 +6,7 @@ use App\Nova\Actions\RegenerateEcMedia;
 use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Khalin\Nova\Field\Link;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Image;
@@ -82,6 +83,14 @@ class EcMedia extends Resource
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
+
+            Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
+                ->url(function () {
+                    return isset($this->id) ? route('api.ec.media.geojson', ['id' => $this->id]) : '';
+                })
+                ->text(__('Open GeoJson'))
+                ->icon()
+                ->blank(),
         ];
 
         if (isset($this->model()->thumbnails)) {
