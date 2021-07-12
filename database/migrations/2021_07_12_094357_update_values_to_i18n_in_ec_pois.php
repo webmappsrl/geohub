@@ -13,16 +13,27 @@ class UpdateValuesToI18nInEcPois extends Migration
     public function up()
     {
         DB::table('ec_pois')->lazyById()->each(function ($poi) {
-            $name = json_encode(['it' => $poi->name, 'en' => $poi->name]);
-            $description = json_encode(['it' => $poi->description, 'en' => $poi->description]);
-            $excerpt = json_encode(['it' => $poi->excerpt, 'en' => $poi->excerpt]);
-            DB::table('ec_pois')
-                ->where('id', $poi->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $update = [];
+            if (null != $poi->name) {
+                $name = json_encode(['it' => $poi->name, 'en' => $poi->name]);
+                $update['name'] = $name;
+            }
+
+            if (null != $poi->description) {
+                $description = json_encode(['it' => $poi->description, 'en' => $poi->description]);
+                $update['description'] = $description;
+            }
+
+            if (null != $poi->excerpt) {
+                $excerpt = json_encode(['it' => $poi->excerpt, 'en' => $poi->excerpt]);
+                $update['excerpt'] = $excerpt;
+            }
+
+            if (count($update)) {
+                DB::table('ec_pois')
+                    ->where('id', $poi->id)
+                    ->update($update);
+            }
         });
     }
 
@@ -34,16 +45,33 @@ class UpdateValuesToI18nInEcPois extends Migration
     public function down()
     {
         DB::table('ec_pois')->lazyById()->each(function ($poi) {
-            $name = json_decode($poi->name);
-            $description = json_decode($poi->description);
-            $excerpt = json_decode($poi->excerpt);
-            DB::table('ec_pois')
-                ->where('id', $poi->id)
-                ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
-                ]);
+            $update = [];
+            if (null != $poi->name) {
+                $name = json_decode($poi->name);
+                if (isset($name)) {
+                    $update['name'] = $name->it;
+                }
+            }
+
+            if (null != $poi->description) {
+                $description = json_decode($poi->description);
+                if (isset($description)) {
+                    $update['description'] = $description->it;
+                }
+            }
+
+            if (null != $poi->excerpt) {
+                $excerpt = json_decode($poi->excerpt);
+                if (isset($excerpt)) {
+                    $update['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($update)) {
+                DB::table('ec_pois')
+                    ->where('id', $poi->id)
+                    ->update($update);
+            }
         });
     }
 }
