@@ -19,16 +19,36 @@
                 <div class="modal-header">
                   <div style="display:flex">
                     <tabs>
-                      <tab name="Services" :selected="true">
-                        <h1>What we do</h1>
-                        <div class="modal-body">
-                          default body
+                      <tab name="Media associati alla track" :selected="true">
+
+                        <div class="modal-body" style="display:flex">
+                          <div>
+                            <div class="media-list col-50">
+                              <div v-for="media in mediaList.features">
+                                <img :src="media.properties.url" style="max-width:30px">
+                                <img :src="media.properties.url" style="max-width:30px">
+                                <img :src="media.properties.url" style="max-width:30px">
+                                <img :src="media.properties.url" style="max-width:30px">
+                                <img :src="media.properties.url" style="max-width:30px">
+
+                              </div>
+
+                            </div>
+                            <div class="map col-50 text-center">
+                              Mappa
+                            </div>
+                          </div>
                         </div>
                       </tab>
-                      <tab name="Pricing">
-                        <h1>How much we do it for</h1>
-                        <div class="modal-body">
-                          default body
+                      <tab name="Carica Media">
+
+                        <div class="modal-body text-center">
+                          <p class="py-1"><b>Trascina </b>i file da caricare <br>
+                            oppure</p>
+                          <input dusk="ecmedia" type="file" id="file-ec-tracks-ecmedia" name="name"
+                                 class="form-file-input select-none">
+                          <label for="file-ec-tracks-ecmedia"
+                                 class="form-file-btn btn btn-default btn-primary select-none"><span>Scegli File</span></label>
                         </div>
                       </tab>
                     </tabs>
@@ -36,7 +56,6 @@
 
                 </div>
                 <div class="modal-footer">
-                  default footer
                   <button class="btn btn-primary btn-default" @click="modalOpen = false">
                     OK
                   </button>
@@ -68,10 +87,16 @@ export default {
   props: ['resourceName', 'resourceId', 'field'],
   data() {
     return {
-      modalOpen: false
+      modalOpen: false,
+      mediaList: {},
     }
   },
   mounted() {
+    axios.get('/api/ec/track/' + this.resourceId + '/near_points')
+        .then(response => {
+          this.mediaList = response.data;
+          console.log(this.mediaList);
+        });
   },
 
   methods: {
@@ -136,7 +161,7 @@ export default {
 }
 
 .modal-body {
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .modal-footer {
@@ -177,5 +202,15 @@ export default {
 
 .modal-footer {
   border-top: 1px solid lightgray;
+}
+
+.col-50 {
+  flex: 0 0 49%;
+  max-width: 49%;
+}
+
+.col-20 {
+  flex: 0 0 20%;
+  max-width: 20%;
 }
 </style>

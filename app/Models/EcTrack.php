@@ -38,7 +38,7 @@ class EcTrack extends Model
         'ele_max' => 'float',
         'duration_forward' => 'int',
         'duration_backward' => 'int',
-        ];
+    ];
     public bool $skip_update = false;
 
 
@@ -48,7 +48,7 @@ class EcTrack extends Model
     }
 
     public static string $geometryType = 'LineString';
-   
+
 
     protected static function booted()
     {
@@ -238,5 +238,30 @@ class EcTrack extends Model
         }
 
         return json_encode($array);
+    }
+
+    public function getNearEcMedia()
+    {
+
+        $features = [];
+        //dd($track->geometry);
+        $result = DB::select(
+            'SELECT id FROM ec_media
+                    WHERE St_DWithin(geometry, ?, 500);',
+            [
+                $this->geometry,
+            ]
+        );
+        foreach ($result as $row) {
+            $geojson = EcMedia::find($row->id)->getGeojson();
+            if (isset($geojson))
+                $features[] = $geojson;
+
+        }
+
+        return ([
+            "type" => "FeatureCollection",
+            "features" => $features,
+        ]);
     }
 }

@@ -300,7 +300,7 @@ class EditorialContentController extends Controller
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
+     * @param int $id the id of the EcMedia
      */
     public function updateEcMedia(Request $request, $id)
     {
@@ -345,7 +345,7 @@ class EditorialContentController extends Controller
     /** Update the ec track with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcTrack
+     * @param int $id the id of the EcTrack
      */
     public function updateEcTrack(Request $request, $id)
     {
@@ -393,7 +393,7 @@ class EditorialContentController extends Controller
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
+     * @param int $id the id of the EcMedia
      */
     public function updateEcPoi(Request $request, $id)
     {
@@ -423,8 +423,8 @@ class EditorialContentController extends Controller
      * Return geometry formatted by $format.
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id
-     * @param string  $format
+     * @param int $id
+     * @param string $format
      *
      * @return Response
      */
@@ -471,7 +471,7 @@ class EditorialContentController extends Controller
      * Return EcTrack JSON.
      *
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -505,7 +505,7 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -534,7 +534,7 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -601,5 +601,22 @@ class EditorialContentController extends Controller
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
 
         return $this->viewEcKml($request, $id, $headers);
+    }
+
+    /**
+     * get points near ecTrack in 500 meters
+     *
+     * @param int $idTrack the id of EcTrack
+     *
+     */
+    public function getEcMediaNearTrack(int $idTrack)
+    {
+        $track = EcTrack::find($idTrack);
+
+        $nearQuery = "SELECT ST_Distance(
+        'SRID=4326;POINT(-72.1235 42.3521)'::geometry,
+		'SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry
+	)";
+        
     }
 }

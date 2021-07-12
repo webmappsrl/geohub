@@ -21,6 +21,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
+use Webmapp\Ecmediapopup\Ecmediapopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
