@@ -29,21 +29,24 @@ use Tests\TestCase;
  *
  * @package Tests\Feature
  */
-class AppElbrusTaxonomyTest extends TestCase {
+class AppElbrusTaxonomyTest extends TestCase
+{
     use RefreshDatabase;
 
     private $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 
-    public function testWrongTaxonomyReturns400() {
+    public function testWrongTaxonomyReturns400()
+    {
         $app = App::factory()->create();
         $uri = 'api/app/elbrus/' . $app->id . '/taxonomies/x.json';
         $result = $this->getJson($uri);
         $this->assertEquals(400, $result->getStatusCode());
     }
 
-    public function testNoAppReturns404ForAllValidTaxonomyName() {
+    public function testNoAppReturns404ForAllValidTaxonomyName()
+    {
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/0/taxonomies/$name.json";
             $result = $this->getJson($uri);
@@ -51,7 +54,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy() {
+    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy()
+    {
         $app = App::factory()->create();
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/$app->id/taxonomies/$name.json";
@@ -61,7 +65,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithOneTrackWithOnlyOneActivityTerm() {
+    public function testAppWithOneTrackWithOnlyOneActivityTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -87,13 +92,14 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
         // Check other taxonomies
     }
 
-    public function testAppWithOneTrackWithOnlyOneThemeTerm() {
+    public function testAppWithOneTrackWithOnlyOneThemeTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $theme = TaxonomyTheme::factory()->create();
@@ -116,17 +122,19 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['theme_' . $theme->id];
         $this->assertEquals('theme_' . $theme->id, $json_term['id']);
-        $this->assertEquals($theme->name, $json_term['name']);
-        $this->assertEquals($theme->description, $json_term['description']);
+        $this->assertEquals($theme->name, $json_term['name']['it']);
+        $this->assertEquals($theme->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
         // Check other taxonomies
 
     }
 
-    public function testAppWithOneTrackWithOnlyOneTerm() {
+    public function testAppWithOneTrackWithOnlyOneTerm()
+    {
         $names = ['activity', 'where', 'when', 'who', 'theme'];
         $names1 = $names;
         foreach ($names as $name) {
+            $i18n = false;
             $user = User::factory()->create();
             $track = EcTrack::factory()->create();
             $track->user_id = $user->id;
@@ -135,22 +143,27 @@ class AppElbrusTaxonomyTest extends TestCase {
                 case 'activity':
                     $tax = TaxonomyActivity::factory()->create();
                     $track->taxonomyActivities()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'where':
                     $tax = TaxonomyWhere::factory()->create();
                     $track->taxonomyWheres()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'when':
                     $tax = TaxonomyWhen::factory()->create();
                     $track->taxonomyWhens()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'who':
                     $tax = TaxonomyTarget::factory()->create();
                     $track->taxonomyTargets()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'theme':
                     $tax = TaxonomyTheme::factory()->create();
                     $track->taxonomyThemes()->attach($tax->id);
+                    $i18n = true;
                     break;
             }
 
@@ -169,8 +182,13 @@ class AppElbrusTaxonomyTest extends TestCase {
 
             $json_term = $json[$name . '_' . $tax->id];
             $this->assertEquals($name . '_' . $tax->id, $json_term['id']);
-            $this->assertEquals($tax->name, $json_term['name']);
-            $this->assertEquals($tax->description, $json_term['description']);
+            if ($i18n) {
+                $this->assertEquals($tax->name, $json_term['name']['it']);
+                $this->assertEquals($tax->description, $json_term['description']['it']);
+            } else {
+                $this->assertEquals($tax->name, $json_term['name']);
+                $this->assertEquals($tax->description, $json_term['description']);
+            }
             $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
 
             // Check other taxonomies
@@ -185,7 +203,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithOneTrackAndTwoActivityTerms() {
+    public function testAppWithOneTrackAndTwoActivityTerms()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -213,18 +232,19 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
 
         $json_term = $json['activity_' . $activity1->id];
         $this->assertEquals('activity_' . $activity1->id, $json_term['id']);
-        $this->assertEquals($activity1->name, $json_term['name']);
-        $this->assertEquals($activity1->description, $json_term['description']);
+        $this->assertEquals($activity1->name, $json_term['name']['it']);
+        $this->assertEquals($activity1->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
     }
 
-    public function testAppWithTwoTracksAndOneActivityTerm() {
+    public function testAppWithTwoTracksAndOneActivityTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -254,14 +274,15 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertTrue(in_array('ec_track_' . $track->id, $json_term['items']['track']));
         $this->assertTrue(in_array('ec_track_' . $track1->id, $json_term['items']['track']));
         $this->assertCount(2, $json_term['items']['track']);
     }
 
-    public function testWhereTaxonomyHasNoGeometry() {
+    public function testWhereTaxonomyHasNoGeometry()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $where = TaxonomyWhere::factory()->create();

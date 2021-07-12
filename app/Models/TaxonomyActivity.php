@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
+use Spatie\Translatable\HasTranslations;
 
 class TaxonomyActivity extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    public $translatable = ['name', 'description', 'excerpt'];
 
     public function save(array $options = [])
     {
@@ -43,7 +46,6 @@ class TaxonomyActivity extends Model
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
-
         });
         static::updating(function ($taxonomyActivity) {
             if ($taxonomyActivity->identifier != null) {

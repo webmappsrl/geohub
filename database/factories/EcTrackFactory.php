@@ -28,10 +28,18 @@ class EcTrackFactory extends Factory
         $lng1 = $this->faker->randomFloat(2, 42, 45);
         $lng2 = $this->faker->randomFloat(2, 42, 45);
         return [
-            'name' => $this->faker->name(),
-            // TODO: 'osm_id' => $this->faker->name(),
-            'excerpt' => $this->faker->text(90),
-            'description' => $this->faker->text(),
+            'name' => [
+                'it' => $this->faker->name(),
+                'en' => $this->faker->name(),
+            ],
+            'description' => [
+                'it' => $this->faker->text(),
+                'en' => $this->faker->text(),
+            ],
+            'excerpt' => [
+                'it' => $this->faker->text(90),
+                'en' => $this->faker->text(90),
+            ],
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,

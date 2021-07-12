@@ -7,6 +7,7 @@ use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Image;
@@ -55,10 +56,12 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
-            Text::make(__('Name'), 'name')->sortable(),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')->sortable(),
+                Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
+            ]),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),

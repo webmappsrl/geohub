@@ -8,6 +8,7 @@ use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
@@ -64,14 +65,17 @@ class TaxonomyTheme extends Resource
         return [
             ErrorMessage::make('Error'),
 
-            Text::make(__('Name'), 'name')->sortable(),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')->sortable(),
+                CKEditor::make(__('Description'), 'description')->hideFromIndex(),
+                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+            ]),
+
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
             Swatches::make('Color'),
             Number::make('Zindex')->hideFromIndex(),
             NovaIconSelect::make("Icon")->setIconProvider(WmpIconProvider::class),
-            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {

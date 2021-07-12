@@ -10,15 +10,18 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 
 class EcMedia extends Model
 {
-    use HasFactory, GeometryFeatureTrait;
+    use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     /**
      * @var array
      */
     protected $fillable = ['name', 'url'];
+
+    public $translatable = ['name', 'description'];
 
     public function __construct(array $attributes = [])
     {

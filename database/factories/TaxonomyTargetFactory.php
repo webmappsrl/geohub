@@ -25,9 +25,18 @@ class TaxonomyTargetFactory extends Factory
     {
         $name = $this->faker->name();
         return [
-            'name' => $name,
-            'excerpt' => $this->faker->text(90),
-            'description' => $this->faker->text(),
+            'name' => [
+                'it' => $name,
+                'en' => $name,
+            ],
+            'description' => [
+                'it' => $this->faker->text(),
+                'en' => $this->faker->text(),
+            ],
+            'excerpt' => [
+                'it' => $this->faker->text(90),
+                'en' => $this->faker->text(90),
+            ],
             'identifier' => $name,
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),

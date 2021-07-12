@@ -30,9 +30,9 @@ class EcPoiGetTest extends TestCase
         $this->assertEquals("Feature", $json->type);
         $this->assertIsObject($json->properties);
 
-        $this->assertEquals($ecPoi->name, $json->properties->name);
-        $this->assertEquals($ecPoi->excerpt, $json->properties->excerpt);
-        $this->assertEquals($ecPoi->description, $json->properties->description);
+        $this->assertEquals($ecPoi->name, $json->properties->name->it);
+        $this->assertEquals($ecPoi->excerpt, $json->properties->excerpt->it);
+        $this->assertEquals($ecPoi->description, $json->properties->description->it);
 
         $this->assertIsObject($json->geometry);
         $this->assertEquals("Point", $json->geometry->type);
@@ -54,9 +54,9 @@ class EcPoiGetTest extends TestCase
         $this->assertEquals("Feature", $json->type);
         $this->assertIsObject($json->properties);
 
-        $this->assertEquals($ecPoi->name, $json->properties->name);
-        $this->assertEquals($ecPoi->excerpt, $json->properties->excerpt);
-        $this->assertEquals($ecPoi->description, $json->properties->description);
+        $this->assertEquals($ecPoi->name, $json->properties->name->it);
+        $this->assertEquals($ecPoi->excerpt, $json->properties->excerpt->it);
+        $this->assertEquals($ecPoi->description, $json->properties->description->it);
 
         $this->assertIsObject($json->geometry);
         $this->assertEquals("Point", $json->geometry->type);

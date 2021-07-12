@@ -24,9 +24,18 @@ class EcPoiFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
-            'excerpt' => $this->faker->text(90),
-            'description' => $this->faker->text(),
+            'name' => [
+                'it' => $this->faker->name(),
+                'en' => $this->faker->name(),
+            ],
+            'description' => [
+                'it' => $this->faker->text(),
+                'en' => $this->faker->text(),
+            ],
+            'excerpt' => [
+                'it' => $this->faker->text(90),
+                'en' => $this->faker->text(90),
+            ],
             'user_id' => User::all()->random()->id,
             'geometry' => DB::raw("(ST_GeomFromText('POINT(10.43 43.70)'))"),
             'related_url' => $this->faker->url().';'.$this->faker->url(),
