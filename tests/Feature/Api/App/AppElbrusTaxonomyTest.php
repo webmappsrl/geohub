@@ -146,6 +146,7 @@ class AppElbrusTaxonomyTest extends TestCase {
                 case 'when':
                     $tax = TaxonomyWhen::factory()->create();
                     $track->taxonomyWhens()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'who':
                     $tax = TaxonomyTarget::factory()->create();
