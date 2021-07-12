@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46db91341c6fa83c4c2cd74ca7fc103c",
+    "content-hash": "e5d3d89c86ce9c1057abaa72d3403523",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -418,52 +418,6 @@
                 "source": "https://github.com/cakephp/chronos"
             },
             "time": "2021-06-17T13:49:10+00:00"
-        },
-        {
-            "name": "cdbeaton/boolean-tick",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cdbeaton/boolean-tick.git",
-                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cdbeaton/boolean-tick/zipball/7c6215cc52c01a7cda7f15745725fcc88453489f",
-                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cdbeaton\\BooleanTick\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Cdbeaton\\BooleanTick\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "An alternative to the Boolean component in Laravel Nova for colourblind users.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/cdbeaton/boolean-tick/issues",
-                "source": "https://github.com/cdbeaton/boolean-tick/tree/master"
-            },
-            "time": "2019-08-14T23:01:02+00:00"
         },
         {
             "name": "chaseconey/nova-external-image",
@@ -1727,6 +1681,52 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.8.2"
             },
             "time": "2021-04-26T09:17:50+00:00"
+        },
+        {
+            "name": "khalin/nova-link-field",
+            "version": "v1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oleghalin/nova-link-field.git",
+                "reference": "3179ee3b573d8911598ec09219d531fc45734c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oleghalin/nova-link-field/zipball/3179ee3b573d8911598ec09219d531fc45734c1b",
+                "reference": "3179ee3b573d8911598ec09219d531fc45734c1b",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": ">=2.1",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Khalin\\Nova\\Field\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Khalin\\Nova\\Field\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Link field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/oleghalin/nova-link-field/issues",
+                "source": "https://github.com/oleghalin/nova-link-field/tree/v1.2.4"
+            },
+            "time": "2020-08-24T16:40:40+00:00"
         },
         {
             "name": "kongulov/nova-tab-translatable",
@@ -10052,7 +10052,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "cdbeaton/boolean-tick": 20,
         "elevate-digital/nova-charcounted-fields": 20
     },
     "prefer-stable": true,

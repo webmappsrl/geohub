@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
@@ -110,7 +109,7 @@ class EcPoi extends Resource
 
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
-            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+            Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),

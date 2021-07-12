@@ -2,16 +2,18 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\OpenEcTrackGeoJson;
 use App\Nova\Actions\RegenerateEcTrack;
-use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
@@ -116,7 +118,15 @@ class EcTrack extends Resource
 
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
-            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+            Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
+
+            Link::make('geojson', 'id')->showOnIndex()->hideWhenUpdating()->hideWhenCreating()
+                ->url(function () {
+                    return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
+                })
+                ->text(__('Open GeoJson'))
+                ->icon()
+                ->blank(),
 
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
