@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 
 class EcPoi extends Model
 {
-    use HasFactory, GeometryFeatureTrait;
+    use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     protected $fillable = ['name'];
+
+    public $translatable = ['name', 'description', 'excerpt'];
 
     public function __construct(array $attributes = [])
     {
