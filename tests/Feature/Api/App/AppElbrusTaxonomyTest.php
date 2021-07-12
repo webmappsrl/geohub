@@ -122,8 +122,8 @@ class AppElbrusTaxonomyTest extends TestCase
 
         $json_term = $json['theme_' . $theme->id];
         $this->assertEquals('theme_' . $theme->id, $json_term['id']);
-        $this->assertEquals($theme->name, $json_term['name']);
-        $this->assertEquals($theme->description, $json_term['description']);
+        $this->assertEquals($theme->name, $json_term['name']['it']);
+        $this->assertEquals($theme->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
         // Check other taxonomies
 
