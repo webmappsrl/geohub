@@ -12,4 +12,5 @@ class Ecmediapopup extends Field
      * @var string
      */
     public $component = 'ecmediapopup';
+
 }

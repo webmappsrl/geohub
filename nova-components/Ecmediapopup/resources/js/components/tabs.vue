@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;">
     <div class="tabs">
       <ul>
         <li v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">

@@ -1083,7 +1083,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 50%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 1rem;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.modal-footer[data-v-c023248a] {\n  border-top: 1px solid lightgray;\n}\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 50%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 2rem;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.modal-footer[data-v-c023248a] {\n  border-top: 1px solid lightgray;\n}\n.col-50[data-v-c023248a] {\n  -webkit-box-flex: 0;\n      -ms-flex: 0 0 49%;\n          flex: 0 0 49%;\n  max-width: 49%;\n}\n.col-20[data-v-c023248a] {\n  -webkit-box-flex: 0;\n      -ms-flex: 0 0 20%;\n          flex: 0 0 20%;\n  max-width: 20%;\n}\n", ""]);
 
 // exports
 
@@ -1154,6 +1154,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1172,10 +1191,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   props: ['resourceName', 'resourceId', 'field'],
   data: function data() {
     return {
-      modalOpen: false
+      modalOpen: false,
+      mediaList: {}
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/api/ec/track/' + this.resourceId + '/near_points').then(function (response) {
+      _this.mediaList = response.data;
+      console.log(_this.mediaList);
+    });
+  },
 
 
   methods: {
@@ -1514,7 +1541,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticStyle: { width: "100%" } }, [
     _c("div", { staticClass: "tabs" }, [
       _c(
         "ul",
@@ -27947,30 +27974,150 @@ var render = function() {
                                     "tab",
                                     {
                                       attrs: {
-                                        name: "Services",
+                                        name: "Media associati alla track",
                                         selected: true
                                       }
                                     },
                                     [
-                                      _c("h1", [_vm._v("What we do")]),
-                                      _vm._v(" "),
-                                      _c("div", { staticClass: "modal-body" }, [
-                                        _vm._v(
-                                          "\n                        default body\n                      "
-                                        )
-                                      ])
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass: "modal-body",
+                                          staticStyle: { display: "flex" }
+                                        },
+                                        [
+                                          _c("div", [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass: "media-list col-50"
+                                              },
+                                              _vm._l(
+                                                _vm.mediaList.features,
+                                                function(media) {
+                                                  return _c("div", [
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        "max-width": "30px"
+                                                      },
+                                                      attrs: {
+                                                        src:
+                                                          media.properties.url
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        "max-width": "30px"
+                                                      },
+                                                      attrs: {
+                                                        src:
+                                                          media.properties.url
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        "max-width": "30px"
+                                                      },
+                                                      attrs: {
+                                                        src:
+                                                          media.properties.url
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        "max-width": "30px"
+                                                      },
+                                                      attrs: {
+                                                        src:
+                                                          media.properties.url
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("img", {
+                                                      staticStyle: {
+                                                        "max-width": "30px"
+                                                      },
+                                                      attrs: {
+                                                        src:
+                                                          media.properties.url
+                                                      }
+                                                    })
+                                                  ])
+                                                }
+                                              ),
+                                              0
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "map col-50 text-center"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                            Mappa\n                          "
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ]
+                                      )
                                     ]
                                   ),
                                   _vm._v(" "),
-                                  _c("tab", { attrs: { name: "Pricing" } }, [
-                                    _c("h1", [_vm._v("How much we do it for")]),
-                                    _vm._v(" "),
-                                    _c("div", { staticClass: "modal-body" }, [
-                                      _vm._v(
-                                        "\n                        default body\n                      "
+                                  _c(
+                                    "tab",
+                                    { attrs: { name: "Carica Media" } },
+                                    [
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass: "modal-body text-center"
+                                        },
+                                        [
+                                          _c("p", { staticClass: "py-1" }, [
+                                            _c("b", [_vm._v("Trascina ")]),
+                                            _vm._v("i file da caricare "),
+                                            _c("br"),
+                                            _vm._v(
+                                              "\n                          oppure"
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("input", {
+                                            staticClass:
+                                              "form-file-input select-none",
+                                            attrs: {
+                                              dusk: "ecmedia",
+                                              type: "file",
+                                              id: "file-ec-tracks-ecmedia",
+                                              name: "name"
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c(
+                                            "label",
+                                            {
+                                              staticClass:
+                                                "form-file-btn btn btn-default btn-primary select-none",
+                                              attrs: {
+                                                for: "file-ec-tracks-ecmedia"
+                                              }
+                                            },
+                                            [
+                                              _c("span", [
+                                                _vm._v("Scegli File")
+                                              ])
+                                            ]
+                                          )
+                                        ]
                                       )
-                                    ])
-                                  ])
+                                    ]
+                                  )
                                 ],
                                 1
                               )
@@ -27980,9 +28127,6 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "modal-footer" }, [
-                          _vm._v(
-                            "\n                default footer\n                "
-                          ),
                           _c(
                             "button",
                             {
