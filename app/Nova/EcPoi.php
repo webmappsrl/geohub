@@ -63,6 +63,7 @@ class EcPoi extends Resource
     {
         return [
             new Panel('Taxonomies', $this->attach_taxonomy()),
+            
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->required()->sortable(),
                 CKEditor::make(__('Description'), 'description')->hideFromIndex(),

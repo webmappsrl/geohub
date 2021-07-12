@@ -58,5 +58,35 @@ class EcMediaTest extends TestCase
         $ecMedia->delete();
     }
 
+    public function testEcMediaFieldsTranslation()
+    {
+        $ecMedia = EcMedia::factory()->create([
+            'name' => 'Titolo media',
+            'description' => 'Descrizione media',
+        ]);
 
+        $this->assertEquals('Titolo media', $ecMedia->name);
+        $this->assertEquals('Titolo media', $ecMedia->getTranslation('name', 'it'));
+        $this->assertEquals('Descrizione media', $ecMedia->description);
+        $this->assertEquals('Descrizione media', $ecMedia->getTranslation('description', 'it'));
+
+        $ecMedia = EcMedia::factory()->create([
+            'name' => [
+                'it' => 'Titolo media',
+                'en' => 'Media title',
+            ],
+            'description' => [
+                'it' => 'Descrizione media',
+                'en' => 'Media description',
+            ],
+        ]);
+
+        $this->assertEquals('Titolo media', $ecMedia->name);
+        $this->assertEquals('Titolo media', $ecMedia->getTranslation('name', 'it'));
+        $this->assertEquals('Media title', $ecMedia->getTranslation('name', 'en'));
+        $this->assertEquals('Descrizione media', $ecMedia->description);
+        $this->assertEquals('Descrizione media', $ecMedia->getTranslation('description', 'it'));
+        $this->assertEquals('Media description', $ecMedia->getTranslation('description', 'en'));
+
+    }
 }
