@@ -76,6 +76,19 @@ class UpdateValuesToI18nInTaxonomies extends Migration
                     'excerpt' => $excerpt,
                 ]);
         });
+
+        DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
+            $name = json_encode(['it' => $poiType->name, 'en' => $poiType->name]);
+            $description = json_encode(['it' => $poiType->description, 'en' => $poiType->description]);
+            $excerpt = json_encode(['it' => $poiType->excerpt, 'en' => $poiType->excerpt]);
+            DB::table('taxonomy_poi_types')
+                ->where('id', $poiType->id)
+                ->update([
+                    'name' => $name,
+                    'description' => $description,
+                    'excerpt' => $excerpt,
+                ]);
+        });
     }
 
     /**
@@ -143,6 +156,19 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             $excerpt = json_decode($theme->excerpt);
             DB::table('taxonomy_themes')
                 ->where('id', $theme->id)
+                ->update([
+                    'name' => $name->it,
+                    'description' => $description->it,
+                    'excerpt' => $excerpt->it,
+                ]);
+        });
+
+        DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
+            $name = json_decode($poiType->name);
+            $description = json_decode($poiType->description);
+            $excerpt = json_decode($poiType->excerpt);
+            DB::table('taxonomy_poi_types')
+                ->where('id', $poiType->id)
                 ->update([
                     'name' => $name->it,
                     'description' => $description->it,
