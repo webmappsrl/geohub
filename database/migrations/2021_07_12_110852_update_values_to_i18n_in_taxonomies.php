@@ -50,6 +50,19 @@ class UpdateValuesToI18nInTaxonomies extends Migration
                     'excerpt' => $excerpt,
                 ]);
         });
+
+        DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
+            $name = json_encode(['it' => $target->name, 'en' => $target->name]);
+            $description = json_encode(['it' => $target->description, 'en' => $target->description]);
+            $excerpt = json_encode(['it' => $target->excerpt, 'en' => $target->excerpt]);
+            DB::table('taxonomy_targets')
+                ->where('id', $target->id)
+                ->update([
+                    'name' => $name,
+                    'description' => $description,
+                    'excerpt' => $excerpt,
+                ]);
+        });
     }
 
     /**
@@ -91,6 +104,19 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             $excerpt = json_decode($when->excerpt);
             DB::table('taxonomy_whens')
                 ->where('id', $when->id)
+                ->update([
+                    'name' => $name->it,
+                    'description' => $description->it,
+                    'excerpt' => $excerpt->it,
+                ]);
+        });
+
+        DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
+            $name = json_decode($target->name);
+            $description = json_decode($target->description);
+            $excerpt = json_decode($target->excerpt);
+            DB::table('taxonomy_targets')
+                ->where('id', $target->id)
                 ->update([
                     'name' => $name->it,
                     'description' => $description->it,

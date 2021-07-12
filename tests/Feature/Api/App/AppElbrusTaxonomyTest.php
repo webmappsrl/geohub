@@ -29,21 +29,24 @@ use Tests\TestCase;
  *
  * @package Tests\Feature
  */
-class AppElbrusTaxonomyTest extends TestCase {
+class AppElbrusTaxonomyTest extends TestCase
+{
     use RefreshDatabase;
 
     private $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 
-    public function testWrongTaxonomyReturns400() {
+    public function testWrongTaxonomyReturns400()
+    {
         $app = App::factory()->create();
         $uri = 'api/app/elbrus/' . $app->id . '/taxonomies/x.json';
         $result = $this->getJson($uri);
         $this->assertEquals(400, $result->getStatusCode());
     }
 
-    public function testNoAppReturns404ForAllValidTaxonomyName() {
+    public function testNoAppReturns404ForAllValidTaxonomyName()
+    {
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/0/taxonomies/$name.json";
             $result = $this->getJson($uri);
@@ -51,7 +54,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy() {
+    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy()
+    {
         $app = App::factory()->create();
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/$app->id/taxonomies/$name.json";
@@ -61,7 +65,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithOneTrackWithOnlyOneActivityTerm() {
+    public function testAppWithOneTrackWithOnlyOneActivityTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -93,7 +98,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         // Check other taxonomies
     }
 
-    public function testAppWithOneTrackWithOnlyOneThemeTerm() {
+    public function testAppWithOneTrackWithOnlyOneThemeTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $theme = TaxonomyTheme::factory()->create();
@@ -123,7 +129,8 @@ class AppElbrusTaxonomyTest extends TestCase {
 
     }
 
-    public function testAppWithOneTrackWithOnlyOneTerm() {
+    public function testAppWithOneTrackWithOnlyOneTerm()
+    {
         $names = ['activity', 'where', 'when', 'who', 'theme'];
         $names1 = $names;
         foreach ($names as $name) {
@@ -151,10 +158,12 @@ class AppElbrusTaxonomyTest extends TestCase {
                 case 'who':
                     $tax = TaxonomyTarget::factory()->create();
                     $track->taxonomyTargets()->attach($tax->id);
+                    $i18n = true;
                     break;
                 case 'theme':
                     $tax = TaxonomyTheme::factory()->create();
                     $track->taxonomyThemes()->attach($tax->id);
+                    $i18n = true;
                     break;
             }
 
@@ -194,7 +203,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         }
     }
 
-    public function testAppWithOneTrackAndTwoActivityTerms() {
+    public function testAppWithOneTrackAndTwoActivityTerms()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -233,7 +243,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
     }
 
-    public function testAppWithTwoTracksAndOneActivityTerm() {
+    public function testAppWithTwoTracksAndOneActivityTerm()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -270,7 +281,8 @@ class AppElbrusTaxonomyTest extends TestCase {
         $this->assertCount(2, $json_term['items']['track']);
     }
 
-    public function testWhereTaxonomyHasNoGeometry() {
+    public function testWhereTaxonomyHasNoGeometry()
+    {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $where = TaxonomyWhere::factory()->create();
