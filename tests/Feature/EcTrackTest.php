@@ -223,11 +223,11 @@ class EcTrackTest extends TestCase
         $ecTrack->source_id = 'relation/126402';
         $ecTrack->import_method = 'osm';
         $ecTrack->save();
-        
+
         $this->assertIsObject($ecTrack);
         $this->assertNotEmpty($ecTrack->geometry);
 
-        
+
         // $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
         // $this->assertEquals('126402', $properties['source_id']);
         // $this->assertEquals('osm', $properties['source']);
