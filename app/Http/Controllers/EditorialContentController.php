@@ -93,6 +93,10 @@ class EditorialContentController extends Controller
             $geojson = $ec->getGeojson([]);
         }
 
+        // Add Taxonomies
+        $taxonomies = $this->_getTaxonomies($ec, $names = ['activity', 'theme', 'where', 'who', 'when']);
+        $geojson['properties']['taxonomy'] = $taxonomies;
+
         return response()->json($geojson);
     }
 
@@ -173,6 +177,7 @@ class EditorialContentController extends Controller
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
+
 
         return response()->json($this->_getElbrusTracksGeojsonComplete($app_id, $track_id), 200);
     }
@@ -281,7 +286,7 @@ class EditorialContentController extends Controller
 
         // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
 
-        if(preg_match('/\.amazonaws\.com\//',$ec->url)) {
+        if (preg_match('/\.amazonaws\.com\//', $ec->url)) {
             $explode = explode('.amazonaws.com/', $ec->url);
             $url = end($explode);
             Log::info($url);

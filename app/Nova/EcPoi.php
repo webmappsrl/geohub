@@ -2,13 +2,13 @@
 
 namespace App\Nova;
 
-use Cdbeaton\BooleanTick\BooleanTick;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Heading;
@@ -61,8 +61,6 @@ class EcPoi extends Resource
     public function fields(Request $request)
     {
         return [
-            
-
             new Panel('Taxonomies', $this->attach_taxonomy()),
             Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -110,7 +108,7 @@ class EcPoi extends Resource
 
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
-            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+            Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
             AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
