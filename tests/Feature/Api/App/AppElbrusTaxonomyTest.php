@@ -87,8 +87,8 @@ class AppElbrusTaxonomyTest extends TestCase {
 
         $json_term = $json['activity_' . $activity->id];
         $this->assertEquals('activity_' . $activity->id, $json_term['id']);
-        $this->assertEquals($activity->name, $json_term['name']);
-        $this->assertEquals($activity->description, $json_term['description']);
+        $this->assertEquals($activity->name, $json_term['name']['it']);
+        $this->assertEquals($activity->description, $json_term['description']['it']);
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
         // Check other taxonomies
     }
@@ -169,8 +169,8 @@ class AppElbrusTaxonomyTest extends TestCase {
 
             $json_term = $json[$name . '_' . $tax->id];
             $this->assertEquals($name . '_' . $tax->id, $json_term['id']);
-            $this->assertEquals($tax->name, $json_term['name']);
-            $this->assertEquals($tax->description, $json_term['description']);
+            $this->assertEquals($tax->name, $json_term['name']['it']);
+            $this->assertEquals($tax->description, $json_term['description']['it']);
             $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
 
             // Check other taxonomies

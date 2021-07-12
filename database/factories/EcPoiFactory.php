@@ -24,6 +24,18 @@ class EcPoiFactory extends Factory
     public function definition()
     {
         return [
+            'name' => [
+                'it' => $this->faker->name(),
+                'en' => $this->faker->name(),
+            ],
+            'description' => [
+                'it' => $this->faker->text(),
+                'en' => $this->faker->text(),
+            ],
+            'excerpt' => [
+                'it' => $this->faker->text(90),
+                'en' => $this->faker->text(90),
+            ],
             'name' => $this->faker->name(),
             'excerpt' => $this->faker->text(90),
             'description' => $this->faker->text(),

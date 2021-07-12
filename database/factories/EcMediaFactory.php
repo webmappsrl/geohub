@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TaxonomyWhere;
 
-class EcMediaFactory extends Factory {
+class EcMediaFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
@@ -22,7 +23,8 @@ class EcMediaFactory extends Factory {
      *
      * @return array
      */
-    public function definition() {
+    public function definition()
+    {
         Storage::disk('public')->put('/ec_media_test/test_108x137.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x137.jpg'));
         Storage::disk('public')->put('/ec_media_test/test_108x148.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x148.jpg'));
         Storage::disk('public')->put('/ec_media_test/test_100x200.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_100x200.jpg'));
@@ -34,9 +36,15 @@ class EcMediaFactory extends Factory {
         $url = Storage::disk('public')->url('/ec_media_test/test.jpg');
 
         $result = [
-            'name' => $this->faker->name(),
+            'name' => [
+                'it' => $this->faker->name(),
+                'en' => $this->faker->name(),
+            ],
+            'description' => [
+                'it' => $this->faker->text(),
+                'en' => $this->faker->text(),
+            ],
             'excerpt' => $this->faker->text(90),
-            'description' => $this->faker->text(),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
