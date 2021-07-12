@@ -6,8 +6,10 @@ use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Heading;
@@ -60,14 +62,15 @@ class EcPoi extends Resource
     public function fields(Request $request)
     {
         return [
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')->required()->sortable(),
+                CKEditor::make(__('Description'), 'description')->hideFromIndex(),
+                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+            ]),
             
-
             new Panel('Taxonomies', $this->attach_taxonomy()),
-            Text::make(__('Name'), 'name')->required()->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-            TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
