@@ -1,82 +1,70 @@
 <template>
-  <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
-    <template slot="field">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EcMediaModal">
-        Select EcMedia
-      </button>
+  <div>
+    <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
+      <template slot="field">
+        <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
+          Select EcMedia
+        </button>
 
 
-      <div id="EcMediaModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">EcMedia</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="associatedMedia-tab" data-toggle="tab" href="#associatedMedia"
-                     role="tab"
-                     aria-controls="associatedMedia"
-                     aria-selected="true">Media associati alla Track</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="uploadMedia-tab" data-toggle="tab" href="#uploadMedia" role="tab"
-                     aria-controls="uploadMedia"
-                     aria-selected="false">Carica Media</a>
-                </li>
-              </ul>
-              <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="associatedMedia" role="tabpanel"
-                     aria-labelledby="associatedMedia-tab">
-                  <div class="row pt-2">
-                    <div class="col-md-6 p-2">
-                      Seleziona i media georeferenziati nellevicinanze della traccia
-                      <br>
-                      <div class="row list-image">
-                        <div class="col-md-3">
+      </template>
+    </default-field>
+    <template v-if="modalOpen">
+      <div id="root" class="container">
+        <transition name="modal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
 
+                <div class="modal-header">
+                  <div style="display:flex">
+                    <tabs>
+                      <tab name="Services" :selected="true">
+                        <h1>What we do</h1>
+                        <div class="modal-body">
+                          default body
                         </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 p-2">
-                      Media MAP
-                    </div>
+                      </tab>
+                      <tab name="Pricing">
+                        <h1>How much we do it for</h1>
+                        <div class="modal-body">
+                          default body
+                        </div>
+                      </tab>
+                    </tabs>
                   </div>
+
                 </div>
-                <div class="tab-pane fade" id="uploadMedia" role="tabpanel" aria-labelledby="uploadMedia-tab">
-                  <div class="row pt-2">
-                    <div class="col-md-12 py-5 text-center">
-                      <b>Trascina</b> i file da caricare<br>
-                      oppure<br>
-                      <button type="button" class="btn btn-primary">Scegli file</button>
-                    </div>
-                  </div>
+                <div class="modal-footer">
+                  default footer
+                  <button class="btn btn-primary btn-default" @click="modalOpen = false">
+                    OK
+                  </button>
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Save changes</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </template>
-  </default-field>
+  </div>
 </template>
 
 <script>
+import Tab from './tab';
+import Tabs from './tabs';
+
 import {FormField, HandlesValidationErrors} from 'laravel-nova'
 
 import EcMediaModal from './ModalEcMedia';
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
-
+  components: {
+    EcMediaModal,
+    Tabs,
+    Tab,
+  },
   props: ['resourceName', 'resourceId', 'field'],
   data() {
     return {
@@ -85,9 +73,7 @@ export default {
   },
   mounted() {
   },
-  components: {
-    EcMediaModal
-  },
+
   methods: {
     openModal() {
       this.modalOpen = true;
@@ -114,3 +100,82 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 50%;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.modal-footer {
+  padding: 1rem;
+  text-align: right
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid lightgray;
+}
+
+.modal-footer {
+  border-top: 1px solid lightgray;
+}
+</style>
