@@ -19,9 +19,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_activities')
                 ->where('id', $activity->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
 
@@ -32,9 +32,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_wheres')
                 ->where('id', $where->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
 
@@ -45,9 +45,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_whens')
                 ->where('id', $when->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
 
@@ -58,9 +58,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_targets')
                 ->where('id', $target->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
 
@@ -71,9 +71,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_themes')
                 ->where('id', $theme->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
 
@@ -84,9 +84,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_poi_types')
                 ->where('id', $poiType->id)
                 ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
+                    'name' => isset($name) ? $name : null,
+                    'description' => isset($description) ? $description : null,
+                    'excerpt' => isset($excerpt) ? $excerpt : null,
                 ]);
         });
     }
@@ -105,9 +105,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_activities')
                 ->where('id', $activity->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
 
@@ -118,9 +118,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_wheres')
                 ->where('id', $where->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
 
@@ -131,9 +131,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_whens')
                 ->where('id', $when->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
 
@@ -144,9 +144,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_targets')
                 ->where('id', $target->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
 
@@ -157,9 +157,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_themes')
                 ->where('id', $theme->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
 
@@ -170,9 +170,9 @@ class UpdateValuesToI18nInTaxonomies extends Migration
             DB::table('taxonomy_poi_types')
                 ->where('id', $poiType->id)
                 ->update([
-                    'name' => $name->it,
-                    'description' => $description->it,
-                    'excerpt' => $excerpt->it,
+                    'name' => isset($name) ? $name->it : null,
+                    'description' => isset($description) ? $description->it : null,
+                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
                 ]);
         });
     }
