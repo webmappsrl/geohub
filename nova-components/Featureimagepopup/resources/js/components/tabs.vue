@@ -2,7 +2,7 @@
   <div style="width: 100%;">
     <div class="tabs">
       <ul>
-        <li class="tabName" v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
+        <li v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
           <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a>
         </li>
       </ul>
@@ -40,11 +40,6 @@ export default {
 
 <style scoped>
 a {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 22px;
-  letter-spacing: 0.459184px;
   color: #00d1b2;
   cursor: pointer;
   text-decoration: none;
@@ -92,8 +87,7 @@ a {
 }
 
 .tabs li.is-active a {
-  border-bottom: 2px solid #63A2DE;
+  border-bottom-color: #00d1b2;
   color: #00d1b2;
-  font-weight: bold;
 }
 </style>

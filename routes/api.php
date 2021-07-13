@@ -121,6 +121,7 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{id}/near_points", [EcTrackController::class, 'getNearEcMedia']);
+            Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'getEcJson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');

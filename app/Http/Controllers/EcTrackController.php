@@ -11,4 +11,9 @@ class EcTrackController extends Controller
     {
         return response()->json(EcTrack::find($idTrack)->getNearEcMedia());
     }
+
+    public static function getAssociatedEcMedia(int $idTrack)
+    {
+        return response()->json(EcTrack::find($idTrack)->ecMedia()->get());
+    }
 }

@@ -2,29 +2,29 @@
   <div>
     <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
       <template slot="field">
-        <div ref="selectedImageList" id="selectedImageList">
-          <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
+        <div ref="selectedImageFeature" id="selectedImageFeature">
+          <div class="selectedImageRow flex flex-wrap mb-1">
             <div class="w-1/5">
               <img class="selectedThunbnail" :src="row.url">
             </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
+              <br>
               <p>EN: {{ row.name.en }}</p>
             </div>
             <div class="w-1/5">
-              <button type="button" class="btn btn-primary btn-default" @click="removeImage(row.id)">Cancel
-              </button>
+              <button type="button" class="btn btn-primary btn-default" @click="removeImage(row.id)">Cancel</button>
             </div>
             <hr>
           </div>
-          <br>
+
         </div>
-        <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
-          Select EcMedia
+        <button type="button" class="btn btn-primary btn-default" @click="modalFeatureOpen = true">
+          Select Feature Image
         </button>
       </template>
     </default-field>
-    <template v-if="modalOpen">
+    <template v-if="modalFeatureOpen">
       <div id="root" class="container">
         <transition name="modal">
           <div class="modal-mask">
@@ -38,7 +38,6 @@
 
                         <div class="modal-body flex flex-wrap">
                           <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
-
                             <div class="w-1/4 box-image" v-for="media in mediaList.features">
                               <img class="image ec-media-image"
                                    :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
@@ -70,7 +69,7 @@
                       </tab>
                     </tabs>
                     <p class="text-right">
-                      <button type="button" class="btn btn-danger btn-default" @click="cancelUpload()">X</button>
+                      <button type="button" class="btn btn-primary btn-default" @click="cancelUpload()">X</button>
                     </p>
                   </div>
 
@@ -107,31 +106,16 @@ export default {
   props: ['resourceName', 'resourceId', 'field'],
   data() {
     return {
-      modalOpen: false,
-      associatedMediaList: {},
-      mediaList: {},
-      selectedImages: [],
-      loadedImages: [],
+      modalFeatureOpen: false,
+      selectedFeatureImage: [],
+      loadedFeatureImage: [],
     }
   },
   mounted() {
-    var that = this;
     axios.get('/api/ec/track/' + this.resourceId + '/near_points')
         .then(response => {
-          that.mediaList = response.data;
+          this.mediaList = response.data;
         });
-    axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_media')
-        .then(response => {
-          that.associatedMediaList = response.data;
-          that.associatedMediaList.forEach(element =>
-              that.selectedImages.push(element.id)
-          );
-          that.associatedMediaList.forEach(element =>
-              that.loadedImages.push(element)
-          );
-        });
-
-
   },
 
   methods: {
@@ -146,15 +130,16 @@ export default {
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
-      this.modalOpen = false;
+      this.modalFeatureOpen = false;
     },
     cancelUpload() {
-      this.modalOpen = false;
+      this.selectedImages.splice(0);
+      this.loadedImages.splice(0);
+      this.modalFeatureOpen = false;
     },
     removeImage(id) {
       this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
-
     },
     associateImages() {
 
@@ -164,6 +149,7 @@ export default {
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
+
       formData.append(this.field.attribute, JSON.stringify(this.selectedImages))
     },
   },
@@ -189,16 +175,14 @@ export default {
 }
 
 .modal-container {
-  width: 75%;
+  width: 50%;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
+  border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
-  border: 1px solid #D4DDE4;
-  box-sizing: border-box;
-  border-radius: 8px;
 }
 
 .modal-header h3 {
@@ -252,21 +236,16 @@ export default {
 }
 
 .ec-media-image {
-  width: 108px;
-  height: 101px !important;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 
 .ec-media-image:hover {
-  border: 5px solid #63A2DE;
-  box-sizing: border-box;
-  opacity: 0.8;
+  border: 4px solid lightgreen;
 }
 
 
 .selected {
-  border: 5px solid #63A2DE;
-  box-sizing: border-box;
+  border: 4px solid lightgreen;
   opacity: 0.8;
 }
 
@@ -283,11 +262,10 @@ export default {
   left: 0;
   right: 0;
   height: 100%;
-  width: 108px;
+  width: 100%;
   opacity: 0;
   transition: .5s ease;
   background-color: black;
-  border-radius: 8px;
 }
 
 .box-image:hover .overlay {
@@ -315,13 +293,12 @@ export default {
 }
 
 .box-image {
-
+  margin: 5px;
 }
 
 .selectedThunbnail {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  max-width: 50%;
+  border-radius: 10px;
 }
 
 </style>

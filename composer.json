@@ -41,7 +41,8 @@
         "webmapp/ecmediapopup": "*",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0"
+        "ynacorp/nova-swatches": "^1.0",
+        "webmapp/featureimagepopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -115,6 +116,10 @@
         {
             "type": "path",
             "url": "./nova-components/Ecmediapopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Featureimagepopup"
         }
     ]
 }
