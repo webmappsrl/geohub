@@ -28,7 +28,7 @@ class EcTrackGetNearMediaTest extends TestCase
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function testGetNearEcMedia()
+    public function _testGetNearEcMedia()
     {
         $track = EcTrack::factory()->create();
 
