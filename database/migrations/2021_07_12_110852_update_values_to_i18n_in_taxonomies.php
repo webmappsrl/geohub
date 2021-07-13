@@ -13,81 +13,147 @@ class UpdateValuesToI18nInTaxonomies extends Migration
     public function up()
     {
         DB::table('taxonomy_activities')->lazyById()->each(function ($activity) {
-            $name = "" != $activity->name ? json_encode(['it' => $activity->name, 'en' => $activity->name]) : null;
-            $description = "" != $activity->description ? json_encode(['it' => $activity->description, 'en' => $activity->description]) : null;
-            $excerpt = "" != $activity->excerpt ? json_encode(['it' => $activity->excerpt, 'en' => $activity->excerpt]) : null;
-            DB::table('taxonomy_activities')
-                ->where('id', $activity->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updateActivities = [];
+            if (null != $activity->name) {
+                $name = json_encode(['it' => $activity->name, 'en' => $activity->name]);
+                $updateActivities['name'] = $name;
+            }
+
+            if (null != $activity->description) {
+                $description = json_encode(['it' => $activity->description, 'en' => $activity->description]);
+                $updateActivities['description'] = $description;
+            }
+
+            if (null != $activity->excerpt) {
+                $excerpt = json_encode(['it' => $activity->excerpt, 'en' => $activity->excerpt]);
+                $updateActivities['excerpt'] = $excerpt;
+            }
+
+            if (count($updateActivities)) {
+                DB::table('taxonomy_activities')
+                    ->where('id', $activity->id)
+                    ->update($updateActivities);
+            }
         });
 
         DB::table('taxonomy_wheres')->lazyById()->each(function ($where) {
-            $name = "" != $where->name ? json_encode(['it' => $where->name, 'en' => $where->name]) : null;
-            $description = "" != $where->description ? json_encode(['it' => $where->description, 'en' => $where->description]) : null;
-            $excerpt = "" != $where->excerpt ? json_encode(['it' => $where->excerpt, 'en' => $where->excerpt]) : null;
-            DB::table('taxonomy_wheres')
-                ->where('id', $where->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updateWheres = [];
+            if (null != $where->name) {
+                $name = json_encode(['it' => $where->name, 'en' => $where->name]);
+                $updateWheres['name'] = $name;
+            }
+
+            if (null != $where->description) {
+                $description = json_encode(['it' => $where->description, 'en' => $where->description]);
+                $updateWheres['description'] = $description;
+            }
+
+            if (null != $where->excerpt) {
+                $excerpt = json_encode(['it' => $where->excerpt, 'en' => $where->excerpt]);
+                $updateWheres['excerpt'] = $excerpt;
+            }
+
+            if (count($updateWheres)) {
+                DB::table('taxonomy_wheres')
+                    ->where('id', $where->id)
+                    ->update($updateWheres);
+            }
         });
 
         DB::table('taxonomy_whens')->lazyById()->each(function ($when) {
-            $name = "" != $when->name ? json_encode(['it' => $when->name, 'en' => $when->name]) : null;
-            $description = "" != $when->description ? json_encode(['it' => $when->description, 'en' => $when->description]) : null;
-            $excerpt = "" != $when->excerpt ? json_encode(['it' => $when->excerpt, 'en' => $when->excerpt]) : null;
-            DB::table('taxonomy_whens')
-                ->where('id', $when->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updateWhens = [];
+            if (null != $when->name) {
+                $name = json_encode(['it' => $when->name, 'en' => $when->name]);
+                $updateWhens['name'] = $name;
+            }
+
+            if (null != $when->description) {
+                $description = json_encode(['it' => $when->description, 'en' => $when->description]);
+                $updateWhens['description'] = $description;
+            }
+
+            if (null != $when->excerpt) {
+                $excerpt = json_encode(['it' => $when->excerpt, 'en' => $when->excerpt]);
+                $updateWhens['excerpt'] = $excerpt;
+            }
+
+            if (count($updateWhens)) {
+                DB::table('taxonomy_whens')
+                    ->where('id', $when->id)
+                    ->update($updateWhens);
+            }
         });
 
         DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
-            $name = "" != $target->name ? json_encode(['it' => $target->name, 'en' => $target->name]) : null;
-            $description = "" != $target->description ? json_encode(['it' => $target->description, 'en' => $target->description]) : null;
-            $excerpt = "" != $target->excerpt ? json_encode(['it' => $target->excerpt, 'en' => $target->excerpt]) : null;
-            DB::table('taxonomy_targets')
-                ->where('id', $target->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updateTargets = [];
+            if (null != $target->name) {
+                $name = json_encode(['it' => $target->name, 'en' => $target->name]);
+                $updateTargets['name'] = $name;
+            }
+
+            if (null != $target->description) {
+                $description = json_encode(['it' => $target->description, 'en' => $target->description]);
+                $updateTargets['description'] = $description;
+            }
+
+            if (null != $target->excerpt) {
+                $excerpt = json_encode(['it' => $target->excerpt, 'en' => $target->excerpt]);
+                $updateTargets['excerpt'] = $excerpt;
+            }
+
+            if (count($updateTargets)) {
+                DB::table('taxonomy_targets')
+                    ->where('id', $target->id)
+                    ->update($updateTargets);
+            }
         });
 
         DB::table('taxonomy_themes')->lazyById()->each(function ($theme) {
-            $name = "" != $theme->name ? json_encode(['it' => $theme->name, 'en' => $theme->name]) : null;
-            $description = "" != $theme->description ? json_encode(['it' => $theme->description, 'en' => $theme->description]) : null;
-            $excerpt = "" != $theme->excerpt ? json_encode(['it' => $theme->excerpt, 'en' => $theme->excerpt]) : null;
-            DB::table('taxonomy_themes')
-                ->where('id', $theme->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updateThemes = [];
+            if (null != $theme->name) {
+                $name = json_encode(['it' => $theme->name, 'en' => $theme->name]);
+                $updateThemes['name'] = $name;
+            }
+
+            if (null != $theme->description) {
+                $description = json_encode(['it' => $theme->description, 'en' => $theme->description]);
+                $updateThemes['description'] = $description;
+            }
+
+            if (null != $theme->excerpt) {
+                $excerpt = json_encode(['it' => $theme->excerpt, 'en' => $theme->excerpt]);
+                $updateThemes['excerpt'] = $excerpt;
+            }
+
+            if (count($updateThemes)) {
+                DB::table('taxonomy_themes')
+                    ->where('id', $theme->id)
+                    ->update($updateThemes);
+            }
         });
 
         DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
-            $name = "" != $poiType->name ? json_encode(['it' => $poiType->name, 'en' => $poiType->name]) : null;
-            $description = "" != $poiType->description ? json_encode(['it' => $poiType->description, 'en' => $poiType->description]) : null;
-            $excerpt = "" != $poiType->excerpt ? json_encode(['it' => $poiType->excerpt, 'en' => $poiType->excerpt]) : null;
-            DB::table('taxonomy_poi_types')
-                ->where('id', $poiType->id)
-                ->update([
-                    'name' => $name,
-                    'description' => $description,
-                    'excerpt' => $excerpt,
-                ]);
+            $updatePoiTypes = [];
+            if (null != $poiType->name) {
+                $name = json_encode(['it' => $poiType->name, 'en' => $poiType->name]);
+                $updatePoiTypes['name'] = $name;
+            }
+
+            if (null != $poiType->description) {
+                $description = json_encode(['it' => $poiType->description, 'en' => $poiType->description]);
+                $updatePoiTypes['description'] = $description;
+            }
+
+            if (null != $poiType->excerpt) {
+                $excerpt = json_encode(['it' => $poiType->excerpt, 'en' => $poiType->excerpt]);
+                $updatePoiTypes['excerpt'] = $excerpt;
+            }
+
+            if (count($updatePoiTypes)) {
+                DB::table('taxonomy_poi_types')
+                    ->where('id', $poiType->id)
+                    ->update($updatePoiTypes);
+            }
         });
     }
 
@@ -99,81 +165,183 @@ class UpdateValuesToI18nInTaxonomies extends Migration
     public function down()
     {
         DB::table('taxonomy_activities')->lazyById()->each(function ($activity) {
-            $name = json_decode($activity->name);
-            $description = json_decode($activity->description);
-            $excerpt = json_decode($activity->excerpt);
-            DB::table('taxonomy_activities')
-                ->where('id', $activity->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updateActivities = [];
+            if (null != $activity->name) {
+                $name = json_decode($activity->name);
+                if (isset($name)) {
+                    $updateActivities['name'] = $name->it;
+                }
+            }
+
+            if (null != $activity->description) {
+                $description = json_decode($activity->description);
+                if (isset($description)) {
+                    $updateActivities['description'] = $description->it;
+                }
+            }
+
+            if (null != $activity->excerpt) {
+                $excerpt = json_decode($activity->excerpt);
+                if (isset($excerpt)) {
+                    $updateActivities['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updateActivities)) {
+                DB::table('taxonomy_activities')
+                    ->where('id', $activity->id)
+                    ->update($updateActivities);
+            }
         });
 
         DB::table('taxonomy_wheres')->lazyById()->each(function ($where) {
-            $name = json_decode($where->name);
-            $description = json_decode($where->description);
-            $excerpt = json_decode($where->excerpt);
-            DB::table('taxonomy_wheres')
-                ->where('id', $where->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updateWheres = [];
+            if (null != $where->name) {
+                $name = json_decode($where->name);
+                if (isset($name)) {
+                    $updateWheres['name'] = $name->it;
+                }
+            }
+
+            if (null != $where->description) {
+                $description = json_decode($where->description);
+                if (isset($description)) {
+                    $updateWheres['description'] = $description->it;
+                }
+            }
+
+            if (null != $where->excerpt) {
+                $excerpt = json_decode($where->excerpt);
+                if (isset($excerpt)) {
+                    $updateWheres['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updateWheres)) {
+                DB::table('taxonomy_wheres')
+                    ->where('id', $where->id)
+                    ->update($updateWheres);
+            }
         });
 
         DB::table('taxonomy_whens')->lazyById()->each(function ($when) {
-            $name = json_decode($when->name);
-            $description = json_decode($when->description);
-            $excerpt = json_decode($when->excerpt);
-            DB::table('taxonomy_whens')
-                ->where('id', $when->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updateWhens = [];
+            if (null != $when->name) {
+                $name = json_decode($when->name);
+                if (isset($name)) {
+                    $updateWhens['name'] = $name->it;
+                }
+            }
+
+            if (null != $when->description) {
+                $description = json_decode($when->description);
+                if (isset($description)) {
+                    $updateWhens['description'] = $description->it;
+                }
+            }
+
+            if (null != $when->excerpt) {
+                $excerpt = json_decode($when->excerpt);
+                if (isset($excerpt)) {
+                    $updateWhens['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updateWhens)) {
+                DB::table('taxonomy_whens')
+                    ->where('id', $when->id)
+                    ->update($updateWhens);
+            }
         });
 
         DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
-            $name = json_decode($target->name);
-            $description = json_decode($target->description);
-            $excerpt = json_decode($target->excerpt);
-            DB::table('taxonomy_targets')
-                ->where('id', $target->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updateTargets = [];
+            if (null != $target->name) {
+                $name = json_decode($target->name);
+                if (isset($name)) {
+                    $updateTargets['name'] = $name->it;
+                }
+            }
+
+            if (null != $target->description) {
+                $description = json_decode($target->description);
+                if (isset($description)) {
+                    $updateTargets['description'] = $description->it;
+                }
+            }
+
+            if (null != $target->excerpt) {
+                $excerpt = json_decode($target->excerpt);
+                if (isset($excerpt)) {
+                    $updateTargets['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updateTargets)) {
+                DB::table('taxonomy_targets')
+                    ->where('id', $target->id)
+                    ->update($updateTargets);
+            }
         });
 
         DB::table('taxonomy_themes')->lazyById()->each(function ($theme) {
-            $name = json_decode($theme->name);
-            $description = json_decode($theme->description);
-            $excerpt = json_decode($theme->excerpt);
-            DB::table('taxonomy_themes')
-                ->where('id', $theme->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updateThemes = [];
+            if (null != $theme->name) {
+                $name = json_decode($theme->name);
+                if (isset($name)) {
+                    $updateThemes['name'] = $name->it;
+                }
+            }
+
+            if (null != $theme->description) {
+                $description = json_decode($theme->description);
+                if (isset($description)) {
+                    $updateThemes['description'] = $description->it;
+                }
+            }
+
+            if (null != $theme->excerpt) {
+                $excerpt = json_decode($theme->excerpt);
+                if (isset($excerpt)) {
+                    $updateThemes['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updateThemes)) {
+                DB::table('taxonomy_themes')
+                    ->where('id', $theme->id)
+                    ->update($updateThemes);
+            }
         });
 
         DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
-            $name = json_decode($poiType->name);
-            $description = json_decode($poiType->description);
-            $excerpt = json_decode($poiType->excerpt);
-            DB::table('taxonomy_poi_types')
-                ->where('id', $poiType->id)
-                ->update([
-                    'name' => isset($name) ? $name->it : null,
-                    'description' => isset($description) ? $description->it : null,
-                    'excerpt' => isset($excerpt) ? $excerpt->it : null,
-                ]);
+            $updatePoiTypes = [];
+            if (null != $poiType->name) {
+                $name = json_decode($poiType->name);
+                if (isset($name)) {
+                    $updatePoiTypes['name'] = $name->it;
+                }
+            }
+
+            if (null != $poiType->description) {
+                $description = json_decode($poiType->description);
+                if (isset($description)) {
+                    $updatePoiTypes['description'] = $description->it;
+                }
+            }
+
+            if (null != $poiType->excerpt) {
+                $excerpt = json_decode($poiType->excerpt);
+                if (isset($excerpt)) {
+                    $updatePoiTypes['excerpt'] = $excerpt->it;
+                }
+            }
+
+            if (count($updatePoiTypes)) {
+                DB::table('taxonomy_poi_types')
+                    ->where('id', $poiType->id)
+                    ->update($updatePoiTypes);
+            }
         });
     }
 }
