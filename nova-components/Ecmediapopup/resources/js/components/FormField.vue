@@ -10,10 +10,11 @@
             </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
+              <br>
               <p>EN: {{ row.name.en }}</p>
             </div>
             <div class="w-1/5">
-              <button class="btn btn-primary btn-default" @click="removeImage(row.id)">Cancel</button>
+              <button type="button" class="btn btn-primary btn-default" @click="removeImage(row.id)">Cancel</button>
             </div>
             <hr>
           </div>
@@ -71,7 +72,7 @@
                       </tab>
                     </tabs>
                     <p class="text-right">
-                      <button class="btn btn-primary btn-default" @click="cancelUpload()">X</button>
+                      <button type="button" class="btn btn-primary btn-default" @click="cancelUpload()">X</button>
                     </p>
                   </div>
 
@@ -138,6 +139,7 @@ export default {
     cancelUpload() {
       this.selectedImages.splice(0);
       this.loadedImages.splice(0);
+      this.modalOpen = false;
     },
     removeImage(id) {
       this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
@@ -146,18 +148,14 @@ export default {
     associateImages() {
 
     },
-    /*
-     * Set the initial, internal value for the field.
-     */
-    setInitialValue() {
-      this.value = this.field.value || ''
-    },
 
     /**
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      formData.append(this.field.attribute, this.value || '')
+      //formData.append('ec-medias', this.selectedImages);
+      //formData.append('viaRelationship', 'ecmedia');
+      formData.append(this.field.attribute, JSON.stringify(this.selectedImages))
     },
   },
 }
@@ -305,6 +303,7 @@ export default {
 
 .selectedThunbnail {
   max-width: 50%;
+  border-radius: 10px;
 }
 
 </style>

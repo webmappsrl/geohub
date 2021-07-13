@@ -244,10 +244,9 @@ class EcTrack extends Model
     {
 
         $features = [];
-        //dd($track->geometry);
         $result = DB::select(
             'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, 500);',
+                    WHERE St_DWithin(geometry, ?, 5000000000000000);',
             [
                 $this->geometry,
             ]

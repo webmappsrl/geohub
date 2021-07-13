@@ -75,8 +75,8 @@ class EcTrack extends Resource
             Text::make(__('Import Method'), 'import_method'),
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            BelongsToMany::make('EcMedia'),
-            //Ecmediapopup::make(__('Ecmediapop'),)->onlyOnForms(),
+            BelongsToMany::make('EcMedia')->onlyOnDetail(),
+            Ecmediapopup::make(__('EcMedia'),)->onlyOnForms(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -129,7 +129,7 @@ class EcTrack extends Resource
                 ->icon()
                 ->blank(),
 
-            AttachMany::make('EcMedia'),
+            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
 
