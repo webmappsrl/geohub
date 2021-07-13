@@ -2,6 +2,23 @@
   <div>
     <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
       <template slot="field">
+        <div ref="selectedImageList" id="selectedImageList"
+             style="display:none">
+          <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
+            <div class="w-1/5">
+              <img class="selectedThunbnail" :src="row.url">
+            </div>
+            <div class="w-3/5">
+              <p>IT: {{ row.name.it }}</p>
+              <p>EN: {{ row.name.en }}</p>
+            </div>
+            <div class="w-1/5">
+              <button class="btn btn-primary btn-default" @click="removeImage(row.id)">Cancel</button>
+            </div>
+            <hr>
+          </div>
+
+        </div>
         <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
           Select EcMedia
         </button>
@@ -21,22 +38,23 @@
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
 
-                        <div class="modal-body" style="display:flex">
-                          <div>
-                            <div class="media-list col-50">
-                              <div v-for="media in mediaList.features">
-                                <img :src="media.properties.url" style="max-width:30px">
-                                <img :src="media.properties.url" style="max-width:30px">
-                                <img :src="media.properties.url" style="max-width:30px">
-                                <img :src="media.properties.url" style="max-width:30px">
-                                <img :src="media.properties.url" style="max-width:30px">
-
+                        <div class="modal-body flex flex-wrap">
+                          <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
+                            <div class="w-1/4 box-image" v-for="media in mediaList.features">
+                              <img class="image ec-media-image"
+                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
+                                   :src="media.properties.url"
+                                   @click="toggleImage(media.properties)">
+                              <div class="overlay"
+                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
+                                   :src="media.properties.url"
+                                   @click="toggleImage(media.properties)">
+                                <div class="text">Seleziona</div>
                               </div>
-
                             </div>
-                            <div class="map col-50 text-center">
-                              Mappa
-                            </div>
+                          </div>
+                          <div class="map w-1/2 text-center">
+                            Mappa
                           </div>
                         </div>
                       </tab>
@@ -52,12 +70,15 @@
                         </div>
                       </tab>
                     </tabs>
+                    <p class="text-right">
+                      <button class="btn btn-primary btn-default" @click="cancelUpload()">X</button>
+                    </p>
                   </div>
 
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-primary btn-default" @click="modalOpen = false">
-                    OK
+                  <button class="btn btn-primary btn-default" @click="loadImages()">
+                    Carica Selezionati
                   </button>
                 </div>
               </div>
@@ -89,25 +110,41 @@ export default {
     return {
       modalOpen: false,
       mediaList: {},
+      selectedImages: [],
+      loadedImages: [],
     }
   },
   mounted() {
     axios.get('/api/ec/track/' + this.resourceId + '/near_points')
         .then(response => {
           this.mediaList = response.data;
-          console.log(this.mediaList);
         });
   },
 
   methods: {
-    openModal() {
-      this.modalOpen = true;
+    toggleImage(item) {
+      if (this.selectedImages.includes(item.id)) {
+        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1)
+        this.selectedImages.splice(this.selectedImages.indexOf(item.id), 1)
+      } else {
+        this.loadedImages.push(item);
+        this.selectedImages.push(item.id);
+      }
     },
-    confirmModal() {
+    loadImages() {
+      document.getElementById('selectedImageList').style.display = "block";
       this.modalOpen = false;
     },
-    closeModal() {
-      this.modalOpen = false;
+    cancelUpload() {
+      this.selectedImages.splice(0);
+      this.loadedImages.splice(0);
+    },
+    removeImage(id) {
+      this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
+      this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
+    },
+    associateImages() {
+
     },
     /*
      * Set the initial, internal value for the field.
@@ -161,7 +198,7 @@ export default {
 }
 
 .modal-body {
-  padding: 2rem;
+  padding: 1rem 0.5rem;
 }
 
 .modal-footer {
@@ -172,6 +209,7 @@ export default {
 .modal-default-button {
   float: right;
 }
+
 
 /*
  * The following styles are auto-applied to elements with
@@ -204,13 +242,69 @@ export default {
   border-top: 1px solid lightgray;
 }
 
-.col-50 {
-  flex: 0 0 49%;
-  max-width: 49%;
+.ec-media-image {
+  border-radius: 5px;
 }
 
-.col-20 {
-  flex: 0 0 20%;
-  max-width: 20%;
+.ec-media-image:hover {
+  border: 4px solid lightgreen;
 }
+
+
+.selected {
+  border: 4px solid lightgreen;
+  opacity: 0.8;
+}
+
+
+.image {
+  display: block;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: black;
+}
+
+.box-image:hover .overlay {
+  opacity: 0.5;
+}
+
+.text {
+  color: white;
+  font-size: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.box-image {
+  position: relative;
+}
+
+.overlay.selected {
+  display: none;
+}
+
+.box-image {
+  margin: 5px;
+}
+
+.selectedThunbnail {
+  max-width: 50%;
+}
+
 </style>

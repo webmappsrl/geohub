@@ -1083,7 +1083,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 50%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 2rem;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.modal-footer[data-v-c023248a] {\n  border-top: 1px solid lightgray;\n}\n.col-50[data-v-c023248a] {\n  -webkit-box-flex: 0;\n      -ms-flex: 0 0 49%;\n          flex: 0 0 49%;\n  max-width: 49%;\n}\n.col-20[data-v-c023248a] {\n  -webkit-box-flex: 0;\n      -ms-flex: 0 0 20%;\n          flex: 0 0 20%;\n  max-width: 20%;\n}\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 50%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 1rem 0.5rem;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.modal-footer[data-v-c023248a] {\n  border-top: 1px solid lightgray;\n}\n.ec-media-image[data-v-c023248a] {\n  border-radius: 5px;\n}\n.ec-media-image[data-v-c023248a]:hover {\n  border: 4px solid lightgreen;\n}\n.selected[data-v-c023248a] {\n  border: 4px solid lightgreen;\n  opacity: 0.8;\n}\n.image[data-v-c023248a] {\n  display: block;\n  height: auto;\n}\n.overlay[data-v-c023248a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 100%;\n  width: 100%;\n  opacity: 0;\n  -webkit-transition: .5s ease;\n  transition: .5s ease;\n  background-color: black;\n}\n.box-image:hover .overlay[data-v-c023248a] {\n  opacity: 0.5;\n}\n.text[data-v-c023248a] {\n  color: white;\n  font-size: 15px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  text-align: center;\n}\n.box-image[data-v-c023248a] {\n  position: relative;\n}\n.overlay.selected[data-v-c023248a] {\n  display: none;\n}\n.box-image[data-v-c023248a] {\n  margin: 5px;\n}\n.selectedThunbnail[data-v-c023248a] {\n  max-width: 50%;\n}\n\n", ""]);
 
 // exports
 
@@ -1102,6 +1102,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_laravel_nova___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_laravel_nova__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ModalEcMedia__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ModalEcMedia___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ModalEcMedia__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1192,7 +1213,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       modalOpen: false,
-      mediaList: {}
+      mediaList: {},
+      selectedImages: [],
+      loadedImages: []
     };
   },
   mounted: function mounted() {
@@ -1200,21 +1223,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     axios.get('/api/ec/track/' + this.resourceId + '/near_points').then(function (response) {
       _this.mediaList = response.data;
-      console.log(_this.mediaList);
     });
   },
 
 
   methods: {
-    openModal: function openModal() {
-      this.modalOpen = true;
+    toggleImage: function toggleImage(item) {
+      if (this.selectedImages.includes(item.id)) {
+        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1);
+        this.selectedImages.splice(this.selectedImages.indexOf(item.id), 1);
+      } else {
+        this.loadedImages.push(item);
+        this.selectedImages.push(item.id);
+      }
     },
-    confirmModal: function confirmModal() {
+    loadImages: function loadImages() {
+      document.getElementById('selectedImageList').style.display = "block";
       this.modalOpen = false;
     },
-    closeModal: function closeModal() {
-      this.modalOpen = false;
+    cancelUpload: function cancelUpload() {
+      this.selectedImages.splice(0);
+      this.loadedImages.splice(0);
     },
+    removeImage: function removeImage(id) {
+      this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
+      this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
+    },
+    associateImages: function associateImages() {},
 
     /*
      * Set the initial, internal value for the field.
@@ -27935,6 +27970,53 @@ var render = function() {
         [
           _c("template", { slot: "field" }, [
             _c(
+              "div",
+              {
+                ref: "selectedImageList",
+                staticStyle: { display: "none" },
+                attrs: { id: "selectedImageList" }
+              },
+              _vm._l(_vm.loadedImages, function(row) {
+                return _c(
+                  "div",
+                  { staticClass: "selectedImageRow flex flex-wrap mb-1" },
+                  [
+                    _c("div", { staticClass: "w-1/5" }, [
+                      _c("img", {
+                        staticClass: "selectedThunbnail",
+                        attrs: { src: row.url }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "w-3/5" }, [
+                      _c("p", [_vm._v("IT: " + _vm._s(row.name.it))]),
+                      _vm._v(" "),
+                      _c("p", [_vm._v("EN: " + _vm._s(row.name.en))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "w-1/5" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-default",
+                          on: {
+                            click: function($event) {
+                              return _vm.removeImage(row.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Cancel")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("hr")
+                  ]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
               "button",
               {
                 staticClass: "btn btn-primary btn-default",
@@ -27982,88 +28064,104 @@ var render = function() {
                                       _c(
                                         "div",
                                         {
-                                          staticClass: "modal-body",
-                                          staticStyle: { display: "flex" }
+                                          staticClass:
+                                            "modal-body flex flex-wrap"
                                         },
                                         [
-                                          _c("div", [
-                                            _c(
-                                              "div",
-                                              {
-                                                staticClass: "media-list col-50"
-                                              },
-                                              _vm._l(
-                                                _vm.mediaList.features,
-                                                function(media) {
-                                                  return _c("div", [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "media-list w-1/2 flex flex-wrap",
+                                              staticStyle: {
+                                                "border-right": "1px solid grey"
+                                              }
+                                            },
+                                            _vm._l(
+                                              _vm.mediaList.features,
+                                              function(media) {
+                                                return _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "w-1/4 box-image"
+                                                  },
+                                                  [
                                                     _c("img", {
-                                                      staticStyle: {
-                                                        "max-width": "30px"
-                                                      },
+                                                      staticClass:
+                                                        "image ec-media-image",
+                                                      class: _vm.selectedImages.includes(
+                                                        media.properties.id
+                                                      )
+                                                        ? "selected"
+                                                        : "",
                                                       attrs: {
                                                         src:
                                                           media.properties.url
+                                                      },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.toggleImage(
+                                                            media.properties
+                                                          )
+                                                        }
                                                       }
                                                     }),
                                                     _vm._v(" "),
-                                                    _c("img", {
-                                                      staticStyle: {
-                                                        "max-width": "30px"
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass: "overlay",
+                                                        class: _vm.selectedImages.includes(
+                                                          media.properties.id
+                                                        )
+                                                          ? "selected"
+                                                          : "",
+                                                        attrs: {
+                                                          src:
+                                                            media.properties.url
+                                                        },
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.toggleImage(
+                                                              media.properties
+                                                            )
+                                                          }
+                                                        }
                                                       },
-                                                      attrs: {
-                                                        src:
-                                                          media.properties.url
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("img", {
-                                                      staticStyle: {
-                                                        "max-width": "30px"
-                                                      },
-                                                      attrs: {
-                                                        src:
-                                                          media.properties.url
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("img", {
-                                                      staticStyle: {
-                                                        "max-width": "30px"
-                                                      },
-                                                      attrs: {
-                                                        src:
-                                                          media.properties.url
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("img", {
-                                                      staticStyle: {
-                                                        "max-width": "30px"
-                                                      },
-                                                      attrs: {
-                                                        src:
-                                                          media.properties.url
-                                                      }
-                                                    })
-                                                  ])
-                                                }
-                                              ),
-                                              0
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "div",
-                                              {
-                                                staticClass:
-                                                  "map col-50 text-center"
-                                              },
-                                              [
-                                                _vm._v(
-                                                  "\n                            Mappa\n                          "
+                                                      [
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass: "text"
+                                                          },
+                                                          [_vm._v("Seleziona")]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
                                                 )
-                                              ]
-                                            )
-                                          ])
+                                              }
+                                            ),
+                                            0
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "map w-1/2 text-center"
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                          Mappa\n                        "
+                                              )
+                                            ]
+                                          )
                                         ]
                                       )
                                     ]
@@ -28120,7 +28218,22 @@ var render = function() {
                                   )
                                 ],
                                 1
-                              )
+                              ),
+                              _vm._v(" "),
+                              _c("p", { staticClass: "text-right" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary btn-default",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.cancelUpload()
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("X")]
+                                )
+                              ])
                             ],
                             1
                           )
@@ -28133,11 +28246,15 @@ var render = function() {
                               staticClass: "btn btn-primary btn-default",
                               on: {
                                 click: function($event) {
-                                  _vm.modalOpen = false
+                                  return _vm.loadImages()
                                 }
                               }
                             },
-                            [_vm._v("\n                  OK\n                ")]
+                            [
+                              _vm._v(
+                                "\n                  Carica Selezionati\n                "
+                              )
+                            ]
                           )
                         ])
                       ])
