@@ -56,7 +56,15 @@ class BaseWorldSeeder extends Seeder
         // TODO: USERS
 
         // Add random all taxonomies but wheres (to be added with command)
-        TaxonomyActivity::factory(10)->create();
+        TaxonomyActivity::factory()->create([
+            'name' => 'Camminata',
+            'identifier' => 'hiking',
+        ]);
+        TaxonomyActivity::factory()->create([
+            'name' => 'Cicloturismo',
+            'identifier' => 'cycling',
+        ]);
+        TaxonomyActivity::factory(8)->create();
         TaxonomyTarget::factory(10)->create();
         TaxonomyTheme::factory(10)->create();
         TaxonomyWhen::factory(10)->create();

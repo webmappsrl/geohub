@@ -97,6 +97,9 @@ class EditorialContentController extends Controller
         $taxonomies = $this->_getTaxonomies($ec, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
 
+        $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
+        $geojson['properties']['duration'] = $durations;
+
         return response()->json($geojson);
     }
 
@@ -160,6 +163,22 @@ class EditorialContentController extends Controller
         }
 
         return $taxonomies;
+    }
+
+    private function _getDurations($obj, $names = ['hiking', 'cycling'])
+    {
+        $durations = [];
+        $activityTerms = $obj->taxonomyActivities()->whereIn('identifier', $names)->get()->toArray();
+        if (count($activityTerms) > 0) {
+            foreach ($activityTerms as $term) {
+                $durations[$term['identifier']] = [
+                    'forward' => $term['pivot']['duration_forward'],
+                    'backward' => $term['pivot']['duration_backward'],
+                ];
+            }
+        }
+
+        return $durations;
     }
 
     /**
@@ -237,6 +256,9 @@ class EditorialContentController extends Controller
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
+
+        $durations = $this->_getDurations($track, $names = ['hiking', 'cycling']);
+        $geojson['properties']['duration'] = $durations;
 
         return $geojson;
     }
