@@ -383,7 +383,7 @@ class EditorialContentController extends Controller
         if (!empty($request->duration)) {
             foreach ($request->duration as $activityIdentifier => $values) {
                 $tax = $ecTrack->taxonomyActivities()->where('identifier', $activityIdentifier)->pluck('id')->first();
-                $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']]);
+                $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']], false);
             }
         }
 

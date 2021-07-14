@@ -56,11 +56,11 @@ class BaseWorldSeeder extends Seeder
         // TODO: USERS
 
         // Add random all taxonomies but wheres (to be added with command)
-        TaxonomyActivity::factory()->create([
+        $hiking = TaxonomyActivity::factory()->create([
             'name' => 'Camminata',
             'identifier' => 'hiking',
         ]);
-        TaxonomyActivity::factory()->create([
+        $cycling = TaxonomyActivity::factory()->create([
             'name' => 'Cicloturismo',
             'identifier' => 'cycling',
         ]);
@@ -120,6 +120,7 @@ class BaseWorldSeeder extends Seeder
         $track->ecMedia()->attach($media2);
         $track->save();
         $track->taxonomyActivities()->attach([$activity->id]);
+        $track->taxonomyActivities()->attach([$hiking->id]);
 
         $track1 = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 2, 3 3 3)'))")]);
         $track1->user_id = $user->id;
@@ -128,6 +129,8 @@ class BaseWorldSeeder extends Seeder
         $track1->ecMedia()->attach($media2);
         $track1->save();
         $track1->taxonomyActivities()->attach([$activity->id]);
+        $track1->taxonomyActivities()->attach([$hiking->id]);
+        $track1->taxonomyActivities()->attach([$cycling->id]);
 
         $app = App::factory()->create();
         $app->user_id = $user->id;
