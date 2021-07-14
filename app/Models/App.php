@@ -81,7 +81,7 @@ class App extends Model {
                 throw new \Exception('Wrong taxonomy name: '.$taxonomy_name);
         }
 
-        $tracks = $query->get();
+        $tracks = $query->orderBy('name')->get();
         $tracks_array = [];
         foreach ($tracks as $track) {
             $tracks_array[] = json_decode($track->getJson(), true);

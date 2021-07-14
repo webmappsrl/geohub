@@ -198,7 +198,8 @@ class EcTrack extends Model
 
     public function taxonomyActivities()
     {
-        return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
+        return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable')
+            ->withPivot(['duration_forward', 'duration_backward']);
     }
 
     public function featureImage(): BelongsTo
@@ -255,7 +256,6 @@ class EcTrack extends Model
             $geojson = EcMedia::find($row->id)->getGeojson();
             if (isset($geojson))
                 $features[] = $geojson;
-
         }
 
         return ([

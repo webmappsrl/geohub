@@ -390,4 +390,49 @@ KML;
         $this->assertArrayHasKey('who', $properties['taxonomy']);
         $this->assertArrayHasKey('when', $properties['taxonomy']);
     }
+
+    public function testApiDurations()
+    {
+        $ecTrack = EcTrack::factory()->create();
+
+        $taxHiking = TaxonomyActivity::factory()->create([
+            'name' => 'Camminata',
+            'identifier' => 'hiking',
+        ]);
+        $taxCycling = TaxonomyActivity::factory()->create([
+            'name' => 'Cicloturismo',
+            'identifier' => 'cycling',
+        ]);
+        $taxJumping = TaxonomyActivity::factory()->create([
+            'name' => 'Saltelli',
+            'identifier' => 'jumping',
+        ]);
+
+        $ecTrack->taxonomyActivities()->attach([$taxHiking->id]);
+        $ecTrack->taxonomyActivities()->attach([$taxCycling->id]);
+        $ecTrack->taxonomyActivities()->attach([$taxJumping->id]);
+
+        $this->assertIsObject($ecTrack);
+        $response = $this->get(route("api.ec.track.view.geojson", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('duration', $properties);
+        $this->assertArrayHasKey('hiking', $properties['duration']);
+        $this->assertArrayHasKey('forward', $properties['duration']['hiking']);
+        $this->assertEquals(0, $properties['duration']['hiking']['forward']);
+        $this->assertArrayHasKey('backward', $properties['duration']['hiking']);
+        $this->assertEquals(0, $properties['duration']['hiking']['backward']);
+        $this->assertArrayHasKey('cycling', $properties['duration']);
+        $this->assertArrayHasKey('forward', $properties['duration']['cycling']);
+        $this->assertEquals(0, $properties['duration']['cycling']['forward']);
+        $this->assertArrayHasKey('backward', $properties['duration']['cycling']);
+        $this->assertEquals(0, $properties['duration']['cycling']['backward']);
+        $this->assertArrayNotHasKey('jumping', $properties['duration']);
+    }
 }
