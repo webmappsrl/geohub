@@ -41,9 +41,9 @@ trait GeometryFeatureTrait
 
     /**
      * Format geometry entry by type.
-     * 
-     * @param string $format.
-     * 
+     *
+     * @param string $format .
+     *
      * @return array|string
      */
     protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
@@ -89,10 +89,10 @@ trait GeometryFeatureTrait
                         }
                     }
                     // Override translated content
-                    if(in_array('Spatie\Translatable\HasTranslations',class_uses($this))) {
-                        if(count($this->getTranslations())>0) {
+                    if (in_array('Spatie\Translatable\HasTranslations', class_uses($this))) {
+                        if (count($this->getTranslations()) > 0) {
                             foreach ($this->getTranslations() as $field => $content) {
-                                $formattedGeometry['properties'][$field]=$content;
+                                $formattedGeometry['properties'][$field] = $content;
                             }
                         }
                     }
@@ -121,18 +121,19 @@ trait GeometryFeatureTrait
         $modelType = get_class($this);
         $model = $modelType::find($this->id);
         $features = [];
+        $images = [];
 
         unset($classes[$modelType]);
 
         foreach ($classes as $class => $table) {
             $result = DB::select(
                 'SELECT id FROM '
-                    . $table
-                    . ' WHERE user_id = ?'
-                    . " AND ABS(EXTRACT(EPOCH FROM created_at) - EXTRACT(EPOCH FROM TIMESTAMP '"
-                    . $model->created_at
-                    . "')) < 5400"
-                    . ' AND St_DWithin(geometry, ?, 400);',
+                . $table
+                . ' WHERE user_id = ?'
+                . " AND ABS(EXTRACT(EPOCH FROM created_at) - EXTRACT(EPOCH FROM TIMESTAMP '"
+                . $model->created_at
+                . "')) < 5400"
+                . ' AND St_DWithin(geometry, ?, 400);',
                 [
                     $model->user_id,
                     $model->geometry

@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Translatable\HasTranslations;
 
 class TaxonomyTarget extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    public $translatable = ['name', 'description', 'excerpt'];
 
     public function save(array $options = [])
     {

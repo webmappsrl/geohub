@@ -2,21 +2,18 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\RegenerateEcMedia;
 use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Khalin\Nova\Field\Link;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -59,12 +56,12 @@ class EcMedia extends Resource
     public function fields(Request $request): array
     {
         $fields = [
-            
-
-            Text::make(__('Name'), 'name')->sortable(),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')->sortable(),
+                Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
+            ]),
             MorphToMany::make('TaxonomyWheres'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
             Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
@@ -89,10 +86,19 @@ class EcMedia extends Resource
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
+
+            Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
+                ->url(function () {
+                    return isset($this->id) ? route('api.ec.media.geojson', ['id' => $this->id]) : '';
+                })
+                ->text(__('Open GeoJson'))
+                ->icon()
+                ->blank(),
         ];
 
-        if (isset($this->model()->thumbnails))
+        if (isset($this->model()->thumbnails)) {
             $fields[] = Panel::make("Thumbnails", $this->_getThumbnailsFields());
+        }
 
         return $fields;
     }
@@ -164,6 +170,8 @@ class EcMedia extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new RegenerateEcMedia(),
+        ];
     }
 }

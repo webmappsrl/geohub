@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d295741f2b833720360bfe512e86bc5",
+    "content-hash": "ea90b2508a24390b0b2e47ed05d1978d",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -110,16 +110,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.185.7",
+            "version": "3.185.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "7c0cd260e749374b5df247c4768c8f33f9a604e4"
+                "reference": "fee396b3e137cc2ec9ae94159d01dd1ed15d8c40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7c0cd260e749374b5df247c4768c8f33f9a604e4",
-                "reference": "7c0cd260e749374b5df247c4768c8f33f9a604e4",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fee396b3e137cc2ec9ae94159d01dd1ed15d8c40",
+                "reference": "fee396b3e137cc2ec9ae94159d01dd1ed15d8c40",
                 "shasum": ""
             },
             "require": {
@@ -194,9 +194,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.185.7"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.185.11"
             },
-            "time": "2021-07-06T18:16:14+00:00"
+            "time": "2021-07-12T18:13:46+00:00"
         },
         {
             "name": "bernhardh/nova-icon-select",
@@ -418,52 +418,6 @@
                 "source": "https://github.com/cakephp/chronos"
             },
             "time": "2021-06-17T13:49:10+00:00"
-        },
-        {
-            "name": "cdbeaton/boolean-tick",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cdbeaton/boolean-tick.git",
-                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cdbeaton/boolean-tick/zipball/7c6215cc52c01a7cda7f15745725fcc88453489f",
-                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cdbeaton\\BooleanTick\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Cdbeaton\\BooleanTick\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "An alternative to the Boolean component in Laravel Nova for colourblind users.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/cdbeaton/boolean-tick/issues",
-                "source": "https://github.com/cdbeaton/boolean-tick/tree/master"
-            },
-            "time": "2019-08-14T23:01:02+00:00"
         },
         {
             "name": "chaseconey/nova-external-image",
@@ -1729,6 +1683,52 @@
             "time": "2021-04-26T09:17:50+00:00"
         },
         {
+            "name": "khalin/nova-link-field",
+            "version": "v1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oleghalin/nova-link-field.git",
+                "reference": "3179ee3b573d8911598ec09219d531fc45734c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oleghalin/nova-link-field/zipball/3179ee3b573d8911598ec09219d531fc45734c1b",
+                "reference": "3179ee3b573d8911598ec09219d531fc45734c1b",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": ">=2.1",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Khalin\\Nova\\Field\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Khalin\\Nova\\Field\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Link field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/oleghalin/nova-link-field/issues",
+                "source": "https://github.com/oleghalin/nova-link-field/tree/v1.2.4"
+            },
+            "time": "2020-08-24T16:40:40+00:00"
+        },
+        {
             "name": "kongulov/nova-tab-translatable",
             "version": "1.0.15",
             "source": {
@@ -1784,16 +1784,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.49.2",
+            "version": "v8.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d9b43ee080b4d51344b2e578aa667f85040471a2"
+                "reference": "d892dbacbe3859cf9303ccda98ac8d782141d5ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d9b43ee080b4d51344b2e578aa667f85040471a2",
-                "reference": "d9b43ee080b4d51344b2e578aa667f85040471a2",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d892dbacbe3859cf9303ccda98ac8d782141d5ae",
+                "reference": "d892dbacbe3859cf9303ccda98ac8d782141d5ae",
                 "shasum": ""
             },
             "require": {
@@ -1803,7 +1803,7 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
-                "league/commonmark": "^1.3",
+                "league/commonmark": "^1.3|^2.0",
                 "league/flysystem": "^1.1",
                 "monolog/monolog": "^2.0",
                 "nesbot/carbon": "^2.31",
@@ -1948,7 +1948,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-07-06T14:06:38+00:00"
+            "time": "2021-07-13T12:41:53+00:00"
         },
         {
             "name": "laravel/nova",
@@ -7372,6 +7372,42 @@
             }
         },
         {
+            "name": "webmapp/featureimagepopup",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/Featureimagepopup",
+                "reference": "e78d4b8af43b09f40a0196baeca89bbc035ffdb6"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webmapp\\Featureimagepopup\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmapp\\Featureimagepopup\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "webmapp/import",
             "version": "dev-develop",
             "dist": {
@@ -7684,16 +7720,16 @@
         },
         {
             "name": "facade/ignition",
-            "version": "2.10.2",
+            "version": "2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/ignition.git",
-                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4"
+                "reference": "dc6818335f50ccf0b90284784718ea9a82604286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/ignition/zipball/43688227bbf27c43bc1ad83af224f135b6ef0ff4",
-                "reference": "43688227bbf27c43bc1ad83af224f135b6ef0ff4",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/dc6818335f50ccf0b90284784718ea9a82604286",
+                "reference": "dc6818335f50ccf0b90284784718ea9a82604286",
                 "shasum": ""
             },
             "require": {
@@ -7701,7 +7737,6 @@
                 "ext-mbstring": "*",
                 "facade/flare-client-php": "^1.6",
                 "facade/ignition-contracts": "^1.0.2",
-                "filp/whoops": "^2.4",
                 "illuminate/support": "^7.0|^8.0",
                 "monolog/monolog": "^2.0",
                 "php": "^7.2.5|^8.0",
@@ -7757,7 +7792,7 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
-            "time": "2021-06-11T06:57:25+00:00"
+            "time": "2021-07-12T15:55:51+00:00"
         },
         {
             "name": "facade/ignition-contracts",
@@ -7879,16 +7914,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.13.0",
+            "version": "2.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "2edbc73a4687d9085c8f20f398eebade844e8424"
+                "reference": "fdf92f03e150ed84d5967a833ae93abffac0315b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/2edbc73a4687d9085c8f20f398eebade844e8424",
-                "reference": "2edbc73a4687d9085c8f20f398eebade844e8424",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/fdf92f03e150ed84d5967a833ae93abffac0315b",
+                "reference": "fdf92f03e150ed84d5967a833ae93abffac0315b",
                 "shasum": ""
             },
             "require": {
@@ -7938,7 +7973,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.13.0"
+                "source": "https://github.com/filp/whoops/tree/2.14.0"
             },
             "funding": [
                 {
@@ -7946,7 +7981,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-04T12:00:00+00:00"
+            "time": "2021-07-13T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -10052,7 +10087,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "cdbeaton/boolean-tick": 20,
         "elevate-digital/nova-charcounted-fields": 20
     },
     "prefer-stable": true,

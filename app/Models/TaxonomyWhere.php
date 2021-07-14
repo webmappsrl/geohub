@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class TaxonomyWhere
@@ -23,7 +24,9 @@ use Illuminate\Validation\ValidationException;
  */
 class TaxonomyWhere extends Model
 {
-    use HasFactory, GeometryFeatureTrait;
+    use HasFactory, GeometryFeatureTrait, HasTranslations;
+
+    public $translatable = ['name', 'description', 'excerpt'];
 
     protected $table = 'taxonomy_wheres';
     protected $fillable = [

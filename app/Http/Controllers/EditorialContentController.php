@@ -93,6 +93,13 @@ class EditorialContentController extends Controller
             $geojson = $ec->getGeojson([]);
         }
 
+        // Add Taxonomies
+        $taxonomies = $this->_getTaxonomies($ec, $names = ['activity', 'theme', 'where', 'who', 'when']);
+        $geojson['properties']['taxonomy'] = $taxonomies;
+
+        $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
+        $geojson['properties']['duration'] = $durations;
+
         return response()->json($geojson);
     }
 
@@ -158,6 +165,22 @@ class EditorialContentController extends Controller
         return $taxonomies;
     }
 
+    private function _getDurations($obj, $names = ['hiking', 'cycling'])
+    {
+        $durations = [];
+        $activityTerms = $obj->taxonomyActivities()->whereIn('identifier', $names)->get()->toArray();
+        if (count($activityTerms) > 0) {
+            foreach ($activityTerms as $term) {
+                $durations[$term['identifier']] = [
+                    'forward' => $term['pivot']['duration_forward'],
+                    'backward' => $term['pivot']['duration_backward'],
+                ];
+            }
+        }
+
+        return $durations;
+    }
+
     /**
      * Controller for API api/app/elbrus/{app_id}/geojson/ec_track_{poi_id}.geojson
      *
@@ -173,6 +196,7 @@ class EditorialContentController extends Controller
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
+
 
         return response()->json($this->_getElbrusTracksGeojsonComplete($app_id, $track_id), 200);
     }
@@ -233,6 +257,9 @@ class EditorialContentController extends Controller
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
 
+        $durations = $this->_getDurations($track, $names = ['hiking', 'cycling']);
+        $geojson['properties']['duration'] = $durations;
+
         return $geojson;
     }
 
@@ -281,7 +308,7 @@ class EditorialContentController extends Controller
 
         // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
 
-        if(preg_match('/\.amazonaws\.com\//',$ec->url)) {
+        if (preg_match('/\.amazonaws\.com\//', $ec->url)) {
             $explode = explode('.amazonaws.com/', $ec->url);
             $url = end($explode);
             Log::info($url);
@@ -295,7 +322,7 @@ class EditorialContentController extends Controller
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
+     * @param int $id the id of the EcMedia
      */
     public function updateEcMedia(Request $request, $id)
     {
@@ -340,7 +367,7 @@ class EditorialContentController extends Controller
     /** Update the ec track with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcTrack
+     * @param int $id the id of the EcTrack
      */
     public function updateEcTrack(Request $request, $id)
     {
@@ -351,6 +378,13 @@ class EditorialContentController extends Controller
 
         if (!empty($request->where_ids)) {
             $ecTrack->taxonomyWheres()->sync($request->where_ids);
+        }
+
+        if (!empty($request->duration)) {
+            foreach ($request->duration as $activityIdentifier => $values) {
+                $tax = $ecTrack->taxonomyActivities()->where('identifier', $activityIdentifier)->pluck('id')->first();
+                $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']], false);
+            }
         }
 
         if (
@@ -388,7 +422,7 @@ class EditorialContentController extends Controller
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
+     * @param int $id the id of the EcMedia
      */
     public function updateEcPoi(Request $request, $id)
     {
@@ -418,8 +452,8 @@ class EditorialContentController extends Controller
      * Return geometry formatted by $format.
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int     $id
-     * @param string  $format
+     * @param int $id
+     * @param string $format
      *
      * @return Response
      */
@@ -466,7 +500,7 @@ class EditorialContentController extends Controller
      * Return EcTrack JSON.
      *
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -500,7 +534,7 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -529,7 +563,7 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int   $id
+     * @param int $id
      * @param array $headers
      *
      * @return Response.
@@ -596,5 +630,22 @@ class EditorialContentController extends Controller
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
 
         return $this->viewEcKml($request, $id, $headers);
+    }
+
+    /**
+     * get points near ecTrack in 500 meters
+     *
+     * @param int $idTrack the id of EcTrack
+     *
+     */
+    public function getEcMediaNearTrack(int $idTrack)
+    {
+        $track = EcTrack::find($idTrack);
+
+        $nearQuery = "SELECT ST_Distance(
+        'SRID=4326;POINT(-72.1235 42.3521)'::geometry,
+		'SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry
+	)";
+        
     }
 }

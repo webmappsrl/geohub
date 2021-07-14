@@ -9,7 +9,8 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
-class EmulateUser extends Action {
+class EmulateUser extends Action
+{
     use InteractsWithQueue, Queueable;
 
     public $showOnDetail = false;
@@ -17,7 +18,8 @@ class EmulateUser extends Action {
     public $showOnTableRow = true;
     public $withoutConfirmation = true;
 
-    public function name(): string {
+    public function name(): string
+    {
         return __("Emulate");
     }
 
@@ -29,7 +31,8 @@ class EmulateUser extends Action {
      *
      * @return mixed
      */
-    public function handle(ActionFields $fields, Collection $models) {
+    public function handle(ActionFields $fields, Collection $models)
+    {
         $user = $models->first();
         User::emulateUser($user->id);
 
@@ -41,7 +44,8 @@ class EmulateUser extends Action {
      *
      * @return array
      */
-    public function fields() {
+    public function fields()
+    {
         return [];
     }
 }

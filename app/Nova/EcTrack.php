@@ -2,26 +2,27 @@
 
 namespace App\Nova;
 
-use Cdbeaton\BooleanTick\BooleanTick;
+use App\Nova\Actions\OpenEcTrackGeoJson;
+use App\Nova\Actions\RegenerateEcTrack;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
-use Spatie\NovaTranslatable\Translatable;
 use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapopup\Ecmediapopup;
+use Webmapp\Featureimagepopup\Featureimagepopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource
@@ -70,14 +71,13 @@ class EcTrack extends Resource
                 CKEditor::make(__('Description'), 'description')->hideFromIndex(),
                 TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
                 Text::make(__('Difficulty'), 'difficulty')->sortable(),
-
             ]),
 
             Text::make(__('Import Method'), 'import_method'),
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            BelongsToMany::make('EcMedia'),
-            //Ecmediapopup::make(__('Ecmediapop'),)->onlyOnForms(),
+            BelongsToMany::make('EcMedia')->onlyOnDetail(),
+            Ecmediapopup::make(__('EcMedia'))->onlyOnForms(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -98,6 +98,7 @@ class EcTrack extends Resource
                 ];
             })->hideFromIndex()->hideWhenCreating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            //Featureimagepopup::make(__('FeatureImage'),)->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
@@ -120,9 +121,17 @@ class EcTrack extends Resource
 
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
-            BooleanTick::make(__('Audio'), 'audio')->onlyOnIndex(),
+            Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
-            AttachMany::make('EcMedia'),
+            Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
+                ->url(function () {
+                    return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
+                })
+                ->text(__('Open GeoJson'))
+                ->icon()
+                ->blank(),
+
+            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
 
@@ -196,6 +205,8 @@ class EcTrack extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new RegenerateEcTrack(),
+        ];
     }
 }

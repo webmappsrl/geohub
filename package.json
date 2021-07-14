@@ -15,7 +15,9 @@
         "build-import": "cd nova-components/Import && npm run dev",
         "build-import-prod": "cd nova-components/Import && npm run prod",
         "build-ecmediapopup": "cd nova-components/Ecmediapopup && npm run dev",
-        "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod"
+        "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod",
+        "build-featureimagepopup": "cd nova-components/Featureimagepopup && npm run dev",
+        "build-featureimagepopup-prod": "cd nova-components/Featureimagepopup && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",

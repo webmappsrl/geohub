@@ -4,9 +4,14 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcMedia;
 use App\Models\EcTrack;
+use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyTarget;
+use App\Models\TaxonomyTheme;
+use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use TaxonomyTargets;
 use Tests\TestCase;
 
 class TrackTest extends TestCase
@@ -330,5 +335,104 @@ KML;
         $this->assertIsArray($properties);
 
         $this->assertArrayNotHasKey('imageGallery', $properties);
+    }
+
+    public function testApiTaxonomies()
+    {
+        $ecTrack = EcTrack::factory()->create();
+
+        TaxonomyWhere::factory(2)->create();
+        TaxonomyActivity::factory(2)->create();
+        TaxonomyTarget::factory(2)->create();
+        TaxonomyTheme::factory(2)->create();
+        TaxonomyWhen::factory(2)->create();
+
+        $activities = TaxonomyActivity::all();
+        $themes = TaxonomyTheme::all();
+        $wheres = TaxonomyWhere::all();
+        $targets = TaxonomyTarget::all();
+        $whens = TaxonomyWhen::all();
+
+        foreach ($activities as $activity) {
+            $ecTrack->taxonomyActivities()->attach([$activity->id]);
+        }
+
+        foreach ($themes as $theme) {
+            $ecTrack->taxonomyThemes()->attach([$theme->id]);
+        }
+
+        foreach ($wheres as $where) {
+            $ecTrack->taxonomyWheres()->attach([$where->id]);
+        }
+
+        foreach ($targets as $target) {
+            $ecTrack->taxonomyTargets()->attach([$target->id]);
+        }
+
+        foreach ($whens as $when) {
+            $ecTrack->taxonomyWhens()->attach([$when->id]);
+        }
+
+        $this->assertIsObject($ecTrack);
+        $response = $this->get(route("api.ec.track.view.geojson", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('taxonomy', $properties);
+        $this->assertArrayHasKey('activity', $properties['taxonomy']);
+        $this->assertArrayHasKey('theme', $properties['taxonomy']);
+        $this->assertArrayHasKey('where', $properties['taxonomy']);
+        $this->assertArrayHasKey('who', $properties['taxonomy']);
+        $this->assertArrayHasKey('when', $properties['taxonomy']);
+    }
+
+    public function testApiDurations()
+    {
+        $ecTrack = EcTrack::factory()->create();
+
+        $taxHiking = TaxonomyActivity::factory()->create([
+            'name' => 'Camminata',
+            'identifier' => 'hiking',
+        ]);
+        $taxCycling = TaxonomyActivity::factory()->create([
+            'name' => 'Cicloturismo',
+            'identifier' => 'cycling',
+        ]);
+        $taxJumping = TaxonomyActivity::factory()->create([
+            'name' => 'Saltelli',
+            'identifier' => 'jumping',
+        ]);
+
+        $ecTrack->taxonomyActivities()->attach([$taxHiking->id]);
+        $ecTrack->taxonomyActivities()->attach([$taxCycling->id]);
+        $ecTrack->taxonomyActivities()->attach([$taxJumping->id]);
+
+        $this->assertIsObject($ecTrack);
+        $response = $this->get(route("api.ec.track.view.geojson", ['id' => $ecTrack->id]));
+
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('duration', $properties);
+        $this->assertArrayHasKey('hiking', $properties['duration']);
+        $this->assertArrayHasKey('forward', $properties['duration']['hiking']);
+        $this->assertEquals(0, $properties['duration']['hiking']['forward']);
+        $this->assertArrayHasKey('backward', $properties['duration']['hiking']);
+        $this->assertEquals(0, $properties['duration']['hiking']['backward']);
+        $this->assertArrayHasKey('cycling', $properties['duration']);
+        $this->assertArrayHasKey('forward', $properties['duration']['cycling']);
+        $this->assertEquals(0, $properties['duration']['cycling']['forward']);
+        $this->assertArrayHasKey('backward', $properties['duration']['cycling']);
+        $this->assertEquals(0, $properties['duration']['cycling']['backward']);
+        $this->assertArrayNotHasKey('jumping', $properties['duration']);
     }
 }
