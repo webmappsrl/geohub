@@ -8,6 +8,7 @@ use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
@@ -62,6 +63,11 @@ class EcTrack extends Resource
      */
     public function fields(Request $request)
     {
+        try {
+            $geojson = $this->model()->getGeojson();
+        } catch (\Exception $e) {
+            $geojson = [];
+        }
         $fields = [
 
             new Panel('Taxonomies', $this->attach_taxonomy()),
@@ -77,7 +83,7 @@ class EcTrack extends Resource
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia')->onlyOnDetail(),
-            Ecmediapopup::make(__('EcMedia'))->onlyOnForms(),
+            Ecmediapopup::make(__('EcMedia'))->onlyOnForms()->feature($geojson),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {

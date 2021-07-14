@@ -41,11 +41,11 @@
 
                             <div class="w-1/4 box-image" v-for="media in mediaList.features">
                               <img class="image ec-media-image"
-                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
                               <div class="overlay"
-                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
                                 <div class="text">Seleziona</div>
@@ -53,7 +53,7 @@
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
-                            Mappa
+                            <MapComponent :feature="field.geojson" :media="mediaList"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -92,6 +92,7 @@
 <script>
 import Tab from './tab';
 import Tabs from './tabs';
+import MapComponent from './MapComponent';
 
 import {FormField, HandlesValidationErrors} from 'laravel-nova'
 
@@ -103,6 +104,7 @@ export default {
     EcMediaModal,
     Tabs,
     Tab,
+    MapComponent,
   },
   props: ['resourceName', 'resourceId', 'field'],
   data() {
@@ -110,7 +112,7 @@ export default {
       modalOpen: false,
       associatedMediaList: {},
       mediaList: {},
-      selectedImages: [],
+      selectedMedia: [],
       loadedImages: [],
     }
   },
@@ -122,26 +124,24 @@ export default {
         });
     axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_media')
         .then(response => {
+          that.selectedMedia.splice(0);
           that.associatedMediaList = response.data;
-          that.associatedMediaList.forEach(element =>
-              that.selectedImages.push(element.id)
-          );
-          that.associatedMediaList.forEach(element =>
-              that.loadedImages.push(element)
+          that.associatedMediaList.forEach(element => {
+                that.loadedImages.push(element)
+                that.selectedMedia.push(element.id)
+              }
           );
         });
-
-
   },
 
   methods: {
     toggleImage(item) {
-      if (this.selectedImages.includes(item.id)) {
-        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1)
-        this.selectedImages.splice(this.selectedImages.indexOf(item.id), 1)
+      if (this.selectedMedia.includes(item.id)) {
+        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1);
+        this.selectedMedia.splice(this.selectedMedia.indexOf(item.id), 1);
       } else {
         this.loadedImages.push(item);
-        this.selectedImages.push(item.id);
+        this.selectedMedia.push(item.id);
       }
     },
     loadImages() {
@@ -152,19 +152,16 @@ export default {
       this.modalOpen = false;
     },
     removeImage(id) {
-      this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
+      this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
-
     },
-    associateImages() {
 
-    },
 
     /**
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      formData.append(this.field.attribute, JSON.stringify(this.selectedImages))
+      formData.append(this.field.attribute, JSON.stringify(this.selectedMedia))
     },
   },
 }
@@ -208,6 +205,7 @@ export default {
 
 .modal-body {
   padding: 1rem 0.5rem;
+  min-height: 50vh;
 }
 
 .modal-footer {
@@ -282,7 +280,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100%;
+  height: 101px;
   width: 108px;
   opacity: 0;
   transition: .5s ease;
