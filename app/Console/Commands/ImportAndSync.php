@@ -84,7 +84,7 @@ class ImportAndSync extends Command
         $import_method = "regioni_italiane";
         $model_name = "TaxonomyWhere";
         $source_id_field = "cod_reg";
-        $mapping = ['den_reg' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry', 'den_reg' => 'identifier'];
+        $mapping = ['name' => 'den_reg', 'admin_level' => 'admin_level', 'geometry' => 'geom', 'identifier' => 'den_reg'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -114,7 +114,7 @@ class ImportAndSync extends Command
         $import_method = "province_italiane";
         $model_name = "TaxonomyWhere";
         $source_id_field = "cod_prov";
-        $mapping = ['den_uts' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry', 'den_uts' => 'identifier'];
+        $mapping = ['name' => 'den_uts', 'admin_level' => 'admin_level', 'geometry' => 'geom', 'identifier' => 'den_uts'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -144,7 +144,7 @@ class ImportAndSync extends Command
         $import_method = "comuni_italiani";
         $model_name = "TaxonomyWhere";
         $source_id_field = "pro_com_t";
-        $mapping = ['comune' => 'name', 'admin_level' => 'admin_level', 'geom' => 'geometry', 'comune' => 'identifier'];
+        $mapping = ['name' => 'comune', 'admin_level' => 'admin_level', 'geometry' => 'geom', 'identifier' => 'comune'];
         $this->syncTable($import_method, $table, $model_name, $source_id_field, $mapping);
 
         //Step 6 : Remove temporary table
@@ -179,7 +179,7 @@ class ImportAndSync extends Command
                 $item->source_id = $source_id;
 
                 foreach ($mapping as $k => $v) {
-                    $item->$v = $new_item->$k;
+                    $item->$k = $new_item->$v;
                 }
                 $item->save();
             }
