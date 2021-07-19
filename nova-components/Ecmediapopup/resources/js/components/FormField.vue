@@ -53,7 +53,8 @@
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
-                            <MapComponent :feature="field.geojson" :media="mediaList"></MapComponent>
+                            <MapComponent :feature="field.geojson" :media="mediaList"
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
                           </div>
                         </div>
                       </tab>

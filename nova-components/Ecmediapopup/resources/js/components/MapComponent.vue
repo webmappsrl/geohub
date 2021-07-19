@@ -30,7 +30,8 @@ export default {
   props: {
     feature: {},
     media: {},
-
+    selectedMedia: [],
+    loadedImages: [],
 
   },
   data: () => ({
@@ -40,11 +41,9 @@ export default {
     featureSource: null,
     mediaLayer: null,
     mediaSource: null,
-    selectedMedia: null,
   }),
   mounted() {
-    //console.log('Mappa', this.$parent.selectedMedia)
-    this.selectedMedia = [];
+
     this.featureSource = new VectorSource({
       features: [],
     });
@@ -183,10 +182,14 @@ export default {
       else if (track)
         id = track.getId();
       if (id) {
-        if (this.selectedMedia.indexOf(id) === -1)
+        if (this.selectedMedia.indexOf(id) === -1) {
           this.selectedMedia.push(id);
-        else
+          this.loadedImages.push(poi['values_']);
+        } else {
           this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
+          this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
+        }
+
         this.mediaLayer.changed();
         this.map.render();
       }
