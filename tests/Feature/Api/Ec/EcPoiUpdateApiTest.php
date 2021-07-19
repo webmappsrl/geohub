@@ -66,4 +66,20 @@ class EcPoiUpdateApiTest extends TestCase
         $this->assertCount(1, $pois);
         $this->assertSame($ecPoi->id, $pois->first()->id);
     }
+
+    public function testUpdateEle()
+    {
+        $ecPoi = EcPoi::factory()->create(['ele' => -10000]);
+        $payload = [
+            'ele' => 100,
+        ];
+
+        $result = $this->putJson('/api/ec/poi/update/' . $ecPoi->id, $payload);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertIsString($result->getContent());
+        $ecPoiUpdated = EcPoi::find($ecPoi->id);
+
+        $this->assertEquals(100, $ecPoiUpdated->ele);
+    }
 }
