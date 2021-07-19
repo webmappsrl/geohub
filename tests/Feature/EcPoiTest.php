@@ -108,4 +108,11 @@ class EcPoiTest extends TestCase
 
         $this->assertEquals(2, $ecPoi->taxonomyPoiTypes()->count());        
     }
+
+    public function testEleField()
+    {
+        $ecPoi = EcPoi::factory()->create();
+        $this->assertIsObject($ecPoi);
+        $this->assertNotEmpty($ecPoi->ele);
+    }
 }
