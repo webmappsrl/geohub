@@ -38,11 +38,12 @@
         "tymon/jwt-auth": "^1.0",
         "vyuldashev/nova-permission": "^2.11",
         "waynestate/nova-ckeditor4-field": "^0.7.0",
+        "webmapp/ecmediapoipopup": "dev-develop",
         "webmapp/ecmediapopup": "*",
+        "webmapp/featureimagepopup": "*",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0",
-        "webmapp/featureimagepopup": "*"
+        "ynacorp/nova-swatches": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -116,6 +117,10 @@
         {
             "type": "path",
             "url": "./nova-components/Ecmediapopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecmediapoipopup"
         },
         {
             "type": "path",

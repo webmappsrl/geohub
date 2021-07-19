@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
@@ -110,5 +111,27 @@ class EcPoi extends Model
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
+
+    public function getNearEcMedia()
+    {
+        $features = [];
+        $result = DB::select(
+            'SELECT id FROM ec_media
+                    WHERE St_DWithin(geometry, ?, 50000000000000000000);',
+            [
+                $this->geometry,
+            ]
+        );
+        foreach ($result as $row) {
+            $geojson = EcMedia::find($row->id)->getGeojson();
+            if (isset($geojson))
+                $features[] = $geojson;
+        }
+
+        return ([
+            "type" => "FeatureCollection",
+            "features" => $features,
+        ]);
     }
 }
