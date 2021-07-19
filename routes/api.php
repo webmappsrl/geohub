@@ -11,6 +11,7 @@ use App\Http\Controllers\TaxonomyWhenController;
 use App\Http\Controllers\TaxonomyWhereController;
 use App\Http\Controllers\ApiElbrusTaxonomyController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\EcPoiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -107,6 +108,8 @@ Route::name('api.')->group(function () {
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{id}/near_points", [EcPoiController::class, 'getNearEcMedia']);
+            Route::get("/{id}/associated_ec_media", [EcPoiController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');

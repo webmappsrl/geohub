@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\EcMedia;
 use App\Models\EcPoi;
+use App\Models\TaxonomyPoiType;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,7 +43,7 @@ class EcPoiTest extends TestCase
                 ->andReturn(201);
         });
         $geometry = DB::raw("(ST_GeomFromText('POINT(10 43)'))");
-        $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl','geometry'=>$geometry]);
+        $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl', 'geometry' => $geometry]);
         $ecPoi->id = 1;
         $ecPoi->save();
 
@@ -55,9 +56,8 @@ class EcPoiTest extends TestCase
         });
 
         $new_geometry = DB::raw("(ST_GeomFromText('POINT(11 44)'))");
-        $ecPoi->geometry= $new_geometry;
+        $ecPoi->geometry = $new_geometry;
         $ecPoi->save();
-
     }
 
     public function testSaveEcPoiError()
@@ -94,5 +94,25 @@ class EcPoiTest extends TestCase
         $this->assertIsObject($ecPoi);
         $this->assertNotEmpty($ecPoi->contact_phone);
         $this->assertNotEmpty($ecPoi->contact_email);
+    }
+
+    public function testAssociateTaxonomyPoiTypeToEcPoi()
+    {
+        $taxonomies = TaxonomyPoiType::factory(2)->create();
+        $ecPoi = EcPoi::factory()->create();
+        $this->assertIsObject($ecPoi);
+        
+        foreach ($taxonomies as $taxonomy) {
+            $ecPoi->taxonomyPoiTypes()->attach([$taxonomy->id]);
+        }
+
+        $this->assertEquals(2, $ecPoi->taxonomyPoiTypes()->count());        
+    }
+
+    public function testEleField()
+    {
+        $ecPoi = EcPoi::factory()->create();
+        $this->assertIsObject($ecPoi);
+        $this->assertNotEmpty($ecPoi->ele);
     }
 }

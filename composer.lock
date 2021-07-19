@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea90b2508a24390b0b2e47ed05d1978d",
+    "content-hash": "fb044c40fe38082e84499a46b12c2030",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -7336,6 +7336,42 @@
             "time": "2020-03-06T03:54:49+00:00"
         },
         {
+            "name": "webmapp/ecmediapoipopup",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/Ecmediapoipopup",
+                "reference": "5253333c52f6a26aeb39ba6ffe3c1383cd6cf960"
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Webmapp\\Ecmediapoipopup\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmapp\\Ecmediapoipopup\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "webmapp/ecmediapopup",
             "version": "dev-develop",
             "dist": {
@@ -10087,7 +10123,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "elevate-digital/nova-charcounted-fields": 20
+        "elevate-digital/nova-charcounted-fields": 20,
+        "webmapp/ecmediapoipopup": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
