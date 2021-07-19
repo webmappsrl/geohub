@@ -82,5 +82,22 @@ class EcPoiUpdateApiTest extends TestCase
         $ecPoiUpdated = EcPoi::find($ecPoi->id);
 
         $this->assertEquals(100, $ecPoiUpdated->ele);
+
+        $json = $this->_getJsonTrack('api.ec.poi.json');
+
+        $this->assertArrayHasKey('properties', $json);
+        $this->assertArrayHasKey('ele', $json['properties']);
+        $this->assertEquals(100, $json['properties']['ele']);
+    }
+
+    protected function _getJsonTrack($route_name)
+    {
+        $poi = EcPoi::factory()->create(['ele' => 100]);
+        $result = $this->get(route($route_name, ['id' => $poi->id]));
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertJson($result->getContent());
+        $json = json_decode($result->getContent(), true);
+
+        return $json;
     }
 }
