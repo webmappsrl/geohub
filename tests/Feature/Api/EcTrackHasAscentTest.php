@@ -16,52 +16,51 @@ class EcTrackHasAscentTest extends TestCase
 
     public function testEcTrackDownloadGeojson()
     {
-
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
         $this->assertArrayHasKey('ascent', $json['properties']);
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
+
     public function testEcTrack()
     {
-
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
         $this->assertArrayHasKey('ascent', $json['properties']);
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
+
     public function testEcTrackGeojson()
     {
-
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
         $this->assertArrayHasKey('ascent', $json['properties']);
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
+
     public function testAppElbrusGeojson()
     {
-
         $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track');
 
         $this->assertArrayHasKey('properties', $json);
         $this->assertArrayHasKey('ascent', $json['properties']);
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
+
     public function testAppElbrusJson()
     {
-
         $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track/json');
 
         $this->assertArrayHasKey('ascent', $json);
         $this->assertEquals(100000, $json['ascent']);
     }
+
     public function testAppElbrusTaxonomies()
     {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
-
         $user = User::factory()->create();
         $image = EcMedia::factory()->create();
         $activity = TaxonomyActivity::factory()->create();

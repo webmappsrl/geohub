@@ -443,10 +443,21 @@ class EditorialContentController extends Controller
             $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
 
+        $fields = [
+            'ele',
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($request->$field)) {
+                $ecPoi->$field = $request->$field;
+            }
+        }
+
         if (!empty($request->where_ids)) {
             $ecPoi->taxonomyWheres()->sync($request->where_ids);
         }
 
+        $ecPoi->skip_update = true;
         $ecPoi->save();
     }
 

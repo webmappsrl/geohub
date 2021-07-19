@@ -109,7 +109,7 @@ class EcPoiTest extends TestCase
         $this->assertEquals(2, $ecPoi->taxonomyPoiTypes()->count());        
     }
 
-    public function testEleField()
+    public function testExistsEleField()
     {
         $ecPoi = EcPoi::factory()->create();
         $this->assertIsObject($ecPoi);
