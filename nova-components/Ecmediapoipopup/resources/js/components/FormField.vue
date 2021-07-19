@@ -20,7 +20,7 @@
           <br>
         </div>
         <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
-          Select EcMedia qui
+          Select EcMedia
         </button>
       </template>
     </default-field>

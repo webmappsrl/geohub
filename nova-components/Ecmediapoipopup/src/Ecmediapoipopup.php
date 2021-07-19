@@ -70,9 +70,4 @@ class Ecmediapoipopup extends Field
     {
         return $this->withMeta(['geojson' => $geojson]);
     }
-
-    public function model(array $geojson)
-    {
-        return $this->withMeta(['model' => $model]);
-    }
 }
