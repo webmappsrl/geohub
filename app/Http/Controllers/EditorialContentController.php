@@ -97,8 +97,10 @@ class EditorialContentController extends Controller
         $taxonomies = $this->_getTaxonomies($ec, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
 
-        $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
-        $geojson['properties']['duration'] = $durations;
+        if ('track' == $apiUrl[2]) {
+            $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
+            $geojson['properties']['duration'] = $durations;
+        }
 
         return response()->json($geojson);
     }
