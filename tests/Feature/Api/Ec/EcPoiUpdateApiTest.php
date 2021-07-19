@@ -70,6 +70,7 @@ class EcPoiUpdateApiTest extends TestCase
     public function testUpdateEle()
     {
         $ecPoi = EcPoi::factory()->create(['ele' => -10000]);
+        $this->assertEquals(-10000, $ecPoi->ele);
         $payload = [
             'ele' => 100,
         ];
