@@ -17,7 +17,9 @@
         "build-ecmediapopup": "cd nova-components/Ecmediapopup && npm run dev",
         "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod",
         "build-featureimagepopup": "cd nova-components/Featureimagepopup && npm run dev",
-        "build-featureimagepopup-prod": "cd nova-components/Featureimagepopup && npm run prod"
+        "build-featureimagepopup-prod": "cd nova-components/Featureimagepopup && npm run prod",
+        "build-featureimagepoipopup": "cd nova-components/Featureimagepoipopup && npm run dev",
+        "build-featureimagepoipopup-prod": "cd nova-components/Featureimagepoipopup && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",

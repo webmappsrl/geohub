@@ -33,6 +33,9 @@
 
                 <div class="modal-header">
                   <div style="display:flex">
+                    <p class="text-right">
+                      <button type="button" @click="cancelUpload()">X</button>
+                    </p>
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
 
@@ -48,7 +51,7 @@
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
-                                <div class="text">Seleziona</div>
+                                <div class="text-overlay">Seleziona</div>
                               </div>
                             </div>
                           </div>
@@ -71,16 +74,16 @@
                       </tab>
                     </tabs>
                     <p class="text-right">
-                      <button type="button" class="btn btn-danger btn-default" @click="cancelUpload()">X</button>
+                      <button type="button" @click="cancelUpload()">X</button>
                     </p>
                   </div>
+                </div>
 
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-primary btn-default" @click="loadImages()">
-                    Carica Selezionati
-                  </button>
-                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary btn-default" @click="loadImages()">
+                  Carica Selezionati
+                </button>
               </div>
             </div>
           </div>
@@ -186,7 +189,7 @@ export default {
 .modal-container {
   width: 75%;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 10px 0px !important;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -254,14 +257,14 @@ export default {
 }
 
 .ec-media-image:hover {
-  border: 5px solid #63A2DE;
+  border: 5px solid #55af60;
   box-sizing: border-box;
   opacity: 0.8;
 }
 
 
 .selected {
-  border: 5px solid #63A2DE;
+  border: 5px solid #55af60;
   box-sizing: border-box;
   opacity: 0.8;
 }
@@ -290,7 +293,8 @@ export default {
   opacity: 0.5;
 }
 
-.text {
+.text-overlay {
+  font-weight: bold;
   color: white;
   font-size: 15px;
   position: absolute;

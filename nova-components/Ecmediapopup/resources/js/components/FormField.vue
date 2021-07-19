@@ -32,7 +32,11 @@
               <div class="modal-container">
 
                 <div class="modal-header">
+                  <p class="text-right">
+                    <button type="button" class="close-button" @click="cancelUpload()">X</button>
+                  </p>
                   <div style="display:flex">
+
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
 
@@ -70,9 +74,7 @@
                         </div>
                       </tab>
                     </tabs>
-                    <p class="text-right">
-                      <button type="button" class="btn btn-danger btn-default" @click="cancelUpload()">X</button>
-                    </p>
+
                   </div>
 
                 </div>
@@ -187,9 +189,9 @@ export default {
 }
 
 .modal-container {
-  width: 75%;
+  width: 60%;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 10px 0px !important;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -205,7 +207,7 @@ export default {
 }
 
 .modal-body {
-  padding: 1rem 0.5rem;
+  padding: 0px 0px !important;
   min-height: 50vh;
 }
 
@@ -246,10 +248,6 @@ export default {
   border-bottom: 1px solid lightgray;
 }
 
-.modal-footer {
-  border-top: 1px solid lightgray;
-}
-
 .ec-media-image {
   width: 108px;
   height: 101px !important;
@@ -257,18 +255,16 @@ export default {
 }
 
 .ec-media-image:hover {
-  border: 5px solid #63A2DE;
+  border: 5px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
-
 
 .selected {
-  border: 5px solid #63A2DE;
+  border: 5px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
-
 
 .image {
   display: block;
@@ -287,6 +283,8 @@ export default {
   transition: .5s ease;
   background-color: black;
   border-radius: 8px;
+  display: flex;
+  justify-content: center;
 }
 
 .box-image:hover .overlay {
@@ -307,11 +305,14 @@ export default {
 
 .box-image {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .overlay.selected {
   display: none;
 }
+
 
 .box-image {
 
@@ -321,6 +322,16 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 8px;
+}
+
+.close-button {
+  font-size: 20px;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.media-list {
+  background-color: #f1f3f5;
 }
 
 </style>

@@ -43,7 +43,8 @@
         "webmapp/featureimagepopup": "*",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0"
+        "ynacorp/nova-swatches": "^1.0",
+        "webmapp/featureimagepoipopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -125,6 +126,10 @@
         {
             "type": "path",
             "url": "./nova-components/Featureimagepopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Featureimagepoipopup"
         }
     ]
 }
