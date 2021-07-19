@@ -16,4 +16,9 @@ class EcTrackController extends Controller
     {
         return response()->json(EcTrack::find($idTrack)->ecMedia()->get());
     }
+
+    public static function getFeatureImage(int $idTrack)
+    {
+        return response()->json(EcTrack::find($idTrack)->featureImage()->get());
+    }
 }
