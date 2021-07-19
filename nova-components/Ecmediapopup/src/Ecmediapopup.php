@@ -50,7 +50,7 @@ class Ecmediapopup extends Field
                     // sync
 
                     $changes = $model->$attribute()->sync($filtered_values);
-                    
+
                     $method = Str::camel($attribute) . 'Synced';
 
                     $parent = $request->newResource();

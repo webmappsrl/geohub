@@ -19,7 +19,7 @@ class EcTrack extends Model
 {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp'];
+    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
 
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     /**
