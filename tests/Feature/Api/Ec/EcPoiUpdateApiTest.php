@@ -67,6 +67,14 @@ class EcPoiUpdateApiTest extends TestCase
         $this->assertSame($ecPoi->id, $pois->first()->id);
     }
 
+    public function testApiRoute()
+    {
+        $poi = EcPoi::factory()->create();
+        $uri = $this->getJson('/api/ec/poi/' . $poi->id);
+        $name = $this->get(route('api.ec.poi.json', ['id' => $poi->id]));
+        $this->assertJsonStringEqualsJsonString($uri->getContent(), $name->getContent());
+    }
+
     public function testUpdateEle()
     {
         $ecPoi = EcPoi::factory()->create(['ele' => -10000]);
