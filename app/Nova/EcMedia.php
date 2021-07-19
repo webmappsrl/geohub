@@ -38,7 +38,6 @@ class EcMedia extends Resource
      */
     public static $search = [
         'name',
-        'author'
     ];
 
     public static function group()
