@@ -457,6 +457,7 @@ class EditorialContentController extends Controller
             $ecPoi->taxonomyWheres()->sync($request->where_ids);
         }
 
+        $ecPoi->skip_update = true;
         $ecPoi->save();
     }
 
