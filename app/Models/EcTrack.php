@@ -39,8 +39,8 @@ class EcTrack extends Model
         'duration_forward' => 'int',
         'duration_backward' => 'int',
     ];
+    
     public bool $skip_update = false;
-
 
     public function __construct(array $attributes = [])
     {
@@ -81,7 +81,9 @@ class EcTrack extends Model
                 } catch (\Exception $e) {
                     Log::error('An error occurred during a store operation: ' . $e->getMessage());
                 }
-            } else $ecTrack->skip_update = false;
+            } else {
+                $ecTrack->skip_update = false;
+            }
         });
         /**
          * static::updated(function ($ecTrack) {

@@ -21,6 +21,8 @@ class EcPoi extends Model
 
     public $translatable = ['name', 'description', 'excerpt'];
 
+    public bool $skip_update = false;
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -45,11 +47,16 @@ class EcPoi extends Model
         });
 
         static::updating(function ($ecPoi) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
-            } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            $skip_update = $ecPoi->skip_update;
+            if (!$skip_update) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
+            } else {
+                $ecPoi->skip_update = false;
             }
         });
     }
