@@ -27699,6 +27699,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.loadedImages.push(item);
         this.selectedMedia.push(item.id);
       }
+      this.$refs.map.map.changed();
+      this.$refs.map.map.render();
     },
     loadImages: function loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
@@ -76155,7 +76157,9 @@ var render = function() {
                                             },
                                             [
                                               _c("MapComponent", {
+                                                ref: "map",
                                                 attrs: {
+                                                  id: "map-component",
                                                   feature: _vm.field.geojson,
                                                   media: _vm.mediaList,
                                                   selectedMedia:

@@ -200,6 +200,7 @@ export default {
       this.drawFeature();
       this.drawMedia();
     }, 500)
+
   },
   methods: {
     getFixedDistance(point1, point2) {

@@ -58,8 +58,9 @@
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
-                            <MapComponent :feature="field.geojson" :media="mediaList"
-                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
+                            <MapComponent id="map-component" :feature="field.geojson" :media="mediaList"
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"
+                                          ref="map"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -143,10 +144,14 @@ export default {
       if (this.selectedMedia.includes(item.id)) {
         this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1);
         this.selectedMedia.splice(this.selectedMedia.indexOf(item.id), 1);
+
       } else {
         this.loadedImages.push(item);
         this.selectedMedia.push(item.id);
+
       }
+      this.$refs.map.map.changed();
+      this.$refs.map.map.render();
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
