@@ -45,7 +45,7 @@ a {
   font-size: 16px;
   line-height: 22px;
   letter-spacing: 0.459184px;
-  color: #00d1b2;
+  color: black;
   cursor: pointer;
   text-decoration: none;
   -webkit-transition: none 86ms ease-out;
@@ -68,6 +68,7 @@ a {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  margin-bottom: 10px;
 }
 
 .tabs li {
@@ -92,8 +93,8 @@ a {
 }
 
 .tabs li.is-active a {
-  border-bottom: 2px solid #63A2DE;
-  color: #00d1b2;
+  border-bottom: 2px solid #63A2DE !important;
+  color: black;
   font-weight: bold;
 }
 </style>

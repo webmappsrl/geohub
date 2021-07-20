@@ -27197,7 +27197,7 @@ exports = module.exports = __webpack_require__(36)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 75%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n  border: 1px solid #D4DDE4;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border-radius: 8px;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 1rem 0.5rem;\n  min-height: 50vh;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.modal-footer[data-v-c023248a] {\n  border-top: 1px solid lightgray;\n}\n.ec-media-image[data-v-c023248a] {\n  width: 108px;\n  height: 101px !important;\n  border-radius: 8px;\n}\n.ec-media-image[data-v-c023248a]:hover {\n  border: 5px solid #63A2DE;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.selected[data-v-c023248a] {\n  border: 5px solid #63A2DE;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.image[data-v-c023248a] {\n  display: block;\n  height: auto;\n}\n.overlay[data-v-c023248a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 101px;\n  width: 108px;\n  opacity: 0;\n  -webkit-transition: .5s ease;\n  transition: .5s ease;\n  background-color: black;\n  border-radius: 8px;\n}\n.box-image:hover .overlay[data-v-c023248a] {\n  opacity: 0.5;\n}\n.text[data-v-c023248a] {\n  color: white;\n  font-size: 15px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  text-align: center;\n}\n.box-image[data-v-c023248a] {\n  position: relative;\n}\n.overlay.selected[data-v-c023248a] {\n  display: none;\n}\n.box-image[data-v-c023248a] {\n}\n.selectedThunbnail[data-v-c023248a] {\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 60% !important;\n  margin: 0px auto;\n  padding: 10px 0px !important;\n  background-color: #fff;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n  border: 1px solid #D4DDE4;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border-radius: 8px;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 0px 0px !important;\n  min-height: 50vh;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.ec-media-image[data-v-c023248a] {\n  width: 108px;\n  height: 101px !important;\n  border-radius: 8px;\n}\n.ec-media-image[data-v-c023248a]:hover {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.selected[data-v-c023248a] {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.vector-visible[data-v-c023248a] {\n  display: block;\n  position: absolute;\n  right: 15px;\n  top: 5px;\n}\n.vector-hidden[data-v-c023248a] {\n  display: none;\n  position: absolute;\n  right: 15px;\n  top: 5px;\n}\n.image[data-v-c023248a] {\n  display: block;\n  height: auto;\n}\n.overlay[data-v-c023248a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 15px !important;\n  right: 0;\n  height: 101px;\n  width: 108px;\n  opacity: 0;\n  -webkit-transition: .5s ease;\n  transition: .5s ease;\n  background-color: black;\n  border-radius: 8px;\n}\n.box-image:hover .overlay[data-v-c023248a] {\n  opacity: 0.5;\n}\n.text[data-v-c023248a] {\n  color: white;\n  font-size: 15px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  text-align: center;\n}\n.box-image[data-v-c023248a] {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.overlay.selected[data-v-c023248a] {\n  display: none;\n}\n.box-image[data-v-c023248a] {\n}\n.selectedThunbnail[data-v-c023248a] {\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n}\n.close-button[data-v-c023248a] {\n  font-size: 20px;\n  margin-right: 15px;\n  margin-top: 15px;\n}\n.media-list[data-v-c023248a] {\n  background-color: #f1f3f5;\n}\n\n", ""]);
 
 // exports
 
@@ -27251,6 +27251,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_laravel_nova___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_laravel_nova__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ModalEcMedia__ = __webpack_require__(240);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ModalEcMedia___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ModalEcMedia__);
+//
+//
+//
 //
 //
 //
@@ -27667,7 +27670,7 @@ exports = module.exports = __webpack_require__(36)(false);
 
 
 // module
-exports.push([module.i, "\na[data-v-6ac15749] {\n  color: #00d1b2;\n  cursor: pointer;\n  text-decoration: none;\n  -webkit-transition: none 86ms ease-out;\n  transition: none 86ms ease-out;\n}\n.tabs ul[data-v-6ac15749] {\n  -webkit-box-align: center;\n  -ms-flex-align: center;\n  align-items: center;\n  border-bottom: 1px solid #dbdbdb;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-flex: 1;\n  -ms-flex-positive: 1;\n  flex-grow: 1;\n  -ms-flex-negative: 0;\n  flex-shrink: 0;\n  -webkit-box-pack: start;\n  -ms-flex-pack: start;\n  justify-content: flex-start;\n}\n.tabs li[data-v-6ac15749] {\n  display: block;\n}\n.tabs a[data-v-6ac15749] {\n  -webkit-box-align: center;\n  -ms-flex-align: center;\n  align-items: center;\n  border-bottom: 1px solid #dbdbdb;\n  color: #4a4a4a;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n  -ms-flex-pack: center;\n  justify-content: center;\n  margin-bottom: -1px;\n  padding: .5em 1em;\n  vertical-align: top;\n}\n.tabs li.is-active a[data-v-6ac15749] {\n  border-bottom-color: #00d1b2;\n  color: #00d1b2;\n}\n", ""]);
+exports.push([module.i, "\na[data-v-6ac15749] {\n  font-style: normal;\n  font-weight: normal;\n  font-size: 16px;\n  line-height: 22px;\n  letter-spacing: 0.459184px;\n  color: black;\n  cursor: pointer;\n  text-decoration: none;\n  -webkit-transition: none 86ms ease-out;\n  transition: none 86ms ease-out;\n}\n.tabs ul[data-v-6ac15749] {\n  -webkit-box-align: center;\n  -ms-flex-align: center;\n  align-items: center;\n  border-bottom: 1px solid #dbdbdb;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-flex: 1;\n  -ms-flex-positive: 1;\n  flex-grow: 1;\n  -ms-flex-negative: 0;\n  flex-shrink: 0;\n  -webkit-box-pack: start;\n  -ms-flex-pack: start;\n  justify-content: flex-start;\n  margin-bottom: 10px;\n}\n.tabs li[data-v-6ac15749] {\n  display: block;\n}\n.tabs a[data-v-6ac15749] {\n  -webkit-box-align: center;\n  -ms-flex-align: center;\n  align-items: center;\n  border-bottom: 1px solid #dbdbdb;\n  color: #4a4a4a;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n  -ms-flex-pack: center;\n  justify-content: center;\n  margin-bottom: -1px;\n  padding: .5em 1em;\n  vertical-align: top;\n}\n.tabs li.is-active a[data-v-6ac15749] {\n  border-bottom: 2px solid #63A2DE !important;\n  color: black;\n  font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -76003,6 +76006,22 @@ var render = function() {
                     _c("div", { staticClass: "modal-wrapper" }, [
                       _c("div", { staticClass: "modal-container" }, [
                         _c("div", { staticClass: "modal-header" }, [
+                          _c("p", { staticClass: "text-right" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "close-button",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.cancelUpload()
+                                  }
+                                }
+                              },
+                              [_vm._v("X")]
+                            )
+                          ]),
+                          _vm._v(" "),
                           _c(
                             "div",
                             { staticStyle: { display: "flex" } },
@@ -76065,6 +76084,17 @@ var render = function() {
                                                             media.properties
                                                           )
                                                         }
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("img", {
+                                                      class: _vm.selectedMedia.includes(
+                                                        media.properties.id
+                                                      )
+                                                        ? "vector-visible"
+                                                        : "vector-hidden",
+                                                      attrs: {
+                                                        src: "/Vector.png"
                                                       }
                                                     }),
                                                     _vm._v(" "),
@@ -76183,23 +76213,7 @@ var render = function() {
                                   )
                                 ],
                                 1
-                              ),
-                              _vm._v(" "),
-                              _c("p", { staticClass: "text-right" }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-danger btn-default",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.cancelUpload()
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("X")]
-                                )
-                              ])
+                              )
                             ],
                             1
                           )

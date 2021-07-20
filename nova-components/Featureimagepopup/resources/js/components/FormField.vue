@@ -32,10 +32,11 @@
               <div class="modal-container">
 
                 <div class="modal-header">
+
+                  <p class="text-right">
+                    <button type="button" class="close-button" @click="cancelUpload()">X</button>
+                  </p>
                   <div style="display:flex">
-                    <p class="text-right">
-                      <button type="button" @click="cancelUpload()">X</button>
-                    </p>
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
 
@@ -47,11 +48,13 @@
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
+                              <img src="/Vector.png"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
                               <div class="overlay"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
-                                <div class="text-overlay">Seleziona</div>
+                                <div class="text">Seleziona</div>
                               </div>
                             </div>
                           </div>
@@ -73,17 +76,14 @@
                         </div>
                       </tab>
                     </tabs>
-                    <p class="text-right">
-                      <button type="button" @click="cancelUpload()">X</button>
-                    </p>
                   </div>
                 </div>
 
-              </div>
-              <div class="modal-footer">
-                <button class="btn btn-primary btn-default" @click="loadImages()">
-                  Carica Selezionati
-                </button>
+                <div class="modal-footer">
+                  <button class="btn btn-primary btn-default" @click="loadImages()">
+                    Carica Selezionati
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default {
 }
 
 .modal-container {
-  width: 75%;
+  width: 60% !important;
   margin: 0px auto;
   padding: 10px 0px !important;
   background-color: #fff;
@@ -205,7 +205,7 @@ export default {
 }
 
 .modal-body {
-  padding: 1rem 0.5rem;
+  padding: 0px 0px !important;
   min-height: 50vh;
 }
 
@@ -217,16 +217,6 @@ export default {
 .modal-default-button {
   float: right;
 }
-
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;
@@ -246,10 +236,6 @@ export default {
   border-bottom: 1px solid lightgray;
 }
 
-.modal-footer {
-  border-top: 1px solid lightgray;
-}
-
 .ec-media-image {
   width: 108px;
   height: 101px !important;
@@ -257,16 +243,30 @@ export default {
 }
 
 .ec-media-image:hover {
-  border: 5px solid #55af60;
+  border: 3px solid #55af60 !important;
+  box-sizing: border-box;
+  opacity: 0.8;
+}
+
+.selected {
+  border: 3px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
 
 
-.selected {
-  border: 5px solid #55af60;
-  box-sizing: border-box;
-  opacity: 0.8;
+.vector-visible {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
+.vector-hidden {
+  display: none;
+  position: absolute;
+  right: 15px;
+  top: 5px;
 }
 
 
@@ -279,7 +279,7 @@ export default {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 15px !important;
   right: 0;
   height: 101px;
   width: 108px;
@@ -293,8 +293,7 @@ export default {
   opacity: 0.5;
 }
 
-.text-overlay {
-  font-weight: bold;
+.text {
   color: white;
   font-size: 15px;
   position: absolute;
@@ -308,11 +307,14 @@ export default {
 
 .box-image {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .overlay.selected {
   display: none;
 }
+
 
 .box-image {
 
@@ -322,6 +324,16 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 8px;
+}
+
+.close-button {
+  font-size: 20px;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.media-list {
+  background-color: #f1f3f5;
 }
 
 </style>

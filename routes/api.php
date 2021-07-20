@@ -110,6 +110,7 @@ Route::name('api.')->group(function () {
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/{id}/near_points", [EcPoiController::class, 'getNearEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcPoiController::class, 'getAssociatedEcMedia']);
+            Route::get("/{id}/feature_image", [EcPoiController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');

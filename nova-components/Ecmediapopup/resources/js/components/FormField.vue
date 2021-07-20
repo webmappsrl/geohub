@@ -36,7 +36,6 @@
                     <button type="button" class="close-button" @click="cancelUpload()">X</button>
                   </p>
                   <div style="display:flex">
-
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
 
@@ -48,6 +47,8 @@
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
                                    @click="toggleImage(media.properties)">
+                              <img src="/Vector.png"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
                               <div class="overlay"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
@@ -189,7 +190,7 @@ export default {
 }
 
 .modal-container {
-  width: 60%;
+  width: 60% !important;
   margin: 0px auto;
   padding: 10px 0px !important;
   background-color: #fff;
@@ -220,16 +221,6 @@ export default {
   float: right;
 }
 
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter {
   opacity: 0;
 }
@@ -255,16 +246,32 @@ export default {
 }
 
 .ec-media-image:hover {
-  border: 5px solid #55af60 !important;
+  border: 3px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
 
 .selected {
-  border: 5px solid #55af60 !important;
+  border: 3px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
+
+
+.vector-visible {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
+.vector-hidden {
+  display: none;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
 
 .image {
   display: block;
@@ -275,7 +282,7 @@ export default {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 15px !important;
   right: 0;
   height: 101px;
   width: 108px;
@@ -283,8 +290,6 @@ export default {
   transition: .5s ease;
   background-color: black;
   border-radius: 8px;
-  display: flex;
-  justify-content: center;
 }
 
 .box-image:hover .overlay {
