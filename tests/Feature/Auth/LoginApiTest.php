@@ -8,15 +8,18 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class LoginApiTest extends TestCase {
+class LoginApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testNoCredentials() {
+    public function testNoCredentials()
+    {
         $response = $this->post('/api/auth/login', []);
         $this->assertSame(401, $response->status());
     }
 
-    public function testInvalidCredentials() {
+    public function testInvalidCredentials()
+    {
         $response = $this->post('/api/auth/login', [
             'email' => 'test@webmapp.it',
             'password' => 'test'
@@ -24,7 +27,8 @@ class LoginApiTest extends TestCase {
         $this->assertSame(401, $response->status());
     }
 
-    public function testValidCredentials() {
+    public function testValidCredentials()
+    {
         $response = $this->post('/api/auth/login', [
             'email' => 'team@webmapp.it',
             'password' => 'webmapp'
