@@ -39,7 +39,7 @@ class EcTrack extends Model
         'duration_forward' => 'int',
         'duration_backward' => 'int',
     ];
-    
+
     public bool $skip_update = false;
 
     public function __construct(array $attributes = [])
@@ -249,7 +249,7 @@ class EcTrack extends Model
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, 50000000000000000000);',
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_track") . ');',
             [
                 $this->geometry,
             ]
