@@ -12,6 +12,7 @@ use App\Http\Controllers\TaxonomyWhereController;
 use App\Http\Controllers\ApiElbrusTaxonomyController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\EcPoiController;
+use App\Http\Controllers\UgcPoiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -27,15 +28,15 @@ use App\Http\Controllers\UserGeneratedDataController;
 */
 
 Route::name('api.')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
-    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup']);
+    Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup'])->name('signup');
     Route::group([
         'middleware' => 'auth.jwt',
         'prefix' => 'auth'
     ], function ($router) {
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+        Route::post('me', [AuthController::class, 'me'])->name('me');
     });
 
     /**
@@ -44,6 +45,12 @@ Route::name('api.')->group(function () {
     Route::group([
         'middleware' => 'auth.jwt',
     ], function ($router) {
+        Route::prefix('ugc')->name('ugc.')->group(function () {
+            // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
+            Route::prefix('poi')->name('poi.')->group(function () {
+                Route::post("store", [UgcPoiController::class, 'store'])->name('store');
+            });
+        });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
         Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
     });

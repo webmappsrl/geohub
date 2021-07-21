@@ -29,6 +29,8 @@ class UgcPoi extends Model {
 
     protected $fillable = [
         'app_id',
+        'name',
+        'geometry',
     ];
 
     public function ugc_media(): BelongsToMany {
