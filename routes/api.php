@@ -13,6 +13,7 @@ use App\Http\Controllers\ApiElbrusTaxonomyController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\EcPoiController;
 use App\Http\Controllers\UgcPoiController;
+use App\Http\Controllers\UgcTrackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -49,6 +50,9 @@ Route::name('api.')->group(function () {
             // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
+            });
+            Route::prefix('track')->name('track.')->group(function () {
+                Route::post("store", [UgcTrackController::class, 'store'])->name('store');
             });
         });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);

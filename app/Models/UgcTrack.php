@@ -23,6 +23,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class UgcTrack extends Model {
     use HasFactory, GeometryFeatureTrait;
 
+    protected $fillable = [
+        'user_id',
+        'app_id',
+        'name',
+        'description',
+        'geometry',
+    ];
+
     public function ugc_media(): BelongsToMany {
         return $this->belongsToMany(UgcMedia::class);
     }

@@ -26,7 +26,6 @@ class UgcPoi extends Model {
     /**
      * @var mixed|string
      */
-
     protected $fillable = [
         'user_id',
         'app_id',

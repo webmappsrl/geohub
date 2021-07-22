@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcPoiTest extends TestCase
+class UgcTrackTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -16,15 +16,15 @@ class UgcPoiTest extends TestCase
      *
      * @return void
      */
-    public function testUgcPoiStore()
+    public function testUgcTrackStore()
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
+            "type" => "LineString",
+            "coordinates" => [[10, 44], [11, 44], [11, 43], [10, 43]]
         ];
-        $value = "(ST_GeomFromText('POINT({$geometry['coordinates'][0]} {$geometry['coordinates'][1]})'))";
+        $value = "(ST_GeomFromText('LINESTRING({$geometry['coordinates'][0][0]} {$geometry['coordinates'][0][1]}, {$geometry['coordinates'][1][0]} {$geometry['coordinates'][1][1]}, {$geometry['coordinates'][2][0]} {$geometry['coordinates'][2][1]}, {$geometry['coordinates'][3][0]} {$geometry['coordinates'][3][1]})'))";
 
         $data = [
             'user_id' => $user->id,
@@ -34,7 +34,7 @@ class UgcPoiTest extends TestCase
             'geometry' => $geometry,
         ];
 
-        $response = $this->postJson(route("api.ugc.poi.store", $data));
+        $response = $this->postJson(route("api.ugc.track.store", $data));
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
