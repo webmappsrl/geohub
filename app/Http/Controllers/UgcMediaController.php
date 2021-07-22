@@ -64,8 +64,8 @@ class UgcMediaController extends Controller
 
         try {
             $media = UgcMedia::create($data);
-            Storage::disk('public')->move($filename, 'ec_media/' . $media->id);
-            $media->relative_url = Storage::disk('public')->url('ec_media/' . $media->id);
+            Storage::disk('public')->move($filename, 'ugc_media/' . $data['app_id'] . '/' . $media->id);
+            $media->relative_url = Storage::disk('public')->url('ugc_media/' . $data['app_id'] . '/' . $media->id);
             $media->save();
         } catch (Exception $e) {
             return response(['error' => $e->getMessage(), 'Validation Error'], 500);

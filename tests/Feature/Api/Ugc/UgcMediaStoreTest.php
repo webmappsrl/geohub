@@ -32,9 +32,10 @@ class UgcMediaTest extends TestCase
         $content = file_get_contents($image);
         $exif = exif_read_data($image);
 
+        $app_id = 'it.webmapp.test';
         $data = [
             'user_id' => $user->id,
-            'app_id' => 'it.webmapp.test',
+            'app_id' => $app_id,
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
             'image' => base64_encode($content),
@@ -43,7 +44,7 @@ class UgcMediaTest extends TestCase
         ];
 
         $response = $this->postJson(route("api.ugc.media.store", $data));
-        Storage::disk('public')->delete('ec_media/1');
+        Storage::disk('public')->delete('ugc_media/' . $app_id . '/1');
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
