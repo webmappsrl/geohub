@@ -41,6 +41,7 @@ class UgcPoiTest extends TestCase
 
         $json = $response->json();
         $this->assertArrayHasKey('data', $json);
+        $this->assertEquals(1, $json['data']['id']);
         $this->assertEquals($user->id, $json['data']['user_id']);
         $this->assertEquals($data['app_id'], $json['data']['app_id']);
         $this->assertEquals($data['name'], $json['data']['name']);
