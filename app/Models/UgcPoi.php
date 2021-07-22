@@ -28,8 +28,10 @@ class UgcPoi extends Model {
      */
 
     protected $fillable = [
+        'user_id',
         'app_id',
         'name',
+        'description',
         'geometry',
     ];
 

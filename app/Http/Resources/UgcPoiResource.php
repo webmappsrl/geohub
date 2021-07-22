@@ -16,9 +16,11 @@ class UgcPoiResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'app_id' => $this->app_id,
             'name' => $this->name,
-            'geometry' => $this->geometry,
+            'description' => $this->description,
+            'geometry' => $this->geometry->getValue(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

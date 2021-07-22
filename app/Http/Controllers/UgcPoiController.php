@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UgcPoiResource;
 use App\Models\UgcPoi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UgcPoiController extends Controller
@@ -41,13 +42,16 @@ class UgcPoiController extends Controller
 
         $validator = Validator::make($data, [
             'name' => 'required|max:255',
+            'user_id' => 'required',
             'app_id' => 'required',
-            'geometry' => 'required',
+            'geometry' => 'required|array',
         ]);
 
         if ($validator->fails()) {
-            //return response(['error' => $validator->errors(), 'Validation Error']);
+            return response(['error' => $validator->errors(), 'Validation Error']);
         }
+
+        $data['geometry'] = DB::raw("(ST_GeomFromText('POINT({$data['geometry']['coordinates'][0]} {$data['geometry']['coordinates'][1]})'))");
 
         $poi = UgcPoi::create($data);
 
