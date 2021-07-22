@@ -5,12 +5,12 @@ namespace Tests\Feature\Ugc;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UgcPoiTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
+
     /**
      * A basic feature test example.
      *
@@ -29,8 +29,8 @@ class UgcPoiTest extends TestCase
         $data = [
             'user_id' => $user->id,
             'app_id' => 'it.webmapp.test',
-            'name' => 'TestUgc Poi Title',
-            'description' => 'TestUgc Poi Description',
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
             'geometry' => $geometry,
         ];
 
