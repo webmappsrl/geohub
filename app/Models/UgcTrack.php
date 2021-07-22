@@ -20,7 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string name
  * @property string raw_data
  */
-class UgcTrack extends Model {
+class UgcTrack extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
     protected $fillable = [
@@ -31,15 +32,18 @@ class UgcTrack extends Model {
         'geometry',
     ];
 
-    public function ugc_media(): BelongsToMany {
+    public function ugc_media(): BelongsToMany
+    {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
+    public function taxonomy_wheres(): BelongsToMany
+    {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 }
