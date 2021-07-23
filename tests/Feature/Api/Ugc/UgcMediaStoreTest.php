@@ -5,11 +5,10 @@ namespace Tests\Feature\Ugc;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class UgcMediaTest extends TestCase
+class UgcMediaStoreTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -27,7 +26,6 @@ class UgcMediaTest extends TestCase
             "type" => "Point",
             "coordinates" => [10, 44]
         ];
-        $value = "(ST_GeomFromText('POINT({$geometry['coordinates'][0]} {$geometry['coordinates'][1]})'))";
 
         $image = base_path() . '/tests/Fixtures/EcMedia/test.jpg';
         $content = file_get_contents($image);
@@ -56,9 +54,8 @@ class UgcMediaTest extends TestCase
         $this->assertEquals($data['app_id'], $json['data']['app_id']);
         $this->assertEquals($data['name'], $json['data']['name']);
         $this->assertEquals($data['description'], $json['data']['description']);
-        $this->assertEquals($value, $json['data']['geometry']);
+        $this->assertEquals($data['geometry'], $json['data']['geometry']);
         $this->assertArrayHasKey('relative_url', $json['data']);
-        $this->assertEquals($value, $json['data']['geometry']);
     }
 
     /**

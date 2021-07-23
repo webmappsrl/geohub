@@ -2,20 +2,21 @@
 
 namespace Tests\Unit\GeometryFeatureTrait;
 
-use App\Providers\GeohubServiceProvider;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UgcPoiTest extends TestCase {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function testGetGeojsonWithoutGeometry() {
         $poi = UgcPoi::factory([
+            'name' => $this->faker->name(),
             'geometry' => null
         ])->create();
 
@@ -26,6 +27,7 @@ class UgcPoiTest extends TestCase {
 
     public function testGetGeojsonWithGeometry() {
         $poi = UgcPoi::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
 
@@ -48,6 +50,7 @@ class UgcPoiTest extends TestCase {
 
     public function testGetRelatedUgcWithNoRelated() {
         $poi = UgcPoi::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
 
@@ -65,18 +68,21 @@ class UgcPoiTest extends TestCase {
     public function testGetRelatedUgcWithRelated() {
         $user = User::factory(1)->create()->first();
         $poi = UgcPoi::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
             'created_at' => now()
         ])->create();
 
         UgcMedia::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
             'created_at' => now()
         ])->create();
 
         UgcTrack::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
             'user_id' => $user['id'],
             'created_at' => now()

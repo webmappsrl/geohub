@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcPoiTest extends TestCase
+class UgcPoiStoreTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -24,10 +24,8 @@ class UgcPoiTest extends TestCase
             "type" => "Point",
             "coordinates" => [10, 44]
         ];
-        $value = "(ST_GeomFromText('POINT({$geometry['coordinates'][0]} {$geometry['coordinates'][1]})'))";
 
         $data = [
-            'user_id' => $user->id,
             'app_id' => 'it.webmapp.test',
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
@@ -46,6 +44,44 @@ class UgcPoiTest extends TestCase
         $this->assertEquals($data['app_id'], $json['data']['app_id']);
         $this->assertEquals($data['name'], $json['data']['name']);
         $this->assertEquals($data['description'], $json['data']['description']);
-        $this->assertEquals($value, $json['data']['geometry']);
+        $this->assertEquals($data['geometry'], $json['data']['geometry']);
+    }
+
+    /**
+     * @test 
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401()
+    {
+        $app_id = 'it.webmapp.test';
+        $data = [
+            'app_id' => $app_id,
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+        ];
+
+        $response = $this->postJson(route("api.ugc.poi.store", $data));
+        $response->assertStatus(401);
+    }
+
+    /**
+     * @test 
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function check_the_index_api_result()
+    {
+        $app_id = 'it.webmapp.test';
+        $data = [
+            'app_id' => $app_id,
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+        ];
+
+        $response = $this->postJson(route("api.ugc.poi.store", $data));
+        $response->assertStatus(401);
     }
 }

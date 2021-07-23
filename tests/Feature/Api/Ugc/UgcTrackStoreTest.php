@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcTrackTest extends TestCase
+class UgcTrackStoreTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -24,7 +24,6 @@ class UgcTrackTest extends TestCase
             "type" => "LineString",
             "coordinates" => [[10, 44], [11, 44], [11, 43], [10, 43]]
         ];
-        $value = "(ST_GeomFromText('LINESTRING({$geometry['coordinates'][0][0]} {$geometry['coordinates'][0][1]}, {$geometry['coordinates'][1][0]} {$geometry['coordinates'][1][1]}, {$geometry['coordinates'][2][0]} {$geometry['coordinates'][2][1]}, {$geometry['coordinates'][3][0]} {$geometry['coordinates'][3][1]})'))";
 
         $data = [
             'user_id' => $user->id,
@@ -46,6 +45,25 @@ class UgcTrackTest extends TestCase
         $this->assertEquals($data['app_id'], $json['data']['app_id']);
         $this->assertEquals($data['name'], $json['data']['name']);
         $this->assertEquals($data['description'], $json['data']['description']);
-        $this->assertEquals($value, $json['data']['geometry']);
+        $this->assertEquals($data['geometry'], $json['data']['geometry']);
+    }
+
+    /**
+     * @test 
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401()
+    {
+        $app_id = 'it.webmapp.test';
+        $data = [
+            'app_id' => $app_id,
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+        ];
+
+        $response = $this->postJson(route("api.ugc.media.store", $data));
+        $response->assertStatus(401);
     }
 }
