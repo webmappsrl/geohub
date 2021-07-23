@@ -23,6 +23,7 @@ class UgcMediaFactory extends Factory
     public function definition()
     {
         return [
+            'name' => $this->faker->name(),
             'created_at' => $this->faker->dateTime('-1 month'),
             'updated_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),

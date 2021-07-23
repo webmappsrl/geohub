@@ -51,6 +51,7 @@ Route::name('api.')->group(function () {
             // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
+                Route::get("index", [UgcPoiController::class, 'index'])->name('index');
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');

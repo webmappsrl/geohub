@@ -32,7 +32,7 @@ class UgcPoiStoreTest extends TestCase
             'geometry' => $geometry,
         ];
 
-        $response = $this->postJson(route("api.ugc.poi.store", $data));
+        $response = $this->post(route("api.ugc.poi.store", $data));
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
@@ -62,26 +62,7 @@ class UgcPoiStoreTest extends TestCase
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->postJson(route("api.ugc.poi.store", $data));
-        $response->assertStatus(401);
-    }
-
-    /**
-     * @test 
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function check_the_index_api_result()
-    {
-        $app_id = 'it.webmapp.test';
-        $data = [
-            'app_id' => $app_id,
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-        ];
-
-        $response = $this->postJson(route("api.ugc.poi.store", $data));
+        $response = $this->post(route("api.ugc.poi.store", $data));
         $response->assertStatus(401);
     }
 }

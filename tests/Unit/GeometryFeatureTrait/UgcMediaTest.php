@@ -16,7 +16,6 @@ class UgcMediaTest extends TestCase {
 
     public function testGetGeojsonWithoutGeometry() {
         $media = UgcMedia::factory([
-            'name' => $this->faker->name(),
             'geometry' => null
         ])->create();
 
@@ -27,7 +26,6 @@ class UgcMediaTest extends TestCase {
 
     public function testGetGeojsonWithGeometry() {
         $media = UgcMedia::factory([
-            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
 
@@ -50,7 +48,6 @@ class UgcMediaTest extends TestCase {
 
     public function testGetRelatedUgcWithNoRelated() {
         $media = UgcMedia::factory([
-            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
 
@@ -68,21 +65,18 @@ class UgcMediaTest extends TestCase {
     public function testGetRelatedUgcWithRelated() {
         $user = User::factory(1)->create()->first();
         $media = UgcMedia::factory([
-            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
             'created_at' => now()
         ])->create();
 
         UgcPoi::factory([
-            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
             'created_at' => now()
         ])->create();
 
         UgcTrack::factory([
-            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
             'user_id' => $user['id'],
             'created_at' => now()

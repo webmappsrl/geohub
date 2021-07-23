@@ -30,10 +30,10 @@ class UgcTrackFactory extends Factory
         }
 
         return [
+            'name' => $this->faker->name(),
             'created_at' => $this->faker->dateTime('-1 month'),
             'updated_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),
-            'name' => $this->faker->firstName(),
             'geometry' => $geometry,
             'raw_data' => json_encode($rawData)
         ];

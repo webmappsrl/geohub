@@ -36,9 +36,9 @@ class UgcMediaStoreTest extends TestCase
             'app_id' => $app_id,
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
+            'geometry' => $geometry,
             'image' => base64_encode($content),
             'raw_data' => json_encode($exif),
-            'geometry' => $geometry,
         ];
 
         $response = $this->postJson(route("api.ugc.media.store", $data));
@@ -69,7 +69,6 @@ class UgcMediaStoreTest extends TestCase
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
-            'name' => $this->faker->name(),
             'description' => $this->faker->text(),
         ];
 
