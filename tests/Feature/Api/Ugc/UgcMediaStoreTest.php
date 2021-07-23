@@ -14,11 +14,12 @@ class UgcMediaTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
+     * @test 
      * A basic feature test example.
      *
      * @return void
      */
-    public function testUgcMediaStore()
+    public function check_that_call_api_to_store_ugcmedia_for_authenticated_user()
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
@@ -34,7 +35,6 @@ class UgcMediaTest extends TestCase
 
         $app_id = 'it.webmapp.test';
         $data = [
-            'user_id' => $user->id,
             'app_id' => $app_id,
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
@@ -58,6 +58,25 @@ class UgcMediaTest extends TestCase
         $this->assertEquals($data['description'], $json['data']['description']);
         $this->assertEquals($value, $json['data']['geometry']);
         $this->assertArrayHasKey('relative_url', $json['data']);
-        //$this->assertEquals($value, $json['data']['geometry']);
+        $this->assertEquals($value, $json['data']['geometry']);
+    }
+
+    /**
+     * @test 
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401()
+    {
+        $app_id = 'it.webmapp.test';
+        $data = [
+            'app_id' => $app_id,
+            'name' => $this->faker->name(),
+            'description' => $this->faker->text(),
+        ];
+
+        $response = $this->postJson(route("api.ugc.media.store", $data));
+        $response->assertStatus(401);
     }
 }

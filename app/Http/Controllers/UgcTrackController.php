@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UgcTrackResource;
 use App\Models\UgcTrack;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,7 +43,6 @@ class UgcTrackController extends Controller {
 
         $validator = Validator::make($data, [
             'name' => 'required|max:255',
-            'user_id' => 'required',
             'app_id' => 'required',
             'geometry' => 'required|array',
         ]);
@@ -50,6 +50,13 @@ class UgcTrackController extends Controller {
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error']);
         }
+
+        $user_id = Auth::user()->id;
+        if (null == $user_id) {
+            return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
+        }
+
+        $data['user_id'] = $user_id;
 
         $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING({$data['geometry']['coordinates'][0][0]} {$data['geometry']['coordinates'][0][1]}, {$data['geometry']['coordinates'][1][0]} {$data['geometry']['coordinates'][1][1]}, {$data['geometry']['coordinates'][2][0]} {$data['geometry']['coordinates'][2][1]}, {$data['geometry']['coordinates'][3][0]} {$data['geometry']['coordinates'][3][1]})'))");
 
