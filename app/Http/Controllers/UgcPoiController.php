@@ -19,6 +19,7 @@ class UgcPoiController extends Controller
     {
         $this->user = Auth::user();    
     }
+    
     /**
      * Display a listing of the resource.
      *

@@ -55,6 +55,7 @@ Route::name('api.')->group(function () {
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
+                Route::get("index", [UgcTrackController::class, 'index'])->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
                 Route::post("store", [UgcMediaController::class, 'store'])->name('store');

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Ugc;
 
-use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcPoiIndexTest extends TestCase
+class UgcTrackIndexTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -18,23 +18,23 @@ class UgcPoiIndexTest extends TestCase
      *
      * @return void
      */
-    public function get_the_ugc_poi_list_for_the_authenticated_user()
+    public function get_the_ugc_track_list_for_the_authenticated_user()
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
         
         $app_id = 'it.webmapp.test';
-        UgcPoi::factory(5)->create([
+        UgcTrack::factory(5)->create([
             'app_id' => $app_id,
             'user_id' => $user1,
         ]);
-        UgcPoi::factory(20)->create([
+        UgcTrack::factory(20)->create([
             'app_id' => $app_id,
             'user_id' => $user2,
         ]);
         
         $this->actingAs($user1, 'api');
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id]));
+        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id]));
         $content = $response->getContent();
         $response->assertStatus(200);
         $this->assertJson($content);
@@ -42,16 +42,16 @@ class UgcPoiIndexTest extends TestCase
         $this->assertArrayHasKey('data', $json);
         $this->assertCount(5, $json['data']);
 
-        UgcPoi::factory(15)->create([
+        UgcTrack::factory(15)->create([
             'app_id' => $app_id,
             'user_id' => $user1,
         ]);
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id]));
+        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list10 = $json['data'];
 
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id, 'page' => 1]));
+        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id, 'page' => 1]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list11 = $json['data'];
