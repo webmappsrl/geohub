@@ -5,7 +5,7 @@
         <div ref="selectedImageList" id="selectedImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
             <div class="w-1/5">
-              <img class="selectedThunbnail" :src="row.url">
+              <img class="selectedThunbnail" :src="'/storage'+row.url">
             </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
@@ -45,7 +45,7 @@
                             <div class="w-1/4 box-image" v-for="media in mediaList.features">
                               <img class="image ec-media-image"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="media.properties.url"
+                                   :src="'/storage'+media.properties.url"
                                    @click="toggleImage(media.properties)">
                               <img src="/Vector.png"
                                    :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
@@ -59,8 +59,7 @@
                           </div>
                           <div class="map w-1/2 text-center">
                             <MapComponent id="map-component" :feature="field.geojson" :media="mediaList"
-                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"
-                                          ref="map"></MapComponent>
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -150,8 +149,7 @@ export default {
         this.selectedMedia.push(item.id);
 
       }
-      this.$refs.map.map.changed();
-      this.$refs.map.map.render();
+
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
@@ -317,15 +315,11 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
+  height: 108px;
 }
 
 .overlay.selected {
   display: none;
-}
-
-
-.box-image {
-
 }
 
 .selectedThunbnail {

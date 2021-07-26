@@ -35,7 +35,61 @@ class EcMediaAndTrack extends Seeder
             'url' => '/ec_media_test/test.jpg',
         ]);
 
-        $media3 = EcTrack::factory()->create([
+        $media3 = EcMedia::factory()->create([
+            'name' => 'TestMedia4',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+
+        $media4 = EcMedia::factory()->create([
+            'name' => 'TestMedia3',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+
+        $media5 = EcMedia::factory()->create([
+            'name' => 'TestMedia5',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+
+        $media6 = EcMedia::factory()->create([
+            'name' => 'TestMedia6',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media7 = EcMedia::factory()->create([
+            'name' => 'TestMedia7',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media8 = EcMedia::factory()->create([
+            'name' => 'TestMedia8',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media9 = EcMedia::factory()->create([
+            'name' => 'TestMedia9',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media10 = EcMedia::factory()->create([
+            'name' => 'TestMedia10',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media11 = EcMedia::factory()->create([
+            'name' => 'TestMedia11',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media12 = EcMedia::factory()->create([
+            'name' => 'TestMedia12',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+
+        $track = EcTrack::factory()->create([
             'name' => 'TestTrack',
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(10.0001 45 0,  10 46 0,  11 45 0, 11 47 0)'))"),
         ]);

@@ -1,7 +1,21 @@
 <template>
-  <div ref="ecmedia-map-root"
-       style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%">
+    <div ref="ecmedia-map-root"
+         style="width: 100%; height: 100%">
+    </div>
+    <div id="overlayPopup">
+      <div style="height:100%">
+        <img id="popupImage" src="" style="height: 85%">
+        <p id="popupImageLabel"></p>
+
+      </div>
+      <div class="bottom-popup">
+      </div>
+    </div>
+
   </div>
+
+
 </template>
 
 <script>
@@ -24,6 +38,7 @@ import Fill from 'ol/style/Fill';
 import {defaults as defaultInteractions, Select} from "ol/interaction";
 import {click as clickCondition} from 'ol/events/condition';
 import {getDistance} from "ol/sphere";
+import {Overlay} from "ol";
 
 export default {
   name: "MapComponent",
@@ -185,6 +200,16 @@ export default {
         if (this.selectedMedia.indexOf(id) === -1) {
           this.selectedMedia.push(id);
           this.loadedImages.push(poi['values_']);
+          var overlayPopup = new Overlay({
+            element: document.getElementById('overlayPopup')
+          });
+          var popupImage = overlayPopup.setPosition(event.coordinate);
+          this.map.addOverlay(overlayPopup);
+          console.log(poi['values_']);
+          console.log(poi['values_']['url']);
+          document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
+          document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+
         } else {
           this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
           this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
@@ -201,6 +226,12 @@ export default {
       this.drawMedia();
     }, 500)
 
+  },
+  watch: {
+    selectedMedia() {
+      this.mediaLayer.changed();
+      this.map.render();
+    }
   },
   methods: {
     getFixedDistance(point1, point2) {
@@ -366,4 +397,22 @@ export default {
 
 <style scoped>
 @import "../../../node_modules/ol/ol.css";
+
+#overlayPopup {
+  padding: 5px;
+  width: 240px;
+  height: 130px;
+  background-color: white;
+  position: absolute;
+  top: -150px;
+  left: -125px;
+}
+
+#overlayPopup .bottom-popup {
+  background-color: white;
+  height: 25px;
+  clip-path: polygon(45% 0%, 30% 0, 50% 100%);
+  margin-top: 5px;
+}
+
 </style>
