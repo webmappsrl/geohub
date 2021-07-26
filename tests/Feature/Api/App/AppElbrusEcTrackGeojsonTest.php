@@ -83,6 +83,7 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $geojson = json_decode($result->content(), true);
         $this->assertEquals('ec_track_' . $track->id, $geojson['properties']['id']);
     }
+
     public function testTaxonomyFieldWithActivity()
     {
         $app = App::factory()->create();
@@ -96,6 +97,7 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertEquals('activity_' . $activity->id, $geojson['properties']['taxonomy']['activity'][0]);
     }
+
     public function testTaxonomyFieldWithTwoActivity()
     {
         $app = App::factory()->create();
@@ -112,6 +114,7 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertTrue(in_array('activity_' . $activity->id, $geojson['properties']['taxonomy']['activity']));
         $this->assertTrue(in_array('activity_' . $activity1->id, $geojson['properties']['taxonomy']['activity']));
     }
+
     public function testTaxonomyFieldWithTheme()
     {
         $app = App::factory()->create();
@@ -125,6 +128,7 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertEquals('theme_' . $theme->id, $geojson['properties']['taxonomy']['theme'][0]);
     }
+
     public function testTaxonomyFieldWithAllTaxonomies()
     {
         $app = App::factory()->create();
@@ -241,6 +245,7 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertStringContainsString('download', $json['gpx_url']);
         $this->assertStringContainsString('.gpx', $json['gpx_url']);
     }
+
     public function testKmlField()
     {
         $ecTrack = EcTrack::factory()->create();

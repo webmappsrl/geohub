@@ -19,22 +19,37 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string geometry
  * @property string name
  */
-class UgcMedia extends Model {
+class UgcMedia extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
-    public function ugc_pois(): BelongsToMany {
+    protected $fillable = [
+        'user_id',
+        'app_id',
+        'name',
+        'description',
+        'relative_url',
+        'raw_data',
+        'geometry',
+    ];
+
+    public function ugc_pois(): BelongsToMany
+    {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): BelongsToMany {
+    public function ugc_tracks(): BelongsToMany
+    {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
+    public function taxonomy_wheres(): BelongsToMany
+    {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 }

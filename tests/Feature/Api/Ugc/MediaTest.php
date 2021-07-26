@@ -6,13 +6,14 @@ use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class MediaTest extends TestCase {
-    use RefreshDatabase;
+class MediaTest extends TestCase
+{
+    use RefreshDatabase, WithFaker;
 
-    public function testGetGeoJson() {
+    public function testGetGeoJson()
+    {
         $ugcMedia = UgcMedia::factory()->create();
         $response = $this->get(route("api.ugc.media.geojson", ['id' => $ugcMedia->id]));
         $this->assertSame(200, $response->status());
@@ -21,12 +22,14 @@ class MediaTest extends TestCase {
         $this->assertSame('Feature', $json["type"]);
     }
 
-    public function testGetGeoJsonMissingId() {
+    public function testGetGeoJsonMissingId()
+    {
         $response = $this->get(route("api.ugc.media.geojson", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testAssociateZeroTaxonomyWhereWithUgcMedia() {
+    public function testAssociateZeroTaxonomyWhereWithUgcMedia()
+    {
         $media = UgcMedia::factory()->create();
         $response = $this->post(route("api.ugc.media.associate", ['id' => $media->id]));
         $this->assertSame(200, $response->status());
@@ -35,11 +38,14 @@ class MediaTest extends TestCase {
         $this->assertCount(0, $media->taxonomy_wheres);
     }
 
-    public function testAssociateUnknownTaxonomyWhereWithUgcMedia() {
+    public function testAssociateUnknownTaxonomyWhereWithUgcMedia()
+    {
         $media = UgcMedia::factory()->create();
         $response = $this->post(route("api.ugc.media.associate", [
             'id' => $media->id,
-            "where_ids" => [12]
+            'name' => $this->faker->name(),
+            'where_ids' => [12],
+
         ]));
         $this->assertSame(200, $response->status());
 
@@ -47,13 +53,15 @@ class MediaTest extends TestCase {
         $this->assertCount(0, $media->taxonomy_wheres);
     }
 
-    public function testAssociateTaxonomyWhereWithUgcMedia() {
+    public function testAssociateTaxonomyWhereWithUgcMedia()
+    {
         $media = UgcMedia::factory()->create();
         $wheres = TaxonomyWhere::factory()->count(2)->create();
         $whereIds = $wheres->pluck('id')->toArray();
         $response = $this->post(route("api.ugc.media.associate", [
             'id' => $media->id,
-            'where_ids' => $whereIds
+            'name' => $this->faker->name(),
+            'where_ids' => $whereIds,
         ]));
         $this->assertSame(200, $response->status());
 
