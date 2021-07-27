@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\App;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AppController extends Controller
 {
@@ -83,6 +84,64 @@ class AppController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function icon(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+        
+        return $this->getOrDownloadIcon($app);
+    }
+
+    public function splash(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+        
+        return $this->getOrDownloadIcon($app, 'splash');
+    }
+
+    public function iconSmall(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+        
+        return $this->getOrDownloadIcon($app, 'icon_small');
+    }
+
+    public function featureImage(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+        
+        return $this->getOrDownloadIcon($app, 'feature_image');
+    }
+
+    protected function getOrDownloadIcon(App $app, $type = 'icon')
+    {
+        if (!isset($app->$type)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        $pathInfo = pathinfo(parse_url($app->$type)['path']);
+        if (substr($app->$type, 0, 4) === 'http') {
+            header("Content-disposition:attachment; filename=$type." . $pathInfo['extension']);
+            header('Content-Type:' . CONTENT_TYPE_IMAGE_MAPPING[$pathInfo['extension']]);
+            readfile($app->$type);
+        } else {
+            //Scaricare risorsa locale
+            return Storage::disk('public')->download($app->$type, $type . '.' . $pathInfo['extension']);
+        }
+    }
+
 
     private function _getReportSection()
     {
