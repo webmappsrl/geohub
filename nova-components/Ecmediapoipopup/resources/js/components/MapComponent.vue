@@ -1,7 +1,21 @@
 <template>
-  <div ref="ecmedia-map-root"
-       style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%">
+    <div ref="ecmedia-map-root"
+         style="width: 100%; height: 100%">
+    </div>
+    <div id="overlayPopup">
+      <div style="height:100%">
+        <img id="popupImage" src="" style="height: 85%">
+        <p id="popupImageLabel"></p>
+
+      </div>
+      <div class="bottom-popup">
+      </div>
+    </div>
+
   </div>
+
+
 </template>
 
 <script>
@@ -24,6 +38,7 @@ import Fill from 'ol/style/Fill';
 import {defaults as defaultInteractions, Select} from "ol/interaction";
 import {click as clickCondition} from 'ol/events/condition';
 import {getDistance} from "ol/sphere";
+import {Overlay} from "ol";
 
 export default {
   name: "MapComponent",
@@ -121,6 +136,73 @@ export default {
             pinchRotate: true,
             pinchZoom: true,
           }).getArray()
+    });
+    this.map.on("pointermove", (event) => {
+      let minPoiDistance = 15,
+          minTrackDistance = 15,
+          minPolygonArea,
+          poi,
+          track,
+          polygon,
+
+          foreachFeature = (feature) => {
+            if (feature.getGeometry().getType() === "Point") {
+              let coord = feature.getGeometry().getCoordinates(),
+                  dist = Math.round(
+                      this.getFixedDistance(coord, event.coordinate)
+                  );
+              if (dist < minPoiDistance) {
+                minPoiDistance = dist;
+                poi = feature;
+              }
+            } else if (
+                !poi && (feature.getGeometry().getType() === "LineString" ||
+                feature.getGeometry().getType() === "MultiLineString")
+            ) {
+              let coord = (feature.getGeometry()).getClosestPoint(
+                  event.coordinate),
+
+                  dist = Math.round(
+                      this.getFixedDistance(coord, event.coordinate)
+                  );
+              if (dist < minTrackDistance) {
+                minTrackDistance = dist;
+                track = feature;
+              }
+            } else if (
+                !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
+                feature.getGeometry().getType() === "MultiPolygon")
+            ) {
+              let area, poly = feature.getGeometry();
+
+              if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
+                area = poly.getArea();
+                if (area < minPolygonArea || !minPolygonArea) {
+                  minPolygonArea = area;
+                  polygon = feature;
+                }
+              }
+            }
+          };
+
+      this.mediaSource.forEachFeatureInExtent(
+          this.view.calculateExtent(this.map.getSize()),
+          foreachFeature
+      );
+      let coordinate;
+      if (poi)
+        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
+      else if (track)
+        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
+      if (coordinate) {
+        var overlayPopup = new Overlay({
+          element: document.getElementById('overlayPopup')
+        });
+        var popupImage = overlayPopup.setPosition(coordinate);
+        this.map.addOverlay(overlayPopup);
+        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
+        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+      }
     });
 
     this.map.on("click", (event) => {
@@ -371,4 +453,21 @@ export default {
 
 <style scoped>
 @import "../../../node_modules/ol/ol.css";
+
+#overlayPopup {
+  padding: 5px;
+  width: 240px;
+  height: 130px;
+  background-color: white;
+  position: absolute;
+  top: -150px;
+  left: -125px;
+}
+
+#overlayPopup .bottom-popup {
+  background-color: white;
+  height: 25px;
+  clip-path: polygon(50% 0%, 30% 0, 52% 100%);
+  margin-top: 0px;
+}
 </style>
