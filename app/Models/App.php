@@ -22,7 +22,9 @@ class App extends Model
         });
 
         static::saving(function ($app) {
-            $app->external_overlays = str_replace('<br />', '', nl2br($app->external_overlays));
+            $json = json_encode(json_decode($app->external_overlays));
+            
+            $app->external_overlays = $json;
         });
     }
 
