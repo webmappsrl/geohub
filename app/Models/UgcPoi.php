@@ -35,6 +35,17 @@ class UgcPoi extends Model
         'geometry',
     ];
 
+    /**
+     * Scope a query to only include current user EcPois.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCurrentUser($query)
+    {
+        return $query->where('user_id', Auth()->user()->id);
+    }
+
     public function ugc_media(): BelongsToMany
     {
         return $this->belongsToMany(UgcMedia::class);

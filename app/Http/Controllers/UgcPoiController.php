@@ -13,13 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UgcPoiController extends Controller
 {
-    private $user;
-
-    public function __construct()
-    {
-        $this->user = Auth::user();    
-    }
-    
     /**
      * Display a listing of the resource.
      *
@@ -28,22 +21,7 @@ class UgcPoiController extends Controller
      */
     public function index(Request $request)
     {
-
-        $user_id = $this->user->id;
-        if (null == $user_id) {
-            return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
-        }
-
-        $app_id = $request->query('app_id');
-        if (null == $app_id) {
-            return response(['error' => 'app_id is required', 'Bad Request'], 400);
-        }
-
-        $page = $request->query('page', 0);
-        $limit =  $request->query('limit', 10);
-        $pois = UgcPoi::where('user_id', $user_id)->where('app_id', $app_id)->skip($page * $limit)->take($limit)->get();
-
-        return response(new UgcPoiCollection($pois));
+        //
     }
 
     /**
@@ -76,7 +54,7 @@ class UgcPoiController extends Controller
             return response(['error' => $validator->errors(), 'Validation Error']);
         }
 
-        $user_id = $this->user->id;
+        $user_id = Auth::user()->id;
         if (null == $user_id) {
             return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
         }

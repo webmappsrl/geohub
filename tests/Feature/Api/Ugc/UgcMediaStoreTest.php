@@ -60,9 +60,6 @@ class UgcMediaStoreTest extends TestCase
 
     /**
      * @test 
-     * A basic feature test example.
-     *
-     * @return void
      */
     public function check_that_if_the_api_is_called_without_access_token_it_responds_401()
     {

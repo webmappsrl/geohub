@@ -17,6 +17,12 @@ use App\Http\Controllers\UgcPoiController;
 use App\Http\Controllers\UgcTrackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
+use App\Http\Resources\UgcMediaCollection;
+use App\Http\Resources\UgcPoiCollection;
+use App\Http\Resources\UgcTrackCollection;
+use App\Models\UgcMedia;
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,14 +57,21 @@ Route::name('api.')->group(function () {
             // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
-                Route::get("index", [UgcPoiController::class, 'index'])->name('index');
+                Route::get("index", function () {
+                    return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
+                })->name('index');
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
-                Route::get("index", [UgcTrackController::class, 'index'])->name('index');
+                Route::get("index", function () {
+                    return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
+                })->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
                 Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                Route::get("index", function () {
+                    return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
+                })->name('index');
             });
         });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
