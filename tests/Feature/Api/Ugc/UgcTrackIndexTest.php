@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Ugc;
+namespace Tests\Feature\Api\Ugc;
 
 use App\Models\UgcTrack;
 use App\Models\User;
