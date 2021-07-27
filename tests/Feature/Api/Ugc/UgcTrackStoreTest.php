@@ -50,7 +50,6 @@ class UgcTrackStoreTest extends TestCase
 
     /**
      * @test 
-     * A basic feature test example.
      *
      * @return void
      */
@@ -63,7 +62,7 @@ class UgcTrackStoreTest extends TestCase
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->postJson(route("api.ugc.media.store", $data));
+        $response = $this->postJson(route("api.ugc.track.store", $data));
         $response->assertStatus(401);
     }
 }

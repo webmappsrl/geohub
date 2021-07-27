@@ -17,6 +17,12 @@ use App\Http\Controllers\UgcPoiController;
 use App\Http\Controllers\UgcTrackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
+use App\Http\Resources\UgcMediaCollection;
+use App\Http\Resources\UgcPoiCollection;
+use App\Http\Resources\UgcTrackCollection;
+use App\Models\UgcMedia;
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,14 +57,21 @@ Route::name('api.')->group(function () {
             // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
-                Route::get("index", [UgcPoiController::class, 'index'])->name('index');
+                Route::get("index", function () {
+                    return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
+                })->name('index');
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
-                Route::get("index", [UgcTrackController::class, 'index'])->name('index');
+                Route::get("index", function () {
+                    return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
+                })->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
                 Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                Route::get("index", function () {
+                    return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
+                })->name('index');
             });
         });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
@@ -172,6 +185,10 @@ Route::name('api.')->group(function () {
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
+            Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
+            Route::get("/{id}/resources/icon512.png", [AppController::class, 'iconSmall'])->name('icon_small');
+            Route::get("/{id}/resources/featured.png", [AppController::class, 'featureImage'])->name('feature_image');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson/ec_track/json');

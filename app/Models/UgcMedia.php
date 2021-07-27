@@ -33,6 +33,17 @@ class UgcMedia extends Model
         'geometry',
     ];
 
+    /**
+     * Scope a query to only include current user EcMedia.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCurrentUser($query)
+    {
+        return $query->where('user_id', Auth()->user()->id);
+    }
+
     public function ugc_pois(): BelongsToMany
     {
         return $this->belongsToMany(UgcPoi::class);
