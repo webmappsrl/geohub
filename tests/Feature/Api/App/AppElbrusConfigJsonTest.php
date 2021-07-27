@@ -344,4 +344,56 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals(3, $json->MAP->bbox[2]);
         $this->assertEquals(3, $json->MAP->bbox[3]);
     }
+
+    /**
+     * @test
+     */
+    public function check_if_section_external_overlays_exists()
+    {
+
+        $external_overlays = <<<EXTERNAL_OVERLAYS
+[
+    {
+        "id": "punti_acqua",
+        "type": "geojson",
+        "geojsonUrl": "punti_acqua.geojson",
+        "color": "#3EAFE3",
+        "icon": "wm-icon-waterdrop",
+        "noDetails": false,
+        "name": "Punti acqua",
+        "locale": "it",
+        "createTaxonomy": "webmapp_category"
+        },
+        {
+        "id": "segnaletica_verticale",
+        "type": "geojson",
+        "geojsonUrl": "segnaletica_verticale.geojson",
+        "color": "#e67300",
+        "icon": "wm-icon-guidepost-15",
+        "noDetails": false,
+        "name": "Segnaletica verticale",
+        "locale": "it",
+        "createTaxonomy": "webmapp_category"
+    }
+]
+EXTERNAL_OVERLAYS;
+
+        $user = User::factory()->create();
+        $app = App::factory()->create([
+            'user_id' => $user->id,
+            'external_overlays' => $external_overlays
+        ]);
+
+        $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0 0, 3 4 0)'))")]);
+        $track->user_id = $user->id;
+        $track->save();
+
+        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $this->assertEquals(200, $response->getStatusCode());
+        $json = json_decode($response->getContent());
+
+        $this->assertTrue(isset($json->OVERLAYS));
+        $this->assertTrue(isset($json->OVERLAYS->external_overlays));
+        $this->assertJson($external_overlays, $json->OVERLAYS->external_overlays);
+    }
 }
