@@ -7,13 +7,13 @@ use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class UgcTrackTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function testGetGeojsonWithoutGeometry()
     {
@@ -72,19 +72,19 @@ class UgcTrackTest extends TestCase
         $track = UgcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         UgcPoi::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         UgcMedia::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         $geojson = $track->getRelatedUgcGeojson();

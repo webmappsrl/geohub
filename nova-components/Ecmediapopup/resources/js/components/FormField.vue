@@ -5,7 +5,7 @@
         <div ref="selectedImageList" id="selectedImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
             <div class="w-1/5">
-              <img class="selectedThunbnail" :src="row.url">
+              <img class="selectedThunbnail" :src="JSON.parse(row.thumbnails)['108x137']">
             </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
@@ -32,6 +32,9 @@
               <div class="modal-container">
 
                 <div class="modal-header">
+                  <p class="text-right">
+                    <button type="button" class="close-button" @click="cancelUpload()">X</button>
+                  </p>
                   <div style="display:flex">
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
@@ -40,20 +43,24 @@
                           <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
 
                             <div class="w-1/4 box-image" v-for="media in mediaList.features">
+
                               <img class="image ec-media-image"
-                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="media.properties.url"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
+                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
                                    @click="toggleImage(media.properties)">
+                              <img src="/Vector.png"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
                               <div class="overlay"
-                                   :class="selectedImages.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="media.properties.url"
+                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
+                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
                                    @click="toggleImage(media.properties)">
                                 <div class="text">Seleziona</div>
                               </div>
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
-                            Mappa
+                            <MapComponent id="map-component" :feature="field.geojson" :media="mediaList"
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -69,9 +76,7 @@
                         </div>
                       </tab>
                     </tabs>
-                    <p class="text-right">
-                      <button type="button" class="btn btn-danger btn-default" @click="cancelUpload()">X</button>
-                    </p>
+
                   </div>
 
                 </div>
@@ -92,6 +97,7 @@
 <script>
 import Tab from './tab';
 import Tabs from './tabs';
+import MapComponent from './MapComponent';
 
 import {FormField, HandlesValidationErrors} from 'laravel-nova'
 
@@ -103,6 +109,7 @@ export default {
     EcMediaModal,
     Tabs,
     Tab,
+    MapComponent,
   },
   props: ['resourceName', 'resourceId', 'field'],
   data() {
@@ -110,7 +117,7 @@ export default {
       modalOpen: false,
       associatedMediaList: {},
       mediaList: {},
-      selectedImages: [],
+      selectedMedia: [],
       loadedImages: [],
     }
   },
@@ -122,27 +129,33 @@ export default {
         });
     axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_media')
         .then(response => {
+          that.selectedMedia.splice(0);
           that.associatedMediaList = response.data;
-          that.associatedMediaList.forEach(element =>
-              that.selectedImages.push(element.id)
+          that.associatedMediaList.forEach(element => {
+                that.loadedImages.push(element)
+                that.selectedMedia.push(element.id)
+
+              }
           );
-          that.associatedMediaList.forEach(element =>
-              that.loadedImages.push(element)
-          );
+
         });
-
-
   },
 
   methods: {
     toggleImage(item) {
-      if (this.selectedImages.includes(item.id)) {
-        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1)
-        this.selectedImages.splice(this.selectedImages.indexOf(item.id), 1)
+      if (this.selectedMedia.includes(item.id)) {
+        this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1);
+        this.selectedMedia.splice(this.selectedMedia.indexOf(item.id), 1);
+
+
       } else {
         this.loadedImages.push(item);
-        this.selectedImages.push(item.id);
+        this.selectedMedia.push(item.id);
+        console.log();
+
+
       }
+
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
@@ -152,19 +165,16 @@ export default {
       this.modalOpen = false;
     },
     removeImage(id) {
-      this.selectedImages.splice(this.selectedImages.indexOf(id), 1);
+      this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
-
     },
-    associateImages() {
 
-    },
 
     /**
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      formData.append(this.field.attribute, JSON.stringify(this.selectedImages))
+      formData.append(this.field.attribute, JSON.stringify(this.selectedMedia))
     },
   },
 }
@@ -189,9 +199,9 @@ export default {
 }
 
 .modal-container {
-  width: 75%;
+  width: 60% !important;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 10px 0px !important;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -207,7 +217,8 @@ export default {
 }
 
 .modal-body {
-  padding: 1rem 0.5rem;
+  padding: 0px 0px !important;
+  min-height: 50vh;
 }
 
 .modal-footer {
@@ -218,16 +229,6 @@ export default {
 .modal-default-button {
   float: right;
 }
-
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;
@@ -247,10 +248,6 @@ export default {
   border-bottom: 1px solid lightgray;
 }
 
-.modal-footer {
-  border-top: 1px solid lightgray;
-}
-
 .ec-media-image {
   width: 108px;
   height: 101px !important;
@@ -258,16 +255,30 @@ export default {
 }
 
 .ec-media-image:hover {
-  border: 5px solid #63A2DE;
+  border: 3px solid #55af60 !important;
+  box-sizing: border-box;
+  opacity: 0.8;
+}
+
+.selected {
+  border: 3px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
 
 
-.selected {
-  border: 5px solid #63A2DE;
-  box-sizing: border-box;
-  opacity: 0.8;
+.vector-visible {
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
+.vector-hidden {
+  display: none;
+  position: absolute;
+  right: 15px;
+  top: 5px;
 }
 
 
@@ -280,9 +291,9 @@ export default {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 15px !important;
   right: 0;
-  height: 100%;
+  height: 101px;
   width: 108px;
   opacity: 0;
   transition: .5s ease;
@@ -308,20 +319,29 @@ export default {
 
 .box-image {
   position: relative;
+  display: flex;
+  justify-content: center;
+  height: 108px;
 }
 
 .overlay.selected {
   display: none;
 }
 
-.box-image {
-
-}
-
 .selectedThunbnail {
   width: 40px;
   height: 40px;
   border-radius: 8px;
+}
+
+.close-button {
+  font-size: 20px;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.media-list {
+  background-color: #f1f3f5;
 }
 
 </style>

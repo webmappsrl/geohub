@@ -14,8 +14,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+define('CONTENT_TYPE_IMAGE_MAPPING', [
+    'bmp' => 'image/bmp',
+    'gif' => 'image/gif',
+    'ico' => 'image/vnd.microsoft.icon',
+    'jpg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'png' => 'image/png',
+    'svg' => 'image/svg+xml',
+    'tif' => 'image/tiff',
+    'webp' => 'image/webp'
+]);
+
 class EditorialContentController extends Controller
 {
+
     use GeometryFeatureTrait;
 
     /**
@@ -97,8 +110,10 @@ class EditorialContentController extends Controller
         $taxonomies = $this->_getTaxonomies($ec, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
 
-        $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
-        $geojson['properties']['duration'] = $durations;
+        if ('track' == $apiUrl[2]) {
+            $durations = $this->_getDurations($ec, $names = ['hiking', 'cycling']);
+            $geojson['properties']['duration'] = $durations;
+        }
 
         return response()->json($geojson);
     }
@@ -289,11 +304,10 @@ class EditorialContentController extends Controller
      *
      * @param int $id the Ec id
      *
+     *
      */
     public function getEcImage(int $id)
     {
-
-
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -308,15 +322,21 @@ class EditorialContentController extends Controller
 
         // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
 
-        if (preg_match('/\.amazonaws\.com\//', $ec->url)) {
+        /*if (preg_match('/\.amazonaws\.com\//', $ec->url)) {
             $explode = explode('.amazonaws.com/', $ec->url);
             $url = end($explode);
             Log::info($url);
-            // TODO: cambiare name (non si capisce perchè!!!!)
             return Storage::disk('s3')->download($url, 'name' . '.jpg');
+        }*/
+        $pathInfo = pathinfo(parse_url($ec->url)['path']);
+        if (substr($ec->url, 0, 4) === 'http') {
+            header("Content-disposition:attachment; filename=name." . $pathInfo['extension']);
+            header('Content-Type:' . CONTENT_TYPE_IMAGE_MAPPING[$pathInfo['extension']]);
+            readfile($ec->url);
+        } else {
+            //Scaricare risorsa locale
+            return Storage::disk('public')->download($ec->url, 'name.' . $pathInfo['extension']);
         }
-        // TODO: cambiare name (non si capisce perchè!!!!)
-        return Storage::disk('public')->download($ec->url, 'name' . '.jpg');
     }
 
     /** Update the ec media with new data from Geomixer
@@ -441,10 +461,21 @@ class EditorialContentController extends Controller
             $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
 
+        $fields = [
+            'ele',
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($request->$field)) {
+                $ecPoi->$field = $request->$field;
+            }
+        }
+
         if (!empty($request->where_ids)) {
             $ecPoi->taxonomyWheres()->sync($request->where_ids);
         }
 
+        $ecPoi->skip_update = true;
         $ecPoi->save();
     }
 
@@ -646,6 +677,6 @@ class EditorialContentController extends Controller
         'SRID=4326;POINT(-72.1235 42.3521)'::geometry,
 		'SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry
 	)";
-        
+
     }
 }

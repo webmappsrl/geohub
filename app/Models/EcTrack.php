@@ -19,7 +19,7 @@ class EcTrack extends Model
 {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp'];
+    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
 
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     /**
@@ -39,8 +39,8 @@ class EcTrack extends Model
         'duration_forward' => 'int',
         'duration_backward' => 'int',
     ];
-    public bool $skip_update = false;
 
+    public bool $skip_update = false;
 
     public function __construct(array $attributes = [])
     {
@@ -81,7 +81,9 @@ class EcTrack extends Model
                 } catch (\Exception $e) {
                     Log::error('An error occurred during a store operation: ' . $e->getMessage());
                 }
-            } else $ecTrack->skip_update = false;
+            } else {
+                $ecTrack->skip_update = false;
+            }
         });
         /**
          * static::updated(function ($ecTrack) {
@@ -241,13 +243,13 @@ class EcTrack extends Model
         return json_encode($array);
     }
 
-    public function getNearEcMedia()
+    public function getNeighbourEcMedia()
     {
 
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, 500);',
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_track") . ');',
             [
                 $this->geometry,
             ]

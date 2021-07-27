@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class UserGeneratedDataController extends Controller {
+class UserGeneratedDataController extends Controller
+{
     use GeometryFeatureTrait;
 
     /**
@@ -26,7 +27,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @return JsonResponse|void
      */
-    public function store(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse
+    {
         $json = json_decode($request->getContent(), true);
 
         if (isset($json['type']) && $json['type'] === 'FeatureCollection' && isset($json['features']) && is_array($json['features'])) {
@@ -49,7 +51,8 @@ class UserGeneratedDataController extends Controller {
      * @param array     $feature the base feature to use to create the UGC
      * @param User|null $user    the user creator of the data
      */
-    private function _storeUgc(array $feature, User $user = null): void {
+    private function _storeUgc(array $feature, User $user = null): void
+    {
         $ugcType = null;
         $userGeneratedData = null;
         if (!isset($feature['geometry']['type']) || $feature['geometry']['type'] === 'Point') {
@@ -91,8 +94,10 @@ class UserGeneratedDataController extends Controller {
             // This is needed to make sure the media attachment work
             $userGeneratedData->save();
 
-            if (isset($feature['properties']['form_data']['gallery']) &&
-                !empty($feature['properties']['form_data']['gallery'])) {
+            if (
+                isset($feature['properties']['form_data']['gallery']) &&
+                !empty($feature['properties']['form_data']['gallery'])
+            ) {
                 $gallery = explode('_', $feature['properties']['form_data']['gallery']);
                 if (count($gallery) > 0) {
                     $geometry = null;
@@ -121,7 +126,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @return int the stored media id
      */
-    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null): int {
+    private function _storeUgcMedia(string $base64, string $appId = null, User $user = null, string $geometry = null): int
+    {
         $baseImageName = 'media/images/ugc/image_';
         $maxId = DB::table('ugc_media')->max('id');
         if (is_null($maxId)) $maxId = 0;
@@ -165,7 +171,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @throws Exception
      */
-    private function _getUgcModelFromType(string $type): string {
+    private function _getUgcModelFromType(string $type): string
+    {
         switch ($type) {
             case 'poi':
                 $model = "\App\Models\UgcPoi";
@@ -190,7 +197,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @return JsonResponse return the Ugc geojson
      */
-    public function getUgcGeojson(int $id): JsonResponse {
+    public function getUgcGeojson(int $id): JsonResponse
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getUgcModelFromType($apiUrl[2]);
@@ -213,7 +221,8 @@ class UserGeneratedDataController extends Controller {
      *
      * @return JsonResponse
      */
-    public function associateTaxonomyWhereWithUgcFeature(Request $request): JsonResponse {
+    public function associateTaxonomyWhereWithUgcFeature(Request $request): JsonResponse
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getUgcModelFromType($apiUrl[2]);

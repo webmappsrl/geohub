@@ -2,25 +2,28 @@
 
 namespace App\Nova;
 
+use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
-class App extends Resource {
-    public static function indexQuery(NovaRequest $request, $query) {
+class App extends Resource
+{
+    public static function indexQuery(NovaRequest $request, $query)
+    {
         $user = \App\Models\User::getEmulatedUser();
         if ($user->hasRole('Admin')) {
             $query = parent::indexQuery($request, $query);
@@ -54,7 +57,8 @@ class App extends Resource {
         'name',
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Editorial Content');
     }
 
@@ -65,9 +69,9 @@ class App extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request)
+    {
         return [
-
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
@@ -76,12 +80,15 @@ class App extends Resource {
             new Panel('Options', $this->option_panel()),
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
+            new Panel('Overlays', $this->overlays_panel()),
+            new Panel('Icons', $this->icons_panel()),
             new Panel('API', $this->api_panel()),
-            new Panel ('Maps', $this->maps_panel()),
+            new Panel('Maps', $this->maps_panel()),
         ];
     }
 
-    protected function app_panel() {
+    protected function app_panel()
+    {
         return [
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
@@ -89,7 +96,8 @@ class App extends Resource {
         ];
     }
 
-    protected function map_panel() {
+    protected function map_panel()
+    {
         return [
             NovaSliderField::make(__('Max Zoom'), 'maxZoom')->min(5)->max(19)->default(16)->onlyOnForms(),
             NovaSliderField::make(__('Min Zoom'), 'minZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
@@ -101,7 +109,8 @@ class App extends Resource {
         ];
     }
 
-    protected function theme_panel() {
+    protected function theme_panel()
+    {
         return [
             Select::make(__('Font Family Header'), 'fontFamilyHeader')->options([
                 'Helvetica' => ['label' => 'Helvetica'],
@@ -138,7 +147,8 @@ class App extends Resource {
         ];
     }
 
-    protected function option_panel() {
+    protected function option_panel()
+    {
         return [
             Select::make(__('Start Url'), 'startUrl')->options([
                 '/main/explore' => 'Home',
@@ -165,7 +175,8 @@ class App extends Resource {
         ];
     }
 
-    protected function table_panel() {
+    protected function table_panel()
+    {
         return [
             Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
             Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
@@ -173,13 +184,66 @@ class App extends Resource {
         ];
     }
 
-    protected function routing_panel() {
+    protected function routing_panel()
+    {
         return [
             Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
-    protected function api_panel() {
+    protected function overlays_panel()
+    {
+        return [
+            Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
+        ];
+    }
+
+    protected function icons_panel()
+    {
+        // 'image', 'mimes:png', 'dimensions:width=1024,height=1024'
+        return [
+            Image::make(__('Icon'), 'icon')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'icon.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->hideFromIndex(),
+            Image::make(__('Splash image'), 'splash')
+                ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'splash.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 2732, 'height' => 2732]))
+                ->hideFromIndex(),
+            Image::make(__('Icon small'), 'icon_small')
+                ->rules('image', 'mimes:png', 'dimensions:width=512,height=512')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'icon_small.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 512, 'height' => 512]))
+                ->hideFromIndex(),
+
+            Image::make(__('Feature image'), 'feature_image')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=500')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'feature_image.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 500]))
+                ->hideFromIndex(),
+        ];
+    }
+
+    protected function api_panel()
+    {
         return [
             Text::make(__('API List'), function () {
                 return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
@@ -209,7 +273,8 @@ class App extends Resource {
         ];
     }
 
-    protected function maps_panel() {
+    protected function maps_panel()
+    {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 Log::info($model->getGeojson());
@@ -228,7 +293,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request)
+    {
         return [];
     }
 
@@ -239,7 +305,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request)
+    {
         return [];
     }
 
@@ -250,7 +317,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request)
+    {
         return [];
     }
 
@@ -261,7 +329,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         return [];
     }
 }

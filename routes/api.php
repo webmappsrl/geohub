@@ -11,6 +11,10 @@ use App\Http\Controllers\TaxonomyWhenController;
 use App\Http\Controllers\TaxonomyWhereController;
 use App\Http\Controllers\ApiElbrusTaxonomyController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\EcPoiController;
+use App\Http\Controllers\UgcMediaController;
+use App\Http\Controllers\UgcPoiController;
+use App\Http\Controllers\UgcTrackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 
@@ -26,15 +30,15 @@ use App\Http\Controllers\UserGeneratedDataController;
 */
 
 Route::name('api.')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
-    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup']);
+    Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+    Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup'])->name('signup');
     Route::group([
         'middleware' => 'auth.jwt',
         'prefix' => 'auth'
     ], function ($router) {
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+        Route::post('me', [AuthController::class, 'me'])->name('me');
     });
 
     /**
@@ -43,6 +47,20 @@ Route::name('api.')->group(function () {
     Route::group([
         'middleware' => 'auth.jwt',
     ], function ($router) {
+        Route::prefix('ugc')->name('ugc.')->group(function () {
+            // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
+            Route::prefix('poi')->name('poi.')->group(function () {
+                Route::post("store", [UgcPoiController::class, 'store'])->name('store');
+                Route::get("index", [UgcPoiController::class, 'index'])->name('index');
+            });
+            Route::prefix('track')->name('track.')->group(function () {
+                Route::post("store", [UgcTrackController::class, 'store'])->name('store');
+                Route::get("index", [UgcTrackController::class, 'index'])->name('index');
+            });
+            Route::prefix('media')->name('media.')->group(function () {
+                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+            });
+        });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
         Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
     });
@@ -107,6 +125,9 @@ Route::name('api.')->group(function () {
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{id}/near_points", [EcPoiController::class, 'getNeighbourEcMedia']);
+            Route::get("/{id}/associated_ec_media", [EcPoiController::class, 'getAssociatedEcMedia']);
+            Route::get("/{id}/feature_image", [EcPoiController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
@@ -120,8 +141,9 @@ Route::name('api.')->group(function () {
             });
         });
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{id}/near_points", [EcTrackController::class, 'getNearEcMedia']);
+            Route::get("/{id}/near_points", [EcTrackController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
+            Route::get("/{id}/feature_image", [EcTrackController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'getEcJson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
@@ -150,6 +172,10 @@ Route::name('api.')->group(function () {
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
+            Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
+            Route::get("/{id}/resources/icon512.png", [AppController::class, 'iconSmall'])->name('icon_small');
+            Route::get("/{id}/resources/featured.png", [AppController::class, 'featureImage'])->name('feature_image');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson/ec_track/json');

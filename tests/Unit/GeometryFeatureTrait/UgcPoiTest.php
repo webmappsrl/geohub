@@ -2,17 +2,17 @@
 
 namespace Tests\Unit\GeometryFeatureTrait;
 
-use App\Providers\GeohubServiceProvider;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UgcPoiTest extends TestCase {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function testGetGeojsonWithoutGeometry() {
         $poi = UgcPoi::factory([
@@ -48,6 +48,7 @@ class UgcPoiTest extends TestCase {
 
     public function testGetRelatedUgcWithNoRelated() {
         $poi = UgcPoi::factory([
+            'name' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
         ])->create();
 

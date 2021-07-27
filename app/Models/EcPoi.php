@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
@@ -19,6 +20,8 @@ class EcPoi extends Model
     protected $fillable = ['name'];
 
     public $translatable = ['name', 'description', 'excerpt'];
+
+    public bool $skip_update = false;
 
     public function __construct(array $attributes = [])
     {
@@ -44,11 +47,16 @@ class EcPoi extends Model
         });
 
         static::updating(function ($ecPoi) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
-            } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            $skip_update = $ecPoi->skip_update;
+            if (!$skip_update) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
+            } else {
+                $ecPoi->skip_update = false;
             }
         });
     }
@@ -110,5 +118,27 @@ class EcPoi extends Model
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
+
+    public function getNeighbourEcMedia()
+    {
+        $features = [];
+        $result = DB::select(
+            'SELECT id FROM ec_media
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_poi") . ');',
+            [
+                $this->geometry,
+            ]
+        );
+        foreach ($result as $row) {
+            $geojson = EcMedia::find($row->id)->getGeojson();
+            if (isset($geojson))
+                $features[] = $geojson;
+        }
+
+        return ([
+            "type" => "FeatureCollection",
+            "features" => $features,
+        ]);
     }
 }

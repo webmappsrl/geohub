@@ -41,6 +41,7 @@ class EcPoiFactory extends Factory
             'related_url' => $this->faker->url().';'.$this->faker->url(),
             'contact_phone' => $this->faker->phoneNumber(),
             'contact_email' => $this->faker->safeEmail(),
+            'ele' => $this->faker->randomNumber(3),
         ];
     }
 }

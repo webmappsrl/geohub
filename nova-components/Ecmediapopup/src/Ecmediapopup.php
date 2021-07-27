@@ -48,9 +48,9 @@ class Ecmediapopup extends Field
                     $filtered_values = array_filter($values);
 
                     // sync
-                    if (request()->input('ecmedia') != '[]') {
-                        $changes = $model->$attribute()->sync($filtered_values);
-                    }
+
+                    $changes = $model->$attribute()->sync($filtered_values);
+
                     $method = Str::camel($attribute) . 'Synced';
 
                     $parent = $request->newResource();
@@ -67,5 +67,10 @@ class Ecmediapopup extends Field
                 );
             }
         });
+    }
+
+    public function feature(array $geojson)
+    {
+        return $this->withMeta(['geojson' => $geojson]);
     }
 }
