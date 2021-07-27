@@ -46,34 +46,12 @@ class UgcPoiStoreTest extends TestCase {
     }
 
     /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testUgcPoiStoreNotAuthenticated() {
-        $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
-        ];
-
-        $data = [
-            'app_id' => 'it.webmapp.test',
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-            'geometry' => $geometry,
-        ];
-
-        $response = $this->post(route("api.ugc.poi.store", $data));
-        $response->assertStatus(401);
-    }
-
-    /**
      * @test
      * A basic feature test example.
      *
      * @return void
      */
-    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401() {
+    public function check_that_if_the_api_is_called_without_login_the_user_it_responds_401() {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
