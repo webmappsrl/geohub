@@ -7,24 +7,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class App extends Model {
+class App extends Model
+{
     use HasFactory;
 
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::booted();
 
-        static::creating(function ($ecMedia) {
+        static::creating(function ($app) {
             $user = User::getEmulatedUser();
             if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
-            $ecMedia->author()->associate($user);
+            $app->author()->associate($user);
+        });
+
+        static::saving(function ($app) {
+            $app->external_overlays = str_replace('<br />', '', nl2br($app->external_overlays));
         });
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function getGeojson() {
+    public function getGeojson()
+    {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
         if (!is_null($tracks)) {
@@ -44,9 +52,10 @@ class App extends Model {
     /**
      * @todo: differenziare la tassonomia "taxonomyActivities" !!!
      */
-    public function listTracksByTerm($term,$taxonomy_name) {
+    public function listTracksByTerm($term, $taxonomy_name)
+    {
 
-        switch($taxonomy_name) {
+        switch ($taxonomy_name) {
             case 'activity':
                 $query = EcTrack::where('user_id', $this->user_id)
                     ->whereHas('taxonomyActivities', function ($q) use ($term) {
@@ -78,7 +87,7 @@ class App extends Model {
                     });
                 break;
             default:
-                throw new \Exception('Wrong taxonomy name: '.$taxonomy_name);
+                throw new \Exception('Wrong taxonomy name: ' . $taxonomy_name);
         }
 
         $tracks = $query->orderBy('name')->get();
