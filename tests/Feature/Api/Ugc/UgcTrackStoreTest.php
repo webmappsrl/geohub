@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Ugc;
+namespace Tests\Feature\Api\Ugc;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,7 +54,7 @@ class UgcTrackStoreTest extends TestCase
      *
      * @return void
      */
-    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401()
+    public function check_that_if_the_api_is_called_without_access_token_it_responds_401()
     {
         $app_id = 'it.webmapp.test';
         $data = [

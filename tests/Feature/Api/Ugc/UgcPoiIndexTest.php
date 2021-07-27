@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Ugc;
+namespace Tests\Feature\Api\Ugc;
 
 use App\Models\UgcPoi;
 use App\Models\User;
