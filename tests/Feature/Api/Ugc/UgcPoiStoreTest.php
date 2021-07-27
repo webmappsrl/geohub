@@ -1,14 +1,13 @@
 <?php
 
-namespace Tests\Feature\Ugc;
+namespace Tests\Feature\Api\Ugc;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcPoiStoreTest extends TestCase
-{
+class UgcPoiStoreTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
@@ -16,8 +15,7 @@ class UgcPoiStoreTest extends TestCase
      *
      * @return void
      */
-    public function testUgcPoiStore()
-    {
+    public function testUgcPoiStore() {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
@@ -48,13 +46,12 @@ class UgcPoiStoreTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      * A basic feature test example.
      *
      * @return void
      */
-    public function check_that_if_the_api_is_called_without_acting_as_the_user_it_responds_401()
-    {
+    public function check_that_if_the_api_is_called_without_login_the_user_it_responds_401() {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
