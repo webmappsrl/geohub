@@ -299,6 +299,7 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals(10, $json->MAP->bbox[2]);
         $this->assertEquals(10, $json->MAP->bbox[3]);
     }
+
     public function testBBoxWithOneTrackRectangle()
     {
         $user = User::factory()->create();
@@ -319,6 +320,7 @@ class AppElbrusConfigJsonTest extends TestCase
         $this->assertEquals(3, $json->MAP->bbox[2]);
         $this->assertEquals(4, $json->MAP->bbox[3]);
     }
+
     public function testBBoxWithTwoTrack()
     {
         $user = User::factory()->create();
