@@ -172,10 +172,10 @@ Route::name('api.')->group(function () {
          */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
-            Route::get("/{id}/icon.png", [AppController::class, 'icon'])->name('icon');
-            Route::get("/{id}/splash.png", [AppController::class, 'splash'])->name('splash');
-            Route::get("/{id}/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
-            Route::get("/{id}/feature_image.png", [AppController::class, 'featureImage'])->name('feature_image');
+            Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
+            Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
+            Route::get("/{id}/resources/icon512.png", [AppController::class, 'iconSmall'])->name('icon_small');
+            Route::get("/{id}/resources/featured.png", [AppController::class, 'featureImage'])->name('feature_image');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson/ec_poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson/ec_track');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson/ec_track/json');
