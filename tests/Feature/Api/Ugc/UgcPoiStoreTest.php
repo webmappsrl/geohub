@@ -51,7 +51,7 @@ class UgcPoiStoreTest extends TestCase {
      *
      * @return void
      */
-    public function check_that_if_the_api_is_called_without_login_the_user_it_responds_401() {
+    public function check_that_if_the_api_is_called_without_access_token_it_responds_401() {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
