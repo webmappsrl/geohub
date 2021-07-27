@@ -103,7 +103,7 @@ class AuthController extends Controller
         $roles = array_map(function ($value) {
             return strtolower($value);
         }, $user->roles->pluck('name')->toArray());
-
+        
         return response()->json(array_merge($user->toArray(), ['roles' => $roles]));
     }
 
