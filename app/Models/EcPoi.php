@@ -120,7 +120,7 @@ class EcPoi extends Model
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    public function getNearEcMedia()
+    public function getNeighbourEcMedia()
     {
         $features = [];
         $result = DB::select(

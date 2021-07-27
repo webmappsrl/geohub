@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class EcPoiController extends Controller
 {
-    public static function getNearEcMedia(int $id)
+    public static function getNeighbourEcMedia(int $id)
     {
-        return response()->json(EcPoi::find($id)->getNearEcMedia());
+        return response()->json(EcPoi::find($id)->getNeighbourEcMedia());
     }
 
     public static function getAssociatedEcMedia(int $id)

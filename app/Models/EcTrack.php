@@ -243,7 +243,7 @@ class EcTrack extends Model
         return json_encode($array);
     }
 
-    public function getNearEcMedia()
+    public function getNeighbourEcMedia()
     {
 
         $features = [];

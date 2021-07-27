@@ -3,6 +3,7 @@
 namespace Tests\Unit\EcMedia;
 
 use App\Models\EcMedia;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,6 @@ class EcTrackGetNearMediaTest extends TestCase
 
         $geojson = $track->getRelatedUgcGeojson();
 
-
         $this->assertNotNull($geojson);
         $this->assertIsArray($geojson);
         $this->assertArrayHasKey('type', $geojson);
@@ -30,13 +30,22 @@ class EcTrackGetNearMediaTest extends TestCase
 
     public function _testGetNearEcMedia()
     {
-        $track = EcTrack::factory()->create();
+        $media11 = EcMedia::factory()->create([
+            'name' => 'TestMedia1',
+            'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $media12 = EcMedia::factory()->create([
+            'name' => 'TestMedia2',
+            'geometry' => DB::raw('ST_MakePoint(10.0005, 46)'),
+            'url' => '/ec_media_test/test.jpg',
+        ]);
+        $poi = EcPoi::factory()->create([
+            'name' => 'TestPoi',
+            'geometry' => DB::raw("(ST_GeomFromText('POINT(10.0005 46)')"),
+        ]);
 
-        EcMedia::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
-        ])->create();
-
-        $geojson = $track->getNearEcMedia($track->id);
+        $geojson = $poi->getNeighbourEcMedia($poi->id);
         $this->assertNotNull($geojson);
         $this->assertIsArray($geojson);
         $this->assertArrayHasKey('type', $geojson);

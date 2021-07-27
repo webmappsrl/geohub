@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class EcTrackController extends Controller
 {
-    public static function getNearEcMedia(int $idTrack)
+    public static function getNeighbourEcMedia(int $idTrack)
     {
-        return response()->json(EcTrack::find($idTrack)->getNearEcMedia());
+        return response()->json(EcTrack::find($idTrack)->getNeighbourEcMedia());
     }
 
     public static function getAssociatedEcMedia(int $idTrack)

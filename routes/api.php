@@ -125,7 +125,7 @@ Route::name('api.')->group(function () {
             Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
-            Route::get("/{id}/near_points", [EcPoiController::class, 'getNearEcMedia']);
+            Route::get("/{id}/near_points", [EcPoiController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcPoiController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcPoiController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
@@ -141,7 +141,7 @@ Route::name('api.')->group(function () {
             });
         });
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{id}/near_points", [EcTrackController::class, 'getNearEcMedia']);
+            Route::get("/{id}/near_points", [EcTrackController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcTrackController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'getEcJson'])->name('view.geojson');
