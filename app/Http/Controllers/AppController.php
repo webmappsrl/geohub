@@ -66,7 +66,7 @@ class AppController extends Controller
 
         // ROUTING section
         $data['ROUTING']['enable'] = $app->enableRouting;
-        
+
         $data['OVERLAYS']['external_overlays'] = nl2br($app->external_overlays);
 
         // REPORT SECION

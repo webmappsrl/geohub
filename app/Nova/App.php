@@ -2,14 +2,14 @@
 
 namespace App\Nova;
 
+use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -72,7 +72,6 @@ class App extends Resource
     public function fields(Request $request)
     {
         return [
-
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
@@ -82,6 +81,7 @@ class App extends Resource
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('Overlays', $this->overlays_panel()),
+            new Panel('Icons', $this->icons_panel($request)),
             new Panel('API', $this->api_panel()),
             new Panel('Maps', $this->maps_panel()),
         ];
@@ -195,6 +195,34 @@ class App extends Resource
     {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
+        ];
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     */
+    protected function icons_panel(Request $request)
+    {
+        // 'image', 'mimes:png', 'dimensions:width=1024,height=1024'
+        return [
+            Image::make(__('Icon'), 'icon')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $request->get('app_id') . '/resources')
+                ->storeAs(function () {
+                    return 'icon.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->hideFromIndex(),
+            Image::make(__('Splash image'), 'splash')
+                ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
+                ->disk('public')
+                ->path('api/app/elbrus/' . $request->get('app_id') . '/resources')
+                ->storeAs(function () {
+                    return 'splash.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 2732, 'height' => 2732]))
+                ->hideFromIndex(),
         ];
     }
 
