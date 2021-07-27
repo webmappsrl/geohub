@@ -28064,6 +28064,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }, 500);
   },
 
+  watch: {
+    selectedMedia: function selectedMedia() {
+      this.mediaLayer.changed();
+      this.map.render();
+    }
+  },
   methods: {
     getFixedDistance: function getFixedDistance(point1, point2) {
       return Object(__WEBPACK_IMPORTED_MODULE_18_ol_sphere__["a" /* getDistance */])(this._toLonLat(point1), this._toLonLat(point2)) / this.view.getResolution();

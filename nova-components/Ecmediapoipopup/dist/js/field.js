@@ -28368,6 +28368,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }, 500);
   },
 
+  watch: {
+    selectedMedia: function selectedMedia() {
+      this.mediaLayer.changed();
+      this.map.render();
+    }
+  },
   methods: {
     getFixedDistance: function getFixedDistance(point1, point2) {
       return Object(__WEBPACK_IMPORTED_MODULE_18_ol_sphere__["a" /* getDistance */])(this._toLonLat(point1), this._toLonLat(point2)) / this.view.getResolution();
@@ -75943,7 +75949,7 @@ var render = function() {
                       _c("div", { staticClass: "w-1/5" }, [
                         _c("img", {
                           staticClass: "selectedThunbnail",
-                          attrs: { src: row.url }
+                          attrs: { src: JSON.parse(row.thumbnails)["108x137"] }
                         })
                       ]),
                       _vm._v(" "),
@@ -76075,8 +76081,10 @@ var render = function() {
                                                         ? "selected"
                                                         : "",
                                                       attrs: {
-                                                        src:
-                                                          media.properties.url
+                                                        src: JSON.parse(
+                                                          media.properties
+                                                            .thumbnails
+                                                        )["108x137"]
                                                       },
                                                       on: {
                                                         click: function(
@@ -76110,8 +76118,10 @@ var render = function() {
                                                           ? "selected"
                                                           : "",
                                                         attrs: {
-                                                          src:
-                                                            media.properties.url
+                                                          src: JSON.parse(
+                                                            media.properties
+                                                              .thumbnails
+                                                          )["108x137"]
                                                         },
                                                         on: {
                                                           click: function(

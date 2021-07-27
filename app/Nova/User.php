@@ -6,12 +6,16 @@ use App\Nova\Actions\EmulateUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
+use League\Flysystem\Exception;
 use Vyuldashev\NovaPermission\Permission;
 use Vyuldashev\NovaPermission\PermissionBooleanGroup;
 use Vyuldashev\NovaPermission\Role;
@@ -56,9 +60,17 @@ class User extends Resource
     public function fields(Request $request): array
     {
         return [
-            
-            //            ID::make()->sortable(),
-            //            Gravatar::make()->maxWidth(50),
+            Avatar::make('Avatar')->disk('public'),
+            /*Avatar::make('Avatar')->store(function (Request $request, $model) {
+                $content = file_get_contents($request->avatar);
+                $avatar = Storage::disk('public')->put('/avatars/test', $content);
+                return $avatar ? [
+                    'avatar' => $avatar,
+                ] : function () {
+                    throw new Exception(__("Il file caricato non è valido."));
+                };
+            }),*/
+
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
