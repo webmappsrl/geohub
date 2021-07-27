@@ -5,7 +5,7 @@
         <div ref="selectedImageList" id="selectedImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
             <div class="w-1/5">
-              <img class="selectedThunbnail" :src="row.url">
+              <img class="selectedThunbnail" :src="JSON.parse(row.thumbnails)['108x137']">
             </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
@@ -45,13 +45,13 @@
                             <div class="w-1/4 box-image" v-for="media in mediaList.features">
                               <img class="image ec-media-image"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="media.properties.url"
+                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
                                    @click="toggleImage(media.properties)">
                               <img src="/Vector.png"
                                    :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
                               <div class="overlay"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="media.properties.url"
+                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
                                    @click="toggleImage(media.properties)">
                                 <div class="text">Seleziona</div>
                               </div>

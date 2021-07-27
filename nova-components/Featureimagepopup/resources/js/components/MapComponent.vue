@@ -199,6 +199,12 @@ export default {
       this.drawMedia();
     }, 500)
   },
+  watch: {
+    selectedMedia() {
+      this.mediaLayer.changed();
+      this.map.render();
+    }
+  },
   methods: {
     getFixedDistance(point1, point2) {
       return (
