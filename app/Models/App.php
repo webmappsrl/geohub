@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-class App extends Model
-{
+/**
+ * Class App
+ *
+ * @package App\Models\
+ *
+ * @property available_languages
+ */
+class App extends Model {
     use HasFactory;
 
-    protected static function booted()
-    {
+    protected static function booted() {
         parent::booted();
 
         static::creating(function ($app) {
@@ -23,18 +28,16 @@ class App extends Model
 
         static::saving(function ($app) {
             $json = json_encode(json_decode($app->external_overlays));
-            
+
             $app->external_overlays = $json;
         });
     }
 
-    public function author()
-    {
+    public function author() {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function getGeojson()
-    {
+    public function getGeojson() {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
         if (!is_null($tracks)) {
@@ -54,9 +57,7 @@ class App extends Model
     /**
      * @todo: differenziare la tassonomia "taxonomyActivities" !!!
      */
-    public function listTracksByTerm($term, $taxonomy_name)
-    {
-
+    public function listTracksByTerm($term, $taxonomy_name) {
         switch ($taxonomy_name) {
             case 'activity':
                 $query = EcTrack::where('user_id', $this->user_id)
