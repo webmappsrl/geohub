@@ -18,8 +18,8 @@ use Tests\TestCase;
 | api/ec/track/{id}                                                       | api.ec.track.json                    |
 | api/ec/track/{id}.geojson                                               | api.ec.track.view.geojson            |
 
-| api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson             | api.app.elbrus.geojson/ec_track      |
-| api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json                | api.app.elbrus.geojson/ec_track/json |
+| api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson             | api.app.elbrus.geojson.track      |
+| api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json                | api.app.elbrus.geojson.track.json |
 | api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json | api.app.elbrus.track.taxonomies      |
 
  */
@@ -76,7 +76,7 @@ class EcTrackEleInfoGetApiTest extends TestCase
     }
     public function testAppElbrusGeojson() {
 
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties',$json);
         foreach($this->fields as $key => $val) {
@@ -87,7 +87,7 @@ class EcTrackEleInfoGetApiTest extends TestCase
     }
     public function testAppElbrusJson() {
 
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track/json');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         foreach($this->fields as $key => $val) {
             $this->assertArrayHasKey($key,$json);

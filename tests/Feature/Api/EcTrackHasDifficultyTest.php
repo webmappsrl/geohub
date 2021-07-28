@@ -21,8 +21,8 @@ class EcTrackHasDifficultyTest extends TestCase
     | api/ec/track/{id}                                                       | api.ec.track.json                    |
     | api/ec/track/{id}.geojson                                               | api.ec.track.view.geojson            |
 
-    | api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson             | api.app.elbrus.geojson/ec_track      |
-    | api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json                | api.app.elbrus.geojson/ec_track/json |
+    | api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson             | api.app.elbrus.geojson.track      |
+    | api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json                | api.app.elbrus.geojson.track.json |
     | api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json | api.app.elbrus.track.taxonomies      |
 
      */
@@ -59,7 +59,7 @@ class EcTrackHasDifficultyTest extends TestCase
     }
     public function testAppElbrusGeojson() {
 
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties',$json);
         $this->assertArrayHasKey('difficulty',$json['properties']);
@@ -69,7 +69,7 @@ class EcTrackHasDifficultyTest extends TestCase
     }
     public function testAppElbrusJson() {
 
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track/json');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('difficulty',$json);
         $this->assertEquals('alta',$json['difficulty']['it']);
