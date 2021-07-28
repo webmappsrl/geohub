@@ -38,7 +38,7 @@
                   <div style="display:flex">
                     <tabs>
                       <tab name="Media associati alla track" :selected="true">
-
+                        <p style="padding:3px">Seleziona i Media Georeferenziati nelle vicinanze della traccia</p>
                         <div class="modal-body flex flex-wrap">
                           <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
 
@@ -60,7 +60,8 @@
                           </div>
                           <div class="map w-1/2 text-center">
                             <MapComponent id="map-component" :feature="field.geojson" :media="mediaList"
-                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"
+                                          :ref="mapComponent"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -102,6 +103,7 @@ import MapComponent from './MapComponent';
 import {FormField, HandlesValidationErrors} from 'laravel-nova'
 
 import EcMediaModal from './ModalEcMedia';
+import {Overlay} from "ol";
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
@@ -139,6 +141,7 @@ export default {
           );
 
         });
+
   },
 
   methods: {
@@ -146,14 +149,10 @@ export default {
       if (this.selectedMedia.includes(item.id)) {
         this.loadedImages.splice(this.loadedImages.indexOf(item.id), 1);
         this.selectedMedia.splice(this.selectedMedia.indexOf(item.id), 1);
-
-
       } else {
         this.loadedImages.push(item);
         this.selectedMedia.push(item.id);
         console.log();
-
-
       }
 
     },
@@ -167,6 +166,22 @@ export default {
     removeImage(id) {
       this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
+    },
+    openImagePopup(id, poiCoordinate) {
+      let coordinate;
+      if (poi)
+        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
+      else if (track)
+        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
+      if (coordinate) {
+        var overlayPopup = new Overlay({
+          element: document.getElementById('overlayPopup')
+        });
+        var popupImage = overlayPopup.setPosition(coordinate);
+        this.map.addOverlay(overlayPopup);
+        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
+        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+      }
     },
 
 

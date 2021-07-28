@@ -268,6 +268,16 @@ class EditorialContentController extends Controller
             $geojson['properties']['kml_url'] = route('api.ec.track.download.kml', ['id' => $track_id]);
         }
 
+        if ($track->ecPois) {
+            $related = [];
+            $pois = $track->ecPois;
+            foreach ($pois as $poi) {
+                $related['poi']['related'][] = $poi->id;
+            }
+
+            $geojson['properties']['related'] = $related;
+        }
+
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;

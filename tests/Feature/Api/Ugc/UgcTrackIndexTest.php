@@ -46,12 +46,12 @@ class UgcTrackIndexTest extends TestCase
             'app_id' => $app_id,
             'user_id' => $user1,
         ]);
-        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id]));
+        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id, 'page' => 1]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list10 = $json['data'];
 
-        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id, 'page' => 1]));
+        $response = $this->get(route("api.ugc.track.index", ['app_id' => $app_id, 'page' => 2]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list11 = $json['data'];

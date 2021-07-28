@@ -178,6 +178,11 @@ class EcTrack extends Model
         return $this->belongsToMany(EcMedia::class);
     }
 
+    public function ecPois(): BelongsToMany
+    {
+        return $this->belongsToMany(EcPoi::class);
+    }
+
     public function taxonomyWheres()
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
@@ -258,6 +263,36 @@ class EcTrack extends Model
             $geojson = EcMedia::find($row->id)->getGeojson();
             if (isset($geojson))
                 $features[] = $geojson;
+        }
+
+        return ([
+            "type" => "FeatureCollection",
+            "features" => $features,
+        ]);
+    }
+
+    public function getNeighbourEcPoi()
+    {
+        $features = [];
+        $result = DB::select(
+            'SELECT id FROM ec_pois
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_track") . ');',
+            [
+                $this->geometry,
+            ]
+        );
+        foreach ($result as $row) {
+            $poi = EcPoi::find($row->id);
+            $geojson = $poi->getGeojson();
+            if (isset($geojson)) {
+                if ($poi->featureImage) {
+                    $geojson['properties']['image'] = json_decode($poi->featureImage->getJson(), true);
+                } else {
+                    $geojson['properties']['image']['url'] = null;
+                }
+                $features[] = $geojson;
+            }
+
         }
 
         return ([

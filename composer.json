@@ -13,6 +13,7 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ampeco/nova-date-range-filter": "^0.1.1",
+        "arku/nova-multiselect": "dev-master",
         "bernhardh/nova-icon-select": "^1.0",
         "chaseconey/nova-external-image": "^0.3.0",
         "davidpiesse/nova-toggle": "^0.0.8",
@@ -44,7 +45,8 @@
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
         "ynacorp/nova-swatches": "^1.0",
-        "webmapp/featureimagepoipopup": "*"
+        "webmapp/featureimagepoipopup": "*",
+        "webmapp/ecpoipopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -130,6 +132,10 @@
         {
             "type": "path",
             "url": "./nova-components/Featureimagepoipopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecpoipopup"
         }
     ]
 }

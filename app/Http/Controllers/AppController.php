@@ -7,16 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class AppController extends Controller
-{
+class AppController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\App  $app
+     * @param \App\Models\App $app
+     *
      * @return \Illuminate\Http\Response
      */
-    public function config(int $id)
-    {
+    public function config(int $id) {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => '404 not found'], 404);
@@ -27,6 +26,11 @@ class AppController extends Controller
         $data['APP']['name'] = $app->name;
         $data['APP']['id'] = $app->app_id;
         $data['APP']['customerName'] = $app->customerName;
+
+        // LANGUAGES section
+        $data['LANGUAGES']['default'] = $app->default_language;
+        if (isset($app->available_languages))
+            $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
 
         // MAP section (zoom)
         $data['MAP']['defZoom'] = $app->defZoom;
@@ -85,48 +89,43 @@ class AppController extends Controller
         return response()->json($data, 200);
     }
 
-    public function icon(int $id)
-    {
+    public function icon(int $id) {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-        
+
         return $this->getOrDownloadIcon($app);
     }
 
-    public function splash(int $id)
-    {
+    public function splash(int $id) {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-        
+
         return $this->getOrDownloadIcon($app, 'splash');
     }
 
-    public function iconSmall(int $id)
-    {
+    public function iconSmall(int $id) {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-        
+
         return $this->getOrDownloadIcon($app, 'icon_small');
     }
 
-    public function featureImage(int $id)
-    {
+    public function featureImage(int $id) {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-        
+
         return $this->getOrDownloadIcon($app, 'feature_image');
     }
 
-    protected function getOrDownloadIcon(App $app, $type = 'icon')
-    {
+    protected function getOrDownloadIcon(App $app, $type = 'icon') {
         if (!isset($app->$type)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
@@ -142,9 +141,7 @@ class AppController extends Controller
         }
     }
 
-
-    private function _getReportSection()
-    {
+    private function _getReportSection() {
         $json_string = <<<EOT
  {
     "enable": true,
@@ -183,17 +180,19 @@ class AppController extends Controller
     ]
     }
 EOT;
+
         return json_decode($json_string, true);
     }
 
     /**
      * Returns bbox array
      * [lon0,lat0,lon1,lat1]
+     *
      * @param App $app
+     *
      * @return array
      */
-    private function _getBBox(App $app): array
-    {
+    private function _getBBox(App $app): array {
         $bbox = [];
         $q = "select ST_Extent(geometry::geometry) as bbox from ec_tracks where user_id=$app->user_id;";
         //$q = "select name,ST_AsGeojson(geometry) as bbox from ec_tracks where user_id=$app->user_id;";
@@ -210,6 +209,7 @@ EOT;
                 $bbox = [$coord_min[0], $coord_min[1], $coord_max[0], $coord_max[1]];
             }
         }
+
         return $bbox;
     }
 }

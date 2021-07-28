@@ -43,7 +43,7 @@ class EcTrackHasAscentTest extends TestCase
 
     public function testAppElbrusGeojson()
     {
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
         $this->assertArrayHasKey('ascent', $json['properties']);
@@ -52,7 +52,7 @@ class EcTrackHasAscentTest extends TestCase
 
     public function testAppElbrusJson()
     {
-        $json = $this->_getJsonTrack('api.app.elbrus.geojson/ec_track/json');
+        $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('ascent', $json);
         $this->assertEquals(100000, $json['ascent']);

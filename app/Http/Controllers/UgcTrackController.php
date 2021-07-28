@@ -12,37 +12,14 @@ use Illuminate\Support\Facades\Validator;
 
 class UgcTrackController extends Controller
 {
-    private $user;
-
-    public function __construct()
-    {
-        $this->user = Auth::user();    
-    }
-    
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        $user_id = $this->user->id;
-        if (null == $user_id) {
-            return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
-        }
-
-        $app_id = $request->query('app_id');
-        if (null == $app_id) {
-            return response(['error' => 'app_id is required', 'Bad Request'], 400);
-        }
-
-        $page = $request->query('page', 0);
-        $limit =  $request->query('limit', 10);
-        $tracks = UgcTrack::where('user_id', $user_id)->where('app_id', $app_id)->skip($page * $limit)->take($limit)->get();
-
-        return response(new UgcTrackCollection($tracks));
+        //
     }
 
     /**

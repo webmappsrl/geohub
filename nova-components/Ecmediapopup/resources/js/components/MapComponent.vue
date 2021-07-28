@@ -138,6 +138,74 @@ export default {
           }).getArray()
     });
 
+    this.map.on("pointermove", (event) => {
+      let minPoiDistance = 15,
+          minTrackDistance = 15,
+          minPolygonArea,
+          poi,
+          track,
+          polygon,
+
+          foreachFeature = (feature) => {
+            if (feature.getGeometry().getType() === "Point") {
+              let coord = feature.getGeometry().getCoordinates(),
+                  dist = Math.round(
+                      this.getFixedDistance(coord, event.coordinate)
+                  );
+              if (dist < minPoiDistance) {
+                minPoiDistance = dist;
+                poi = feature;
+              }
+            } else if (
+                !poi && (feature.getGeometry().getType() === "LineString" ||
+                feature.getGeometry().getType() === "MultiLineString")
+            ) {
+              let coord = (feature.getGeometry()).getClosestPoint(
+                  event.coordinate),
+
+                  dist = Math.round(
+                      this.getFixedDistance(coord, event.coordinate)
+                  );
+              if (dist < minTrackDistance) {
+                minTrackDistance = dist;
+                track = feature;
+              }
+            } else if (
+                !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
+                feature.getGeometry().getType() === "MultiPolygon")
+            ) {
+              let area, poly = feature.getGeometry();
+
+              if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
+                area = poly.getArea();
+                if (area < minPolygonArea || !minPolygonArea) {
+                  minPolygonArea = area;
+                  polygon = feature;
+                }
+              }
+            }
+          };
+
+      this.mediaSource.forEachFeatureInExtent(
+          this.view.calculateExtent(this.map.getSize()),
+          foreachFeature
+      );
+      let coordinate;
+      if (poi)
+        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
+      else if (track)
+        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
+      if (coordinate) {
+        var overlayPopup = new Overlay({
+          element: document.getElementById('overlayPopup')
+        });
+        var popupImage = overlayPopup.setPosition(coordinate);
+        this.map.addOverlay(overlayPopup);
+        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
+        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+      }
+    });
+
     this.map.on("click", (event) => {
       let minPoiDistance = 15,
           minTrackDistance = 15,
@@ -200,15 +268,7 @@ export default {
         if (this.selectedMedia.indexOf(id) === -1) {
           this.selectedMedia.push(id);
           this.loadedImages.push(poi['values_']);
-          var overlayPopup = new Overlay({
-            element: document.getElementById('overlayPopup')
-          });
-          var popupImage = overlayPopup.setPosition(event.coordinate);
-          this.map.addOverlay(overlayPopup);
-          console.log(poi['values_']);
-          console.log(poi['values_']['url']);
-          document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-          document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+
 
         } else {
           this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
@@ -411,8 +471,8 @@ export default {
 #overlayPopup .bottom-popup {
   background-color: white;
   height: 25px;
-  clip-path: polygon(45% 0%, 30% 0, 50% 100%);
-  margin-top: 5px;
+  clip-path: polygon(50% 0%, 30% 0, 52% 100%);
+  margin-top: 0px;
 }
 
 </style>

@@ -12,13 +12,15 @@ use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AppElbrusEcTrackGeojsonTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function testNoAppAndNoTrackReturns404()
     {
@@ -269,5 +271,78 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertStringContainsString($ecTrack->id, $json['kml_url']);
         $this->assertStringContainsString('download', $json['kml_url']);
         $this->assertStringContainsString('.kml', $json['kml_url']);
+    }
+
+    /**
+     * @test
+     */
+    public function check_that_api_for_elbrus_track_has_related_poi_section_with_all_associated_pois()
+    {
+        $user = User::factory()->create();
+        $app = App::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $track = EcTrack::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $pois = EcPoi::factory(10)->create([
+            'user_id' => $user->id,
+        ]);
+        $track->ecPois()->attach($pois);
+
+        $this->assertCount(10, $track->ecPois()->get());
+
+        $response = $this->get(route("api.app.elbrus.geojson.track", ['app_id' => $app->id, 'track_id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+        $this->assertArrayHasKey('related', $properties);
+        $this->assertArrayHasKey('poi', $properties['related']);
+        $this->assertArrayHasKey('related', $properties['related']['poi']);
+    }
+
+    /**
+     * @test
+     */
+    public function check_that_api_for_elbrus_taxonomy_poi_type_has_poi_types_derived_from_related_pois()
+    {
+        $user = User::factory()->create();
+        $app = App::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $poiTypesSerie[] = TaxonomyPoiType::factory(1)->create();
+        $poiTypesSerie[] = TaxonomyPoiType::factory(2)->create();
+        $poiTypesSerie[] = TaxonomyPoiType::factory(3)->create();
+
+        $pois = EcPoi::factory(3)->create([
+            'user_id' => $user->id,
+        ]);
+        
+        foreach ($pois as $i => $poi) {
+            $poi->taxonomyPoiTypes()->attach($poiTypesSerie[$i]);
+        }
+
+        $track = EcTrack::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $track->ecPois()->attach($pois);
+
+        $this->assertCount(3, $track->ecPois()->get());
+
+        $response = $this->get(route("api.app.elbrus.taxonomies", ['app_id' => $app->id, 'taxonomy_name' => 'webmapp_category']));
+        $content = $response->getContent();
+        $this->assertJson($content);
+        $json = $response->json();
+
+        $this->assertIsArray($json);
+        $this->assertCount(6, $json);
+
+        $id = $poiTypesSerie[0]->first()->id;
+        $this->assertArrayHasKey('webmapp_category_' . $id, $json);
     }
 }

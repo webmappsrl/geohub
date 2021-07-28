@@ -12,9 +12,19 @@ class EcTrackController extends Controller
         return response()->json(EcTrack::find($idTrack)->getNeighbourEcMedia());
     }
 
+    public static function getNeighbourEcPoi(int $idTrack)
+    {
+        return response()->json(EcTrack::find($idTrack)->getNeighbourEcPoi());
+    }
+
     public static function getAssociatedEcMedia(int $idTrack)
     {
         return response()->json(EcTrack::find($idTrack)->ecMedia()->get());
+    }
+
+    public static function getAssociatedEcPoi(int $idTrack)
+    {
+        return response()->json(EcTrack::find($idTrack)->ecPois()->get());
     }
 
     public static function getFeatureImage(int $idTrack)
