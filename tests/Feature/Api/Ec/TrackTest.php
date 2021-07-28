@@ -448,25 +448,4 @@ KML;
 
         $this->assertCount(10, $track->ecPois()->get());
     }
-
-    /**
-     * @test
-     */
-    public function check_that_api_for_elbrus_track_has_related_poi_section_with_all_associated_pois()
-    {
-        $track = EcTrack::factory()->create();
-        $pois = EcPoi::factory(10)->create();
-        $track->ecPois()->attach($pois);
-
-        $this->assertCount(10, $track->ecPois()->get());
-
-        $response = $this->get(route("api.ec.track.view.geojson", ['id' => $track->id]));
-        $content = $response->getContent();
-        $this->assertJson($content);
-
-        $json = $response->json();
-        $properties = $json['properties'];
-        $this->assertIsArray($properties);
-
-    }
 }
