@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcMedia;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyTarget;
@@ -434,5 +435,17 @@ KML;
         $this->assertArrayHasKey('backward', $properties['duration']['cycling']);
         $this->assertEquals(0, $properties['duration']['cycling']['backward']);
         $this->assertArrayNotHasKey('jumping', $properties['duration']);
+    }
+
+    /**
+     * @test
+     */
+    public function check_adding_multiple_pois_to_track()
+    {
+        $track = EcTrack::factory()->create();
+        $pois = EcPoi::factory(10)->create();
+        $track->ecPois()->attach($pois);
+
+        $this->assertCount(10, $track->ecPois()->get());
     }
 }
