@@ -41,11 +41,12 @@
         "waynestate/nova-ckeditor4-field": "^0.7.0",
         "webmapp/ecmediapoipopup": "dev-develop",
         "webmapp/ecmediapopup": "*",
-        "webmapp/featureimagepoipopup": "*",
         "webmapp/featureimagepopup": "*",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0"
+        "ynacorp/nova-swatches": "^1.0",
+        "webmapp/featureimagepoipopup": "*",
+        "webmapp/ecpoipopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -131,6 +132,10 @@
         {
             "type": "path",
             "url": "./nova-components/Featureimagepoipopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecpoipopup"
         }
     ]
 }

@@ -269,13 +269,13 @@ class EditorialContentController extends Controller
         }
 
         if ($track->ecPois) {
-            $poiList = [];
+            $related = [];
             $pois = $track->ecPois;
             foreach ($pois as $poi) {
-                $poiList[] = ['id' => $poi->id, 'url' => route("api.app.elbrus.geojson.poi", ['app_id' => $app->id, 'poi_id' => $poi->id])];
+                $related['poi']['related'][] = $poi->id;
             }
 
-            $geojson['properties']['related_poi'] = $poiList;
+            $geojson['properties']['related'] = $related;
         }
 
         // Add Taxonomies

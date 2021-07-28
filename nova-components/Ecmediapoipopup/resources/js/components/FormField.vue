@@ -38,7 +38,7 @@
                   <div style="display:flex">
                     <tabs>
                       <tab name="Media associati al POI" :selected="true">
-
+                        <p style="padding:3px">Seleziona i Media Georeferenziati nelle vicinanze del POI</p>
                         <div class="modal-body flex flex-wrap">
                           <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
 
