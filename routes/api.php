@@ -192,7 +192,11 @@ Route::name('api.')->group(function () {
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson.poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson.track');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson.track.json');
-            Route::get("/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json", [ApiElbrusTaxonomyController::class, 'getTracksByAppAndTerm'])->name('track.taxonomies');
+            Route::get("/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json", [ApiElbrusTaxonomyController::class, 'getTracksByAppAndTerm'])->where([
+                'app_id' => '[0-9]+',
+                'taxonomy_name' => '[a-z\_]+',
+                'term_id' => '[0-9]+',
+            ])->name('track.taxonomies');
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
         });
     });

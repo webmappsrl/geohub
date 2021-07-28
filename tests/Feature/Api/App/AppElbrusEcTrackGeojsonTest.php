@@ -15,11 +15,12 @@ use App\Models\TaxonomyWhere;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AppElbrusEcTrackGeojsonTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function testNoAppAndNoTrackReturns404()
     {
@@ -272,8 +273,6 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertStringContainsString('.kml', $json['kml_url']);
     }
 
-
-
     /**
      * @test
      */
@@ -307,5 +306,47 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
 
         $route = route("api.app.elbrus.geojson.poi", ['app_id' => $app->id, 'poi_id' => 3]);
         $this->assertEquals($route, $properties['related_poi'][2]['url']);
+    }
+
+    /**
+     * @test
+     */
+    public function check_that_api_for_elbrus_taxonomy_poi_type_has_poi_types_derived_from_related_pois()
+    {
+        $user = User::factory()->create();
+        $app = App::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $poiTypesSerie1 = TaxonomyPoiType::factory()->create();
+        $poiTypesSerie2 = TaxonomyPoiType::factory(2)->create();
+        $poiTypesSerie3 = TaxonomyPoiType::factory(3)->create();
+
+        // $poiTypes = TaxonomyPoiType::all();
+        $pois = EcPoi::factory(3)->create([
+            'user_id' => $user->id,
+        ]);
+        
+        EcPoi::find(1)->taxonomyPoiTypes()->attach($poiTypesSerie1);
+        EcPoi::find(2)->taxonomyPoiTypes()->attach($poiTypesSerie2);
+        EcPoi::find(3)->taxonomyPoiTypes()->attach($poiTypesSerie3);
+
+        $track = EcTrack::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $track->ecPois()->attach($pois);
+
+        $this->assertCount(3, $track->ecPois()->get());
+
+        $response = $this->get(route("api.app.elbrus.taxonomies", ['app_id' => $app->id, 'taxonomy_name' => 'webmapp_category']));
+        $content = $response->getContent();
+        $this->assertJson($content);
+        $json = $response->json();
+
+        $this->assertIsArray($json);
+        $this->assertCount(6, $json);
+        $this->assertArrayHasKey('webmapp_category_1', $json);
+        $this->assertEquals($poiTypesSerie1->name, $json['webmapp_category_1']['name']['it']);
     }
 }

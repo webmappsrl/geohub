@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use TaxonomyPoiTypes;
 
 class ApiElbrusTaxonomyController extends Controller
 {
@@ -74,6 +75,7 @@ class ApiElbrusTaxonomyController extends Controller
     private function _termsByUserId($app, $taxonomy_name)
     {
         $terms = [];
+        $add_poi_types = false;
         switch ($taxonomy_name) {
             case 'activity':
                 $table = 'taxonomy_activityables';
@@ -110,6 +112,7 @@ class ApiElbrusTaxonomyController extends Controller
                 $tid = 'taxonomy_poi_type_id';
                 $fid = 'taxonomy_poi_typeable_id';
                 $type = 'taxonomy_poi_typeable_type';
+                $add_poi_types = true;
                 break;
             default:
                 $table = 'taxonomy_ables';
@@ -118,19 +121,43 @@ class ApiElbrusTaxonomyController extends Controller
                 $type = 'taxonomy_able_type';
         }
         $res = DB::select("
-         SELECT $tid as tid, $fid as fid 
-         FROM $table 
-         WHERE $type='App\Models\EcTrack' 
-         AND $fid IN (select id from ec_tracks where user_id=$app->user_id)
+            SELECT $tid as tid, $fid as fid 
+            FROM $table 
+            WHERE $type='App\Models\EcTrack' 
+            AND $fid IN (select id from ec_tracks where user_id=$app->user_id)
          ");
         if (count($res) > 0) {
             foreach ($res as $item) {
                 $terms[$item->tid]['track'][] = 'ec_track_' . $item->fid;
             }
         }
+
+        if ($add_poi_types) {
+            $res = DB::select("
+                SELECT $tid as tid, $fid as fid 
+                FROM $table 
+                WHERE $type='App\Models\EcPoi' 
+                AND $fid IN (select id from ec_pois where user_id=$app->user_id)
+            ");
+
+            if (count($res) > 0) {
+                foreach ($res as $item) {
+                    $terms[$item->tid]['poi'][] = 'ec_poi_' . $item->fid;
+                }
+            }
+        }
+
         return $terms;
     }
 
+    /**
+     * Update the specified user.
+     *
+     * @param  int  $app_id
+     * @param  string  $taxonomy_name
+     * @param  int  $term_id
+     * @return JsonResponse
+     */
     public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse
     {
         $json = [];
@@ -158,7 +185,7 @@ class ApiElbrusTaxonomyController extends Controller
             return response()->json($json, $code);
         }
 
-        $tracks = $app->listTracksByTerm($term,$taxonomy_name);
+        $tracks = $app->listTracksByTerm($term, $taxonomy_name);
 
         return response()->json($tracks, $code);
     }
