@@ -302,7 +302,6 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertArrayHasKey('related', $properties);
         $this->assertArrayHasKey('poi', $properties['related']);
         $this->assertArrayHasKey('related', $properties['related']['poi']);
-        $this->assertEquals(3, $properties['related']['poi']['related'][2]);
     }
 
     /**
@@ -315,18 +314,17 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $poiTypesSerie1 = TaxonomyPoiType::factory()->create();
-        $poiTypesSerie2 = TaxonomyPoiType::factory(2)->create();
-        $poiTypesSerie3 = TaxonomyPoiType::factory(3)->create();
+        $poiTypesSerie[] = TaxonomyPoiType::factory(1)->create();
+        $poiTypesSerie[] = TaxonomyPoiType::factory(2)->create();
+        $poiTypesSerie[] = TaxonomyPoiType::factory(3)->create();
 
-        // $poiTypes = TaxonomyPoiType::all();
         $pois = EcPoi::factory(3)->create([
             'user_id' => $user->id,
         ]);
         
-        EcPoi::find(1)->taxonomyPoiTypes()->attach($poiTypesSerie1);
-        EcPoi::find(2)->taxonomyPoiTypes()->attach($poiTypesSerie2);
-        EcPoi::find(3)->taxonomyPoiTypes()->attach($poiTypesSerie3);
+        foreach ($pois as $i => $poi) {
+            $poi->taxonomyPoiTypes()->attach($poiTypesSerie[$i]);
+        }
 
         $track = EcTrack::factory()->create([
             'user_id' => $user->id,
@@ -343,7 +341,8 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
 
         $this->assertIsArray($json);
         $this->assertCount(6, $json);
-        $this->assertArrayHasKey('webmapp_category_1', $json);
-        $this->assertEquals($poiTypesSerie1->name, $json['webmapp_category_1']['name']['it']);
+
+        $id = $poiTypesSerie[0]->first()->id;
+        $this->assertArrayHasKey('webmapp_category_' . $id, $json);
     }
 }
