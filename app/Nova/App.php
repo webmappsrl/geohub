@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -16,14 +17,13 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
+use Nova\Multiselect\Multiselect;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
-class App extends Resource
-{
-    public static function indexQuery(NovaRequest $request, $query)
-    {
+class App extends Resource {
+    public static function indexQuery(NovaRequest $request, $query) {
         $user = \App\Models\User::getEmulatedUser();
         if ($user->hasRole('Admin')) {
             $query = parent::indexQuery($request, $query);
@@ -57,8 +57,7 @@ class App extends Resource
         'name',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Editorial Content');
     }
 
@@ -69,8 +68,7 @@ class App extends Resource
      *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request) {
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -87,17 +85,25 @@ class App extends Resource
         ];
     }
 
-    protected function app_panel()
-    {
+    protected function app_panel() {
+        $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
+
         return [
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Customer Name'), 'customerName')->sortable(),
+            Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options([
+                'en' => 'English',
+                'it' => 'Italiano',
+            ])->displayUsingLabels(),
+            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options([
+                'en' => 'English',
+                'it' => 'Italiano',
+            ], $availableLanguages)
         ];
     }
 
-    protected function map_panel()
-    {
+    protected function map_panel() {
         return [
             NovaSliderField::make(__('Max Zoom'), 'maxZoom')->min(5)->max(19)->default(16)->onlyOnForms(),
             NovaSliderField::make(__('Min Zoom'), 'minZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
@@ -109,8 +115,7 @@ class App extends Resource
         ];
     }
 
-    protected function theme_panel()
-    {
+    protected function theme_panel() {
         return [
             Select::make(__('Font Family Header'), 'fontFamilyHeader')->options([
                 'Helvetica' => ['label' => 'Helvetica'],
@@ -147,8 +152,7 @@ class App extends Resource
         ];
     }
 
-    protected function option_panel()
-    {
+    protected function option_panel() {
         return [
             Select::make(__('Start Url'), 'startUrl')->options([
                 '/main/explore' => 'Home',
@@ -175,8 +179,7 @@ class App extends Resource
         ];
     }
 
-    protected function table_panel()
-    {
+    protected function table_panel() {
         return [
             Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
             Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
@@ -184,22 +187,19 @@ class App extends Resource
         ];
     }
 
-    protected function routing_panel()
-    {
+    protected function routing_panel() {
         return [
             Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
-    protected function overlays_panel()
-    {
+    protected function overlays_panel() {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
         ];
     }
 
-    protected function icons_panel()
-    {
+    protected function icons_panel() {
         // 'image', 'mimes:png', 'dimensions:width=1024,height=1024'
         return [
             Image::make(__('Icon'), 'icon')
@@ -242,8 +242,7 @@ class App extends Resource
         ];
     }
 
-    protected function api_panel()
-    {
+    protected function api_panel() {
         return [
             Text::make(__('API List'), function () {
                 return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
@@ -273,8 +272,7 @@ class App extends Resource
         ];
     }
 
-    protected function maps_panel()
-    {
+    protected function maps_panel() {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 Log::info($model->getGeojson());
@@ -293,8 +291,7 @@ class App extends Resource
      *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -305,8 +302,7 @@ class App extends Resource
      *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [];
     }
 
@@ -317,8 +313,7 @@ class App extends Resource
      *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -329,8 +324,7 @@ class App extends Resource
      *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }

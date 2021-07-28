@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38257b84163d9d2a6db4214abf7d9f82",
+    "content-hash": "9aaabc9c1e876f5478aa9d5b57fd4ea7",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -51,6 +51,53 @@
                 "source": "https://github.com/ampeco/nova-date-range-filter/tree/0.1.2"
             },
             "time": "2021-03-25T12:16:08+00:00"
+        },
+        {
+            "name": "arku/nova-multiselect",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arku31/NovaMultiSelect.git",
+                "reference": "1908fffb6138ae75b2ce631f0d459cad86f4a695"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arku31/NovaMultiSelect/zipball/1908fffb6138ae75b2ce631f0d459cad86f4a695",
+                "reference": "1908fffb6138ae75b2ce631f0d459cad86f4a695",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Nova\\Multiselect\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nova\\Multiselect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Multiselect Implementation.",
+            "keywords": [
+                "laravel",
+                "multiselect",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/arku31/NovaMultiSelect/issues",
+                "source": "https://github.com/arku31/NovaMultiSelect/tree/master"
+            },
+            "time": "2019-10-06T15:32:28+00:00"
         },
         {
             "name": "asm89/stack-cors",
@@ -3023,16 +3070,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.0",
+            "version": "2.51.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8"
+                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
-                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
                 "shasum": ""
             },
             "require": {
@@ -3113,7 +3160,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T08:28:41+00:00"
+            "time": "2021-07-28T13:16:28+00:00"
         },
         {
             "name": "nette/schema",
@@ -10461,16 +10508,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a"
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/75a63c33a8577608444246075ea0af0d052e452a",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/34a41e998c2183e22995f158c581e7b5e755ab9e",
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e",
                 "shasum": ""
             },
             "require": {
@@ -10499,7 +10546,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/master"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.1"
             },
             "funding": [
                 {
@@ -10507,12 +10554,13 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-12T23:59:07+00:00"
+            "time": "2021-07-28T10:34:58+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "arku/nova-multiselect": 20,
         "elevate-digital/nova-charcounted-fields": 20,
         "webmapp/ecmediapoipopup": 20
     },
@@ -10525,5 +10573,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }
