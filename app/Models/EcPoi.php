@@ -85,6 +85,11 @@ class EcPoi extends Model
         return $this->belongsToMany(EcMedia::class);
     }
 
+    public function ecTracks(): BelongsToMany
+    {
+        return $this->belongsToMany(EcTrack::class);
+    }
+
     public function taxonomyWheres()
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
