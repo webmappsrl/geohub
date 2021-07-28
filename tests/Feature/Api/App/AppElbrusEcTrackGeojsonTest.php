@@ -299,13 +299,10 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $json = $response->json();
         $properties = $json['properties'];
         $this->assertIsArray($properties);
-        $this->assertArrayHasKey('related_poi', $properties);
-        $this->assertArrayHasKey('id', $properties['related_poi'][5]);
-        $this->assertArrayHasKey('url', $properties['related_poi'][5]);
-        $this->assertEquals(3, $properties['related_poi'][2]['id']);
-
-        $route = route("api.app.elbrus.geojson.poi", ['app_id' => $app->id, 'poi_id' => 3]);
-        $this->assertEquals($route, $properties['related_poi'][2]['url']);
+        $this->assertArrayHasKey('related', $properties);
+        $this->assertArrayHasKey('poi', $properties['related']);
+        $this->assertArrayHasKey('related', $properties['related']['poi']);
+        $this->assertEquals(3, $properties['related']['poi']['related'][2]);
     }
 
     /**
