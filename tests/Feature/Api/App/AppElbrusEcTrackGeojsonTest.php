@@ -12,6 +12,7 @@ use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -269,5 +270,42 @@ class AppElbrusEcTrackGeojsonTest extends TestCase
         $this->assertStringContainsString($ecTrack->id, $json['kml_url']);
         $this->assertStringContainsString('download', $json['kml_url']);
         $this->assertStringContainsString('.kml', $json['kml_url']);
+    }
+
+
+
+    /**
+     * @test
+     */
+    public function check_that_api_for_elbrus_track_has_related_poi_section_with_all_associated_pois()
+    {
+        $user = User::factory()->create();
+        $app = App::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $track = EcTrack::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $pois = EcPoi::factory(10)->create([
+            'user_id' => $user->id,
+        ]);
+        $track->ecPois()->attach($pois);
+
+        $this->assertCount(10, $track->ecPois()->get());
+
+        $response = $this->get(route("api.app.elbrus.geojson.track", ['app_id' => $app->id, 'track_id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+        $this->assertArrayHasKey('related_poi', $properties);
+        $this->assertArrayHasKey('id', $properties['related_poi'][5]);
+        $this->assertArrayHasKey('url', $properties['related_poi'][5]);
+        $this->assertEquals(3, $properties['related_poi'][2]['id']);
+
+        $route = route("api.app.elbrus.geojson.poi", ['app_id' => $app->id, 'poi_id' => 3]);
+        $this->assertEquals($route, $properties['related_poi'][2]['url']);
     }
 }

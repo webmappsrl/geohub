@@ -268,6 +268,16 @@ class EditorialContentController extends Controller
             $geojson['properties']['kml_url'] = route('api.ec.track.download.kml', ['id' => $track_id]);
         }
 
+        if ($track->ecPois) {
+            $poiList = [];
+            $pois = $track->ecPois;
+            foreach ($pois as $poi) {
+                $poiList[] = ['id' => $poi->id, 'url' => route("api.app.elbrus.geojson.poi", ['app_id' => $app->id, 'poi_id' => $poi->id])];
+            }
+
+            $geojson['properties']['related_poi'] = $poiList;
+        }
+
         // Add Taxonomies
         $taxonomies = $this->_getTaxonomies($track, $names = ['activity', 'theme', 'where', 'who', 'when']);
         $geojson['properties']['taxonomy'] = $taxonomies;
