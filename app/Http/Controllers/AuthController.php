@@ -55,9 +55,17 @@ class AuthController extends Controller
             ], 400);
         }
 
+        if (!isset($credentials['last_name'])) {
+            return response()->json([
+                'error' => "Missing mandatory parameter(s): 'last_name'",
+                'code' => 400
+            ], 400);
+        }
+
         $user = new User();
         $user->password = bcrypt($credentials['password']);
         $user->name = $credentials['name'];
+        $user->last_name = $credentials['last_name'];
         $user->email = $credentials['email'];
         $user->email_verified_at = now();
         $user->save();
@@ -103,7 +111,7 @@ class AuthController extends Controller
         $roles = array_map(function ($value) {
             return strtolower($value);
         }, $user->roles->pluck('name')->toArray());
-        
+
         return response()->json(array_merge($user->toArray(), ['roles' => $roles]));
     }
 
