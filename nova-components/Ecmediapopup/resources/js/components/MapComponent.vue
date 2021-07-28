@@ -199,6 +199,7 @@ export default {
         var overlayPopup = new Overlay({
           element: document.getElementById('overlayPopup')
         });
+        console.log(coordinate);
         var popupImage = overlayPopup.setPosition(coordinate);
         this.map.addOverlay(overlayPopup);
         document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
