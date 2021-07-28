@@ -43,11 +43,11 @@
 
                           <div class="poi-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
 
-                            <div :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''" class="box-image"
+                            <div :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''" class="box-poi"
                                  v-for="poi in poiList.features" style="margin:5px"
                                  @click="toggleImage(poi.properties)">
 
-                              <img class="image ec-media-image"
+                              <img class="image ec-poi-image"
                                    :src="poi.properties.image.url">
                               <!--<img src="/Vector.png"
                                    :class="selectedPois.includes(poi.properties.id) ? 'vector-visible' : 'vector-hidden'">-->
@@ -59,7 +59,7 @@
                                    :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''"
                                    :src="poi.properties.image.url"
                                    @click="toggleImage(poi.properties)">
-                                <div class="text">Seleziona</div>
+                                <div class="text-poi">Seleziona</div>
                               </div>-->
                             </div>
                             <br>
@@ -268,7 +268,7 @@ export default {
   border-bottom: 1px solid lightgray;
 }
 
-.ec-media-image {
+.ec-poi-image {
   width: 108px;
   height: 101px !important;
   border-radius: 8px;
@@ -330,7 +330,7 @@ export default {
   padding: 5px;
 }
 
-.text {
+.text-poi {
   color: white;
   font-size: 15px;
   position: absolute;
@@ -339,14 +339,20 @@ export default {
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  text-align: center;
+  text-align: left;
 }
 
-.box-image {
+.box-poi {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   height: 108px;
+  width: 100%;
+  padding: 3px;
+}
+
+.box-poi:hover {
+  border: 1px solid lightblue;
 }
 
 .overlay.selected {
