@@ -44,7 +44,8 @@
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
         "ynacorp/nova-swatches": "^1.0",
-        "webmapp/featureimagepoipopup": "*"
+        "webmapp/featureimagepoipopup": "*",
+        "webmapp/ecpoipopup": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -130,6 +131,10 @@
         {
             "type": "path",
             "url": "./nova-components/Featureimagepoipopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecpoipopup"
         }
     ]
 }

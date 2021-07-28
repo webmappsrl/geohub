@@ -23,6 +23,7 @@ use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapopup\Ecmediapopup;
+use Webmapp\Ecpoipopup\Ecpoipopup;
 use Webmapp\Featureimagepopup\Featureimagepopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -83,6 +84,7 @@ class EcTrack extends Resource
             Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia')->onlyOnDetail(),
+            BelongsToMany::make('EcPois')->onlyOnDetail(),
             Ecmediapopup::make(__('EcMedia'))->nullable()->onlyOnForms()->feature($geojson),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -105,6 +107,7 @@ class EcTrack extends Resource
             })->hideFromIndex()->hideWhenCreating(),
             //BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             Featureimagepopup::make(__('FeatureImage'))->onlyOnForms()->feature($geojson),
+            Ecpoipopup::make(__('EcPoi'))->nullable()->onlyOnForms()->feature($geojson),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {

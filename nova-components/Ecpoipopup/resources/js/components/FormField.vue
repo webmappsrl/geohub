@@ -2,11 +2,11 @@
   <div>
     <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
       <template slot="field">
-        <div ref="selectedFeatureImageList" id="selectedFeatureImageList">
-          <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
-            <div class="w-1/5">
-              <img class="selectedThunbnail" :src="JSON.parse(row.thumbnails)['108x137']">
-            </div>
+        <div ref="selectedImageList" id="selectedImageList">
+          <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedPois">
+            <!--<div class="w-1/5">
+              <img class="selectedThunbnail" :src="row.name.it">
+            </div>-->
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
               <p>EN: {{ row.name.en }}</p>
@@ -20,7 +20,7 @@
           <br>
         </div>
         <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
-          Select EcMedia
+          Select EcPoi
         </button>
       </template>
     </default-field>
@@ -32,53 +32,51 @@
               <div class="modal-container">
 
                 <div class="modal-header">
-
                   <p class="text-right">
                     <button type="button" class="close-button" @click="cancelUpload()">X</button>
                   </p>
                   <div style="display:flex">
                     <tabs>
-                      <tab name="Media associati alla track" :selected="true">
-                        <p style="padding:3px">Seleziona i Media Georeferenziati nelle vicinanze della traccia</p>
+                      <tab name="Poi associati alla track" :selected="true">
+                        <p style="padding:3px">Seleziona i Poi Georeferenziati nelle vicinanze della traccia</p>
                         <div class="modal-body flex flex-wrap">
-                          <div class="media-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
 
-                            <div class="w-1/4 box-image" v-for="media in mediaList.features">
+                          <div class="poi-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
+
+                            <div :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''" class="box-image"
+                                 v-for="poi in poiList.features" style="margin:5px"
+                                 @click="toggleImage(poi.properties)">
+
                               <img class="image ec-media-image"
-                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
-                                   @click="toggleImage(media.properties)">
-                              <img src="/Vector.png"
-                                   :class="selectedMedia.includes(media.properties.id) ? 'vector-visible' : 'vector-hidden'">
-                              <div class="overlay"
-                                   :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
-                                   :src="JSON.parse(media.properties.thumbnails)['108x137']"
-                                   @click="toggleImage(media.properties)">
+                                   :src="poi.properties.image.url">
+                              <!--<img src="/Vector.png"
+                                   :class="selectedPois.includes(poi.properties.id) ? 'vector-visible' : 'vector-hidden'">-->
+                              <p @click="toggleImage(poi.properties)" style="padding-left:3px">IT:
+                                {{ poi.properties.name.it }}<br>
+                                <br>
+                                EN: {{ poi.properties.name.en }}</p>
+                              <!--<div class="overlay"
+                                   :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''"
+                                   :src="poi.properties.image.url"
+                                   @click="toggleImage(poi.properties)">
                                 <div class="text">Seleziona</div>
-                              </div>
+                              </div>-->
                             </div>
+                            <br>
                           </div>
                           <div class="map w-1/2 text-center">
-                            <MapComponent :feature="field.geojson" :media="mediaList"
-                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
+                            <MapComponent id="map-component" :feature="field.geojson" :media="poiList"
+                                          :selectedPois="selectedPois" :loadedPois="loadedPois"
+                                          :ref="mapComponent"></MapComponent>
                           </div>
                         </div>
                       </tab>
-                      <tab name="Carica Media">
 
-                        <div class="modal-body text-center">
-                          <p class="py-1"><b>Trascina </b>i file da caricare <br>
-                            oppure</p>
-                          <input dusk="ecmedia" type="file" id="file-ec-tracks-ecmedia" name="name"
-                                 class="form-file-input select-none">
-                          <label for="file-ec-tracks-ecmedia"
-                                 class="form-file-btn btn btn-default btn-primary select-none"><span>Scegli File</span></label>
-                        </div>
-                      </tab>
                     </tabs>
-                  </div>
-                </div>
 
+                  </div>
+
+                </div>
                 <div class="modal-footer">
                   <button class="btn btn-primary btn-default" @click="loadImages()">
                     Carica Selezionati
@@ -100,12 +98,13 @@ import MapComponent from './MapComponent';
 
 import {FormField, HandlesValidationErrors} from 'laravel-nova'
 
-import EcMediaModal from './ModalEcMedia';
+import EcPoiModal from './ModalEcPoi';
+import {Overlay} from "ol";
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
   components: {
-    EcMediaModal,
+    EcPoiModal,
     Tabs,
     Tab,
     MapComponent,
@@ -114,47 +113,70 @@ export default {
   data() {
     return {
       modalOpen: false,
-      associatedMediaList: {},
-      mediaList: {},
-      selectedMedia: [],
-      loadedImages: [],
+      associatedPoiList: {},
+      poiList: {},
+      selectedPois: [],
+      loadedPois: [],
     }
   },
   mounted() {
     var that = this;
-    axios.get('/api/ec/poi/' + this.resourceId + '/near_points')
+    axios.get('/api/ec/track/' + this.resourceId + '/neighbour_pois')
         .then(response => {
-          that.mediaList = response.data;
+          that.poiList = response.data;
         });
-    axios.get('/api/ec/poi/' + this.resourceId + '/feature_image')
+    axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_poi')
         .then(response => {
-          that.selectedMedia.splice(0);
-          that.associatedMediaList = response.data;
-          that.associatedMediaList.forEach(element => {
-                that.loadedImages.push(element)
-                that.selectedMedia.push(element.id)
+          that.selectedPois.splice(0);
+          that.associatedPoiList = response.data;
+          that.associatedPoiList.forEach(element => {
+                that.loadedPois.push(element)
+                that.selectedPois.push(element.id)
+
               }
           );
+
         });
+
   },
 
   methods: {
     toggleImage(item) {
-      this.selectedMedia.splice(0);
-      this.loadedImages.splice(0);
-      this.loadedImages.push(item);
-      this.selectedMedia.push(item.id);
+      if (this.selectedPois.includes(item.id)) {
+        this.loadedPois.splice(this.loadedPois.indexOf(item.id), 1);
+        this.selectedPois.splice(this.selectedPois.indexOf(item.id), 1);
+      } else {
+        this.loadedPois.push(item);
+        this.selectedPois.push(item.id);
+      }
+
     },
     loadImages() {
-      document.getElementById('selectedFeatureImageList').style.display = "block";
+      document.getElementById('selectedImageList').style.display = "block";
       this.modalOpen = false;
     },
     cancelUpload() {
       this.modalOpen = false;
     },
     removeImage(id) {
-      this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
-      this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
+      this.selectedPois.splice(this.selectedPois.indexOf(id), 1);
+      this.loadedPois.splice(this.loadedPois.indexOf(id), 1)
+    },
+    openImagePopup(id, poiCoordinate) {
+      let coordinate;
+      if (poi)
+        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
+      else if (track)
+        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
+      if (coordinate) {
+        var overlayPopup = new Overlay({
+          element: document.getElementById('overlayPopup')
+        });
+        var popupImage = overlayPopup.setPosition(coordinate);
+        this.map.addOverlay(overlayPopup);
+        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
+        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+      }
     },
 
 
@@ -162,7 +184,7 @@ export default {
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      formData.append(this.field.attribute, this.selectedMedia[0])
+      formData.append(this.field.attribute, JSON.stringify(this.selectedPois))
     },
   },
 }
@@ -212,6 +234,16 @@ export default {
 .modal-footer {
   padding: 1rem;
   text-align: right
+}
+
+.poi-list .box-image:hover {
+  border: 3px solid #55af60 !important;
+  box-sizing: border-box;
+  opacity: 0.8;
+}
+
+.poi-list .box-image.selected:hover {
+  border: 0px;
 }
 
 .modal-default-button {
@@ -293,6 +325,11 @@ export default {
   opacity: 0.5;
 }
 
+
+.box-image {
+  padding: 5px;
+}
+
 .text {
   color: white;
   font-size: 15px;
@@ -309,15 +346,11 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
+  height: 108px;
 }
 
 .overlay.selected {
   display: none;
-}
-
-
-.box-image {
-
 }
 
 .selectedThunbnail {
@@ -332,7 +365,7 @@ export default {
   margin-top: 15px;
 }
 
-.media-list {
+.poi-list {
   background-color: #f1f3f5;
 }
 
