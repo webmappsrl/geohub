@@ -431,4 +431,30 @@ EXTERNAL_OVERLAYS;
         $this->assertTrue(in_array('it', $json->LANGUAGES->available));
         $this->assertTrue(in_array('en', $json->LANGUAGES->available));
     }
+
+
+    private function _getJsonfromAPP($app){
+        $user = User::factory()->create();
+        $app = App::factory()->create($app);
+        $app->user_id=$user->id;
+        $app->save();
+        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $this->assertEquals(200, $response->getStatusCode());
+        return json_decode($response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function check_auth_show_at_startup_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['auth_show_at_startup' => true]);
+        $this->assertSame(true, $json->AUTH->showAtStartup);
+    }
+    /**
+     * @test
+     */
+    public function check_auth_show_at_startup_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['auth_show_at_startup' => false]);
+        $this->assertSame(false, $json->AUTH->showAtStartup);
+    }
 }

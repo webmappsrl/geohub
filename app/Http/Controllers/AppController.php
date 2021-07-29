@@ -83,6 +83,10 @@ class AppController extends Controller {
         $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
 
         // AUTH section
+        $data['AUTH']['showAtStartup'] = false;
+        if($app->auth_show_at_startup) {
+            $data['AUTH']['showAtStartup'] = true;
+        }
         $data['AUTH']['enable'] = true;
         $data['AUTH']['loginToGeohub'] = true;
 
