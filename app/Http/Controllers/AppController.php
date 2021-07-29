@@ -78,7 +78,10 @@ class AppController extends Controller {
         $data['REPORTS'] = $this->_getReportSection();
 
         // GEOLOCATIONS SECTION
-        $data['GEOLOCATION']['record']['enable'] = true;
+        $data['GEOLOCATION']['record']['enable'] = false;
+        if($app->geolocation_record_enable) {
+            $data['GEOLOCATION']['record']['enable'] = true;
+        }
         $data['GEOLOCATION']['record']['export'] = true;
         $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
 

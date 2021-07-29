@@ -149,7 +149,7 @@ class AppElbrusConfigJsonTest extends TestCase {
 
         $this->assertTrue(isset($json->GEOLOCATION));
         $this->assertTrue(isset($json->GEOLOCATION->record));
-        $this->assertTrue($json->GEOLOCATION->record->enable);
+        $this->assertFalse($json->GEOLOCATION->record->enable);
         $this->assertTrue($json->GEOLOCATION->record->export);
         $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store', $json->GEOLOCATION->record->uploadUrl);
     }
@@ -484,5 +484,19 @@ EXTERNAL_OVERLAYS;
     public function check_offline_force_auth_when_field_is_false() {
         $json = $this->_getJsonfromAPP(['offline_force_auth' => false]);
         $this->assertSame(false, $json->OFFLINE->forceAuth);
+    }
+    /**
+     * @test
+     */
+    public function check_geolocation_record_enable_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['geolocation_record_enable' => true]);
+        $this->assertSame(true, $json->GEOLOCATION->record->enable);
+    }
+    /**
+     * @test
+     */
+    public function check_geolocation_record_enable_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['geolocation_record_enable' => false]);
+        $this->assertSame(false, $json->GEOLOCATION->record->enable);
     }
 }
