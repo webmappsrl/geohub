@@ -209,6 +209,7 @@ class App extends Resource {
     protected function offline_panel() {
         return [
             Toggle::make(__('Enable Offline'), 'offline_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Force Auth'), 'offline_force_auth')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
