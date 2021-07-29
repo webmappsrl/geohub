@@ -76,6 +76,7 @@ class App extends Resource {
             new Panel('Map', $this->map_panel()),
             new Panel('Theme', $this->theme_panel()),
             new Panel('Options', $this->option_panel()),
+            new Panel('Auth', $this->auth_panel()),
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('Overlays', $this->overlays_panel()),
@@ -176,6 +177,12 @@ class App extends Resource {
             Number::make(__('Poi Icon Radius'), 'poiIconRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             Number::make(__('Poi Min Zoom'), 'poiMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             Number::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+        ];
+    }
+
+    protected function auth_panel() {
+        return [
+            Toggle::make(__('Show Auth at startup'),'auth_show_at_startup')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
