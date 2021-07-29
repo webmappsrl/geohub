@@ -51,7 +51,8 @@
                                    :src="poi.properties.image.url">
                               <!--<img src="/Vector.png"
                                    :class="selectedPois.includes(poi.properties.id) ? 'vector-visible' : 'vector-hidden'">-->
-                              <p @click="toggleImage(poi.properties)" style="padding-left:3px">IT:
+                              <p @click="toggleImage(poi.properties)" @mouseover="showOverlay(poi.properties.id)"
+                                 style="padding-left:3px">IT:
                                 {{ poi.properties.name.it }}<br>
                                 <br>
                                 EN: {{ poi.properties.name.en }}</p>
@@ -67,7 +68,7 @@
                           <div class="map w-1/2 text-center">
                             <MapComponent id="map-component" :feature="field.geojson" :media="poiList"
                                           :selectedPois="selectedPois" :loadedPois="loadedPois"
-                                          :ref="mapComponent"></MapComponent>
+                                          ref="mapComponent"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -140,6 +141,25 @@ export default {
   },
 
   methods: {
+    showOverlay(id) {
+      var that = this;
+      axios.get('/api/ec/poi/' + id)
+          .then(response => {
+            var coordinate = response.data.geometry.coordinates;
+
+            if (coordinate) {
+              var overlayPopup = new Overlay({
+                element: document.getElementById('overlayPopup')
+              });
+              var popupImage = overlayPopup.setPosition(coordinate);
+
+              this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+              document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+              document.getElementById("popupImage").src = response.data.properties.feature_image;
+            }
+          });
+    },
     toggleImage(item) {
       if (this.selectedPois.includes(item.id)) {
         this.loadedPois.splice(this.loadedPois.indexOf(item.id), 1);

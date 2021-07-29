@@ -30772,6 +30772,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -30817,6 +30818,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    showOverlay: function showOverlay(id) {
+      var _this = this;
+
+      var that = this;
+      axios.get('/api/ec/poi/' + id).then(function (response) {
+        var coordinate = response.data.geometry.coordinates;
+
+        if (coordinate) {
+          var overlayPopup = new __WEBPACK_IMPORTED_MODULE_5_ol__["a" /* Overlay */]({
+            element: document.getElementById('overlayPopup')
+          });
+          var popupImage = overlayPopup.setPosition(coordinate);
+
+          _this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+          document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+          document.getElementById("popupImage").src = response.data.properties.feature_image;
+        }
+      });
+    },
     toggleImage: function toggleImage(item) {
       if (this.selectedPois.includes(item.id)) {
         this.loadedPois.splice(this.loadedPois.indexOf(item.id), 1);
@@ -78411,6 +78432,14 @@ var render = function() {
                                                               return _vm.toggleImage(
                                                                 poi.properties
                                                               )
+                                                            },
+                                                            mouseover: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.showOverlay(
+                                                                poi.properties
+                                                                  .id
+                                                              )
                                                             }
                                                           }
                                                         },
@@ -78452,7 +78481,7 @@ var render = function() {
                                             },
                                             [
                                               _c("MapComponent", {
-                                                ref: _vm.mapComponent,
+                                                ref: "mapComponent",
                                                 attrs: {
                                                   id: "map-component",
                                                   feature: _vm.field.geojson,
