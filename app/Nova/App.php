@@ -80,6 +80,7 @@ class App extends Resource {
             new Panel('Table', $this->table_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('Overlays', $this->overlays_panel()),
+            new Panel('Offline', $this->offline_panel()),
             new Panel('Icons', $this->icons_panel()),
             new Panel('API', $this->api_panel()),
             new Panel('Maps', $this->maps_panel()),
@@ -203,6 +204,11 @@ class App extends Resource {
     protected function overlays_panel() {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
+        ];
+    }
+    protected function offline_panel() {
+        return [
+            Toggle::make(__('Enable Offline'), 'offline_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
