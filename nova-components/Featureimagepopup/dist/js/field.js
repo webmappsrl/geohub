@@ -31424,7 +31424,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var popupImage = overlayPopup.setPosition(coordinate);
         _this.map.addOverlay(overlayPopup);
         document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+        document.getElementById("popupImage").src = poi['values_']['url'];
       }
     });
 
