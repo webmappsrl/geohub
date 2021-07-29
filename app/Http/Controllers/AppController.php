@@ -90,6 +90,13 @@ class AppController extends Controller {
         $data['AUTH']['enable'] = true;
         $data['AUTH']['loginToGeohub'] = true;
 
+        // OFFLINE section
+        $data['OFFLINE']['enable'] = false;
+        if($app->offline_enable) {
+            $data['OFFLINE']['enable'] = true;
+        }
+
+
         return response()->json($data, 200);
     }
 
