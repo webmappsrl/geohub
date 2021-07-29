@@ -53,7 +53,8 @@
                               <div class="overlay"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="JSON.parse(media.properties.thumbnails)['108x137']"
-                                   @click="toggleImage(media.properties)">
+                                   @click="toggleImage(media.properties)"
+                                   @mouseover="showOverlay(media.properties.id)">
                                 <div class="text">Seleziona</div>
                               </div>
                             </div>
@@ -61,7 +62,7 @@
                           <div class="map w-1/2 text-center">
                             <MapComponent id="map-component" :feature="field.geojson" :media="mediaList"
                                           :selectedMedia="selectedMedia" :loadedImages="loadedImages"
-                                          :ref="mapComponent"></MapComponent>
+                                          ref="mapComponent"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -141,7 +142,6 @@ export default {
           );
 
         });
-
   },
 
   methods: {
@@ -152,9 +152,27 @@ export default {
       } else {
         this.loadedImages.push(item);
         this.selectedMedia.push(item.id);
-        console.log();
-      }
 
+      }
+    },
+    showOverlay(id) {
+      var that = this;
+      axios.get('/api/ec/media/' + id)
+          .then(response => {
+            var coordinate = response.data.geometry.coordinates;
+
+            if (coordinate) {
+              var overlayPopup = new Overlay({
+                element: document.getElementById('overlayPopup')
+              });
+              var popupImage = overlayPopup.setPosition(coordinate);
+
+              this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+              document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+              document.getElementById("popupImage").src = response.data.properties.url;
+            }
+          });
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
@@ -166,22 +184,6 @@ export default {
     removeImage(id) {
       this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1)
-    },
-    openImagePopup(id, poiCoordinate) {
-      let coordinate;
-      if (poi)
-        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
-      else if (track)
-        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
-      if (coordinate) {
-        var overlayPopup = new Overlay({
-          element: document.getElementById('overlayPopup')
-        });
-        var popupImage = overlayPopup.setPosition(coordinate);
-        this.map.addOverlay(overlayPopup);
-        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
-      }
     },
 
 

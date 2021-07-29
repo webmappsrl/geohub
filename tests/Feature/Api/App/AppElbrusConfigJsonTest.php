@@ -149,7 +149,7 @@ class AppElbrusConfigJsonTest extends TestCase {
 
         $this->assertTrue(isset($json->GEOLOCATION));
         $this->assertTrue(isset($json->GEOLOCATION->record));
-        $this->assertTrue($json->GEOLOCATION->record->enable);
+        $this->assertFalse($json->GEOLOCATION->record->enable);
         $this->assertTrue($json->GEOLOCATION->record->export);
         $this->assertEquals('https://geohub.webmapp.it/api/usergenerateddata/store', $json->GEOLOCATION->record->uploadUrl);
     }
@@ -430,5 +430,73 @@ EXTERNAL_OVERLAYS;
         $this->assertCount(2, $json->LANGUAGES->available);
         $this->assertTrue(in_array('it', $json->LANGUAGES->available));
         $this->assertTrue(in_array('en', $json->LANGUAGES->available));
+    }
+
+
+    private function _getJsonfromAPP($app){
+        $user = User::factory()->create();
+        $app = App::factory()->create($app);
+        $app->user_id=$user->id;
+        $app->save();
+        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $this->assertEquals(200, $response->getStatusCode());
+        return json_decode($response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function check_auth_show_at_startup_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['auth_show_at_startup' => true]);
+        $this->assertSame(true, $json->AUTH->showAtStartup);
+    }
+    /**
+     * @test
+     */
+    public function check_auth_show_at_startup_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['auth_show_at_startup' => false]);
+        $this->assertSame(false, $json->AUTH->showAtStartup);
+    }
+    /**
+     * @test
+     */
+    public function check_offline_enable_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['offline_enable' => true]);
+        $this->assertSame(true, $json->OFFLINE->enable);
+    }
+    /**
+     * @test
+     */
+    public function check_offline_enable_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['offline_enable' => false]);
+        $this->assertSame(false, $json->OFFLINE->enable);
+    }
+    /**
+     * @test
+     */
+    public function check_offline_force_auth_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['offline_force_auth' => true]);
+        $this->assertSame(true, $json->OFFLINE->forceAuth);
+    }
+    /**
+     * @test
+     */
+    public function check_offline_force_auth_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['offline_force_auth' => false]);
+        $this->assertSame(false, $json->OFFLINE->forceAuth);
+    }
+    /**
+     * @test
+     */
+    public function check_geolocation_record_enable_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['geolocation_record_enable' => true]);
+        $this->assertSame(true, $json->GEOLOCATION->record->enable);
+    }
+    /**
+     * @test
+     */
+    public function check_geolocation_record_enable_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['geolocation_record_enable' => false]);
+        $this->assertSame(false, $json->GEOLOCATION->record->enable);
     }
 }

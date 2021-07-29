@@ -53,14 +53,16 @@
                               <div class="overlay"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :src="media.properties.url"
-                                   @click="toggleImage(media.properties)">
+                                   @click="toggleImage(media.properties)"
+                                   @mouseover="showOverlay(media.properties.id)">
                                 <div class="text">Seleziona</div>
                               </div>
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
                             <MapComponent :feature="field.geojson" :media="mediaList"
-                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"></MapComponent>
+                                          :selectedMedia="selectedMedia" :loadedImages="loadedImages"
+                                          ref="mapComponent"></MapComponent>
                           </div>
                         </div>
                       </tab>
@@ -139,6 +141,25 @@ export default {
   },
 
   methods: {
+    showOverlay(id) {
+      var that = this;
+      axios.get('/api/ec/media/' + id)
+          .then(response => {
+            var coordinate = response.data.geometry.coordinates;
+
+            if (coordinate) {
+              var overlayPopup = new Overlay({
+                element: document.getElementById('overlayPopup')
+              });
+              var popupImage = overlayPopup.setPosition(coordinate);
+
+              this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+              document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+              document.getElementById("popupImage").src = response.data.properties.url;
+            }
+          });
+    },
     toggleImage(item) {
       this.selectedMedia.splice(0);
       this.loadedImages.splice(0);

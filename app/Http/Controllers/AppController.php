@@ -78,13 +78,31 @@ class AppController extends Controller {
         $data['REPORTS'] = $this->_getReportSection();
 
         // GEOLOCATIONS SECTION
-        $data['GEOLOCATION']['record']['enable'] = true;
+        $data['GEOLOCATION']['record']['enable'] = false;
+        if($app->geolocation_record_enable) {
+            $data['GEOLOCATION']['record']['enable'] = true;
+        }
         $data['GEOLOCATION']['record']['export'] = true;
         $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
 
         // AUTH section
+        $data['AUTH']['showAtStartup'] = false;
+        if($app->auth_show_at_startup) {
+            $data['AUTH']['showAtStartup'] = true;
+        }
         $data['AUTH']['enable'] = true;
         $data['AUTH']['loginToGeohub'] = true;
+
+        // OFFLINE section
+        $data['OFFLINE']['enable'] = false;
+        if($app->offline_enable) {
+            $data['OFFLINE']['enable'] = true;
+        }
+        $data['OFFLINE']['forceAuth'] = false;
+        if($app->offline_force_auth) {
+            $data['OFFLINE']['forceAuth'] = true;
+        }
+
 
         return response()->json($data, 200);
     }

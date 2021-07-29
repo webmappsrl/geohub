@@ -76,9 +76,12 @@ class App extends Resource {
             new Panel('Map', $this->map_panel()),
             new Panel('Theme', $this->theme_panel()),
             new Panel('Options', $this->option_panel()),
+            new Panel('Auth', $this->auth_panel()),
             new Panel('Table', $this->table_panel()),
+            new Panel('Geolocation', $this->geolocation_panel()),
             new Panel('Routing', $this->routing_panel()),
             new Panel('Overlays', $this->overlays_panel()),
+            new Panel('Offline', $this->offline_panel()),
             new Panel('Icons', $this->icons_panel()),
             new Panel('API', $this->api_panel()),
             new Panel('Maps', $this->maps_panel()),
@@ -179,11 +182,23 @@ class App extends Resource {
         ];
     }
 
+    protected function auth_panel() {
+        return [
+            Toggle::make(__('Show Auth at startup'),'auth_show_at_startup')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+        ];
+    }
+
     protected function table_panel() {
         return [
             Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
             Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
             Toggle::make(__('Show Related POI'), 'showRelatedPoi')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+        ];
+    }
+
+    protected function geolocation_panel() {
+        return [
+            Toggle::make(__('Enable Track record'), 'geolocation_record_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
@@ -196,6 +211,12 @@ class App extends Resource {
     protected function overlays_panel() {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
+        ];
+    }
+    protected function offline_panel() {
+        return [
+            Toggle::make(__('Enable Offline'), 'offline_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Force Auth'), 'offline_force_auth')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 

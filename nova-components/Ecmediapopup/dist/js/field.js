@@ -31076,6 +31076,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -31128,8 +31129,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       } else {
         this.loadedImages.push(item);
         this.selectedMedia.push(item.id);
-        console.log();
       }
+    },
+    showOverlay: function showOverlay(id) {
+      var _this = this;
+
+      var that = this;
+      axios.get('/api/ec/media/' + id).then(function (response) {
+        var coordinate = response.data.geometry.coordinates;
+
+        if (coordinate) {
+          var overlayPopup = new __WEBPACK_IMPORTED_MODULE_5_ol__["a" /* Overlay */]({
+            element: document.getElementById('overlayPopup')
+          });
+          var popupImage = overlayPopup.setPosition(coordinate);
+
+          _this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+          document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+          document.getElementById("popupImage").src = response.data.properties.url;
+        }
+      });
     },
     loadImages: function loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
@@ -31141,19 +31161,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     removeImage: function removeImage(id) {
       this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
       this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
-    },
-    openImagePopup: function openImagePopup(id, poiCoordinate) {
-      var coordinate = void 0;
-      if (poi) coordinate = poi.getGeometry().getClosestPoint(event.coordinate);else if (track) coordinate = track.getGeometry().getClosestPoint(event.coordinate);
-      if (coordinate) {
-        var overlayPopup = new __WEBPACK_IMPORTED_MODULE_5_ol__["a" /* Overlay */]({
-          element: document.getElementById('overlayPopup')
-        });
-        var popupImage = overlayPopup.setPosition(coordinate);
-        this.map.addOverlay(overlayPopup);
-        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
-      }
     },
 
 
@@ -31818,10 +31825,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var overlayPopup = new __WEBPACK_IMPORTED_MODULE_19_ol__["a" /* Overlay */]({
           element: document.getElementById('overlayPopup')
         });
+        console.log(coordinate);
         var popupImage = overlayPopup.setPosition(coordinate);
         _this.map.addOverlay(overlayPopup);
         document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+        document.getElementById("popupImage").src = poi['values_']['url'];
       }
     });
 
@@ -78371,6 +78379,16 @@ var render = function() {
                                     },
                                     [
                                       _c(
+                                        "p",
+                                        { staticStyle: { padding: "3px" } },
+                                        [
+                                          _vm._v(
+                                            "Seleziona i Media Georeferenziati nelle vicinanze della traccia"
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
                                         "div",
                                         {
                                           staticClass:
@@ -78454,6 +78472,14 @@ var render = function() {
                                                             return _vm.toggleImage(
                                                               media.properties
                                                             )
+                                                          },
+                                                          mouseover: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.showOverlay(
+                                                              media.properties
+                                                                .id
+                                                            )
                                                           }
                                                         }
                                                       },
@@ -78482,7 +78508,7 @@ var render = function() {
                                             },
                                             [
                                               _c("MapComponent", {
-                                                ref: _vm.mapComponent,
+                                                ref: "mapComponent",
                                                 attrs: {
                                                   id: "map-component",
                                                   feature: _vm.field.geojson,

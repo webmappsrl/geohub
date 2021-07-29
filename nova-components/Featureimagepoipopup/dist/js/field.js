@@ -30681,6 +30681,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -30725,6 +30727,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    showOverlay: function showOverlay(id) {
+      var _this = this;
+
+      var that = this;
+      axios.get('/api/ec/media/' + id).then(function (response) {
+        var coordinate = response.data.geometry.coordinates;
+
+        if (coordinate) {
+          var overlayPopup = new Overlay({
+            element: document.getElementById('overlayPopup')
+          });
+          var popupImage = overlayPopup.setPosition(coordinate);
+
+          _this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+          document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+          document.getElementById("popupImage").src = response.data.properties.url;
+        }
+      });
+    },
     toggleImage: function toggleImage(item) {
       this.selectedMedia.splice(0);
       this.loadedImages.splice(0);
@@ -31402,7 +31424,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var popupImage = overlayPopup.setPosition(coordinate);
         _this.map.addOverlay(overlayPopup);
         document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+        document.getElementById("popupImage").src = poi['values_']['url'];
       }
     });
 
@@ -78337,6 +78359,16 @@ var render = function() {
                                     },
                                     [
                                       _c(
+                                        "p",
+                                        { staticStyle: { padding: "3px" } },
+                                        [
+                                          _vm._v(
+                                            "Seleziona i Media Georeferenziati nelle vicinanze della traccia"
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
                                         "div",
                                         {
                                           staticClass:
@@ -78420,6 +78452,14 @@ var render = function() {
                                                             return _vm.toggleImage(
                                                               media.properties
                                                             )
+                                                          },
+                                                          mouseover: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.showOverlay(
+                                                              media.properties
+                                                                .id
+                                                            )
                                                           }
                                                         }
                                                       },
@@ -78448,6 +78488,7 @@ var render = function() {
                                             },
                                             [
                                               _c("MapComponent", {
+                                                ref: "mapComponent",
                                                 attrs: {
                                                   feature: _vm.field.geojson,
                                                   media: _vm.mediaList,
