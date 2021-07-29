@@ -95,6 +95,10 @@ class AppController extends Controller {
         if($app->offline_enable) {
             $data['OFFLINE']['enable'] = true;
         }
+        $data['OFFLINE']['forceAuth'] = false;
+        if($app->offline_force_auth) {
+            $data['OFFLINE']['forceAuth'] = true;
+        }
 
 
         return response()->json($data, 200);

@@ -471,4 +471,18 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['offline_enable' => false]);
         $this->assertSame(false, $json->OFFLINE->enable);
     }
+    /**
+     * @test
+     */
+    public function check_offline_force_auth_when_field_is_true() {
+        $json = $this->_getJsonfromAPP(['offline_force_auth' => true]);
+        $this->assertSame(true, $json->OFFLINE->forceAuth);
+    }
+    /**
+     * @test
+     */
+    public function check_offline_force_auth_when_field_is_false() {
+        $json = $this->_getJsonfromAPP(['offline_force_auth' => false]);
+        $this->assertSame(false, $json->OFFLINE->forceAuth);
+    }
 }
