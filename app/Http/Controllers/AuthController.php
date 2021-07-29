@@ -25,7 +25,7 @@ class AuthController extends Controller
      */
     public function signup(): JsonResponse
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request(['email', 'password', 'last_name']);
 
         if (!isset($credentials['email']) || !isset($credentials['password'])) {
             $message = "";

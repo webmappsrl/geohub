@@ -8,15 +8,18 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class SignupApiTest extends TestCase {
+class SignupApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testNoCredentials() {
+    public function testNoCredentials()
+    {
         $response = $this->post('/api/auth/signup', []);
         $this->assertSame(400, $response->status());
     }
 
-    public function testInvalidCredentials() {
+    public function testInvalidCredentials()
+    {
         $response = $this->post('/api/auth/signup', [
             'email' => 'test@webmapp.it',
             'password' => 'test'
@@ -24,7 +27,8 @@ class SignupApiTest extends TestCase {
         $this->assertSame(400, $response->status());
     }
 
-    public function testValidExistingCredentials() {
+    public function testValidExistingCredentials()
+    {
         $response = $this->post('/api/auth/signup', [
             'email' => 'team@webmapp.it',
             'password' => 'webmapp'
@@ -40,13 +44,15 @@ class SignupApiTest extends TestCase {
         $this->assertArrayHasKey('created_at', $response->json());
     }
 
-    public function testValidNonExistingCredentials() {
+    public function testValidNonExistingCredentials()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $response = $this->post('/api/auth/signup', [
             'email' => $email,
             'password' => 'webmapp',
-            'name' => $name
+            'name' => $name,
+            'last_name' => $name,
         ]);
         $json = $response->json();
         $this->assertSame(200, $response->status());
