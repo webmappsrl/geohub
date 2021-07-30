@@ -200,6 +200,9 @@ Route::name('api.')->group(function () {
                 'term_id' => '[0-9]+',
             ])->name('track.taxonomies');
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
+            Route::get('/{app_id}/tiles/map.mbtiles',function ($app_id) {
+               return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+            });
         });
     });
 });
