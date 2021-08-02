@@ -361,6 +361,7 @@ export default {
   padding-top: 27px;
   padding-left: 34px;
   padding-right: 62px;
+  align-content: flex-start;
 }
 
 .subtitle {

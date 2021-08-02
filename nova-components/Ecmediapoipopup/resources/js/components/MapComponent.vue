@@ -467,6 +467,7 @@ export default {
 #overlayPopup .bottom-popup {
   background-color: white;
   height: 25px;
+  -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   margin-top: 0px;
 }

@@ -31229,7 +31229,7 @@ exports = module.exports = __webpack_require__(39)(false);
 exports.i(__webpack_require__(173), "");
 
 // module
-exports.push([module.i, "\n#overlayPopup[data-v-2f302b28] {\n  padding: 5px;\n  width: 240px;\n  height: 130px;\n  background-color: white;\n  position: absolute;\n  top: -150px;\n  left: -125px;\n}\n#overlayPopup .bottom-popup[data-v-2f302b28] {\n  background-color: white;\n  height: 25px;\n  -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);\n          clip-path: polygon(50% 0%, 30% 0, 52% 100%);\n  margin-top: 0px;\n}\n.ol-full-screen button[data-v-2f302b28] {\n  display: none !important;\n}\n", ""]);
+exports.push([module.i, "\n#overlayPopup[data-v-2f302b28] {\n  padding: 5px;\n  width: 240px;\n  height: 130px;\n  background-color: white;\n  position: absolute;\n  top: -150px;\n  left: -125px;\n}\n#overlayPopup .bottom-popup[data-v-2f302b28] {\n  background-color: white;\n  height: 25px;\n  -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);\n  clip-path: polygon(50% 0%, 30% 0, 52% 100%);\n  margin-top: 21px;\n}\n.ol-full-screen button[data-v-2f302b28] {\n  display: none !important;\n}\n", ""]);
 
 // exports
 

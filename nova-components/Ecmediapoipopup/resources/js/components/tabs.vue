@@ -38,11 +38,12 @@ export default {
       this.tabs.forEach(tab => {
         tab.isActive = (tab.name == selectedTab.name);
       });
-    }
+    },
+    cancelUpload() {
+      this.$parent.modalOpen = false;
+    },
   },
-  cancelUpload() {
-    this.$parent.modalOpen = false;
-  },
+
 };
 </script>
 
