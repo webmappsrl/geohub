@@ -5,6 +5,11 @@
         <li class="tabName" v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
           <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a>
         </li>
+        <li style="margin-left: auto;">
+          <a href="javascript:;" class="close-button" @click="cancelUpload()"
+             style="border-bottom: 0px solid #dbdbdb;">
+            <i class="webmapp-icon-close-outline"></i></a>
+        </li>
       </ul>
     </div>
 
@@ -34,7 +39,10 @@ export default {
         tab.isActive = (tab.name == selectedTab.name);
       });
     }
-  }
+  },
+  cancelUpload() {
+    this.$parent.modalOpen = false;
+  },
 };
 </script>
 

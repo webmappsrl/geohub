@@ -21974,7 +21974,7 @@ function exitFullScreen() {
         document['webkitExitFullscreen']();
     }
 }
-/* harmony default export */ __webpack_exports__["a"] = (FullScreen);
+/* unused harmony default export */ var _unused_webpack_default_export = (FullScreen);
 //# sourceMappingURL=FullScreen.js.map
 
 /***/ }),
@@ -30532,7 +30532,7 @@ exports = module.exports = __webpack_require__(39)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 60% !important;\n  margin: 0px auto;\n  padding: 10px 0px !important;\n  background-color: #fff;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n  border: 1px solid #D4DDE4;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border-radius: 8px;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 0px 0px !important;\n  min-height: 50vh;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.ec-media-image[data-v-c023248a] {\n  width: 108px;\n  height: 101px !important;\n  border-radius: 8px;\n}\n.ec-media-image[data-v-c023248a]:hover {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.selected[data-v-c023248a] {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.vector-visible[data-v-c023248a] {\n  display: block;\n  position: absolute;\n  right: 15px;\n  top: 5px;\n}\n.vector-hidden[data-v-c023248a] {\n  display: none;\n  position: absolute;\n  right: 15px;\n  top: 5px;\n}\n.image[data-v-c023248a] {\n  display: block;\n  height: auto;\n}\n.overlay[data-v-c023248a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 15px !important;\n  right: 0;\n  height: 101px;\n  width: 108px;\n  opacity: 0;\n  -webkit-transition: .5s ease;\n  transition: .5s ease;\n  background-color: black;\n  border-radius: 8px;\n}\n.box-image:hover .overlay[data-v-c023248a] {\n  opacity: 0.5;\n}\n.text[data-v-c023248a] {\n  color: white;\n  font-size: 15px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  text-align: center;\n}\n.box-image[data-v-c023248a] {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.overlay.selected[data-v-c023248a] {\n  display: none;\n}\n.box-image[data-v-c023248a] {\n}\n.selectedThunbnail[data-v-c023248a] {\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n}\n.close-button[data-v-c023248a] {\n  font-size: 20px;\n  margin-right: 15px;\n  margin-top: 15px;\n}\n.media-list[data-v-c023248a] {\n  background-color: #f1f3f5;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-c023248a] {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper[data-v-c023248a] {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container[data-v-c023248a] {\n  width: 60% !important;\n  margin: 0px auto;\n  padding: 10px 0px !important;\n  background-color: #fff;\n  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n  border: 1px solid #D4DDE4;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border-radius: 8px;\n}\n.modal-header h3[data-v-c023248a] {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body[data-v-c023248a] {\n  padding: 0px 0px !important;\n  min-height: 50vh;\n}\n.modal-footer[data-v-c023248a] {\n  padding: 1rem;\n  text-align: right\n}\n.modal-default-button[data-v-c023248a] {\n  float: right;\n}\n.modal-enter[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-leave-active[data-v-c023248a] {\n  opacity: 0;\n}\n.modal-enter .modal-container[data-v-c023248a],\n.modal-leave-active .modal-container[data-v-c023248a] {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n.modal-header[data-v-c023248a] {\n  border-bottom: 1px solid lightgray;\n}\n.ec-media-image[data-v-c023248a] {\n  width: 108px;\n  height: 101px !important;\n  border-radius: 8px;\n}\n.ec-media-image[data-v-c023248a]:hover {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.selected[data-v-c023248a] {\n  border: 3px solid #55af60 !important;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  opacity: 0.8;\n}\n.vector-visible[data-v-c023248a] {\n  display: block;\n  position: absolute;\n  right: 0px;\n  top: 5px;\n}\n.vector-hidden[data-v-c023248a] {\n  display: none;\n  position: absolute;\n  right: 15px;\n  top: 5px;\n}\n.image[data-v-c023248a] {\n  display: block;\n  height: auto;\n}\n.overlay[data-v-c023248a] {\n  position: absolute;\n  top: 5px !important;\n  bottom: 0;\n  left: 5px !important;\n  right: 0;\n  height: 101px;\n  width: 101px;\n  opacity: 0;\n  -webkit-transition: .5s ease;\n  transition: .5s ease;\n  background-color: black;\n  border-radius: 8px;\n}\n.box-image:hover .overlay[data-v-c023248a] {\n  opacity: 0.5;\n}\n.text[data-v-c023248a] {\n  color: white;\n  font-size: 15px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  text-align: center;\n}\n.box-image[data-v-c023248a] {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n.overlay.selected[data-v-c023248a] {\n  display: none;\n}\n.box-image[data-v-c023248a] {\n}\n.selectedThunbnail[data-v-c023248a] {\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n}\n.close-button[data-v-c023248a] {\n  font-size: 20px;\n  margin-right: 15px;\n  margin-top: 15px;\n}\n.media-list[data-v-c023248a] {\n  background-color: #f1f3f5;\n  max-height: 50vh;\n  overflow: scroll;\n  padding-top: 27px;\n  padding-left: 34px;\n  padding-right: 62px;\n}\n.subtitle[data-v-c023248a] {\n  padding-left: 20px;\n  padding-top: 10px;\n  padding-bottom: 10px;\n  font-family: Nunito, sans-serif;\n}\n\n", ""]);
 
 // exports
 
@@ -30586,10 +30586,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_laravel_nova___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_laravel_nova__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ModalEcMedia__ = __webpack_require__(248);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ModalEcMedia___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ModalEcMedia__);
-//
-//
-//
-//
 //
 //
 //
@@ -31054,6 +31050,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "tabs",
@@ -31071,6 +31072,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.tabs.forEach(function (tab) {
         tab.isActive = tab.name == selectedTab.name;
       });
+    },
+    cancelUpload: function cancelUpload() {
+      this.$parent.modalOpen = false;
     }
   }
 });
@@ -31087,23 +31091,42 @@ var render = function() {
     _c("div", { staticClass: "tabs" }, [
       _c(
         "ul",
-        _vm._l(_vm.tabs, function(tab) {
-          return _c("li", { class: { "is-active": tab.isActive } }, [
+        [
+          _vm._l(_vm.tabs, function(tab) {
+            return _c("li", { class: { "is-active": tab.isActive } }, [
+              _c(
+                "a",
+                {
+                  attrs: { href: tab.href },
+                  on: {
+                    click: function($event) {
+                      return _vm.selectTab(tab)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(tab.name))]
+              )
+            ])
+          }),
+          _vm._v(" "),
+          _c("li", { staticStyle: { "margin-left": "auto" } }, [
             _c(
               "a",
               {
-                attrs: { href: tab.href },
+                staticClass: "close-button",
+                staticStyle: { "border-bottom": "0px solid #dbdbdb" },
+                attrs: { href: "javascript:;" },
                 on: {
                   click: function($event) {
-                    return _vm.selectTab(tab)
+                    return _vm.cancelUpload()
                   }
                 }
               },
-              [_vm._v(_vm._s(tab.name))]
+              [_c("i", { staticClass: "webmapp-icon-close-outline" })]
             )
           ])
-        }),
-        0
+        ],
+        2
       )
     ]),
     _vm._v(" "),
@@ -31363,7 +31386,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         })
       }), this.featureLayer, this.mediaLayer],
       view: this.view,
-      controls: [new __WEBPACK_IMPORTED_MODULE_6_ol_control_Zoom__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_8_ol_control_FullScreen__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_5_ol_control_Attribution__["a" /* default */]({
+      controls: [new __WEBPACK_IMPORTED_MODULE_6_ol_control_Zoom__["a" /* default */](), new __WEBPACK_IMPORTED_MODULE_7_ol_control_ScaleLine__["a" /* default */](),
+      /*new FullScreen(),*/
+      new __WEBPACK_IMPORTED_MODULE_5_ol_control_Attribution__["a" /* default */]({
         collapsed: false,
         collapsible: false
       })],
@@ -78326,22 +78351,6 @@ var render = function() {
                     _c("div", { staticClass: "modal-wrapper" }, [
                       _c("div", { staticClass: "modal-container" }, [
                         _c("div", { staticClass: "modal-header" }, [
-                          _c("p", { staticClass: "text-right" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "close-button",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cancelUpload()
-                                  }
-                                }
-                              },
-                              [_vm._v("X")]
-                            )
-                          ]),
-                          _vm._v(" "),
                           _c(
                             "div",
                             { staticStyle: { display: "flex" } },
@@ -78358,15 +78367,11 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _c(
-                                        "p",
-                                        { staticStyle: { padding: "3px" } },
-                                        [
-                                          _vm._v(
-                                            "Seleziona i Media Georeferenziati nelle vicinanze della traccia"
-                                          )
-                                        ]
-                                      ),
+                                      _c("p", { staticClass: "subtitle" }, [
+                                        _vm._v(
+                                          "Seleziona i Media Georeferenziati nelle vicinanze della traccia"
+                                        )
+                                      ]),
                                       _vm._v(" "),
                                       _c(
                                         "div",
