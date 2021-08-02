@@ -32,13 +32,11 @@
               <div class="modal-container">
 
                 <div class="modal-header">
-                  <p class="text-right">
-                    <button type="button" class="close-button" @click="cancelUpload()">X</button>
-                  </p>
+
                   <div style="display:flex">
                     <tabs>
                       <tab name="Poi associati alla track" :selected="true">
-                        <p style="padding:3px">Seleziona i Poi Georeferenziati nelle vicinanze della traccia</p>
+                        <p class="subtitle">Seleziona i Poi Georeferenziati nelle vicinanze della traccia</p>
                         <div class="modal-body flex flex-wrap">
 
                           <div class="poi-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
@@ -309,7 +307,7 @@ export default {
 .vector-visible {
   display: block;
   position: absolute;
-  right: 15px;
+  right: 0px;
   top: 5px;
 }
 
@@ -328,13 +326,14 @@ export default {
 
 .overlay {
   position: absolute;
-  top: 0;
+  top: 5px !important;
   bottom: 0;
-  left: 15px !important;
+  left: 5px !important;
   right: 0;
   height: 101px;
-  width: 108px;
+  width: 101px;
   opacity: 0;
+  -webkit-transition: .5s ease;
   transition: .5s ease;
   background-color: black;
   border-radius: 8px;
@@ -392,6 +391,19 @@ export default {
 
 .poi-list {
   background-color: #f1f3f5;
+  max-height: 50vh;
+  overflow: scroll;
+  padding-top: 27px;
+  padding-left: 34px;
+  padding-right: 62px;
+  align-content: flex-start;
+}
+
+.subtitle {
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-family: Nunito, sans-serif;
 }
 
 </style>

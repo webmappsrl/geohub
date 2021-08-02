@@ -14,27 +14,28 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use TaxonomyPoiTypes;
 
-class ApiElbrusTaxonomyController extends Controller
-{
+class ApiElbrusTaxonomyController extends Controller {
     private $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 
-    public function getTerms(int $app_id, string $taxonomy_name): JsonResponse
-    {
+    public function getTerms(int $app_id, string $taxonomy_name): JsonResponse {
         $json = [];
         $code = 200;
         if (!in_array($taxonomy_name, $this->names)) {
             $code = 400;
             $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
+
             return response()->json($json, $code);
         }
         $app = App::find($app_id);
         if (is_null($app)) {
             $code = 404;
             $json = ['code' => $code, 'App NOT found'];
+
             return response()->json($json, $code);
         }
 
@@ -72,8 +73,7 @@ class ApiElbrusTaxonomyController extends Controller
         return response()->json($json, $code);
     }
 
-    private function _termsByUserId($app, $taxonomy_name)
-    {
+    private function _termsByUserId($app, $taxonomy_name) {
         $terms = [];
         $add_poi_types = false;
         switch ($taxonomy_name) {
@@ -121,9 +121,9 @@ class ApiElbrusTaxonomyController extends Controller
                 $type = 'taxonomy_able_type';
         }
         $res = DB::select("
-            SELECT $tid as tid, $fid as fid 
-            FROM $table 
-            WHERE $type='App\Models\EcTrack' 
+            SELECT $tid as tid, $fid as fid
+            FROM $table
+            WHERE $type='App\Models\EcTrack'
             AND $fid IN (select id from ec_tracks where user_id=$app->user_id)
          ");
         if (count($res) > 0) {
@@ -134,10 +134,12 @@ class ApiElbrusTaxonomyController extends Controller
 
         if ($add_poi_types) {
             $res = DB::select("
-                SELECT $tid as tid, $fid as fid 
-                FROM $table 
-                WHERE $type='App\Models\EcPoi' 
-                AND $fid IN (select id from ec_pois where user_id=$app->user_id)
+                SELECT $tid as tid, $fid as fid
+                FROM $table
+                WHERE $type='App\Models\EcPoi'
+                AND $fid IN (
+                    SELECT id FROM ec_pois
+                );
             ");
 
             if (count($res) > 0) {
@@ -153,13 +155,13 @@ class ApiElbrusTaxonomyController extends Controller
     /**
      * Update the specified user.
      *
-     * @param  int  $app_id
-     * @param  string  $taxonomy_name
-     * @param  int  $term_id
+     * @param int    $app_id
+     * @param string $taxonomy_name
+     * @param int    $term_id
+     *
      * @return JsonResponse
      */
-    public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse
-    {
+    public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse {
         $json = [];
         $code = 200;
 
@@ -168,6 +170,7 @@ class ApiElbrusTaxonomyController extends Controller
         if (!in_array($taxonomy_name, $this->names)) {
             $code = 400;
             $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
+
             return response()->json($json, $code);
         }
 
@@ -175,6 +178,7 @@ class ApiElbrusTaxonomyController extends Controller
         if (is_null($app)) {
             $code = 404;
             $json = ['code' => $code, 'App NOT found'];
+
             return response()->json($json, $code);
         }
 
@@ -182,6 +186,7 @@ class ApiElbrusTaxonomyController extends Controller
         if (is_null($term)) {
             $code = 404;
             $json = ['code' => $code, 'Term NOT found in taxonomy ' . $taxonomy_name];
+
             return response()->json($json, $code);
         }
 
@@ -190,8 +195,7 @@ class ApiElbrusTaxonomyController extends Controller
         return response()->json($tracks, $code);
     }
 
-    protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id)
-    {
+    protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id) {
         $tax = null;
 
         switch ($taxonomy_name) {

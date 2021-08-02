@@ -5,7 +5,7 @@
     </div>
     <div id="overlayPopup">
       <div style="height:100%">
-        <img id="popupImage" src="" style="height: 85%">
+        <img id="popupImage" src="" style="height: 85%;width: 70%;">
         <p id="popupImageLabel"></p>
 
       </div>
@@ -118,7 +118,7 @@ export default {
       controls: [
         new Zoom(),
         new ScaleLine(),
-        new FullScreen(),
+        /*new FullScreen(),*/
         new Attribution({
           collapsed: false,
           collapsible: false
@@ -156,10 +156,10 @@ export default {
               }
             } else if (
                 !poi && (feature.getGeometry().getType() === "LineString" ||
-                feature.getGeometry().getType() === "MultiLineString")
+                    feature.getGeometry().getType() === "MultiLineString")
             ) {
               let coord = (feature.getGeometry()).getClosestPoint(
-                  event.coordinate),
+                      event.coordinate),
 
                   dist = Math.round(
                       this.getFixedDistance(coord, event.coordinate)
@@ -170,7 +170,7 @@ export default {
               }
             } else if (
                 !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
-                feature.getGeometry().getType() === "MultiPolygon")
+                    feature.getGeometry().getType() === "MultiPolygon")
             ) {
               let area, poly = feature.getGeometry();
 
@@ -224,10 +224,10 @@ export default {
               }
             } else if (
                 !poi && (feature.getGeometry().getType() === "LineString" ||
-                feature.getGeometry().getType() === "MultiLineString")
+                    feature.getGeometry().getType() === "MultiLineString")
             ) {
               let coord = (feature.getGeometry()).getClosestPoint(
-                  event.coordinate),
+                      event.coordinate),
 
                   dist = Math.round(
                       this.getFixedDistance(coord, event.coordinate)
@@ -238,7 +238,7 @@ export default {
               }
             } else if (
                 !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
-                feature.getGeometry().getType() === "MultiPolygon")
+                    feature.getGeometry().getType() === "MultiPolygon")
             ) {
               let area, poly = feature.getGeometry();
 
@@ -458,7 +458,12 @@ export default {
 #overlayPopup .bottom-popup {
   background-color: white;
   height: 25px;
+  -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   margin-top: 0px;
+}
+
+.ol-full-screen button {
+  display: none !important;
 }
 </style>
