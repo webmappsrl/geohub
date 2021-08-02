@@ -184,7 +184,7 @@ class App extends Resource {
 
     protected function auth_panel() {
         return [
-            Toggle::make(__('Show Auth at startup'),'auth_show_at_startup')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
         ];
     }
 
@@ -213,6 +213,7 @@ class App extends Resource {
             Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
         ];
     }
+
     protected function offline_panel() {
         return [
             Toggle::make(__('Enable Offline'), 'offline_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
@@ -271,7 +272,8 @@ class App extends Resource {
                     <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/theme.json" target="_blank">Theme</a>
                     <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/when.json" target="_blank">When</a>
                     <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/where.json" target="_blank">Where</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a>';
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/webmapp_category.json" target="_blank">Webmapp Category</a>';
             })->asHtml()->onlyOnDetail(),
             Text::make(__('API List (Tracks)'), function ($tracks) {
                 $tracks = \App\Models\EcTrack::where('user_id', $this->model()->user_id)->get();

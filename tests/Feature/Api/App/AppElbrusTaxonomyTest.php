@@ -3,7 +3,9 @@
 namespace Tests\Feature\Api\App;
 
 use App\Models\App;
+use App\Models\EcPoi;
 use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
@@ -29,24 +31,21 @@ use Tests\TestCase;
  *
  * @package Tests\Feature
  */
-class AppElbrusTaxonomyTest extends TestCase
-{
+class AppElbrusTaxonomyTest extends TestCase {
     use RefreshDatabase;
 
     private $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 
-    public function testWrongTaxonomyReturns400()
-    {
+    public function testWrongTaxonomyReturns400() {
         $app = App::factory()->create();
         $uri = 'api/app/elbrus/' . $app->id . '/taxonomies/x.json';
         $result = $this->getJson($uri);
         $this->assertEquals(400, $result->getStatusCode());
     }
 
-    public function testNoAppReturns404ForAllValidTaxonomyName()
-    {
+    public function testNoAppReturns404ForAllValidTaxonomyName() {
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/0/taxonomies/$name.json";
             $result = $this->getJson($uri);
@@ -54,8 +53,7 @@ class AppElbrusTaxonomyTest extends TestCase
         }
     }
 
-    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy()
-    {
+    public function testAppWithNoTaxonomyReturns200EmptyForAllTaxonomy() {
         $app = App::factory()->create();
         foreach ($this->names as $name) {
             $uri = "api/app/elbrus/$app->id/taxonomies/$name.json";
@@ -65,8 +63,7 @@ class AppElbrusTaxonomyTest extends TestCase
         }
     }
 
-    public function testAppWithOneTrackWithOnlyOneActivityTerm()
-    {
+    public function testAppWithOneTrackWithOnlyOneActivityTerm() {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -98,8 +95,7 @@ class AppElbrusTaxonomyTest extends TestCase
         // Check other taxonomies
     }
 
-    public function testAppWithOneTrackWithOnlyOneThemeTerm()
-    {
+    public function testAppWithOneTrackWithOnlyOneThemeTerm() {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $theme = TaxonomyTheme::factory()->create();
@@ -129,8 +125,7 @@ class AppElbrusTaxonomyTest extends TestCase
 
     }
 
-    public function testAppWithOneTrackWithOnlyOneTerm()
-    {
+    public function testAppWithOneTrackWithOnlyOneTerm() {
         $names = ['activity', 'where', 'when', 'who', 'theme'];
         $names1 = $names;
         foreach ($names as $name) {
@@ -203,8 +198,7 @@ class AppElbrusTaxonomyTest extends TestCase
         }
     }
 
-    public function testAppWithOneTrackAndTwoActivityTerms()
-    {
+    public function testAppWithOneTrackAndTwoActivityTerms() {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -243,8 +237,7 @@ class AppElbrusTaxonomyTest extends TestCase
         $this->assertEquals('ec_track_' . $track->id, $json_term['items']['track'][0]);
     }
 
-    public function testAppWithTwoTracksAndOneActivityTerm()
-    {
+    public function testAppWithTwoTracksAndOneActivityTerm() {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -281,8 +274,7 @@ class AppElbrusTaxonomyTest extends TestCase
         $this->assertCount(2, $json_term['items']['track']);
     }
 
-    public function testWhereTaxonomyHasNoGeometry()
-    {
+    public function testWhereTaxonomyHasNoGeometry() {
         // CONTEXT: create user, activity,track,app and relations
         $user = User::factory()->create();
         $where = TaxonomyWhere::factory()->create();
@@ -306,5 +298,41 @@ class AppElbrusTaxonomyTest extends TestCase
         $json_term = $json['where_' . $where->id];
 
         $this->assertFalse(isset($json_term['geometry']));
+    }
+
+    public function testAppWithOneTrackWithOneActivityAndOnePoiWithOnePoiType() {
+        // CONTEXT: create user, activity,track,app and relations
+        $user = User::factory()->create();
+        $activity = TaxonomyActivity::factory()->create();
+        $poiType = TaxonomyPoiType::factory()->create();
+        $track = EcTrack::factory()->create();
+        $track->user_id = $user->id;
+        $track->save();
+        $track->taxonomyActivities()->sync([$activity->id]);
+        $poi = EcPoi::factory()->create();
+        $poi->save();
+        $poi->taxonomyPoiTypes()->sync([$poiType->id]);
+        $track->ecPois()->sync($poi->id);
+        $app = App::factory()->create();
+        $app->user_id = $user->id;
+        $app->save();
+
+        // Check activity term
+        // https://k.webmapp.it/caipontedera/taxonomies/activity.json
+
+        $uri = "api/app/elbrus/$app->id/taxonomies/webmapp_category.json";
+        $result = $this->getJson($uri);
+        $this->assertEquals(200, $result->getStatusCode());
+
+        $json = json_decode($result->content(), true);
+
+        $this->assertArrayHasKey('webmapp_category_' . $poiType->id, $json);
+        $this->assertCount(1, $json);
+
+        $json_term = $json['webmapp_category_' . $poiType->id];
+        $this->assertEquals('webmapp_category_' . $poiType->id, $json_term['id']);
+        $this->assertEquals($poiType->name, $json_term['name']['it']);
+        $this->assertEquals($poiType->description, $json_term['description']['it']);
+        $this->assertEquals('ec_poi_' . $poi->id, $json_term['items']['poi'][0]);
     }
 }
