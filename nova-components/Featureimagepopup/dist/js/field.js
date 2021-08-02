@@ -51596,7 +51596,7 @@ var staticRenderFns = [
     return _c("div", { attrs: { id: "overlayPopup" } }, [
       _c("div", { staticStyle: { height: "100%" } }, [
         _c("img", {
-          staticStyle: { height: "85%" },
+          staticStyle: { height: "85%", width: "70%" },
           attrs: { id: "popupImage", src: "" }
         }),
         _vm._v(" "),

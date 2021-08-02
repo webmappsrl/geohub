@@ -5,7 +5,7 @@
     </div>
     <div id="overlayPopup">
       <div style="height:100%">
-        <img id="popupImage" src="" style="height: 85%">
+        <img id="popupImage" src="" style="height: 85%;width: 70%;">
         <p id="popupImageLabel"></p>
 
       </div>
