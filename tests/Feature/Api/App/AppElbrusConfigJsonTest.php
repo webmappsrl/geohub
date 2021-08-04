@@ -373,9 +373,9 @@ EXTERNAL_OVERLAYS;
         $this->assertEquals(200, $response->getStatusCode());
         $json = json_decode($response->getContent());
 
-        $this->assertTrue(isset($json->OVERLAYS));
-        $this->assertTrue(isset($json->OVERLAYS->external_overlays));
-        $this->assertJson($external_overlays, $json->OVERLAYS->external_overlays);
+        $this->assertTrue(isset($json->MAP));
+        $this->assertTrue(isset($json->MAP->overlays));
+        $this->assertJson($external_overlays, json_encode($json->MAP->overlays));
     }
 
     /**
@@ -432,14 +432,14 @@ EXTERNAL_OVERLAYS;
         $this->assertTrue(in_array('en', $json->LANGUAGES->available));
     }
 
-
-    private function _getJsonfromAPP($app){
+    private function _getJsonfromAPP($app) {
         $user = User::factory()->create();
         $app = App::factory()->create($app);
-        $app->user_id=$user->id;
+        $app->user_id = $user->id;
         $app->save();
         $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
         $this->assertEquals(200, $response->getStatusCode());
+
         return json_decode($response->getContent());
     }
 
@@ -450,6 +450,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['auth_show_at_startup' => true]);
         $this->assertSame(true, $json->AUTH->showAtStartup);
     }
+
     /**
      * @test
      */
@@ -457,6 +458,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['auth_show_at_startup' => false]);
         $this->assertSame(false, $json->AUTH->showAtStartup);
     }
+
     /**
      * @test
      */
@@ -464,6 +466,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['offline_enable' => true]);
         $this->assertSame(true, $json->OFFLINE->enable);
     }
+
     /**
      * @test
      */
@@ -471,6 +474,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['offline_enable' => false]);
         $this->assertSame(false, $json->OFFLINE->enable);
     }
+
     /**
      * @test
      */
@@ -478,6 +482,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['offline_force_auth' => true]);
         $this->assertSame(true, $json->OFFLINE->forceAuth);
     }
+
     /**
      * @test
      */
@@ -485,6 +490,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['offline_force_auth' => false]);
         $this->assertSame(false, $json->OFFLINE->forceAuth);
     }
+
     /**
      * @test
      */
@@ -492,6 +498,7 @@ EXTERNAL_OVERLAYS;
         $json = $this->_getJsonfromAPP(['geolocation_record_enable' => true]);
         $this->assertSame(true, $json->GEOLOCATION->record->enable);
     }
+
     /**
      * @test
      */

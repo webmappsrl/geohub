@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AppController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\App $app
+     * @param int $id the app id in the database
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function config(int $id) {
         $app = App::find($id);
@@ -44,6 +46,11 @@ class AppController extends Controller {
         $data['MAP']['layers'][0]['label'] = 'Mappa';
         $data['MAP']['layers'][0]['type'] = 'maptile';
         $data['MAP']['layers'][0]['tilesUrl'] = 'https://api.webmapp.it/tiles/';
+        try {
+            $data['MAP']['overlays'] = json_decode($app->external_overlays);
+        } catch (\Exception $e) {
+            Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
+        }
 
         // THEME section
         $data['THEME']['fontFamilyHeader'] = $app->fontFamilyHeader;
@@ -72,14 +79,12 @@ class AppController extends Controller {
         // ROUTING section
         $data['ROUTING']['enable'] = $app->enableRouting;
 
-        $data['OVERLAYS']['external_overlays'] = nl2br($app->external_overlays);
-
         // REPORT SECION
         $data['REPORTS'] = $this->_getReportSection();
 
         // GEOLOCATIONS SECTION
         $data['GEOLOCATION']['record']['enable'] = false;
-        if($app->geolocation_record_enable) {
+        if ($app->geolocation_record_enable) {
             $data['GEOLOCATION']['record']['enable'] = true;
         }
         $data['GEOLOCATION']['record']['export'] = true;
@@ -87,7 +92,7 @@ class AppController extends Controller {
 
         // AUTH section
         $data['AUTH']['showAtStartup'] = false;
-        if($app->auth_show_at_startup) {
+        if ($app->auth_show_at_startup) {
             $data['AUTH']['showAtStartup'] = true;
         }
         $data['AUTH']['enable'] = true;
@@ -95,14 +100,13 @@ class AppController extends Controller {
 
         // OFFLINE section
         $data['OFFLINE']['enable'] = false;
-        if($app->offline_enable) {
+        if ($app->offline_enable) {
             $data['OFFLINE']['enable'] = true;
         }
         $data['OFFLINE']['forceAuth'] = false;
-        if($app->offline_force_auth) {
+        if ($app->offline_force_auth) {
             $data['OFFLINE']['forceAuth'] = true;
         }
-
 
         return response()->json($data, 200);
     }
