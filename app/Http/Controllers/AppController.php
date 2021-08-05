@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AppController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\App $app
+     * @param int $id the app id in the database
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function config(int $id) {
         $app = App::find($id);
@@ -44,6 +46,11 @@ class AppController extends Controller {
         $data['MAP']['layers'][0]['label'] = 'Mappa';
         $data['MAP']['layers'][0]['type'] = 'maptile';
         $data['MAP']['layers'][0]['tilesUrl'] = 'https://api.webmapp.it/tiles/';
+        try {
+            $data['MAP']['overlays'] = json_decode($app->external_overlays);
+        } catch (\Exception $e) {
+            Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
+        }
 
         // THEME section
         $data['THEME']['fontFamilyHeader'] = $app->fontFamilyHeader;
@@ -69,17 +76,32 @@ class AppController extends Controller {
         $data['TABLES']['details']['showKmlDownload'] = $app->showKmlDownload;
         $data['TABLES']['details']['showRelatedPoi'] = $app->showRelatedPoi;
 
+        $data['TABLES']['details']['hide_duration:forward'] = !$app->table_details_show_duration_forward;
+        $data['TABLES']['details']['hide_duration:backward'] = !$app->table_details_show_duration_backward;
+        $data['TABLES']['details']['hide_distance'] = !$app->table_details_show_distance;
+        $data['TABLES']['details']['hide_ascent'] = !$app->table_details_show_ascent;
+        $data['TABLES']['details']['hide_descent'] = !$app->table_details_show_descent;
+        $data['TABLES']['details']['hide_ele:max'] = !$app->table_details_show_ele_max;
+        $data['TABLES']['details']['hide_ele:min'] = !$app->table_details_show_ele_min;
+        $data['TABLES']['details']['hide_ele:from'] = !$app->table_details_show_ele_from;
+        $data['TABLES']['details']['hide_ele:to'] = !$app->table_details_show_ele_to;
+        $data['TABLES']['details']['hide_scale'] = !$app->table_details_show_scale;
+        $data['TABLES']['details']['hide_cai_scale'] = !$app->table_details_show_cai_scale;
+        $data['TABLES']['details']['hide_mtb_scale'] = !$app->table_details_show_mtb_scale;
+        $data['TABLES']['details']['hide_ref'] = !$app->table_details_show_ref;
+        $data['TABLES']['details']['hide_surface'] = !$app->table_details_show_surface;
+        $data['TABLES']['details']['showGeojsonDownload'] = !!$app->table_details_show_geojson_download;
+        $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
+
         // ROUTING section
         $data['ROUTING']['enable'] = $app->enableRouting;
-
-        $data['OVERLAYS']['external_overlays'] = nl2br($app->external_overlays);
 
         // REPORT SECION
         $data['REPORTS'] = $this->_getReportSection();
 
         // GEOLOCATIONS SECTION
         $data['GEOLOCATION']['record']['enable'] = false;
-        if($app->geolocation_record_enable) {
+        if ($app->geolocation_record_enable) {
             $data['GEOLOCATION']['record']['enable'] = true;
         }
         $data['GEOLOCATION']['record']['export'] = true;
@@ -87,7 +109,7 @@ class AppController extends Controller {
 
         // AUTH section
         $data['AUTH']['showAtStartup'] = false;
-        if($app->auth_show_at_startup) {
+        if ($app->auth_show_at_startup) {
             $data['AUTH']['showAtStartup'] = true;
         }
         $data['AUTH']['enable'] = true;
@@ -95,14 +117,13 @@ class AppController extends Controller {
 
         // OFFLINE section
         $data['OFFLINE']['enable'] = false;
-        if($app->offline_enable) {
+        if ($app->offline_enable) {
             $data['OFFLINE']['enable'] = true;
         }
         $data['OFFLINE']['forceAuth'] = false;
-        if($app->offline_force_auth) {
+        if ($app->offline_force_auth) {
             $data['OFFLINE']['forceAuth'] = true;
         }
-
 
         return response()->json($data, 200);
     }

@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Bernhardh\NovaIconSelect\IconProvider;
 
-class WmpIconProvider extends IconProvider
-{
-    public function __construct()
-    {
+class WebmappAppIconProvider extends IconProvider {
+    public function __construct() {
         $json = file_get_contents('css/icons/webmapp-icons/selection.json');
         $content = json_decode($json, true);
         $options = array();
@@ -19,6 +18,7 @@ class WmpIconProvider extends IconProvider
                 'search' => explode('-', $icon['properties']['name'])
             ];
         }
+
         $this->setOptions($options);
     }
 }
