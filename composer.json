@@ -111,14 +111,6 @@
         },
         {
             "type": "path",
-            "url": "./nova-components/Import"
-        },
-        {
-            "type": "path",
-            "url": "./nova-components/Import"
-        },
-        {
-            "type": "path",
             "url": "./nova-components/Ecmediapopup"
         },
         {

@@ -76,6 +76,23 @@ class AppController extends Controller {
         $data['TABLES']['details']['showKmlDownload'] = $app->showKmlDownload;
         $data['TABLES']['details']['showRelatedPoi'] = $app->showRelatedPoi;
 
+        $data['TABLES']['details']['hide_duration:forward'] = !$app->table_details_show_duration_forward;
+        $data['TABLES']['details']['hide_duration:backward'] = !$app->table_details_show_duration_backward;
+        $data['TABLES']['details']['hide_distance'] = !$app->table_details_show_distance;
+        $data['TABLES']['details']['hide_ascent'] = !$app->table_details_show_ascent;
+        $data['TABLES']['details']['hide_descent'] = !$app->table_details_show_descent;
+        $data['TABLES']['details']['hide_ele:max'] = !$app->table_details_show_ele_max;
+        $data['TABLES']['details']['hide_ele:min'] = !$app->table_details_show_ele_min;
+        $data['TABLES']['details']['hide_ele:from'] = !$app->table_details_show_ele_from;
+        $data['TABLES']['details']['hide_ele:to'] = !$app->table_details_show_ele_to;
+        $data['TABLES']['details']['hide_scale'] = !$app->table_details_show_scale;
+        $data['TABLES']['details']['hide_cai_scale'] = !$app->table_details_show_cai_scale;
+        $data['TABLES']['details']['hide_mtb_scale'] = !$app->table_details_show_mtb_scale;
+        $data['TABLES']['details']['hide_ref'] = !$app->table_details_show_ref;
+        $data['TABLES']['details']['hide_surface'] = !$app->table_details_show_surface;
+        $data['TABLES']['details']['showGeojsonDownload'] = !!$app->table_details_show_geojson_download;
+        $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
+
         // ROUTING section
         $data['ROUTING']['enable'] = $app->enableRouting;
 

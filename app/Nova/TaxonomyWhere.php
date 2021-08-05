@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\Providers\WmpIconProvider;
+use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\IconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
@@ -26,9 +26,7 @@ use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Tsungsoft\ErrorMessage\ErrorMessage;
 
-class TaxonomyWhere extends Resource
-{
-
+class TaxonomyWhere extends Resource {
     /**
      * The model the resource corresponds to.
      *
@@ -52,8 +50,7 @@ class TaxonomyWhere extends Resource
         'author'
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Taxonomies');
     }
 
@@ -64,8 +61,7 @@ class TaxonomyWhere extends Resource
      *
      * @return array
      */
-    public function fields(Request $request): array
-    {
+    public function fields(Request $request): array {
         return [
             ErrorMessage::make('Error'),
 
@@ -79,7 +75,7 @@ class TaxonomyWhere extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Swatches::make('Color'),
             Number::make('Zindex')->hideFromIndex(),
-            NovaIconSelect::make("Icon")->setIconProvider(WmpIconProvider::class),
+            NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -90,6 +86,7 @@ class TaxonomyWhere extends Resource
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
+
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating()->hideFromIndex(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
@@ -104,18 +101,17 @@ class TaxonomyWhere extends Resource
         ];
     }
 
-    protected function ux_ui_panel()
-    {
+    protected function ux_ui_panel() {
         return [
             NovaSliderField::make(__('Stroke Width'), 'stroke_width')->min(0.5)->max(10)->default(2.5)->interval(0.5)->onlyOnForms(),
             NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(0)->max(1)->default(0)->interval(0.01)->onlyOnForms(),
             Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator')->hideFromIndex(),
             NovaSliderField::make(__('Min Visible Zoom'), 'min_visible_zoom')->min(5)->max(19)->default(5)->onlyOnForms(),
-            NovaSliderField::make(__('Max Sizes Zoom'), 'min_size_zoom')->min(5)->max(19)->default(19)->onlyOnForms(),
-            NovaSliderField::make(__('Min Size'), 'min_size')->min(0.1)->max(4)->default(1)->onlyOnForms(),
-            NovaSliderField::make(__('Max Size'), 'max_size')->min(0.1)->max(4)->default(4)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(0)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Size'), 'icon_size')->min(0.1)->max(4)->default(0.1)->onlyOnForms(),
+            NovaSliderField::make(__('Max Size Zoom'), 'min_size_zoom')->min(5)->max(19)->default(15)->onlyOnForms(),
+            NovaSliderField::make(__('Min Size'), 'min_size')->min(0.1)->max(4)->default(1)->interval(0.1)->onlyOnForms(),
+            NovaSliderField::make(__('Max Size'), 'max_size')->min(0.1)->max(4)->default(2)->interval(0.1)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(15)->onlyOnForms(),
+            NovaSliderField::make(__('Icon Size'), 'icon_size')->min(0.1)->max(4)->default(01.7)->interval(0.1)->onlyOnForms(),
 
             Number::make(__('Stroke Width'), 'stroke_width')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             Number::make(__('Stroke Opacity'), 'stroke_opacity')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
@@ -135,8 +131,7 @@ class TaxonomyWhere extends Resource
      *
      * @return array
      */
-    public function cards(Request $request): array
-    {
+    public function cards(Request $request): array {
         return [];
     }
 
@@ -147,8 +142,7 @@ class TaxonomyWhere extends Resource
      *
      * @return array
      */
-    public function filters(Request $request): array
-    {
+    public function filters(Request $request): array {
         return [];
     }
 
@@ -159,8 +153,7 @@ class TaxonomyWhere extends Resource
      *
      * @return array
      */
-    public function lenses(Request $request): array
-    {
+    public function lenses(Request $request): array {
         return [];
     }
 
@@ -171,8 +164,7 @@ class TaxonomyWhere extends Resource
      *
      * @return array
      */
-    public function actions(Request $request): array
-    {
+    public function actions(Request $request): array {
         return [];
     }
 }

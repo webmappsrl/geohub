@@ -230,12 +230,33 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertTrue(isset($json->TABLES));
         $this->assertTrue(isset($json->TABLES->details));
         $fields = [
-            'showGpxDownload',
-            'showKmlDownload',
-            'showRelatedPoi',
+            'showGpxDownload' => 'showGpxDownload',
+            'showKmlDownload' => 'showKmlDownload',
+            'showRelatedPoi' => 'showRelatedPoi',
+            'table_details_show_geojson_download' => 'showGeojsonDownload',
+            'table_details_show_shapefile_download' => 'showShapefileDownload'
         ];
-        foreach ($fields as $field) {
-            $this->assertEquals($app->$field, $json->TABLES->details->$field);
+        $invertedFields = [
+            'table_details_show_duration_forward' => 'hide_duration:forward',
+            'table_details_show_duration_backward' => 'hide_duration:backward',
+            'table_details_show_distance' => 'hide_distance',
+            'table_details_show_ascent' => 'hide_ascent',
+            'table_details_show_descent' => 'hide_descent',
+            'table_details_show_ele_max' => 'hide_ele:max',
+            'table_details_show_ele_min' => 'hide_ele:min',
+            'table_details_show_ele_from' => 'hide_ele:from',
+            'table_details_show_ele_to' => 'hide_ele:to',
+            'table_details_show_scale' => 'hide_scale',
+            'table_details_show_cai_scale' => 'hide_cai_scale',
+            'table_details_show_mtb_scale' => 'hide_mtb_scale',
+            'table_details_show_ref' => 'hide_ref',
+            'table_details_show_surface' => 'hide_surface',
+        ];
+        foreach ($fields as $modelField => $field) {
+            $this->assertEquals($app->$modelField, $json->TABLES->details->$field);
+        }
+        foreach ($invertedFields as $modelField => $field) {
+            $this->assertEquals($app->$modelField, !$json->TABLES->details->$field);
         }
     }
 
