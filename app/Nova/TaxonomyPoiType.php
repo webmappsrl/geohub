@@ -71,7 +71,7 @@ class TaxonomyPoiType extends Resource {
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Swatches::make('Color'),
             Number::make('Zindex')->hideFromIndex(),
-            NovaIconSelect::make("Icon")->setIconProvider(WmIconProvider::class),
+            NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
