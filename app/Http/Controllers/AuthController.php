@@ -22,7 +22,7 @@ class AuthController extends Controller {
      * @return JsonResponse
      */
     public function signup(): JsonResponse {
-        $credentials = request(['email', 'password', 'last_name', 'referrer']);
+        $credentials = request(['email', 'password', 'name', 'last_name', 'referrer']);
 
         if (!isset($credentials['email']) || !isset($credentials['password'])) {
             $message = "";
@@ -43,8 +43,6 @@ class AuthController extends Controller {
             return response()->json(array_merge($this->me()->getData('true'), $tokenArray->getData('true')));
         }
 
-        $credentials = array_merge($credentials, request(['name']));
-
         if (!isset($credentials['name'])) {
             return response()->json([
                 'error' => "Missing mandatory parameter(s): 'name'",
@@ -52,17 +50,11 @@ class AuthController extends Controller {
             ], 400);
         }
 
-        if (!isset($credentials['last_name'])) {
-            return response()->json([
-                'error' => "Missing mandatory parameter(s): 'last_name'",
-                'code' => 400
-            ], 400);
-        }
-
         $user = new User();
         $user->password = bcrypt($credentials['password']);
         $user->name = $credentials['name'];
-        $user->last_name = $credentials['last_name'];
+        if (isset($credentials['last_name']))
+            $user->last_name = $credentials['last_name'];
         $user->email = $credentials['email'];
         $user->email_verified_at = now();
         if (isset($credentials['referrer']))
