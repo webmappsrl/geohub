@@ -16,7 +16,7 @@ body.min-w-site {
     padding-top: 20px;
 }
 
-.content {
+#nova > div > .content {
     position: fixed;
     left: 13.75rem;
     right: 0;
