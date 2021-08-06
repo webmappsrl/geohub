@@ -22,8 +22,7 @@ use Vyuldashev\NovaPermission\Role;
 use Vyuldashev\NovaPermission\RoleBooleanGroup;
 use Vyuldashev\NovaPermission\RoleSelect;
 
-class User extends Resource
-{
+class User extends Resource {
     /**
      * The model the resource corresponds to.
      *
@@ -45,8 +44,7 @@ class User extends Resource
         'id', 'name', 'email',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Admin');
     }
 
@@ -57,8 +55,7 @@ class User extends Resource
      *
      * @return array
      */
-    public function fields(Request $request): array
-    {
+    public function fields(Request $request): array {
         return [
             Avatar::make('Avatar')->disk('public'),
             /*Avatar::make('Avatar')->store(function (Request $request, $model) {
@@ -90,6 +87,8 @@ class User extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
+            Text::make(__('Referrer'))->onlyOnDetail()->sortable(),
+
             RoleSelect::make('Role', 'roles')->showOnCreating(function () {
                 $user = \App\Models\User::getEmulatedUser();
 
@@ -104,7 +103,6 @@ class User extends Resource
         ];
     }
 
-
     /**
      * Get the cards available for the request.
      *
@@ -112,8 +110,7 @@ class User extends Resource
      *
      * @return array
      */
-    public function cards(Request $request): array
-    {
+    public function cards(Request $request): array {
         return [];
     }
 
@@ -124,8 +121,7 @@ class User extends Resource
      *
      * @return array
      */
-    public function filters(Request $request): array
-    {
+    public function filters(Request $request): array {
         return [];
     }
 
@@ -136,8 +132,7 @@ class User extends Resource
      *
      * @return array
      */
-    public function lenses(Request $request): array
-    {
+    public function lenses(Request $request): array {
         return [];
     }
 
@@ -148,8 +143,7 @@ class User extends Resource
      *
      * @return array
      */
-    public function actions(Request $request): array
-    {
+    public function actions(Request $request): array {
         return [
             (new EmulateUser())
                 ->canSee(function ($request) {
