@@ -7,15 +7,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
     }
 
     /**
@@ -23,9 +21,8 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function signup(): JsonResponse
-    {
-        $credentials = request(['email', 'password', 'last_name']);
+    public function signup(): JsonResponse {
+        $credentials = request(['email', 'password', 'last_name', 'referrer']);
 
         if (!isset($credentials['email']) || !isset($credentials['password'])) {
             $message = "";
@@ -68,6 +65,8 @@ class AuthController extends Controller
         $user->last_name = $credentials['last_name'];
         $user->email = $credentials['email'];
         $user->email_verified_at = now();
+        if (isset($credentials['referrer']))
+            $user->referrer = $credentials['referrer'];
         $user->save();
         $role = Role::where('name', '=', 'Contributor')->first();
         $user->roles()->sync([$role->id]);
@@ -87,8 +86,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function login(): JsonResponse
-    {
+    public function login(): JsonResponse {
         $credentials = request(['email', 'password']);
 
         if (!$token = auth('api')->attempt($credentials)) {
@@ -105,14 +103,18 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function me(): JsonResponse
-    {
+    public function me(): JsonResponse {
         $user = auth('api')->user();
         $roles = array_map(function ($value) {
             return strtolower($value);
         }, $user->roles->pluck('name')->toArray());
 
-        return response()->json(array_merge($user->toArray(), ['roles' => $roles]));
+        $result = array_merge($user->toArray(), ['roles' => $roles]);
+
+        unset($result['referrer']);
+        unset($result['password']);
+
+        return response()->json($result);
     }
 
     /**
@@ -120,8 +122,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function logout(): JsonResponse
-    {
+    public function logout(): JsonResponse {
         auth('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
@@ -132,8 +133,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function refresh(): JsonResponse
-    {
+    public function refresh(): JsonResponse {
         return $this->respondWithToken(auth('api')->refresh());
     }
 
@@ -144,8 +144,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    protected function respondWithToken(string $token): JsonResponse
-    {
+    protected function respondWithToken(string $token): JsonResponse {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

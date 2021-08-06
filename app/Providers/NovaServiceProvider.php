@@ -18,7 +18,9 @@ use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\NewUgcTracks;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
@@ -26,15 +28,13 @@ use Silvanite\NovaToolPermissions\NovaToolPermissions;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
 use Webmapp\Import\Import;
 
-class NovaServiceProvider extends NovaApplicationServiceProvider
-{
+class NovaServiceProvider extends NovaApplicationServiceProvider {
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         parent::boot();
     }
 
@@ -43,8 +43,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function routes()
-    {
+    protected function routes() {
         Nova::routes()
             ->withAuthenticationRoutes()
             ->withPasswordResetRoutes()
@@ -58,13 +57,26 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    protected function gate()
-    {
+    protected function gate() {
         Gate::define('viewNova', function ($user) {
-            return true;
-            //            in_array($user->email, [
-            //                'team@webmapp.it'
-            //            ]);
+            $usersEmails = DB::select('
+                SELECT DISTINCT users.email as email
+                FROM users JOIN model_has_roles
+                    ON users.id = model_id
+                           AND model_type = \'App\Models\User\'
+                WHERE role_id IN (
+                    SELECT id
+                    FROM roles
+                    WHERE LOWER(name) IN (\'admin\', \'author\',\'editor\')
+                );');
+
+            $emails = [];
+
+            foreach ($usersEmails as $row) {
+                $emails[] = $row->email;
+            }
+
+            return in_array($user->email, $emails);
         });
     }
 
@@ -73,8 +85,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    protected function cards()
-    {
+    protected function cards() {
         $cards = [];
         $currentUser = User::getEmulatedUser();
 
@@ -105,8 +116,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    protected function dashboards()
-    {
+    protected function dashboards() {
         return [];
     }
 
@@ -115,8 +125,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return array
      */
-    public function tools(): array
-    {
+    public function tools(): array {
         return [
             NovaPermissionTool::make()
                 ->rolePolicy(RolePolicy::class)
@@ -130,8 +139,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         Nova::sortResourcesBy(function ($resource) {
             return $resource::$priority ?? 99999;
         });
