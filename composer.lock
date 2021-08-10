@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5874f2feb18bc3ba0c7cf412da99dca1",
+    "content-hash": "f2735dc27dcb9e8e2b1e12a41c9b14a1",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -7985,42 +7985,6 @@
             "autoload": {
                 "psr-4": {
                     "Webmapp\\Ecpoipopup\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
-            "name": "webmapp/featureimagepoipopup",
-            "version": "dev-develop",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/Featureimagepoipopup",
-                "reference": "438856fc3ef1a9713dda4fb82226dd6df0c864f1"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Webmapp\\Featureimagepoipopup\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmapp\\Featureimagepoipopup\\": "src/"
                 }
             },
             "license": [

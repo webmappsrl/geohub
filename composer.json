@@ -43,7 +43,6 @@
     "webmapp/ecmediapoipopup": "dev-develop",
     "webmapp/ecmediapopup": "*",
     "webmapp/ecpoipopup": "*",
-    "webmapp/featureimagepoipopup": "*",
     "webmapp/featureimagepopup": "*",
     "webmapp/import": "*",
     "webmapp/wm-embedmaps-field": "*",
@@ -121,10 +120,6 @@
     {
       "type": "path",
       "url": "nova-components/FeatureImagePopup"
-    },
-    {
-      "type": "path",
-      "url": "./nova-components/Featureimagepoipopup"
     },
     {
       "type": "path",

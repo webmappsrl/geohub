@@ -18,8 +18,6 @@
     "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod",
     "build-featureimagepopup": "cd nova-components/FeatureImagePopup && npm run dev",
     "build-featureimagepopup-prod": "cd nova-components/FeatureImagePopup && npm run prod",
-    "build-featureimagepoipopup": "cd nova-components/Featureimagepoipopup && npm run dev",
-    "build-featureimagepoipopup-prod": "cd nova-components/Featureimagepoipopup && npm run prod",
     "build-ecpoipopup": "cd nova-components/Ecpoipopup && npm run dev",
     "build-ecpoipopup-prod": "cd nova-components/Ecpoipopup && npm run prod"
   },

@@ -41,4 +41,8 @@ class FeatureImagePopup extends Field {
     public function feature(array $geojson) {
         return $this->withMeta(['geojson' => $geojson]);
     }
+
+    public function apiBaseUrl(string $url) {
+        return $this->withMeta(['apiBaseUrl' => $url]);
+    }
 }

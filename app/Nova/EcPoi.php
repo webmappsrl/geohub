@@ -21,7 +21,7 @@ use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapoipopup\Ecmediapoipopup;
-use Webmapp\Featureimagepoipopup\Featureimagepoipopup;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcPoi extends Resource {
@@ -98,8 +98,10 @@ class EcPoi extends Resource {
                     'feature' => $model->id ? $model->getGeojson() : null,
                 ];
             })->required()->hideFromIndex(),
-            Featureimagepoipopup::make(__('Feature Image'))->onlyOnForms()->feature($geojson),
-            //BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/poi/'),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {

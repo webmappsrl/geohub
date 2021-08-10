@@ -21,7 +21,7 @@
           <br>
         </div>
         <button type="button" class="btn btn-primary btn-default" @click="openModal()">
-          Select EcMedia
+          Select image
         </button>
       </template>
     </default-field>
@@ -35,13 +35,13 @@
                 <div class="modal-header">
                   <div style="display:flex">
                     <tabs>
-                      <tab name="Media associati alla track" :selected="true">
+                      <tab name="Media associati" :selected="true">
 
                         <div class="modal-body flex flex-wrap">
                           <div class="modal-image-list w-1/2">
-                            <p class="subtitle">Seleziona i Media Georeferenziati nelle
-                              vicinanze
-                              della traccia</p>
+                            <p class="subtitle">
+                              Select the geolocated media nearby
+                            </p>
                             <div class="media-list flex flex-wrap"
                                  @mouseover="hideOverlay()">
                               <div class="image ec-media-image"
@@ -51,7 +51,7 @@
                                    @click="toggleImage(media.properties)"
                                    @mouseover="showOverlay(media.properties.id, $event)">
                                 <div class="select-overlay">
-                                  Seleziona
+                                  Select
                                 </div>
                                 <img src="/Vector.png"
                                      class="vector-visible"
@@ -61,7 +61,8 @@
                             </div>
                           </div>
                           <div class="map w-1/2 text-center">
-                            <MapComponent :feature="field.geojson" :media="mediaList"
+                            <MapComponent :feature="field.geojson"
+                                          :media="mediaList"
                                           :selectedMedia="selectedMedia"
                                           :loadedImages="loadedImages"
                                           ref="mapComponent"></MapComponent>
@@ -71,13 +72,13 @@
                       <tab name="Carica Media">
 
                         <div class="modal-body text-center">
-                          <p class="py-1"><b>Trascina </b>i file da caricare <br>
-                            oppure</p>
+                          <p class="py-1"><b>Drag </b>the files to upload <br>
+                            or</p>
                           <input dusk="ecmedia" type="file" id="file-ec-tracks-ecmedia"
                                  name="name"
                                  class="form-file-input select-none">
                           <label for="file-ec-tracks-ecmedia"
-                                 class="form-file-btn btn btn-default btn-primary select-none"><span>Scegli File</span></label>
+                                 class="form-file-btn btn btn-default btn-primary select-none"><span>Select File</span></label>
                         </div>
                       </tab>
                     </tabs>
@@ -86,7 +87,7 @@
 
                 <div class="modal-footer">
                   <button class="btn btn-primary btn-default" @click="loadImages()">
-                    Carica Selezionati
+                    Upload selected
                   </button>
                 </div>
               </div>
@@ -126,23 +127,26 @@ export default {
     }
   },
   mounted() {
-    axios.get('/api/ec/track/' + this.resourceId + '/feature_image')
+    console.log(this)
+    if (!this.field.apiBaseUrl) this.field.apiBaseUrl = "/api/ec/track/";
+    axios.get(this.field.apiBaseUrl + this.resourceId + '/feature_image')
       .then(response => {
         this.selectedMedia = [];
         this.associatedMediaList = response.data;
         this.associatedMediaList.forEach(element => {
-          this.loadedImages.push(element)
-          this.selectedMedia.push(element.id)
+          if (!!element && !!element.id) {
+            this.loadedImages.push(element)
+            this.selectedMedia.push(element.id)
+          }
         });
       });
   },
   methods: {
     mount() {
-      axios.get('/api/ec/track/' + this.resourceId + '/near_points')
+      axios.get(this.field.apiBaseUrl + this.resourceId + '/near_points')
         .then(response => {
           this.mediaList = response.data;
         });
-
     },
     openModal() {
       this.modalOpen = true;

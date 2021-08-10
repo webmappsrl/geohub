@@ -13,7 +13,7 @@
             <li class="nav-item">
               <a class="nav-link active" id="associatedMedia-tab" data-toggle="tab" href="#associatedMedia" role="tab"
                  aria-controls="associatedMedia"
-                 aria-selected="true">Media associati alla Track</a>
+                 aria-selected="true">Media associati</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="uploadMedia-tab" data-toggle="tab" href="#uploadMedia" role="tab"
