@@ -1,23 +1,21 @@
 <?php
 
-namespace Webmapp\Featureimagepopup;
+namespace Webmapp\FeatureImagePopup;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Featureimagepopup extends Field
-{
+class FeatureImagePopup extends Field {
     /**
      * The field's component.
      *
      * @var string
      */
-    public $component = 'featureimagepopup';
+    public $component = 'feature-image-popup';
 
-    protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
-    {
+    protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute) {
         if ($request[$requestAttribute] == 'undefined') {
             $relation = Relation::noConstraints(function () use ($model) {
                 return $model->{$this->attribute}();
@@ -40,9 +38,7 @@ class Featureimagepopup extends Field
         }
     }
 
-
-    public function feature(array $geojson)
-    {
+    public function feature(array $geojson) {
         return $this->withMeta(['geojson' => $geojson]);
     }
 }

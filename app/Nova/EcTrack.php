@@ -22,7 +22,7 @@ use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
 use Webmapp\Ecmediapopup\Ecmediapopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
-use Webmapp\Featureimagepopup\Featureimagepopup;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcTrack extends Resource {
@@ -101,7 +101,7 @@ class EcTrack extends Resource {
                 ];
             })->hideFromIndex()->hideWhenCreating(),
             //BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
-            Featureimagepopup::make(__('FeatureImage'))->onlyOnForms()->feature($geojson),
+            FeatureImagePopup::make(__('FeatureImage'))->onlyOnForms()->feature($geojson),
             Ecpoipopup::make(__('EcPoi'))->nullable()->onlyOnForms()->feature($geojson),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';

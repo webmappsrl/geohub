@@ -1,39 +1,39 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production",
-        "build-raw-gallery": "cd nova-components/RawGallery && npm run dev",
-        "build-raw-gallery-prod": "cd nova-components/RawGallery && npm run prod",
-        "build-wm-embedmaps-field": "cd nova-components/WmEmbedmapsField && npm run dev",
-        "build-wm-embedmaps-field-prod": "cd nova-components/WmEmbedmapsField && npm run prod",
-        "build-import": "cd nova-components/Import && npm run dev",
-        "build-import-prod": "cd nova-components/Import && npm run prod",
-        "build-ecmediapopup": "cd nova-components/Ecmediapopup && npm run dev",
-        "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod",
-        "build-featureimagepopup": "cd nova-components/Featureimagepopup && npm run dev",
-        "build-featureimagepopup-prod": "cd nova-components/Featureimagepopup && npm run prod",
-        "build-featureimagepoipopup": "cd nova-components/Featureimagepoipopup && npm run dev",
-        "build-featureimagepoipopup-prod": "cd nova-components/Featureimagepoipopup && npm run prod",
-        "build-ecpoipopup": "cd nova-components/Ecpoipopup && npm run dev",
-        "build-ecpoipopup-prod": "cd nova-components/Ecpoipopup && npm run prod"
-    },
-    "devDependencies": {
-        "axios": "^0.21",
-        "laravel-mix": "^6.0.6",
-        "lodash": "^4.17.19",
-        "postcss": "^8.1.14",
-        "resolve-url-loader": "^3.1.3",
-        "sass": "^1.35.1",
-        "sass-loader": "^10.2.0"
-    },
-    "dependencies": {
-        "cypress": "^7.1.0",
-        "portal-vue": "^2.1.7"
-    }
+  "private": true,
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production",
+    "build-raw-gallery": "cd nova-components/RawGallery && npm run dev",
+    "build-raw-gallery-prod": "cd nova-components/RawGallery && npm run prod",
+    "build-wm-embedmaps-field": "cd nova-components/WmEmbedmapsField && npm run dev",
+    "build-wm-embedmaps-field-prod": "cd nova-components/WmEmbedmapsField && npm run prod",
+    "build-import": "cd nova-components/Import && npm run dev",
+    "build-import-prod": "cd nova-components/Import && npm run prod",
+    "build-ecmediapopup": "cd nova-components/Ecmediapopup && npm run dev",
+    "build-ecmediapopup-prod": "cd nova-components/Ecmediapopup && npm run prod",
+    "build-featureimagepopup": "cd nova-components/FeatureImagePopup && npm run dev",
+    "build-featureimagepopup-prod": "cd nova-components/FeatureImagePopup && npm run prod",
+    "build-featureimagepoipopup": "cd nova-components/Featureimagepoipopup && npm run dev",
+    "build-featureimagepoipopup-prod": "cd nova-components/Featureimagepoipopup && npm run prod",
+    "build-ecpoipopup": "cd nova-components/Ecpoipopup && npm run dev",
+    "build-ecpoipopup-prod": "cd nova-components/Ecpoipopup && npm run prod"
+  },
+  "devDependencies": {
+    "axios": "^0.21",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "postcss": "^8.1.14",
+    "resolve-url-loader": "^3.1.3",
+    "sass": "^1.35.1",
+    "sass-loader": "^10.2.0"
+  },
+  "dependencies": {
+    "cypress": "^7.1.0",
+    "portal-vue": "^2.1.7"
+  }
 }
