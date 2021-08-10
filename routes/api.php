@@ -54,7 +54,6 @@ Route::name('api.')->group(function () {
         'middleware' => 'auth.jwt',
     ], function ($router) {
         Route::prefix('ugc')->name('ugc.')->group(function () {
-            // Route::resource('poi', UgcPoiController::class, ['model' => UgcPoi::class]);
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
                 Route::get("index", function () {
@@ -163,7 +162,7 @@ Route::name('api.')->group(function () {
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
             Route::get("/{id}", [EditorialContentController::class, 'getEcJson'])->name('json');
-            Route::put("/update/{id}", [EditorialContentController::class, 'updateEcTrack'])->name('update');
+            Route::put("/update/{id}", [EcTrackController::class, 'updateComputedData'])->name('update');
             Route::prefix('download')->group(function () {
                 Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
                 Route::get("/{id}.gpx", [EditorialContentController::class, 'downloadEcGpx'])->name('download.gpx');
@@ -189,8 +188,8 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
             Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
             Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
-            Route::get("/{id}/resources/icon512.png", [AppController::class, 'iconSmall'])->name('icon_small');
-            Route::get("/{id}/resources/featured.png", [AppController::class, 'featureImage'])->name('feature_image');
+            Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
+            Route::get("/{id}/resources/feature_image.png", [AppController::class, 'featureImage'])->name('feature_image');
             Route::get("/{app_id}/geojson/ec_poi_{poi_id}.geojson", [EditorialContentController::class, 'getElbrusPoiGeojson'])->name('geojson.poi');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.geojson", [EditorialContentController::class, 'getElbrusTrackGeojson'])->name('geojson.track');
             Route::get("/{app_id}/geojson/ec_track_{track_id}.json", [EditorialContentController::class, 'getElbrusTrackJson'])->name('geojson.track.json');
@@ -200,8 +199,8 @@ Route::name('api.')->group(function () {
                 'term_id' => '[0-9]+',
             ])->name('track.taxonomies');
             Route::get("/{app_id}/taxonomies/{taxonomy_name}.json", [ApiElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
-            Route::get('/{app_id}/tiles/map.mbtiles',function ($app_id) {
-               return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+            Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
+                return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
         });
     });
