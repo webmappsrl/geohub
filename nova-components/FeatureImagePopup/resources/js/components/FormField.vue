@@ -1,6 +1,6 @@
 <template>
   <div>
-    <default-field :field="field" :errors="errors" :show-help-text="showHelpText">
+    <default-field :field="field" :errors="errors" :show-help-text="showHelpText" :full-width-content="true">
       <template slot="field">
         <div ref="selectedFeatureImageList" id="selectedFeatureImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
