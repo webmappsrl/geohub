@@ -40,7 +40,6 @@
     "tymon/jwt-auth": "^1.0",
     "vyuldashev/nova-permission": "^2.11",
     "waynestate/nova-ckeditor4-field": "^0.7.0",
-    "webmapp/ecmediapoipopup": "dev-develop",
     "webmapp/ecmediapopup": "*",
     "webmapp/ecpoipopup": "*",
     "webmapp/featureimagepopup": "*",
@@ -111,11 +110,7 @@
     },
     {
       "type": "path",
-      "url": "./nova-components/Ecmediapopup"
-    },
-    {
-      "type": "path",
-      "url": "./nova-components/Ecmediapoipopup"
+      "url": "nova-components/EcMediaPopup"
     },
     {
       "type": "path",

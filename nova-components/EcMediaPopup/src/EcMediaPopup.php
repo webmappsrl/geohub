@@ -1,30 +1,29 @@
 <?php
 
-namespace Webmapp\FeatureImagePopup;
+namespace Webmapp\EcMediaPopup;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class FeatureImagePopup extends Field {
+class EcMediaPopup extends Field {
     /**
      * The field's component.
      *
      * @var string
      */
-    public $component = 'feature-image-popup';
+    public $component = 'ec-media-popup';
 
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute) {
         if ($request[$requestAttribute] == 'undefined') {
-            $model->{$this->attribute}()->dissociate();
+            $model->{$this->attribute}()->sync([]);
         } else {
             if ($request->exists($requestAttribute)) {
-                $value = $request[$requestAttribute];
+                $value = json_decode($request[$requestAttribute], true);
 
                 if ($this->isNullValue($value)) {
-                    $model->{$this->attribute}()->dissociate();
+                    $model->{$this->attribute}()->sync([]);
                 } else {
-                    $model->{$this->attribute}()->associate($value);
+                    $model->{$this->attribute}()->sync($value);
                 }
             }
         }

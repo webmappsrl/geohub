@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 100%; height: 100%" class="feature-image-popup-container">
-    <div ref="feature-ec-media-map-root"
+  <div style="width: 100%; height: 100%" class="ec-media-popup-container">
+    <div ref="ec-media-map-root"
          style="width: 100%; height: 100%">
     </div>
     <div id="overlayPopup">
@@ -33,7 +33,7 @@ import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
 import {defaults as defaultInteractions, Select} from "ol/interaction";
 import {getDistance} from "ol/sphere";
-import Overlay from "ol/Overlay";
+import {Overlay} from "ol";
 
 export default {
   name: "MapComponent",
@@ -89,7 +89,7 @@ export default {
       zoom: 6,
     });
     this.map = new Map({
-      target: this.$refs['feature-ec-media-map-root'],
+      target: this.$refs['ec-media-map-root'],
       layers: [
         new TileLayer({
           source: new XYZ({
@@ -240,8 +240,13 @@ export default {
       else if (track)
         id = track.getId();
       if (id) {
-        this.selectedMedia = [id];
-        this.loadedImages = [poi['values_']];
+        if (this.selectedMedia.indexOf(id) === -1) {
+          this.selectedMedia.push(id);
+          this.loadedImages.push(poi['values_']);
+        } else {
+          this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
+          this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
+        }
 
         this.mediaLayer.changed();
         this.map.render();

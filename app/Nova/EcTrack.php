@@ -20,7 +20,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
-use Webmapp\Ecmediapopup\Ecmediapopup;
+use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
@@ -80,7 +80,10 @@ class EcTrack extends Resource {
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia')->onlyOnDetail(),
             BelongsToMany::make('EcPois')->onlyOnDetail(),
-            Ecmediapopup::make(__('EcMedia'))->nullable()->onlyOnForms()->feature($geojson),
+            EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/track/'),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -134,7 +137,6 @@ class EcTrack extends Resource {
                 ->icon()
                 ->blank(),
 
-            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
     }

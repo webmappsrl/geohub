@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2735dc27dcb9e8e2b1e12a41c9b14a1",
+    "content-hash": "58a8a2bf2e86d50d3df724334c42496a",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -7892,48 +7892,12 @@
             "time": "2020-03-06T03:54:49+00:00"
         },
         {
-            "name": "webmapp/ecmediapoipopup",
-            "version": "dev-develop",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/Ecmediapoipopup",
-                "reference": "5253333c52f6a26aeb39ba6ffe3c1383cd6cf960"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Webmapp\\Ecmediapoipopup\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmapp\\Ecmediapoipopup\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
             "name": "webmapp/ecmediapopup",
             "version": "dev-develop",
             "dist": {
                 "type": "path",
-                "url": "./nova-components/Ecmediapopup",
-                "reference": "085f205f5e7db7a5ab9200eed54772313414799e"
+                "url": "nova-components/EcMediaPopup",
+                "reference": "1defb66d4a0b16a0ff59bb2ddd9404197842f32f"
             },
             "require": {
                 "php": ">=7.1.0"
@@ -7942,13 +7906,13 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Webmapp\\Ecmediapopup\\FieldServiceProvider"
+                        "Webmapp\\EcMediaPopup\\FieldServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Webmapp\\Ecmediapopup\\": "src/"
+                    "Webmapp\\EcMediaPopup\\": "src/"
                 }
             },
             "license": [
@@ -10716,8 +10680,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "arku/nova-multiselect": 20,
-        "elevate-digital/nova-charcounted-fields": 20,
-        "webmapp/ecmediapoipopup": 20
+        "elevate-digital/nova-charcounted-fields": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

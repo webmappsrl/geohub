@@ -2,7 +2,7 @@
   <div>
     <default-field :field="field" :errors="errors" :show-help-text="showHelpText" :full-width-content="true">
       <template slot="field">
-        <div ref="selectedFeatureImageList" id="selectedFeatureImageList">
+        <div ref="selectedImageList" id="selectedImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedImages">
             <div class="w-1/5">
               <img class="selectedThumbnail" :src="getBackgroundImage(row)">
@@ -21,7 +21,7 @@
           <br>
         </div>
         <button type="button" class="btn btn-primary btn-default" @click="openModal()">
-          Select image
+          Select images
         </button>
       </template>
     </default-field>
@@ -42,7 +42,7 @@
                             </p>
                             <div class="media-list flex flex-wrap"
                                  @mouseover="hideOverlay()">
-                              <div class="image ec-media-image"
+                              <div class="ec-media-image"
                                    :class="selectedMedia.includes(media.properties.id) ? 'selected' : ''"
                                    :style="{'background-image': 'url(' + getBackgroundImage(media) + ')' }"
                                    v-for="media in mediaList.features"
@@ -124,7 +124,7 @@ export default {
   },
   mounted() {
     if (!this.field.apiBaseUrl) this.field.apiBaseUrl = "/api/ec/track/";
-    axios.get(this.field.apiBaseUrl + this.resourceId + '/feature_image')
+    axios.get(this.field.apiBaseUrl + this.resourceId + '/associated_ec_media')
       .then(response => {
         this.selectedMedia = [];
         this.associatedMediaList = response.data;
@@ -156,19 +156,19 @@ export default {
     },
     toggleImage(item) {
       if (this.selectedMedia.includes(item.id))
-        this.selectedMedia = [];
+        this.selectedMedia.splice(this.selectedMedia.indexOf(item.id), 1);
       else
-        this.selectedMedia = [item.id];
+        this.selectedMedia.push(item.id);
     },
     loadImages() {
-      document.getElementById('selectedFeatureImageList').style.display = "block";
+      document.getElementById('selectedImageList').style.display = "block";
       this.modalOpen = false;
+      let loadedImages = [];
       for (let i in this.mediaList.features) {
-        if (this.mediaList.features[i].properties.id === this.selectedMedia[0]) {
-          this.loadedImages = [this.mediaList.features[i].properties];
-          break;
-        }
+        if (this.selectedMedia.includes(this.mediaList.features[i].properties.id))
+          loadedImages.push(this.mediaList.features[i].properties);
       }
+      this.loadedImages = loadedImages;
     },
     cancelUpload() {
       this.modalOpen = false;
@@ -179,7 +179,12 @@ export default {
     },
     dismiss() {
       this.modalOpen = false;
-      this.selectedMedia = [this.loadedImages[0].id];
+      let selectedMedia = [];
+      for (let i in this.loadedImages) {
+        selectedMedia.push(this.loadedImages[i].id);
+      }
+      console.log(selectedMedia);
+      this.selectedMedia = selectedMedia;
     },
     getBackgroundImage(media) {
       let url = undefined,
@@ -205,7 +210,7 @@ export default {
      * Fill the given FormData object with the field's internal value.
      */
     fill(formData) {
-      formData.append(this.field.attribute, this.selectedMedia[0])
+      formData.append(this.field.attribute, JSON.stringify(this.selectedMedia))
     },
   },
 }

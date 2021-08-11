@@ -20,7 +20,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
-use Webmapp\Ecmediapoipopup\Ecmediapoipopup;
+use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -75,7 +75,10 @@ class EcPoi extends Resource {
             ]),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Ecmediapoipopup::make(__('EcMedia'))->onlyOnForms()->feature($geojson),
+            EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/poi/'),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
@@ -125,7 +128,6 @@ class EcPoi extends Resource {
             })->acceptedTypes('audio/*')->onlyOnForms(),
             Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
-            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
     }
