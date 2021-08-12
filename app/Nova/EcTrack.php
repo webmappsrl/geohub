@@ -2,13 +2,11 @@
 
 namespace App\Nova;
 
-use App\Nova\Actions\OpenEcTrackGeoJson;
 use App\Nova\Actions\RegenerateEcTrack;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
@@ -22,19 +20,18 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
-use Webmapp\Ecmediapopup\Ecmediapopup;
+use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
-use Webmapp\Featureimagepopup\Featureimagepopup;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class EcTrack extends Resource
-{
+class EcTrack extends Resource {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\EcTrack::class;
+    public static string $model = \App\Models\EcTrack::class;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -50,27 +47,25 @@ class EcTrack extends Resource
         'name',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Editorial Content');
     }
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request): array {
         try {
             $geojson = $this->model()->getGeojson();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $geojson = [];
         }
-        $fields = [
 
+        return [
             new Panel('Taxonomies', $this->attach_taxonomy()),
 
             NovaTabTranslatable::make([
@@ -85,7 +80,10 @@ class EcTrack extends Resource
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia')->onlyOnDetail(),
             BelongsToMany::make('EcPois')->onlyOnDetail(),
-            Ecmediapopup::make(__('EcMedia'))->nullable()->onlyOnForms()->feature($geojson),
+            EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/track/'),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             File::make('Geojson')->store(function (Request $request, $model) {
@@ -95,18 +93,17 @@ class EcTrack extends Resource
                 return $geometry ? [
                     'geometry' => $geometry,
                 ] : function () {
-                    throw new Exception(__("Il file caricato non è valido."));
+                    throw new Exception(__("The uploaded file is not valid"));
                 };
             })->hideFromDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            WmEmbedmapsField::make(__('Map'), 'geometry', function ($model) {
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () {
                 return [
                     'feature' => $this->getGeojson(),
                 ];
             })->hideFromIndex()->hideWhenCreating(),
-            //BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
-            Featureimagepopup::make(__('FeatureImage'))->onlyOnForms()->feature($geojson),
+            FeatureImagePopup::make(__('Feature Image'), 'featureImage')->onlyOnForms()->feature($geojson)->apiBaseUrl('/api/ec/track/'),
             Ecpoipopup::make(__('EcPoi'))->nullable()->onlyOnForms()->feature($geojson),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -118,10 +115,10 @@ class EcTrack extends Resource
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
 
             Text::make(__('Audio'), 'audio', function () {
-                $pathinfo = pathinfo($this->model()->audio);
-                if (isset($pathinfo['extension'])) {
-                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathinfo['extension']];
-                }
+                $pathInfo = pathinfo($this->model()->audio);
+                if (isset($pathInfo['extension'])) {
+                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathInfo['extension']];
+                } else $mime = CONTENT_TYPE_AUDIO_MAPPING['mp3'];
 
                 return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
             })->asHtml()->onlyOnDetail(),
@@ -140,15 +137,11 @@ class EcTrack extends Resource
                 ->icon()
                 ->blank(),
 
-            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
-
-        return $fields;
     }
 
-    protected function taxonomies()
-    {
+    protected function taxonomies(): array {
         return [
             MorphToMany::make('TaxonomyWheres'),
             MorphToMany::make('TaxonomyActivities'),
@@ -158,8 +151,7 @@ class EcTrack extends Resource
         ];
     }
 
-    protected function attach_taxonomy()
-    {
+    protected function attach_taxonomy(): array {
         return [
             AttachMany::make('TaxonomyWheres'),
             AttachMany::make('TaxonomyActivities'),
@@ -172,48 +164,44 @@ class EcTrack extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request): array {
         return [];
     }
 
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request): array {
         return [];
     }
 
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request): array {
         return [];
     }
 
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request): array {
         return [
             new RegenerateEcTrack(),
         ];

@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
@@ -19,28 +20,23 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Waynestate\Nova\CKEditor;
-use Webmapp\Ecmediapoipopup\Ecmediapoipopup;
-use Webmapp\Featureimagepoipopup\Featureimagepoipopup;
-use Webmapp\Featureimagepopup\Featureimagepopup;
+use Webmapp\EcMediaPopup\EcMediaPopup;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-
-class EcPoi extends Resource
-{
+class EcPoi extends Resource {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = \App\Models\EcPoi::class;
-
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
-
     /**
      * The columns that should be searched.
      *
@@ -51,8 +47,7 @@ class EcPoi extends Resource
         'author',
     ];
 
-    public static function group()
-    {
+    public static function group() {
         return __('Editorial Content');
     }
 
@@ -60,13 +55,13 @@ class EcPoi extends Resource
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function fields(Request $request)
-    {
+    public function fields(Request $request) {
         try {
             $geojson = $this->model()->getGeojson();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $geojson = [];
         }
 
@@ -80,7 +75,10 @@ class EcPoi extends Resource
             ]),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
-            Ecmediapoipopup::make(__('EcMedia'))->onlyOnForms()->feature($geojson),
+            EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/poi/'),
             Text::make(__('Contact phone'), 'contact_phone')->hideFromIndex(),
             Text::make(__('Contact email'), 'contact_email')->hideFromIndex(),
             Textarea::make(__('Related Urls'), 'related_url')->hideFromIndex()->hideFromDetail()->help('IMPORTANT : Write urls with " ; " separator and start new line'),
@@ -91,23 +89,28 @@ class EcPoi extends Resource
                 foreach ($urls as $url) {
                     $html_url .= '<a href="' . $url . '" target="_blank">' . $url . '</a><br>';
                 }
+
                 return $html_url;
             })->asHtml()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             WmEmbedmapsField::make(__('Map'), 'geometry', function () {
                 $model = $this->model();
+
                 return [
-                    'feature' => $model->id ? $model->getGeojson() : NULL,
+                    'feature' => $model->id ? $model->getGeojson() : null,
                 ];
             })->required()->hideFromIndex(),
-            Featureimagepoipopup::make(__('Feature Image'))->onlyOnForms()->feature($geojson),
-            //BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                ->onlyOnForms()
+                ->feature($geojson)
+                ->apiBaseUrl('/api/ec/poi/'),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
+
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Audio'), 'audio', function () {
@@ -125,20 +128,17 @@ class EcPoi extends Resource
             })->acceptedTypes('audio/*')->onlyOnForms(),
             Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
 
-            //AttachMany::make('EcMedia'),
             new Panel('Relations', $this->taxonomies()),
         ];
     }
 
-    protected function action_panel()
-    {
+    protected function action_panel() {
         return [
             Heading::make('<div class="flex items-center">
    <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="create-button">
         Create App
       </button>
       </div>')->asHtml()->showOnCreating()->hideWhenUpdating()->hideFromDetail(),
-
 
             Heading::make('<div class="flex items-center">
       <button type="submit" class="btn btn-default btn-primary inline-flex items-center relative" dusk="update-button">
@@ -149,9 +149,7 @@ class EcPoi extends Resource
         ];
     }
 
-
-    protected function taxonomies()
-    {
+    protected function taxonomies() {
         return [
             MorphToMany::make('TaxonomyWheres'),
             MorphToMany::make('TaxonomyActivities'),
@@ -162,8 +160,7 @@ class EcPoi extends Resource
         ];
     }
 
-    protected function attach_taxonomy()
-    {
+    protected function attach_taxonomy() {
         return [
             AttachMany::make('TaxonomyWheres'),
             AttachMany::make('TaxonomyActivities'),
@@ -178,10 +175,10 @@ class EcPoi extends Resource
      * Get the cards available for the request.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function cards(Request $request)
-    {
+    public function cards(Request $request) {
         return [];
     }
 
@@ -189,10 +186,10 @@ class EcPoi extends Resource
      * Get the filters available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function filters(Request $request)
-    {
+    public function filters(Request $request) {
         return [];
     }
 
@@ -200,10 +197,10 @@ class EcPoi extends Resource
      * Get the lenses available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function lenses(Request $request)
-    {
+    public function lenses(Request $request) {
         return [];
     }
 
@@ -211,10 +208,10 @@ class EcPoi extends Resource
      * Get the actions available for the resource.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function actions(Request $request)
-    {
+    public function actions(Request $request) {
         return [];
     }
 }

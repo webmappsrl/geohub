@@ -1,0 +1,22 @@
+// Nova Tool CSS
+.ec-media-popup-container {
+  .ol-overlaycontainer-stopevent {
+    .ol-zoom {
+      right: 10px;
+      left: unset;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0);
+
+      .ol-zoom-in,
+      .ol-zoom-out {
+        background: grey;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        font-weight: normal;
+        line-height: 1.14em;
+      }
+    }
+  }
+}

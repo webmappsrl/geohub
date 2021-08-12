@@ -26,11 +26,7 @@ define('CONTENT_TYPE_IMAGE_MAPPING', [
     'webp' => 'image/webp'
 ]);
 
-class EditorialContentController extends Controller
-{
-
-    use GeometryFeatureTrait;
-
+class EditorialContentController extends Controller {
     /**
      * Calculate the model class name of a ugc from its type
      *
@@ -40,8 +36,7 @@ class EditorialContentController extends Controller
      *
      * @throws Exception
      */
-    private function _getEcModelFromType(string $type): string
-    {
+    private function _getEcModelFromType(string $type): string {
         switch ($type) {
             case 'poi':
                 $model = "\App\Models\EcPoi";
@@ -66,8 +61,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse return the Ec info
      */
-    public function getEcJson(int $id): JsonResponse
-    {
+    public function getEcJson(int $id): JsonResponse {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -126,8 +120,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse
      */
-    public function getElbrusPoiGeojson(int $app_id, int $poi_id): JsonResponse
-    {
+    public function getElbrusPoiGeojson(int $app_id, int $poi_id): JsonResponse {
         $app = App::find($app_id);
         $poi = EcPoi::find($poi_id);
         if (is_null($app) || is_null($poi)) {
@@ -146,8 +139,7 @@ class EditorialContentController extends Controller
         return response()->json($geojson, 200);
     }
 
-    private function _getTaxonomies($obj, $names = ['activity', 'theme', 'where', 'who', 'when', 'webmapp_category'])
-    {
+    private function _getTaxonomies($obj, $names = ['activity', 'theme', 'where', 'who', 'when', 'webmapp_category']) {
         $taxonomies = [];
         foreach ($names as $name) {
             switch ($name) {
@@ -180,8 +172,7 @@ class EditorialContentController extends Controller
         return $taxonomies;
     }
 
-    private function _getDurations($obj, $names = ['hiking', 'cycling'])
-    {
+    private function _getDurations($obj, $names = ['hiking', 'cycling']) {
         $durations = [];
         $activityTerms = $obj->taxonomyActivities()->whereIn('identifier', $names)->get()->toArray();
         if (count($activityTerms) > 0) {
@@ -204,14 +195,12 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse
      */
-    public function getElbrusTrackGeojson(int $app_id, int $track_id): JsonResponse
-    {
+    public function getElbrusTrackGeojson(int $app_id, int $track_id): JsonResponse {
         $app = App::find($app_id);
         $track = EcTrack::find($track_id);
         if (is_null($app) || is_null($track)) {
             return response()->json(['code' => 404, 'error' => 'Not found'], 404);
         }
-
 
         return response()->json($this->_getElbrusTracksGeojsonComplete($app_id, $track_id), 200);
     }
@@ -224,8 +213,7 @@ class EditorialContentController extends Controller
      *
      * @return JsonResponse
      */
-    public function getElbrusTrackJson(int $app_id, int $track_id): JsonResponse
-    {
+    public function getElbrusTrackJson(int $app_id, int $track_id): JsonResponse {
         $app = App::find($app_id);
         $track = EcTrack::find($track_id);
         if (is_null($app) || is_null($track)) {
@@ -236,8 +224,7 @@ class EditorialContentController extends Controller
         return response()->json($geojson['properties'], 200);
     }
 
-    private function _getElbrusTracksGeojsonComplete(int $app_id, int $track_id): array
-    {
+    private function _getElbrusTracksGeojsonComplete(int $app_id, int $track_id): array {
         $app = App::find($app_id);
         $track = EcTrack::find($track_id);
         $geojson = $track->getGeojson();
@@ -297,8 +284,7 @@ class EditorialContentController extends Controller
      * @param      $field
      * @param null $field_with_colon
      */
-    private function _mapGeojsonPropertyForElbrusApi($geojson, $field, $field_with_colon = null)
-    {
+    private function _mapGeojsonPropertyForElbrusApi($geojson, $field, $field_with_colon = null) {
         if (isset($geojson['properties'][$field])) {
             if (is_null($field_with_colon)) {
                 $field_with_colon = preg_replace('/_/', ':', $field);
@@ -316,8 +302,7 @@ class EditorialContentController extends Controller
      *
      *
      */
-    public function getEcImage(int $id)
-    {
+    public function getEcImage(int $id) {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -328,7 +313,6 @@ class EditorialContentController extends Controller
         $ec = $model::find($id);
         if (is_null($ec))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-
 
         // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
 
@@ -352,10 +336,9 @@ class EditorialContentController extends Controller
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int $id the id of the EcMedia
+     * @param int     $id      the id of the EcMedia
      */
-    public function updateEcMedia(Request $request, $id)
-    {
+    public function updateEcMedia(Request $request, $id) {
         $ecMedia = EcMedia::find($id);
 
         if (is_null($ecMedia))
@@ -394,68 +377,12 @@ class EditorialContentController extends Controller
         }
     }
 
-    /** Update the ec track with new data from Geomixer
-     *
-     * @param Request $request the request with data from geomixer POST
-     * @param int $id the id of the EcTrack
-     */
-    public function updateEcTrack(Request $request, $id)
-    {
-        $ecTrack = EcTrack::find($id);
-        if (is_null($ecTrack)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        }
-
-        if (!empty($request->where_ids)) {
-            $ecTrack->taxonomyWheres()->sync($request->where_ids);
-        }
-
-        if (!empty($request->duration)) {
-            foreach ($request->duration as $activityIdentifier => $values) {
-                $tax = $ecTrack->taxonomyActivities()->where('identifier', $activityIdentifier)->pluck('id')->first();
-                $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']], false);
-            }
-        }
-
-        if (
-            !is_null($request->geometry)
-            && is_array($request->geometry)
-            && isset($request->geometry['type'])
-            && isset($request->geometry['coordinates'])
-        ) {
-            $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
-        }
-
-        $fields = [
-            'distance_comp',
-            'distance',
-            'ele_min',
-            'ele_max',
-            'ele_from',
-            'ele_to',
-            'ascent',
-            'descent',
-            'duration_forward',
-            'duration_backward',
-        ];
-
-        foreach ($fields as $field) {
-            if (isset($request->$field)) {
-                $ecTrack->$field = $request->$field;
-            }
-        }
-
-        $ecTrack->skip_update = true;
-        $ecTrack->save();
-    }
-
     /** Update the ec media with new data from Geomixer
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int $id the id of the EcMedia
+     * @param int     $id      the id of the EcMedia
      */
-    public function updateEcPoi(Request $request, $id)
-    {
+    public function updateEcPoi(Request $request, $id) {
         $ecPoi = EcPoi::find($id);
 
         if (is_null($ecPoi)) {
@@ -493,13 +420,12 @@ class EditorialContentController extends Controller
      * Return geometry formatted by $format.
      *
      * @param Request $request the request with data from geomixer POST
-     * @param int $id
-     * @param string $format
+     * @param int     $id
+     * @param string  $format
      *
      * @return Response
      */
-    public function downloadEcPoi(Request $request, int $id, string $format = 'geojson')
-    {
+    public function downloadEcPoi(Request $request, int $id, string $format = 'geojson') {
         $ecPoi = EcPoi::find($id);
 
         $response = response()->json(['code' => 404, 'error' => "Not Found"], 404);
@@ -541,13 +467,12 @@ class EditorialContentController extends Controller
      * Return EcTrack JSON.
      *
      * @param Request
-     * @param int $id
+     * @param int   $id
      * @param array $headers
      *
      * @return Response.
      */
-    public function viewEcGeojson(Request $request, int $id, array $headers = [])
-    {
+    public function viewEcGeojson(Request $request, int $id, array $headers = []) {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -575,13 +500,12 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int $id
+     * @param int   $id
      * @param array $headers
      *
      * @return Response.
      */
-    public function viewEcGpx(Request $request, int $id, array $headers = [])
-    {
+    public function viewEcGpx(Request $request, int $id, array $headers = []) {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -604,13 +528,12 @@ class EditorialContentController extends Controller
 
     /**
      * @param Request
-     * @param int $id
+     * @param int   $id
      * @param array $headers
      *
      * @return Response.
      */
-    public function viewEcKml(Request $request, int $id, array $headers = [])
-    {
+    public function viewEcKml(Request $request, int $id, array $headers = []) {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -637,8 +560,7 @@ class EditorialContentController extends Controller
      *
      * @return Response.
      */
-    public function downloadEcGeojson(Request $request, int $id)
-    {
+    public function downloadEcGeojson(Request $request, int $id) {
         $headers['Content-Type'] = 'application/vnd.api+json';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.geojson"';
 
@@ -651,8 +573,7 @@ class EditorialContentController extends Controller
      *
      * @return Response.
      */
-    public function downloadEcGpx(Request $request, int $id)
-    {
+    public function downloadEcGpx(Request $request, int $id) {
         $headers['Content-Type'] = 'application/xml';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.gpx"';
 
@@ -665,8 +586,7 @@ class EditorialContentController extends Controller
      *
      * @return Response.
      */
-    public function downloadEcKml(Request $request, int $id)
-    {
+    public function downloadEcKml(Request $request, int $id) {
         $headers['Content-Type'] = 'application/xml';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
 
@@ -679,14 +599,12 @@ class EditorialContentController extends Controller
      * @param int $idTrack the id of EcTrack
      *
      */
-    public function getEcMediaNearTrack(int $idTrack)
-    {
+    public function getEcMediaNearTrack(int $idTrack) {
         $track = EcTrack::find($idTrack);
 
         $nearQuery = "SELECT ST_Distance(
         'SRID=4326;POINT(-72.1235 42.3521)'::geometry,
 		'SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry
 	)";
-
     }
 }
