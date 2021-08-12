@@ -20,14 +20,12 @@ use Spatie\Translatable\HasTranslations;
  * @package App\Models
  *
  * @property string import_method
- * @property int id
+ * @property int    id
  */
-class TaxonomyWhere extends Model
-{
+class TaxonomyWhere extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     public $translatable = ['name', 'description', 'excerpt'];
-
     protected $table = 'taxonomy_wheres';
     protected $fillable = [
         'name',
@@ -35,17 +33,14 @@ class TaxonomyWhere extends Model
     ];
     private HoquServiceProvider $hoquServiceProvider;
 
-    public function __construct(array $attributes = [])
-    {
+    public function __construct(array $attributes = []) {
         parent::__construct($attributes);
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
         static::creating(function ($taxonomyWhere) {
-
             if ($taxonomyWhere->identifier != null) {
                 $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
                 if (!$validateTaxonomyWhere == null) {
@@ -63,13 +58,16 @@ class TaxonomyWhere extends Model
         });
     }
 
+    public function table(): string {
+        return $this->table;
+    }
+
     /**
      * All the taxonomy where imported using a sync command are not editable
      *
      * @return bool
      */
-    public function isEditableByUserInterface(): bool
-    {
+    public function isEditableByUserInterface(): bool {
         return !$this->isImportedByExternalData();
     }
 
@@ -78,13 +76,11 @@ class TaxonomyWhere extends Model
      *
      * @return bool
      */
-    public function isImportedByExternalData(): bool
-    {
+    public function isImportedByExternalData(): bool {
         return !is_null($this->import_method);
     }
 
-    public function save(array $options = [])
-    {
+    public function save(array $options = []) {
         static::creating(function ($taxonomyWhere) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -107,48 +103,39 @@ class TaxonomyWhere extends Model
         }
     }
 
-    public function author()
-    {
+    public function author() {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ugc_pois(): BelongsToMany
-    {
+    public function ugc_pois(): BelongsToMany {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): BelongsToMany
-    {
+    public function ugc_tracks(): BelongsToMany {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function ugc_media(): BelongsToMany
-    {
+    public function ugc_media(): BelongsToMany {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function ecMedia()
-    {
+    public function ecMedia() {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 
-    public function ecTrack()
-    {
+    public function ecTrack() {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
     }
 
-    public function ecPoi()
-    {
+    public function ecPoi() {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
 
-    public function featureImage(): BelongsTo
-    {
+    public function featureImage(): BelongsTo {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message)
-    {
+    private static function validationError($message) {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
