@@ -68,7 +68,7 @@ class App extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request): array {
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -88,13 +88,13 @@ class App extends Resource {
         ];
     }
 
-    protected function app_panel() {
+    protected function app_panel(): array {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Customer Name'), 'customerName')->sortable(),
+            Text::make(__('Customer Name'), 'customer_name')->sortable(),
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options([
                 'en' => 'English',
                 'it' => 'Italiano',
@@ -106,139 +106,289 @@ class App extends Resource {
         ];
     }
 
-    protected function map_panel() {
+    protected function map_panel(): array {
         return [
-            NovaSliderField::make(__('Max Zoom'), 'maxZoom')->min(5)->max(19)->default(16)->onlyOnForms(),
-            NovaSliderField::make(__('Min Zoom'), 'minZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
-            NovaSliderField::make(__('Def Zoom'), 'defZoom')->min(5)->max(19)->default(12)->onlyOnForms(),
+            NovaSliderField::make(__('Max Zoom'), 'map_ma_zoom')
+                ->min(5)
+                ->max(19)
+                ->default(16)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Min Zoom'), 'map_min_zoom')
+                ->min(5)
+                ->max(19)
+                ->default(12)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Def Zoom'), 'map_def_zoom')
+                ->min(5)
+                ->max(19)
+                ->interval(0.1)
+                ->default(12)
+                ->onlyOnForms(),
 
-            Number::make(__('Max Zoom'), 'maxZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Min Zoom'), 'minZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Def Zoom'), 'defZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Max Zoom'), 'map_max_zoom')->onlyOnDetail(),
+            Number::make(__('Min Zoom'), 'minZoom')->onlyOnDetail(),
+            Number::make(__('Def Zoom'), 'defZoom')->onlyOnDetail(),
         ];
     }
 
-    protected function theme_panel() {
+    protected function theme_panel(): array {
+        $fontsOptions = [
+            'Helvetica' => ['label' => 'Helvetica'],
+            'Lato' => ['label' => 'Lato'],
+            'Merriweather' => ['label' => 'Merriweather'],
+            'Montserrat' => ['label' => 'Montserrat'],
+            'Montserrat Light' => ['label' => 'Montserrat Light'],
+            'Noto Sans' => ['label' => 'Noto Sans'],
+            'Noto Serif' => ['label' => 'Noto Serif'],
+            'Open Sans' => ['label' => 'Roboto'],
+            'Roboto' => ['label' => 'Noto Serif'],
+            'Roboto Slab' => ['label' => 'Roboto Slab'],
+            'Sora' => ['label' => 'Sora'],
+            'Source Sans Pro' => ['label' => 'Source Sans Pro']
+        ];
+
         return [
-            Select::make(__('Font Family Header'), 'fontFamilyHeader')->options([
-                'Helvetica' => ['label' => 'Helvetica'],
-                'Lato' => ['label' => 'Lato'],
-                'Merriweather' => ['label' => 'Merriweather'],
-                'Montserrat' => ['label' => 'Montserrat'],
-                'Montserrat Light' => ['label' => 'Montserrat Light'],
-                'Noto Sans' => ['label' => 'Noto Sans'],
-                'Noto Serif' => ['label' => 'Noto Serif'],
-                'Open Sans' => ['label' => 'Roboto'],
-                'Roboto' => ['label' => 'Noto Serif'],
-                'Roboto Slab' => ['label' => 'Roboto Slab'],
-                'Sora' => ['label' => 'Sora'],
-                'Source Sans Pro' => ['label' => 'Source Sans Pro']
-            ])->default('Roboto Slab')->hideFromIndex(),
-
-            Select::make(__('Font Family Content'), 'fontFamilyContent')->options([
-                'Helvetica' => ['label' => 'Helvetica'],
-                'Lato' => ['label' => 'Lato'],
-                'Merriweather' => ['label' => 'Merriweather'],
-                'Montserrat' => ['label' => 'Montserrat'],
-                'Montserrat Light' => ['label' => 'Montserrat Light'],
-                'Noto Sans' => ['label' => 'Noto Sans'],
-                'Noto Serif' => ['label' => 'Noto Serif'],
-                'Open Sans' => ['label' => 'Open Sans'],
-                'Roboto' => ['label' => 'Roboto'],
-                'Roboto Slab' => ['label' => 'Roboto Slab'],
-                'Sora' => ['label' => 'Sora'],
-                'Source Sans Pro' => ['label' => 'Source Sans Pro']
-            ])->default('Roboto')->hideFromIndex(),
-
-            Swatches::make(__('Default Feature Color'), 'defaultFeatureColor')->default('#de1b0d')->hideFromIndex(),
-            Swatches::make(__('Primary'), 'primary')->default('#de1b0d')->hideFromIndex(),
+            Select::make(__('Font Family Header'), 'font_family_header')
+                ->options($fontsOptions)
+                ->default('Roboto Slab')
+                ->hideFromIndex(),
+            Select::make(__('Font Family Content'), 'font_family_content')
+                ->options($fontsOptions)
+                ->default('Roboto')
+                ->hideFromIndex(),
+            Swatches::make(__('Default Feature Color'), 'default_feature_color')
+                ->default('#de1b0d')
+                ->hideFromIndex(),
+            Swatches::make(__('Primary color'), 'primary_color')
+                ->default('#de1b0d')
+                ->hideFromIndex(),
         ];
     }
 
-    protected function option_panel() {
+    protected function option_panel(): array {
         return [
-            Select::make(__('Start Url'), 'startUrl')->options([
-                '/main/explore' => 'Home',
-                '/main/map' => 'Map',
-            ])->default('/main/explore'),
+            Select::make(__('Start Url'), 'start_url')
+                ->options([
+                    '/main/explore' => 'Home',
+                    '/main/map' => 'Map',
+                ])
+                ->default('/main/explore'),
+            Toggle::make(__('Show Edit Link'), 'show_edit_link')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->onlyOnForms(),
+            Toggle::make(__('Skip Route Index Download'), 'skip_route_index_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Min Radius'), 'poi_min_radius')
+                ->min(0.1)
+                ->max(3.5)
+                ->default(0.5)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Max Radius'), 'poi_max_radius')
+                ->min(0.1)
+                ->max(3.5)
+                ->default(1.2)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Icon Zoom'), 'poi_icon_zoom')
+                ->min(5)
+                ->max(19)
+                ->default(16)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Icon Radius'), 'poi_icon_radius')
+                ->min(0.1)
+                ->max(3.5)
+                ->default(1.5)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Min Zoom'), 'poi_min_zoom')
+                ->min(5)
+                ->max(19)
+                ->default(13)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            NovaSliderField::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')
+                ->min(5)
+                ->max(19)
+                ->default(10.5)
+                ->interval(0.1)
+                ->onlyOnForms(),
+            Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
 
-            Toggle::make(__('Show Edit Link'), 'showEditLink')->trueValue('On')->falseValue('Off')->default(false)->onlyOnForms(),
-            Toggle::make(__('Skip Route Index Download'), 'skipRouteIndexDownload')->trueValue('On')->falseValue('Off')->default(true)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Min Radius'), 'poiMinRadius')->min(0.1)->max(3.5)->default(0.5)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Max Radius'), 'poiMaxRadius')->min(0.1)->max(3.5)->default(1.2)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Icon Zoom'), 'poiIconZoom')->min(5)->max(19)->default(16)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Icon Radius'), 'poiIconRadius')->min(0.1)->max(3.5)->default(1)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Min Zoom'), 'poiMinZoom')->min(5)->max(19)->default(13)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->min(5)->max(19)->default(10.5)->interval(0.1)->onlyOnForms(),
-
-            Toggle::make(__('Show Track Ref Label'), 'showTrackRefLabel')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-
-            Number::make(__('Poi Min Radius'), 'poiMinRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Poi Max Radius'), 'poiMaxRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Poi Icon Zoom'), 'poiIconZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Poi Icon Radius'), 'poiIconRadius')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Poi Min Zoom'), 'poiMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Poi Label Min Zoom'), 'poiLabelMinZoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Poi Min Radius'), 'poi_min_radius')->onlyOnDetail(),
+            Number::make(__('Poi Max Radius'), 'poi_max_radius')->onlyOnDetail(),
+            Number::make(__('Poi Icon Zoom'), 'poi_icon_zoom')->onlyOnDetail(),
+            Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
+            Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
+            Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
         ];
     }
 
-    protected function auth_panel() {
+    protected function auth_panel(): array {
         return [
-            Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
         ];
     }
 
-    protected function table_panel() {
+    protected function table_panel(): array {
         return [
-            Toggle::make(__('Show Related POI'), 'showRelatedPoi')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Show Duration'), 'table_details_show_duration_forward')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Duration Backward'), 'table_details_show_duration_backward')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex()->hideFromIndex(),
-            Toggle::make(__('Show Distance'), 'table_details_show_distance')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ascent'), 'table_details_show_ascent')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Descent'), 'table_details_show_descent')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ele Max'), 'table_details_show_ele_max')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ele Min'), 'table_details_show_ele_min')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ele From'), 'table_details_show_ele_from')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ele To'), 'table_details_show_ele_to')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Scale'), 'table_details_show_scale')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Cai Scale'), 'table_details_show_cai_scale')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Mtb Scale'), 'table_details_show_mtb_scale')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Ref'), 'table_details_show_ref')->trueValue('On')->falseValue('Off')->default(true)->hideFromIndex(),
-            Toggle::make(__('Show Surface'), 'table_details_show_surface')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Show GPX Download'), 'showGpxDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Show KML Download'), 'showKmlDownload')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Show Geojson Download'), 'table_details_show_geojson_download')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Show Shapefile Download'), 'table_details_show_shapefile_download')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex()
+            Toggle::make(__('Show Related POI'), 'table_details_show_related_poi')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Duration'), 'table_details_show_duration_forward')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Duration Backward'), 'table_details_show_duration_backward')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->hideFromIndex(),
+            Toggle::make(__('Show Distance'), 'table_details_show_distance')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ascent'), 'table_details_show_ascent')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Descent'), 'table_details_show_descent')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ele Max'), 'table_details_show_ele_max')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ele Min'), 'table_details_show_ele_min')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ele From'), 'table_details_show_ele_from')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ele To'), 'table_details_show_ele_to')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Scale'), 'table_details_show_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Cai Scale'), 'table_details_show_cai_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Mtb Scale'), 'table_details_show_mtb_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Ref'), 'table_details_show_ref')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Surface'), 'table_details_show_surface')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show GPX Download'), 'table_details_show_gpx_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show KML Download'), 'table_details_show_kml_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Geojson Download'), 'table_details_show_geojson_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show Shapefile Download'), 'table_details_show_shapefile_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
         ];
     }
 
-    protected function geolocation_panel() {
+    protected function geolocation_panel(): array {
         return [
-            Toggle::make(__('Enable Track record'), 'geolocation_record_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Enable Track record'), 'geolocation_record_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
         ];
     }
 
-    protected function routing_panel() {
+    protected function routing_panel(): array {
         return [
-            Toggle::make(__('Enable Routing'), 'enableRouting')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Enable Routing'), 'enable_routing')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
         ];
     }
 
-    protected function overlays_panel() {
+    protected function overlays_panel(): array {
         return [
-            Textarea::make(__('External overlays'), 'external_overlays')->rows(10)->hideFromIndex(),
+            Textarea::make(__('External overlays'), 'external_overlays')
+                ->rows(10)
+                ->hideFromIndex(),
         ];
     }
 
-    protected function offline_panel() {
+    protected function offline_panel(): array {
         return [
-            Toggle::make(__('Enable Offline'), 'offline_enable')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
-            Toggle::make(__('Force Auth'), 'offline_force_auth')->trueValue('On')->falseValue('Off')->default(false)->hideFromIndex(),
+            Toggle::make(__('Enable Offline'), 'offline_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Force Auth'), 'offline_force_auth')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
         ];
     }
 
-    protected function icons_panel() {
-        // 'image', 'mimes:png', 'dimensions:width=1024,height=1024'
+    protected function icons_panel(): array {
         return [
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
@@ -280,7 +430,7 @@ class App extends Resource {
         ];
     }
 
-    protected function api_panel() {
+    protected function api_panel(): array {
         return [
             Text::make(__('API List'), function () {
                 return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
@@ -307,15 +457,12 @@ class App extends Resource {
 
                 return $html;
             })->asHtml()->onlyOnDetail(),
-
         ];
     }
 
-    protected function maps_panel() {
+    protected function maps_panel(): array {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
-                Log::info($model->getGeojson());
-
                 return [
                     'features' => json_decode($model->getGeojson()),
                 ];

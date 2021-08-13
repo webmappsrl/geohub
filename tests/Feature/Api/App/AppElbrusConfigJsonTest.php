@@ -43,7 +43,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertTrue(isset($json->APP));
         $this->assertEquals($app->app_id, $json->APP->id);
         $this->assertEquals($app->name, $json->APP->name);
-        $this->assertEquals($app->customerName, $json->APP->customerName);
+        $this->assertEquals($app->customer_name, $json->APP->customerName);
     }
 
     /**
@@ -56,9 +56,9 @@ class AppElbrusConfigJsonTest extends TestCase {
         $json = json_decode($result->getContent());
 
         $this->assertTrue(isset($json->MAP));
-        $this->assertEquals($app->maxZoom, $json->MAP->maxZoom);
-        $this->assertEquals($app->defZoom, $json->MAP->defZoom);
-        $this->assertEquals($app->minZoom, $json->MAP->minZoom);
+        $this->assertEquals($app->map_max_zoom, $json->MAP->maxZoom);
+        $this->assertEquals($app->map_def_zoom, $json->MAP->defZoom);
+        $this->assertEquals($app->map_min_zoom, $json->MAP->minZoom);
     }
 
     /**
@@ -184,10 +184,10 @@ class AppElbrusConfigJsonTest extends TestCase {
         $json = json_decode($result->getContent());
 
         $this->assertTrue(isset($json->THEME));
-        $this->assertEquals($app->fontFamilyHeader, $json->THEME->fontFamilyHeader);
-        $this->assertEquals($app->fontFamilyContent, $json->THEME->fontFamilyContent);
-        $this->assertEquals($app->defaultFeatureColor, $json->THEME->defaultFeatureColor);
-        $this->assertEquals($app->primary, $json->THEME->primary);
+        $this->assertEquals($app->font_family_header, $json->THEME->fontFamilyHeader);
+        $this->assertEquals($app->font_family_content, $json->THEME->fontFamilyContent);
+        $this->assertEquals($app->default_feature_color, $json->THEME->defaultFeatureColor);
+        $this->assertEquals($app->primary_color, $json->THEME->primary);
     }
 
     /**
@@ -201,19 +201,20 @@ class AppElbrusConfigJsonTest extends TestCase {
 
         $this->assertTrue(isset($json->OPTIONS));
         $fields = [
-            'startUrl',
-            'showEditLink',
-            'skipRouteIndexDownload',
-            'poiMinRadius',
-            'poiMaxRadius',
-            'poiIconZoom',
-            'poiIconRadius',
-            'poiMinZoom',
-            'poiLabelMinZoom',
-            'showTrackRefLabel',
+            'start_url' => 'startUrl',
+            'show_edit_link' => 'showEditLink',
+            'skip_route_index_download' => 'skipRouteIndexDownload',
+            'poi_min_radius' => 'poiMinRadius',
+            'poi_max_radius' => 'poiMaxRadius',
+            'poi_icon_zoom' => 'poiIconZoom',
+            'poi_icon_radius' => 'poiIconRadius',
+            'poi_min_zoom' => 'poiMinZoom',
+            'poi_label_min_zoom' => 'poiLabelMinZoom',
+            'show_track_ref_label' => 'showTrackRefLabel',
+
         ];
-        foreach ($fields as $field) {
-            $this->assertEquals($app->$field, $json->OPTIONS->$field);
+        foreach ($fields as $key => $field) {
+            $this->assertEquals($app->$key, $json->OPTIONS->$field);
         }
         $this->assertEquals('https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/', $json->OPTIONS->baseUrl);
     }
@@ -230,9 +231,9 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertTrue(isset($json->TABLES));
         $this->assertTrue(isset($json->TABLES->details));
         $fields = [
-            'showGpxDownload' => 'showGpxDownload',
-            'showKmlDownload' => 'showKmlDownload',
-            'showRelatedPoi' => 'showRelatedPoi',
+            'table_details_show_gpx_download' => 'showGpxDownload',
+            'table_details_show_kml_download' => 'showKmlDownload',
+            'table_details_show_related_poi' => 'showRelatedPoi',
             'table_details_show_geojson_download' => 'showGeojsonDownload',
             'table_details_show_shapefile_download' => 'showShapefileDownload'
         ];
@@ -264,7 +265,7 @@ class AppElbrusConfigJsonTest extends TestCase {
      * Test ROUTING section enabled
      */
     public function testRoutingSectionEnabled() {
-        $app = App::factory()->create(['enableRouting' => true]);
+        $app = App::factory()->create(['enable_routing' => true]);
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
@@ -277,7 +278,7 @@ class AppElbrusConfigJsonTest extends TestCase {
      * Test ROUTING section disabled
      */
     public function testRoutingSectionDisabled() {
-        $app = App::factory()->create(['enableRouting' => false]);
+        $app = App::factory()->create(['enable_routing' => false]);
         $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
