@@ -277,4 +277,32 @@ class EcTrack extends Model {
             "features" => $features,
         ]);
     }
+
+    /**
+     * Calculate the bounding box of the track
+     *
+     * @return array
+     */
+    public function bbox(): array {
+        $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
+        $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+
+        return array_map('floatval', explode(' ', $bboxString));
+    }
+
+    /**
+     * Calculate the centroid of the ec track
+     *
+     * @return array [lon, lat] of the point
+     */
+    public function getCentroid(): array {
+        $rawResult = EcTrack::where('id', $this->id)
+            ->selectRaw(
+                'ST_X(ST_AsText(ST_Centroid(geometry))) as lon')
+            ->selectRaw(
+                'ST_Y(ST_AsText(ST_Centroid(geometry))) as lat'
+            )->first();
+
+        return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
+    }
 }

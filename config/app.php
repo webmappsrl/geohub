@@ -190,7 +190,8 @@ return [
         /*
          * Webmapp Service Providers...
          */
-        App\Providers\HoquServiceProvider::class
+        App\Providers\HoquServiceProvider::class,
+        App\Providers\EcTrackServiceProvider::class
 
     ],
 
