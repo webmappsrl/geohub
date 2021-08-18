@@ -27,7 +27,7 @@ class AppController extends Controller {
         // APP section
         $data['APP']['name'] = $app->name;
         $data['APP']['id'] = $app->app_id;
-        $data['APP']['customerName'] = $app->customerName;
+        $data['APP']['customerName'] = $app->customer_name;
 
         // LANGUAGES section
         $data['LANGUAGES']['default'] = $app->default_language;
@@ -35,9 +35,9 @@ class AppController extends Controller {
             $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
 
         // MAP section (zoom)
-        $data['MAP']['defZoom'] = $app->defZoom;
-        $data['MAP']['maxZoom'] = $app->maxZoom;
-        $data['MAP']['minZoom'] = $app->minZoom;
+        $data['MAP']['defZoom'] = $app->map_def_zoom;
+        $data['MAP']['maxZoom'] = $app->map_max_zoom;
+        $data['MAP']['minZoom'] = $app->map_min_zoom;
 
         // MAP section (bbox)
         $data['MAP']['bbox'] = $this->_getBBox($app);
@@ -53,29 +53,28 @@ class AppController extends Controller {
         }
 
         // THEME section
-        $data['THEME']['fontFamilyHeader'] = $app->fontFamilyHeader;
-        $data['THEME']['fontFamilyContent'] = $app->fontFamilyContent;
-        $data['THEME']['defaultFeatureColor'] = $app->defaultFeatureColor;
-        $data['THEME']['primary'] = $app->primary;
+        $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
+        $data['THEME']['fontFamilyContent'] = $app->font_family_content;
+        $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
+        $data['THEME']['primary'] = $app->primary_color;
 
         // OPTIONS section
         $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
-        $data['OPTIONS']['startUrl'] = $app->startUrl;
-        $data['OPTIONS']['showEditLink'] = $app->showEditLink;
-        $data['OPTIONS']['skipRouteIndexDownload'] = $app->skipRouteIndexDownload;
-        $data['OPTIONS']['poiMinRadius'] = $app->poiMinRadius;
-        $data['OPTIONS']['poiMaxRadius'] = $app->poiMaxRadius;
-        $data['OPTIONS']['poiIconZoom'] = $app->poiIconZoom;
-        $data['OPTIONS']['poiIconRadius'] = $app->poiIconRadius;
-        $data['OPTIONS']['poiMinZoom'] = $app->poiMinZoom;
-        $data['OPTIONS']['poiLabelMinZoom'] = $app->poiLabelMinZoom;
-        $data['OPTIONS']['showTrackRefLabel'] = $app->showTrackRefLabel;
+        $data['OPTIONS']['startUrl'] = $app->start_url;
+        $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
+        $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
+        $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
+        $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
+        $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
+        $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
+        $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
+        $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
+        $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
 
         // TABLES section
-        $data['TABLES']['details']['showGpxDownload'] = $app->showGpxDownload;
-        $data['TABLES']['details']['showKmlDownload'] = $app->showKmlDownload;
-        $data['TABLES']['details']['showRelatedPoi'] = $app->showRelatedPoi;
-
+        $data['TABLES']['details']['showGpxDownload'] = !!$app->table_details_show_gpx_download;
+        $data['TABLES']['details']['showKmlDownload'] = !!$app->table_details_show_kml_download;
+        $data['TABLES']['details']['showRelatedPoi'] = !!$app->table_details_show_related_poi;
         $data['TABLES']['details']['hide_duration:forward'] = !$app->table_details_show_duration_forward;
         $data['TABLES']['details']['hide_duration:backward'] = !$app->table_details_show_duration_backward;
         $data['TABLES']['details']['hide_distance'] = !$app->table_details_show_distance;
@@ -94,7 +93,7 @@ class AppController extends Controller {
         $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
 
         // ROUTING section
-        $data['ROUTING']['enable'] = $app->enableRouting;
+        $data['ROUTING']['enable'] = $app->enable_routing;
 
         // REPORT SECION
         $data['REPORTS'] = $this->_getReportSection();
@@ -125,7 +124,7 @@ class AppController extends Controller {
             $data['OFFLINE']['forceAuth'] = true;
         }
 
-        return response()->json($data, 200);
+        return response()->json($data);
     }
 
     public function icon(int $id) {

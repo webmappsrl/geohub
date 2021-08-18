@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EcTrack;
+use App\Providers\EcTrackServiceProvider;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -106,5 +108,35 @@ class EcTrackController extends Controller {
         $ecTrack->save();
 
         return response()->json();
+    }
+
+    /**
+     * Search the ec tracks using the GET parameters
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+
+        $bboxParam = $request->get('bbox');
+        if (isset($bboxParam)) {
+            try {
+                $bbox = explode(',', $bboxParam);
+                $bbox = array_map('floatval', $bbox);
+            } catch (Exception $e) {
+                Log::warning();
+            }
+
+            if (isset($bbox) && is_array($bbox)) {
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox);
+            }
+        }
+
+        return response()->json($featureCollection);
     }
 }

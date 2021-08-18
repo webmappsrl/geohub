@@ -102,7 +102,7 @@ class EcTrack extends Resource {
                 return [
                     'feature' => $this->getGeojson(),
                 ];
-            })->hideFromIndex()->hideWhenCreating(),
+            })->hideFromIndex()->hideWhenCreating()->viewOnly(),
             FeatureImagePopup::make(__('Feature Image'), 'featureImage')->onlyOnForms()->feature($geojson)->apiBaseUrl('/api/ec/track/'),
             Ecpoipopup::make(__('EcPoi'))->nullable()->onlyOnForms()->feature($geojson),
             ExternalImage::make(__('Feature Image'), function () {

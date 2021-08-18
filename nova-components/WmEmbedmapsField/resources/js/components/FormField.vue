@@ -10,7 +10,7 @@
         class="wm-embedmaps-field-map-container"
         :feature="field.value['feature']"
         v-model="field.value['feature']"
-        :editable="true"
+        :editable="!this.field.viewOnly"
         :related="field.value['related'] ? field.value['related'] : []"
       ></map-wm-embedmaps-field>
     </template>
@@ -22,9 +22,7 @@ import {FormField, HandlesValidationErrors} from "laravel-nova";
 
 export default {
   mixins: [FormField, HandlesValidationErrors],
-
   props: ["resourceName", "resourceId", "field"],
-
   methods: {
     /*
      * Set the initial, internal value for the field.

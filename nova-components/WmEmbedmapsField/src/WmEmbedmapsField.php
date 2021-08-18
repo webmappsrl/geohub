@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class WmEmbedmapsField extends Field
-{
+class WmEmbedmapsField extends Field {
     /**
      * The field's component.
      *
@@ -21,13 +20,16 @@ class WmEmbedmapsField extends Field
         $requestAttribute,
         $model,
         $attribute
-    )
-    {
+    ) {
         $geometryType = $model::$geometryType ?? 'Point';
 
         if ($request->exists($requestAttribute) && $geometryType === 'Point') {
             list($lat, $lng) = explode(',', $request[$requestAttribute]);
             $model->{$attribute} = DB::raw("ST_GeomFromText('POINT($lat $lng)')");
         }
+    }
+
+    public function viewOnly() {
+        return $this->withMeta(['viewOnly' => true]);
     }
 }

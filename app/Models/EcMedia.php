@@ -12,24 +12,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 
-class EcMedia extends Model
-{
+class EcMedia extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     /**
      * @var array
      */
     protected $fillable = ['name', 'url'];
+    public array $translatable = ['name', 'description'];
 
-    public $translatable = ['name', 'description'];
-
-    public function __construct(array $attributes = [])
-    {
+    public function __construct(array $attributes = []) {
         parent::__construct($attributes);
     }
 
-    protected static function booted()
-    {
+    protected static function booted() {
         parent::booted();
 
         static::creating(function ($ecMedia) {
@@ -81,65 +77,61 @@ class EcMedia extends Model
         });
     }
 
-    public function save(array $options = [])
-    {
+    public function save(array $options = []) {
         parent::save($options);
     }
 
-    public function author()
-    {
+    public function author() {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ecPois(): BelongsToMany
-    {
+    public function ecPois(): BelongsToMany {
         return $this->belongsToMany(EcPoi::class);
     }
 
-
-    public function ecTracks(): BelongsToMany
-    {
+    public function ecTracks(): BelongsToMany {
         return $this->belongsToMany(EcTrack::class);
     }
 
-    public function taxonomyActivities()
-    {
+    public function taxonomyActivities() {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function taxonomyPoiTypes()
-    {
+    public function taxonomyPoiTypes() {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function taxonomyTargets()
-    {
+    public function taxonomyTargets() {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes()
-    {
+    public function taxonomyThemes() {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyWhens()
-    {
+    public function taxonomyWhens() {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyWheres()
-    {
+    public function taxonomyWheres() {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function featureImageEcPois(): HasMany
-    {
+    public function featureImageEcPois(): HasMany {
         return $this->hasMany(EcPoi::class, 'feature_image');
     }
 
-    public function featureImageEcTracks(): HasMany
-    {
+    public function featureImageEcTracks(): HasMany {
         return $this->hasMany(EcTrack::class, 'feature_image');
+    }
+
+    public function thumbnail($size): string {
+        $thumbnails = json_decode($this->thumbnails, true);
+        $result = substr($this->url, 0, 4) === 'http' ? $this->url : Storage::disk('public')->path($this->url);
+        if (isset($thumbnails[$size]))
+            $result = $thumbnails[$size];
+
+        return $result;
     }
 
     /**
@@ -147,8 +139,7 @@ class EcMedia extends Model
      *
      * @return string
      */
-    public function getJson(): string
-    {
+    public function getJson(): string {
         $json = [
             'id' => $this->id,
             'url' => $this->url,

@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'version' => '0.1.27.4',
+    'version' => '0.2.1.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -190,7 +190,8 @@ return [
         /*
          * Webmapp Service Providers...
          */
-        App\Providers\HoquServiceProvider::class
+        App\Providers\HoquServiceProvider::class,
+        App\Providers\EcTrackServiceProvider::class
 
     ],
 
