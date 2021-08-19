@@ -4,9 +4,7 @@ namespace Tests\Feature\Api\Ec\Track;
 
 use App\Models\EcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class SearchTest extends TestCase {
