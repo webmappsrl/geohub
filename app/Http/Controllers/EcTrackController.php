@@ -178,4 +178,38 @@ class EcTrackController extends Controller {
 
         return response()->json($featureCollection);
     }
+
+    /**
+     * Get the most viewed ec tracks
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function multiple(Request $request): JsonResponse {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+
+        try {
+            $ids = $request->get('ids');
+            $ids = explode(',', $ids ?? void);
+        } catch (Exception $e) {
+        }
+
+        if (isset($ids) && is_array($ids)) {
+            $ids = array_slice($ids, 0, 3);
+            $ids = array_values(array_unique($ids));
+            foreach ($ids as $id) {
+                if ($id === strval(intval($id))) {
+                    $track = EcTrack::find($id);
+                    if (isset($track))
+                        $featureCollection["features"][] = $track->getGeojson();
+                }
+            }
+        }
+
+        return response()->json($featureCollection);
+    }
 }

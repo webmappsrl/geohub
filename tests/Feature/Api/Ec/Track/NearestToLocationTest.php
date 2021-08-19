@@ -181,6 +181,7 @@ class NearestToLocationTest extends TestCase {
                 [9, 0, 0]
             ]
         ]);
+        $ids[] = $track->id;
         EcTrack::factory([
             'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
         ])->count(5)->create();
