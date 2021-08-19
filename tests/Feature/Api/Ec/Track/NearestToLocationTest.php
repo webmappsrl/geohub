@@ -63,7 +63,7 @@ class NearestToLocationTest extends TestCase {
             "type" => "LineString",
             "coordinates" => [
                 [0, 0, 0],
-                [1, 0, 0]
+                [0.01, 0, 0]
             ]
         ]);
         $track = EcTrack::factory([
@@ -73,8 +73,8 @@ class NearestToLocationTest extends TestCase {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
-                [1, 0, 0],
-                [2, 0, 0]
+                [0.01, 0, 0],
+                [0.02, 0, 0]
             ]
         ]);
         $track = EcTrack::factory([
@@ -84,8 +84,8 @@ class NearestToLocationTest extends TestCase {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
-                [2, 0, 0],
-                [3, 0, 0]
+                [0.02, 0, 0],
+                [0.03, 0, 0]
             ]
         ]);
         $track = EcTrack::factory([
@@ -95,8 +95,8 @@ class NearestToLocationTest extends TestCase {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
-                [3, 0, 0],
-                [4, 0, 0]
+                [0.03, 0, 0],
+                [0.04, 0, 0]
             ]
         ]);
         $track = EcTrack::factory([
@@ -106,8 +106,8 @@ class NearestToLocationTest extends TestCase {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
-                [4, 0, 0],
-                [5, 0, 0]
+                [0.04, 0, 0],
+                [0.05, 0, 0]
             ]
         ]);
         $track = EcTrack::factory([
@@ -117,8 +117,8 @@ class NearestToLocationTest extends TestCase {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
-                [5, 0, 0],
-                [6, 0, 0]
+                [0.05, 0, 0],
+                [0.06, 0, 0]
             ]
         ]);
         EcTrack::factory([
@@ -136,6 +136,66 @@ class NearestToLocationTest extends TestCase {
         $this->assertArrayHasKey("features", $json);
         $this->assertIsArray($json["features"]);
         $this->assertCount(5, $json["features"]);
+        foreach ($ids as $pos => $id) {
+            $this->assertArrayHasKey($pos, $json["features"]);
+            $this->assertIsArray($json["features"][$pos]);
+            $this->assertArrayHasKey("type", $json["features"][$pos]);
+            $this->assertSame("Feature", $json["features"][$pos]["type"]);
+            $this->assertArrayHasKey("properties", $json["features"][$pos]);
+            $this->assertArrayHasKey("id", $json["features"][$pos]["properties"]);
+            $this->assertSame($id, $json["features"][$pos]["properties"]["id"]);
+            $this->assertArrayHasKey("geometry", $json["features"][$pos]);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function check_return_order_is_correct_with_only_two_tracks_in_range() {
+        $ids = [];
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0, 0, 0],
+                [0.01, 0, 0]
+            ]
+        ]);
+        $track = EcTrack::factory([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ])->create();
+        $ids[] = $track->id;
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0.01, 0, 0],
+                [0.02, 0, 0]
+            ]
+        ]);
+        $track = EcTrack::factory([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ])->create();
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [8, 0, 0],
+                [9, 0, 0]
+            ]
+        ]);
+        EcTrack::factory([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ])->count(5)->create();
+
+        $result = $this->getJson('/api/ec/track/nearest/0/0', []);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = $result->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("type", $json);
+        $this->assertIsString($json["type"]);
+        $this->assertSame("FeatureCollection", $json["type"]);
+        $this->assertArrayHasKey("features", $json);
+        $this->assertIsArray($json["features"]);
+        $this->assertCount(2, $json["features"]);
         foreach ($ids as $pos => $id) {
             $this->assertArrayHasKey($pos, $json["features"]);
             $this->assertIsArray($json["features"][$pos]);

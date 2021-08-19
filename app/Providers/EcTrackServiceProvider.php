@@ -107,19 +107,26 @@ ORDER BY kmeans;';
      *
      * @param float $lon
      * @param float $lat
+     * @param int   $distance the distance limit in meters
      * @param int   $limit
      *
      * @return array
      */
-    public static function getNearestToLonLat(float $lon, float $lat, int $limit = 5): array {
+    public static function getNearestToLonLat(float $lon, float $lat, int $distance = 10000, int $limit = 5): array {
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
         ];
-        $tracks = EcTrack::orderByRaw("ST_Distance(
+        $tracks = EcTrack::whereRaw("ST_Distance(
                 ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
                 ST_Transform(ST_SetSRID(geometry, 4326), 3857)
-                ) ASC")->limit($limit)->get();
+                ) <= $distance")
+            ->orderByRaw("ST_Distance(
+                ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
+                ST_Transform(ST_SetSRID(geometry, 4326), 3857)
+                ) ASC")
+            ->limit($limit)
+            ->get();
 
         foreach ($tracks as $track) {
             $featureCollection['features'][] = $track->getGeojson();
