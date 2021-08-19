@@ -102,8 +102,6 @@ class EcTrackController extends Controller {
             } else $ecTrack->$field = null;
         }
 
-        Log::info($ecTrack->ele_max);
-
         $ecTrack->skip_update = true;
         $ecTrack->save();
 
@@ -134,6 +132,81 @@ class EcTrackController extends Controller {
 
             if (isset($bbox) && is_array($bbox)) {
                 $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox);
+            }
+        }
+
+        return response()->json($featureCollection);
+    }
+
+    /**
+     * Get the closest ec track to the given location
+     *
+     * @param Request $request
+     * @param string  $lon
+     * @param string  $lat
+     *
+     * @return JsonResponse
+     */
+    public function nearestToLocation(Request $request, string $lon, string $lat): JsonResponse {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+        if ($lon === strval(floatval($lon)) && $lat === strval(floatval($lat))) {
+            $lon = floatval($lon);
+            $lat = floatval($lat);
+            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($lon, $lat);
+        }
+
+        return response()->json($featureCollection);
+    }
+
+    /**
+     * Get the most viewed ec tracks
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function mostViewed(Request $request): JsonResponse {
+        //        $featureCollection = [
+        //            "type" => "FeatureCollection",
+        //            "features" => []
+        //        ];
+
+        $featureCollection = EcTrackServiceProvider::getMostViewed();
+
+        return response()->json($featureCollection);
+    }
+
+    /**
+     * Get the most viewed ec tracks
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function multiple(Request $request): JsonResponse {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+
+        try {
+            $ids = $request->get('ids');
+            $ids = explode(',', $ids ?? void);
+        } catch (Exception $e) {
+        }
+
+        if (isset($ids) && is_array($ids)) {
+            $ids = array_slice($ids, 0, 3);
+            $ids = array_values(array_unique($ids));
+            foreach ($ids as $id) {
+                if ($id === strval(intval($id))) {
+                    $track = EcTrack::find($id);
+                    if (isset($track))
+                        $featureCollection["features"][] = $track->getGeojson();
+                }
             }
         }
 

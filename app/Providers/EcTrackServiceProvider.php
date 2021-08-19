@@ -101,4 +101,60 @@ ORDER BY kmeans;';
 
         return $featureCollection;
     }
+
+    /**
+     * Retrieve the $limit closest track to the given location
+     *
+     * @param float $lon
+     * @param float $lat
+     * @param int   $distance the distance limit in meters
+     * @param int   $limit
+     *
+     * @return array
+     */
+    public static function getNearestToLonLat(float $lon, float $lat, int $distance = 10000, int $limit = 5): array {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+        $tracks = EcTrack::whereRaw("ST_Distance(
+                ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
+                ST_Transform(ST_SetSRID(geometry, 4326), 3857)
+                ) <= $distance")
+            ->orderByRaw("ST_Distance(
+                ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
+                ST_Transform(ST_SetSRID(geometry, 4326), 3857)
+                ) ASC")
+            ->limit($limit)
+            ->get();
+
+        foreach ($tracks as $track) {
+            $featureCollection['features'][] = $track->getGeojson();
+        }
+
+        return $featureCollection;
+    }
+
+    /**
+     * Retrieves the $limit most viewed ec tracks
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
+    // TODO: select the most viewed tracks from a real analytic value and not randomly
+    public static function getMostViewed(int $limit = 5): array {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+
+        $tracks = EcTrack::limit($limit)->get();
+
+        foreach ($tracks as $track) {
+            $featureCollection['features'][] = $track->getGeojson();
+        }
+
+        return $featureCollection;
+    }
 }

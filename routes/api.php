@@ -154,6 +154,9 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/search", [EcTrackController::class, 'search'])->name('search');
+            Route::get("/nearest/{lon}/{lat}", [EcTrackController::class, 'nearestToLocation'])->name('nearest_to_location');
+            Route::get("/most_viewed", [EcTrackController::class, 'mostViewed'])->name('most_viewed');
+            Route::get("/multiple", [EcTrackController::class, 'multiple'])->name('multiple');
             Route::put("/update/{id}", [EcTrackController::class, 'updateComputedData'])->name('update');
             Route::prefix('download')->group(function () {
                 Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
