@@ -7,15 +7,23 @@ use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EcTrackHasAscentTest extends TestCase
-{
+class EcTrackHasAscentTest extends TestCase {
     use RefreshDatabase;
 
-    public function testEcTrackDownloadGeojson()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testEcTrackDownloadGeojson() {
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -23,8 +31,7 @@ class EcTrackHasAscentTest extends TestCase
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
 
-    public function testEcTrack()
-    {
+    public function testEcTrack() {
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
@@ -32,8 +39,7 @@ class EcTrackHasAscentTest extends TestCase
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
 
-    public function testEcTrackGeojson()
-    {
+    public function testEcTrackGeojson() {
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -41,8 +47,7 @@ class EcTrackHasAscentTest extends TestCase
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
 
-    public function testAppElbrusGeojson()
-    {
+    public function testAppElbrusGeojson() {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
@@ -50,16 +55,14 @@ class EcTrackHasAscentTest extends TestCase
         $this->assertEquals(100000, $json['properties']['ascent']);
     }
 
-    public function testAppElbrusJson()
-    {
+    public function testAppElbrusJson() {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('ascent', $json);
         $this->assertEquals(100000, $json['ascent']);
     }
 
-    public function testAppElbrusTaxonomies()
-    {
+    public function testAppElbrusTaxonomies() {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
         $user = User::factory()->create();
         $image = EcMedia::factory()->create();
@@ -93,7 +96,6 @@ class EcTrackHasAscentTest extends TestCase
 
         $fields = [
             'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent', 'difficulty',
-            'ele_from', 'ele_to', 'ele_min', 'ele_max', 'duration_forward', 'duration_backward',
             'ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward',
             'image', 'imageGallery'
         ];
@@ -105,8 +107,7 @@ class EcTrackHasAscentTest extends TestCase
         $this->assertEquals(100000, $tracks[1]['ascent']);
     }
 
-    public function _getJsonTrack($route_name)
-    {
+    public function _getJsonTrack($route_name) {
         $track = EcTrack::factory()->create(['ascent' => 100000]);
         if (preg_match('/elbrus/', $route_name)) {
             $app = App::factory()->create();

@@ -12,6 +12,7 @@ use App\Models\TaxonomyWhere;
 use App\Models\TaxonomyTarget;
 use App\Models\User;
 use App\Models\EcTrack;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -33,6 +34,15 @@ use Tests\TestCase;
  */
 class AppElbrusTaxonomyTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     private $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'

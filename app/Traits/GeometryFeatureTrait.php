@@ -7,47 +7,13 @@ use Illuminate\Support\Facades\Schema;
 use Symm\Gisconverter\Gisconverter;
 use function PHPUnit\Framework\arrayHasKey;
 
-trait GeometryFeatureTrait
-{
+trait GeometryFeatureTrait {
     /**
-     * Calculate the geojson on a model with geometry
+     * Calculate the geojson of a model with only the geometry
      *
      * @return array
      */
-    public function getGeojson($downloadUrls = []): ?array
-    {
-        return $this->formatGeometry('geojson', $downloadUrls);
-    }
-
-    /**
-     * Calculate the kml on a model with geometry
-     *
-     * @return string
-     */
-    public function getKml()
-    {
-        return $this->formatGeometry('kml');
-    }
-
-    /**
-     * Calculate the gpx on a model with geometry
-     *
-     * @return string
-     */
-    public function getGpx()
-    {
-        return $this->formatGeometry('gpx');
-    }
-
-    /**
-     * Format geometry entry by type.
-     *
-     * @param string $format .
-     *
-     * @return array|string
-     */
-    protected function formatGeometry($format = 'geojson', array $downloadUrls = [])
-    {
+    protected function getEmptyGeojson(): ?array {
         $model = get_class($this);
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -57,57 +23,58 @@ trait GeometryFeatureTrait
             ->geom;
 
         if (isset($geom)) {
-            $keys = Schema::getColumnListing($this->getTable());
-            switch ($format) {
-                case 'gpx':
-                    $formattedGeometry = Gisconverter::geojsonToGpx($geom);
-                    break;
-                case 'kml':
-                    $formattedGeometry = Gisconverter::geojsonToKml($geom);
-                    $name = $description = '';
-                    foreach ($keys as $value) {
-                        if ($value == 'name') {
-                            $name = '<name>' . $this->$value . '</name>';
-                            continue;
-                        }
-                        if ($value == 'description') {
-                            $description = '<description>' . $this->$value . '</description>';
-                            continue;
-                        }
-                    }
-                    $formattedGeometry = $name . $description . $formattedGeometry;
-                    break;
-                default:
-                    $formattedGeometry = [
-                        "type" => "Feature",
-                        "properties" => [],
-                        "geometry" => json_decode($geom, true)
-                    ];
-                    foreach ($keys as $value) {
-                        if ($value != 'geometry') {
-                            $formattedGeometry['properties'][$value] = $this->$value;
-                        }
-                    }
-                    // Override translated content
-                    if (in_array('Spatie\Translatable\HasTranslations', class_uses($this))) {
-                        if (count($this->getTranslations()) > 0) {
-                            foreach ($this->getTranslations() as $field => $content) {
-                                $formattedGeometry['properties'][$field] = $content;
-                            }
-                        }
-                    }
-                    if (count($downloadUrls)) {
-                        $formattedGeometry['properties']['geojson_url'] = $downloadUrls['geojson'];
-                        $formattedGeometry['properties']['kml_url'] = $downloadUrls['kml'];
-                        $formattedGeometry['properties']['gpx_url'] = $downloadUrls['gpx'];
-                    }
-                    break;
-            }
-
-            return $formattedGeometry;
-        } else {
+            return [
+                "type" => "Feature",
+                "properties" => [],
+                "geometry" => json_decode($geom, true)
+            ];
+        } else
             return null;
-        }
+    }
+
+    /**
+     * Calculate the kml on a model with geometry
+     *
+     * @return string
+     */
+    public function getKml(): ?string {
+        $model = get_class($this);
+        $geom = $model::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(geometry) as geom")
+            )
+            ->first()
+            ->geom;
+
+        if (isset($geom)) {
+            $formattedGeometry = Gisconverter::geojsonToKml($geom);
+
+            $name = '<name>' . ($this->name ?? '') . '</name>';
+            $description = '<description>' . ($this->description ?? '') . '</description>';
+
+            return $name . $description . $formattedGeometry;
+        } else
+            return null;
+    }
+
+    /**
+     * Calculate the gpx on a model with geometry
+     *
+     * @return mixed|null
+     */
+    public function getGpx() {
+        $model = get_class($this);
+        $geom = $model::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(geometry) as geom")
+            )
+            ->first()
+            ->geom;
+
+        if (isset($geom))
+            return Gisconverter::geojsonToGpx($geom);
+        else
+            return null;
     }
 
     /**
@@ -115,8 +82,7 @@ trait GeometryFeatureTrait
      *
      * @return array
      */
-    public function getRelatedUgcGeojson(): array
-    {
+    public function getRelatedUgcGeojson(): array {
         $classes = ['App\Models\UgcPoi' => 'ugc_pois', 'App\Models\UgcTrack' => 'ugc_tracks', 'App\Models\UgcMedia' => 'ugc_media'];
         $modelType = get_class($this);
         $model = $modelType::find($this->id);

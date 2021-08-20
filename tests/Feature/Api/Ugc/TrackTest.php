@@ -4,11 +4,21 @@ namespace Tests\Feature\Api\Ugc;
 
 use App\Models\TaxonomyWhere;
 use App\Models\UgcTrack;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class TrackTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     public function testGetGeoJson() {
         $ugcTrack = UgcTrack::factory()->create();

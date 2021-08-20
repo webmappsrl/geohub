@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\Ec\Track;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class MultipleTest extends TestCase {

@@ -4,17 +4,25 @@ namespace Tests\Feature\Api\Taxonomy;
 
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyWhere;
+use App\Providers\HoquServiceProvider;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-class WhereTest extends TestCase
-{
+class WhereTest extends TestCase {
     use RefreshDatabase;
 
-    public function testGetGeoJson()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testGetGeoJson() {
         $taxonomyWhere = TaxonomyWhere::factory()->create();
         $response = $this->get(route("api.taxonomy.where.geojson", ['id' => $taxonomyWhere->id]));
         $this->assertSame(200, $response->status());
@@ -23,14 +31,12 @@ class WhereTest extends TestCase
         $this->assertSame('Feature', $json["type"]);
     }
 
-    public function testGetGeoJsonMissingId()
-    {
+    public function testGetGeoJsonMissingId() {
         $response = $this->get(route("api.taxonomy.where.geojson", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testGetGeoJsonByIdentifier()
-    {
+    public function testGetGeoJsonByIdentifier() {
         $taxonomyWhere = TaxonomyWhere::factory()->create();
         $response = $this->get(route("api.taxonomy.where.geojson.idt", ['identifier' => $taxonomyWhere->identifier]));
         $this->assertSame(200, $response->status());
@@ -39,8 +45,7 @@ class WhereTest extends TestCase
         $this->assertSame('Feature', $json["type"]);
     }
 
-    public function testGetJson()
-    {
+    public function testGetJson() {
         $this->withoutExceptionHandling();
         $taxonomyWhen = TaxonomyWhere::factory()->create();
         $response = $this->get(route("api.taxonomy.where.json", ['id' => $taxonomyWhen->id]));
@@ -48,31 +53,27 @@ class WhereTest extends TestCase
         $this->assertIsObject($response);
     }
 
-    public function testGetJsonMissingId()
-    {
+    public function testGetJsonMissingId() {
         $response = $this->get(route("api.taxonomy.where.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testGetJsonByIdentifier()
-    {
+    public function testGetJsonByIdentifier() {
         $taxonomyWhen = TaxonomyWhere::factory()->create();
         $response = $this->get(route("api.taxonomy.where.json.idt", ['identifier' => $taxonomyWhen->identifier]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
     }
 
-    public function testIdentifierFormat()
-    {
+    public function testIdentifierFormat() {
         $taxonomyWhere = TaxonomyWhere::factory()->create(['identifier' => "Testo dell'identifier di prova"]);
         $this->assertEquals($taxonomyWhere->identifier, "testo-dellidentifier-di-prova");
     }
 
-    public function testIdentifierUniqueness()
-    {
+    public function testIdentifierUniqueness() {
         TaxonomyWhere::factory()->create(['identifier' => "identifier"]);
-        $taxonomyWhereSecond = TaxonomyWhere::factory()->create(['identifier' => NULL]);
-        $taxonomyWhereThird = TaxonomyWhere::factory()->create(['identifier' => NULL]);
+        $taxonomyWhereSecond = TaxonomyWhere::factory()->create(['identifier' => null]);
+        $taxonomyWhereThird = TaxonomyWhere::factory()->create(['identifier' => null]);
         $this->assertEquals($taxonomyWhereSecond->identifier, $taxonomyWhereThird->identifier);
         $this->assertNull($taxonomyWhereSecond->identifier);
         $this->assertNull($taxonomyWhereThird->identifier);

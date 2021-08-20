@@ -175,7 +175,9 @@ class AppController extends Controller {
             readfile($app->$type);
         } else {
             //Scaricare risorsa locale
-            return Storage::disk('public')->download($app->$type, $type . '.' . $pathInfo['extension']);
+            if (Storage::disk('public')->exists($app->$type . '.asd'))
+                return Storage::disk('public')->download($app->$type, $type . '.' . $pathInfo['extension']);
+            else return response()->json(['error' => 'File not found'], 404);
         }
     }
 

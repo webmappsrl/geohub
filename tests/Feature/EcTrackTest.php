@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 
-class EcTrackTest extends TestCase
-{
+class EcTrackTest extends TestCase {
     use RefreshDatabase;
 
-    public function testSaveEcTrackOk()
-    {
+    public function testSaveEcTrackOk() {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -29,8 +27,7 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testSaveEcTrackError()
-    {
+    public function testSaveEcTrackError() {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -44,8 +41,11 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testAssociateFeatureImageToTrack()
-    {
+    public function testAssociateFeatureImageToTrack() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -57,8 +57,11 @@ class EcTrackTest extends TestCase
         $this->assertEquals($ecTrack->feature_image, $ecMedia->id);
     }
 
-    public function testLoad2DGeojsonFile()
-    {
+    public function testLoad2DGeojsonFile() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -77,8 +80,11 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testLoad3DGeojsonFile()
-    {
+    public function testLoad3DGeojsonFile() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -97,8 +103,11 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testLoadFeatureCollectionGeojsonFile()
-    {
+    public function testLoadFeatureCollectionGeojsonFile() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -125,8 +134,11 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testLoadGpxFile()
-    {
+    public function testLoadGpxFile() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -156,9 +168,7 @@ class EcTrackTest extends TestCase
      * 0.1.8.05 Come GC voglio che le tassonomie WHERE si aggiornino automaticamente
      * quando cambio la geometria del Track perché altrimenti sarebbero potenzialmente sbagliate
      */
-    public function testEcTrackChangeGeometry()
-    {
-
+    public function testEcTrackChangeGeometry() {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -182,8 +192,11 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testLoadKmlFile()
-    {
+    public function testLoadKmlFile() {
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
         $ecTrack = EcTrack::factory()->create();
         $this->assertIsObject($ecTrack);
 
@@ -209,8 +222,7 @@ class EcTrackTest extends TestCase
         $ecTrack->save();
     }
 
-    public function testOsmidFields()
-    {
+    public function testOsmidFields() {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -226,7 +238,6 @@ class EcTrackTest extends TestCase
 
         $this->assertIsObject($ecTrack);
         $this->assertNotEmpty($ecTrack->geometry);
-
 
         // $new_geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 44, 12 45, 13 46)'))");
         // $this->assertEquals('126402', $properties['source_id']);

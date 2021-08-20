@@ -10,17 +10,25 @@ use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use TaxonomyTargets;
 use Tests\TestCase;
 
-class TrackTest extends TestCase
-{
+class TrackTest extends TestCase {
     use RefreshDatabase;
 
-    public function testGetGeoJson()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testGetGeoJson() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
         $this->assertSame(200, $response->status());
@@ -29,14 +37,12 @@ class TrackTest extends TestCase
         $this->assertSame('Feature', $json["type"]);
     }
 
-    public function testGetGeoJsonMissingId()
-    {
+    public function testGetGeoJsonMissingId() {
         $response = $this->get(route("api.ec.track.json", ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
-    public function testDownloadGpxData()
-    {
+    public function testDownloadGpxData() {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
         $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
@@ -56,8 +62,7 @@ KML;
         $this->assertEquals($gpxResponse, $gpx);
     }
 
-    public function testDownloadKmlData()
-    {
+    public function testDownloadKmlData() {
         $data['name'] = 'Test track';
         $data['description'] = 'Test track description.';
         $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
@@ -76,8 +81,7 @@ KML;
         $this->assertEquals($kmlResponse, $kml);
     }
 
-    public function testOsmidFields()
-    {
+    public function testOsmidFields() {
         $data['source_id'] = '126402';
         $data['import_method'] = 'osm';
         $data['source'] = 'osm';
@@ -98,8 +102,7 @@ KML;
         $this->assertEquals('osm', $properties['import_method']);
     }
 
-    public function testExistsDownloadGeojsonUrl()
-    {
+    public function testExistsDownloadGeojsonUrl() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -116,8 +119,7 @@ KML;
         $this->assertStringContainsString('download', $properties['geojson_url']);
     }
 
-    public function testExistsDownloadGpxUrl()
-    {
+    public function testExistsDownloadGpxUrl() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -135,8 +137,7 @@ KML;
         $this->assertStringContainsString('.gpx', $properties['gpx_url']);
     }
 
-    public function testExistsDownloadKmlUrl()
-    {
+    public function testExistsDownloadKmlUrl() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -154,8 +155,7 @@ KML;
         $this->assertStringContainsString('.kml', $properties['kml_url']);
     }
 
-    public function testViewGpxOfTrack()
-    {
+    public function testViewGpxOfTrack() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.view.gpx", ['id' => $ecTrack->id]));
 
@@ -166,8 +166,7 @@ KML;
         $this->assertStringContainsString('<trkseg', $content);
     }
 
-    public function testViewKmlOfTrack()
-    {
+    public function testViewKmlOfTrack() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.view.kml", ['id' => $ecTrack->id]));
 
@@ -179,8 +178,7 @@ KML;
         $this->assertStringContainsString('<description', $content);
     }
 
-    public function testFeatureImageWithImage()
-    {
+    public function testFeatureImageWithImage() {
         $media = EcMedia::factory()->create();
         $api_url = route('api.ec.media.geojson', ['id' => $media->id], true);
 
@@ -196,9 +194,9 @@ KML;
         $properties = $json['properties'];
         $this->assertIsArray($properties);
 
-        $this->assertArrayHasKey('image', $properties);
-        $this->assertIsArray($properties['image']);
-        $image = $properties['image'];
+        $this->assertArrayHasKey('feature_image', $properties);
+        $this->assertIsArray($properties['feature_image']);
+        $image = $properties['feature_image'];
 
         $this->assertArrayHasKey('id', $image);
         $this->assertArrayHasKey('url', $image);
@@ -221,8 +219,7 @@ KML;
         $this->assertArrayHasKey('original', $image['sizes']);
     }
 
-    public function testFeatureImageWithoutImage()
-    {
+    public function testFeatureImageWithoutImage() {
         $this->withoutExceptionHandling();
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
@@ -237,8 +234,7 @@ KML;
         $this->assertArrayNotHasKey('image', $properties);
     }
 
-    public function testGalleryWithImage()
-    {
+    public function testGalleryWithImage() {
         $media1 = EcMedia::factory()->create();
         $media2 = EcMedia::factory()->create();
         $media3 = EcMedia::factory()->create();
@@ -261,9 +257,9 @@ KML;
         $properties = $json['properties'];
         $this->assertIsArray($properties);
 
-        $this->assertArrayHasKey('imageGallery', $properties);
-        $this->assertIsArray($properties['imageGallery']);
-        $gallery = $properties['imageGallery'];
+        $this->assertArrayHasKey('image_gallery', $properties);
+        $this->assertIsArray($properties['image_gallery']);
+        $gallery = $properties['image_gallery'];
 
         $this->assertIsArray($gallery);
         $this->assertCount(3, $gallery);
@@ -323,8 +319,7 @@ KML;
         $this->assertArrayHasKey('original', $gallery[2]['sizes']);
     }
 
-    public function testGalleryWithoutImage()
-    {
+    public function testGalleryWithoutImage() {
         $ecTrack = EcTrack::factory()->create();
         $response = $this->get(route("api.ec.track.json", ['id' => $ecTrack->id]));
 
@@ -335,11 +330,10 @@ KML;
         $properties = $json['properties'];
         $this->assertIsArray($properties);
 
-        $this->assertArrayNotHasKey('imageGallery', $properties);
+        $this->assertArrayNotHasKey('image_gallery', $properties);
     }
 
-    public function testApiTaxonomies()
-    {
+    public function testApiTaxonomies() {
         $ecTrack = EcTrack::factory()->create();
 
         TaxonomyWhere::factory(2)->create();
@@ -392,8 +386,7 @@ KML;
         $this->assertArrayHasKey('when', $properties['taxonomy']);
     }
 
-    public function testApiDurations()
-    {
+    public function testApiDurations() {
         $ecTrack = EcTrack::factory()->create();
 
         $taxHiking = TaxonomyActivity::factory()->create([
@@ -440,8 +433,7 @@ KML;
     /**
      * @test
      */
-    public function check_adding_multiple_pois_to_track()
-    {
+    public function check_adding_multiple_pois_to_track() {
         $track = EcTrack::factory()->create();
         $pois = EcPoi::factory(10)->create();
         $track->ecPois()->attach($pois);

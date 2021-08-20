@@ -57,7 +57,7 @@ class App extends Model {
     /**
      * @todo: differenziare la tassonomia "taxonomyActivities" !!!
      */
-    public function listTracksByTerm($term, $taxonomy_name) {
+    public function listTracksByTerm($term, $taxonomy_name): array {
         switch ($taxonomy_name) {
             case 'activity':
                 $query = EcTrack::where('user_id', $this->user_id)
@@ -78,6 +78,7 @@ class App extends Model {
                     });
                 break;
             case 'target':
+            case 'who':
                 $query = EcTrack::where('user_id', $this->user_id)
                     ->whereHas('taxonomyTargets', function ($q) use ($term) {
                         $q->where('id', $term);
@@ -96,7 +97,9 @@ class App extends Model {
         $tracks = $query->orderBy('name')->get();
         $tracks_array = [];
         foreach ($tracks as $track) {
-            $tracks_array[] = json_decode($track->getJson(), true);
+            $geojson = $track->getElbrusGeojson();
+            if (isset($geojson['properties']))
+                $tracks_array[] = $geojson['properties'];
         }
 
         return $tracks_array;

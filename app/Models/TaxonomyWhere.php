@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
@@ -25,7 +26,7 @@ use Spatie\Translatable\HasTranslations;
 class TaxonomyWhere extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
-    public $translatable = ['name', 'description', 'excerpt'];
+    public array $translatable = ['name', 'description', 'excerpt'];
     protected $table = 'taxonomy_wheres';
     protected $fillable = [
         'name',
@@ -103,7 +104,7 @@ class TaxonomyWhere extends Model {
         }
     }
 
-    public function author() {
+    public function author(): BelongsTo {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
@@ -119,15 +120,15 @@ class TaxonomyWhere extends Model {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function ecMedia() {
+    public function ecMedia(): MorphToMany {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 
-    public function ecTrack() {
+    public function ecTrack(): MorphToMany {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
     }
 
-    public function ecPoi() {
+    public function ecPoi(): MorphToMany {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
 
@@ -135,10 +136,48 @@ class TaxonomyWhere extends Model {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
+    /**
+     * @param $message
+     *
+     * @throws ValidationException
+     */
     private static function validationError($message) {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
         throw  ValidationException::withMessages($messageBag->getMessages());
+    }
+
+    /**
+     * Return the json version of the taxonomy where, avoiding the geometry
+     *
+     * @return array
+     */
+    public function getJson(): array {
+        $array = $this->toArray();
+
+        $propertiesToClear = ['geometry'];
+        foreach ($array as $property => $value) {
+            if (in_array($property, $propertiesToClear)
+                || is_null($value)
+                || (is_array($value) && count($value) === 0))
+                unset($array[$property]);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Create a geojson from the ec track
+     *
+     * @return array
+     */
+    public function getGeojson(): ?array {
+        $feature = $this->getEmptyGeojson();
+        if (isset($feature["properties"])) {
+            $feature["properties"] = $this->getJson();
+
+            return $feature;
+        } else return null;
     }
 }

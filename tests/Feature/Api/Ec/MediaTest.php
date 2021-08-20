@@ -4,32 +4,38 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcMedia;
 use App\Models\TaxonomyWhere;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class MediaTest extends TestCase
-{
+class MediaTest extends TestCase {
     use RefreshDatabase;
+    
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
-    public function testNoIdReturnCode404()
-    {
+    public function testNoIdReturnCode404() {
         $result = $this->putJson('/api/ec/media/update/0', []);
 
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testNoUrlReturnCode400()
-    {
+    public function testNoUrlReturnCode400() {
         $ecMedia = EcMedia::factory()->create();
         $result = $this->putJson('/api/ec/media/update/' . $ecMedia->id, []);
 
         $this->assertEquals(400, $result->getStatusCode());
     }
 
-    public function testSendUrlUpdateFieldUrl()
-    {
+    public function testSendUrlUpdateFieldUrl() {
         $ecMedia = EcMedia::factory()->create();
 
         $actualUrl = $ecMedia->url;
@@ -48,8 +54,7 @@ class MediaTest extends TestCase
         $this->assertEquals($newUrl, $ecMediaUpdated->url);
     }
 
-    public function testSendCoordinatesUpdateFieldGeometry()
-    {
+    public function testSendCoordinatesUpdateFieldGeometry() {
         $ecMedia = EcMedia::factory()->create();
         $newGeometry = [
             'type' => 'Point',
@@ -75,8 +80,7 @@ class MediaTest extends TestCase
         $this->assertEquals($newGeometry, json_decode($geom, true));
     }
 
-    public function testSendWheresIdsUpdateWhereRelation()
-    {
+    public function testSendWheresIdsUpdateWhereRelation() {
         $ecMedia = EcMedia::factory()->create();
         $where = TaxonomyWhere::factory()->create();
 
@@ -95,8 +99,7 @@ class MediaTest extends TestCase
         $this->assertSame($ecMedia->id, $medias->first()->id);
     }
 
-    public function testSendThumbnailsToEcMedia()
-    {
+    public function testSendThumbnailsToEcMedia() {
         $ecMedia = EcMedia::factory()->create();
         $payload = [
             'url' => 'test_url',
@@ -111,8 +114,7 @@ class MediaTest extends TestCase
         $this->assertSame($newEcMedia->thumbnails, json_encode($payload['thumbnail_urls']));
     }
 
-    public function testDeleteLocalImage()
-    {
+    public function testDeleteLocalImage() {
         $ecMedia = EcMedia::factory()->create();
         $payload = [
             'url' => 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/100x200/test_100x200.jpg',

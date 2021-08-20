@@ -10,12 +10,22 @@ use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
 use App\Models\TaxonomyPoiType;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AppElbrusEcPoiGeojsonTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     public function testNoAppAndNoPoiReturns404() {
         $result = $this->getJson('/api/app/elbrus/0/geojson/ec_poi_0.geojson', []);
@@ -58,6 +68,7 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $this->assertEquals($poi->contact_phone, $geojson['properties']['contact:phone']);
         $this->assertEquals($poi->contact_email, $geojson['properties']['contact:email']);
     }
+
     public function testSpecialIdField() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();
@@ -66,8 +77,9 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
 
         // test response is geojson
         $geojson = json_decode($result->content(), true);
-        $this->assertEquals('ec_poi_'.$poi->id,$geojson['properties']['id']);
+        $this->assertEquals('ec_poi_' . $poi->id, $geojson['properties']['id']);
     }
+
     public function testTaxonomyFieldWithActivity() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();
@@ -78,9 +90,9 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $geojson = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('activity_'.$activity->id,$geojson['properties']['taxonomy']['activity'][0]);
-
+        $this->assertEquals('activity_' . $activity->id, $geojson['properties']['taxonomy']['activity'][0]);
     }
+
     public function testTaxonomyFieldWithTwoActivity() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();
@@ -93,10 +105,10 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $geojson = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertTrue(in_array('activity_'.$activity->id,$geojson['properties']['taxonomy']['activity']));
-        $this->assertTrue(in_array('activity_'.$activity1->id,$geojson['properties']['taxonomy']['activity']));
-
+        $this->assertTrue(in_array('activity_' . $activity->id, $geojson['properties']['taxonomy']['activity']));
+        $this->assertTrue(in_array('activity_' . $activity1->id, $geojson['properties']['taxonomy']['activity']));
     }
+
     public function testTaxonomyFieldWithTheme() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();
@@ -107,9 +119,9 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $geojson = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('theme_'.$theme->id,$geojson['properties']['taxonomy']['theme'][0]);
-
+        $this->assertEquals('theme_' . $theme->id, $geojson['properties']['taxonomy']['theme'][0]);
     }
+
     public function testTaxonomyFieldWithAllTaxonomies() {
         $app = App::factory()->create();
         $poi = EcPoi::factory()->create();
@@ -136,12 +148,11 @@ class AppElbrusEcPoiGeojsonTest extends TestCase {
         $geojson = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('activity_'.$activity->id,$geojson['properties']['taxonomy']['activity'][0]);
-        $this->assertEquals('theme_'.$theme->id,$geojson['properties']['taxonomy']['theme'][0]);
-        $this->assertEquals('who_'.$who->id,$geojson['properties']['taxonomy']['who'][0]);
-        $this->assertEquals('when_'.$when->id,$geojson['properties']['taxonomy']['when'][0]);
-        $this->assertEquals('where_'.$where->id,$geojson['properties']['taxonomy']['where'][0]);
-        $this->assertEquals('webmapp_category_'.$poi_type->id,$geojson['properties']['taxonomy']['webmapp_category'][0]);
-
+        $this->assertEquals('activity_' . $activity->id, $geojson['properties']['taxonomy']['activity'][0]);
+        $this->assertEquals('theme_' . $theme->id, $geojson['properties']['taxonomy']['theme'][0]);
+        $this->assertEquals('who_' . $who->id, $geojson['properties']['taxonomy']['who'][0]);
+        $this->assertEquals('when_' . $when->id, $geojson['properties']['taxonomy']['when'][0]);
+        $this->assertEquals('where_' . $where->id, $geojson['properties']['taxonomy']['where'][0]);
+        $this->assertEquals('webmapp_category_' . $poi_type->id, $geojson['properties']['taxonomy']['webmapp_category'][0]);
     }
 }

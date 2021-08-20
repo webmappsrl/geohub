@@ -4,23 +4,30 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class EcTrackUpdateTest extends TestCase
-{
+class EcTrackUpdateTest extends TestCase {
     use RefreshDatabase;
-    public function testNoIdReturnCode404()
-    {
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testNoIdReturnCode404() {
         $result = $this->putJson('/api/ec/track/update/0', []);
 
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testSendDistanceCompUpdateFieldDistanceComp()
-    {
+    public function testSendDistanceCompUpdateFieldDistanceComp() {
         $ecTrack = EcTrack::factory()->create();
         $newDistance = 123;
         $payload = [
@@ -36,8 +43,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals($newDistance, $ecTrackUpdated->distance_comp);
     }
 
-    public function testUpdateEleMax()
-    {
+    public function testUpdateEleMax() {
         $ecTrack = EcTrack::factory()->create(['ele_max' => 0]);
         $payload = [
             'ele_max' => 100,
@@ -52,8 +58,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ele_max);
     }
 
-    public function testUpdateEleMin()
-    {
+    public function testUpdateEleMin() {
         $ecTrack = EcTrack::factory()->create(['ele_min' => 0]);
         $payload = [
             'ele_min' => 100,
@@ -68,8 +73,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ele_min);
     }
 
-    public function testUpdateAscent()
-    {
+    public function testUpdateAscent() {
         $ecTrack = EcTrack::factory()->create(['ascent' => 1]);
         $payload = [
             'ascent' => 100,
@@ -84,8 +88,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->ascent);
     }
 
-    public function testUpdateDescent()
-    {
+    public function testUpdateDescent() {
         $ecTrack = EcTrack::factory()->create(['descent' => 1]);
         $payload = [
             'descent' => 100,
@@ -100,8 +103,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(100, $ecTrackUpdated->descent);
     }
 
-    public function testUpdateDurationForward()
-    {
+    public function testUpdateDurationForward() {
         $ecTrack = EcTrack::factory()->create(['duration_forward' => 1]);
         $payload = [
             'duration_forward' => 60,
@@ -116,8 +118,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(60, $ecTrackUpdated->duration_forward);
     }
 
-    public function testUpdateDurationBackward()
-    {
+    public function testUpdateDurationBackward() {
         $ecTrack = EcTrack::factory()->create(['duration_backward' => 1]);
         $payload = [
             'duration_backward' => 60,
@@ -132,8 +133,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertEquals(60, $ecTrackUpdated->duration_backward);
     }
 
-    public function testSendWheresIdsUpdateWhereRelation()
-    {
+    public function testSendWheresIdsUpdateWhereRelation() {
         $ecTrack = EcTrack::factory()->create();
         $where = TaxonomyWhere::factory()->create();
 
@@ -151,8 +151,7 @@ class EcTrackUpdateTest extends TestCase
         $this->assertSame($ecTrack->id, $tracks->first()->id);
     }
 
-    public function testUpdate3DGeometry()
-    {
+    public function testUpdate3DGeometry() {
         $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
         // $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2],[4,5],[7,8]]}')";
         $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
