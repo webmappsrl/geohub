@@ -3,23 +3,30 @@
 namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcPoi;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class EcPoiGetTest extends TestCase
-{
+class EcPoiGetTest extends TestCase {
     use RefreshDatabase;
 
-    public function testNoIdReturnCode404()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testNoIdReturnCode404() {
         $result = $this->getJson('/api/ec/poi/0', []);
 
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testJsonStructure()
-    {
+    public function testJsonStructure() {
         $data['geometry'] = DB::raw("(ST_GeomFromText('POINT(10.1 43.1)'))");
         $ecPoi = EcPoi::factory()->create($data);
         $result = $this->getJson('/api/ec/poi/' . $ecPoi->id, []);
@@ -40,15 +47,14 @@ class EcPoiGetTest extends TestCase
         $this->assertEquals(43.1, $json->geometry->coordinates[1]);
     }
 
-    public function testDownloadGeoJsonData()
-    {
+    public function testDownloadGeoJsonData() {
         $data['geometry'] = DB::raw("(ST_GeomFromText('POINT(10.43 43.10)'))");
         $ecPoi = EcPoi::factory()->create($data);
         $this->assertIsObject($ecPoi);
 
         $result = $this->getJson('/api/ec/poi/download/' . $ecPoi->id, []);
         $this->assertEquals(200, $result->getStatusCode());
-        
+
         $json = json_decode($result->getContent());
 
         $this->assertEquals("Feature", $json->type);
@@ -65,8 +71,7 @@ class EcPoiGetTest extends TestCase
         // $this->assertEquals("geojson", $json->type);
     }
 
-    public function testDownloadKmlData()
-    {
+    public function testDownloadKmlData() {
         $data['name'] = 'Test point';
         $data['description'] = 'Test point description.';
         $data['geometry'] = DB::raw("(ST_GeomFromText('POINT(10.43 43.10)'))");
@@ -81,7 +86,7 @@ KML;
 
         $response = $this->get(route("api.ec.poi.download.kml", ['id' => $ecPoi->id]));
         $this->assertEquals(200, $response->getStatusCode());
-        
+
         $kmlResponse = $response->getContent();
 
         $this->assertEquals($kmlResponse, $kml);

@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\App;
 
 use App\Models\EcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\App;
@@ -12,6 +13,15 @@ use Tests\TestCase;
 
 class AppElbrusConfigJsonTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     /**
      * Test 404 with not found app onject

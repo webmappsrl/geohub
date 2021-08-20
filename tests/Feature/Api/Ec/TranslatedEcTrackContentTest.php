@@ -7,10 +7,10 @@ use App\Models\EcMedia;
 use App\Models\TaxonomyActivity;
 use App\Models\User;
 use App\Models\EcTrack;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 
 /**
  * Class TranslatedEcTrackContentTest
@@ -22,30 +22,38 @@ use Tests\TestCase;
  * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
  * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json
  * api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
+ *
  * @package Tests\Feature
  */
-class TranslatedEcTrackContentTest extends TestCase
-{
-    use WithFaker;
-    use RefreshDatabase;
+class TranslatedEcTrackContentTest extends TestCase {
+    use WithFaker, RefreshDatabase;
 
-    private $fields=['name','excerpt','description'];
+    private $fields = ['name', 'excerpt', 'description'];
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     /**
      * api/ec/track/{id}
      */
     public function testApiEcTrack() {
         $data = $this->_getData();
-        $track = \App\Models\EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/'.$track->id);
-        $this->assertArrayHasKey('properties',$geojson);
+        $track = EcTrack::factory()->create($data);
+        $geojson = $this->getJson('api/ec/track/' . $track->id);
+        $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -54,16 +62,16 @@ class TranslatedEcTrackContentTest extends TestCase
      */
     public function testApiEcTrackGeojson() {
         $data = $this->_getData();
-        $track = \App\Models\EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/'.$track->id.'.geojson');
-        $this->assertArrayHasKey('properties',$geojson);
+        $track = EcTrack::factory()->create($data);
+        $geojson = $this->getJson('api/ec/track/' . $track->id . '.geojson');
+        $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -72,16 +80,16 @@ class TranslatedEcTrackContentTest extends TestCase
      */
     public function testApiEcTrackDownload() {
         $data = $this->_getData();
-        $track = \App\Models\EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/download/'.$track->id);
-        $this->assertArrayHasKey('properties',$geojson);
+        $track = EcTrack::factory()->create($data);
+        $geojson = $this->getJson('api/ec/track/download/' . $track->id);
+        $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -90,16 +98,16 @@ class TranslatedEcTrackContentTest extends TestCase
      */
     public function testApiEcTrackDownloadGeojson() {
         $data = $this->_getData();
-        $track = \App\Models\EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/download/'.$track->id.'.geojson');
-        $this->assertArrayHasKey('properties',$geojson);
+        $track = EcTrack::factory()->create($data);
+        $geojson = $this->getJson('api/ec/track/download/' . $track->id . '.geojson');
+        $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -109,17 +117,17 @@ class TranslatedEcTrackContentTest extends TestCase
     public function testApiAppElbrusEcTrackGeojson() {
         $data = $this->_getData();
         $app = App::factory()->create();
-        $track = \App\Models\EcTrack::factory()->create($data);
+        $track = EcTrack::factory()->create($data);
         $geojson = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.geojson', []);
 
-        $this->assertArrayHasKey('properties',$geojson);
+        $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -129,15 +137,15 @@ class TranslatedEcTrackContentTest extends TestCase
     public function testApiAppElbrusEcTrackJson() {
         $data = $this->_getData();
         $app = App::factory()->create();
-        $track = \App\Models\EcTrack::factory()->create($data);
+        $track = EcTrack::factory()->create($data);
         $p = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
 
-        foreach($this->fields as $field) {
-            $this->assertArrayHasKey($field,$p);
-            $this->assertArrayHasKey('it',$p[$field]);
-            $this->assertArrayHasKey('en',$p[$field]);
-            $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-            $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($this->fields as $field) {
+            $this->assertArrayHasKey($field, $p);
+            $this->assertArrayHasKey('it', $p[$field]);
+            $this->assertArrayHasKey('en', $p[$field]);
+            $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+            $this->assertEquals($data[$field]['en'], $p[$field]['en']);
         }
     }
 
@@ -145,7 +153,6 @@ class TranslatedEcTrackContentTest extends TestCase
      * api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
      */
     public function testApiAppElbrusEcTaxonomiesTrack() {
-
         $user = User::factory()->create();
         $image = EcMedia::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -174,23 +181,21 @@ class TranslatedEcTrackContentTest extends TestCase
         $result = $this->getJson($uri);
         $this->assertEquals(200, $result->getStatusCode());
 
-        $tracks= json_decode($result->content(), true);
+        $tracks = json_decode($result->content(), true);
         $this->assertIsArray($tracks);
 
         $this->assertCount(2, $tracks);
 
-        foreach($tracks as $p) {
-            foreach($this->fields as $field) {
-                $this->assertArrayHasKey($field,$p);
-                $this->assertArrayHasKey('it',$p[$field]);
-                $this->assertArrayHasKey('en',$p[$field]);
-                $this->assertEquals($data[$field]['it'],$p[$field]['it']);
-                $this->assertEquals($data[$field]['en'],$p[$field]['en']);
+        foreach ($tracks as $p) {
+            foreach ($this->fields as $field) {
+                $this->assertArrayHasKey($field, $p);
+                $this->assertArrayHasKey('it', $p[$field]);
+                $this->assertArrayHasKey('en', $p[$field]);
+                $this->assertEquals($data[$field]['it'], $p[$field]['it']);
+                $this->assertEquals($data[$field]['en'], $p[$field]['en']);
             }
         }
     }
-
-
 
     private function _getData() {
         return [

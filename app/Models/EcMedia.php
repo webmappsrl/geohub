@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -81,7 +83,7 @@ class EcMedia extends Model {
         parent::save($options);
     }
 
-    public function author() {
+    public function author(): BelongsTo {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
@@ -93,27 +95,27 @@ class EcMedia extends Model {
         return $this->belongsToMany(EcTrack::class);
     }
 
-    public function taxonomyActivities() {
+    public function taxonomyActivities(): MorphToMany {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function taxonomyPoiTypes() {
+    public function taxonomyPoiTypes(): MorphToMany {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function taxonomyTargets() {
+    public function taxonomyTargets(): MorphToMany {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes() {
+    public function taxonomyThemes(): MorphToMany {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyWhens() {
+    public function taxonomyWhens(): MorphToMany {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyWheres() {
+    public function taxonomyWheres(): MorphToMany {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
@@ -149,5 +151,19 @@ class EcMedia extends Model {
         ];
 
         return json_encode($json);
+    }
+
+    /**
+     * Create a geojson from the ec track
+     *
+     * @return array
+     */
+    public function getGeojson(): ?array {
+        $feature = $this->getEmptyGeojson();
+        if (isset($feature["properties"])) {
+            $feature["properties"] = $this->getJson();
+
+            return $feature;
+        } else return null;
     }
 }

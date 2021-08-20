@@ -3,15 +3,23 @@
 namespace Tests\Unit\EcMedia;
 
 use App\Models\EcMedia;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EcMediaGetJsonTest extends TestCase
-{
+class EcMediaGetJsonTest extends TestCase {
     use RefreshDatabase;
 
-    public function testJson()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testJson() {
         $media = EcMedia::factory()->create();
         $json_string = $media->getJson();
         $api_url = route('api.ec.media.geojson', ['id' => $media->id], true);

@@ -3,22 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
-use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhere;
 use App\Models\TaxonomyWhen;
-use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use TaxonomyPoiTypes;
 
-class ApiElbrusTaxonomyController extends Controller {
-    private $names = [
+class AppElbrusTaxonomyController extends Controller {
+    private array $names = [
         'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
     ];
 

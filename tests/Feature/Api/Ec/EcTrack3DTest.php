@@ -7,6 +7,7 @@ use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -19,15 +20,22 @@ use Tests\TestCase;
  * api/ec/track/download/{id}
  * api/ec/track/download/{id}.geojson
  * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
+ *
  * @package Tests\Feature\Api\Ec
  */
-class EcTrack3DTest extends TestCase
-{
-    use WithFaker;
-    use RefreshDatabase;
+class EcTrack3DTest extends TestCase {
+    use WithFaker, RefreshDatabase;
 
-    private function _check3D($geojson)
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    private function _check3D($geojson) {
         $this->assertIsArray($geojson);
         $this->assertArrayHasKey('geometry', $geojson);
         $this->assertArrayHasKey('coordinates', $geojson['geometry']);
@@ -42,63 +50,57 @@ class EcTrack3DTest extends TestCase
     /**
      * api/ec/track/{id}
      */
-    public function testApiEcTrack()
-    {
+    public function testApiEcTrack() {
         $track = \App\Models\EcTrack::factory()->create();
         $response = $this->get('api/ec/track/' . $track->id);
-        $this->assertEquals(200,$response->getStatusCode());
-        $geojson=json_decode($response->getContent(),true);
+        $this->assertEquals(200, $response->getStatusCode());
+        $geojson = json_decode($response->getContent(), true);
         $this->_check3D($geojson);
     }
 
     /**
      * api/ec/track/{id}.geojson
      */
-    public function testApiEcTrackGeojson()
-    {
+    public function testApiEcTrackGeojson() {
         $track = \App\Models\EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/' . $track->id . '.geojson');
-        $this->assertEquals(200,$response->getStatusCode());
-        $geojson=json_decode($response->getContent(),true);
+        $this->assertEquals(200, $response->getStatusCode());
+        $geojson = json_decode($response->getContent(), true);
         $this->_check3D($geojson);
     }
 
     /**
      * api/ec/track/download/{id}
      */
-    public function testApiEcTrackDownload()
-    {
+    public function testApiEcTrackDownload() {
         $track = \App\Models\EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/download/' . $track->id);
-        $this->assertEquals(200,$response->getStatusCode());
-        $geojson=json_decode($response->getContent(),true);
+        $this->assertEquals(200, $response->getStatusCode());
+        $geojson = json_decode($response->getContent(), true);
         $this->_check3D($geojson);
     }
 
     /**
      * api/ec/track/download/{id}.geojson
      */
-    public function testApiEcTrackDownloadGeojson()
-    {
+    public function testApiEcTrackDownloadGeojson() {
         $track = \App\Models\EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/download/' . $track->id . '.geojson');
-        $this->assertEquals(200,$response->getStatusCode());
-        $geojson=json_decode($response->getContent(),true);
+        $this->assertEquals(200, $response->getStatusCode());
+        $geojson = json_decode($response->getContent(), true);
         $this->_check3D($geojson);
     }
 
     /**
      * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
      */
-    public function testApiAppElbrusEcTrackGeojson()
-    {
+    public function testApiAppElbrusEcTrackGeojson() {
         $app = App::factory()->create();
         $track = \App\Models\EcTrack::factory()->create();
         $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.geojson', []);
 
-        $this->assertEquals(200,$response->getStatusCode());
-        $geojson=json_decode($response->getContent(),true);
+        $this->assertEquals(200, $response->getStatusCode());
+        $geojson = json_decode($response->getContent(), true);
         $this->_check3D($geojson);
     }
-
 }

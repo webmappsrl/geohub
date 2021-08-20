@@ -197,39 +197,159 @@ class EcTrack extends Model {
     }
 
     /**
-     * Json with properties for API
+     * Return the json version of the ec track, avoiding the geometry
      * TODO: unit TEST
      *
-     * @return string
+     * @return array
      */
-    public function getJson(): string {
+    public function getJson(): array {
         $array = $this->toArray();
-        // Feature Image
-        if ($this->featureImage) {
-            $array['image'] = json_decode($this->featureImage->getJson(), true);
-        }
-        // Gallery
+        if ($this->featureImage)
+            $array['feature_image'] = json_decode($this->featureImage->getJson(), true);
+
         if ($this->ecMedia) {
             $gallery = [];
             $ecMedia = $this->ecMedia;
             foreach ($ecMedia as $media) {
                 $gallery[] = json_decode($media->getJson(), true);
             }
-            if (count($gallery)) {
-                $array['imageGallery'] = $gallery;
+            if (count($gallery))
+                $array['image_gallery'] = $gallery;
+        }
+
+        $fileTypes = ['geojson', 'gpx', 'kml'];
+        foreach ($fileTypes as $fileType) {
+            $array[$fileType . '_url'] = route('api.ec.track.download.' . $fileType, ['id' => $this->id]);
+        }
+
+        $taxonomies = [
+            'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
+            'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
+            'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
+            'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
+            'who' => $this->taxonomyTargets()->pluck('id')->toArray()
+        ];
+
+        foreach ($taxonomies as $key => $value) {
+            if (count($value) === 0)
+                unset($taxonomies[$key]);
+        }
+
+        $array['taxonomy'] = $taxonomies;
+
+        $durations = [];
+        $activityTerms = $this->taxonomyActivities()->whereIn('identifier', ['hiking', 'cycling'])->get()->toArray();
+        if (count($activityTerms) > 0) {
+            foreach ($activityTerms as $term) {
+                $durations[$term['identifier']] = [
+                    'forward' => $term['pivot']['duration_forward'],
+                    'backward' => $term['pivot']['duration_backward'],
+                ];
             }
         }
 
-        // Elbrus Mapping (_ -> ;)
-        $fields = ['ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward'];
-        foreach ($fields as $field) {
-            $array[$field] = $array[preg_replace('/:/', '_', $field)];
+        $array['duration'] = $durations;
+
+        $propertiesToClear = ['geometry'];
+        foreach ($array as $property => $value) {
+            if (in_array($property, $propertiesToClear)
+                || is_null($value)
+                || (is_array($value) && count($value) === 0))
+                unset($array[$property]);
         }
 
-        return json_encode($array);
+        return $array;
     }
 
-    public function getNeighbourEcMedia() {
+    /**
+     * Create a geojson from the ec track
+     *
+     * @return array
+     */
+    public function getGeojson(): ?array {
+        $feature = $this->getEmptyGeojson();
+        if (isset($feature["properties"])) {
+            $feature["properties"] = $this->getJson();
+
+            return $feature;
+        } else return null;
+    }
+
+    /**
+     * Create the track geojson using the elbrus standard
+     *
+     * @return array
+     */
+    public function getElbrusGeojson(): array {
+        $geojson = $this->getGeojson();
+        // MAPPING
+        $geojson['properties']['id'] = 'ec_track_' . $this->id;
+        $geojson = $this->_mapElbrusGeojsonProperties($geojson);
+
+        if ($this->ecPois) {
+            $related = [];
+            $pois = $this->ecPois;
+            foreach ($pois as $poi) {
+                $related['poi']['related'][] = $poi->id;
+            }
+
+            if (count($related) > 0)
+                $geojson['properties']['related'] = $related;
+        }
+
+        return $geojson;
+    }
+
+    /**
+     * Map the geojson properties to the elbrus standard
+     *
+     * @param array $geojson
+     *
+     * @return array
+     */
+    private function _mapElbrusGeojsonProperties(array $geojson): array {
+        $fields = ['ele_min', 'ele_max', 'ele_from', 'ele_to', 'duration_forward', 'duration_backward', 'contact_phone', 'contact_email'];
+        foreach ($fields as $field) {
+            if (isset($geojson['properties'][$field])) {
+                $field_with_colon = preg_replace('/_/', ':', $field);
+
+                $geojson['properties'][$field_with_colon] = $geojson['properties'][$field];
+                unset($geojson['properties'][$field]);
+            }
+        }
+
+        $fields = ['kml', 'gpx'];
+        foreach ($fields as $field) {
+            if (isset($geojson['properties'][$field . '_url'])) {
+                $geojson['properties'][$field] = $geojson['properties'][$field . '_url'];
+                unset($geojson['properties'][$field . '_url']);
+            }
+        }
+
+        if (isset($geojson['properties']['taxonomy'])) {
+            foreach ($geojson['properties']['taxonomy'] as $taxonomy => $values) {
+                $name = $taxonomy === 'poi_type' ? 'webmapp_category' : $taxonomy;
+
+                $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                    return $name . '_' . $item;
+                }, $values);
+            }
+        }
+
+        if (isset($geojson['properties']['feature_image'])) {
+            $geojson['properties']['image'] = $geojson['properties']['feature_image'];
+            unset ($geojson['properties']['feature_image']);
+        }
+
+        if (isset($geojson['properties']['image_gallery'])) {
+            $geojson['properties']['imageGallery'] = $geojson['properties']['image_gallery'];
+            unset ($geojson['properties']['image_gallery']);
+        }
+
+        return $geojson;
+    }
+
+    public function getNeighbourEcMedia(): array {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media

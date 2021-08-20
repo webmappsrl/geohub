@@ -4,23 +4,30 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcPoi;
 use App\Models\TaxonomyWhere;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class EcPoiUpdateApiTest extends TestCase
-{
+class EcPoiUpdateApiTest extends TestCase {
     use RefreshDatabase;
 
-    public function testNoIdReturnCode404()
-    {
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
+    public function testNoIdReturnCode404() {
         $result = $this->putJson('/api/ec/poi/update/0', []);
 
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testSendCoordinatesUpdateFieldGeometry()
-    {
+    public function testSendCoordinatesUpdateFieldGeometry() {
         $geometry = DB::raw("(ST_GeomFromText('POINT(10.43 43.70)'))");
         $ecPoi = EcPoi::factory()->create([
             'geometry' => $geometry,
@@ -48,8 +55,7 @@ class EcPoiUpdateApiTest extends TestCase
         $this->assertEquals($newGeometry, json_decode($geom, true));
     }
 
-    public function testSendWheresIdsUpdateWhereRelation()
-    {
+    public function testSendWheresIdsUpdateWhereRelation() {
         $ecPoi = EcPoi::factory()->create();
         $where = TaxonomyWhere::factory()->create();
 
@@ -67,16 +73,14 @@ class EcPoiUpdateApiTest extends TestCase
         $this->assertSame($ecPoi->id, $pois->first()->id);
     }
 
-    public function testApiRoute()
-    {
+    public function testApiRoute() {
         $poi = EcPoi::factory()->create();
         $uri = $this->getJson('/api/ec/poi/' . $poi->id);
         $name = $this->get(route('api.ec.poi.json', ['id' => $poi->id]));
         $this->assertJsonStringEqualsJsonString($uri->getContent(), $name->getContent());
     }
 
-    public function testUpdateEle()
-    {
+    public function testUpdateEle() {
         $ecPoi = EcPoi::factory()->create(['ele' => -10000]);
         $this->assertEquals(-10000, $ecPoi->ele);
         $payload = [
@@ -98,8 +102,7 @@ class EcPoiUpdateApiTest extends TestCase
         $this->assertEquals(100, $json['properties']['ele']);
     }
 
-    protected function _getJsonTrack($route_name)
-    {
+    protected function _getJsonTrack($route_name) {
         $poi = EcPoi::factory()->create(['ele' => 100]);
         $result = $this->get(route($route_name, ['id' => $poi->id]));
         $this->assertEquals(200, $result->getStatusCode());
