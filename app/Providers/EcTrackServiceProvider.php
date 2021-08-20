@@ -36,26 +36,53 @@ class EcTrackServiceProvider extends ServiceProvider {
      * @return mixed
      */
     public static function getSearchClustersInsideBBox(array $bbox): array {
-        $count = EcTrack::whereRaw('geometry && ST_SetSRID (ST_MakeBox2D (ST_Point (?, ?), ST_Point (?, ?)), 4326)', $bbox)->count();
+        //        $count = EcTrack::whereRaw('geometry && ST_SetSRID (ST_MakeBox2D (ST_Point (?, ?), ST_Point (?, ?)), 4326)', $bbox)->count();
+        //        $oldQuery = '
+        //SELECT
+        //    ST_AsGeojson(ST_Centroid(ST_Collect(geometry))) AS geometry,
+        //    json_agg(id) as ids,
+        //    ST_Extent(geometry) AS bbox
+        //FROM (
+        //  SELECT
+        //	(ST_ClusterKMeans(
+        //		geometry,
+        //		LEAST(5, ?)
+        //	) OVER()) as kmeans,
+        //	geometry,
+        //	id
+        //    FROM
+        //	    ec_tracks
+        //    WHERE geometry && ST_SetSRID (ST_MakeBox2D(ST_Point(?, ?), ST_Point(?, ?)), 4326)
+        //) AS ksub
+        //GROUP BY kmeans
+        //ORDER BY kmeans;';
+
+        $deltaLon = ($bbox[2] - $bbox[0]) / 5;
+        $deltaLat = ($bbox[3] - $bbox[1]) / 5;
+
+        $clusterRadius = min($deltaLon, $deltaLat);
+
         $query = '
 SELECT
-    ST_AsGeojson(ST_Centroid(ST_Collect(geometry))) AS geometry,
-    json_agg(id) as ids,
-    ST_Extent(geometry) AS bbox
+	ST_Extent(geometry) AS bbox,
+--    ST_AsGeojson(ST_Centroid(ST_Collect(geometry))) AS geometry,
+    ST_AsGeojson(ST_Centroid(ST_Extent(geometry))) AS geometry,
+	json_agg(id) AS ids
 FROM (
-  SELECT
-	(ST_ClusterKMeans(
-		geometry,
-		LEAST(5, ?)
-	) OVER()) as kmeans,
-	geometry,
-	id
-    FROM
-	    ec_tracks
+	SELECT
+		id,
+		ST_ClusterDBSCAN(
+		    ST_Centroid(geometry),
+			eps := ?,
+			minpoints := 1
+		) OVER () AS cluster_id,
+		geometry
+	FROM
+		ec_tracks
     WHERE geometry && ST_SetSRID (ST_MakeBox2D(ST_Point(?, ?), ST_Point(?, ?)), 4326)
-) AS ksub
-GROUP BY kmeans
-ORDER BY kmeans;';
+    ) sq
+GROUP BY
+	cluster_id;';
 
         /**
          * The query calculate 5 clusters of ec tracks intersecting the given bbox.
@@ -64,7 +91,8 @@ ORDER BY kmeans;';
          *  - the collected bbox (bbox, postgis BOX)
          *  - the list of features included in the cluster (ids, json array)
          */
-        $res = DB::select($query, array_merge([$count], $bbox));
+        //        $res = DB::select($query, array_merge([$count], $bbox));
+        $res = DB::select($query, array_merge([$clusterRadius], $bbox));
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
