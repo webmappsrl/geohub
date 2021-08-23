@@ -29,33 +29,61 @@ class EcTrackServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Return a collection of up to $limit ec tracks inside the bbox
+     * Return a collection of ec tracks inside the bbox. The tracks must be within $distance meters
+     * of the given $trackId if provided
      *
-     * @param array $bbox
+     * @param array    $bbox
+     * @param int|null $trackId an ec track id to reference
+     * @param int      $distanceLimit
      *
      * @return mixed
      */
-    public static function getSearchClustersInsideBBox(array $bbox): array {
-        $count = EcTrack::whereRaw('geometry && ST_SetSRID (ST_MakeBox2D (ST_Point (?, ?), ST_Point (?, ?)), 4326)', $bbox)->count();
-        $query = '
+    public static function getSearchClustersInsideBBox(array $bbox, int $trackId = null, int $distanceLimit = 1000): array {
+        $deltaLon = ($bbox[2] - $bbox[0]) / 6;
+        $deltaLat = ($bbox[3] - $bbox[1]) / 6;
+
+        $clusterRadius = min($deltaLon, $deltaLat);
+
+        $from = '';
+        $where = '';
+        $params = [$clusterRadius];
+
+        if (is_int($trackId)) {
+            $track = EcTrack::find($trackId);
+
+            if (isset($track)) {
+                $from = ', (SELECT geometry as geom FROM ec_tracks WHERE id = ?) as track';
+                $params[] = $trackId;
+                $where = 'ST_Distance(ST_Transform(ST_SetSRID(ec_tracks.geometry, 4326), 3857), ST_Transform(ST_SetSRID(track.geom, 4326), 3857)) <= ? AND ';
+                $params[] = $distanceLimit;
+            }
+        }
+
+        $where .= 'geometry && ST_SetSRID(ST_MakeBox2D(ST_Point(?, ?), ST_Point(?, ?)), 4326)';
+        $params = array_merge($params, $bbox);
+
+        $query = "
 SELECT
-    ST_AsGeojson(ST_Centroid(ST_Collect(geometry))) AS geometry,
-    json_agg(id) as ids,
-    ST_Extent(geometry) AS bbox
+	ST_Extent(centroid) AS bbox,
+    ST_AsGeojson(ST_Centroid(ST_Extent(geometry))) AS geometry,
+	json_agg(id) AS ids
 FROM (
-  SELECT
-	(ST_ClusterKMeans(
-		geometry,
-		LEAST(5, ?)
-	) OVER()) as kmeans,
-	geometry,
-	id
-    FROM
-	    ec_tracks
-    WHERE geometry && ST_SetSRID (ST_MakeBox2D(ST_Point(?, ?), ST_Point(?, ?)), 4326)
-) AS ksub
-GROUP BY kmeans
-ORDER BY kmeans;';
+	SELECT
+		id,
+		ST_ClusterDBSCAN(
+		    ST_Centroid(geometry),
+			eps := ?,
+			minpoints := 1
+		) OVER () AS cluster_id,
+		ST_Centroid(geometry) as centroid,
+	    geometry
+	FROM
+		ec_tracks
+	    $from
+    WHERE $where
+    ) clusters
+GROUP BY
+	cluster_id;";
 
         /**
          * The query calculate 5 clusters of ec tracks intersecting the given bbox.
@@ -64,17 +92,17 @@ ORDER BY kmeans;';
          *  - the collected bbox (bbox, postgis BOX)
          *  - the list of features included in the cluster (ids, json array)
          */
-        $res = DB::select($query, array_merge([$count], $bbox));
+        $res = DB::select($query, $params);
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
         ];
 
         foreach ($res as $cluster) {
-            $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $cluster->bbox));
-            $bbox = array_map('floatval', explode(' ', $bboxString));
             $ids = json_decode($cluster->ids, true);
             $geometry = json_decode($cluster->geometry, true);
+            $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $cluster->bbox));
+            $bbox = array_map('floatval', explode(' ', $bboxString));
 
             $images = [];
             $i = 0;
@@ -94,7 +122,7 @@ ORDER BY kmeans;';
                 "properties" => [
                     "ids" => $ids,
                     "bbox" => $bbox,
-                    "images" => $images
+                    "images" => $images,
                 ]
             ];
         }
