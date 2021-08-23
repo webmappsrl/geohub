@@ -127,7 +127,11 @@ class SearchTest extends TestCase {
         $this->assertArrayHasKey("bbox", $json["features"][0]["properties"]);
         $this->assertIsArray($json["features"][0]["properties"]["bbox"]);
         $this->assertCount(4, $json["features"][0]["properties"]["bbox"]);
-        $this->assertSame(json_encode([30, 0, 31, 0]), json_encode($json["features"][0]["properties"]["bbox"]));
+        /*
+         * The bbox is calculated as the bbox including the centroids.
+         * As the tracks are equal the bbox must be the track centroid
+         */
+        $this->assertSame(json_encode([30.5, 0, 30.5, 0]), json_encode($json["features"][0]["properties"]["bbox"]));
         $this->assertArrayHasKey("images", $json["features"][0]["properties"]);
         $this->assertIsArray($json["features"][0]["properties"]["images"]);
     }
@@ -183,7 +187,7 @@ class SearchTest extends TestCase {
     /**
      * @test
      */
-    public function check_search_return_five_cluster_with_more_hypothetical_clusters() {
+    public function check_search_return_six_cluster() {
         $geometry = json_encode([
             "type" => "LineString",
             "coordinates" => [
@@ -255,6 +259,150 @@ class SearchTest extends TestCase {
         $this->assertSame("FeatureCollection", $json["type"]);
         $this->assertArrayHasKey("features", $json);
         $this->assertIsArray($json["features"]);
-        $this->assertCount(5, $json["features"]);
+        $this->assertCount(6, $json["features"]);
+    }
+
+    /**
+     * @test
+     */
+    public function check_search_on_reference_track_with_no_close_tracks() {
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0, 0, 0],
+                [1, 1, 0]
+            ]
+        ]);
+        $track = EcTrack::factory()->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+        $trackId = $track->id;
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [5, 0, 0],
+                [6, 0, 0]
+            ]
+        ]);
+        EcTrack::factory(2)->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+
+        $result = $this->getJson("/api/ec/track/search?bbox=0,0,27,0&reference_id=$trackId", []);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = $result->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("type", $json);
+        $this->assertIsString($json["type"]);
+        $this->assertSame("FeatureCollection", $json["type"]);
+        $this->assertArrayHasKey("features", $json);
+        $this->assertIsArray($json["features"]);
+        $this->assertCount(1, $json["features"]);
+        $this->assertIsArray($json["features"][0]);
+        $this->assertArrayHasKey("properties", $json["features"][0]);
+        $this->assertIsArray($json["features"][0]["properties"]);
+        $this->assertArrayHasKey("ids", $json["features"][0]["properties"]);
+        $this->assertIsArray($json["features"][0]["properties"]["ids"]);
+        $this->assertCount(1, $json["features"][0]["properties"]["ids"]);
+        $this->assertTrue(in_array($trackId, $json["features"][0]["properties"]["ids"]));
+    }
+
+    /**
+     * @test
+     */
+    public function check_search_on_reference_track_with_two_close_tracks_in_the_same_cluster() {
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0, 0, 0],
+                [1, 0, 0]
+            ]
+        ]);
+        $track = EcTrack::factory()->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+        $trackId = $track->id;
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0.5, -1, 0],
+                [0.5, 1, 0]
+            ]
+        ]);
+        EcTrack::factory(2)->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+
+        $result = $this->getJson("/api/ec/track/search?bbox=0,0,27,5&reference_id=$trackId", []);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = $result->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("type", $json);
+        $this->assertIsString($json["type"]);
+        $this->assertSame("FeatureCollection", $json["type"]);
+        $this->assertArrayHasKey("features", $json);
+        $this->assertIsArray($json["features"]);
+        $this->assertCount(1, $json["features"]);
+        $this->assertIsArray($json["features"][0]);
+        $this->assertArrayHasKey("properties", $json["features"][0]);
+        $this->assertIsArray($json["features"][0]["properties"]);
+        $this->assertArrayHasKey("ids", $json["features"][0]["properties"]);
+        $this->assertIsArray($json["features"][0]["properties"]["ids"]);
+        $this->assertCount(3, $json["features"][0]["properties"]["ids"]);
+        $this->assertTrue(in_array($trackId, $json["features"][0]["properties"]["ids"]));
+    }
+
+    /**
+     * @test
+     */
+    public function check_search_on_reference_track_with_two_close_tracks_in_another_cluster() {
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0, 0, 0],
+                [1, 0, 0]
+            ]
+        ]);
+        $track = EcTrack::factory()->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+        $trackId = $track->id;
+        $geometry = json_encode([
+            "type" => "LineString",
+            "coordinates" => [
+                [0.5, -1.5, 0],
+                [0.5, 0.5, 0]
+            ]
+        ]);
+        EcTrack::factory(2)->create([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
+        ]);
+
+        $result = $this->getJson("/api/ec/track/search?bbox=0,0,27,2&reference_id=$trackId", []);
+
+        $this->assertEquals(200, $result->getStatusCode());
+        $json = $result->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey("type", $json);
+        $this->assertIsString($json["type"]);
+        $this->assertSame("FeatureCollection", $json["type"]);
+        $this->assertArrayHasKey("features", $json);
+        $this->assertIsArray($json["features"]);
+        $this->assertCount(2, $json["features"]);
+        $this->assertIsArray($json["features"][0]);
+        $this->assertArrayHasKey("properties", $json["features"][0]);
+        $this->assertIsArray($json["features"][0]["properties"]);
+        $this->assertArrayHasKey("ids", $json["features"][0]["properties"]);
+        $this->assertIsArray($json["features"][0]["properties"]["ids"]);
+        $this->assertIsArray($json["features"][1]);
+        $this->assertArrayHasKey("properties", $json["features"][1]);
+        $this->assertIsArray($json["features"][1]["properties"]);
+        $this->assertArrayHasKey("ids", $json["features"][1]["properties"]);
+        $this->assertIsArray($json["features"][1]["properties"]["ids"]);
+        $ids = array_merge($json["features"][0]["properties"]["ids"], $json["features"][1]["properties"]["ids"]);
+        $this->assertCount(3, $ids);
+        $this->assertTrue(in_array($trackId, $ids));
     }
 }

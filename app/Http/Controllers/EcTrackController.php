@@ -127,11 +127,15 @@ class EcTrackController extends Controller {
                 $bbox = explode(',', $bboxParam);
                 $bbox = array_map('floatval', $bbox);
             } catch (Exception $e) {
-                Log::warning();
+                Log::warning($e->getMessage());
             }
 
             if (isset($bbox) && is_array($bbox)) {
-                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox);
+                $trackRef = $request->get('reference_id');
+                if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
+                else $trackRef = null;
+
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef);
             }
         }
 
