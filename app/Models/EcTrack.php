@@ -264,6 +264,14 @@ class EcTrack extends Model {
                 unset($array[$property]);
         }
 
+        $relatedPoi = $this->ecPois;
+        if (count($relatedPoi) > 0) {
+            $array['related_pois'] = [];
+            foreach ($relatedPoi as $poi) {
+                $array['related_pois'][] = $poi->getBasicGeojson();
+            }
+        }
+
         return $array;
     }
 

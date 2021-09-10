@@ -441,6 +441,33 @@ KML;
         $pois = EcPoi::factory(10)->create();
         $track->ecPois()->attach($pois);
 
-        $this->assertCount(10, $track->ecPois()->get());
+        $this->assertCount(10, $track->ecPois);
+    }
+
+    /**
+     * @test
+     */
+    public function check_related_pois_in_api() {
+        $track = EcTrack::factory()->create();
+        $pois = EcPoi::factory(10)->create();
+        $track->ecPois()->attach($pois);
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('related_pois', $properties);
+        $this->assertCount(10, $properties['related_pois']);
+        $this->assertIsArray($properties['related_pois'][0]);
+        $this->assertArrayHasKey('type', $properties['related_pois'][0]);
+        $this->assertArrayHasKey('properties', $properties['related_pois'][0]);
+        $this->assertIsArray($properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('id', $properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('name', $properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('geometry', $properties['related_pois'][0]);
     }
 }
