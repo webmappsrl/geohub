@@ -380,6 +380,9 @@ KML;
 
         $this->assertArrayHasKey('taxonomy', $properties);
         $this->assertArrayHasKey('activity', $properties['taxonomy']);
+        $this->assertIsArray($properties['taxonomy']['activity']);
+        $this->assertCount(2, $properties['taxonomy']['activity']);
+        $this->assertIsArray($properties['taxonomy']['activity'][0]);
         $this->assertArrayHasKey('theme', $properties['taxonomy']);
         $this->assertArrayHasKey('where', $properties['taxonomy']);
         $this->assertArrayHasKey('who', $properties['taxonomy']);

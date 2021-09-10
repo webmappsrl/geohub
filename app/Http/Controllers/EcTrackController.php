@@ -11,6 +11,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EcTrackController extends Controller {
+    /**
+     * Return EcTrack JSON.
+     *
+     * @param Request $request
+     * @param int     $id
+     * @param array   $headers
+     *
+     * @return JsonResponse
+     */
+    public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse {
+        $track = EcTrack::find($id);
+
+        if (is_null($track))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
+
     public static function getNeighbourEcMedia(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))

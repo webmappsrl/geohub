@@ -242,7 +242,7 @@ class EditorialContentController extends Controller {
 
         $ec = $model::find($id);
         if (is_null($ec))
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);;
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
 
         return response()->json($ec->getGeojson(), 200, $headers);
     }
