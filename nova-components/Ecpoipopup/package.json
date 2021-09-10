@@ -15,6 +15,7 @@
         "laravel-nova": "^1.0"
     },
     "dependencies": {
+        "ol": "^6.7.0",
         "vue": "^2.5.0"
     }
 }

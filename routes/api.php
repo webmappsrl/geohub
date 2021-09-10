@@ -166,7 +166,7 @@ Route::name('api.')->group(function () {
                 Route::get("/{id}", [EditorialContentController::class, 'downloadEcGeojson'])->name('download');
             });
             Route::get("/{id}/neighbour_pois", [EcTrackController::class, 'getNeighbourEcPoi']);
-            Route::get("/{id}/associated_ec_poi", [EcTrackController::class, 'getAssociatedEcPoi']);
+            Route::get("/{id}/associated_ec_pois", [EcTrackController::class, 'getAssociatedEcPois']);
             Route::get("/{id}/near_points", [EcTrackController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcTrackController::class, 'getFeatureImage']);

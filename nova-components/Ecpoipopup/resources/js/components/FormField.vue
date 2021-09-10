@@ -124,7 +124,7 @@ export default {
         .then(response => {
           that.poiList = response.data;
         });
-    axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_poi')
+    axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_pois')
         .then(response => {
           that.selectedPois.splice(0);
           that.associatedPoiList = response.data;

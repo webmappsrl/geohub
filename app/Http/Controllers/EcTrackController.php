@@ -49,16 +49,31 @@ class EcTrackController extends Controller {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecMedia()->get());
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecMedia as $media) {
+            $result['features'][] = $media->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
-    public static function getAssociatedEcPoi(int $idTrack): JsonResponse {
+    public static function getAssociatedEcPois(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecPois()->get());
+
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecPois as $poi) {
+            $result['features'][] = $poi->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
     public static function getFeatureImage(int $idTrack): JsonResponse {
