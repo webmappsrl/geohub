@@ -222,8 +222,14 @@ class EcTrack extends Model {
             $array[$fileType . '_url'] = route('api.ec.track.download.' . $fileType, ['id' => $this->id]);
         }
 
+        $activities = [];
+
+        foreach ($this->taxonomyActivities as $activity) {
+            $activities[] = $activity->getJson();
+        }
+
         $taxonomies = [
-            'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
+            'activity' => $activities,
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
@@ -256,6 +262,14 @@ class EcTrack extends Model {
                 || is_null($value)
                 || (is_array($value) && count($value) === 0))
                 unset($array[$property]);
+        }
+
+        $relatedPoi = $this->ecPois;
+        if (count($relatedPoi) > 0) {
+            $array['related_pois'] = [];
+            foreach ($relatedPoi as $poi) {
+                $array['related_pois'][] = $poi->getBasicGeojson();
+            }
         }
 
         return $array;
@@ -330,9 +344,17 @@ class EcTrack extends Model {
             foreach ($geojson['properties']['taxonomy'] as $taxonomy => $values) {
                 $name = $taxonomy === 'poi_type' ? 'webmapp_category' : $taxonomy;
 
-                $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                    return $name . '_' . $item;
-                }, $values);
+                if ($taxonomy === 'activity') {
+                    $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                        return $name . '_' . $item;
+                    }, array_map(function ($item) {
+                        return $item['id'];
+                    }, $values));
+                } else {
+                    $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                        return $name . '_' . $item;
+                    }, $values);
+                }
             }
         }
 

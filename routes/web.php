@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmulateUserController;
 use App\Http\Controllers\ImportController;
+use App\Models\EcTrack;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,3 +22,16 @@ Route::prefix('/emulatedUser')->name('emulatedUser.')->group(function () {
 });
 Route::post('import/geojson', [ImportController::class, 'importGeojson'])->name('import');
 Route::post('import/confirm', [ImportController::class, 'saveImport'])->name('save-import');
+
+Route::get('/track/{id}',function($id){
+    
+    $track = EcTrack::find($id);
+
+    if ($track == null) {
+        abort(404);
+    }
+    return view('track',[
+        'track' => $track
+    ]);
+
+});

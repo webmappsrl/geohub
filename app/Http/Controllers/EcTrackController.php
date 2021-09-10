@@ -11,6 +11,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EcTrackController extends Controller {
+    /**
+     * Return EcTrack JSON.
+     *
+     * @param Request $request
+     * @param int     $id
+     * @param array   $headers
+     *
+     * @return JsonResponse
+     */
+    public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse {
+        $track = EcTrack::find($id);
+
+        if (is_null($track))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
+
     public static function getNeighbourEcMedia(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
@@ -31,16 +49,31 @@ class EcTrackController extends Controller {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecMedia()->get());
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecMedia as $media) {
+            $result['features'][] = $media->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
-    public static function getAssociatedEcPoi(int $idTrack): JsonResponse {
+    public static function getAssociatedEcPois(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecPois()->get());
+
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecPois as $poi) {
+            $result['features'][] = $poi->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
     public static function getFeatureImage(int $idTrack): JsonResponse {
