@@ -168,7 +168,8 @@ class EcTrackController extends Controller {
                 if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
                 else $trackRef = null;
 
-                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef);
+                $searchString = $request->get('string');
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef, $searchString, 'en');
             }
         }
 
