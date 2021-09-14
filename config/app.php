@@ -191,7 +191,12 @@ return [
          * Webmapp Service Providers...
          */
         App\Providers\HoquServiceProvider::class,
-        App\Providers\EcTrackServiceProvider::class
+        App\Providers\EcTrackServiceProvider::class,
+
+        /**
+         * A PHP desktop/mobile user agent parser
+         */
+        Jenssegers\Agent\AgentServiceProvider::class
 
     ],
 
@@ -209,6 +214,7 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

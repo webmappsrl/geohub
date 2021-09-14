@@ -13,6 +13,16 @@ class TrackSharePageTest extends TestCase
     /**
      * @test
      */
+    public function when_user_access_to_track_with_not_existing_id_then_it_returns_404()
+    {
+        $track = EcTrack::factory()->create();
+        while( in_array( ($n = mt_rand(1,100)), array($track->id) ) );
+        $response = $this->get('/track/'.$n);
+        $response->assertStatus(404);
+    }
+    /**
+     * @test
+     */
     public function when_user_access_to_track_with_existing_id_then_it_returns_200()
     {
         $track = EcTrack::factory()->create();
@@ -22,9 +32,10 @@ class TrackSharePageTest extends TestCase
     /**
      * @test
      */
-    public function when_user_access_to_track_with_not_existing_id_then_it_returns_404()
+    public function when_user_access_to_track_check_the_title_is_correct()
     {
-        $response = $this->get('/track/123');
-        $response->assertStatus(404);
+        $track = EcTrack::factory()->create();
+        $response = $this->get('/track/'.$track->id);
+        $response->assertSee($track->name);
     }
 }
