@@ -164,7 +164,7 @@ Route::name('api.')->group(function () {
                     Route::post("/add/{id}", [EcTrackController::class, 'addFavorite']);
                     Route::post("/remove/{id}", [EcTrackController::class, 'removeFavorite']);
                     Route::post("/toggle/{id}", [EcTrackController::class, 'toggleFavorite']);
-                    Route::post("/list", [EcTrackController::class, 'listFavorites']);
+                    Route::get("/list", [EcTrackController::class, 'listFavorites']);
                 });
             Route::prefix('download')->group(function () {
                 Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
@@ -177,7 +177,6 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/near_points", [EcTrackController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcTrackController::class, 'getFeatureImage']);
-
             Route::get("/{id}.geojson", [EcTrackController::class, 'getGeojson'])->name('view.geojson');
             Route::get("/{id}.gpx", [EditorialContentController::class, 'viewEcGpx'])->name('view.gpx');
             Route::get("/{id}.kml", [EditorialContentController::class, 'viewEcKml'])->name('view.kml');
