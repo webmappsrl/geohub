@@ -264,6 +264,46 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse with the current
      */
+    public function addFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if (!$track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function removeFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if ($track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
     public function toggleFavorite(Request $request, int $id): JsonResponse {
         $track = EcTrack::find($id);
         if (!isset($track))
@@ -273,5 +313,23 @@ class EcTrackController extends Controller {
         $track->toggleFavorite($userId);
 
         return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function listFavorites(Request $request): JsonResponse {
+        $user = auth('api')->user();
+
+        $ids = $user->favorite(EcTrack::class)->pluck('id');
+
+        Log::info($ids);
+
+        return response()->json(['favorites' => $ids]);
     }
 }

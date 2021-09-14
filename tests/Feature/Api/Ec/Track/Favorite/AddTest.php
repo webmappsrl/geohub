@@ -1,13 +1,14 @@
 <?php
 
-namespace Tests\Feature\Api\Ec\Track;
+namespace Tests\Feature\Api\Ec\Track\Favorite;
 
 use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class FavoriteTest extends TestCase {
+class AddTest extends TestCase {
     use RefreshDatabase;
 
     public function test_api_works() {
@@ -15,7 +16,7 @@ class FavoriteTest extends TestCase {
         $this->actingAs($user, 'api');
         $track = EcTrack::factory()->create();
         $id = $track->id;
-        $response = $this->post("/api/ec/track/$id/favorite");
+        $response = $this->post("/api/ec/track/favorite/add/$id");
 
         $response->assertStatus(200);
         $content = $response->json();
@@ -24,34 +25,34 @@ class FavoriteTest extends TestCase {
         $this->assertEquals(true, $content['favorite']);
     }
 
-    public function test_double_toggle_works() {
+    public function test_double_add_works() {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
 
         $track = EcTrack::factory()->create();
         $id = $track->id;
-        $response = $this->post("/api/ec/track/$id/favorite");
+        $response = $this->post("/api/ec/track/favorite/add/$id");
         $response->assertStatus(200);
 
-        $response = $this->post("/api/ec/track/$id/favorite");
+        $response = $this->post("/api/ec/track/favorite/add/$id");
         $response->assertStatus(200);
         $content = $response->json();
         $this->assertIsArray($content);
         $this->assertArrayHasKey('favorite', $content);
-        $this->assertEquals(false, $content['favorite']);
+        $this->assertEquals(true, $content['favorite']);
     }
 
     public function test_without_authentication() {
         $track = EcTrack::factory()->create();
         $id = $track->id;
-        $response = $this->post("/api/ec/track/$id/favorite");
+        $response = $this->post("/api/ec/track/favorite/add/$id");
         $response->assertStatus(401);
     }
 
     public function test_with_invalid_track_id() {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
-        $response = $this->post("/api/ec/track/10/favorite");
+        $response = $this->post("/api/ec/track/favorite/add/10");
         $response->assertStatus(404);
     }
 }
