@@ -3,14 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\EcTrack;
+use App\Models\User;
 use App\Providers\EcTrackServiceProvider;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EcTrackController extends Controller {
+    /**
+     * Return EcTrack JSON.
+     *
+     * @param Request $request
+     * @param int     $id
+     * @param array   $headers
+     *
+     * @return JsonResponse
+     */
+    public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse {
+        $track = EcTrack::find($id);
+
+        if (is_null($track))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
+
     public static function getNeighbourEcMedia(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
@@ -31,16 +51,31 @@ class EcTrackController extends Controller {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecMedia()->get());
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecMedia as $media) {
+            $result['features'][] = $media->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
-    public static function getAssociatedEcPoi(int $idTrack): JsonResponse {
+    public static function getAssociatedEcPois(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
-        else
-            return response()->json($track->ecPois()->get());
+
+        $result = [
+            'type' => 'FeatureCollection',
+            'features' => []
+        ];
+        foreach ($track->ecPois as $poi) {
+            $result['features'][] = $poi->getGeojson();
+        }
+
+        return response()->json($result);
     }
 
     public static function getFeatureImage(int $idTrack): JsonResponse {
@@ -75,6 +110,7 @@ class EcTrackController extends Controller {
         }
 
         if (
+            isset($request->geometry) &&
             !is_null($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
@@ -82,6 +118,9 @@ class EcTrackController extends Controller {
         ) {
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
+
+        if (isset($request->slope) && is_array($request->slope))
+            $ecTrack->slope = json_encode($request->slope);
 
         $fields = [
             'distance_comp',
@@ -184,7 +223,7 @@ class EcTrackController extends Controller {
     }
 
     /**
-     * Get the most viewed ec tracks
+     * Get multiple ec tracks in a single geojson
      *
      * @param Request $request
      *
@@ -215,5 +254,82 @@ class EcTrackController extends Controller {
         }
 
         return response()->json($featureCollection);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function addFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if (!$track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function removeFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if ($track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function toggleFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function listFavorites(Request $request): JsonResponse {
+        $user = auth('api')->user();
+
+        $ids = $user->favorite(EcTrack::class)->pluck('id');
+
+        Log::info($ids);
+
+        return response()->json(['favorites' => $ids]);
     }
 }

@@ -194,6 +194,25 @@ class EcPoi extends Model {
     }
 
     /**
+     * Return a geojson of the poi with only the basic informations
+     *
+     * @return array|null
+     */
+    public function getBasicGeojson(): ?array {
+        $geojson = $this->getGeojson();
+        if (isset($geojson["properties"])) {
+            $geojson["properties"] = $this->getJson();
+            $neededProperties = ['id', 'name', 'feature_image'];
+            foreach ($geojson['properties'] as $property => $value) {
+                if (!in_array($property, $neededProperties))
+                    unset ($geojson['properties'][$property]);
+            }
+
+            return $geojson;
+        } else return null;
+    }
+
+    /**
      * Create the track geojson using the elbrus standard
      *
      * @return array

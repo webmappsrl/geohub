@@ -380,6 +380,9 @@ KML;
 
         $this->assertArrayHasKey('taxonomy', $properties);
         $this->assertArrayHasKey('activity', $properties['taxonomy']);
+        $this->assertIsArray($properties['taxonomy']['activity']);
+        $this->assertCount(2, $properties['taxonomy']['activity']);
+        $this->assertIsArray($properties['taxonomy']['activity'][0]);
         $this->assertArrayHasKey('theme', $properties['taxonomy']);
         $this->assertArrayHasKey('where', $properties['taxonomy']);
         $this->assertArrayHasKey('who', $properties['taxonomy']);
@@ -438,6 +441,59 @@ KML;
         $pois = EcPoi::factory(10)->create();
         $track->ecPois()->attach($pois);
 
-        $this->assertCount(10, $track->ecPois()->get());
+        $this->assertCount(10, $track->ecPois);
+    }
+
+    /**
+     * @test
+     */
+    public function check_related_pois_in_api() {
+        $track = EcTrack::factory()->create();
+        $pois = EcPoi::factory(10)->create();
+        $track->ecPois()->attach($pois);
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $properties = $json['properties'];
+        $this->assertIsArray($properties);
+
+        $this->assertArrayHasKey('related_pois', $properties);
+        $this->assertCount(10, $properties['related_pois']);
+        $this->assertIsArray($properties['related_pois'][0]);
+        $this->assertArrayHasKey('type', $properties['related_pois'][0]);
+        $this->assertArrayHasKey('properties', $properties['related_pois'][0]);
+        $this->assertIsArray($properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('id', $properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('name', $properties['related_pois'][0]['properties']);
+        $this->assertArrayHasKey('geometry', $properties['related_pois'][0]);
+    }
+
+    /**
+     * @test
+     */
+    public function check_slope_in_api() {
+        $slopes = [1, 2, 3, 4];
+        $track = EcTrack::factory([
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))"),
+            'slope' => json_encode($slopes)
+        ])->create();
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $geometry = $json['geometry'];
+        $this->assertIsArray($geometry);
+        $this->assertArrayHasKey('coordinates', $geometry);
+        $this->assertIsArray($geometry['coordinates']);
+        $this->assertCount(4, $geometry['coordinates']);
+        foreach ($geometry['coordinates'] as $key => $coordinate) {
+            $this->assertCount(4, $coordinate);
+            $this->assertEquals($slopes[$key], $coordinate[3]);
+        }
     }
 }

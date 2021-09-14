@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model {
-    use HasFactory, GeometryFeatureTrait, HasTranslations;
+    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
     protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
@@ -222,8 +223,14 @@ class EcTrack extends Model {
             $array[$fileType . '_url'] = route('api.ec.track.download.' . $fileType, ['id' => $this->id]);
         }
 
+        $activities = [];
+
+        foreach ($this->taxonomyActivities as $activity) {
+            $activities[] = $activity->getJson();
+        }
+
         $taxonomies = [
-            'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
+            'activity' => $activities,
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
@@ -258,6 +265,14 @@ class EcTrack extends Model {
                 unset($array[$property]);
         }
 
+        $relatedPoi = $this->ecPois;
+        if (count($relatedPoi) > 0) {
+            $array['related_pois'] = [];
+            foreach ($relatedPoi as $poi) {
+                $array['related_pois'][] = $poi->getBasicGeojson();
+            }
+        }
+
         return $array;
     }
 
@@ -270,6 +285,12 @@ class EcTrack extends Model {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
+            $slope = json_decode($this->slope, true);
+            if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
+                foreach ($slope as $key => $value) {
+                    $feature['geometry']['coordinates'][$key][3] = $value;
+                }
+            }
 
             return $feature;
         } else return null;
@@ -330,9 +351,17 @@ class EcTrack extends Model {
             foreach ($geojson['properties']['taxonomy'] as $taxonomy => $values) {
                 $name = $taxonomy === 'poi_type' ? 'webmapp_category' : $taxonomy;
 
-                $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                    return $name . '_' . $item;
-                }, $values);
+                if ($taxonomy === 'activity') {
+                    $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                        return $name . '_' . $item;
+                    }, array_map(function ($item) {
+                        return $item['id'];
+                    }, $values));
+                } else {
+                    $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                        return $name . '_' . $item;
+                    }, $values);
+                }
             }
         }
 

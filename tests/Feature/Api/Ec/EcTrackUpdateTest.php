@@ -221,4 +221,28 @@ class EcTrackUpdateTest extends TestCase {
         $this->assertEquals(8, $coord[2][1]);
         $this->assertEquals(9, $coord[2][2]);
     }
+
+    /**
+     * @test
+     */
+    public function check_slope_is_added_correctly() {
+        $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
+        $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
+
+        $payload = [
+            'geometry' => json_decode('{"type":"LineString","coordinates":[[1,2,3],[4,5,6],[7,8,9]]}', true),
+            'slope' => [1, 2, 3]
+        ];
+        $result = $this->putJson('/api/ec/track/update/' . $track->id, $payload);
+        $this->assertEquals(200, $result->getStatusCode());
+
+        $track_updated = EcTrack::find($track->id);
+        $slope = json_decode($track_updated->slope, true);
+
+        $this->assertIsArray($slope);
+        $this->assertCount(3, $slope);
+        $this->assertEquals(1, $slope[0]);
+        $this->assertEquals(2, $slope[1]);
+        $this->assertEquals(3, $slope[2]);
+    }
 }
