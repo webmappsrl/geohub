@@ -116,6 +116,9 @@ class EcTrackController extends Controller {
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
+        if (!is_null($request->slope) && is_array($request->slope))
+            $ecTrack->slope = json_encode($request->slope);
+
         $fields = [
             'distance_comp',
             'distance',
