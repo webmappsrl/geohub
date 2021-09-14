@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model {
-    use HasFactory, GeometryFeatureTrait, HasTranslations;
+    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
     protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];

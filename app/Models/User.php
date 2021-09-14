@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use ChristianKuri\LaravelFavorite\Traits\Favoriteability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -24,7 +25,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string referrer
  */
 class User extends Authenticatable implements JWTSubject {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, Favoriteability;
 
     /**
      * The attributes that are mass assignable.
