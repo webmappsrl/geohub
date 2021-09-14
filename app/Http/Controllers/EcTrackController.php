@@ -108,6 +108,7 @@ class EcTrackController extends Controller {
         }
 
         if (
+            isset($request->geometry) &&
             !is_null($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
@@ -116,7 +117,7 @@ class EcTrackController extends Controller {
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
-        if (!is_null($request->slope) && is_array($request->slope))
+        if (isset($request->slope) && is_array($request->slope))
             $ecTrack->slope = json_encode($request->slope);
 
         $fields = [

@@ -31,16 +31,13 @@ use Spatie\Permission\Models\Role;
  *
  * @package Database\Seeders
  */
-class BaseWorldSeeder extends Seeder
-{
+class BaseWorldSeeder extends Seeder {
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run()
-    {
-
+    public function run() {
         // TODO: check that we are running in LOCAL environment if not DIE
 
         // TODO: check if HOQU (LOCAL) IS WORKING if not die
@@ -83,6 +80,11 @@ class BaseWorldSeeder extends Seeder
         EcPoi::factory(10)->create();
 
         // TRACKS
+        // Create a track in the test dem, then generate some more tracks
+        $geom = '{"type":"LineString","coordinates":[[11.03,43.18,0],[11.05,43.14,0],[11.01,43.20,0],[11.06,43.17,0]]}';
+        EcTrack::factory([
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geom')")
+        ])->create();
         EcTrack::factory(10)->create();
 
         // APP
