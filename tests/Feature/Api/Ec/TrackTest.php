@@ -470,4 +470,30 @@ KML;
         $this->assertArrayHasKey('name', $properties['related_pois'][0]['properties']);
         $this->assertArrayHasKey('geometry', $properties['related_pois'][0]);
     }
+
+    /**
+     * @test
+     */
+    public function check_slope_in_api() {
+        $slopes = [1, 2, 3, 4];
+        $track = EcTrack::factory([
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))"),
+            'slope' => json_encode($slopes)
+        ])->create();
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $geometry = $json['geometry'];
+        $this->assertIsArray($geometry);
+        $this->assertArrayHasKey('coordinates', $geometry);
+        $this->assertIsArray($geometry['coordinates']);
+        $this->assertCount(4, $geometry['coordinates']);
+        foreach ($geometry['coordinates'] as $key => $coordinate) {
+            $this->assertCount(4, $coordinate);
+            $this->assertEquals($slopes[$key], $coordinate[3]);
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model {
-    use HasFactory, GeometryFeatureTrait, HasTranslations;
+    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
     protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
@@ -284,6 +285,12 @@ class EcTrack extends Model {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
+            $slope = json_decode($this->slope, true);
+            if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
+                foreach ($slope as $key => $value) {
+                    $feature['geometry']['coordinates'][$key][3] = $value;
+                }
+            }
 
             return $feature;
         } else return null;

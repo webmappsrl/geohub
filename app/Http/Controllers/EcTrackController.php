@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\EcTrack;
+use App\Models\User;
 use App\Providers\EcTrackServiceProvider;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -108,6 +110,7 @@ class EcTrackController extends Controller {
         }
 
         if (
+            isset($request->geometry) &&
             !is_null($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
@@ -115,6 +118,9 @@ class EcTrackController extends Controller {
         ) {
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
+
+        if (isset($request->slope) && is_array($request->slope))
+            $ecTrack->slope = json_encode($request->slope);
 
         $fields = [
             'distance_comp',
@@ -217,7 +223,7 @@ class EcTrackController extends Controller {
     }
 
     /**
-     * Get the most viewed ec tracks
+     * Get multiple ec tracks in a single geojson
      *
      * @param Request $request
      *
@@ -248,5 +254,82 @@ class EcTrackController extends Controller {
         }
 
         return response()->json($featureCollection);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function addFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if (!$track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function removeFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        if ($track->isFavorited($userId))
+            $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function toggleFavorite(Request $request, int $id): JsonResponse {
+        $track = EcTrack::find($id);
+        if (!isset($track))
+            return response()->json(["error" => "Unknown ec track with id $id"], 404);
+
+        $userId = auth('api')->id();
+        $track->toggleFavorite($userId);
+
+        return response()->json(['favorite' => $track->isFavorited($userId)]);
+    }
+
+    /**
+     * Toggle the favorite on the given ec track
+     *
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return JsonResponse with the current
+     */
+    public function listFavorites(Request $request): JsonResponse {
+        $user = auth('api')->user();
+
+        $ids = $user->favorite(EcTrack::class)->pluck('id');
+
+        Log::info($ids);
+
+        return response()->json(['favorites' => $ids]);
     }
 }
