@@ -51,11 +51,4 @@ class ListTest extends TestCase {
         $response = $this->get("/api/ec/track/favorite/list");
         $response->assertStatus(401);
     }
-
-    public function test_with_invalid_track_id() {
-        $user = User::factory()->create();
-        $this->actingAs($user, 'api');
-        $response = $this->post("/api/ec/track/favorite/toggle/10");
-        $response->assertStatus(404);
-    }
 }
