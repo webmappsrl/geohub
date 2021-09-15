@@ -16,6 +16,7 @@ use App\Http\Controllers\EcPoiController;
 use App\Http\Controllers\UgcMediaController;
 use App\Http\Controllers\UgcPoiController;
 use App\Http\Controllers\UgcTrackController;
+use App\Http\Controllers\WebmappAppController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
 use App\Http\Resources\UgcMediaCollection;
@@ -183,6 +184,8 @@ Route::name('api.')->group(function () {
             Route::get("/{id}", [EcTrackController::class, 'getGeojson'])->name('json');
         });
     });
+
+    Route::post("search", [WebmappAppController::class, 'search'])->name('search');
 
     /**
      * APP API (/app/*)

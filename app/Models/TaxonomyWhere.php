@@ -180,4 +180,16 @@ class TaxonomyWhere extends Model {
             return $feature;
         } else return null;
     }
+
+    /**
+     * Calculate the bounding box of the track
+     *
+     * @return array
+     */
+    public function bbox(): array {
+        $rawResult = TaxonomyWhere::where('id', $this->id)->selectRaw('ST_Extent(geometry::geometry) as bbox')->first();
+        $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+
+        return array_map('floatval', explode(' ', $bboxString));
+    }
 }
