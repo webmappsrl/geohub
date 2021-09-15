@@ -242,7 +242,7 @@ class EcTrackController extends Controller {
         }
 
         if (isset($ids) && is_array($ids)) {
-            $ids = array_slice($ids, 0, 3);
+            $ids = array_slice($ids, 0, 10);
             $ids = array_values(array_unique($ids));
             foreach ($ids as $id) {
                 if ($id === strval(intval($id))) {

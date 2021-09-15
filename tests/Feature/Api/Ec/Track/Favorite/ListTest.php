@@ -13,7 +13,7 @@ class ListTest extends TestCase {
     public function test_api_works_with_empty_list() {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
-        $response = $this->post("/api/ec/track/favorite/list");
+        $response = $this->get("/api/ec/track/favorite/list");
 
         $response->assertStatus(200);
         $content = $response->json();
@@ -36,7 +36,7 @@ class ListTest extends TestCase {
         $response = $this->post("/api/ec/track/favorite/add/$id");
         $response->assertStatus(200);
 
-        $response = $this->post("/api/ec/track/favorite/list");
+        $response = $this->get("/api/ec/track/favorite/list");
         $response->assertStatus(200);
         $content = $response->json();
         $this->assertIsArray($content);
@@ -48,7 +48,7 @@ class ListTest extends TestCase {
     }
 
     public function test_without_authentication() {
-        $response = $this->post("/api/ec/track/favorite/list");
+        $response = $this->get("/api/ec/track/favorite/list");
         $response->assertStatus(401);
     }
 
