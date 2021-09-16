@@ -84,9 +84,9 @@ class MultipleTest extends TestCase {
     /**
      * @test
      */
-    public function check_api_works_with_multiple_ids_limiting_to_three_results() {
+    public function check_api_works_with_multiple_ids_limiting_to_ten_results() {
         $ids = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $track = EcTrack::factory()->create();
             $ids[] = $track->id;
             $i++;
@@ -101,9 +101,9 @@ class MultipleTest extends TestCase {
         $this->assertSame("FeatureCollection", $json["type"]);
         $this->assertArrayHasKey("features", $json);
         $this->assertIsArray($json["features"]);
-        $this->assertCount(3, $json["features"]);
+        $this->assertCount(10, $json["features"]);
 
-        for ($pos = 0; $pos < 3; $pos++) {
+        for ($pos = 0; $pos < 10; $pos++) {
             $id = $ids[$pos];
             $this->assertArrayHasKey($pos, $json["features"]);
             $this->assertIsArray($json["features"][$pos]);

@@ -174,7 +174,8 @@ class EcTrackController extends Controller {
                 if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
                 else $trackRef = null;
 
-                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef);
+                //                $searchString = $request->get('string');
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef, null, 'en');
             }
         }
 
@@ -242,7 +243,7 @@ class EcTrackController extends Controller {
         }
 
         if (isset($ids) && is_array($ids)) {
-            $ids = array_slice($ids, 0, 3);
+            $ids = array_slice($ids, 0, 10);
             $ids = array_values(array_unique($ids));
             foreach ($ids as $id) {
                 if ($id === strval(intval($id))) {
@@ -319,7 +320,6 @@ class EcTrackController extends Controller {
      * Toggle the favorite on the given ec track
      *
      * @param Request $request
-     * @param int     $id
      *
      * @return JsonResponse with the current
      */
