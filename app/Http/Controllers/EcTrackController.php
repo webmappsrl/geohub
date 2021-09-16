@@ -174,7 +174,8 @@ class EcTrackController extends Controller {
                 if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
                 else $trackRef = null;
 
-                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef);
+                //                $searchString = $request->get('string');
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef, null, 'en');
             }
         }
 
@@ -319,7 +320,6 @@ class EcTrackController extends Controller {
      * Toggle the favorite on the given ec track
      *
      * @param Request $request
-     * @param int     $id
      *
      * @return JsonResponse with the current
      */

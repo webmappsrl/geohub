@@ -32,13 +32,15 @@ class EcTrackServiceProvider extends ServiceProvider {
      * Return a collection of ec tracks inside the bbox. The tracks must be within $distance meters
      * of the given $trackId if provided
      *
-     * @param array    $bbox
-     * @param int|null $trackId an ec track id to reference
-     * @param int      $distanceLimit
+     * @param array       $bbox
+     * @param int|null    $trackId an ec track id to reference
+     * @param string|null $searchString
+     * @param string      $language
+     * @param int         $distanceLimit
      *
      * @return mixed
      */
-    public static function getSearchClustersInsideBBox(array $bbox, int $trackId = null, int $distanceLimit = 1000): array {
+    public static function getSearchClustersInsideBBox(array $bbox, int $trackId = null, string $searchString = null, string $language = 'it', int $distanceLimit = 1000): array {
         $deltaLon = ($bbox[2] - $bbox[0]) / 6;
         $deltaLat = ($bbox[3] - $bbox[1]) / 6;
 
@@ -57,6 +59,11 @@ class EcTrackServiceProvider extends ServiceProvider {
                 $where = 'ST_Distance(ST_Transform(ST_SetSRID(ec_tracks.geometry, 4326), 3857), ST_Transform(ST_SetSRID(track.geom, 4326), 3857)) <= ? AND ';
                 $params[] = $distanceLimit;
             }
+        }
+
+        if (isset($searchString) && !empty($searchString)) {
+            $escapedSearchString = preg_replace('/[^0-9a-z\s]/', '', strtolower($searchString));
+            $where .= "to_tsvector(regexp_replace(LOWER(((ec_tracks.name::json))->>'$language'), '[^0-9a-z\s]', '', 'g')) @@ to_tsquery('$escapedSearchString') AND ";
         }
 
         $where .= 'geometry && ST_SetSRID(ST_MakeBox2D(ST_Point(?, ?), ST_Point(?, ?)), 4326)';
