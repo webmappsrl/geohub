@@ -8,6 +8,10 @@ module.exports = {
       fontFamily: {
         'body': ['"Inter"'],
       },
+      colors: {
+        'primary': '#508AA8',
+        'secondary': '#FF7E6B',
+      }
     }
   },
   variants: {

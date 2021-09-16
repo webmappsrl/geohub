@@ -62,4 +62,19 @@ class EcMediaFactory extends Factory
 
         return $result;
     }
+
+    public function frontEndSizes() {
+        return $this->state(function (array $result) {
+            Storage::disk('public')->put('/ec_media_test/test_1440x500.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_1440x500.jpg'));
+
+            $url1440x500 = Storage::disk('public')->url('/ec_media_test/test_1440x500.jpg');
+
+            $thumbnails = json_decode($result['thumbnails'],true);
+            $thumbnails['1440x500'] = $url1440x500;
+            return [
+                'thumbnails' => json_encode($thumbnails)
+            ];
+
+        });
+    }
 }

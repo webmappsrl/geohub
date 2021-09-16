@@ -1,44 +1,60 @@
-@props(['track'])
-<!-- thumbnail('100x200') -->
-<?php 
-    use Jenssegers\Agent\Agent;
-    $agent = new Agent();
+@props(['track','agent'])
+
+@php
     if (!$track->featureImage) {
-        $featured_image = 'images/webmapp-logo.png';
+        $featured_image = 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/1440x500/26_1440x500.jpg';
     } else {
-        $featured_image = $track->featureImage->url;
+        $featured_image = $track->featureImage->thumbnail('1440x500');
     }
-?>
+@endphp
+
 <header>
-    <div class="mx-auto h-80 sm:h-96 grid grid-cols-3 grid-rows-6">
+    <div class="mx-auto bg-cover bg-center bg-no-repeat" style="background-image:url('{{$featured_image}}')">
+        <div class="h-80 sm:h-96 grid grid-cols-3 grid-rows-6 transparent-overlay">
+            <!-- Webmapp logo section -->
+            <div class="{{$agent->isMobile() ? 'row-span-3' : 'row-span-2'}} col-span-full sm:row-span-3 py-6 px-4 sm:px-20">
+                <img src="{{asset('images/webmapp-logo.png')}}" alt="webmapp logo" class="">
+            </div>
 
-        <!-- Webmapp logo section -->
-        <div class="col-span-full row-span-3 bg-cover bg-fixed bg-center py-6 px-4 sm:px-20" style="background-image:url('{{$featured_image}}')">
-            <img src="{{asset('images/webmapp-logo.png')}}" alt="webmapp logo" class="">
-        </div>
+            <!-- Download desktop section -->
+            <div class="{{$agent->isMobile() ? 'hidden' : ''}} row-span-4 col-span-full sm:col-start-3 sm:col-end-4 sm:row-start-4 sm:row-end-7 py-4 px-4 sm:max-w-sm">
+                <div class="bg-white bg-opacity-70 rounded-lg max-w-md h-full flex flex-col justify-center gap-y-4 px-6">
+                    <div class="flex gap-x-6 justify-left items-center">
+                        <div><img src="{{asset('images/webmapp-logo-icon-only.png')}}" width="50"  alt="android download link"></div>
+                        <p class="font-semibold text-xl">Scarica l'APP!</p>
+                    </div>
+                    <div class="flex w-full justify-between">
+                        <div><a href="#"><img src="{{asset('images/google-play-icon.png')}}" width="140" alt="android download link"></a></div>
+                        <div><a href="#"><img src="{{asset('images/apple-store-icon.png')}}" width="130" alt="ios download link"></a></div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Title section -->
-        <div class="text-white col-span-full bg-cover bg-fixed bg-center col-span-full text-2xl sm:text-3xl font-semibold  py-4 px-4 sm:px-20 sm:col-span-2" style="background-image:url('{{$featured_image}}')">
-            <h1>{{$track->name}}</h1>
-        </div>
+            <!-- Title section -->
+            @if ($track->name)
+            <div class="text-white col-span-full text-2xl sm:text-3xl font-semibold px-4 sm:px-20 sm:col-span-2 flex items-end">
+                <h1>{{$track->name}}</h1>
+            </div>
+            @endif
 
-        <!-- Taxonomy Where section -->
-        <div class="bg-cover bg-fixed bg-center col-span-full py-4 px-4 sm:px-20 sm:col-span-2" style="background-image:url('{{$featured_image}}')">
-            @foreach ($track->taxonomyWheres->pluck('name') as $name)
-            <div class="w-auto text-white">{{$name}}</div>
-            @endforeach
-        </div>
+            <!-- Taxonomy Where section -->
+            <div class="col-span-full flex items-start px-4 sm:px-20 sm:col-span-2 flex">
+                @if ($track->taxonomyWheres->count() > 0 )
+                    @foreach ($track->taxonomyWheres->pluck('name') as $name)
+                    <div class="w-auto text-white">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
+                    @endforeach
+                @endif
+            </div>
 
-        <!-- Download desktop section -->
-        <div class="{{$agent->isMobile() ? 'hidden' : ''}} col-start-3 col-end-4 row-start-4 row-end-7 bg-cover bg-fixed bg-center py-4 px-4 sm:px-20" style="background-image:url('{{$featured_image}}')">
-            <div class="bg-white bg-opacity-70 rounded-lg max-w-md h-full">Scarica l'APP!</div>
+            <!-- Taxonomy Activity section -->
+            @if ($track->taxonomyActivities->count() > 0 )
+            <div class="col-span-full flex flex-row flex items-center px-4 sm:px-20 sm:col-span-2 bg-white sm:bg-transparent">
+                @foreach ($track->taxonomyActivities->pluck('icon','name') as $name => $icon)
+                    <div class="block text-black sm:text-white">{{$name}}</div>
+                @endforeach
+            </div>
+            @endif
         </div>
-
-        <!-- Taxonomy Activity section -->
-        <div class="bg-cover bg-fixed bg-center col-span-full flex flex-row py-4 px-4 sm:px-20 sm:col-span-2" <?php if (!$agent->isMobile()) {?> style="background-image:url('{{$featured_image}}')"<?php } ?>>
-            @foreach ($track->taxonomyActivities->pluck('icon','name') as $name => $icon)
-                <div class="block text-black sm:text-white">{{$name}}</div>
-            @endforeach
-        </div>
+        
     </div>
 </header>

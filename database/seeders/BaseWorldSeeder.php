@@ -114,6 +114,9 @@ class BaseWorldSeeder extends Seeder {
         $media = EcMedia::factory()->create();
         $media1 = EcMedia::factory()->create();
         $media2 = EcMedia::factory()->create();
+        $media3 = EcMedia::factory()->create();
+        $media4 = EcMedia::factory()->create();
+        $media5 = EcMedia::factory()->frontEndSizes()->create();
 
         $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(0 0 0, 1 1 1)'))")]);
         $track->user_id = $user->id;
@@ -133,6 +136,23 @@ class BaseWorldSeeder extends Seeder {
         $track1->taxonomyActivities()->attach([$activity->id]);
         $track1->taxonomyActivities()->attach([$hiking->id]);
         $track1->taxonomyActivities()->attach([$cycling->id]);
+
+        $track2 = EcTrack::factory()->create([
+            'name' => 'Frontend Track',
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 2, 3 3 3)'))")
+        ]);
+        $track2->user_id = $user->id;
+        $track2->featureImage()->associate($media5);
+        $track2->ecMedia()->attach($media1);
+        $track2->ecMedia()->attach($media2);
+        $track2->ecMedia()->attach($media3);
+        $track2->ecMedia()->attach($media4);
+        $track2->save();
+        $track2->taxonomyActivities()->attach([$activity->id]);
+        $track2->taxonomyActivities()->attach([$hiking->id]);
+        $track2->taxonomyActivities()->attach([$cycling->id]);
+        $track2->taxonomyWheres()->attach([9]);
+        $track2->taxonomyWheres()->attach([20]);
 
         $app = App::factory()->create();
         $app->user_id = $user->id;
