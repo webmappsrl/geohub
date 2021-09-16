@@ -115,6 +115,16 @@ class WebmappAppController extends Controller {
         return $poiTypes;
     }
 
+    /**
+     * Create the search by string query
+     *
+     * @param string $table
+     * @param string $escapedSearchString
+     * @param string $language
+     * @param array  $columnToCheck
+     *
+     * @return string the query
+     */
     public function getSearchQuery(string $table, string $escapedSearchString, string $language, array $columnToCheck = []): string {
         return "SELECT id
             FROM " . $table . ",
