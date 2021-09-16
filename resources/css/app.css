@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.transparent-overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+.shadow-top {
+    box-shadow: 0px -2px 12px rgba(0, 0, 0, 0.2);
+}
