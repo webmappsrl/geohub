@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "666c685023463f6d739e7f19246f2ba0",
+    "content-hash": "7e2f080dd5a42d3ca399c2483b9d767a",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -5247,6 +5247,53 @@
             "time": "2020-10-29T18:22:10+00:00"
         },
         {
+            "name": "suenerds/nova-searchable-belongs-to-filter",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/suenerds/nova-searchable-belongs-to-filter.git",
+                "reference": "2a7fe5096c3d9fcd7625dd31b969338700fb8467"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/suenerds/nova-searchable-belongs-to-filter/zipball/2a7fe5096c3d9fcd7625dd31b969338700fb8467",
+                "reference": "2a7fe5096c3d9fcd7625dd31b969338700fb8467",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Suenerds\\NovaSearchableBelongsToFilter\\FilterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Suenerds\\NovaSearchableBelongsToFilter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Searchable Nova filter for belongsTo relationships.",
+            "keywords": [
+                "belongs-to",
+                "filter",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/suenerds/nova-searchable-belongs-to-filter/issues",
+                "source": "https://github.com/suenerds/nova-searchable-belongs-to-filter/tree/master"
+            },
+            "time": "2020-01-22T10:11:43+00:00"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v6.2.7",
             "source": {
@@ -8212,7 +8259,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/0.2.6.6",
+            "version": "dev-hotfix/geohub.hotfix.0.2.9.5.2",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -8248,7 +8295,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/0.2.6.6",
+            "version": "dev-hotfix/geohub.hotfix.0.2.9.5.2",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -8284,7 +8331,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/0.2.6.6",
+            "version": "dev-hotfix/geohub.hotfix.0.2.9.5.2",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -8320,7 +8367,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/0.2.6.6",
+            "version": "dev-hotfix/geohub.hotfix.0.2.9.5.2",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -8356,7 +8403,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/0.2.6.6",
+            "version": "dev-hotfix/geohub.hotfix.0.2.9.5.2",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
