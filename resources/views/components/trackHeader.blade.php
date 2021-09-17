@@ -2,7 +2,7 @@
 
 @php
     if (!$track->featureImage) {
-        $featured_image = 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/1440x500/26_1440x500.jpg';
+        $featured_image = asset('images/ectrack_share_page_feature_image_placeholder.jpg');
     } else {
         $featured_image = $track->featureImage->thumbnail('1440x500');
     }
@@ -38,17 +38,17 @@
             @endif
 
             <!-- Taxonomy Where section -->
-            <div class="col-span-full flex items-start px-4 sm:px-20 sm:col-span-2 flex">
+            <div class="col-span-full items-start px-4 sm:px-20 sm:col-span-2 flex">
                 @if ($track->taxonomyWheres->count() > 0 )
                     @foreach ($track->taxonomyWheres->pluck('name') as $name)
-                    <div class="w-auto text-white">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
+                    <div class="taxonomyWheres w-auto text-white">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
                     @endforeach
                 @endif
             </div>
 
             <!-- Taxonomy Activity section -->
             @if ($track->taxonomyActivities->count() > 0 )
-            <div class="col-span-full flex flex-row flex items-center px-4 sm:px-20 sm:col-span-2 bg-white sm:bg-transparent">
+            <div id="taxonomyActivities" class="col-span-full flex-row flex items-center px-4 sm:px-20 sm:col-span-2 bg-white sm:bg-transparent">
                 @foreach ($track->taxonomyActivities->pluck('icon','name') as $name => $icon)
                     <div class="block text-black sm:text-white">{{$name}}</div>
                 @endforeach

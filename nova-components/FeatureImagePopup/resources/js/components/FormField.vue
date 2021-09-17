@@ -128,12 +128,14 @@ export default {
       .then(response => {
         this.selectedMedia = [];
         this.associatedMediaList = response.data;
-        this.associatedMediaList.forEach(element => {
-          if (!!element && !!element.id) {
-            this.loadedImages.push(element)
-            this.selectedMedia.push(element.id)
-          }
-        });
+        if (!!this.associatedMediaList.length && !!this.associatedMediaList.forEach) {
+          this.associatedMediaList.forEach(element => {
+            if (!!element && !!element.id) {
+              this.loadedImages.push(element)
+              this.selectedMedia.push(element.id)
+            }
+          });
+        }
       });
   },
   methods: {
@@ -179,7 +181,9 @@ export default {
     },
     dismiss() {
       this.modalOpen = false;
-      this.selectedMedia = [this.loadedImages[0].id];
+      if (this.loadedImages.length > 0)
+        this.selectedMedia = [this.loadedImages[0].id];
+      else this.selectedMedia = [];
     },
     getBackgroundImage(media) {
       let url = undefined,
@@ -187,11 +191,10 @@ export default {
           ? media.properties
           : !!media.url ? media : undefined;
       if (!!properties) {
-        if (!!properties.thumbnails) {
+        if (!!properties.sizes) {
           try {
-            let thumbnails = JSON.parse(properties.thumbnails);
-            if (thumbnails['118x117']) url = thumbnails['118x117'];
-            else if (Object.keys(thumbnails).length > 0) url = thumbnails[Object.keys(thumbnails)[0]];
+            let thumbnails = JSON.parse(properties.sizes);
+            if (thumbnails['150x150']) url = thumbnails['150x150'];
           } catch (e) {
           }
         }

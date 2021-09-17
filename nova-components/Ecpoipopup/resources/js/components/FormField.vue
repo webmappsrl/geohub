@@ -119,44 +119,45 @@ export default {
     }
   },
   mounted() {
-    var that = this;
     axios.get('/api/ec/track/' + this.resourceId + '/neighbour_pois')
-        .then(response => {
-          that.poiList = response.data;
-        });
+      .then(response => {
+        this.poiList = response.data;
+      });
     axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_pois')
-        .then(response => {
-          that.selectedPois.splice(0);
-          that.associatedPoiList = response.data;
-          that.associatedPoiList.forEach(element => {
-                that.loadedPois.push(element)
-                that.selectedPois.push(element.id)
-
-              }
-          );
-
-        });
-  },
-
-  methods: {
-    showOverlay(id) {
-      var that = this;
-      axios.get('/api/ec/poi/' + id)
-          .then(response => {
-            var coordinate = response.data.geometry.coordinates;
-
-            if (coordinate) {
-              var overlayPopup = new Overlay({
-                element: document.getElementById('overlayPopup')
-              });
-              var popupImage = overlayPopup.setPosition(coordinate);
-
-              this.$refs.mapComponent.map.addOverlay(overlayPopup);
-
-              document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
-              document.getElementById("popupImage").src = response.data.properties.feature_image;
+      .then(response => {
+        this.selectedPois.splice(0);
+        this.associatedPoiList = response.data && response.data.features ? response.data.features : [];
+        if (!!this.associatedPoiList.length) {
+          this.associatedPoiList.forEach(element => {
+            if (!!element && !!element.properties && !!element.properties.id) {
+              this.loadedPois.push(element.properties)
+              this.selectedPois.push(element.properties.id)
+            } else if (!!element && !!element.id) {
+              this.loadedPois.push(element)
+              this.selectedPois.push(element.id)
             }
           });
+        }
+      });
+  },
+  methods: {
+    showOverlay(id) {
+      axios.get('/api/ec/poi/' + id)
+        .then(response => {
+          let coordinate = response.data.geometry.coordinates;
+
+          if (coordinate) {
+            let overlayPopup = new Overlay({
+              element: document.getElementById('overlayPopup')
+            });
+            overlayPopup.setPosition(coordinate);
+
+            this.$refs.mapComponent.map.addOverlay(overlayPopup);
+
+            document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
+            document.getElementById("popupImage").src = response.data.properties.feature_image;
+          }
+        });
     },
     toggleImage(item) {
       if (this.selectedPois.includes(item.id)) {

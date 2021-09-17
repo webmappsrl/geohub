@@ -6,7 +6,7 @@
   $images[] = 'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80' ;
   $images[] = 'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80' ;
 @endphp
-<div class="px-4 py-4">
+<div id="carousel" class="px-4 py-4">
         <div x-data="{swiper: null}"
         x-init="swiper = new Swiper($refs.container, {
             loop: true,

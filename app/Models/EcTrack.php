@@ -206,13 +206,13 @@ class EcTrack extends Model {
     public function getJson(): array {
         $array = $this->toArray();
         if ($this->featureImage)
-            $array['feature_image'] = json_decode($this->featureImage->getJson(), true);
+            $array['feature_image'] = $this->featureImage->getJson();
 
         if ($this->ecMedia) {
             $gallery = [];
             $ecMedia = $this->ecMedia;
             foreach ($ecMedia as $media) {
-                $gallery[] = json_decode($media->getJson(), true);
+                $gallery[] = $media->getJson();
             }
             if (count($gallery))
                 $array['image_gallery'] = $gallery;
@@ -399,7 +399,7 @@ class EcTrack extends Model {
         ]);
     }
 
-    public function getNeighbourEcPoi() {
+    public function getNeighbourEcPoi(): array {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_pois
@@ -413,9 +413,7 @@ class EcTrack extends Model {
             $geojson = $poi->getGeojson();
             if (isset($geojson)) {
                 if ($poi->featureImage) {
-                    $geojson['properties']['image'] = json_decode($poi->featureImage->getJson(), true);
-                } else {
-                    $geojson['properties']['image']['url'] = null;
+                    $geojson['properties']['image'] = $poi->featureImage->getJson();
                 }
                 $features[] = $geojson;
             }

@@ -3,9 +3,11 @@
     <div ref="ec-media-map-root"
          style="width: 100%; height: 100%">
     </div>
-    <div id="overlayPopup">
-      <div style="height:100%">
-        <img id="popupImage" src="" style="height: 85%;width: 70%;">
+    <div id="overlayPopupContainer">
+      <div id="overlayPopup">
+        <div id="popupImage" style="height: 85%;width: 70%;">
+        </div>
+
         <p id="popupImageLabel"></p>
 
       </div>
@@ -439,16 +441,26 @@ export default {
       if (coordinate) {
         if (!this.overlayPopup) {
           this.overlayPopup = new Overlay({
-            element: document.getElementById('overlayPopup')
+            element: document.getElementById('overlayPopupContainer')
           });
         }
         this.overlayPopup.setPosition(coordinate);
 
         this.map.addOverlay(this.overlayPopup);
-        if (document.getElementById("popupImageLabel").innerHTML !== feature['values_']['name']['it'])
-          document.getElementById("popupImageLabel").innerHTML = feature['values_']['name']['it'];
-        if (document.getElementById("popupImage").src !== feature['values_']['url'])
-          document.getElementById("popupImage").src = feature['values_']['url'];
+        let properties = feature.getProperties(),
+          url = properties['sizes'] && properties['sizes']['150x150'] ? properties['sizes']['150x150'] : properties['url'],
+          nameObj = properties.name ? properties.name : {},
+          name = '';
+
+        if (Object.keys(nameObj).length > 0)
+          name = nameObj[Object.keys(nameObj)[0]];
+
+        if (document.getElementById("popupImageLabel").innerHTML !== name)
+          document.getElementById("popupImageLabel").innerHTML = name;
+
+        let popupImage = document.getElementById("popupImage");
+        if (popupImage.style.backgroundImage !== 'url(' + url + ')')
+          popupImage.style.backgroundImage = 'url(' + url + ')';
       } else if (this.overlayPopup) {
         this.map.removeOverlay(this.overlayPopup);
       }
@@ -460,7 +472,7 @@ export default {
 <style scoped>
 @import "../../../node_modules/ol/ol.css";
 
-#overlayPopup {
+#overlayPopupContainer {
   padding: 5px;
   width: 240px;
   height: 130px;
@@ -470,11 +482,25 @@ export default {
   left: -125px;
 }
 
-#overlayPopup .bottom-popup {
+#overlayPopupContainer .bottom-popup {
   background-color: white;
   height: 25px;
   -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   clip-path: polygon(50% 0%, 30% 0, 52% 100%);
   margin-top: 0px;
+}
+
+#overlayPopupContainer #overlayPopup {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+#overlayPopupContainer #overlayPopup #popupImage {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 </style>

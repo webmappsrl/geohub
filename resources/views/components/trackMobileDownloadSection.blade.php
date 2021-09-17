@@ -1,6 +1,6 @@
 @props(['track','agent'])
 
-<div class="px-4 flex flex-row fixed bottom-0 bg-white h-20 w-full shadow-top z-15">
+<div class="px-4 flex flex-row fixed bottom-0 bg-white h-20 w-full shadow-top z-20">
     <div class="flex gap-x-6 justify-left items-center w-4/6">
         <div><img src="{{asset('images/webmapp-logo-icon-only.png')}}" width="50"  alt="android download link"></div>
         <div>
