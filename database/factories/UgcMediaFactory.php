@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\UgcMedia;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +30,7 @@ class UgcMediaFactory extends Factory
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),
             'relative_url' => 'media/images/ugc/' . $this->faker->firstName() . '.png',
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
+            'user_id' => User::factory()->create()->id
         ];
     }
 }

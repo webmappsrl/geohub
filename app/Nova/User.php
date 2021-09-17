@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\DownloadMyUgcMediaAction;
 use App\Nova\Actions\EmulateUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
@@ -145,6 +146,7 @@ class User extends Resource {
      */
     public function actions(Request $request): array {
         return [
+            (new DownloadMyUgcMediaAction())->onlyOnDetail(),
             (new EmulateUser())
                 ->canSee(function ($request) {
                     return $request->user()->can('emulate', $this->resource);
@@ -152,6 +154,7 @@ class User extends Resource {
                 ->canRun(function ($request, $zone) {
                     return $request->user()->can('emulate', $zone);
                 }),
+
         ];
     }
 }
