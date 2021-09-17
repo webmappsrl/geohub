@@ -135,13 +135,13 @@ class EcPoi extends Model {
     public function getJson(): array {
         $array = $this->toArray();
         if ($this->featureImage)
-            $array['feature_image'] = json_decode($this->featureImage->getJson(), true);
+            $array['feature_image'] = $this->featureImage->getJson();
 
         if ($this->ecMedia) {
             $gallery = [];
             $ecMedia = $this->ecMedia;
             foreach ($ecMedia as $media) {
-                $gallery[] = json_decode($media->getJson(), true);
+                $gallery[] = $media->getJson();
             }
             if (count($gallery))
                 $array['image_gallery'] = $gallery;

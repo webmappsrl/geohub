@@ -127,13 +127,18 @@ export default {
     axios.get(this.field.apiBaseUrl + this.resourceId + '/associated_ec_media')
       .then(response => {
         this.selectedMedia = [];
-        this.associatedMediaList = response.data;
-        this.associatedMediaList.forEach(element => {
-          if (!!element && !!element.id) {
-            this.loadedImages.push(element)
-            this.selectedMedia.push(element.id)
-          }
-        });
+        this.associatedMediaList = response.data && response.data.features ? response.data.features : [];
+        if (!!this.associatedMediaList.length) {
+          this.associatedMediaList.forEach(element => {
+            if (!!element && !!element.properties && !!element.properties.id) {
+              this.loadedImages.push(element.properties)
+              this.selectedMedia.push(element.properties.id)
+            } else if (!!element && !!element.id) {
+              this.loadedImages.push(element)
+              this.selectedMedia.push(element.id)
+            }
+          });
+        }
       });
   },
   methods: {
@@ -183,7 +188,6 @@ export default {
       for (let i in this.loadedImages) {
         selectedMedia.push(this.loadedImages[i].id);
       }
-      console.log(selectedMedia);
       this.selectedMedia = selectedMedia;
     },
     getBackgroundImage(media) {
@@ -192,11 +196,10 @@ export default {
           ? media.properties
           : !!media.url ? media : undefined;
       if (!!properties) {
-        if (!!properties.thumbnails) {
+        if (!!properties.sizes) {
           try {
-            let thumbnails = JSON.parse(properties.thumbnails);
-            if (thumbnails['118x117']) url = thumbnails['118x117'];
-            else if (Object.keys(thumbnails).length > 0) url = thumbnails[Object.keys(thumbnails)[0]];
+            let thumbnails = properties.sizes;
+            if (thumbnails['150x150']) url = thumbnails['150x150'];
           } catch (e) {
           }
         }

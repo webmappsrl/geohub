@@ -139,18 +139,26 @@ class EcMedia extends Model {
     /**
      * Return json to be used in features API.
      *
-     * @return string
+     * @return array
      */
-    public function getJson(): string {
-        $json = [
-            'id' => $this->id,
-            'url' => $this->url,
-            'caption' => $this->description,
-            'api_url' => route('api.ec.media.geojson', ['id' => $this->id], true),
-            'sizes' => json_decode($this->thumbnails, true),
-        ];
+    public function getJson(): array {
+        $array = $this->toArray();
+        $toSave = ['id', 'name', 'url', 'description'];
 
-        return json_encode($json);
+        foreach ($array as $key => $property) {
+            if (!in_array($key, $toSave)) {
+                unset($array[$key]);
+            }
+        }
+
+        if (isset($array['description']))
+            $array['caption'] = $array['description'];
+        unset ($array['description']);
+
+        $array['api_url'] = route('api.ec.media.geojson', ['id' => $this->id], true);
+        $array['sizes'] = json_decode($this->thumbnails, true);
+
+        return $array;
     }
 
     /**
@@ -164,6 +172,10 @@ class EcMedia extends Model {
             $feature["properties"] = $this->getJson();
 
             return $feature;
-        } else return null;
+        } else return [
+            "type" => "Feature",
+            "properties" => $this->getJson(),
+            "coordinates" => []
+        ];
     }
 }
