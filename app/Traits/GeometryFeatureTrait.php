@@ -13,7 +13,7 @@ trait GeometryFeatureTrait {
      *
      * @return array
      */
-    protected function getEmptyGeojson(): ?array {
+    public function getEmptyGeojson(): ?array {
         $model = get_class($this);
         $geom = $model::where('id', '=', $this->id)
             ->select(

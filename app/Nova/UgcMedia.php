@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
 use App\Nova\Filters\DateRange;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -9,6 +10,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -33,7 +35,7 @@ class UgcMedia extends Resource {
      * @var array
      */
     public static $search = [
-        'name'
+        'name',
     ];
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
@@ -93,7 +95,10 @@ class UgcMedia extends Resource {
      */
     public function filters(Request $request): array {
         return [
-            new DateRange('created_at')
+            new DateRange('created_at'),
+            (new NovaSearchableBelongsToFilter('Author'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id')
         ];
     }
 

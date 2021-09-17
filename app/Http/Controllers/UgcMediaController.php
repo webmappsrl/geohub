@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UgcMediaCollection;
 use App\Http\Resources\UgcMediaResource;
 use App\Models\UgcMedia;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -127,6 +128,40 @@ class UgcMediaController extends Controller
     public function destroy(UgcMedia $ugcMedia)
     {
         //
+    }
+
+
+
+    public function downloadUserGeojson($user_id) {
+
+        $headers = [
+            'Content-type' => 'application/json',
+            'Content-Disposition' => 'attachment; filename="MyUgcMedia.geojson"',
+        ];
+
+        $user=User::find($user_id);
+        if($user==null) {
+            $geojson = ["error"=>"User Not Found"];
+        }
+        else if (count($user->ugc_medias) == 0) {
+            $geojson = ["error"=>"User has no Media"];
+        }
+        else {
+            $geojson=['type'=>'FeatureCollection'];
+            $geojson['features']=[];
+            foreach ($user->ugc_medias as $media) {
+                $feature=['type'=>'Feature'];
+                $feature['properties']['id']=$media->id;
+                $feature['properties']['name']=$media->name;
+                $feature['properties']['url']=env('APP_URL').Storage::url($media->relative_url);
+                $emptygeojson = $media->getEmptyGeojson();
+                $feature['geometry']=$emptygeojson['geometry'];
+                $geojson['features'][]=$feature;
+            }
+        }
+
+        return response(json_encode($geojson), 200, $headers);
+
     }
 
     protected function mime2ext($mime) {
