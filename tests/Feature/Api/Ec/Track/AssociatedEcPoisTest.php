@@ -6,10 +6,9 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class AssociatedPoiTest extends TestCase {
+class AssociatedEcPoisTest extends TestCase {
     use RefreshDatabase;
 
     protected function setUp(): void {

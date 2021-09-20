@@ -146,7 +146,7 @@ Route::name('api.')->group(function () {
                 Route::get("/{id}.kml", [EditorialContentController::class, 'downloadEcKml'])->name('download.kml');
                 Route::get("/{id}", [EditorialContentController::class, 'downloadEcGeojson'])->name('download');
             });
-            Route::get("/{id}/near_points", [EcPoiController::class, 'getNeighbourEcMedia']);
+            Route::get("/{id}/neighbour_media", [EcPoiController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcPoiController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcPoiController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EditorialContentController::class, 'viewEcGeojson'])->name('view.geojson');
@@ -175,7 +175,7 @@ Route::name('api.')->group(function () {
             });
             Route::get("/{id}/neighbour_pois", [EcTrackController::class, 'getNeighbourEcPoi']);
             Route::get("/{id}/associated_ec_pois", [EcTrackController::class, 'getAssociatedEcPois']);
-            Route::get("/{id}/near_points", [EcTrackController::class, 'getNeighbourEcMedia']);
+            Route::get("/{id}/neighbour_media", [EcTrackController::class, 'getNeighbourEcMedia']);
             Route::get("/{id}/associated_ec_media", [EcTrackController::class, 'getAssociatedEcMedia']);
             Route::get("/{id}/feature_image", [EcTrackController::class, 'getFeatureImage']);
             Route::get("/{id}.geojson", [EcTrackController::class, 'getGeojson'])->name('view.geojson');
