@@ -22,16 +22,11 @@
 <script>
 export default {
   name: "tabs",
-
-
   data() {
     return {tabs: []};
   },
-
   created() {
-
     this.tabs = this.$children;
-
   },
   methods: {
     selectTab(selectedTab) {
@@ -40,7 +35,7 @@ export default {
       });
     },
     cancelUpload() {
-      this.$parent.modalOpen = false;
+      this.$parent.dismiss();
     },
   }
 };

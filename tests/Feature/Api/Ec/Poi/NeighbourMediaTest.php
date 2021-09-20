@@ -6,6 +6,7 @@ use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -46,6 +47,8 @@ class NeighbourMediaTest extends TestCase {
         $media = EcMedia::factory([
             'geometry' => DB::raw("ST_GeomFromText('POINT(5 5)')")
         ])->count(2)->create();
+
+        Config::set('geohub.ec_poi_media_distance', 100);
 
         $result = $this->getJson('/api/ec/poi/' . $poi->id . "/neighbour_media", []);
 

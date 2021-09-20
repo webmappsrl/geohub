@@ -109,7 +109,7 @@ class EcPoi extends Model {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_poi") . ');',
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_poi_media_distance") . ');',
             [
                 $this->geometry,
             ]

@@ -6,6 +6,7 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -46,6 +47,8 @@ class NeighbourPoisTest extends TestCase {
         EcPoi::factory([
             'geometry' => DB::raw("ST_GeomFromText('POINT(5 5)')")
         ])->count(2)->create();
+
+        Config::set('geohub.ec_track_ec_poi_distance', 100);
 
         $result = $this->getJson('/api/ec/track/' . $track->id . "/neighbour_pois", []);
 
