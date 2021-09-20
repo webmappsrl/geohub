@@ -37,6 +37,10 @@ use App\Models\UgcTrack;
 |
 */
 
+
+Route::get('downloadUserUgcMediaGeojson/{user_id}',[UgcMediaController::class,'downloadUserGeojson'])
+    ->name('downloadUserUgcMediaGeojson');
+
 Route::name('api.')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
     Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup'])->name('signup');
