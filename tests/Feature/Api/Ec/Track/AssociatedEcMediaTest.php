@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Api\Ec\Track;
 
-use App\Models\EcPoi;
+use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AssociatedEcPoisTest extends TestCase {
+class AssociatedEcMediaTest extends TestCase {
     use RefreshDatabase;
 
     protected function setUp(): void {
@@ -22,7 +22,7 @@ class AssociatedEcPoisTest extends TestCase {
 
     public function test_empty_result() {
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_pois", []);
+        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_media", []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -35,12 +35,12 @@ class AssociatedEcPoisTest extends TestCase {
         $this->assertCount(0, $json["features"]);
     }
 
-    public function test_result_with_some_pois() {
+    public function test_result_with_some_media() {
         $track = EcTrack::factory()->create();
-        $pois = EcPoi::factory(10)->create();
+        $media = EcMedia::factory(10)->create();
 
-        $track->ecPois()->sync($pois);
-        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_pois", []);
+        $track->ecMedia()->sync($media);
+        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_media", []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
