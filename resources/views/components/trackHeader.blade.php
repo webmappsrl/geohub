@@ -33,7 +33,7 @@
             <!-- Title section -->
             @if ($track->name)
             <div class="text-white col-span-full text-2xl sm:text-3xl font-semibold px-4 sm:px-20 sm:col-span-2 flex items-end">
-                <h1>{{$track->name}}</h1>
+                <h1>{!! $track->name !!}</h1>
             </div>
             @endif
 
@@ -50,7 +50,12 @@
             @if ($track->taxonomyActivities->count() > 0 )
             <div id="taxonomyActivities" class="col-span-full flex-row flex items-center px-4 sm:px-20 sm:col-span-2 bg-white sm:bg-transparent">
                 @foreach ($track->taxonomyActivities->pluck('icon','name') as $name => $icon)
-                    <div class="block text-black sm:text-white">{{$name}}</div>
+                    <div class="block text-black sm:text-white {{ $loop->iteration > 1 ? 'pl-4' : '' }}">
+                        @if ($icon)
+                            <i class="activityIcon {{$icon}}"></i>{{ $loop->iteration > 1 ? ' ' : '' }}
+                        @endif
+                        {{$name}}
+                    </div>
                 @endforeach
             </div>
             @endif
