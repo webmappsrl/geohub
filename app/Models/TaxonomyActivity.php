@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
@@ -36,14 +37,6 @@ class TaxonomyActivity extends Model {
     protected static function boot() {
         parent::boot();
         static::creating(function ($taxonomyActivity) {
-            if ($taxonomyActivity->identifier != null) {
-                $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
-                if (!$validateTaxonomyActivity == null) {
-                    self::validationError("The inserted 'identifier' field already exists.");
-                }
-            }
-        });
-        static::updating(function ($taxonomyActivity) {
             if ($taxonomyActivity->identifier != null) {
                 $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
                 if (!$validateTaxonomyActivity == null) {

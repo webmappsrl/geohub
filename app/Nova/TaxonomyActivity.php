@@ -15,7 +15,6 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
-use Tsungsoft\ErrorMessage\ErrorMessage;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
 
@@ -49,11 +48,11 @@ class TaxonomyActivity extends Resource {
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
-    public function fields(Request $request) {
+    public function fields(Request $request): array {
         return [
 
             NovaTabTranslatable::make([
@@ -62,8 +61,8 @@ class TaxonomyActivity extends Resource {
                 TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             ]),
 
-            ErrorMessage::make('Error'),
-            Text::make(__('Identifier'), 'identifier'),
+            Text::make(__('Identifier'), 'identifier')
+                ->updateRules('unique:taxonomy_activities,identifier,{{resourceId}}'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Swatches::make('Color'),
             Number::make('Zindex')->hideFromIndex(),
@@ -112,7 +111,7 @@ class TaxonomyActivity extends Resource {
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -123,7 +122,7 @@ class TaxonomyActivity extends Resource {
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -134,7 +133,7 @@ class TaxonomyActivity extends Resource {
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -145,7 +144,7 @@ class TaxonomyActivity extends Resource {
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */

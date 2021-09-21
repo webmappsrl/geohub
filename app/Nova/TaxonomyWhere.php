@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Providers\WebmappAppIconProvider;
-use Bernhardh\NovaIconSelect\IconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
 use ElevateDigital\CharcountedFields\TextareaCounted;
@@ -12,13 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\MorphOne;
-use Laravel\Nova\Fields\MorphTo;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;

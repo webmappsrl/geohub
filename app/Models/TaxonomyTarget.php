@@ -10,14 +10,12 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
-class TaxonomyTarget extends Model
-{
+class TaxonomyTarget extends Model {
     use HasFactory, HasTranslations;
 
     public $translatable = ['name', 'description', 'excerpt'];
 
-    public function save(array $options = [])
-    {
+    public function save(array $options = []) {
         static::creating(function ($taxonomyTarget) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -35,20 +33,9 @@ class TaxonomyTarget extends Model
         parent::save($options);
     }
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
         static::creating(function ($taxonomyTarget) {
-
-            if ($taxonomyTarget->identifier != null) {
-                $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
-                if (!$validateTaxonomyTarget == null) {
-                    self::validationError("The inserted 'identifier' field already exists.");
-                }
-            }
-
-        });
-        static::updating(function ($taxonomyTarget) {
             if ($taxonomyTarget->identifier != null) {
                 $validateTaxonomyTarget = TaxonomyTarget::where('identifier', 'LIKE', $taxonomyTarget->identifier)->first();
                 if (!$validateTaxonomyTarget == null) {
@@ -58,23 +45,19 @@ class TaxonomyTarget extends Model
         });
     }
 
-    public function author()
-    {
+    public function author() {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ecMedia()
-    {
+    public function ecMedia() {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 
-    public function featureImage(): BelongsTo
-    {
+    public function featureImage(): BelongsTo {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message)
-    {
+    private static function validationError($message) {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
