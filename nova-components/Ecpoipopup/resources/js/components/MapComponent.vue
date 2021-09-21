@@ -3,9 +3,11 @@
     <div ref="ecmedia-map-root"
          style="width: 100%; height: 100%">
     </div>
-    <div id="overlayPopup">
-      <div style="height:100%">
-        <img id="popupImage" src="" style="height: 85%;width: 70%;">
+    <div id="overlayPopupContainer">
+      <div id="overlayPopup">
+        <div id="popupImage" style="height: 85%;width: 70%;">
+        </div>
+
         <p id="popupImageLabel"></p>
 
       </div>
@@ -47,18 +49,16 @@ export default {
     media: {},
     selectedPois: [],
     loadedPois: [],
-
   },
   data: () => ({
     map: null,
     view: null,
     featureLayer: null,
     featureSource: null,
-    mediaLayer: null,
-    mediaSource: null,
+    poiLayer: null,
+    poiSource: null,
   }),
   mounted() {
-
     this.featureSource = new VectorSource({
       features: [],
     });
@@ -72,11 +72,11 @@ export default {
       updateWhileInteracting: true,
       zIndex: 50,
     });
-    this.mediaSource = new VectorSource({
+    this.poiSource = new VectorSource({
       features: [],
     });
-    this.mediaLayer = new VectorLayer({
-      source: this.mediaSource,
+    this.poiLayer = new VectorLayer({
+      source: this.poiSource,
       visible: true,
       style: (feature) => {
         return this._style(feature, true);
@@ -85,7 +85,6 @@ export default {
       updateWhileInteracting: true,
       zIndex: 50,
     });
-
 
     this.view = new View({
       center: this._fromLonLat([10.4, 43]),
@@ -114,7 +113,7 @@ export default {
           })
         }),
         this.featureLayer,
-        this.mediaLayer
+        this.poiLayer
       ],
       view: this.view,
       controls: [
@@ -127,137 +126,122 @@ export default {
         })
       ],
       interactions:
-          defaultInteractions({
-            mouseWheelZoom: false,
-            doubleClickZoom: true,
-            shiftDragZoom: true,
-            dragPan: true,
-            altShiftDragRotate: true,
-            pinchRotate: true,
-            pinchZoom: true,
-          }).getArray()
+        defaultInteractions({
+          mouseWheelZoom: false,
+          doubleClickZoom: true,
+          shiftDragZoom: true,
+          dragPan: true,
+          altShiftDragRotate: true,
+          pinchRotate: true,
+          pinchZoom: true,
+        }).getArray()
     });
 
     this.map.on("pointermove", (event) => {
       let minPoiDistance = 15,
-          minTrackDistance = 15,
-          minPolygonArea,
-          poi,
-          track,
-          polygon,
+        minTrackDistance = 15,
+        minPolygonArea,
+        poi,
+        track,
+        polygon,
+        foreachFeature = (feature) => {
+          if (feature.getGeometry().getType() === "Point") {
+            let coord = feature.getGeometry().getCoordinates(),
+              dist = Math.round(
+                this.getFixedDistance(coord, event.coordinate)
+              );
+            if (dist < minPoiDistance) {
+              minPoiDistance = dist;
+              poi = feature;
+            }
+          } else if (
+            !poi && (feature.getGeometry().getType() === "LineString" ||
+            feature.getGeometry().getType() === "MultiLineString")
+          ) {
+            let coord = (feature.getGeometry()).getClosestPoint(
+              event.coordinate),
 
-          foreachFeature = (feature) => {
-            if (feature.getGeometry().getType() === "Point") {
-              let coord = feature.getGeometry().getCoordinates(),
-                  dist = Math.round(
-                      this.getFixedDistance(coord, event.coordinate)
-                  );
-              if (dist < minPoiDistance) {
-                minPoiDistance = dist;
-                poi = feature;
-              }
-            } else if (
-                !poi && (feature.getGeometry().getType() === "LineString" ||
-                    feature.getGeometry().getType() === "MultiLineString")
-            ) {
-              let coord = (feature.getGeometry()).getClosestPoint(
-                      event.coordinate),
+              dist = Math.round(
+                this.getFixedDistance(coord, event.coordinate)
+              );
+            if (dist < minTrackDistance) {
+              minTrackDistance = dist;
+              track = feature;
+            }
+          } else if (
+            !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
+            feature.getGeometry().getType() === "MultiPolygon")
+          ) {
+            let area, poly = feature.getGeometry();
 
-                  dist = Math.round(
-                      this.getFixedDistance(coord, event.coordinate)
-                  );
-              if (dist < minTrackDistance) {
-                minTrackDistance = dist;
-                track = feature;
-              }
-            } else if (
-                !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
-                    feature.getGeometry().getType() === "MultiPolygon")
-            ) {
-              let area, poly = feature.getGeometry();
-
-              if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
-                area = poly.getArea();
-                if (area < minPolygonArea || !minPolygonArea) {
-                  minPolygonArea = area;
-                  polygon = feature;
-                }
+            if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
+              area = poly.getArea();
+              if (area < minPolygonArea || !minPolygonArea) {
+                minPolygonArea = area;
+                polygon = feature;
               }
             }
-          };
+          }
+        };
 
-      this.mediaSource.forEachFeatureInExtent(
-          this.view.calculateExtent(this.map.getSize()),
-          foreachFeature
+      this.poiSource.forEachFeatureInExtent(
+        this.view.calculateExtent(this.map.getSize()),
+        foreachFeature
       );
       let coordinate;
-      if (poi)
-        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
-      else if (track)
-        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
-      if (coordinate) {
-        var overlayPopup = new Overlay({
-          element: document.getElementById('overlayPopup')
-        });
-        var popupImage = overlayPopup.setPosition(coordinate);
-        this.map.addOverlay(overlayPopup);
-        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = poi['values_']['url'];
-      }
+      this._toggleOverlay(poi || track || undefined);
     });
 
     this.map.on("click", (event) => {
       let minPoiDistance = 15,
-          minTrackDistance = 15,
-          minPolygonArea,
-          poi,
-          track,
-          polygon,
+        minTrackDistance = 15,
+        minPolygonArea,
+        poi,
+        track,
+        polygon,
+        foreachFeature = (feature) => {
+          if (feature.getGeometry().getType() === "Point") {
+            let coord = feature.getGeometry().getCoordinates(),
+              dist = Math.round(
+                this.getFixedDistance(coord, event.coordinate)
+              );
+            if (dist < minPoiDistance) {
+              minPoiDistance = dist;
+              poi = feature;
+            }
+          } else if (
+            !poi && (feature.getGeometry().getType() === "LineString" ||
+            feature.getGeometry().getType() === "MultiLineString")
+          ) {
+            let coord = (feature.getGeometry()).getClosestPoint(
+              event.coordinate),
 
-          foreachFeature = (feature) => {
-            if (feature.getGeometry().getType() === "Point") {
-              let coord = feature.getGeometry().getCoordinates(),
-                  dist = Math.round(
-                      this.getFixedDistance(coord, event.coordinate)
-                  );
-              if (dist < minPoiDistance) {
-                minPoiDistance = dist;
-                poi = feature;
-              }
-            } else if (
-                !poi && (feature.getGeometry().getType() === "LineString" ||
-                    feature.getGeometry().getType() === "MultiLineString")
-            ) {
-              let coord = (feature.getGeometry()).getClosestPoint(
-                      event.coordinate),
+              dist = Math.round(
+                this.getFixedDistance(coord, event.coordinate)
+              );
+            if (dist < minTrackDistance) {
+              minTrackDistance = dist;
+              track = feature;
+            }
+          } else if (
+            !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
+            feature.getGeometry().getType() === "MultiPolygon")
+          ) {
+            let area, poly = feature.getGeometry();
 
-                  dist = Math.round(
-                      this.getFixedDistance(coord, event.coordinate)
-                  );
-              if (dist < minTrackDistance) {
-                minTrackDistance = dist;
-                track = feature;
-              }
-            } else if (
-                !poi && !track && (feature.getGeometry().getType() === "Polygon" ||
-                    feature.getGeometry().getType() === "MultiPolygon")
-            ) {
-              let area, poly = feature.getGeometry();
-
-              if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
-                area = poly.getArea();
-                if (area < minPolygonArea || !minPolygonArea) {
-                  minPolygonArea = area;
-                  polygon = feature;
-                }
+            if (poly.containsXY(event.coordinate[0], event.coordinate[1])) {
+              area = poly.getArea();
+              if (area < minPolygonArea || !minPolygonArea) {
+                minPolygonArea = area;
+                polygon = feature;
               }
             }
-          };
+          }
+        };
 
-
-      this.mediaSource.forEachFeatureInExtent(
-          this.view.calculateExtent(this.map.getSize()),
-          foreachFeature
+      this.poiSource.forEachFeatureInExtent(
+        this.view.calculateExtent(this.map.getSize()),
+        foreachFeature
       );
       let id;
       if (poi)
@@ -268,14 +252,12 @@ export default {
         if (this.selectedPois.indexOf(id) === -1) {
           this.selectedPois.push(id);
           this.loadedPois.push(poi['values_']);
-
-
         } else {
           this.selectedPois.splice(this.selectedPois.indexOf(id), 1);
           this.loadedPois.splice(this.loadedPois.indexOf(id), 1);
         }
 
-        this.mediaLayer.changed();
+        this.poiLayer.changed();
         this.map.render();
       }
     });
@@ -283,23 +265,22 @@ export default {
     setTimeout(() => {
       this.map.updateSize();
       this.drawFeature();
-      this.drawMedia();
+      this.drawPois();
     }, 500)
-
   },
   watch: {
     selectedPois() {
-      this.mediaLayer.changed();
+      this.poiLayer.changed();
       this.map.render();
     }
   },
   methods: {
     getFixedDistance(point1, point2) {
       return (
-          getDistance(
-              this._toLonLat(point1),
-              this._toLonLat(point2)
-          ) / this.view.getResolution()
+        getDistance(
+          this._toLonLat(point1),
+          this._toLonLat(point2)
+        ) / this.view.getResolution()
       );
     },
     _toLonLat(coordinates) {
@@ -319,30 +300,30 @@ export default {
       if (feature.getGeometry().getType() === "Point")
         return this._getPoiStyle(feature, isMedia, isSelected);
       else if (
-          feature.getGeometry().getType() === "LineString" ||
-          feature.getGeometry().getType() === "MultiLineString"
+        feature.getGeometry().getType() === "LineString" ||
+        feature.getGeometry().getType() === "MultiLineString"
       )
         return this._getLineStyle(feature, isMedia, isSelected);
       else if (
-          feature.getGeometry().getType() === "Polygon" ||
-          feature.getGeometry().getType() === "MultiPolygon"
+        feature.getGeometry().getType() === "Polygon" ||
+        feature.getGeometry().getType() === "MultiPolygon"
       )
         return this._getPolygonStyle(feature, isMedia, isSelected);
       else return [];
     },
     _getPoiStyle(feature, isMedia, isSelected) {
       let style,
-          color = !isMedia ? "#ff0000" : (isSelected ? "#63a2de" : "#ffb100"),
-          colorRgb = !isMedia ? "255,0,0" : (isSelected ? "99,162,222" : "255,177,0"),
-          zoomFactor = 1.2,
-          borderSize = 2;
+        color = !isMedia ? "#ff0000" : (isSelected ? "#63a2de" : "#ffb100"),
+        colorRgb = !isMedia ? "255,0,0" : (isSelected ? "99,162,222" : "255,177,0"),
+        zoomFactor = 1.2,
+        borderSize = 2;
 
       style = [
         new Style({
           image: new CircleStyle({
             radius:
-                (isSelected ? 1.5 : zoomFactor) * 7 +
-                borderSize / 2 + 8,
+              (isSelected ? 1.5 : zoomFactor) * 7 +
+              borderSize / 2 + 8,
             fill: new Fill({color: "rgba(" + colorRgb + ",0.2)"}),
 
           }),
@@ -351,8 +332,8 @@ export default {
         new Style({
           image: new CircleStyle({
             radius:
-                (isSelected ? 1.5 : zoomFactor) * 7 +
-                borderSize / 2,
+              (isSelected ? 1.5 : zoomFactor) * 7 +
+              borderSize / 2,
             fill: new Fill({color: "#fff"}),
 
           }),
@@ -361,8 +342,8 @@ export default {
         new Style({
           image: new CircleStyle({
             radius:
-                (isSelected ? 1.5 : zoomFactor) * 7 -
-                borderSize / 2,
+              (isSelected ? 1.5 : zoomFactor) * 7 -
+              borderSize / 2,
             fill: new Fill({color: color}),
           }),
           zIndex: isSelected ? 202 : 102,
@@ -376,21 +357,21 @@ export default {
       let style = [];
 
       let color = isRelated ? "#66b3ff" : "#ff0000",
-          strokeWidth = isRelated ? 2 : 4,
-          lineDash = [],
-          lineCap = 'round',
-          zIndex = isRelated ? 100 : 200;
+        strokeWidth = isRelated ? 2 : 4,
+        lineDash = [],
+        lineCap = 'round',
+        zIndex = isRelated ? 100 : 200;
 
       style.push(
-          new Style({
-            stroke: new Stroke({
-              color: color,
-              width: strokeWidth,
-              lineDash: lineDash,
-              lineCap: lineCap,
-            }),
-            zIndex: zIndex + 2,
-          })
+        new Style({
+          stroke: new Stroke({
+            color: color,
+            width: strokeWidth,
+            lineDash: lineDash,
+            lineCap: lineCap,
+          }),
+          zIndex: zIndex + 2,
+        })
       );
 
       return style;
@@ -399,29 +380,29 @@ export default {
       const isRelated = feature.getId() + "" !== "wm-main-feature" && !!this.feature && !this.features && !!this.related;
 
       let style = [],
-          color = isRelated ? "#66b3ff" : "#ff0000",
-          colorRgb = isRelated ? "102, 179, 255" : "255, 0, 0",
-          fillOpacity = 0.3,
-          strokeWidth = 2,
-          strokeOpacity = 1,
-          lineDash = [],
-          fillColor = '';
+        color = isRelated ? "#66b3ff" : "#ff0000",
+        colorRgb = isRelated ? "102, 179, 255" : "255, 0, 0",
+        fillOpacity = 0.3,
+        strokeWidth = 2,
+        strokeOpacity = 1,
+        lineDash = [],
+        fillColor = '';
 
       fillColor = "rgba(" + colorRgb + "," + fillOpacity + ")";
       color = "rgba(" + colorRgb + "," + strokeOpacity + ")";
 
       style.push(
-          new Style({
-            fill: new Fill({
-              color: fillColor,
-            }),
-            stroke: new Stroke({
-              color: color,
-              width: strokeWidth,
-              lineDash: lineDash,
-            }),
-            zIndex: isRelated ? 100 : 200,
-          })
+        new Style({
+          fill: new Fill({
+            color: fillColor,
+          }),
+          stroke: new Stroke({
+            color: color,
+            width: strokeWidth,
+            lineDash: lineDash,
+          }),
+          zIndex: isRelated ? 100 : 200,
+        })
       );
 
       return style;
@@ -440,7 +421,7 @@ export default {
         });
       }
     },
-    drawMedia() {
+    drawPois() {
       if (!!this.media) {
         const features = new GeoJSON({
           featureProjection: 'EPSG:3857',
@@ -448,7 +429,47 @@ export default {
         for (let i in features) {
           features[i].setId(features[i].get('id'));
         }
-        this.mediaSource.addFeatures(features);
+        this.poiSource.addFeatures(features);
+      }
+    },
+    showOverlay(id) {
+      for (let poi of this.poiSource.getFeatures()) {
+        if (poi.getId() + '' === id + '') {
+          this._toggleOverlay(poi);
+          break;
+        }
+      }
+    },
+    hideOverlay() {
+      this._toggleOverlay();
+    },
+    _toggleOverlay(feature) {
+      const coordinate = feature && feature.getGeometry() && feature.getGeometry().getCoordinates();
+      if (coordinate) {
+        if (!this.overlayPopup) {
+          this.overlayPopup = new Overlay({
+            element: document.getElementById('overlayPopupContainer')
+          });
+        }
+        this.overlayPopup.setPosition(coordinate);
+
+        this.map.addOverlay(this.overlayPopup);
+        let properties = feature.getProperties(),
+          url = properties['sizes'] && properties['sizes']['150x150'] ? properties['sizes']['150x150'] : properties['url'],
+          nameObj = properties.name ? properties.name : {},
+          name = '';
+
+        if (Object.keys(nameObj).length > 0)
+          name = nameObj[Object.keys(nameObj)[0]];
+
+        if (document.getElementById("popupImageLabel").innerHTML !== name)
+          document.getElementById("popupImageLabel").innerHTML = name;
+
+        let popupImage = document.getElementById("popupImage");
+        if (popupImage.style.backgroundImage !== 'url(' + url + ')')
+          popupImage.style.backgroundImage = 'url(' + url + ')';
+      } else if (this.overlayPopup) {
+        this.map.removeOverlay(this.overlayPopup);
       }
     }
   }
@@ -458,7 +479,7 @@ export default {
 <style scoped>
 @import "../../../node_modules/ol/ol.css";
 
-#overlayPopup {
+#overlayPopupContainer {
   padding: 5px;
   width: 240px;
   height: 130px;
@@ -468,7 +489,7 @@ export default {
   left: -125px;
 }
 
-#overlayPopup .bottom-popup {
+#overlayPopupContainer .bottom-popup {
   background-color: white;
   height: 25px;
   -webkit-clip-path: polygon(50% 0%, 30% 0, 52% 100%);
@@ -476,4 +497,17 @@ export default {
   margin-top: 0px;
 }
 
+#overlayPopupContainer #overlayPopup {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+#overlayPopupContainer #overlayPopup #popupImage {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 </style>

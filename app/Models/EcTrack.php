@@ -273,6 +273,14 @@ class EcTrack extends Model {
             }
         }
 
+        $mbtilesIds = $this->mbtiles;
+        if ($mbtilesIds) {
+            $mbtilesIds = json_decode($mbtilesIds, true);
+            if (count($mbtilesIds)) {
+                $array['mbtiles'] = $mbtilesIds;
+            }
+        }
+
         return $array;
     }
 
@@ -382,7 +390,7 @@ class EcTrack extends Model {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_track") . ');',
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_media_distance") . ');',
             [
                 $this->geometry,
             ]
@@ -403,7 +411,7 @@ class EcTrack extends Model {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_pois
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.distance_ec_track") . ');',
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_ec_poi_distance") . ');',
             [
                 $this->geometry,
             ]

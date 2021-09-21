@@ -49,14 +49,6 @@ class TaxonomyWhere extends Model {
                 }
             }
         });
-        static::updating(function ($taxonomyWhere) {
-            if ($taxonomyWhere->identifier != null) {
-                $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
-                if (!$validateTaxonomyWhere == null) {
-                    self::validationError("The inserted 'identifier' field already exists.");
-                }
-            }
-        });
     }
 
     public function table(): string {

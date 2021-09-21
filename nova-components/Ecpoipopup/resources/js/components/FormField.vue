@@ -4,9 +4,10 @@
       <template slot="field">
         <div ref="selectedImageList" id="selectedImageList">
           <div class="selectedImageRow flex flex-wrap mb-1" v-for="row in loadedPois">
-            <!--<div class="w-1/5">
-              <img class="selectedThunbnail" :src="row.name.it">
-            </div>-->
+            <div class="w-1/5">
+              <div class="selectedThumbnail" :style="{'background-image': 'url(' + getBackgroundImage(row) + ')' }">
+              </div>
+            </div>
             <div class="w-3/5">
               <p>IT: {{ row.name.it }}</p>
               <p>EN: {{ row.name.en }}</p>
@@ -19,7 +20,7 @@
           </div>
           <br>
         </div>
-        <button type="button" class="btn btn-primary btn-default" @click="modalOpen = true">
+        <button type="button" class="btn btn-primary btn-default" @click="openModal()">
           Select EcPoi
         </button>
       </template>
@@ -36,35 +37,35 @@
                   <div style="display:flex">
                     <tabs>
                       <tab name="Poi associati alla track" :selected="true">
-                        <p class="subtitle">Seleziona i Poi Georeferenziati nelle vicinanze della traccia</p>
                         <div class="modal-body flex flex-wrap">
+                          <div class="modal-poi-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
+                            <p class="subtitle">Select the points geolocated nearby</p>
 
-                          <div class="poi-list w-1/2 flex flex-wrap" style="border-right: 1px solid grey">
-
-                            <div :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''" class="box-poi"
-                                 v-for="poi in poiList.features" style="margin:5px"
-                                 @click="toggleImage(poi.properties)">
-
-                              <img class="image ec-poi-image"
-                                   :src="poi.properties.image.url">
-                              <!--<img src="/Vector.png"
-                                   :class="selectedPois.includes(poi.properties.id) ? 'vector-visible' : 'vector-hidden'">-->
-                              <p @click="toggleImage(poi.properties)" @mouseover="showOverlay(poi.properties.id)"
-                                 style="padding-left:3px">IT:
-                                {{ poi.properties.name.it }}<br>
-                                <br>
-                                EN: {{ poi.properties.name.en }}</p>
-                              <!--<div class="overlay"
+                            <div class="poi-list flex flex-wrap"
+                                 @mouseover="hideOverlay()">
+                              <div class="ec-poi"
                                    :class="selectedPois.includes(poi.properties.id) ? 'selected' : ''"
-                                   :src="poi.properties.image.url"
-                                   @click="toggleImage(poi.properties)">
-                                <div class="text-poi">Seleziona</div>
-                              </div>-->
+                                   v-for="poi in poiList.features"
+                                   @click="toggleImage(poi.properties)"
+                                   @mouseover="showOverlay(poi.properties.id, $event)">
+                                <div class="ec-poi-content">
+                                  IT: {{ poi.properties.name.it }}<br>
+                                  EN: {{ poi.properties.name.en }}
+                                </div>
+                                <div class="select-overlay">
+                                  Select
+                                </div>
+                                <img src="/Vector.png"
+                                     class="vector-visible"
+                                     v-if="selectedPois.includes(poi.properties.id)"
+                                     alt="selected">
+                              </div>
                             </div>
-                            <br>
                           </div>
                           <div class="map w-1/2 text-center">
-                            <MapComponent id="map-component" :feature="field.geojson" :media="poiList"
+                            <MapComponent id="map-component"
+                                          :feature="field.geojson"
+                                          :media="poiList"
                                           :selectedPois="selectedPois" :loadedPois="loadedPois"
                                           ref="mapComponent"></MapComponent>
                           </div>
@@ -119,10 +120,6 @@ export default {
     }
   },
   mounted() {
-    axios.get('/api/ec/track/' + this.resourceId + '/neighbour_pois')
-      .then(response => {
-        this.poiList = response.data;
-      });
     axios.get('/api/ec/track/' + this.resourceId + '/associated_ec_pois')
       .then(response => {
         this.selectedPois.splice(0);
@@ -141,37 +138,38 @@ export default {
       });
   },
   methods: {
-    showOverlay(id) {
-      axios.get('/api/ec/poi/' + id)
+    mount() {
+      axios.get('/api/ec/track/' + this.resourceId + '/neighbour_pois')
         .then(response => {
-          let coordinate = response.data.geometry.coordinates;
-
-          if (coordinate) {
-            let overlayPopup = new Overlay({
-              element: document.getElementById('overlayPopup')
-            });
-            overlayPopup.setPosition(coordinate);
-
-            this.$refs.mapComponent.map.addOverlay(overlayPopup);
-
-            document.getElementById("popupImageLabel").innerHTML = response.data.properties.name.it;
-            document.getElementById("popupImage").src = response.data.properties.feature_image;
-          }
+          this.poiList = response.data;
         });
     },
+    openModal() {
+      this.modalOpen = true;
+      this.mount();
+    },
+    showOverlay(id, event) {
+      event.stopPropagation();
+      this.$refs.mapComponent.showOverlay(id);
+    },
+    hideOverlay() {
+      this.$refs.mapComponent.hideOverlay();
+    },
     toggleImage(item) {
-      if (this.selectedPois.includes(item.id)) {
-        this.loadedPois.splice(this.loadedPois.indexOf(item.id), 1);
+      if (this.selectedPois.includes(item.id))
         this.selectedPois.splice(this.selectedPois.indexOf(item.id), 1);
-      } else {
-        this.loadedPois.push(item);
+      else
         this.selectedPois.push(item.id);
-      }
-
     },
     loadImages() {
       document.getElementById('selectedImageList').style.display = "block";
       this.modalOpen = false;
+      let loadedImages = [];
+      for (let i in this.poiList.features) {
+        if (this.selectedPois.includes(this.poiList.features[i].properties.id))
+          loadedImages.push(this.poiList.features[i].properties);
+      }
+      this.loadedPois = loadedImages;
     },
     cancelUpload() {
       this.modalOpen = false;
@@ -180,24 +178,27 @@ export default {
       this.selectedPois.splice(this.selectedPois.indexOf(id), 1);
       this.loadedPois.splice(this.loadedPois.indexOf(id), 1)
     },
-    openImagePopup(id, poiCoordinate) {
-      let coordinate;
-      if (poi)
-        coordinate = poi.getGeometry().getClosestPoint(event.coordinate);
-      else if (track)
-        coordinate = track.getGeometry().getClosestPoint(event.coordinate);
-      if (coordinate) {
-        var overlayPopup = new Overlay({
-          element: document.getElementById('overlayPopup')
-        });
-        var popupImage = overlayPopup.setPosition(coordinate);
-        this.map.addOverlay(overlayPopup);
-        document.getElementById("popupImageLabel").innerHTML = poi['values_']['name']['it'];
-        document.getElementById("popupImage").src = "/storage" + poi['values_']['url'];
+    dismiss() {
+      this.modalOpen = false;
+      let selectedPois = [];
+      for (let i in this.loadedPois) {
+        selectedPois.push(this.loadedPois[i].id);
       }
+      this.selectedPois = selectedPois;
     },
+    getBackgroundImage(poi) {
+      let url = undefined,
+        image = poi && poi.properties && poi.properties.feature_image
+          ? poi.properties.feature_image : (poi.feature_image ? poi.feature_image : undefined);
+      if (image) {
+        if (image.sizes && image.sizes['150x150']) url = image.sizes['150x150'];
 
+        if (!url)
+          url = image.url;
+      }
 
+      return url;
+    },
     /**
      * Fill the given FormData object with the field's internal value.
      */
@@ -209,6 +210,55 @@ export default {
 </script>
 
 <style scoped>
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid lightgray;
+}
+
+.select-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transition: .5s ease;
+  transition: .5s ease;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  font-size: 15px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectedThumbnail {
+  width: 40px;
+  height: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 8px;
+}
+
+.poi-list {
+  width: 100%;
+  background-color: #f1f3f5;
+  max-height: 50vh;
+  overflow: scroll;
+  padding-top: 27px;
+  padding-left: 34px;
+  padding-right: 34px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex: 1 1 auto;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -249,31 +299,16 @@ export default {
   min-height: 50vh;
 }
 
+.modal-poi-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .modal-footer {
   padding: 1rem;
   text-align: right
-}
-
-.poi-list .box-image:hover {
-  border: 3px solid #55af60 !important;
-  box-sizing: border-box;
-  opacity: 0.8;
-}
-
-.poi-list .box-image.selected:hover {
-  border: 0px;
-}
-
-.modal-default-button {
-  float: right;
-}
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
 }
 
 .modal-enter .modal-container,
@@ -286,24 +321,25 @@ export default {
   border-bottom: 1px solid lightgray;
 }
 
-.ec-poi-image {
-  width: 108px;
-  height: 101px !important;
+.ec-poi {
+  display: block;
+  padding: 5px;
   border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  margin-right: 10px;
+  position: relative;
 }
 
-.ec-media-image:hover {
+.ec-poi:hover {
   border: 3px solid #55af60 !important;
   box-sizing: border-box;
   opacity: 0.8;
 }
 
-.selected {
-  border: 3px solid #55af60 !important;
-  box-sizing: border-box;
-  opacity: 0.8;
+.ec-poi:hover .select-overlay {
+  display: flex;
 }
-
 
 .vector-visible {
   display: block;
@@ -312,99 +348,45 @@ export default {
   top: 5px;
 }
 
-.vector-hidden {
-  display: none;
+.select-overlay {
   position: absolute;
-  right: 15px;
-  top: 5px;
-}
-
-
-.image {
-  display: block;
-  height: auto;
-}
-
-.overlay {
-  position: absolute;
-  top: 5px !important;
+  top: 0;
   bottom: 0;
-  left: 5px !important;
+  left: 0;
   right: 0;
-  height: 101px;
-  width: 101px;
-  opacity: 0;
   -webkit-transition: .5s ease;
   transition: .5s ease;
-  background-color: black;
-  border-radius: 8px;
-}
-
-.box-image:hover .overlay {
-  opacity: 0.5;
-}
-
-
-.box-image {
-  padding: 5px;
-}
-
-.text-poi {
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   font-size: 15px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  text-align: left;
-}
-
-.box-poi {
-  position: relative;
-  display: flex;
-  justify-content: left;
-  height: 108px;
-  width: 100%;
-  padding: 3px;
-}
-
-.box-poi:hover {
-  border: 1px solid lightblue;
-}
-
-.overlay.selected {
   display: none;
+  justify-content: center;
+  align-items: center;
 }
 
-.selectedThunbnail {
+.selectedThumbnail {
   width: 40px;
   height: 40px;
   border-radius: 8px;
 }
 
-.close-button {
-  font-size: 20px;
-  margin-right: 15px;
-  margin-top: 15px;
-}
-
 .poi-list {
+  width: 100%;
   background-color: #f1f3f5;
   max-height: 50vh;
   overflow: scroll;
   padding-top: 27px;
   padding-left: 34px;
-  padding-right: 62px;
-  align-content: flex-start;
+  padding-right: 34px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex: 1 1 auto;
 }
 
 .subtitle {
-  padding-left: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 20px;
   font-family: Nunito, sans-serif;
+  background: #fff;
 }
-
 </style>

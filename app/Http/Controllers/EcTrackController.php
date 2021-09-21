@@ -31,6 +31,13 @@ class EcTrackController extends Controller {
         return response()->json($track->getGeojson(), 200, $headers);
     }
 
+    /**
+     * Get a feature collection with the neighbour media
+     *
+     * @param int $idTrack
+     *
+     * @return JsonResponse
+     */
     public static function getNeighbourEcMedia(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
@@ -39,6 +46,13 @@ class EcTrackController extends Controller {
             return response()->json($track->getNeighbourEcMedia());
     }
 
+    /**
+     * Get a feature collection with the neighbour pois
+     *
+     * @param int $idTrack
+     *
+     * @return JsonResponse
+     */
     public static function getNeighbourEcPoi(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
@@ -47,6 +61,13 @@ class EcTrackController extends Controller {
             return response()->json($track->getNeighbourEcPoi());
     }
 
+    /**
+     * Get a feature collection with the related media
+     *
+     * @param int $idTrack
+     *
+     * @return JsonResponse
+     */
     public static function getAssociatedEcMedia(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
@@ -62,6 +83,13 @@ class EcTrackController extends Controller {
         return response()->json($result);
     }
 
+    /**
+     * Get a feature collection with the related pois
+     *
+     * @param int $idTrack
+     *
+     * @return JsonResponse
+     */
     public static function getAssociatedEcPois(int $idTrack): JsonResponse {
         $track = EcTrack::find($idTrack);
         if (is_null($track))

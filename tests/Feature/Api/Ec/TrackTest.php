@@ -17,6 +17,25 @@ use TaxonomyTargets;
 use Tests\TestCase;
 
 class TrackTest extends TestCase {
+    public function testDownloadKmlData() {
+        $data['name'] = 'Test track';
+        $data['description'] = 'Test track description.';
+        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
+        $kml = <<<KML
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Placemark><name>Test track</name><description>Test track description.</description><LineString><coordinates>11,43 12,43 12,44 11,44</coordinates></LineString></Placemark>
+</kml>
+KML;
+        $ecTrack = EcTrack::factory()->create($data);
+        $response = $this->get(route("api.ec.track.download.kml", ['id' => $ecTrack->id]));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $kmlResponse = $response->getContent();
+
+        $this->assertEquals($kmlResponse, $kml);
+    }
+
     use RefreshDatabase;
 
     protected function setUp(): void {
@@ -60,25 +79,6 @@ KML;
         $gpxResponse = $response->getContent();
 
         $this->assertEquals($gpxResponse, $gpx);
-    }
-
-    public function testDownloadKmlData() {
-        $data['name'] = 'Test track';
-        $data['description'] = 'Test track description.';
-        $data['geometry'] = DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))");
-        $kml = <<<KML
-<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-<Placemark><name>Test track</name><description>Test track description.</description><LineString><coordinates>11,43 12,43 12,44 11,44</coordinates></LineString></Placemark>
-</kml>
-KML;
-        $ecTrack = EcTrack::factory()->create($data);
-        $response = $this->get(route("api.ec.track.download.kml", ['id' => $ecTrack->id]));
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $kmlResponse = $response->getContent();
-
-        $this->assertEquals($kmlResponse, $kml);
     }
 
     public function testOsmidFields() {
@@ -471,10 +471,7 @@ KML;
         $this->assertArrayHasKey('geometry', $properties['related_pois'][0]);
     }
 
-    /**
-     * @test
-     */
-    public function check_slope_in_api() {
+    public function test_slope_in_api() {
         $slopes = [1, 2, 3, 4];
         $track = EcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43 0,12 43 0,12 44 0,11 44 0)'))"),
@@ -494,6 +491,47 @@ KML;
         foreach ($geometry['coordinates'] as $key => $coordinate) {
             $this->assertCount(4, $coordinate);
             $this->assertEquals($slopes[$key], $coordinate[3]);
+        }
+    }
+
+    public function test_mbtiles_is_not_present_when_not_set() {
+        $track = EcTrack::factory()->create();
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey('properties', $json);
+        $this->assertIsArray($json['properties']);
+        $this->assertArrayNotHasKey('mbtiles', $json['properties']);
+    }
+
+    public function test_mbtiles_is_present_when_set() {
+        $mbtiles = [
+            '1/2/3',
+            '4/5/6',
+            '7/8/9'
+        ];
+        $track = EcTrack::factory([
+            'mbtiles' => json_encode($mbtiles)
+        ])->create();
+
+        $response = $this->get(route("api.ec.track.json", ['id' => $track->id]));
+        $content = $response->getContent();
+        $this->assertJson($content);
+
+        $json = $response->json();
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey('properties', $json);
+        $this->assertIsArray($json['properties']);
+        $this->assertArrayHasKey('mbtiles', $json['properties']);
+        $this->assertIsArray($json['properties']['mbtiles']);
+        $this->assertCount(3, $json['properties']['mbtiles']);
+
+        foreach ($mbtiles as $id) {
+            $this->assertContains($id, $json['properties']['mbtiles']);
         }
     }
 }

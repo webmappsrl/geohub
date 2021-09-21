@@ -6,10 +6,11 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class AssociatedPoiTest extends TestCase {
+class NeighbourPoisTest extends TestCase {
     use RefreshDatabase;
 
     protected function setUp(): void {
@@ -21,12 +22,9 @@ class AssociatedPoiTest extends TestCase {
         });
     }
 
-    /**
-     * @test
-     */
-    public function check_empty_result() {
+    public function test_empty_result() {
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_pois", []);
+        $result = $this->getJson('/api/ec/track/' . $track->id . "/neighbour_pois", []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -39,15 +37,20 @@ class AssociatedPoiTest extends TestCase {
         $this->assertCount(0, $json["features"]);
     }
 
-    /**
-     * @test
-     */
-    public function check_result_with_some_pois() {
-        $track = EcTrack::factory()->create();
-        $pois = EcPoi::factory(10)->create();
+    public function test_result_with_some_neighbour_media() {
+        $track = EcTrack::factory([
+            'geometry' => DB::raw("ST_GeomFromText('LINESTRING(0 0 0, 1 1 0)')")
+        ])->create();
+        $neighbourPois = EcPoi::factory([
+            'geometry' => DB::raw("ST_GeomFromText('POINT(0 0)')")
+        ])->count(2)->create();
+        EcPoi::factory([
+            'geometry' => DB::raw("ST_GeomFromText('POINT(5 5)')")
+        ])->count(2)->create();
 
-        $track->ecPois()->sync($pois);
-        $result = $this->getJson('/api/ec/track/' . $track->id . "/associated_ec_pois", []);
+        Config::set('geohub.ec_track_ec_poi_distance', 100);
+
+        $result = $this->getJson('/api/ec/track/' . $track->id . "/neighbour_pois", []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -57,6 +60,16 @@ class AssociatedPoiTest extends TestCase {
         $this->assertSame("FeatureCollection", $json["type"]);
         $this->assertArrayHasKey("features", $json);
         $this->assertIsArray($json["features"]);
-        $this->assertCount(10, $json["features"]);
+        $this->assertCount(2, $json["features"]);
+
+        foreach ($json['features'] as $feature) {
+            $this->assertIsArray($feature);
+            $this->assertArrayHasKey('type', $feature);
+            $this->assertArrayHasKey('geometry', $feature);
+            $this->assertArrayHasKey('properties', $feature);
+            $this->assertIsArray($feature['properties']);
+            $this->assertArrayHasKey('id', $feature['properties']);
+            $this->assertTrue(in_array($feature['properties']['id'], $neighbourPois->pluck('id')->toArray()));
+        }
     }
 }

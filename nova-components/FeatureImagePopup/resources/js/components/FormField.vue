@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     mount() {
-      axios.get(this.field.apiBaseUrl + this.resourceId + '/near_points')
+      axios.get(this.field.apiBaseUrl + this.resourceId + '/neighbour_media')
         .then(response => {
           this.mediaList = response.data;
         });

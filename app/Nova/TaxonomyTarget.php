@@ -10,18 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
-use Tsungsoft\ErrorMessage\ErrorMessage;
 use Waynestate\Nova\CKEditor;
-use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 
 class TaxonomyTarget extends Resource {
@@ -67,7 +61,6 @@ class TaxonomyTarget extends Resource {
                 TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
             ]),
 
-            ErrorMessage::make('Error'),
             Text::make(__('Identifier'), 'identifier'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Swatches::make('Color'),
