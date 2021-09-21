@@ -273,6 +273,14 @@ class EcTrack extends Model {
             }
         }
 
+        $mbtilesIds = $this->mbtiles;
+        if ($mbtilesIds) {
+            $mbtilesIds = json_decode($mbtilesIds, true);
+            if (count($mbtilesIds)) {
+                $array['mbtiles'] = $mbtilesIds;
+            }
+        }
+
         return $array;
     }
 
