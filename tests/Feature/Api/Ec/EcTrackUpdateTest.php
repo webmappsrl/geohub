@@ -222,10 +222,7 @@ class EcTrackUpdateTest extends TestCase {
         $this->assertEquals(9, $coord[2][2]);
     }
 
-    /**
-     * @test
-     */
-    public function check_slope_is_added_correctly() {
+    public function test_slope_is_added_correctly() {
         $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
         $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
 
@@ -244,5 +241,25 @@ class EcTrackUpdateTest extends TestCase {
         $this->assertEquals(1, $slope[0]);
         $this->assertEquals(2, $slope[1]);
         $this->assertEquals(3, $slope[2]);
+    }
+
+    public function test_mbtiles_are_added_correctly() {
+        $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
+        $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
+
+        $payload = [
+            'geometry' => json_decode('{"type":"LineString","coordinates":[[1,2,3],[4,5,6],[7,8,9]]}', true),
+            'mbtiles' => ['0/0/0', '1/1/1']
+        ];
+        $result = $this->putJson('/api/ec/track/update/' . $track->id, $payload);
+        $this->assertEquals(200, $result->getStatusCode());
+
+        $track_updated = EcTrack::find($track->id);
+        $mbtiles = json_decode($track_updated->mbtiles, true);
+
+        $this->assertIsArray($mbtiles);
+        $this->assertCount(2, $mbtiles);
+        $this->assertEquals("0/0/0", $mbtiles[0]);
+        $this->assertEquals("1/1/1", $mbtiles[1]);
     }
 }

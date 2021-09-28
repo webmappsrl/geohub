@@ -150,6 +150,9 @@ class EcTrackController extends Controller {
         if (isset($request->slope) && is_array($request->slope))
             $ecTrack->slope = json_encode($request->slope);
 
+        if (isset($request->mbtiles) && is_array($request->mbtiles))
+            $ecTrack->mbtiles = json_encode($request->mbtiles);
+
         $fields = [
             'distance_comp',
             'distance',
