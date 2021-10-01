@@ -262,4 +262,22 @@ class EcTrackUpdateTest extends TestCase {
         $this->assertEquals("0/0/0", $mbtiles[0]);
         $this->assertEquals("1/1/1", $mbtiles[1]);
     }
+
+    public function test_elevation_chart_image_is_added_correctly() {
+        $query = "ST_GeomFromGeoJSON('{\"type\":\"LineString\",\"coordinates\":[[1,2,0],[4,5,0],[7,8,0]]}')";
+        $track = EcTrack::factory()->create(['geometry' => DB::raw($query)]);
+        $testPath = 'testPath';
+
+        $payload = [
+            'geometry' => json_decode('{"type":"LineString","coordinates":[[1,2,3],[4,5,6],[7,8,9]]}', true),
+            'elevation_chart_image' => $testPath
+        ];
+        $result = $this->putJson('/api/ec/track/update/' . $track->id, $payload);
+        $this->assertEquals(200, $result->getStatusCode());
+
+        $track_updated = EcTrack::find($track->id);
+
+        $this->assertIsString($track_updated->elevation_chart_image);
+        $this->assertEquals($testPath, $track_updated->elevation_chart_image);
+    }
 }

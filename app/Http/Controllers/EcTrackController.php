@@ -153,6 +153,9 @@ class EcTrackController extends Controller {
         if (isset($request->mbtiles) && is_array($request->mbtiles))
             $ecTrack->mbtiles = json_encode($request->mbtiles);
 
+        if (isset($request->elevation_chart_image) && is_string($request->elevation_chart_image))
+            $ecTrack->elevation_chart_image = $request->elevation_chart_image;
+
         $fields = [
             'distance_comp',
             'distance',
