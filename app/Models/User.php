@@ -4,6 +4,7 @@ namespace App\Models;
 
 use ChristianKuri\LaravelFavorite\Traits\Favoriteability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -81,6 +82,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function roles(): MorphToMany {
         return $this->morphToMany(Role::class, 'model', 'model_has_roles');
+    }
+
+    public function downloadableEcTracks(): BelongsToMany {
+        return $this->belongsToMany(EcTrack::class, 'downloadable_ec_track_user');
     }
 
     /**

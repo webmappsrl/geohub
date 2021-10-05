@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
  *
  * @package App\Models\
  *
- * @property available_languages
+ * @property string available_languages
  */
 class App extends Model {
     use HasFactory;

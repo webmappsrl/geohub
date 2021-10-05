@@ -4,23 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EcPoiEcTrack extends Migration {
+class DownloadableEcTrackUser extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
     public function up() {
-        Schema::create('ec_poi_ec_track', function (Blueprint $table) {
+        Schema::create('downloadable_ec_track_user', function (Blueprint $table) {
             $table->id();
-            $table->integer('ec_poi_id')->unsigned();
             $table->integer('ec_track_id')->unsigned();
-            $table->foreign('ec_poi_id')
-                ->references('id')
-                ->on('ec_pois');
+            $table->integer('user_id')->unsigned();
             $table->foreign('ec_track_id')
                 ->references('id')
                 ->on('ec_tracks');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 
@@ -30,6 +30,6 @@ class EcPoiEcTrack extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('ec_poi_ec_track');
+        Schema::dropIfExists('downloadable_ec_track_user');
     }
 }

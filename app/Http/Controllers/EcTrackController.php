@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\EcTrack;
-use App\Models\User;
 use App\Providers\EcTrackServiceProvider;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -138,8 +136,7 @@ class EcTrackController extends Controller {
         }
 
         if (
-            isset($request->geometry) &&
-            !is_null($request->geometry)
+            isset($request->geometry)
             && is_array($request->geometry)
             && isset($request->geometry['type'])
             && isset($request->geometry['coordinates'])

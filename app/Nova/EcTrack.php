@@ -75,8 +75,8 @@ class EcTrack extends Resource {
                 Text::make(__('Difficulty'), 'difficulty')->sortable(),
             ]),
 
-            Text::make(__('Import Method'), 'import_method'),
-            Text::make(__('Source ID'), 'source_id'),
+            //            Text::make(__('Import Method'), 'import_method'),
+            //            Text::make(__('Source ID'), 'source_id'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia')->onlyOnDetail(),
             BelongsToMany::make('EcPois')->onlyOnDetail(),

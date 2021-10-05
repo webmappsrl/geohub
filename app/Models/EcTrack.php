@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
@@ -197,9 +198,12 @@ class EcTrack extends Model {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
+    public function usersCanDownload(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'downloadable_ec_track_user');
+    }
+
     /**
      * Return the json version of the ec track, avoiding the geometry
-     * TODO: unit TEST
      *
      * @return array
      */
@@ -257,7 +261,7 @@ class EcTrack extends Model {
 
         $array['duration'] = $durations;
 
-        $propertiesToClear = ['geometry'];
+        $propertiesToClear = ['geometry', 'slope'];
         foreach ($array as $property => $value) {
             if (in_array($property, $propertiesToClear)
                 || is_null($value)
@@ -280,6 +284,9 @@ class EcTrack extends Model {
                 $array['mbtiles'] = $mbtilesIds;
             }
         }
+
+        $user = auth('api')->user();
+        $array['user_can_download'] = isset($user) && Gate::forUser($user)->allows('downloadOffline', $this);
 
         return $array;
     }
