@@ -4,11 +4,21 @@ namespace Tests\Feature\Api\Ec\Track\Geojson;
 
 use App\Models\EcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UserCanDownloadTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     public function test_guest_user_can_not_download() {
         $track = EcTrack::factory()->create();
