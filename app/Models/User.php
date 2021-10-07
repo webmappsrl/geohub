@@ -24,6 +24,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string email_verified_at
  * @property string last_name
  * @property string referrer
+ * @property string fiscal_code
  */
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable, HasRoles, Favoriteability;
@@ -86,6 +87,10 @@ class User extends Authenticatable implements JWTSubject {
 
     public function downloadableEcTracks(): BelongsToMany {
         return $this->belongsToMany(EcTrack::class, 'downloadable_ec_track_user');
+    }
+
+    public function partnerships(): BelongsToMany {
+        return $this->belongsToMany(Partnership::class, 'partnership_user');
     }
 
     /**

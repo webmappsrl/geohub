@@ -202,6 +202,10 @@ class EcTrack extends Model {
         return $this->belongsToMany(User::class, 'downloadable_ec_track_user');
     }
 
+    public function partnerships(): BelongsToMany {
+        return $this->belongsToMany(Partnership::class, 'ec_track_partnership');
+    }
+
     /**
      * Return the json version of the ec track, avoiding the geometry
      *
