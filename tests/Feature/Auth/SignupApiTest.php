@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use App\Providers\PartnershipValidationProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
@@ -84,5 +85,69 @@ class SignupApiTest extends TestCase {
         $this->assertArrayNotHasKey('referrer', $json);
 
         $this->assertSame($referrer, $user->referrer);
+    }
+
+    public function test_invalid_fiscal_code_field() {
+        $email = 'newemail@webmapp.it';
+        $name = 'signup test';
+        $fiscalCode = '1234567890123456';
+
+        $this->mock(PartnershipValidationProvider::class, function ($mock) {
+            $mock->shouldReceive('cai')
+                ->andReturn(false);
+        });
+
+        $response = $this->post('/api/auth/signup', [
+            'email' => $email,
+            'password' => 'webmapp',
+            'name' => $name,
+            'last_name' => $name,
+            'fiscal_code' => $fiscalCode
+        ]);
+        $json = $response->json();
+        $this->assertSame(200, $response->status());
+        $this->assertArrayHasKey('id', $json);
+        $user = User::find($json['id']);
+
+        $this->assertAuthenticatedAs($user, 'api');
+
+        $this->assertArrayHasKey('fiscal_code', $json);
+        $this->assertEquals($fiscalCode, $json['fiscal_code']);
+        $this->assertSame($fiscalCode, $user->fiscal_code);
+        $this->assertArrayHasKey('partnerships', $json);
+        $this->assertIsArray($json['partnerships']);
+        $this->assertCount(0, $json['partnerships']);
+    }
+
+    public function test_valid_fiscal_code_field() {
+        $email = 'newemail@webmapp.it';
+        $name = 'signup test';
+        $fiscalCode = '1234567890123456';
+
+        $this->mock(PartnershipValidationProvider::class, function ($mock) {
+            $mock->shouldReceive('cai')
+                ->andReturn(true);
+        });
+
+        $response = $this->post('/api/auth/signup', [
+            'email' => $email,
+            'password' => 'webmapp',
+            'name' => $name,
+            'last_name' => $name,
+            'fiscal_code' => $fiscalCode
+        ]);
+        $json = $response->json();
+        $this->assertSame(200, $response->status());
+        $this->assertArrayHasKey('id', $json);
+        $user = User::find($json['id']);
+
+        $this->assertAuthenticatedAs($user, 'api');
+
+        $this->assertArrayHasKey('fiscal_code', $json);
+        $this->assertEquals($fiscalCode, $json['fiscal_code']);
+        $this->assertSame($fiscalCode, $user->fiscal_code);
+        $this->assertArrayHasKey('partnerships', $json);
+        $this->assertIsArray($json['partnerships']);
+        $this->assertCount(1, $json['partnerships']);
     }
 }

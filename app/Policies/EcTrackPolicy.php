@@ -47,6 +47,10 @@ class EcTrackPolicy {
     }
 
     public function downloadOffline(User $user, EcTrack $model): bool {
-        return $user->downloadableEcTracks->contains($model->id);
+        $userPartnerships = $user->partnerships()->pluck('id')->toArray();
+        $ecTrackPartnerships = $model->partnerships()->pluck('id')->toArray();
+        $diff = array_diff($userPartnerships, $ecTrackPartnerships);
+
+        return $user->downloadableEcTracks->contains($model->id) || count($diff) < count($userPartnerships);
     }
 }
