@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Providers\PartnershipValidationProvider;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -91,6 +92,12 @@ class User extends Authenticatable implements JWTSubject {
 
     public function partnerships(): BelongsToMany {
         return $this->belongsToMany(Partnership::class, 'partnership_user');
+    }
+
+    public function isCaiMember(): bool {
+        $service = app(PartnershipValidationProvider::class);
+
+        return $service->cai($this);
     }
 
     /**

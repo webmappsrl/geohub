@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Partnership;
 use App\Models\User;
+use App\Providers\PartnershipValidationProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
@@ -22,7 +24,7 @@ class AuthController extends Controller {
      * @return JsonResponse
      */
     public function signup(): JsonResponse {
-        $credentials = request(['email', 'password', 'name', 'last_name', 'referrer']);
+        $credentials = request(['email', 'password', 'name', 'last_name', 'referrer', 'fiscal_code']);
 
         if (!isset($credentials['email']) || !isset($credentials['password'])) {
             $message = "";
@@ -36,6 +38,7 @@ class AuthController extends Controller {
             ], 400);
         }
 
+        // Check if user already exists
         $token = auth('api')->attempt($credentials);
         if ($token) {
             $tokenArray = $this->respondWithToken($token);
@@ -59,9 +62,23 @@ class AuthController extends Controller {
         $user->email_verified_at = now();
         if (isset($credentials['referrer']))
             $user->referrer = $credentials['referrer'];
+        if (isset($credentials['fiscal_code']) && is_string($credentials['fiscal_code']) && strlen($credentials['fiscal_code']) === 16)
+            $user->fiscal_code = strtoupper($credentials['fiscal_code']);
+
         $user->save();
         $role = Role::where('name', '=', 'Contributor')->first();
         $user->roles()->sync([$role->id]);
+
+        $partnerships = Partnership::all();
+        $service = app(PartnershipValidationProvider::class);
+        $partnershipsIds = [];
+        foreach ($partnerships as $partnership) {
+            if (method_exists(PartnershipValidationProvider::class, $partnership->validator)
+                && $service->{$partnership->validator}($user)) {
+                $partnershipsIds[] = $partnership->id;
+            }
+        }
+        $user->partnerships()->sync($partnershipsIds);
 
         $token = auth('api')->attempt($credentials);
         if ($token) {
@@ -101,7 +118,14 @@ class AuthController extends Controller {
             return strtolower($value);
         }, $user->roles->pluck('name')->toArray());
 
-        $result = array_merge($user->toArray(), ['roles' => $roles]);
+        $partnerships = array_map(function ($value) {
+            return $value;
+        }, $user->partnerships->pluck('name')->toArray());
+
+        $result = array_merge($user->toArray(), [
+            'roles' => $roles,
+            'partnerships' => $partnerships
+        ]);
 
         unset($result['referrer']);
         unset($result['password']);

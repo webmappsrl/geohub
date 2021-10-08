@@ -21,7 +21,8 @@ class PartnershipFactory extends Factory {
     public function definition() {
         return [
             'name' => $this->faker->name,
-            'short_name' => $this->faker->word
+            'short_name' => $this->faker->word,
+            'validator' => $this->faker->word
         ];
     }
 }

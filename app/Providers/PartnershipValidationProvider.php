@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class PartnershipValidationProvider extends ServiceProvider {
@@ -12,7 +13,9 @@ class PartnershipValidationProvider extends ServiceProvider {
      * @return void
      */
     public function register() {
-        //
+        $this->app->bind(PartnershipValidationProvider::class, function ($app) {
+            return new PartnershipValidationProvider($app);
+        });
     }
 
     /**
@@ -33,8 +36,10 @@ class PartnershipValidationProvider extends ServiceProvider {
      */
     public function cai(User $user): bool {
         $fiscalCode = $user->fiscal_code;
+        $result = false;
+        $caiBasicAuthKey = config('auth.partnerships.cai.basic_auth_key');
 
-        if (isset($fiscalCode)) {
+        if (isset($fiscalCode) && isset($caiBasicAuthKey)) {
             $fiscalCode = strtoupper($fiscalCode);
 
             $curl = curl_init();
@@ -49,7 +54,7 @@ class PartnershipValidationProvider extends ServiceProvider {
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'GET',
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: Basic YWxlc3Npb3BpY2Npb2xpQHdlYm1hcHAuaXQ6c3RsU3RhWmxTcFVtSTNyMEJhdzU='
+                    'Authorization: Basic ' . $caiBasicAuthKey
                 ),
             ));
 
@@ -57,14 +62,10 @@ class PartnershipValidationProvider extends ServiceProvider {
             $errno = curl_errno($curl);
             curl_close($curl);
 
-            if ($errno === 404)
-                return false;
-            else if ($response == 'false')
-                return false;
-            else if ($response == 'true')
-                return true;
+            if ($errno < 400 && $response == 'true')
+                $result = true;
         }
 
-        return false;
+        return $result;
     }
 }

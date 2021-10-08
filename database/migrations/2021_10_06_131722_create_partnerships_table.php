@@ -17,11 +17,13 @@ class CreatePartnershipsTable extends Migration {
             $table->timestamps();
             $table->text('name');
             $table->string('short_name', 30);
+            $table->string('validator', 30);
         });
 
         DB::table('partnerships')->insert([
             'name' => "Club Alpino Italiano",
-            'short_name' => "CAI"
+            'short_name' => "CAI",
+            'validator' => 'cai'
         ]);
     }
 
