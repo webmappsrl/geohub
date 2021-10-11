@@ -22,7 +22,8 @@ class ImportFiscalCodeFromSentieroItalia extends Command {
      *
      * @var string
      */
-    protected $description = 'Import all the fiscal code from a csv generated from the Sentiero Italia website';
+    protected $description = 'Import all the fiscal code from a csv generated from the Sentiero Italia website.
+        By default uses an export file located in /import/sentieroItaliaFiscalCodes.csv in the local disk';
 
     /**
      * Create a new command instance.
@@ -47,6 +48,8 @@ class ImportFiscalCodeFromSentieroItalia extends Command {
             $csvUri = '/import/sentieroItaliaFiscalCodes.csv';
 
         if (!Storage::disk('local')->exists($csvUri)) {
+            Log::channel('stdout')->error("Missing import file: " . Storage::disk('local')->path($csvUri));
+
             return 1;
         }
 

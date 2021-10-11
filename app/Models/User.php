@@ -26,6 +26,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string last_name
  * @property string referrer
  * @property string fiscal_code
+ * @property float  balance
  */
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable, HasRoles, Favoriteability;
