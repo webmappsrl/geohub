@@ -93,15 +93,25 @@ class AddWebmappCoinToSentieroItaliaCustomers extends Command {
                 $twenties = intval(($price % 40) / 20);
                 $tens = intval((($price % 40) % 20) / 10);
                 $ones = (($price % 40) % 20) % 10;
-                $user->balance += $forties * 100 + $twenties * 50 + $tens * 20 + $ones;
+                $user->balance += $forties * 1000 + $twenties * 500 + $tens * 200 + $ones * 10;
                 $user->save();
             }
         }
 
-        DB::table('sync')->updateOrInsert([
-            'type' => 'sentiero_italia_orders_sync',
-            'last_item_date' => Carbon::parse($newLastDate)
-        ]);
+        if (is_null($res)) {
+            DB::table('sync')->insert([
+                'type' => 'sentiero_italia_orders_sync',
+                'last_item_date' => Carbon::parse($newLastDate),
+                'last_update' => now()
+            ]);
+        } else {
+            DB::table('sync')->update([
+                'id' => $res->id,
+                'type' => 'sentiero_italia_orders_sync',
+                'last_item_date' => Carbon::parse($newLastDate),
+                'last_update' => now()
+            ]);
+        }
 
         Log::channel('stdout')->info("Imported all orders successfully");
 
