@@ -41,6 +41,7 @@ class AuthController extends Controller {
         // Check if user already exists
         $token = auth('api')->attempt($credentials);
         if ($token) {
+            // TODO: save name/last_name/fiscal_code if empty
             $tokenArray = $this->respondWithToken($token);
 
             return response()->json(array_merge($this->me()->getData('true'), $tokenArray->getData('true')));
