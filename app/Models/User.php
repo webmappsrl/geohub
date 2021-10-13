@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Providers\PartnershipValidationProvider;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,6 +25,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string email_verified_at
  * @property string last_name
  * @property string referrer
+ * @property string fiscal_code
+ * @property float  balance
  */
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable, HasRoles, Favoriteability;
@@ -81,6 +85,20 @@ class User extends Authenticatable implements JWTSubject {
 
     public function roles(): MorphToMany {
         return $this->morphToMany(Role::class, 'model', 'model_has_roles');
+    }
+
+    public function downloadableEcTracks(): BelongsToMany {
+        return $this->belongsToMany(EcTrack::class, 'downloadable_ec_track_user');
+    }
+
+    public function partnerships(): BelongsToMany {
+        return $this->belongsToMany(Partnership::class, 'partnership_user');
+    }
+
+    public function isCaiMember(): bool {
+        $service = app(PartnershipValidationProvider::class);
+
+        return $service->cai($this);
     }
 
     /**

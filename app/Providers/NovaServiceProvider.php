@@ -16,12 +16,11 @@ use App\Nova\Metrics\TotalUsers;
 use App\Nova\Metrics\NewUgcMedia;
 use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\NewUgcTracks;
+use App\Nova\Metrics\UserReferrers;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Silvanite\NovaToolPermissions\NovaToolPermissions;
@@ -67,7 +66,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
                 WHERE role_id IN (
                     SELECT id
                     FROM roles
-                    WHERE LOWER(name) IN (\'admin\', \'author\',\'editor\')
+                    WHERE LOWER(name) IN (\'admin\', \'author\', \'editor\')
                 );');
 
             $emails = [];
@@ -85,13 +84,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function cards() {
+    protected function cards(): array {
         $cards = [];
         $currentUser = User::getEmulatedUser();
 
         if ($currentUser->hasRole('Admin')) {
             $cards[] = new TotalUsers();
             $cards[] = new NewUsers();
+            $cards[] = new UserReferrers();
             $cards[] = new TotalUgc();
             $cards[] = new NewUgcTracks();
             $cards[] = new NewUgcPois();
@@ -108,7 +108,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
             $cards[] = new NewUgcMediaByLoggedUser();
         }
 
-        return $cards;;
+        return $cards;
     }
 
     /**

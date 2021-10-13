@@ -16,6 +16,7 @@ use App\Http\Controllers\EcPoiController;
 use App\Http\Controllers\UgcMediaController;
 use App\Http\Controllers\UgcPoiController;
 use App\Http\Controllers\UgcTrackController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebmappAppController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
@@ -37,8 +38,7 @@ use App\Models\UgcTrack;
 |
 */
 
-
-Route::get('downloadUserUgcMediaGeojson/{user_id}',[UgcMediaController::class,'downloadUserGeojson'])
+Route::get('downloadUserUgcMediaGeojson/{user_id}', [UgcMediaController::class, 'downloadUserGeojson'])
     ->name('downloadUserUgcMediaGeojson');
 
 Route::name('api.')->group(function () {
@@ -81,6 +81,9 @@ Route::name('api.')->group(function () {
         });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
         Route::post('/usergenerateddata/store', [UserGeneratedDataController::class, 'store']);
+        Route::prefix('wallet')->name('wallet.')->group(function () {
+            Route::post('/buy', [WalletController::class, 'buy'])->name('buy');
+        });
     });
 
     /**
