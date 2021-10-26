@@ -65,7 +65,10 @@ class UgcPoiController extends Controller {
 
         if (isset($data['properties']['app_id'])) {
             $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            $poi->app_id = $app->app_id;
+            if (isset($app) && !is_null($app))
+                $poi->app_id = $app->app_id;
+            else
+                $poi->app_id = $data['properties']['app_id'];
         }
 
         unset($data['properties']['name']);

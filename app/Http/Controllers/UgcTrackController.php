@@ -64,7 +64,10 @@ class UgcTrackController extends Controller {
 
         if (isset($data['properties']['app_id'])) {
             $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            $track->app_id = $app->app_id;
+            if (isset($app) && !is_null($app))
+                $track->app_id = $app->app_id;
+            else
+                $track->app_id = $data['properties']['app_id'];
         }
 
         unset($data['properties']['name']);
