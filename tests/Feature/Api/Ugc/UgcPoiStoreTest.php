@@ -18,10 +18,10 @@ class UgcPoiStoreTest extends TestCase {
      */
     public function testUgcPoiStore() {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
-        $this->actingAs($user, 'api');
         App::factory([
             'app_id' => 'it.webmapp.test'
         ])->create();
+        $this->actingAs($user, 'api');
         $geometry = [
             "type" => "Point",
             "coordinates" => [10, 44]

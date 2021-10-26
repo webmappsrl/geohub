@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Api\Ugc;
 
+use App\Models\App;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcTrackStoreTest extends TestCase
-{
+class UgcTrackStoreTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
@@ -16,9 +16,11 @@ class UgcTrackStoreTest extends TestCase
      *
      * @return void
      */
-    public function testUgcTrackStore()
-    {
+    public function testUgcTrackStore() {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
+        App::factory([
+            'app_id' => 'it.webmapp.test'
+        ])->create();
         $this->actingAs($user, 'api');
         $geometry = [
             "type" => "LineString",
@@ -26,10 +28,13 @@ class UgcTrackStoreTest extends TestCase
         ];
 
         $data = [
-            'user_id' => $user->id,
-            'app_id' => 'it.webmapp.test',
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
+            'type' => 'Feature',
+            'properties' => [
+                'user_id' => $user->id,
+                'app_id' => 'it.webmapp.test',
+                'name' => $this->faker->name(),
+                'description' => $this->faker->text()
+            ],
             'geometry' => $geometry,
         ];
 
@@ -39,22 +44,15 @@ class UgcTrackStoreTest extends TestCase
         $this->assertJson($content);
 
         $json = $response->json();
-        $this->assertArrayHasKey('data', $json);
-        $this->assertIsInt($json['data']['id']);
-        $this->assertEquals($user->id, $json['data']['user_id']);
-        $this->assertEquals($data['app_id'], $json['data']['app_id']);
-        $this->assertEquals($data['name'], $json['data']['name']);
-        $this->assertEquals($data['description'], $json['data']['description']);
-        $this->assertEquals($data['geometry'], $json['data']['geometry']);
+        $this->assertArrayHasKey('id', $json);
     }
 
     /**
-     * @test 
+     * @test
      *
      * @return void
      */
-    public function check_that_if_the_api_is_called_without_access_token_it_responds_401()
-    {
+    public function check_that_if_the_api_is_called_without_access_token_it_responds_401() {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
