@@ -44,6 +44,7 @@ class UgcTrackController extends Controller {
             'type' => 'required',
             'properties' => 'required|array',
             'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255',
             'geometry' => 'required|array',
             'geometry.type' => 'required',
             'geometry.coordinates' => 'required|array',
