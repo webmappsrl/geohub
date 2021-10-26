@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string relative_url
  * @property string geometry
  * @property string name
+ * @property string description
  * @property string raw_data
  */
 class UgcPoi extends Model {
