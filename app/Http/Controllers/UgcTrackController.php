@@ -44,6 +44,7 @@ class UgcTrackController extends Controller {
             'type' => 'required',
             'properties' => 'required|array',
             'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255',
             'geometry' => 'required|array',
             'geometry.type' => 'required',
             'geometry.coordinates' => 'required|array',
@@ -64,7 +65,10 @@ class UgcTrackController extends Controller {
 
         if (isset($data['properties']['app_id'])) {
             $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            $track->app_id = $app->app_id;
+            if (isset($app) && !is_null($app))
+                $track->app_id = $app->app_id;
+            else
+                $track->app_id = $data['properties']['app_id'];
         }
 
         unset($data['properties']['name']);
