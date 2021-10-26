@@ -2,113 +2,130 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UgcPoiCollection;
-use App\Http\Resources\UgcPoiResource;
+use App\Models\App;
+use App\Models\UgcMedia;
 use App\Models\UgcPoi;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class UgcPoiController extends Controller
-{
+class UgcPoiController extends Controller {
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         //
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request): Response {
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => 'required|max:255',
-            'app_id' => 'required',
+            'type' => 'required',
+            'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255',
             'geometry' => 'required|array',
+            'geometry.type' => 'required',
+            'geometry.coordinates' => 'required|array',
         ]);
 
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error']);
+        if ($validator->fails())
+            return response(['error' => $validator->errors(), 'Validation Error'], 400);
+
+        $user = auth('api')->user();
+        if (is_null($user))
+            return response(['error' => 'User not authenticated'], 403);
+
+        $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
+        if (is_null($app))
+            return response(['error' => 'Unknown app with id ' . $data['properties']['app_id']], 400);
+
+        $poi = new UgcPoi();
+        $poi->name = $data['properties']['name'];
+        $poi->description = $data['properties']['description'];
+        $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
+        $poi->app_id = $app->app_id;
+        $poi->user_id = $user->id;
+        unset($data['properties']['name']);
+        unset($data['properties']['description']);
+        unset($data['properties']['app_id']);
+        $poi->raw_data = json_encode($data['properties']);
+        $poi->save();
+
+        if (isset($data['image_gallery']) && is_array($data['image_gallery']) && count($data['image_gallery']) > 0) {
+            foreach ($data['image_gallery'] as $imageId) {
+                if (!!UgcMedia::find($imageId))
+                    $poi->attach($imageId);
+            }
         }
 
-        $user_id = Auth::user()->id;
-        if (null == $user_id) {
-            return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
-        }
-
-        $data['user_id'] = $user_id;
-        $data['geometry'] = DB::raw("(ST_GeomFromText('POINT({$data['geometry']['coordinates'][0]} {$data['geometry']['coordinates'][1]})'))");
-
-        $poi = UgcPoi::create($data);
-
-        return response(['data' => new UgcPoiResource($poi), 'message' => 'Created successfully'], 201);
+        return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UgcPoi  $ugcPoi
-     * @return \Illuminate\Http\Response
+     * @param \App\Models\UgcPoi $ugcPoi
+     *
+     * @return Response
      */
-    public function show(UgcPoi $ugcPoi)
-    {
+    public function show(UgcPoi $ugcPoi) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UgcPoi  $ugcPoi
-     * @return \Illuminate\Http\Response
+     * @param \App\Models\UgcPoi $ugcPoi
+     *
+     * @return Response
      */
-    public function edit(UgcPoi $ugcPoi)
-    {
+    public function edit(UgcPoi $ugcPoi) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UgcPoi  $ugcPoi
-     * @return \Illuminate\Http\Response
+     * @param Request            $request
+     * @param \App\Models\UgcPoi $ugcPoi
+     *
+     * @return Response
      */
-    public function update(Request $request, UgcPoi $ugcPoi)
-    {
+    public function update(Request $request, UgcPoi $ugcPoi) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UgcPoi  $ugcPoi
-     * @return \Illuminate\Http\Response
+     * @param \App\Models\UgcPoi $ugcPoi
+     *
+     * @return Response
      */
-    public function destroy(UgcPoi $ugcPoi)
-    {
+    public function destroy(UgcPoi $ugcPoi) {
         //
     }
 }
