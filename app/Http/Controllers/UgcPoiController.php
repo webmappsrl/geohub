@@ -45,7 +45,6 @@ class UgcPoiController extends Controller {
             'type' => 'required',
             'properties' => 'required|array',
             'properties.name' => 'required|max:255',
-            'properties.app_id' => 'required|max:255',
             'geometry' => 'required|array',
             'geometry.type' => 'required',
             'geometry.coordinates' => 'required|array',
@@ -58,16 +57,17 @@ class UgcPoiController extends Controller {
         if (is_null($user))
             return response(['error' => 'User not authenticated'], 403);
 
-        $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-        if (is_null($app))
-            return response(['error' => 'Unknown app with id ' . $data['properties']['app_id']], 400);
-
         $poi = new UgcPoi();
         $poi->name = $data['properties']['name'];
         $poi->description = $data['properties']['description'];
         $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
-        $poi->app_id = $app->app_id;
         $poi->user_id = $user->id;
+
+        if (isset($data['properties']['app_id'])) {
+            $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
+            $poi->app_id = $app->app_id;
+        }
+
         unset($data['properties']['name']);
         unset($data['properties']['description']);
         unset($data['properties']['app_id']);
