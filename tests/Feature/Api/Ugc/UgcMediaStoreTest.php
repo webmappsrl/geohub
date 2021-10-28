@@ -2,24 +2,35 @@
 
 namespace Tests\Feature\Api\Ugc;
 
+use App\Models\UgcMedia;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class UgcMediaStoreTest extends TestCase
-{
+class UgcMediaStoreTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
+
     /**
-     * @test 
+     * @test
      * A basic feature test example.
      *
      * @return void
      */
-    public function check_that_call_api_to_store_ugcmedia_for_authenticated_user()
-    {
+    public function check_that_call_api_to_store_ugc_media_for_authenticated_user() {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
@@ -28,48 +39,57 @@ class UgcMediaStoreTest extends TestCase
         ];
 
         $image = base_path() . '/tests/Fixtures/EcMedia/test.jpg';
-        $content = file_get_contents($image);
         $exif = exif_read_data($image);
+        $uploadedFile = new UploadedFile(
+            $image,
+            'large-avatar.jpg',
+            'image/jpeg',
+            null,
+            true
+        );
 
         $app_id = 'it.webmapp.test';
-        $data = [
-            'app_id' => $app_id,
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-            'geometry' => $geometry,
-            'image' => base64_encode($content),
-            'raw_data' => json_encode($exif),
+        $geojson = [
+            'type' => 'Feature',
+            'properties' => [
+                'app_id' => $app_id,
+                'name' => $this->faker->name(),
+                'description' => $this->faker->text(),
+                'raw_data' => json_encode($exif),
+            ],
+            'geometry' => $geometry
         ];
 
-        $response = $this->postJson(route("api.ugc.media.store", $data));
-        Storage::disk('public')->delete('ugc_media/' . $app_id . '/1');
+        $response = $this->postJson(route("api.ugc.media.store"), [
+            'geojson' => json_encode($geojson),
+            'image' => $uploadedFile
+        ]);
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
 
         $json = $response->json();
-        $this->assertArrayHasKey('data', $json);
-        $this->assertIsInt($json['data']['id']);
-        $this->assertEquals($user->id, $json['data']['user_id']);
-        $this->assertEquals($data['app_id'], $json['data']['app_id']);
-        $this->assertEquals($data['name'], $json['data']['name']);
-        $this->assertEquals($data['description'], $json['data']['description']);
-        $this->assertEquals($data['geometry'], $json['data']['geometry']);
-        $this->assertArrayHasKey('relative_url', $json['data']);
+        $this->assertArrayHasKey('id', $json);
+        $this->assertIsInt($json['id']);
+
+        $media = UgcMedia::find($json['id']);
+        $this->assertTrue(isset($media));
+        $this->assertTrue(file_exists(Storage::disk('public')->path($media->relative_url)));
+
+        Storage::disk('public')->delete($media->relative_url);
     }
 
     /**
-     * @test 
+     * @test
      */
-    public function check_that_if_the_api_is_called_without_access_token_it_responds_401()
-    {
+    public function check_that_if_the_api_is_called_without_access_token_it_responds_401() {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->postJson(route("api.ugc.media.store", $data));
+        $response = $this->postJson(route("api.ugc.media.store"), $data);
         $response->assertStatus(401);
     }
 }

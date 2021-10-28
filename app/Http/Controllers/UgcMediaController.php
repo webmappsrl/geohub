@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UgcMediaCollection;
 use App\Http\Resources\UgcMediaResource;
+use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\User;
 use Exception;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,46 +46,86 @@ class UgcMediaController extends Controller {
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'app_id' => 'required',
-            'name' => 'required|max:255',
-            'image' => 'required',
-            'geometry' => 'required|array',
+            'geojson' => 'required',
+            'image' => 'required'
         ]);
 
-        // TODO: mapping from standard geojson
-        // app_id image<binary> name description geometry
+        if ($validator->fails())
+            return response(['error' => $validator->errors()], 400);
+
+        $geojson = @json_decode($data['geojson'], true);
+
+        if (is_null($geojson))
+            return response(['error' => ['geojson' => 'validation.required.json']], 400);
+
+        $validator = Validator::make($geojson, [
+            'type' => 'required',
+            'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255'
+        ]);
 
         if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error']);
+            $currentErrors = json_decode($validator->errors(), true);
+            $errors = [];
+            foreach ($currentErrors as $key => $error) {
+                $errors['geojson.' . $key] = $error;
+            }
+
+            return response(['error' => $errors], 400);
         }
 
-        $user_id = Auth::user()->id;
-        if (null == $user_id) {
-            return response(['error' => 'User not authenticated', 'Authentication Error'], 403);
+        $user = auth('api')->user();
+
+        $media = new UgcMedia();
+        $media->name = $geojson['properties']['name'];
+        $media->description = $geojson['properties']['description'];
+        $media->user_id = $user->id;
+        $media->relative_url = '';
+
+        if (isset($geojson['geometry']))
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . ")')");
+
+        if (isset($geojson['properties']['app_id'])) {
+            $app = App::where('app_id', '=', $geojson['properties']['app_id'])->first();
+            if (isset($app))
+                $media->app_id = $app->app_id;
+            else
+                $media->app_id = $geojson['properties']['app_id'];
         }
 
-        $data['user_id'] = $user_id;
-        $data['geometry'] = DB::raw("(ST_GeomFromText('POINT({$data['geometry']['coordinates'][0]} {$data['geometry']['coordinates'][1]})'))");
-        $data['relative_url'] = 'relative_url';
-
-        $content = $data['image'];
+        unset($geojson['properties']['name']);
+        unset($geojson['properties']['description']);
+        unset($geojson['properties']['app_id']);
+        $media->raw_data = json_encode($geojson['properties']);
+        $media->save();
 
         try {
-            $media = UgcMedia::create($data);
-            $filename = $media->id;
-            if ($raw_data = json_decode($data['raw_data'])) {
-                if (isset($raw_data->MimeType)) {
-                    $filename = 'img_' . $media->id . '.' . $this->mime2ext($raw_data->MimeType);
-                }
-            }
-            Storage::disk('public')->put('ugc_media/' . $data['app_id'] . '/' . $filename, base64_decode($content));
-            $media->relative_url = Storage::disk('public')->url('ugc_media/' . $data['app_id'] . '/' . $filename);
+            $id = $media->id;
+            $imageName = "image_$id";
+            $basePath = "media/images/ugc/";
+            if (Storage::disk('public')->exists("$basePath$imageName"))
+                Storage::disk('public')->delete("$basePath$imageName");
+            Storage::disk('public')->put("$basePath$imageName", $data['image']);
+
+            $savedPath = Storage::disk('public')->files("$basePath$imageName/")[0];
+            $split = explode('/', $savedPath);
+            $savedName = end($split);
+
+            $split = explode('.', $savedName);
+            $ext = end($split);
+            Storage::disk('public')->delete("$basePath$imageName.$ext");
+            Storage::disk('public')->move("{$basePath}image_$id/$savedName", "$basePath$imageName.$ext");
+            Storage::disk('public')->deleteDirectory("$basePath$imageName");
+            $media->relative_url = $basePath . $imageName . '.' . $ext;
             $media->save();
         } catch (Exception $e) {
-            return response(['error' => $e->getMessage(), 'Validation Error'], 500);
+            Log::error($e);
+
+            return response(['message' => 'An error occurred while creating the new image'], 500);
         }
 
-        return response(['data' => new UgcMediaResource($media), 'message' => 'Created successfully'], 201);
+        return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
 
     /**

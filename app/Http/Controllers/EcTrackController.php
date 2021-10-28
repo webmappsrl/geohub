@@ -359,8 +359,6 @@ class EcTrackController extends Controller {
 
         $ids = $user->favorite(EcTrack::class)->pluck('id');
 
-        Log::info($ids);
-
         return response()->json(['favorites' => $ids]);
     }
 }
