@@ -5,12 +5,22 @@ namespace Tests\Unit\Policies\EcTrack;
 use App\Models\EcTrack;
 use App\Models\Partnership;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 
 class DownloadOfflineTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     public function test_can_not_download_offline_when_no_partnerships() {
         $user = User::factory()->create();

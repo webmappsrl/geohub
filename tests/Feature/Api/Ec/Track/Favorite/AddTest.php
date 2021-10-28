@@ -4,12 +4,22 @@ namespace Tests\Feature\Api\Ec\Track\Favorite;
 
 use App\Models\EcTrack;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AddTest extends TestCase {
     use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     public function test_api_works() {
         $user = User::factory()->create();

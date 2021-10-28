@@ -4,12 +4,22 @@ namespace Tests\Feature\Api\Ugc;
 
 use App\Models\App;
 use App\Models\User;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UgcPoiStoreTest extends TestCase {
     use RefreshDatabase, WithFaker;
+
+    protected function setUp(): void {
+        parent::setUp();
+        // To prevent the service to post to hoqu for real
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->andReturn(201);
+        });
+    }
 
     /**
      * A basic feature test example.

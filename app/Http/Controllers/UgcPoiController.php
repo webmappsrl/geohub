@@ -81,7 +81,7 @@ class UgcPoiController extends Controller {
         if (isset($data['image_gallery']) && is_array($data['image_gallery']) && count($data['image_gallery']) > 0) {
             foreach ($data['image_gallery'] as $imageId) {
                 if (!!UgcMedia::find($imageId))
-                    $poi->attach($imageId);
+                    $poi->ugc_media->attach($imageId);
             }
         }
 
