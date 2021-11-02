@@ -61,7 +61,6 @@ class UgcMediaController extends Controller {
         $validator = Validator::make($geojson, [
             'type' => 'required',
             'properties' => 'required|array',
-            'properties.name' => 'required|max:255',
             'properties.app_id' => 'required|max:255'
         ]);
 
@@ -78,8 +77,9 @@ class UgcMediaController extends Controller {
         $user = auth('api')->user();
 
         $media = new UgcMedia();
-        $media->name = $geojson['properties']['name'];
-        $media->description = $geojson['properties']['description'];
+        $media->name = $geojson['properties']['name'] ?? 'placeholder_name';
+        if (isset($geojson['properties']['description']))
+            $media->description = $geojson['properties']['description'];
         $media->user_id = $user->id;
         $media->relative_url = '';
 
@@ -118,6 +118,11 @@ class UgcMediaController extends Controller {
             Storage::disk('public')->move("{$basePath}image_$id/$savedName", "$basePath$imageName.$ext");
             Storage::disk('public')->deleteDirectory("$basePath$imageName");
             $media->relative_url = $basePath . $imageName . '.' . $ext;
+
+            if ($media->name == 'placeholder_name')
+                $media->name = $imageName;
+            if (empty($media->description))
+                $media->description = $imageName;
             $media->save();
         } catch (Exception $e) {
             Log::error($e);
