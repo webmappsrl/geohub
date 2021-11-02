@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -18,18 +19,16 @@ class UgcPoiController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request) {
-        //
-    }
+    //    public function index(Request $request) {
+    //    }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function create() {
-        //
-    }
+    //    public function create() {
+    //    }
 
     /**
      * Store a newly created resource in storage.
@@ -66,7 +65,7 @@ class UgcPoiController extends Controller {
 
         if (isset($data['properties']['app_id'])) {
             $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            if (isset($app) && !is_null($app))
+            if (!is_null($app))
                 $poi->app_id = $app->app_id;
             else
                 $poi->app_id = $data['properties']['app_id'];
@@ -85,51 +84,54 @@ class UgcPoiController extends Controller {
             }
         }
 
+        $hoquService = app(HoquServiceProvider::class);
+        $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
+
+        foreach ($poi->ugc_media as $media) {
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $media->id, 'type' => 'media']);
+        }
+
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\UgcPoi $ugcPoi
+     * @param UgcPoi $ugcPoi
      *
      * @return Response
      */
-    public function show(UgcPoi $ugcPoi) {
-        //
-    }
+    //    public function show(UgcPoi $ugcPoi) {
+    //    }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\UgcPoi $ugcPoi
+     * @param UgcPoi $ugcPoi
      *
      * @return Response
      */
-    public function edit(UgcPoi $ugcPoi) {
-        //
-    }
+    //    public function edit(UgcPoi $ugcPoi) {
+    //    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request            $request
-     * @param \App\Models\UgcPoi $ugcPoi
+     * @param Request $request
+     * @param UgcPoi  $ugcPoi
      *
      * @return Response
      */
-    public function update(Request $request, UgcPoi $ugcPoi) {
-        //
-    }
+    //    public function update(Request $request, UgcPoi $ugcPoi) {
+    //    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\UgcPoi $ugcPoi
+     * @param UgcPoi $ugcPoi
      *
      * @return Response
      */
-    public function destroy(UgcPoi $ugcPoi) {
-        //
-    }
+    //    public function destroy(UgcPoi $ugcPoi) {
+    //    }
 }

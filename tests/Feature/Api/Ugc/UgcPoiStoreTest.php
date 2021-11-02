@@ -12,15 +12,6 @@ use Tests\TestCase;
 class UgcPoiStoreTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
-    protected function setUp(): void {
-        parent::setUp();
-        // To prevent the service to post to hoqu for real
-        $this->mock(HoquServiceProvider::class, function ($mock) {
-            $mock->shouldReceive('store')
-                ->andReturn(201);
-        });
-    }
-
     /**
      * A basic feature test example.
      *
@@ -31,6 +22,11 @@ class UgcPoiStoreTest extends TestCase {
         App::factory([
             'app_id' => 'it.webmapp.test'
         ])->create();
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->once()
+                ->andReturn(201);
+        });
         $this->actingAs($user, 'api');
         $geometry = [
             "type" => "Point",
