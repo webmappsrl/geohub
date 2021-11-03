@@ -6,6 +6,7 @@ use App\Http\Resources\UgcTrackResource;
 use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\UgcTrack;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -82,6 +83,13 @@ class UgcTrackController extends Controller {
                 if (!!UgcMedia::find($imageId))
                     $track->ugc_media->attach($imageId);
             }
+        }
+
+        $hoquService = app(HoquServiceProvider::class);
+        $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
+
+        foreach ($track->ugc_media as $media) {
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $media->id, 'type' => 'media']);
         }
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);

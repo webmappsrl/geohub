@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string name
  * @property string description
  * @property string raw_data
+ * @property mixed  ugc_media
  */
 class UgcPoi extends Model {
     use HasFactory, GeometryFeatureTrait;
