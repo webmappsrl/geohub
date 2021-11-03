@@ -59,7 +59,8 @@ class UgcPoiController extends Controller {
 
         $poi = new UgcPoi();
         $poi->name = $data['properties']['name'];
-        $poi->description = $data['properties']['description'];
+        if (isset($data['properties']['description']))
+            $poi->description = $data['properties']['description'];
         $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
         $poi->user_id = $user->id;
 
