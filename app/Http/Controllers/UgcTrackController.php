@@ -60,7 +60,8 @@ class UgcTrackController extends Controller {
 
         $track = new UgcTrack();
         $track->name = $data['properties']['name'];
-        $track->description = $data['properties']['description'];
+        if (isset($data['properties']['description']))
+            $track->description = $data['properties']['description'];
         $track->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
         $track->user_id = $user->id;
 
@@ -81,7 +82,7 @@ class UgcTrackController extends Controller {
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
             foreach ($data['properties']['image_gallery'] as $imageId) {
                 if (!!UgcMedia::find($imageId))
-                    $track->ugc_media->attach($imageId);
+                    $track->ugc_media()->attach($imageId);
             }
         }
 
@@ -91,10 +92,6 @@ class UgcTrackController extends Controller {
 
         $hoquService = app(HoquServiceProvider::class);
         $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
-
-        foreach ($track->ugc_media as $media) {
-            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $media->id, 'type' => 'media']);
-        }
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
     }
