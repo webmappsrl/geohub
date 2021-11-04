@@ -72,6 +72,10 @@ class UgcTrackController extends Controller {
                 $track->app_id = $data['properties']['app_id'];
         }
 
+        unset($data['properties']['name']);
+        unset($data['properties']['description']);
+        unset($data['properties']['app_id']);
+        $track->raw_data = json_encode($data['properties']);
         $track->save();
 
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
@@ -81,9 +85,6 @@ class UgcTrackController extends Controller {
             }
         }
 
-        unset($data['properties']['name']);
-        unset($data['properties']['description']);
-        unset($data['properties']['app_id']);
         unset($data['properties']['image_gallery']);
         $track->raw_data = json_encode($data['properties']);
         $track->save();
