@@ -78,8 +78,8 @@ class UgcPoiController extends Controller {
         $poi->raw_data = json_encode($data['properties']);
         $poi->save();
 
-        if (isset($data['image_gallery']) && is_array($data['image_gallery']) && count($data['image_gallery']) > 0) {
-            foreach ($data['image_gallery'] as $imageId) {
+        if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
+            foreach ($data['properties']['image_gallery'] as $imageId) {
                 if (!!UgcMedia::find($imageId))
                     $poi->ugc_media()->attach($imageId);
             }
