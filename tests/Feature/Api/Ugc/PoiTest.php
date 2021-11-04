@@ -68,6 +68,8 @@ class PoiTest extends TestCase {
         $poi = UgcPoi::find($poi->id);
         $this->assertCount(2, $poi->taxonomy_wheres);
         $ids = $poi->taxonomy_wheres->pluck('id')->toArray();
-        $this->assertSame($whereIds, $ids);
+        asort($whereIds);
+        asort($ids);
+        $this->assertEquals($whereIds, $ids);
     }
 }

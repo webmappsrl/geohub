@@ -85,12 +85,12 @@ class UgcPoiController extends Controller {
             }
         }
 
+        unset($data['properties']['image_gallery']);
+        $poi->raw_data = json_encode($data['properties']);
+        $poi->save();
+
         $hoquService = app(HoquServiceProvider::class);
         $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
-
-        foreach ($poi->ugc_media as $media) {
-            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $media->id, 'type' => 'media']);
-        }
 
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
