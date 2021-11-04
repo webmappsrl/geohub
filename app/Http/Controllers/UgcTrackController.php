@@ -72,18 +72,21 @@ class UgcTrackController extends Controller {
                 $track->app_id = $data['properties']['app_id'];
         }
 
-        unset($data['properties']['name']);
-        unset($data['properties']['description']);
-        unset($data['properties']['app_id']);
-        $track->raw_data = json_encode($data['properties']);
         $track->save();
 
-        if (isset($data['image_gallery']) && is_array($data['image_gallery']) && count($data['image_gallery']) > 0) {
-            foreach ($data['image_gallery'] as $imageId) {
+        if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
+            foreach ($data['properties']['image_gallery'] as $imageId) {
                 if (!!UgcMedia::find($imageId))
                     $track->ugc_media->attach($imageId);
             }
         }
+
+        unset($data['properties']['name']);
+        unset($data['properties']['description']);
+        unset($data['properties']['app_id']);
+        unset($data['properties']['image_gallery']);
+        $track->raw_data = json_encode($data['properties']);
+        $track->save();
 
         $hoquService = app(HoquServiceProvider::class);
         $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
