@@ -92,6 +92,12 @@ class App extends Resource {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
+            Select::make(__('Api API'),'api')->options(
+                [
+                    'elbrus' => 'Elbrus',
+                    'webmapp' => 'Webmapp',
+                ]
+            ),
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Customer Name'), 'customer_name')->sortable(),
@@ -108,7 +114,7 @@ class App extends Resource {
 
     protected function map_panel(): array {
         return [
-            NovaSliderField::make(__('Max Zoom'), 'map_ma_zoom')
+            NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(19)
                 ->default(16)
