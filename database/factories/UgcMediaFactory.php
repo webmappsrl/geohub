@@ -23,6 +23,10 @@ class UgcMediaFactory extends Factory
      */
     public function definition()
     {
+        if(User::count()==0) {
+            User::factory()->create(100);
+        }
+
         return [
             'name' => $this->faker->name(),
             'created_at' => $this->faker->dateTime('-1 month'),
@@ -30,7 +34,7 @@ class UgcMediaFactory extends Factory
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),
             'relative_url' => 'media/images/ugc/' . $this->faker->firstName() . '.png',
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
-            'user_id' => User::factory()->create()->id
+            'user_id' => User::all()->random(1)->first()->id,
         ];
     }
 }

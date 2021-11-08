@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
@@ -109,7 +110,11 @@ class UgcTrack extends Resource {
      */
     public function filters(Request $request): array {
         return [
-            new DateRange('created_at')
+            // new DateRange('created_at'),
+            (new NovaSearchableBelongsToFilter('Author'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id')
+
         ];
     }
 
