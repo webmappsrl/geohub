@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
@@ -62,6 +63,9 @@ class UgcMedia extends Resource {
                 return last(explode('/', $relativeUrl));
             }),
             BelongsTo::make(__('Creator'), 'user', User::class),
+            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            Text::make(__('App ID'), 'app_id')->sortable(),
+
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })->onlyOnIndex(),
@@ -95,7 +99,7 @@ class UgcMedia extends Resource {
      */
     public function filters(Request $request): array {
         return [
-            new DateRange('created_at'),
+            // new DateRange('created_at'),
             (new NovaSearchableBelongsToFilter('Author'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id')
