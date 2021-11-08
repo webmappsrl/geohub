@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddApitypeToApps extends Migration
+class AddIconNotifyAndLogoToApps extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddApitypeToApps extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->string('api')->default('elbrus')->nullable();
+            $table->string('icon_notify')->nullable();
+            $table->string('logo_homepage')->nullable();
         });
     }
 
@@ -26,7 +27,8 @@ class AddApitypeToApps extends Migration
     public function down()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropColumn('api');
+            $table->dropColumn('icon_notify');
+            $table->dropColumn('logo_homepage');
         });
     }
 }

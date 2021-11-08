@@ -405,7 +405,7 @@ class App extends Resource {
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'icon.png';
                 })
@@ -414,7 +414,7 @@ class App extends Resource {
             Image::make(__('Splash image'), 'splash')
                 ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'splash.png';
                 })
@@ -423,7 +423,7 @@ class App extends Resource {
             Image::make(__('Icon small'), 'icon_small')
                 ->rules('image', 'mimes:png', 'dimensions:width=512,height=512')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'icon_small.png';
                 })
@@ -433,11 +433,21 @@ class App extends Resource {
             Image::make(__('Feature image'), 'feature_image')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=500')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'feature_image.png';
                 })
                 ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 500]))
+                ->hideFromIndex(),
+
+            Image::make(__('Icon Notify'), 'icon_notify')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'icon_notify.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
                 ->hideFromIndex(),
         ];
     }
