@@ -449,6 +449,16 @@ class App extends Resource {
                 })
                 ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
                 ->hideFromIndex(),
+
+            Image::make(__('Logo Homepage'), 'logo_homepage')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'logo_homepage.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->hideFromIndex(),
         ];
     }
 
