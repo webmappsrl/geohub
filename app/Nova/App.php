@@ -69,23 +69,29 @@ class App extends Resource {
      * @return array
      */
     public function fields(Request $request): array {
-        return [
+        $fields = [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
-            new Panel('Map', $this->map_panel()),
-            new Panel('Theme', $this->theme_panel()),
-            new Panel('Options', $this->option_panel()),
-            new Panel('Auth', $this->auth_panel()),
-            new Panel('Table', $this->table_panel()),
-            new Panel('Geolocation', $this->geolocation_panel()),
-            new Panel('Routing', $this->routing_panel()),
-            new Panel('Overlays', $this->overlays_panel()),
-            new Panel('Offline', $this->offline_panel()),
-            new Panel('Icons', $this->icons_panel()),
-            new Panel('API', $this->api_panel()),
-            new Panel('Maps', $this->maps_panel()),
-        ];
+            new Panel('Icons', $this->icons_panel())];
+        if($this->api=='elbrus') {
+            $elbrus_fields = [
+                new Panel('Map', $this->map_panel()),
+                new Panel('Theme', $this->theme_panel()),
+                new Panel('Options', $this->option_panel()),
+                new Panel('Auth', $this->auth_panel()),
+                new Panel('Table', $this->table_panel()),
+                new Panel('Geolocation', $this->geolocation_panel()),
+                new Panel('Routing', $this->routing_panel()),
+                new Panel('Overlays', $this->overlays_panel()),
+                new Panel('Offline', $this->offline_panel()),
+                new Panel('API', $this->api_panel()),
+                new Panel('Maps', $this->maps_panel()),
+            ];
+            $fields = array_merge($fields,$elbrus_fields);
+        }
+
+        return $fields;
     }
 
     protected function app_panel(): array {
@@ -97,7 +103,7 @@ class App extends Resource {
                     'elbrus' => 'Elbrus',
                     'webmapp' => 'Webmapp',
                 ]
-            ),
+            )->required(),
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Customer Name'), 'customer_name')->sortable(),
