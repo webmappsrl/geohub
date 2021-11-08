@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\UgcTrack;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,10 @@ class UgcTrackFactory extends Factory
      */
     public function definition()
     {
+        if(User::count()==0) {
+            User::factory()->create(100);
+        }
+
         $geometry = DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))");
 
         $rawData = [];
@@ -35,7 +40,8 @@ class UgcTrackFactory extends Factory
             'updated_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),
             'geometry' => $geometry,
-            'raw_data' => json_encode($rawData)
+            'raw_data' => json_encode($rawData),
+            'user_id' => User::all()->random(1)->first()->id,
         ];
     }
 }
