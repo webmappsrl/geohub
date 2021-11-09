@@ -64,7 +64,7 @@ class App extends Resource {
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -74,7 +74,7 @@ class App extends Resource {
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
             new Panel('Icons', $this->icons_panel())];
-        if($this->api=='elbrus') {
+        if ($this->api == 'elbrus') {
             $elbrus_fields = [
                 new Panel('Map', $this->map_panel()),
                 new Panel('Theme', $this->theme_panel()),
@@ -88,7 +88,7 @@ class App extends Resource {
                 new Panel('API', $this->api_panel()),
                 new Panel('Maps', $this->maps_panel()),
             ];
-            $fields = array_merge($fields,$elbrus_fields);
+            $fields = array_merge($fields, $elbrus_fields);
         }
 
         return $fields;
@@ -98,7 +98,7 @@ class App extends Resource {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
-            Select::make(__('Api API'),'api')->options(
+            Select::make(__('Api API'), 'api')->options(
                 [
                     'elbrus' => 'Elbrus',
                     'webmapp' => 'Webmapp',
@@ -451,13 +451,13 @@ class App extends Resource {
                 ->hideFromIndex(),
 
             Image::make(__('Logo Homepage'), 'logo_homepage')
-                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->rules('image', 'mimes:svg')
                 ->disk('public')
                 ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
-                    return 'logo_homepage.png';
+                    return 'logo_homepage.svg';
                 })
-                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->help(__('Required svg image'))
                 ->hideFromIndex(),
         ];
     }
@@ -505,7 +505,7 @@ class App extends Resource {
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -516,7 +516,7 @@ class App extends Resource {
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -527,7 +527,7 @@ class App extends Resource {
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */
@@ -538,7 +538,7 @@ class App extends Resource {
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return array
      */

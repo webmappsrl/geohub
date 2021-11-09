@@ -227,7 +227,7 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
             Route::get("/{id}/resources/feature_image.png", [AppController::class, 'featureImage'])->name('feature_image');
             Route::get("/{id}/resources/icon_notify.png", [AppController::class, 'iconNotify'])->name('icon_notify');
-            Route::get("/{id}/resources/logo_homepage.png", [AppController::class, 'logoHomepage'])->name('logo_homepage');
+            Route::get("/{id}/resources/logo_homepage.svg", [AppController::class, 'logoHomepage'])->name('logo_homepage');
         });
     });
 });
