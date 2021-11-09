@@ -22,109 +22,237 @@ class AppController extends Controller {
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => '404 not found'], 404);
         }
+
         $data = [];
 
-        // APP section
+        $data = array_merge($data,$this->config_section_app($app));
+        $data = array_merge($data,$this->config_section_languages($app));
+        $data = array_merge($data,$this->config_section_map($app));
+        $data = array_merge($data,$this->config_section_theme($app));
+        $data = array_merge($data,$this->config_section_options($app));
+        $data = array_merge($data,$this->config_section_tables($app));
+        $data = array_merge($data,$this->config_section_routing($app));
+        $data = array_merge($data,$this->config_section_report($app));
+        $data = array_merge($data,$this->config_section_geolocation($app));
+        $data = array_merge($data,$this->config_section_auth($app));
+        $data = array_merge($data,$this->config_section_offline($app));
+
+        return response()->json($data);
+    }
+
+
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_app(App $app): array {
+        $data = [];
+
         $data['APP']['name'] = $app->name;
         $data['APP']['id'] = $app->app_id;
         $data['APP']['customerName'] = $app->customer_name;
 
-        // LANGUAGES section
-        $data['LANGUAGES']['default'] = $app->default_language;
-        if (isset($app->available_languages))
-            $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
+        return $data;
+    }
 
-        // MAP section (zoom)
-        $data['MAP']['defZoom'] = $app->map_def_zoom;
-        $data['MAP']['maxZoom'] = $app->map_max_zoom;
-        $data['MAP']['minZoom'] = $app->map_min_zoom;
-
-        // MAP section (bbox)
-        $data['MAP']['bbox'] = $this->_getBBox($app);
-
-        // Map section layers
-        $data['MAP']['layers'][0]['label'] = 'Mappa';
-        $data['MAP']['layers'][0]['type'] = 'maptile';
-        $data['MAP']['layers'][0]['tilesUrl'] = 'https://api.webmapp.it/tiles/';
-        try {
-            $data['MAP']['overlays'] = json_decode($app->external_overlays);
-        } catch (\Exception $e) {
-            Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_languages(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // LANGUAGES section
+            $data['LANGUAGES']['default'] = $app->default_language;
+            if (isset($app->available_languages))
+                $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
         }
+        return $data;
+    }
 
-        // THEME section
-        $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
-        $data['THEME']['fontFamilyContent'] = $app->font_family_content;
-        $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
-        $data['THEME']['primary'] = $app->primary_color;
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_map(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // MAP section (zoom)
+            $data['MAP']['defZoom'] = $app->map_def_zoom;
+            $data['MAP']['maxZoom'] = $app->map_max_zoom;
+            $data['MAP']['minZoom'] = $app->map_min_zoom;
 
-        // OPTIONS section
-        $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
-        $data['OPTIONS']['startUrl'] = $app->start_url;
-        $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
-        $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
-        $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
-        $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
-        $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
-        $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
-        $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
-        $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
-        $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
+            // MAP section (bbox)
+            $data['MAP']['bbox'] = $this->_getBBox($app);
 
-        // TABLES section
-        $data['TABLES']['details']['showGpxDownload'] = !!$app->table_details_show_gpx_download;
-        $data['TABLES']['details']['showKmlDownload'] = !!$app->table_details_show_kml_download;
-        $data['TABLES']['details']['showRelatedPoi'] = !!$app->table_details_show_related_poi;
-        $data['TABLES']['details']['hide_duration:forward'] = !$app->table_details_show_duration_forward;
-        $data['TABLES']['details']['hide_duration:backward'] = !$app->table_details_show_duration_backward;
-        $data['TABLES']['details']['hide_distance'] = !$app->table_details_show_distance;
-        $data['TABLES']['details']['hide_ascent'] = !$app->table_details_show_ascent;
-        $data['TABLES']['details']['hide_descent'] = !$app->table_details_show_descent;
-        $data['TABLES']['details']['hide_ele:max'] = !$app->table_details_show_ele_max;
-        $data['TABLES']['details']['hide_ele:min'] = !$app->table_details_show_ele_min;
-        $data['TABLES']['details']['hide_ele:from'] = !$app->table_details_show_ele_from;
-        $data['TABLES']['details']['hide_ele:to'] = !$app->table_details_show_ele_to;
-        $data['TABLES']['details']['hide_scale'] = !$app->table_details_show_scale;
-        $data['TABLES']['details']['hide_cai_scale'] = !$app->table_details_show_cai_scale;
-        $data['TABLES']['details']['hide_mtb_scale'] = !$app->table_details_show_mtb_scale;
-        $data['TABLES']['details']['hide_ref'] = !$app->table_details_show_ref;
-        $data['TABLES']['details']['hide_surface'] = !$app->table_details_show_surface;
-        $data['TABLES']['details']['showGeojsonDownload'] = !!$app->table_details_show_geojson_download;
-        $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
+            // Map section layers
+            $data['MAP']['layers'][0]['label'] = 'Mappa';
+            $data['MAP']['layers'][0]['type'] = 'maptile';
+            $data['MAP']['layers'][0]['tilesUrl'] = 'https://api.webmapp.it/tiles/';
+            try {
+                $data['MAP']['overlays'] = json_decode($app->external_overlays);
+            } catch (\Exception $e) {
+                Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
+            }
 
-        // ROUTING section
-        $data['ROUTING']['enable'] = $app->enable_routing;
 
-        // REPORT SECION
-        $data['REPORTS'] = $this->_getReportSection();
-
-        // GEOLOCATIONS SECTION
-        $data['GEOLOCATION']['record']['enable'] = false;
-        if ($app->geolocation_record_enable) {
-            $data['GEOLOCATION']['record']['enable'] = true;
         }
-        $data['GEOLOCATION']['record']['export'] = true;
-        $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
+        return $data;
+    }
 
-        // AUTH section
-        $data['AUTH']['showAtStartup'] = false;
-        if ($app->auth_show_at_startup) {
-            $data['AUTH']['showAtStartup'] = true;
-        }
-        $data['AUTH']['enable'] = true;
-        $data['AUTH']['loginToGeohub'] = true;
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_theme(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // THEME section
+            $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
+            $data['THEME']['fontFamilyContent'] = $app->font_family_content;
+            $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
+            $data['THEME']['primary'] = $app->primary_color;
 
-        // OFFLINE section
-        $data['OFFLINE']['enable'] = false;
-        if ($app->offline_enable) {
-            $data['OFFLINE']['enable'] = true;
         }
-        $data['OFFLINE']['forceAuth'] = false;
-        if ($app->offline_force_auth) {
-            $data['OFFLINE']['forceAuth'] = true;
-        }
+        return $data;
+    }
 
-        return response()->json($data);
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_options(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // OPTIONS section
+            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
+            $data['OPTIONS']['startUrl'] = $app->start_url;
+            $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
+            $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
+            $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
+            $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
+            $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
+            $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
+            $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
+            $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
+            $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
+
+        }
+        return $data;
+    }
+
+
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_tables(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // TABLES section
+            $data['TABLES']['details']['showGpxDownload'] = !!$app->table_details_show_gpx_download;
+            $data['TABLES']['details']['showKmlDownload'] = !!$app->table_details_show_kml_download;
+            $data['TABLES']['details']['showRelatedPoi'] = !!$app->table_details_show_related_poi;
+            $data['TABLES']['details']['hide_duration:forward'] = !$app->table_details_show_duration_forward;
+            $data['TABLES']['details']['hide_duration:backward'] = !$app->table_details_show_duration_backward;
+            $data['TABLES']['details']['hide_distance'] = !$app->table_details_show_distance;
+            $data['TABLES']['details']['hide_ascent'] = !$app->table_details_show_ascent;
+            $data['TABLES']['details']['hide_descent'] = !$app->table_details_show_descent;
+            $data['TABLES']['details']['hide_ele:max'] = !$app->table_details_show_ele_max;
+            $data['TABLES']['details']['hide_ele:min'] = !$app->table_details_show_ele_min;
+            $data['TABLES']['details']['hide_ele:from'] = !$app->table_details_show_ele_from;
+            $data['TABLES']['details']['hide_ele:to'] = !$app->table_details_show_ele_to;
+            $data['TABLES']['details']['hide_scale'] = !$app->table_details_show_scale;
+            $data['TABLES']['details']['hide_cai_scale'] = !$app->table_details_show_cai_scale;
+            $data['TABLES']['details']['hide_mtb_scale'] = !$app->table_details_show_mtb_scale;
+            $data['TABLES']['details']['hide_ref'] = !$app->table_details_show_ref;
+            $data['TABLES']['details']['hide_surface'] = !$app->table_details_show_surface;
+            $data['TABLES']['details']['showGeojsonDownload'] = !!$app->table_details_show_geojson_download;
+            $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
+        }
+        return $data;
+    }
+
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_routing(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // ROUTING section
+            $data['ROUTING']['enable'] = $app->enable_routing;
+        }
+        return $data;
+    }
+
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_report(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // REPORT SECION
+            $data['REPORTS'] = $this->_getReportSection();
+        }
+        return $data;
+    }
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_geolocation(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // GEOLOCATIONS SECTION
+            $data['GEOLOCATION']['record']['enable'] = false;
+            if ($app->geolocation_record_enable) {
+                $data['GEOLOCATION']['record']['enable'] = true;
+            }
+            $data['GEOLOCATION']['record']['export'] = true;
+            $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
+        }
+        return $data;
+    }
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_auth(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // AUTH section
+            $data['AUTH']['showAtStartup'] = false;
+            if ($app->auth_show_at_startup) {
+                $data['AUTH']['showAtStartup'] = true;
+            }
+            $data['AUTH']['enable'] = true;
+            $data['AUTH']['loginToGeohub'] = true;
+
+        }
+        return $data;
+    }
+
+    /**
+     * @param App $app
+     * @return array
+     */
+    private function config_section_offline(App $app): array {
+        $data = [];
+        if(in_array($app->api,['elbrus'])) {
+            // OFFLINE section
+            $data['OFFLINE']['enable'] = false;
+            if ($app->offline_enable) {
+                $data['OFFLINE']['enable'] = true;
+            }
+            $data['OFFLINE']['forceAuth'] = false;
+            if ($app->offline_force_auth) {
+                $data['OFFLINE']['forceAuth'] = true;
+            }
+
+        }
+        return $data;
     }
 
     public function icon(int $id) {

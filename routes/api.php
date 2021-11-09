@@ -198,6 +198,9 @@ Route::name('api.')->group(function () {
      * APP API (/app/*)
      */
     Route::prefix('app')->name('app.')->group(function () {
+        /**
+         * ELBRUS API
+         */
         Route::prefix('elbrus')->name('elbrus.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
             Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
@@ -216,6 +219,13 @@ Route::name('api.')->group(function () {
             Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
                 return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
+        });
+        Route::prefix('webmapp')->name('webmapp.')->group(function () {
+            Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
+            Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
+            Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
+            Route::get("/{id}/resources/feature_image.png", [AppController::class, 'featureImage'])->name('feature_image');
         });
     });
 });
