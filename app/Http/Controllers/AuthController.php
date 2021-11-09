@@ -6,7 +6,6 @@ use App\Models\Partnership;
 use App\Models\User;
 use App\Providers\PartnershipValidationProvider;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller {
@@ -39,7 +38,10 @@ class AuthController extends Controller {
         }
 
         // Check if user already exists
-        $token = auth('api')->attempt($credentials);
+        $token = auth('api')->attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password']
+        ]);
         if ($token) {
             // TODO: save name/last_name/fiscal_code if empty
             $tokenArray = $this->respondWithToken($token);
@@ -81,7 +83,10 @@ class AuthController extends Controller {
         }
         $user->partnerships()->sync($partnershipsIds);
 
-        $token = auth('api')->attempt($credentials);
+        $token = auth('api')->attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password']
+        ]);
         if ($token) {
             $tokenArray = $this->respondWithToken($token);
 
