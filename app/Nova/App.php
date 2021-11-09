@@ -69,29 +69,41 @@ class App extends Resource {
      * @return array
      */
     public function fields(Request $request): array {
-        return [
+        $fields = [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             new Panel('App', $this->app_panel()),
-            new Panel('Map', $this->map_panel()),
-            new Panel('Theme', $this->theme_panel()),
-            new Panel('Options', $this->option_panel()),
-            new Panel('Auth', $this->auth_panel()),
-            new Panel('Table', $this->table_panel()),
-            new Panel('Geolocation', $this->geolocation_panel()),
-            new Panel('Routing', $this->routing_panel()),
-            new Panel('Overlays', $this->overlays_panel()),
-            new Panel('Offline', $this->offline_panel()),
-            new Panel('Icons', $this->icons_panel()),
-            new Panel('API', $this->api_panel()),
-            new Panel('Maps', $this->maps_panel()),
-        ];
+            new Panel('Icons', $this->icons_panel())];
+        if($this->api=='elbrus') {
+            $elbrus_fields = [
+                new Panel('Map', $this->map_panel()),
+                new Panel('Theme', $this->theme_panel()),
+                new Panel('Options', $this->option_panel()),
+                new Panel('Auth', $this->auth_panel()),
+                new Panel('Table', $this->table_panel()),
+                new Panel('Geolocation', $this->geolocation_panel()),
+                new Panel('Routing', $this->routing_panel()),
+                new Panel('Overlays', $this->overlays_panel()),
+                new Panel('Offline', $this->offline_panel()),
+                new Panel('API', $this->api_panel()),
+                new Panel('Maps', $this->maps_panel()),
+            ];
+            $fields = array_merge($fields,$elbrus_fields);
+        }
+
+        return $fields;
     }
 
     protected function app_panel(): array {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
+            Select::make(__('Api API'),'api')->options(
+                [
+                    'elbrus' => 'Elbrus',
+                    'webmapp' => 'Webmapp',
+                ]
+            )->required(),
             Text::make(__('App Id'), 'app_id'),
             Text::make(__('Name'), 'name')->sortable(),
             Text::make(__('Customer Name'), 'customer_name')->sortable(),
@@ -108,7 +120,7 @@ class App extends Resource {
 
     protected function map_panel(): array {
         return [
-            NovaSliderField::make(__('Max Zoom'), 'map_ma_zoom')
+            NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(19)
                 ->default(16)
@@ -393,7 +405,7 @@ class App extends Resource {
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'icon.png';
                 })
@@ -402,7 +414,7 @@ class App extends Resource {
             Image::make(__('Splash image'), 'splash')
                 ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'splash.png';
                 })
@@ -411,7 +423,7 @@ class App extends Resource {
             Image::make(__('Icon small'), 'icon_small')
                 ->rules('image', 'mimes:png', 'dimensions:width=512,height=512')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'icon_small.png';
                 })
@@ -421,11 +433,31 @@ class App extends Resource {
             Image::make(__('Feature image'), 'feature_image')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=500')
                 ->disk('public')
-                ->path('api/app/elbrus/' . $this->model()->id . '/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'feature_image.png';
                 })
                 ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 500]))
+                ->hideFromIndex(),
+
+            Image::make(__('Icon Notify'), 'icon_notify')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'icon_notify.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->hideFromIndex(),
+
+            Image::make(__('Logo Homepage'), 'logo_homepage')
+                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->disk('public')
+                ->path('api/app/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'logo_homepage.png';
+                })
+                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
                 ->hideFromIndex(),
         ];
     }
