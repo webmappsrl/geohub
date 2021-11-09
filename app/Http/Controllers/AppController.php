@@ -291,6 +291,24 @@ class AppController extends Controller {
         return $this->getOrDownloadIcon($app, 'feature_image');
     }
 
+    public function iconNotify(int $id) {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return $this->getOrDownloadIcon($app, 'icon_notify');
+    }
+
+    public function logoHomepage(int $id) {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return $this->getOrDownloadIcon($app, 'logo_homepage');
+    }
+
     protected function getOrDownloadIcon(App $app, $type = 'icon') {
         if (!isset($app->$type)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
