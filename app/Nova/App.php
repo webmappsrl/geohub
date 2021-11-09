@@ -89,6 +89,11 @@ class App extends Resource {
                 new Panel('Maps', $this->maps_panel()),
             ];
             $fields = array_merge($fields, $elbrus_fields);
+        } else {
+            $elbrus_fields = [
+                new Panel('Geolocation', $this->geolocation_panel()),
+            ];
+            $fields = array_merge($fields, $elbrus_fields);
         }
 
         return $fields;
@@ -359,7 +364,7 @@ class App extends Resource {
 
     protected function geolocation_panel(): array {
         return [
-            Toggle::make(__('Enable Track record'), 'geolocation_record_enable')
+            Toggle::make(__('Enable UGC record'), 'geolocation_record_enable')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)

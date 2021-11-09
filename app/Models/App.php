@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -33,7 +34,7 @@ class App extends Model {
         });
     }
 
-    public function author() {
+    public function author(): BelongsTo {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
