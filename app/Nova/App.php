@@ -441,13 +441,13 @@ class App extends Resource {
                 ->hideFromIndex(),
 
             Image::make(__('Icon Notify'), 'icon_notify')
-                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
+                ->rules('image', 'mimes:png', 'dimensions:ratio=1')
                 ->disk('public')
                 ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'icon_notify.png';
                 })
-                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 1024]))
+                ->help(__('Required square png. Transparency is allowed and recommended for the background'))
                 ->hideFromIndex(),
 
             Image::make(__('Logo Homepage'), 'logo_homepage')
