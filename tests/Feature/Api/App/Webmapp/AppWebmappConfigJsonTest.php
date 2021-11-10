@@ -57,6 +57,7 @@ class AppWebmappConfigJsonTest extends TestCase {
         $this->assertEquals($app->app_id, $json->APP->id);
         $this->assertEquals($app->name, $json->APP->name);
         $this->assertEquals($app->customer_name, $json->APP->customerName);
+        $this->assertEquals($app->id, $json->APP->geohubId);
     }
 
     public function test_api_is_webmapp_it_has_only_app_section() {

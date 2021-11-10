@@ -51,6 +51,7 @@ class AppController extends Controller {
         $data['APP']['name'] = $app->name;
         $data['APP']['id'] = $app->app_id;
         $data['APP']['customerName'] = $app->customer_name;
+        $data['APP']['geohubId'] = $app->id;
 
         return $data;
     }
