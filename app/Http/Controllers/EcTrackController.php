@@ -241,6 +241,22 @@ class EcTrackController extends Controller {
      * @return JsonResponse
      */
     public function nearestToLocation(Request $request, string $lon, string $lat): JsonResponse {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'app_id' => 'required|max:255'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 400);
+
+        $appId = $data['app_id'];
+
+        $app = App::where('app_id', '=', $appId)->first();
+
+        if (!isset($app->id))
+            return response()->json(['error' => 'Unknown reference app'], 400);
+
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
@@ -248,7 +264,7 @@ class EcTrackController extends Controller {
         if ($lon === strval(floatval($lon)) && $lat === strval(floatval($lat))) {
             $lon = floatval($lon);
             $lat = floatval($lat);
-            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($lon, $lat);
+            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($app, $lon, $lat);
         }
 
         return response()->json($featureCollection);

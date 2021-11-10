@@ -148,25 +148,32 @@ GROUP BY
     }
 
     /**
-     * Retrieve the $limit closest track to the given location
+     * Retrieve the closest tracks to the given location
      *
+     * @param App   $app      the reference app
      * @param float $lon
      * @param float $lat
      * @param int   $distance the distance limit in meters
-     * @param int   $limit
+     * @param int   $limit    the max numbers of results
      *
      * @return array
      */
-    public static function getNearestToLonLat(float $lon, float $lat, int $distance = 10000, int $limit = 5): array {
+    public static function getNearestToLonLat(App $app, float $lon, float $lat, int $distance = 10000, int $limit = 5): array {
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
         ];
-        $tracks = EcTrack::whereRaw("ST_Distance(
+        $query = EcTrack::whereRaw("ST_Distance(
                 ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
                 ST_Transform(ST_SetSRID(geometry, 4326), 3857)
-                ) <= $distance")
-            ->orderByRaw("ST_Distance(
+                ) <= $distance");
+
+        if ($app->app_id !== 'it.webmapp.webmapp') {
+            $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
+            $query = $query->whereIn($validTrackIds);
+        }
+
+        $tracks = $query->orderByRaw("ST_Distance(
                 ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
                 ST_Transform(ST_SetSRID(geometry, 4326), 3857)
                 ) ASC")
