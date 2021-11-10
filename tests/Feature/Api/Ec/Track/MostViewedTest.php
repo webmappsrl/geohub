@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Ec\Track;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +24,10 @@ class MostViewedTest extends TestCase {
      * @test
      */
     public function check_api_works() {
-        $result = $this->getJson('/api/ec/track/most_viewed', []);
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/most_viewed?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -41,8 +45,10 @@ class MostViewedTest extends TestCase {
      */
     public function check_response_has_three_tracks_when_only_three_available() {
         EcTrack::factory(3)->create();
-
-        $result = $this->getJson('/api/ec/track/most_viewed', []);
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/most_viewed?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -61,7 +67,10 @@ class MostViewedTest extends TestCase {
     public function check_response_has_five_tracks_when_more_are_available() {
         EcTrack::factory(10)->create();
 
-        $result = $this->getJson('/api/ec/track/most_viewed', []);
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/most_viewed?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();

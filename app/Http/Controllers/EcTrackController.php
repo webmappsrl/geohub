@@ -262,12 +262,23 @@ class EcTrackController extends Controller {
      * @return JsonResponse
      */
     public function mostViewed(Request $request): JsonResponse {
-        //        $featureCollection = [
-        //            "type" => "FeatureCollection",
-        //            "features" => []
-        //        ];
+        $data = $request->all();
 
-        $featureCollection = EcTrackServiceProvider::getMostViewed();
+        $validator = Validator::make($data, [
+            'app_id' => 'required|max:255'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 400);
+
+        $appId = $data['app_id'];
+
+        $app = App::where('app_id', '=', $appId)->first();
+
+        if (!isset($app->id))
+            return response()->json(['error' => 'Unknown reference app'], 400);
+
+        $featureCollection = EcTrackServiceProvider::getMostViewed($app);
 
         return response()->json($featureCollection);
     }

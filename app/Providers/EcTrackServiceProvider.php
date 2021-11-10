@@ -55,7 +55,7 @@ class EcTrackServiceProvider extends ServiceProvider {
 
         if ($app->app_id !== 'it.webmapp.webmapp')
             $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
-            
+
         if (!is_null($validTrackIds))
             $where .= 'ec_tracks.id IN (' . join(',', $validTrackIds) . ') AND ';
 
@@ -103,7 +103,7 @@ GROUP BY
 	cluster_id;";
 
         /**
-         * The query calculate 5 clusters of ec tracks intersecting the given bbox.
+         * The query calculate some clusters of ec tracks intersecting the given bbox.
          * For each cluster it returns:
          *  - the cluster point (geometry, geojson geometry)
          *  - the collected bbox (bbox, postgis BOX)
@@ -183,18 +183,26 @@ GROUP BY
     /**
      * Retrieves the $limit most viewed ec tracks
      *
-     * @param int $limit
+     * @param App $app   the reference app
+     * @param int $limit the max number of tracks to respond
      *
-     * @return array
+     * @return array the geojson feature collection
      */
     // TODO: select the most viewed tracks from a real analytic value and not randomly
-    public static function getMostViewed(int $limit = 5): array {
+    public static function getMostViewed(App $app, int $limit = 5): array {
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
         ];
 
-        $tracks = EcTrack::limit($limit)->get();
+        $validTrackIds = null;
+
+        if ($app->app_id !== 'it.webmapp.webmapp')
+            $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
+
+        $tracks = is_null($validTrackIds)
+            ? EcTrack::limit($limit)->get()
+            : EcTrack::whereIn($validTrackIds)->limit($limit)->get();
 
         foreach ($tracks as $track) {
             $featureCollection['features'][] = $track->getGeojson();
