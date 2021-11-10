@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +33,7 @@ class EcTrackServiceProvider extends ServiceProvider {
      * Return a collection of ec tracks inside the bbox. The tracks must be within $distance meters
      * of the given $trackId if provided
      *
+     * @param App         $app
      * @param array       $bbox
      * @param int|null    $trackId an ec track id to reference
      * @param string|null $searchString
@@ -40,7 +42,7 @@ class EcTrackServiceProvider extends ServiceProvider {
      *
      * @return mixed
      */
-    public static function getSearchClustersInsideBBox(array $bbox, int $trackId = null, string $searchString = null, string $language = 'it', int $distanceLimit = 1000): array {
+    public static function getSearchClustersInsideBBox(App $app, array $bbox, int $trackId = null, string $searchString = null, string $language = 'it', int $distanceLimit = 1000): array {
         $deltaLon = ($bbox[2] - $bbox[0]) / 6;
         $deltaLat = ($bbox[3] - $bbox[1]) / 6;
 
@@ -49,8 +51,16 @@ class EcTrackServiceProvider extends ServiceProvider {
         $from = '';
         $where = '';
         $params = [$clusterRadius];
+        $validTrackIds = null;
 
-        if (is_int($trackId)) {
+        if ($app->app_id !== 'it.webmapp.webmapp')
+            $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
+            
+        if (!is_null($validTrackIds))
+            $where .= 'ec_tracks.id IN (' . join(',', $validTrackIds) . ') AND ';
+
+        if (is_int($trackId)
+            && (!$validTrackIds || in_array($trackId, $validTrackIds))) {
             $track = EcTrack::find($trackId);
 
             if (isset($track)) {
