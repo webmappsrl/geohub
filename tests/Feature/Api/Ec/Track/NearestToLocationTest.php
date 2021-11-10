@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Ec\Track;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,11 +21,11 @@ class NearestToLocationTest extends TestCase {
         });
     }
 
-    /**
-     * @test
-     */
-    public function check_api_works_with_invalid_parameters() {
-        $result = $this->getJson('/api/ec/track/nearest/test/test', []);
+    public function test_api_works_with_invalid_parameters() {
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/nearest/test/test?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -37,11 +38,11 @@ class NearestToLocationTest extends TestCase {
         $this->assertCount(0, $json["features"]);
     }
 
-    /**
-     * @test
-     */
-    public function check_api_works() {
-        $result = $this->getJson('/api/ec/track/nearest/10/40', []);
+    public function test_api_works() {
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/nearest/10/40?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -54,10 +55,7 @@ class NearestToLocationTest extends TestCase {
         $this->assertCount(0, $json["features"]);
     }
 
-    /**
-     * @test
-     */
-    public function check_return_order_is_correct() {
+    public function test_return_order_is_correct() {
         $ids = [];
         $geometry = json_encode([
             "type" => "LineString",
@@ -124,8 +122,10 @@ class NearestToLocationTest extends TestCase {
         EcTrack::factory([
             'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
         ])->count(5)->create();
-
-        $result = $this->getJson('/api/ec/track/nearest/0/0', []);
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/nearest/0/0?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();
@@ -148,10 +148,7 @@ class NearestToLocationTest extends TestCase {
         }
     }
 
-    /**
-     * @test
-     */
-    public function check_return_order_is_correct_with_only_two_tracks_in_range() {
+    public function test_return_order_is_correct_with_only_two_tracks_in_range() {
         $ids = [];
         $geometry = json_encode([
             "type" => "LineString",
@@ -186,7 +183,10 @@ class NearestToLocationTest extends TestCase {
             'geometry' => DB::raw("ST_GeomFromGeojson('$geometry')")
         ])->count(5)->create();
 
-        $result = $this->getJson('/api/ec/track/nearest/0/0', []);
+        App::factory([
+            'app_id' => 'it.webmapp.webmapp'
+        ])->create();
+        $result = $this->getJson('/api/ec/track/nearest/0/0?app_id=it.webmapp.webmapp', []);
 
         $this->assertEquals(200, $result->getStatusCode());
         $json = $result->json();

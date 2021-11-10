@@ -25,24 +25,24 @@ class AppController extends Controller {
 
         $data = [];
 
-        $data = array_merge($data,$this->config_section_app($app));
-        $data = array_merge($data,$this->config_section_languages($app));
-        $data = array_merge($data,$this->config_section_map($app));
-        $data = array_merge($data,$this->config_section_theme($app));
-        $data = array_merge($data,$this->config_section_options($app));
-        $data = array_merge($data,$this->config_section_tables($app));
-        $data = array_merge($data,$this->config_section_routing($app));
-        $data = array_merge($data,$this->config_section_report($app));
-        $data = array_merge($data,$this->config_section_geolocation($app));
-        $data = array_merge($data,$this->config_section_auth($app));
-        $data = array_merge($data,$this->config_section_offline($app));
+        $data = array_merge($data, $this->config_section_app($app));
+        $data = array_merge($data, $this->config_section_languages($app));
+        $data = array_merge($data, $this->config_section_map($app));
+        $data = array_merge($data, $this->config_section_theme($app));
+        $data = array_merge($data, $this->config_section_options($app));
+        $data = array_merge($data, $this->config_section_tables($app));
+        $data = array_merge($data, $this->config_section_routing($app));
+        $data = array_merge($data, $this->config_section_report($app));
+        $data = array_merge($data, $this->config_section_geolocation($app));
+        $data = array_merge($data, $this->config_section_auth($app));
+        $data = array_merge($data, $this->config_section_offline($app));
 
         return response()->json($data);
     }
 
-
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_app(App $app): array {
@@ -57,26 +57,29 @@ class AppController extends Controller {
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_languages(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // LANGUAGES section
             $data['LANGUAGES']['default'] = $app->default_language;
             if (isset($app->available_languages))
                 $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_map(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // MAP section (zoom)
             $data['MAP']['defZoom'] = $app->map_def_zoom;
             $data['MAP']['maxZoom'] = $app->map_max_zoom;
@@ -94,36 +97,37 @@ class AppController extends Controller {
             } catch (\Exception $e) {
                 Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
             }
-
-
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_theme(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // THEME section
             $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
             $data['THEME']['fontFamilyContent'] = $app->font_family_content;
             $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
             $data['THEME']['primary'] = $app->primary_color;
-
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_options(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // OPTIONS section
             $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
             $data['OPTIONS']['startUrl'] = $app->start_url;
@@ -136,19 +140,19 @@ class AppController extends Controller {
             $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
             $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
             $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
-
         }
+
         return $data;
     }
 
-
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_tables(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // TABLES section
             $data['TABLES']['details']['showGpxDownload'] = !!$app->table_details_show_gpx_download;
             $data['TABLES']['details']['showKmlDownload'] = !!$app->table_details_show_kml_download;
@@ -170,58 +174,68 @@ class AppController extends Controller {
             $data['TABLES']['details']['showGeojsonDownload'] = !!$app->table_details_show_geojson_download;
             $data['TABLES']['details']['showShapefileDownload'] = !!$app->table_details_show_shapefile_download;
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_routing(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // ROUTING section
             $data['ROUTING']['enable'] = $app->enable_routing;
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_report(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // REPORT SECION
             $data['REPORTS'] = $this->_getReportSection();
         }
+
         return $data;
     }
+
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_geolocation(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
-            // GEOLOCATIONS SECTION
-            $data['GEOLOCATION']['record']['enable'] = false;
-            if ($app->geolocation_record_enable) {
-                $data['GEOLOCATION']['record']['enable'] = true;
-            }
+        if (in_array($app->api, ['elbrus'])) {
+            // GEOLOCATION SECTION
+            $data['GEOLOCATION']['record']['enable'] = !!$app->geolocation_record_enable;
             $data['GEOLOCATION']['record']['export'] = true;
             $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
+        } else {
+            if (!!$app->geolocation_record_enable)
+                $data['GEOLOCATION']['record']['enable'] = !!$app->geolocation_record_enable;
         }
+
         return $data;
     }
+
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_auth(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // AUTH section
             $data['AUTH']['showAtStartup'] = false;
             if ($app->auth_show_at_startup) {
@@ -229,18 +243,19 @@ class AppController extends Controller {
             }
             $data['AUTH']['enable'] = true;
             $data['AUTH']['loginToGeohub'] = true;
-
         }
+
         return $data;
     }
 
     /**
      * @param App $app
+     *
      * @return array
      */
     private function config_section_offline(App $app): array {
         $data = [];
-        if(in_array($app->api,['elbrus'])) {
+        if (in_array($app->api, ['elbrus'])) {
             // OFFLINE section
             $data['OFFLINE']['enable'] = false;
             if ($app->offline_enable) {
@@ -250,8 +265,8 @@ class AppController extends Controller {
             if ($app->offline_force_auth) {
                 $data['OFFLINE']['forceAuth'] = true;
             }
-
         }
+
         return $data;
     }
 

@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Log;
  *
  * @package App\Models\
  *
+ * @property string app_id
  * @property string available_languages
  */
 class App extends Model {
@@ -33,7 +36,7 @@ class App extends Model {
         });
     }
 
-    public function author() {
+    public function author(): BelongsTo {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
@@ -52,6 +55,10 @@ class App extends Model {
 
             return json_encode($geoJson);
         }
+    }
+
+    public function ecTracks(): HasMany {
+        return $this->author->ecTracks();
     }
 
     /**

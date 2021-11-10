@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use App\Providers\EcTrackServiceProvider;
 use Exception;
@@ -9,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class EcTrackController extends Controller {
     /**
@@ -186,12 +188,29 @@ class EcTrackController extends Controller {
      * @return JsonResponse
      */
     public function search(Request $request): JsonResponse {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'bbox' => 'required',
+            'app_id' => 'required|max:255'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 400);
+
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
         ];
 
-        $bboxParam = $request->get('bbox');
+        $bboxParam = $data['bbox'];
+        $appId = $data['app_id'];
+
+        $app = App::where('app_id', '=', $appId)->first();
+
+        if (!isset($app->id))
+            return response()->json(['error' => 'Unknown reference app'], 400);
+
         if (isset($bboxParam)) {
             try {
                 $bbox = explode(',', $bboxParam);
@@ -201,12 +220,11 @@ class EcTrackController extends Controller {
             }
 
             if (isset($bbox) && is_array($bbox)) {
-                $trackRef = $request->get('reference_id');
+                $trackRef = $data['reference_id'] ?? null;
                 if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
                 else $trackRef = null;
 
-                //                $searchString = $request->get('string');
-                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($bbox, $trackRef, null, 'en');
+                $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($app, $bbox, $trackRef, null, 'en');
             }
         }
 
@@ -223,6 +241,22 @@ class EcTrackController extends Controller {
      * @return JsonResponse
      */
     public function nearestToLocation(Request $request, string $lon, string $lat): JsonResponse {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'app_id' => 'required|max:255'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 400);
+
+        $appId = $data['app_id'];
+
+        $app = App::where('app_id', '=', $appId)->first();
+
+        if (!isset($app->id))
+            return response()->json(['error' => 'Unknown reference app'], 400);
+
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
@@ -230,7 +264,7 @@ class EcTrackController extends Controller {
         if ($lon === strval(floatval($lon)) && $lat === strval(floatval($lat))) {
             $lon = floatval($lon);
             $lat = floatval($lat);
-            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($lon, $lat);
+            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($app, $lon, $lat);
         }
 
         return response()->json($featureCollection);
@@ -244,12 +278,23 @@ class EcTrackController extends Controller {
      * @return JsonResponse
      */
     public function mostViewed(Request $request): JsonResponse {
-        //        $featureCollection = [
-        //            "type" => "FeatureCollection",
-        //            "features" => []
-        //        ];
+        $data = $request->all();
 
-        $featureCollection = EcTrackServiceProvider::getMostViewed();
+        $validator = Validator::make($data, [
+            'app_id' => 'required|max:255'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 400);
+
+        $appId = $data['app_id'];
+
+        $app = App::where('app_id', '=', $appId)->first();
+
+        if (!isset($app->id))
+            return response()->json(['error' => 'Unknown reference app'], 400);
+
+        $featureCollection = EcTrackServiceProvider::getMostViewed($app);
 
         return response()->json($featureCollection);
     }
