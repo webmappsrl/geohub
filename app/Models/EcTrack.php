@@ -6,6 +6,7 @@ use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,7 +51,7 @@ class EcTrack extends Model {
 
     protected static function booted() {
         parent::booted();
-        EcTrack::observe(EcTrackElasticObserver::class);
+        // EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
             if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
@@ -472,5 +473,51 @@ class EcTrack extends Model {
             )->first();
 
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
+    }
+
+    public function elasticIndex($index='ectracks')
+    {
+        #REF: https://github.com/elastic/elasticsearch-php/
+        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
+
+        Log::info('Elastic Indexing track ' . $this->id);
+        $url=config('services.elastic.host').'/geohub_'.$index.'/_doc/'.$this->id;
+        Log::info($url);
+
+        $geom = EcTrack::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+            )
+            ->first()
+            ->geom;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+  "geometry" : '.$geom.',
+  "id": '.$this->id.',
+  "ref": "100",
+  "cai_scale": "E"
+}',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Basic '.config('services.elastic.key')
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        Log::info($response);
+
+        curl_close($curl);
+
     }
 }

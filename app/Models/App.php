@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -110,5 +111,95 @@ class App extends Model {
         }
 
         return $tracks_array;
+    }
+
+    /**
+     * Index all APP tracks using index name: app_id
+     */
+    public function elasticIndex() {
+        if(Arr::accessible($this->ecTracks)) {
+            $index_name='app_'.$this->id;
+            foreach ($this->ecTracks as $t) {
+                $t->elasticIndex($index_name);
+            }
+        }
+        else {
+            Log::info('No tracks in APP '.$this->id);
+        }
+    }
+    /**
+     * Delete APP INDEX
+     */
+    public function elasticIndexDelete() {
+        Log::info('Deleting Elastic Indexing APP ' . $this->id);
+        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
+        Log::info($url);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'DELETE',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Basic '.config('services.elastic.key')
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        Log::info($response);
+
+        curl_close($curl);
+
+    }
+    /**
+     * Delete APP INDEX
+     */
+    public function elasticIndexCreate() {
+        Log::info('Creating Elastic Indexing APP ' . $this->id);
+        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
+        Log::info($url);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS =>'
+               {
+                  "mappings": {
+                    "properties": {
+                      "id": {
+                          "type": "integer"  
+                      },
+                      "geometry": {
+                        "type": "shape"
+                      }
+                    }
+                  }
+               }',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Basic '.config('services.elastic.key')
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        Log::info($response);
+
+        curl_close($curl);
+
     }
 }
