@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'elastic' => [
+        'host' => env('ELASTIC_HOST'),
+        'key' => env('ELASTIC_KEY')
+    ]
+
 ];
