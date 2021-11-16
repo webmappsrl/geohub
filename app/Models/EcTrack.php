@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
@@ -49,6 +50,7 @@ class EcTrack extends Model {
 
     protected static function booted() {
         parent::booted();
+        EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
             if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
