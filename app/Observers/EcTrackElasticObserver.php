@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\EcTrack;
 use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -29,6 +30,18 @@ class EcTrackElasticObserver
     public function updated(EcTrack $ecTrack)
     {
 
+        #REF: https://github.com/elastic/elasticsearch-php/
+        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
+
+        $hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
+        $client = ClientBuilder::create()->setHosts($hosts)->build();
+
+
+
+        return;
+
+
+
         Log::info('Indexing track '.$ecTrack->id);
         $geom = $ecTrack::where('id', '=', $ecTrack->id)
             ->select(
@@ -38,9 +51,10 @@ class EcTrackElasticObserver
             ->geom;
 
         $curl = curl_init();
-
+// https://elastic.sis-te.com/geohub
+//             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
+            CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/'.$ecTrack->id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -57,7 +71,7 @@ class EcTrackElasticObserver
 }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic YWRtaW46cmljZXJjYUVsYXN0aWNh'
+                'Authorization: Basic Zm9yZ2U6MWIwVlVKeFJGeGVPdXBralBlaWU='
             ),
         ));
 

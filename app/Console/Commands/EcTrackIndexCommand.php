@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class EcTrackIndexCommand extends Command
 {
@@ -38,10 +40,20 @@ class EcTrackIndexCommand extends Command
      */
     public function handle()
     {
-        $a = EcTrack::all();
-        foreach($a as $t)
+        $apps = App::all();
+        foreach($apps as $app)
         {
-            $t->updated_at=date('Y-m-d h:i:s');$t->save();
+            Log::info('===========================');
+            Log::info('===========================');
+            Log::info('===========================');
+            Log:info('Indexing app '.$app->id);
+            $app->elasticIndexDelete();
+            $app->elasticIndexCreate();
+            $app->elasticIndex();
+            Log::info('===========================');
+            Log::info('DONE !!');
+            Log::info('===========================');
+            Log::info(' ');
         }
         return 0;
     }
