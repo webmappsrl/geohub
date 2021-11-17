@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -60,6 +61,17 @@ class App extends Model {
 
     public function ecTracks(): HasMany {
         return $this->author->ecTracks();
+    }
+
+
+    /**
+     * @return Collection
+     */
+    public function getEcTracks(): Collection {
+        if($this->api == 'webmapp') {
+            return EcTrack::all();
+        }
+        return EcTrack::where('user_id',$this->user_id)->get();
     }
 
     /**
@@ -119,7 +131,7 @@ class App extends Model {
     public function elasticIndex() {
         if(Arr::accessible($this->ecTracks)) {
             $index_name='app_'.$this->id;
-            foreach ($this->ecTracks as $t) {
+            foreach ($this->getEcTracks() as $t) {
                 $t->elasticIndex($index_name);
             }
         }
