@@ -164,9 +164,7 @@ class App extends Model {
         ));
 
         $response = curl_exec($curl);
-
         Log::info($response);
-
         curl_close($curl);
 
     }
@@ -175,20 +173,10 @@ class App extends Model {
      */
     public function elasticIndexCreate() {
         Log::info('Creating Elastic Indexing APP ' . $this->id);
-        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
-        Log::info($url);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'PUT',
-            CURLOPT_POSTFIELDS =>'
+        // Create Index
+        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
+        $posts = '
                {
                   "mappings": {
                     "properties": {
@@ -200,18 +188,41 @@ class App extends Model {
                       }
                     }
                   }
-               }',
+               }';
+        $this->_curlExec($url,'PUT',$posts);
+
+        // Settings
+        $url=config('services.elastic.host').'/geohub_app_'.$this->id.'/_settings';
+        $posts = '{"max_result_window": 50000}';
+        $this->_curlExec($url,'PUT',$posts);
+
+    }
+
+    /**
+     * @param string $url
+     * @param string $type
+     * @param string $posts
+     */
+    private function _curlExec(string $url, string $type,string $posts): void {
+        Log::info("CURL EXEC TYPE:$type URL:$url");
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => $type,
+            CURLOPT_POSTFIELDS => $posts,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
                 'Authorization: Basic '.config('services.elastic.key')
             ),
         ));
-
-        $response = curl_exec($curl);
-
-        Log::info($response);
-
+        curl_exec($curl);
         curl_close($curl);
-
     }
 }
