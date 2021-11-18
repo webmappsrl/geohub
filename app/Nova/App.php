@@ -106,7 +106,8 @@ class App extends Resource {
             Select::make(__('Api API'), 'api')->options(
                 [
                     'elbrus' => 'Elbrus',
-                    'webmapp' => 'Webmapp',
+                    'webmapp' => 'WebMapp',
+                    'webapp' => 'WebApp',
                 ]
             )->required(),
             Text::make(__('App Id'), 'app_id'),

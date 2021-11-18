@@ -343,6 +343,281 @@ class AppController extends Controller {
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id the app id in the database
+     *
+     * @return JsonResponse
+     */
+    public function vectorStyle(int $id) {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+
+        $url = route('api.app.webapp.vector_layer',['id'=>$app->id]);
+
+        $data = <<<EOF
+{
+  "version": 8,
+  "name": "tracks",
+  "metadata": {
+    "maputnik:renderer": "ol"
+  },
+  "sources": {
+    "tracks1": {
+      "type": "vector",
+      "url": "$url"
+    }
+  },
+  "sprite": "",
+  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "EEA",
+      "type": "line",
+      "source": "tracks",
+      "source-layer": "tracks",
+      "filter": [
+        "all",
+        [
+          "==",
+          "cai_scale",
+          "EEA"
+        ]
+      ],
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(255, 0, 218, 0.8)",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              1
+            ],
+            [
+              20,
+              10
+            ]
+          ]
+        },
+        "line-dasharray": [
+          0.001,
+          2
+        ]
+      }
+    },
+    {
+      "id": "EE",
+      "type": "line",
+      "source": "tracks",
+      "source-layer": "tracks",
+      "filter": [
+        "all",
+        [
+          "==",
+          "cai_scale",
+          "EE"
+        ]
+      ],
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "rgba(255, 57, 0, 0.8)",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              1
+            ],
+            [
+              20,
+              10
+            ]
+          ]
+        },
+        "line-dasharray": [
+          0.01,
+          2
+        ]
+      }
+    },
+    {
+      "id": "E",
+      "type": "line",
+      "source": "tracks",
+      "source-layer": "tracks",
+      "filter": [
+        "all",
+        [
+          "==",
+          "cai_scale",
+          "E"
+        ]
+      ],
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "rgba(255, 57, 0, 0.8)",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              1
+            ],
+            [
+              20,
+              10
+            ]
+          ]
+        },
+        "line-dasharray": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "id": "T",
+      "type": "line",
+      "source": "tracks",
+      "source-layer": "tracks",
+      "filter": [
+        "all",
+        [
+          "==",
+          "cai_scale",
+          "T"
+        ]
+      ],
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round",
+        "visibility": "visible"
+      },
+      "paint": {
+        "line-color": "rgba(255, 57, 0, 0.8)",
+        "line-width": {
+          "stops": [
+            [
+              10,
+              1
+            ],
+            [
+              20,
+              10
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "ref",
+      "type": "symbol",
+      "source": "tracks",
+      "source-layer": "tracks",
+      "minzoom": 10,
+      "maxzoom": 16,
+      "layout": {
+        "text-field": "{ref}",
+        "visibility": "visible",
+        "symbol-placement": "line",
+        "text-size": 12,
+        "text-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "rgba(255, 57, 0,0.8)"
+      }
+    }
+  ],
+  "id": "63fa0rhhq"
+}
+EOF;
+        $data = json_decode($data,TRUE);
+        return response()->json($data);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id the app id in the database
+     *
+     * @return JsonResponse
+     */
+    public function vectorLayer(int $id) {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+
+        /**
+         *
+         *   "grids": [
+         *       "https://tiles.webmapp.it/sentieri_toscana/{z}/{x}/{y}.grid.json"
+         *    ],
+         *
+         */
+
+        $tile_url="https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_{$app->id}";
+
+        $data = <<<EOF
+{
+  "name": "sentieri_toscana",
+  "description": "",
+  "legend": "",
+  "attribution": "Rendered with <a href=\"https://www.maptiler.com/desktop/\">MapTiler Desktop</a>",
+  "type": "baselayer",
+  "version": "1",
+  "format": "pbf",
+  "format_arguments": "",
+  "minzoom": 3,
+  "maxzoom": 16,
+  "bounds": [
+    9.662666,
+    42.59819,
+    12.415403,
+    44.573604
+  ],
+  "scale": "1.000000",
+  "profile": "mercator",
+  "scheme": "xyz",
+  "generator": "MapTiler Desktop Plus 11.2.1-252233dc0b",
+  "basename": "sentieri_toscana",
+  "tiles": [
+    "$tile_url"
+  ],
+  "tilejson": "2.0.0",
+  "vector_layers": [
+    {
+      "id": "sentieri",
+      "description": "",
+      "minzoom": 3,
+      "maxzoom": 16,
+      "fields": {
+        "id": "Number",
+        "ref": "String",
+        "cai_scale": "String"
+      }
+    }
+  ]
+}
+EOF;
+
+        $data = json_decode($data,TRUE);
+        return response()->json($data);
+    }
+
+
+
     private function _getReportSection() {
         $json_string = <<<EOT
  {
