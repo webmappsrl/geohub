@@ -231,6 +231,8 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('webapp')->name('webapp.')->group(function () {
             Route::get("/{id}/config", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/vector_style", [AppController::class, 'vectorStyle'])->name('vector_style');
+            Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
         });
     });
 });

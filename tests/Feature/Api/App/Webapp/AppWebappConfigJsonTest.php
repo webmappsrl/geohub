@@ -50,7 +50,7 @@ class AppWebappConfigJsonTest extends TestCase
      */
     public function when_api_is_webapp_it_returns_proper_section_app() {
         $app = App::factory()->create(['api' => 'webapp']);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webapp/' . $app->id . '/config', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -63,7 +63,7 @@ class AppWebappConfigJsonTest extends TestCase
 
     public function test_api_is_webapp_it_has_only_app_section() {
         $app = App::factory()->create(['api' => 'webmapp']);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webapp/' . $app->id . '/config', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
