@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AppWebappVectorStyleJsonTest extends TestCase
+class AppWebappVectorLayerJsonTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -27,7 +27,7 @@ class AppWebappVectorStyleJsonTest extends TestCase
      * @test
      */
     public function when_id_is_null_it_returns_404() {
-        $result = $this->getJson('/api/app/webapp/0/vector_style', []);
+        $result = $this->getJson('/api/app/webapp/0/vector_layer', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
 
@@ -38,7 +38,7 @@ class AppWebappVectorStyleJsonTest extends TestCase
      */
     public function when_app_it_exists_it_returns_200() {
         $app = App::factory()->create(['api' => 'webapp']);
-        $result = $this->getJson('/api/app/webapp/' . $app->id . '/vector_style', []);
+        $result = $this->getJson('/api/app/webapp/' . $app->id . '/vector_layer', []);
         $this->assertEquals(200, $result->getStatusCode());
     }
 
@@ -50,17 +50,14 @@ class AppWebappVectorStyleJsonTest extends TestCase
      */
     public function when_api_is_webapp_it_returns_proper_json() {
         $app = App::factory()->create(['api' => 'webapp']);
-        $result = $this->getJson('/api/app/webapp/' . $app->id . '/vector_style', []);
+        $result = $this->getJson('/api/app/webapp/' . $app->id . '/vector_layer', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
         // Checks
-        $this->assertTrue(isset($json->sources));
-        $this->assertTrue(isset($json->sources->tracks1));
-        $this->assertTrue(isset($json->sources->tracks1->url));
-        $this->assertEquals(route('api.app.webapp.vector_layer',['id'=>$app->id]),$json->sources->tracks1->url);
+        $this->assertTrue(isset($json->tiles));
+        $this->assertEquals('https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_'.$app->id,$json->tiles[0]);
 
     }
-
 
 }

@@ -546,6 +546,76 @@ EOF;
         return response()->json($data);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id the app id in the database
+     *
+     * @return JsonResponse
+     */
+    public function vectorLayer(int $id) {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+
+        /**
+         *
+         *   "grids": [
+         *       "https://tiles.webmapp.it/sentieri_toscana/{z}/{x}/{y}.grid.json"
+         *    ],
+         *
+         */
+
+        $tile_url="https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_{$app->id}";
+
+        $data = <<<EOF
+{
+  "name": "sentieri_toscana",
+  "description": "",
+  "legend": "",
+  "attribution": "Rendered with <a href=\"https://www.maptiler.com/desktop/\">MapTiler Desktop</a>",
+  "type": "baselayer",
+  "version": "1",
+  "format": "pbf",
+  "format_arguments": "",
+  "minzoom": 3,
+  "maxzoom": 16,
+  "bounds": [
+    9.662666,
+    42.59819,
+    12.415403,
+    44.573604
+  ],
+  "scale": "1.000000",
+  "profile": "mercator",
+  "scheme": "xyz",
+  "generator": "MapTiler Desktop Plus 11.2.1-252233dc0b",
+  "basename": "sentieri_toscana",
+  "tiles": [
+    "$tile_url"
+  ],
+  "tilejson": "2.0.0",
+  "vector_layers": [
+    {
+      "id": "sentieri",
+      "description": "",
+      "minzoom": 3,
+      "maxzoom": 16,
+      "fields": {
+        "id": "Number",
+        "ref": "String",
+        "cai_scale": "String"
+      }
+    }
+  ]
+}
+EOF;
+
+        $data = json_decode($data,TRUE);
+        return response()->json($data);
+    }
+
 
 
     private function _getReportSection() {
