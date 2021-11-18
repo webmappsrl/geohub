@@ -229,5 +229,10 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/resources/icon_notify.png", [AppController::class, 'iconNotify'])->name('icon_notify');
             Route::get("/{id}/resources/logo_homepage.svg", [AppController::class, 'logoHomepage'])->name('logo_homepage');
         });
+        Route::prefix('webapp')->name('webapp.')->group(function () {
+            Route::get("/{id}/config", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/vector_style", [AppController::class, 'vectorStyle'])->name('vector_style');
+            Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
+        });
     });
 });
