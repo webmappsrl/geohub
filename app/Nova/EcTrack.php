@@ -82,7 +82,7 @@ class EcTrack extends Resource {
             BelongsToMany::make('EcPois')->onlyOnDetail(),
             EcMediaPopup::make(__('EcMedia'), 'ecMedia')
                 ->onlyOnForms()
-                ->feature($geojson)
+                ->feature($geojson ?? [])
                 ->apiBaseUrl('/api/ec/track/'),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
@@ -103,8 +103,14 @@ class EcTrack extends Resource {
                     'feature' => $this->getGeojson(),
                 ];
             })->hideFromIndex()->hideWhenCreating()->viewOnly(),
-            FeatureImagePopup::make(__('Feature Image'), 'featureImage')->onlyOnForms()->feature($geojson)->apiBaseUrl('/api/ec/track/'),
-            Ecpoipopup::make(__('EcPoi'))->nullable()->onlyOnForms()->feature($geojson),
+            FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                ->onlyOnForms()
+                ->feature($geojson ?? [])
+                ->apiBaseUrl('/api/ec/track/'),
+            Ecpoipopup::make(__('EcPoi'))
+                ->nullable()
+                ->onlyOnForms()
+                ->feature($geojson ?? []),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
