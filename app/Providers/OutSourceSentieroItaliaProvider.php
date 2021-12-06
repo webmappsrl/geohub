@@ -93,4 +93,48 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
             ->toArray();
         return $ids;
     }
+
+    /**
+     * It downloads data from SICAI
+     * tinker>>> $si = app(App\Providers\OutSourceSentieroItaliaProvider::class);
+     * tinker>>> $si->getItem(531);
+     * @param string $id
+     * @return array
+     */
+    public function getItem(string $id): array {
+        $data = [];
+        $db = DB::connection('out_source_sentiero_italia');
+        $item = $db->table('sentiero_italia.SI_Tappe')
+            ->where('id_2',$id)
+            ->select([
+                'tappa',
+                'descrizione_sito',
+                'difficolta',
+                'partenza',
+                'arrivo',
+            ])
+            ->first();
+        if(!is_null($item)) {
+            // ADD Geometry
+            $geometry = null;
+            $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2='.$id));
+            if(isset($res[0]->geometry)) {
+                $geometry=$res[0]->geometry;
+            }
+
+            $data=[
+                'provider' => get_class($this),
+                'source_id'=> $id,
+                'tags' => [
+                    'name' => [ 'it' => "Sentiero Italia CAI: tappa {$item->tappa}, da {$item->partenza} a {$item->arrivo}" ],
+                    'description' => ['it' => $item->descrizione_sito],
+                    'cai_scale' => $item->difficolta,
+                    'from' => $item->partenza,
+                    'to' => $item->arrivo,
+                ],
+                'geometry' => $geometry,
+            ];
+        }
+        return $data;
+    }
 }
