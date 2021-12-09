@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\OutSourceFeature;
+use App\Models\OutSourceTrack;
 use App\Providers\OutSourceSentieroItaliaProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +44,7 @@ class OutSourceImportCommand extends Command
         $si = app(OutSourceSentieroItaliaProvider::class);
         foreach ($si->getTrackList() as $id) {
             Log::info("Importing track: source_id -> {$id}");
-            $os = OutSourceFeature::firstOrCreate([
+            $os = OutSourceTrack::firstOrCreate([
                 'provider' => 'App\Providers\OutSourceSentieroItaliaProvider',
                 'type' => 'track',
                 'source_id' => $id,
