@@ -134,6 +134,22 @@ class EcTrack extends Resource {
                 return $model->uploadAudio($file);
             })->acceptedTypes('audio/*')->onlyOnForms(),
             Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
+            Boolean::make(__('OutSource'), function() {
+                $val = false;
+                if(!is_null($this->out_source_feature_id)) {
+                    $val=true;
+                }
+                return $val;
+            })->onlyOnIndex(),
+
+            Text::make('Out Source Feature', function() {
+                if(!is_null($this->out_source_feature_id)) {
+                    return $this->out_source_feature_id;
+                }
+                else {
+                    return 'No Out Source associated';
+                }
+            })->onlyOnDetail(),
 
             Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
                 ->url(function () {
@@ -142,6 +158,7 @@ class EcTrack extends Resource {
                 ->text(__('Open GeoJson'))
                 ->icon()
                 ->blank(),
+            
 
             new Panel('Relations', $this->taxonomies()),
         ];
