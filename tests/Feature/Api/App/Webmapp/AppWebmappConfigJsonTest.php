@@ -1,17 +1,18 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api\App\Webmapp;
 
 use App\Models\App;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AppWebmappConfigJsonTest extends TestCase {
+class AppWebmappConfigJsonTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -25,7 +26,8 @@ class AppWebmappConfigJsonTest extends TestCase {
      *
      * @test
      */
-    public function when_id_is_null_it_returns_404() {
+    public function when_id_is_null_it_returns_404()
+    {
         $result = $this->getJson('/api/app/webmapp/0/config.json', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
@@ -35,7 +37,8 @@ class AppWebmappConfigJsonTest extends TestCase {
      *
      * @test
      */
-    public function when_app_it_exists_it_returns_200() {
+    public function when_app_it_exists_it_returns_200()
+    {
         $app = App::factory()->create(['api' => 'webmapp']);
         $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
@@ -47,7 +50,8 @@ class AppWebmappConfigJsonTest extends TestCase {
      *
      * @test
      */
-    public function when_api_is_webmapp_it_returns_proper_section_app() {
+    public function when_api_is_webmapp_it_returns_proper_section_app()
+    {
         $app = App::factory()->create(['api' => 'webmapp']);
         $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
@@ -60,7 +64,8 @@ class AppWebmappConfigJsonTest extends TestCase {
         $this->assertEquals($app->id, $json->APP->geohubId);
     }
 
-    public function test_api_is_webmapp_it_has_only_app_section() {
+    public function test_api_is_webmapp_it_has_only_app_section()
+    {
         $app = App::factory()->create(['api' => 'webmapp']);
         $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
@@ -78,7 +83,8 @@ class AppWebmappConfigJsonTest extends TestCase {
         $this->assertFalse(isset($json->OFFLINE));
     }
 
-    public function test_api_is_webmapp_and_has_record_enabled_it_should_have_geolocation_section() {
+    public function test_api_is_webmapp_and_has_record_enabled_it_should_have_geolocation_section()
+    {
         $app = App::factory()->create([
             'api' => 'webmapp',
             'geolocation_record_enable' => true
