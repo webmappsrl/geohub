@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UgcMedia
@@ -21,7 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string description
  * @property string raw_data
  */
-class UgcMedia extends Model {
+class UgcMedia extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
     protected $fillable = [
@@ -34,6 +37,19 @@ class UgcMedia extends Model {
         'geometry',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::saved(function ($media) {
+            try {
+                $hoquServiceProvider = app(HoquServiceProvider::class);
+                $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            }
+        });
+    }
+
     /**
      * Scope a query to only include current user EcMedia.
      *
@@ -41,23 +57,28 @@ class UgcMedia extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeCurrentUser($query) {
+    public function scopeCurrentUser($query)
+    {
         return $query->where('user_id', Auth()->user()->id);
     }
 
-    public function ugc_pois(): BelongsToMany {
+    public function ugc_pois(): BelongsToMany
+    {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): BelongsToMany {
+    public function ugc_tracks(): BelongsToMany
+    {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
+    public function taxonomy_wheres(): BelongsToMany
+    {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 
@@ -67,7 +88,8 @@ class UgcMedia extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $array = $this->toArray();
 
         $propertiesToClear = ['geometry'];
@@ -84,7 +106,8 @@ class UgcMedia extends Model {
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
