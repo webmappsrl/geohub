@@ -10,7 +10,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class UgcPoiStoreTest extends TestCase {
+class UgcPoiStoreTest extends TestCase
+{
     use RefreshDatabase, WithFaker;
 
     /**
@@ -18,7 +19,8 @@ class UgcPoiStoreTest extends TestCase {
      *
      * @return void
      */
-    public function testUgcPoiStore() {
+    public function testUgcPoiStore()
+    {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
             'app_id' => 'it.webmapp.test'
@@ -56,7 +58,8 @@ class UgcPoiStoreTest extends TestCase {
     /**
      * @test
      */
-    public function check_that_if_the_api_is_called_without_access_token_it_responds_401() {
+    public function check_that_if_the_api_is_called_without_access_token_it_responds_401()
+    {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
@@ -68,14 +71,15 @@ class UgcPoiStoreTest extends TestCase {
         $response->assertStatus(401);
     }
 
-    public function test_poi_upload_with_some_media() {
+    public function test_poi_upload_with_some_media()
+    {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
             'app_id' => 'it.webmapp.test'
         ])->create();
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
-                ->once()
+                ->atLeast(2)
                 ->andReturn(201);
         });
         $medias = UgcMedia::factory(2)->create();
