@@ -209,13 +209,19 @@ class EcTrack extends Model {
         return $this->belongsToMany(Partnership::class, 'ec_track_partnership');
     }
 
+    public function outSourceTrack(): BelongsTo {
+        return $this->belongsTo(OutSourceTrack::class,'out_source_feature_id');
+    }
+
     /**
      * Return the json version of the ec track, avoiding the geometry
      *
      * @return array
      */
     public function getJson(): array {
-        $array = $this->toArray();
+
+        $array = $this->setOutSourceValue();
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
@@ -296,6 +302,60 @@ class EcTrack extends Model {
         $array['user_can_download'] = isset($user) && Gate::forUser($user)->allows('downloadOffline', $this);
 
         return $array;
+    }
+
+    private function setOutSourceValue():array {
+        $array = $this->toArray();
+        if(isset($this->out_source_feature_id)) {
+            $keys = [
+                'name',
+                'description',
+                'excerpt',
+                'distance',
+                'ascent',
+                'descent',
+                'ele_min',
+                'ele_max',
+                'ele_from',
+                'ele_to',
+                'duration_forward',
+                'duration_backward',
+            ];
+            foreach ($keys as $key) {
+                $array=$this->setOutSourceSingleValue($array,$key);
+            }
+        }
+        return $array;
+    }
+
+    private function setOutSourceSingleValue($array,$varname):array {
+        if($this->isReallyEmpty($array[$varname])) {
+            if(isset($this->outSourceTrack->tags[$varname])) {
+                $array[$varname] = $this->outSourceTrack->tags[$varname];
+            }
+        }
+        return $array;
+    }
+
+    private function isReallyEmpty($val): bool {
+        if(is_null($val)) {
+            return true;
+        }
+        if(empty($val)) {
+            return true;
+        }
+        if(is_array($val)) {
+            if(count($val)==0) {
+                return true;
+            }
+            foreach($val as $lang => $cont) {
+                if(!empty($cont)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'version' => '0.2.19.2.webapp.0.0.3',
+    'version' => '0.3.02',
 
     /*
     |--------------------------------------------------------------------------
@@ -193,6 +193,7 @@ return [
         App\Providers\HoquServiceProvider::class,
         App\Providers\EcTrackServiceProvider::class,
         App\Providers\PartnershipValidationProvider::class,
+        App\Providers\OutSourceSentieroItaliaProvider::class,
 
         /**
          * A PHP desktop/mobile user agent parser

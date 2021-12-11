@@ -78,6 +78,22 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'out_source_sentiero_italia' => [
+            'driver' => 'pgsql',
+            'url' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_URL'),
+            'host' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_HOST', '127.0.0.1'),
+            'port' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_PORT', '5432'),
+            'database' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_DATABASE', ''),
+            'username' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_USERNAME', ''),
+            'password' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
