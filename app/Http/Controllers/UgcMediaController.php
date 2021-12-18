@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UgcMediaCollection;
-use App\Http\Resources\UgcMediaResource;
 use App\Models\App;
+use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -88,7 +86,7 @@ class UgcMediaController extends Controller
         $media->relative_url = '';
 
         if (isset($geojson['geometry']))
-            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . ")')");
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . "')");
 
         if (isset($geojson['properties']['app_id'])) {
             $app = App::where('app_id', '=', $geojson['properties']['app_id'])->first();
@@ -157,19 +155,6 @@ class UgcMediaController extends Controller
      * @return Response
      */
     public function edit(UgcMedia $ugcMedia)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request  $request
-     * @param UgcMedia $ugcMedia
-     *
-     * @return Response
-     */
-    public function update(Request $request, UgcMedia $ugcMedia)
     {
         //
     }
@@ -612,5 +597,54 @@ class UgcMediaController extends Controller
         ];
 
         return response(readfile(Storage::disk('public')->path($media->relative_url)), 200, $headers);
+    }
+
+    /**
+     * Update an ugc media, setting coordinates and taxonomy where if available
+     * 
+     * @param Request $request the request
+     * @param int $id the ugc media id
+     */
+    public function update(Request $request, int $id)
+    {
+        $media = UgcMedia::find($id);
+
+        if (!$media) {
+            return response()->json([
+                "error" => "UGC Media $id not found"
+            ], 404);
+        }
+
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'geojson' => 'required',
+            'geojson.type' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response(['error' => $validator->errors()], 400);
+
+        $geojson = $data['geojson'];
+
+        if (isset($geojson['geometry']['type']) && $geojson['geometry']['type'] === 'Point' && isset($geojson['geometry']['coordinates'])) {
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . "')");
+            $media->saveWithoutHoquJob();
+        }
+
+        if (isset($geojson['properties']['where_ids']) && is_array($geojson['properties']['where_ids'])) {
+            $whereIds = $geojson['properties']['where_ids'];
+            $ids = [];
+            foreach ($whereIds as $id) {
+                $where = TaxonomyWhere::find($id);
+                if (!is_null($where)) {
+                    $ids[] = $id;
+                }
+            }
+            $media->taxonomy_wheres()->sync($ids);
+        }
+
+
+        return response()->noContent();
     }
 }

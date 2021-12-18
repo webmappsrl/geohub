@@ -37,17 +37,31 @@ class UgcMedia extends Model
         'geometry',
     ];
 
+    public $preventHoquSave = false;
+
     protected static function boot()
     {
         parent::boot();
         static::saved(function ($media) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
-            } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            if (!$media->preventHoquSave) {
+                try {
+                    $hoquServiceProvider = app(HoquServiceProvider::class);
+                    $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
+                } catch (\Exception $e) {
+                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                }
             }
         });
+    }
+
+    /**
+     * Save the ugc media to the database without pushing any new HOQU job
+     */
+    public function saveWithoutHoquJob()
+    {
+        $this->preventHoquSave = true;
+        $this->save();
+        $this->preventHoquSave = false;
     }
 
     /**
@@ -114,5 +128,9 @@ class UgcMedia extends Model
 
             return $feature;
         } else return null;
+    }
+
+    public function setGeometry(array $geometry)
+    {
     }
 }
