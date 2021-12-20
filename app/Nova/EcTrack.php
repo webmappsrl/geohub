@@ -24,6 +24,7 @@ use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 
 class EcTrack extends Resource {
@@ -162,6 +163,10 @@ class EcTrack extends Resource {
                 Text::make('Ele Max')->onlyOnDetail(),
                 Text::make('Ele Min')->onlyOnDetail(),
             ],
+            'Scale' => [
+                Text::make('Difficulty'),
+                Text::make('Cai Scale')
+            ],
             'Taxonomies' => [
                 Text::make('Activities',function(){
                     if($this->taxonomyActivities()->count() >0) {
@@ -266,6 +271,15 @@ class EcTrack extends Resource {
                 Text::make('Ref'),
                 Text::make('From'),
                 Text::make('To'),
+            ],
+            'Scale' => [
+                Text::make('Difficulty'),
+                Select::make('Cai Scale')->options([
+                    'T' => 'Turistico (T)',
+                    'E' => 'Escursionistico (E)',
+                    'EE' => 'Per escursionisti esperti (EE)',
+                    'EEA' => 'Alpinistico (EEA)'
+                ]),
             ],
             'Taxonomies' => [
                 AttachMany::make('TaxonomyWheres'),
