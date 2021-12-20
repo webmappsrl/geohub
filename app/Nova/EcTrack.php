@@ -149,6 +149,7 @@ class EcTrack extends Resource {
                 })->onlyOnDetail(),
             ],
             'Info' => [
+                Text::make('Ref'),
                 Text::make('From')->onlyOnDetail(),
                 Text::make('Distance')->onlyOnDetail(),
                 Text::make('Duration Forward')->onlyOnDetail(),
@@ -261,7 +262,8 @@ class EcTrack extends Resource {
                     ->feature($geojson ?? []),
             ],
             'Info' => [
-                Text::make('From')->onlyOnForms(),
+                Text::make('Ref'),
+                Text::make('From'),
             ],
             'Taxonomies' => [
                 AttachMany::make('TaxonomyWheres'),
