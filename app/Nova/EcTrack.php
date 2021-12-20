@@ -24,6 +24,7 @@ use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
+use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 
@@ -141,6 +142,17 @@ class EcTrack extends Resource {
 
                     return $url;
                 })->withMeta(['width' => 400])->onlyOnDetail(),
+                Text::make('Related Url',function () {
+                    $out = '';
+                    if(count($this->related_url)>0){
+                        foreach($this->related_url as $label => $url) {
+                            $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
+                        }
+                    } else {
+                        $out = "No related Url";
+                    }
+                    return $out;
+                })->asHtml(),
             ],
             'Map' => [
                 WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -250,6 +262,11 @@ class EcTrack extends Resource {
                     ->onlyOnForms()
                     ->feature($geojson ?? [])
                     ->apiBaseUrl('/api/ec/track/'),
+                KeyValue::make('Related Url')
+                    ->keyLabel('Label')
+                    ->valueLabel('Url with https://')
+                    ->actionText('Add new related url')
+                    ->rules('json'),
             ],
             'Map' => [
                 File::make('Geojson')->store(function (Request $request, $model) {

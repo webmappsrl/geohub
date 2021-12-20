@@ -27,6 +27,14 @@ class EcTrackFactory extends Factory
         $lat2 = $this->faker->randomFloat(2, 11, 13);
         $lng1 = $this->faker->randomFloat(2, 42, 45);
         $lng2 = $this->faker->randomFloat(2, 42, 45);
+
+        // Build related_url
+        $num = $this->faker->numberBetween(1,3);
+        $related_url=[];
+        for ($i=1;$i<=$num;$i++) {
+            $related_url[$this->faker->slug()]=$this->faker->url();
+        }
+
         return [
             'name' => [
                 'it' => $this->faker->name(),
@@ -44,6 +52,7 @@ class EcTrackFactory extends Factory
             'to' => $this->faker->city(),
             'ref' => $this->faker->numberBetween(100,999),
             'cai_scale' => $this->faker->randomElement(['T','E','EE','EEA']),
+            'related_url' => $related_url,
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
