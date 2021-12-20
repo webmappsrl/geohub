@@ -163,8 +163,10 @@ class EcTrack extends Resource {
             ],
             'Info' => [
                 Text::make('Ref'),
-                Text::make('From')->onlyOnDetail(),
-                Text::make('To')->onlyOnDetail(),
+                Text::make('From'),
+                Text::make('To'),
+                Boolean::make('Not Accessible'),
+                Textarea::make('Not Accessible Message')->alwaysShow(),
                 Text::make('Distance')->onlyOnDetail(),
                 Text::make('Duration Forward')->onlyOnDetail(),
                 Text::make('Duration Backward')->onlyOnDetail(),
@@ -288,6 +290,9 @@ class EcTrack extends Resource {
                 Text::make('Ref'),
                 Text::make('From'),
                 Text::make('To'),
+                Boolean::make('Not Accessible'),
+                Textarea::make('Not Accessible Message')->alwaysShow(),
+
             ],
             'Scale' => [
                 Text::make('Difficulty'),

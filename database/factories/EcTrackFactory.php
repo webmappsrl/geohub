@@ -53,6 +53,8 @@ class EcTrackFactory extends Factory
             'ref' => $this->faker->numberBetween(100,999),
             'cai_scale' => $this->faker->randomElement(['T','E','EE','EEA']),
             'related_url' => $related_url,
+            'not_accessible' => $this->faker->boolean(),
+            'not_accessible_message' => $this->faker->text(100),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
             'user_id' => User::all()->random()->id,
