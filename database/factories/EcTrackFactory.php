@@ -41,6 +41,7 @@ class EcTrackFactory extends Factory
                 'en' => $this->faker->text(90),
             ],
             'from' => $this->faker->city(),
+            'to' => $this->faker->city(),
             'ref' => $this->faker->numberBetween(100,999),
             'source_id' => $this->faker->randomDigit(),
             'source' => $this->faker->text(100),
