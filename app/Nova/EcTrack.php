@@ -2,9 +2,9 @@
 
 namespace App\Nova;
 
+use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcTrack;
 use Chaseconey\ExternalImage\ExternalImage;
-use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,15 +17,21 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
-use Waynestate\Nova\CKEditor;
 use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Textarea;
 
 class EcTrack extends Resource {
+
+    use TabsOnEdit;
+
     /**
      * The model the resource corresponds to.
      *
@@ -59,82 +65,45 @@ class EcTrack extends Resource {
      * @return array
      */
     public function fields(Request $request): array {
-        try {
-            $geojson = $this->model()->getGeojson();
-        } catch (Exception $e) {
-            $geojson = [];
+
+        ///////////////////////
+        // Index (onlyOnIndex)
+        ///////////////////////
+        if(NovaCurrentResourceActionHelper::isIndex($request)) {
+            return $this->index();
         }
 
+        ///////////////////////
+        // Detail (onlyOnDetail)
+        ///////////////////////
+        if(NovaCurrentResourceActionHelper::isDetail($request)) {
+            return $this->detail();
+        }
+
+        ////////////////////////////////////////////////////////
+        // Form (onlyOnForms,hideWhenCreating,hideWhenUpdating)
+        ////////////////////////////////////////////////////////
+        if(NovaCurrentResourceActionHelper::isForm($request)) {
+            return $this->forms($request);
+        }
+
+    }
+
+
+    private function index() {
         return [
-            new Panel('Taxonomies', $this->attach_taxonomy()),
 
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->sortable(),
-                CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
-                Text::make(__('Difficulty'), 'difficulty')->sortable(),
-            ]),
+            ])->onlyOnIndex(),
 
-            //            Text::make(__('Import Method'), 'import_method'),
-            //            Text::make(__('Source ID'), 'source_id'),
-            BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            BelongsToMany::make('EcMedia')->onlyOnDetail(),
-            BelongsToMany::make('EcPois')->onlyOnDetail(),
-            EcMediaPopup::make(__('EcMedia'), 'ecMedia')
-                ->onlyOnForms()
-                ->feature($geojson ?? [])
-                ->apiBaseUrl('/api/ec/track/'),
-            Text::make(__('Source'), 'source')->onlyOnDetail(),
-            Text::make(__('Distance Comp'), 'distance_comp')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            File::make('Geojson')->store(function (Request $request, $model) {
-                $content = file_get_contents($request->geojson);
-                $geometry = $model->fileToGeometry($content);
+            BelongsTo::make('Author', 'author', User::class)->sortable()->onlyOnIndex(),
 
-                return $geometry ? [
-                    'geometry' => $geometry,
-                ] : function () {
-                    throw new Exception(__("The uploaded file is not valid"));
-                };
-            })->hideFromDetail(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            WmEmbedmapsField::make(__('Map'), 'geometry', function () {
-                return [
-                    'feature' => $this->getGeojson(),
-                ];
-            })->hideFromIndex()->hideWhenCreating()->viewOnly(),
-            FeatureImagePopup::make(__('Feature Image'), 'featureImage')
-                ->onlyOnForms()
-                ->feature($geojson ?? [])
-                ->apiBaseUrl('/api/ec/track/'),
-            Ecpoipopup::make(__('EcPoi'))
-                ->nullable()
-                ->onlyOnForms()
-                ->feature($geojson ?? []),
-            ExternalImage::make(__('Feature Image'), function () {
-                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                if ('' !== $url && substr($url, 0, 4) !== 'http') {
-                    $url = Storage::disk('public')->url($url);
-                }
+            DateTime::make(__('Created At'), 'created_at')->sortable()->onlyOnIndex(),
 
-                return $url;
-            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->onlyOnIndex(),
 
-            Text::make(__('Audio'), 'audio', function () {
-                $pathInfo = pathinfo($this->model()->audio);
-                if (isset($pathInfo['extension'])) {
-                    $mime = CONTENT_TYPE_AUDIO_MAPPING[$pathInfo['extension']];
-                } else $mime = CONTENT_TYPE_AUDIO_MAPPING['mp3'];
-
-                return $this->model()->audio ? '<audio controls><source src="' . $this->model()->audio . '" type="' . $mime . '">Your browser does not support the audio element.</audio>' : null;
-            })->asHtml()->onlyOnDetail(),
-            File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
-                $file = $request->file('audio');
-
-                return $model->uploadAudio($file);
-            })->acceptedTypes('audio/*')->onlyOnForms(),
-            Boolean::make(__('Audio'), 'audio')->onlyOnIndex(),
-            Boolean::make(__('OutSource'), function() {
+            Boolean::make(__('OS'), function() {
                 $val = false;
                 if(!is_null($this->out_source_feature_id)) {
                     $val=true;
@@ -142,46 +111,207 @@ class EcTrack extends Resource {
                 return $val;
             })->onlyOnIndex(),
 
-            Text::make('Out Source Feature', function() {
-                if(!is_null($this->out_source_feature_id)) {
-                    return $this->out_source_feature_id;
-                }
-                else {
-                    return 'No Out Source associated';
-                }
-            })->onlyOnDetail(),
-
-            Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
-                ->url(function () {
-                    return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
-                })
-                ->text(__('Open GeoJson'))
-                ->icon()
-                ->blank(),
-            
-
-            new Panel('Relations', $this->taxonomies()),
+            Link::make('GJ', 'id')
+            ->url(function () {
+                return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
+            })
+            ->text(__('Open GeoJson'))->icon()->blank()->onlyOnIndex(),
         ];
+
     }
 
-    protected function taxonomies(): array {
-        return [
-            MorphToMany::make('TaxonomyWheres'),
-            MorphToMany::make('TaxonomyActivities'),
-            MorphToMany::make('TaxonomyTargets'),
-            MorphToMany::make('TaxonomyWhens'),
-            MorphToMany::make('TaxonomyThemes'),
-        ];
-    }
+    private function detail() {
+        return [ (new Tabs("EC Track Details: {$this->name} ({$this->id})",[
+            'Main' => [
+                Text::make('Geohub ID',function (){return $this->id;})->onlyOnDetail(),
+                DateTime::make('Created At')->onlyOnDetail(),
+                DateTime::make('Updated At')->onlyOnDetail(),
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    Textarea::make(__('Excerpt'),'excerpt'),
+                    Textarea::make('Description'),
+                    ])->onlyOnDetail(),
+            ],
+            'Media' => [
+                Text::make('Audio',function () {$this->audio;})->onlyOnDetail(),
+                ExternalImage::make(__('Feature Image'), function () {
+                    $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                    if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        $url = Storage::disk('public')->url($url);
+                    }
 
-    protected function attach_taxonomy(): array {
-        return [
-            AttachMany::make('TaxonomyWheres'),
-            AttachMany::make('TaxonomyActivities'),
-            AttachMany::make('TaxonomyTargets'),
-            AttachMany::make('TaxonomyWhens'),
-            AttachMany::make('TaxonomyThemes'),
-        ];
+                    return $url;
+                })->withMeta(['width' => 400])->onlyOnDetail(),
+                Text::make('Related Url',function () {
+                    $out = '';
+                    if(count($this->related_url)>0){
+                        foreach($this->related_url as $label => $url) {
+                            $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
+                        }
+                    } else {
+                        $out = "No related Url";
+                    }
+                    return $out;
+                })->asHtml(),
+            ],
+            'Map' => [
+                WmEmbedmapsField::make(__('Map'), 'geometry', function () {
+                    return [
+                        'feature' => $this->getGeojson(),
+                    ];
+                })->onlyOnDetail(),
+            ],
+            'Info' => [
+                Text::make('Ref'),
+                Text::make('From'),
+                Text::make('To'),
+                Boolean::make('Not Accessible'),
+                Textarea::make('Not Accessible Message')->alwaysShow(),
+                Text::make('Distance')->onlyOnDetail(),
+                Text::make('Duration Forward')->onlyOnDetail(),
+                Text::make('Duration Backward')->onlyOnDetail(),
+                Text::make('Ascent')->onlyOnDetail(),
+                Text::make('Descent')->onlyOnDetail(),
+                Text::make('Ele From')->onlyOnDetail(),
+                Text::make('Ele To')->onlyOnDetail(),
+                Text::make('Ele Max')->onlyOnDetail(),
+                Text::make('Ele Min')->onlyOnDetail(),
+            ],
+            'Scale' => [
+                Text::make('Difficulty'),
+                Text::make('Cai Scale')
+            ],
+            'Taxonomies' => [
+                Text::make('Activities',function(){
+                    if($this->taxonomyActivities()->count() >0) {
+                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
+                    }
+                    return 'No activities';
+                }),
+                Text::make('Wheres',function(){
+                    if($this->taxonomyWheres()->count() >0) {
+                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
+                    }
+                    return 'No Wheres';
+                }),
+                Text::make('Themes',function(){
+                    if($this->taxonomyThemes()->count() >0) {
+                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                    }
+                    return 'No Themes';
+                }),
+                Text::make('Targets',function(){
+                    if($this->taxonomyTargets()->count() >0) {
+                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
+                    }
+                    return 'No Targets';
+                }),
+                Text::make('Whens',function(){
+                    if($this->taxonomyWhens()->count() >0) {
+                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
+                    }
+                    return 'No Whens';
+                }),
+            ],
+            'Out Source' => [
+                Text::make('Out Source Feature', function() {
+                    if(!is_null($this->out_source_feature_id)) {
+                        return $this->out_source_feature_id;
+                    }
+                    else {
+                        return 'No Out Source associated';
+                    }
+                })->onlyOnDetail(),    
+            ]
+        ]))->withToolbar()];
+
+    }
+    private function forms($request) {
+
+        try {
+            $geojson = $this->model()->getGeojson();
+        } catch (Exception $e) {
+            $geojson = [];
+        }
+
+        $tab_title = "New EC Track";
+        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+            $tab_title = "EC Track Edit: {$this->name} ({$this->id})";
+        }
+
+        return [(new Tabs($tab_title,[
+            'Main' => [
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    Textarea::make(__('Excerpt'),'excerpt'),
+                    Textarea::make('Description'),
+                    ])->onlyOnForms(),
+            ],
+            'Media' => [
+
+                File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                    $file = $request->file('audio');
+
+                    return $model->uploadAudio($file);
+                })->acceptedTypes('audio/*')->onlyOnForms(),
+
+                FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                    ->onlyOnForms()
+                    ->feature($geojson ?? [])
+                    ->apiBaseUrl('/api/ec/track/'),
+
+                EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                    ->onlyOnForms()
+                    ->feature($geojson ?? [])
+                    ->apiBaseUrl('/api/ec/track/'),
+                KeyValue::make('Related Url')
+                    ->keyLabel('Label')
+                    ->valueLabel('Url with https://')
+                    ->actionText('Add new related url')
+                    ->rules('json'),
+            ],
+            'Map' => [
+                File::make('Geojson')->store(function (Request $request, $model) {
+                    $content = file_get_contents($request->geojson);
+                    $geometry = $model->fileToGeometry($content);
+
+                    return $geometry ? [
+                        'geometry' => $geometry,
+                    ] : function () {
+                        throw new Exception(__("The uploaded file is not valid"));
+                    };
+                })->onlyOnForms(),
+                Ecpoipopup::make(__('EcPoi'))
+                    ->nullable()
+                    ->onlyOnForms()
+                    ->feature($geojson ?? []),
+            ],
+            'Info' => [
+                Text::make('Ref'),
+                Text::make('From'),
+                Text::make('To'),
+                Boolean::make('Not Accessible'),
+                Textarea::make('Not Accessible Message')->alwaysShow(),
+
+            ],
+            'Scale' => [
+                Text::make('Difficulty'),
+                Select::make('Cai Scale')->options([
+                    'T' => 'Turistico (T)',
+                    'E' => 'Escursionistico (E)',
+                    'EE' => 'Per escursionisti esperti (EE)',
+                    'EEA' => 'Alpinistico (EEA)'
+                ]),
+            ],
+            'Taxonomies' => [
+                AttachMany::make('TaxonomyWheres'),
+                AttachMany::make('TaxonomyActivities'),
+                AttachMany::make('TaxonomyTargets'),
+                AttachMany::make('TaxonomyWhens'),
+                AttachMany::make('TaxonomyThemes'),
+                ],
+        ]))];
+
     }
 
     /**
