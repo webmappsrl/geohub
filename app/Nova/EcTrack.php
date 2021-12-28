@@ -62,6 +62,11 @@ class EcTrack extends Resource {
      */
     public static $searchRelations = [
         'author' => ['name', 'email'],
+        'taxonomyActivities' => ['name'],
+        'taxonomyWheres' => ['name'],
+        'taxonomyTargets' => ['name'],
+        'taxonomyWhens' => ['name'],
+        'taxonomyThemes' => ['name'],
     ];
 
     public static function group() {
