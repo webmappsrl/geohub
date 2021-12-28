@@ -5,7 +5,6 @@ namespace App\Nova;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
-use ElevateDigital\CharcountedFields\TextareaCounted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
@@ -13,6 +12,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
@@ -58,7 +58,7 @@ class TaxonomyWhen extends Resource {
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->sortable(),
                 CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+                Textarea::make(__('Excerpt'), 'excerpt')->hideFromIndex()->withMeta(['maxlength' => '255']),
             ]),
 
             Text::make(__('Identifier'), 'identifier'),

@@ -11,10 +11,12 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class UgcMediaStoreTest extends TestCase {
+class UgcMediaStoreTest extends TestCase
+{
     use RefreshDatabase, WithFaker;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -23,13 +25,8 @@ class UgcMediaStoreTest extends TestCase {
         });
     }
 
-    /**
-     * @test
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function check_that_call_api_to_store_ugc_media_for_authenticated_user() {
+    public function test_that_call_api_to_store_ugc_media_for_authenticated_user()
+    {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
@@ -59,6 +56,12 @@ class UgcMediaStoreTest extends TestCase {
             'geometry' => $geometry
         ];
 
+        $this->mock(HoquServiceProvider::class, function ($mock) {
+            $mock->shouldReceive('store')
+                ->atLeast(1)
+                ->andReturn(201);
+        });
+
         $response = $this->postJson(route("api.ugc.media.store"), [
             'geojson' => json_encode($geojson),
             'image' => $uploadedFile
@@ -78,10 +81,8 @@ class UgcMediaStoreTest extends TestCase {
         Storage::disk('public')->delete($media->relative_url);
     }
 
-    /**
-     * @test
-     */
-    public function check_that_if_the_api_is_called_without_access_token_it_responds_401() {
+    public function test_that_if_the_api_is_called_without_access_token_it_responds_401()
+    {
         $app_id = 'it.webmapp.test';
         $data = [
             'app_id' => $app_id,
@@ -92,7 +93,8 @@ class UgcMediaStoreTest extends TestCase {
         $response->assertStatus(401);
     }
 
-    public function test_for_authenticated_user_with_missing_name_and_description() {
+    public function test_for_authenticated_user_with_missing_name_and_description()
+    {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [

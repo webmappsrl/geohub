@@ -133,6 +133,8 @@ Route::name('api.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
+            Route::get("/download/{id}", [UgcMediaController::class, 'download'])->name('download');
+            Route::post("/update/{id}", [UgcMediaController::class, 'update'])->name('update');
         });
     });
 

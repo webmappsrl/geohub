@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Web;
 
 use App\Models\EcTrack;
 use App\Models\EcMedia;
@@ -11,10 +11,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class TrackSharePageTest extends TestCase {
+class TrackSharePageTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -22,11 +24,12 @@ class TrackSharePageTest extends TestCase {
                 ->andReturn(201);
         });
     }
-    
+
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_not_existing_id_then_it_returns_404() {
+    public function when_visitor_access_to_track_with_not_existing_id_then_it_returns_404()
+    {
         EcTrack::truncate();
         $track = EcTrack::factory()->create();
         $response = $this->get('/track/' . (intval($track->id) + 1));
@@ -36,7 +39,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_existing_id_then_it_returns_200() {
+    public function when_visitor_access_to_track_with_existing_id_then_it_returns_200()
+    {
         $track = EcTrack::factory()->create();
         $response = $this->get('/track/' . $track->id);
         $response->assertStatus(200);
@@ -45,7 +49,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_then_the_title_is_correct() {
+    public function when_visitor_access_to_track_then_the_title_is_correct()
+    {
         $track = EcTrack::factory()->create();
         $response = $this->get('/track/' . $track->id);
         $response->assertSee($track->name);
@@ -54,7 +59,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_feature_image_then_feature_image_is_correct() {
+    public function when_visitor_access_to_track_with_feature_image_then_feature_image_is_correct()
+    {
         $m = EcMedia::factory()->frontEndSizes()->create();
         $t = EcTrack::factory()->create([
             'feature_image' => $m->id
@@ -66,7 +72,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_feature_image_then_it_returns_200() {
+    public function when_visitor_access_to_track_without_feature_image_then_it_returns_200()
+    {
         $t = EcTrack::factory()->create([
             'feature_image' => null
         ]);
@@ -77,7 +84,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_feature_image_then_feature_image_is_placeholder() {
+    public function when_visitor_access_to_track_without_feature_image_then_feature_image_is_placeholder()
+    {
         $t = EcTrack::factory()->create([
             'feature_image' => null
         ]);
@@ -89,7 +97,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_taxonomy_wheres_then_taxonomies_are_correct() {
+    public function when_visitor_access_to_track_with_taxonomy_wheres_then_taxonomies_are_correct()
+    {
         $tax1 = TaxonomyWhere::factory()->create();
         $tax2 = TaxonomyWhere::factory()->create();
         $t = EcTrack::factory()->create();
@@ -102,7 +111,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_taxonomy_wheres_then_it_returns_200() {
+    public function when_visitor_access_to_track_without_taxonomy_wheres_then_it_returns_200()
+    {
         $t = EcTrack::factory()->create();
         if ($t->taxonomyWheres()->count() > 0) {
             foreach ($t->taxonomyWheres() as $tax) {
@@ -116,7 +126,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_taxonomy_wheres_then_div_class_taxonomyWheres_does_not_exists() {
+    public function when_visitor_access_to_track_without_taxonomy_wheres_then_div_class_taxonomyWheres_does_not_exists()
+    {
         $t = EcTrack::factory()->create();
         if ($t->taxonomyWheres()->count() > 0) {
             foreach ($t->taxonomyWheres() as $tax) {
@@ -130,7 +141,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_taxonomy_activities_then_taxonomies_are_correct() {
+    public function when_visitor_access_to_track_with_taxonomy_activities_then_taxonomies_are_correct()
+    {
         $tax1 = TaxonomyActivity::factory()->create();
         $tax2 = TaxonomyActivity::factory()->create();
         $t = EcTrack::factory()->create();
@@ -143,7 +155,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_taxonomy_activities_then_it_returns_200() {
+    public function when_visitor_access_to_track_without_taxonomy_activities_then_it_returns_200()
+    {
         $t = EcTrack::factory()->create();
         if ($t->taxonomyActivities()->count() > 0) {
             foreach ($t->taxonomyActivities() as $tax) {
@@ -157,7 +170,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_taxonomy_activities_then_div_id_taxonomyActivities_does_not_exist() {
+    public function when_visitor_access_to_track_without_taxonomy_activities_then_div_id_taxonomyActivities_does_not_exist()
+    {
         $t = EcTrack::factory()->create();
         if ($t->taxonomyActivities()->count() > 0) {
             foreach ($t->taxonomyActivities() as $tax) {
@@ -171,7 +185,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_taxonomy_activity_with_icon_then_icon_is_correct() {
+    public function when_visitor_access_to_track_with_taxonomy_activity_with_icon_then_icon_is_correct()
+    {
         $tax1 = TaxonomyActivity::factory()->create([
             'icon' => 'webmapp-icon-bike',
         ]);
@@ -188,7 +203,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_taxonomy_activities_without_icon_then_status_200_and_class_activityIcon_does_not_exists() {
+    public function when_visitor_access_to_track_with_taxonomy_activities_without_icon_then_status_200_and_class_activityIcon_does_not_exists()
+    {
         $tax1 = TaxonomyActivity::factory()->create();
         $tax2 = TaxonomyActivity::factory()->create();
         $t = EcTrack::factory()->create();
@@ -201,7 +217,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_description_then_description_is_correct() {
+    public function when_visitor_access_to_track_with_description_then_description_is_correct()
+    {
         $t = EcTrack::factory()->create();
         $r = $this->get('/track/' . $t->id);
         $r->assertSee($t->description);
@@ -210,7 +227,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_description_then_it_returns_200() {
+    public function when_visitor_access_to_track_without_description_then_it_returns_200()
+    {
         $t = EcTrack::factory()->create([
             'description' => null,
         ]);
@@ -221,7 +239,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_description_then_div_id_trackDescription_does_not_exists() {
+    public function when_visitor_access_to_track_without_description_then_div_id_trackDescription_does_not_exists()
+    {
         $t = EcTrack::factory()->create([
             'description' => null,
         ]);
@@ -232,7 +251,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_track_details_then_details_are_correct() {
+    public function when_visitor_access_to_track_with_track_details_then_details_are_correct()
+    {
         $t = EcTrack::factory()->create();
         $r = $this->get('/track/' . $t->id);
         $r->assertSee($t->distance . 'km');
@@ -247,7 +267,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_track_details_then_class_trackDetails_does_not_exists() {
+    public function when_visitor_access_to_track_without_track_details_then_class_trackDetails_does_not_exists()
+    {
         $t = EcTrack::factory()->create([
             'distance' => null,
             'ascent' => null,
@@ -264,7 +285,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_with_gallery_then_gallery_images_are_correct() {
+    public function when_visitor_access_to_track_with_gallery_then_gallery_images_are_correct()
+    {
         $media1 = EcMedia::factory()->frontEndSizes()->create();
         $media2 = EcMedia::factory()->frontEndSizes()->create();
         $t = EcTrack::factory()->create();
@@ -279,7 +301,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_gallery_then_it_returns_200() {
+    public function when_visitor_access_to_track_without_gallery_then_it_returns_200()
+    {
         $t = EcTrack::factory()->create();
         $r = $this->get('/track/' . $t->id);
         $r->assertStatus(200);
@@ -288,7 +311,8 @@ class TrackSharePageTest extends TestCase {
     /**
      * @test
      */
-    public function when_visitor_access_to_track_without_gallery_then_div_id_carousel_does_not_exist() {
+    public function when_visitor_access_to_track_without_gallery_then_div_id_carousel_does_not_exist()
+    {
         $t = EcTrack::factory()->create();
         $r = $this->get('/track/' . $t->id);
         $r->assertDontSee('carousel');

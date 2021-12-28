@@ -20,6 +20,8 @@ class RegenerateEcTrack extends Action
     public $showOnDetail = true;
     public $showOnTableRow = true;
 
+    public $name='GEOMIXER';
+
     /**
      * Perform the action on the given models.
      *

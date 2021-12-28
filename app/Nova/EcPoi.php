@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use Chaseconey\ExternalImage\ExternalImage;
-use ElevateDigital\CharcountedFields\TextareaCounted;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -71,7 +70,7 @@ class EcPoi extends Resource {
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->required()->sortable(),
                 CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
+                Textarea::make(__('Excerpt'), 'excerpt')->hideFromIndex(),
             ]),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             BelongsToMany::make('EcMedia'),
