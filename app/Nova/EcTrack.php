@@ -160,7 +160,7 @@ class EcTrack extends Resource {
                 })->withMeta(['width' => 400])->onlyOnDetail(),
                 Text::make('Related Url',function () {
                     $out = '';
-                    if(count($this->related_url)>0){
+                    if(is_array($this->related_url) && count($this->related_url)>0){
                         foreach($this->related_url as $label => $url) {
                             $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
                         }
