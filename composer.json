@@ -39,7 +39,7 @@
     "spatie/laravel-translatable": "^4.6",
     "spatie/nova-translatable": "^3.0",
     "suenerds/nova-searchable-belongs-to-filter": "^1.0",
-    "titasgailius/search-relations": "^1.0",
+    "titasgailius/search-relations": "^2.0",
     "tsungsoft/error-message": "^0.0.3",
     "tymon/jwt-auth": "^1.0",
     "vyuldashev/nova-permission": "^2.11",

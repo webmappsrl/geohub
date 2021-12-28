@@ -27,10 +27,12 @@ use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
+use Titasgailius\SearchRelations\SearchesRelations;
+
 
 class EcTrack extends Resource {
 
-    use TabsOnEdit;
+    use TabsOnEdit, SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -51,6 +53,15 @@ class EcTrack extends Resource {
      */
     public static $search = [
         'name',
+    ];
+
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'author' => ['name', 'email'],
     ];
 
     public static function group() {
@@ -333,7 +344,8 @@ class EcTrack extends Resource {
      * @return array
      */
     public function filters(Request $request): array {
-        return [];
+        return [
+        ];
     }
 
     /**

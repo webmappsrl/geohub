@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b381f80fd505b6217ff4c9713d3dc5f",
+    "content-hash": "79b873d33dbd9f666505cdf3a240788a",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -8084,16 +8084,16 @@
         },
         {
             "name": "titasgailius/search-relations",
-            "version": "1.0.6",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TitasGailius/nova-search-relations.git",
-                "reference": "ac999c8d3230573fe5bb81f50cbabfaa62da26c0"
+                "reference": "46b9e83ccc91feff22b19c285b8a29bf7ca44f6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TitasGailius/nova-search-relations/zipball/ac999c8d3230573fe5bb81f50cbabfaa62da26c0",
-                "reference": "ac999c8d3230573fe5bb81f50cbabfaa62da26c0",
+                "url": "https://api.github.com/repos/TitasGailius/nova-search-relations/zipball/46b9e83ccc91feff22b19c285b8a29bf7ca44f6f",
+                "reference": "46b9e83ccc91feff22b19c285b8a29bf7ca44f6f",
                 "shasum": ""
             },
             "require": {
@@ -8118,9 +8118,9 @@
             ],
             "support": {
                 "issues": "https://github.com/TitasGailius/nova-search-relations/issues",
-                "source": "https://github.com/TitasGailius/nova-search-relations/tree/1.0.6"
+                "source": "https://github.com/TitasGailius/nova-search-relations/tree/2.0.1"
             },
-            "time": "2020-10-09T09:25:10+00:00"
+            "time": "2021-07-16T15:55:13+00:00"
         },
         {
             "name": "tsungsoft/error-message",
@@ -8509,7 +8509,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/0.3.02.pec.0.1.06",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -8545,7 +8545,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/0.3.02.pec.0.1.06",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -8581,7 +8581,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/0.3.02.pec.0.1.06",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -8617,7 +8617,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/0.3.02.pec.0.1.06",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -8653,7 +8653,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/0.3.02.pec.0.1.06",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
