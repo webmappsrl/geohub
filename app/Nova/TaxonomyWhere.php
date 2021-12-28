@@ -2,15 +2,20 @@
 
 namespace App\Nova;
 
+use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
-use ElevateDigital\CharcountedFields\TextareaCounted;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
@@ -19,8 +24,10 @@ use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Tsungsoft\ErrorMessage\ErrorMessage;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
 
 class TaxonomyWhere extends Resource {
+    use TabsOnEdit;
     /**
      * The model the resource corresponds to.
      *
@@ -56,24 +63,31 @@ class TaxonomyWhere extends Resource {
      * @return array
      */
     public function fields(Request $request): array {
+
+        if(NovaCurrentResourceActionHelper::isIndex($request)) {
+            return $this->index();
+        }
+
+        if(NovaCurrentResourceActionHelper::isDetail($request)) {
+            return $this->detail();
+        }
+
+        if(NovaCurrentResourceActionHelper::isForm($request)) {
+            return $this->form($request);
+        }
+
         return [
             ErrorMessage::make('Error'),
 
-            NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')->sortable(),
-                CKEditor::make(__('Description'), 'description')->hideFromIndex(),
-                TextareaCounted::make(__('Excerpt'), 'excerpt')->hideFromIndex()->maxChars(255)->warningAt(200)->withMeta(['maxlength' => '255']),
-            ]),
-
-            Text::make(__('Identifier'), 'identifier'),
-            BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Swatches::make('Color'),
             Number::make('Zindex')->hideFromIndex(),
             NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
+
             Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
             Number::make(__('Admin level'), 'admin_level')->sortable()->hideFromIndex(),
+
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -83,39 +97,129 @@ class TaxonomyWhere extends Resource {
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating()->hideFromIndex(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                 ];
             })->onlyOnDetail(),
-
-            new Panel('UX/UI', $this->ux_ui_panel()),
-
         ];
     }
 
-    protected function ux_ui_panel() {
+    private function index() {
         return [
-            NovaSliderField::make(__('Stroke Width'), 'stroke_width')->min(0.5)->max(10)->default(2.5)->interval(0.5)->onlyOnForms(),
-            NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(0)->max(1)->default(0)->interval(0.01)->onlyOnForms(),
-            Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator')->hideFromIndex(),
-            NovaSliderField::make(__('Min Visible Zoom'), 'min_visible_zoom')->min(5)->max(19)->default(5)->onlyOnForms(),
-            NovaSliderField::make(__('Max Size Zoom'), 'min_size_zoom')->min(5)->max(19)->default(15)->onlyOnForms(),
-            NovaSliderField::make(__('Min Size'), 'min_size')->min(0.1)->max(4)->default(1)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Max Size'), 'max_size')->min(0.1)->max(4)->default(2)->interval(0.1)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Zoom'), 'icon_zoom')->min(5)->max(19)->default(15)->onlyOnForms(),
-            NovaSliderField::make(__('Icon Size'), 'icon_size')->min(0.1)->max(4)->default(01.7)->interval(0.1)->onlyOnForms(),
 
-            Number::make(__('Stroke Width'), 'stroke_width')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Stroke Opacity'), 'stroke_opacity')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Min Visible Zoom'), 'min_visible_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Max Size Zoom'), 'min_size_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Min Size'), 'min_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Max Size'), 'max_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Icon Zoom'), 'icon_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Icon Size'), 'icon_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name'),
+            ]),
+            Text::make(__('Identifier'), 'identifier'),
+            BelongsTo::make('Author', 'author', User::class)->sortable(),
+            DateTime::make(__('Created At'), 'created_at')->sortable(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable(),
         ];
+    }
+
+    private function detail() {
+        return [(new Tabs("Taxnonomy Where Details: {$this->name} ($this->id)",
+        [
+            'Main' => [
+                Text::make('Geohub ID',function(){return $this->id;}),
+                Text::make(__('Identifier'), 'identifier'),
+                BelongsTo::make('Author', 'author', User::class),
+                DateTime::make(__('Created At'), 'created_at'),
+                DateTime::make(__('Updated At'), 'updated_at'),        
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    CKEditor::make(__('Description'), 'description'),
+                    Textarea::make(__('Excerpt'), 'excerpt'),
+                ]),     
+            ],
+            'Media' => [
+                BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class),
+                ExternalImage::make(__('Feature Image'), function () {
+                    $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                    if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        $url = Storage::disk('public')->url($url);
+                    }
+    
+                    return $url;
+                })->withMeta(['width' => 200]),    
+            ],
+            'Map' => [
+                WmEmbedmapsField::make(__('Map'), function ($model) {
+                    return [
+                        'feature' => $model->getGeojson(),
+                    ];
+                }),    
+            ],
+            'Style' => [
+                Number::make(__('Stroke Width'), 'stroke_width'),
+                Number::make(__('Stroke Opacity'), 'stroke_opacity'),
+                Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator'),
+                Number::make(__('Min Visible Zoom'), 'min_visible_zoom'),
+                Number::make(__('Max Size Zoom'), 'min_size_zoom'),
+                Number::make(__('Min Size'), 'min_size'),
+                Number::make(__('Max Size'), 'max_size'),
+                Number::make(__('Icon Zoom'), 'icon_zoom'),
+                Number::make(__('Icon Size'), 'icon_size'),
+            ]
+        ]
+        ))->withToolbar()];
+    }
+
+    private function form($request) {
+
+        try {
+            $geojson = $this->model()->getGeojson();
+        } catch (Exception $e) {
+            $geojson = [];
+        }
+
+        $tab_title = "New Taxonomy Where";
+        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+            $tab_title = "Taxonomy Where Edit: {$this->name} ({$this->id})";
+        }
+
+        return [(new Tabs($tab_title,
+        [
+            'Main' => [
+                Text::make(__('Identifier'), 'identifier'),
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    CKEditor::make(__('Description'), 'description'),
+                    Textarea::make(__('Excerpt'), 'excerpt'),
+                ]),     
+            ],
+            'Media' => [
+                FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                ->onlyOnForms()
+                ->feature($geojson ?? [])
+                ->apiBaseUrl('/api/ec/track/'),
+
+            ],
+            'Map' => [
+                File::make('Geojson')->store(function (Request $request, $model) {
+                    $content = file_get_contents($request->geojson);
+                    $geometry = $model->fileToGeometry($content);
+
+                    return $geometry ? [
+                        'geometry' => $geometry,
+                    ] : function () {
+                        throw new Exception(__("The uploaded file is not valid"));
+                    };
+                }),
+            ],
+            'Style' => [
+                Number::make(__('Stroke Width'), 'stroke_width'),
+                Number::make(__('Stroke Opacity'), 'stroke_opacity'),
+                Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator'),
+                Number::make(__('Min Visible Zoom'), 'min_visible_zoom'),
+                Number::make(__('Max Size Zoom'), 'min_size_zoom'),
+                Number::make(__('Min Size'), 'min_size'),
+                Number::make(__('Max Size'), 'max_size'),
+                Number::make(__('Icon Zoom'), 'icon_zoom'),
+                Number::make(__('Icon Size'), 'icon_size'),
+        ]]
+        ))->withToolbar()];
     }
 
     /**

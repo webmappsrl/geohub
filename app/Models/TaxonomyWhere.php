@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\GeoJsonHelper;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,11 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
+use Symm\Gisconverter\Exceptions\InvalidText;
+use Symm\Gisconverter\Gisconverter;
 
 /**
  * Class TaxonomyWhere
@@ -184,4 +188,48 @@ class TaxonomyWhere extends Model {
 
         return array_map('floatval', explode(' ', $bboxString));
     }
+
+
+    /**
+     * @param string json encoded geometry.
+     */
+    public function fileToGeometry($fileContent = '') {
+        $geometry = $contentType = null;
+        if ($fileContent) {
+            if (substr($fileContent, 0, 5) == "<?xml") {
+                $geojson = '';
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::gpxToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
+                }
+
+                if ('' === $geojson) {
+                    try {
+                        $geojson = Gisconverter::kmlToGeojson($fileContent);
+                        $content = json_decode($geojson);
+                        $contentType = @$content->type;
+                    } catch (InvalidText $ec) {
+                    }
+                }
+            } else {
+                $fileContent = GeoJsonHelper::convertCollectionToFirstFeature($fileContent);
+                $fileContent = GeoJsonHelper::convertPolygonToMultiPolygon($fileContent);
+                $content = json_decode($fileContent);
+                $isJson = json_last_error() === JSON_ERROR_NONE;
+                if ($isJson) {
+                    $contentType = $content->type;
+                }
+            }
+            $contentGeometry = $content->geometry;
+            $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "'))");
+
+        }
+
+        return $geometry;
+    }
+
 }
