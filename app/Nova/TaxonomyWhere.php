@@ -47,8 +47,6 @@ class TaxonomyWhere extends Resource {
      */
     public static $search = [
         'name',
-        'admin_level',
-        'author'
     ];
 
     public static function group() {
