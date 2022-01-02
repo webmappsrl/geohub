@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c674a4abe66772ae8c32621697263157",
+    "content-hash": "0835c756e45d59beb09b3102fc248567",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -807,6 +807,60 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.1"
             },
             "time": "2021-08-13T13:06:58+00:00"
+        },
+        {
+            "name": "digital-creative/nova-mega-filter",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dcasia/nova-mega-filter.git",
+                "reference": "faa396321e5de26926fd00a7a386451252291380"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dcasia/nova-mega-filter/zipball/faa396321e5de26926fd00a7a386451252291380",
+                "reference": "faa396321e5de26926fd00a7a386451252291380",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": "^3.17.0",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DigitalCreative\\MegaFilter\\MegaFilterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DigitalCreative\\MegaFilter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rafael Milewski"
+                }
+            ],
+            "description": "Allows you to control the columns and filters shown on your nova resources.",
+            "keywords": [
+                "big-filter",
+                "columns",
+                "filter",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/dcasia/nova-mega-filter/issues",
+                "source": "https://github.com/dcasia/nova-mega-filter/tree/v0.6.0"
+            },
+            "time": "2021-09-20T02:06:58+00:00"
         },
         {
             "name": "dillingham/nova-attach-many",
@@ -8561,7 +8615,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/0.3.04",
+            "version": "dev-feature/0.3.05",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -8597,7 +8651,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/0.3.04",
+            "version": "dev-feature/0.3.05",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -8633,7 +8687,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/0.3.04",
+            "version": "dev-feature/0.3.05",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -8669,7 +8723,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/0.3.04",
+            "version": "dev-feature/0.3.05",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -8705,7 +8759,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/0.3.04",
+            "version": "dev-feature/0.3.05",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",

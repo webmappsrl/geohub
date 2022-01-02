@@ -19,6 +19,7 @@
     "christiankuri/laravel-favorite": "^1.4",
     "cloudcake/nova-fixed-bars": "^1.1",
     "davidpiesse/nova-toggle": "^0.0.8",
+    "digital-creative/nova-mega-filter": "^0.6.0",
     "dillingham/nova-attach-many": "^1.3",
     "elasticsearch/elasticsearch": "^7.15",
     "eminiarts/nova-tabs": "^1.4",

@@ -31,11 +31,14 @@ use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 use Titasgailius\SearchRelations\SearchesRelations;
-
+use DigitalCreative\MegaFilter\MegaFilter;
+use DigitalCreative\MegaFilter\Column;
+use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 
 class EcTrack extends Resource {
 
     use TabsOnEdit, SearchesRelations;
+    use HasMegaFilterTrait;
 
     /**
      * The model the resource corresponds to.
@@ -112,29 +115,19 @@ class EcTrack extends Resource {
     private function index() {
         return [
 
-            NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')->sortable(),
-            ])->onlyOnIndex(),
+            Text::make('Name', 'name')->sortable(),
 
-            BelongsTo::make('Author', 'author', User::class)->sortable()->onlyOnIndex(),
+            BelongsTo::make('Author', 'author', User::class)->sortable(),
 
-            DateTime::make(__('Created At'), 'created_at')->sortable()->onlyOnIndex(),
+            DateTime::make(__('Created At'), 'created_at')->sortable(),
 
-            DateTime::make(__('Updated At'), 'updated_at')->sortable()->onlyOnIndex(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable(),
 
-            Boolean::make(__('OS'), function() {
-                $val = false;
-                if(!is_null($this->out_source_feature_id)) {
-                    $val=true;
-                }
-                return $val;
-            })->onlyOnIndex(),
+            Text::make('Geojson',function () {
+                return '<a href="'.url('api.ec.track.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
+            })->asHtml(),
 
-            Link::make('GJ', 'id')
-            ->url(function () {
-                return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
-            })
-            ->text(__('Open GeoJson'))->icon()->blank()->onlyOnIndex(),
+//                return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
         ];
 
     }
@@ -343,6 +336,14 @@ class EcTrack extends Resource {
      */
     public function cards(Request $request): array {
         return [
+            MegaFilter::make([
+                'columns' => [
+                    Column::make('Name')->permanent(),
+                    Column::make('Author'),
+                    Column::make('Created At'),
+                    Column::make('Updated At'),
+                ]
+            ]),
             (new EcTracksTotalValue()),
             (new EcTracksNewValue()),
             (new EcTracksMyValue()),
