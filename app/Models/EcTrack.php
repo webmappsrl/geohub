@@ -107,6 +107,10 @@ class EcTrack extends Model {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function uploadAudio($file) {
         $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
         $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;

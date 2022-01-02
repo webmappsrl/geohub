@@ -34,6 +34,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 
 class EcTrack extends Resource {
 
@@ -124,10 +125,8 @@ class EcTrack extends Resource {
             DateTime::make(__('Updated At'), 'updated_at')->sortable(),
 
             Text::make('Geojson',function () {
-                return '<a href="'.url('api.ec.track.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
+                return '<a href="'.route('api.ec.track.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
             })->asHtml(),
-
-//                return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
         ];
 
     }
@@ -359,6 +358,7 @@ class EcTrack extends Resource {
      */
     public function filters(Request $request): array {
         return [
+           // (new NovaSearchableBelongsToFilter('User'))->fieldAttribute('user')->filterBy('user_id'),
         ];
     }
 
