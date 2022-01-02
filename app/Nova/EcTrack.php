@@ -326,6 +326,7 @@ class EcTrack extends Resource {
                 AttachMany::make('TaxonomyWhens'),
                 AttachMany::make('TaxonomyThemes'),
                 ],
+                
         ]))];
 
     }

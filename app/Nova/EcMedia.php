@@ -2,23 +2,31 @@
 
 namespace App\Nova;
 
+use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcMedia;
 use Chaseconey\ExternalImage\ExternalImage;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
+use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class EcMedia extends Resource
 {
+
+    use TabsOnEdit;
     /**
      * The model the resource corresponds to.
      *
@@ -54,6 +62,19 @@ class EcMedia extends Resource
      */
     public function fields(Request $request): array
     {
+        if(NovaCurrentResourceActionHelper::isIndex($request)) {
+            return $this->index();
+        }
+
+        if(NovaCurrentResourceActionHelper::isDetail($request)) {
+            return $this->detail();
+        }
+
+        if(NovaCurrentResourceActionHelper::isForm($request)) {
+            return $this->form($request);
+        }
+
+        
         $fields = [
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->sortable(),
@@ -64,13 +85,6 @@ class EcMedia extends Resource
             Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
-            Text::make('Url', function () {
-                $url = $this->model()->url;
-                if (substr($url, 0, 4) !== 'http')
-                    $url = Storage::disk('public')->url($url);
-
-                return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
-            })->asHtml(),
             ExternalImage::make('Image', function () {
                 $url = $this->model()->url;
                 if (substr($url, 0, 4) !== 'http')
@@ -100,6 +114,183 @@ class EcMedia extends Resource
         }
 
         return $fields;
+    }
+
+
+    private function index() {
+        return [
+            ExternalImage::make('Image', function () {
+                $url = $this->model()->url;
+                if (substr($url, 0, 4) !== 'http')
+                    $url = Storage::disk('public')->url($url);
+
+                return $url;
+            })->withMeta(['width' => 100]),
+
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name'),
+            ]),
+            BelongsTo::make('Author', 'author', User::class)->sortable(),
+            Date::make(__('Created At'), 'created_at')->sortable(),
+            Date::make(__('Updated At'), 'updated_at')->sortable(),
+            Text::make('Url', function () {
+                $url = $this->model()->url;
+                if (substr($url, 0, 4) !== 'http')
+                    $url = Storage::disk('public')->url($url);
+
+                return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
+            })->asHtml(),
+            Link::make('GJ', 'id')
+                ->url(function () {
+                    return isset($this->id) ? route('api.ec.media.geojson', ['id' => $this->id]) : '';
+                })
+                ->text(__('Open GeoJson'))
+                ->icon()
+                ->blank(),
+        ];
+    }
+
+    private function detail() {
+        return [(new Tabs("Taxnonomy Where Details: {$this->name} ($this->id)",
+        [
+            'Main' => [
+                Text::make('Geohub ID',function(){return $this->id;}),
+                BelongsTo::make('Author', 'author', User::class),
+                DateTime::make(__('Created At'), 'created_at'),
+                DateTime::make(__('Updated At'), 'updated_at'),        
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    Textarea::make(__('Description'), 'description'),
+                    Textarea::make(__('Excerpt'), 'excerpt'),
+                ]),     
+            ],
+            'Images' => $this->getImages(),
+            'Map' => [
+                WmEmbedmapsField::make(__('Map'), function ($model) {
+                    return [
+                        'feature' => $model->getGeojson(),
+                    ];
+                }),    
+            ],
+            'Taxonomies' => [
+                Text::make('Activities',function(){
+                    if($this->taxonomyActivities()->count() >0) {
+                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
+                    }
+                    return 'No activities';
+                }),
+                Text::make('Wheres',function(){
+                    if($this->taxonomyWheres()->count() >0) {
+                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
+                    }
+                    return 'No Wheres';
+                }),
+                Text::make('Themes',function(){
+                    if($this->taxonomyThemes()->count() >0) {
+                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                    }
+                    return 'No Themes';
+                }),
+                Text::make('Targets',function(){
+                    if($this->taxonomyTargets()->count() >0) {
+                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
+                    }
+                    return 'No Targets';
+                }),
+                Text::make('Whens',function(){
+                    if($this->taxonomyWhens()->count() >0) {
+                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
+                    }
+                    return 'No Whens';
+                }),
+            ],
+
+        ]
+        ))->withToolbar()];
+    }
+    private function form($request) {
+
+        try {
+            $geojson = $this->model()->getGeojson();
+        } catch (Exception $e) {
+            $geojson = null;
+        }
+
+
+        $tab_title = "New EC Media";
+        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+            $tab_title = "EC Media Edit: {$this->name} ({$this->id})";
+        }
+
+        return [(new Tabs($tab_title,
+        [
+            'Main' => [
+                NovaTabTranslatable::make([
+                    Text::make(__('Name'), 'name'),
+                    Textarea::make(__('Description'), 'description'),
+                    Textarea::make(__('Excerpt'), 'excerpt'),
+                ]),     
+            ],
+            'Images' => [
+                Image::make('Url'),
+            ],
+            'Map' => [
+            ],
+            'Taxonomies' => [
+                AttachMany::make('TaxonomyWheres'),
+                AttachMany::make('TaxonomyActivities'),
+                AttachMany::make('TaxonomyTargets'),
+                AttachMany::make('TaxonomyWhens'),
+                AttachMany::make('TaxonomyThemes'),
+                ],
+
+
+        ]
+        ))->withToolbar(),
+        new Panel('Map / Geographical info', [
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
+                return [
+                    'feature' => $geojson,
+                ];
+            }),    
+        ]),
+
+    ];
+    }
+
+
+    private function getImages() {
+        $return = [];
+        $return[] = Text::make('Original Image', function () {
+            $url = $this->model()->url;
+            if (substr($url, 0, 4) !== 'http')
+                $url = Storage::disk('public')->url($url);
+
+            return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
+        })->asHtml();
+
+        $return[] =ExternalImage::make('Image', function () {
+            $url = $this->model()->url;
+            if (substr($url, 0, 4) !== 'http')
+                $url = Storage::disk('public')->url($url);
+
+            return $url;
+        })->withMeta(['width' => 500]);
+
+        if(isset($this->model()->thumbnails)) {
+            $thumbnails = json_decode($this->model()->thumbnails, true);
+            $fields = [];
+    
+            if (isset($thumbnails)) {
+                foreach ($thumbnails as $size => $url) {
+                    $return[] = Text::make($size, function () use ($url) {
+                        return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
+                    })->asHtml();                    
+                }
+            }
+        }
+
+        return $return; 
     }
 
     /**
