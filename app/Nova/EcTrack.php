@@ -4,6 +4,9 @@ namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcTrack;
+use App\Nova\Metrics\EcTracksMyValue;
+use App\Nova\Metrics\EcTracksNewValue;
+use App\Nova\Metrics\EcTracksTotalValue;
 use Chaseconey\ExternalImage\ExternalImage;
 use Exception;
 use Illuminate\Http\Request;
@@ -339,7 +342,11 @@ class EcTrack extends Resource {
      * @return array
      */
     public function cards(Request $request): array {
-        return [];
+        return [
+            (new EcTracksTotalValue()),
+            (new EcTracksNewValue()),
+            (new EcTracksMyValue()),
+        ];
     }
 
     /**
