@@ -235,11 +235,6 @@ class EcMedia extends Resource
                 Image::make('Url'),
             ],
             'Map' => [
-                WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
-                    return [
-                        'feature' => $geojson,
-                    ];
-                }),
             ],
             'Taxonomies' => [
                 AttachMany::make('TaxonomyWheres'),
@@ -251,7 +246,16 @@ class EcMedia extends Resource
 
 
         ]
-        ))->withToolbar()];
+        ))->withToolbar(),
+        new Panel('Map / Geographical info', [
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
+                return [
+                    'feature' => $geojson,
+                ];
+            }),    
+        ]),
+
+    ];
     }
 
 
