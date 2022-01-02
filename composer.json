@@ -27,6 +27,7 @@
     "guzzlehttp/guzzle": "^7.0.1",
     "jenssegers/agent": "^2.6",
     "khalin/nova-link-field": "^1.2",
+    "kirschbaum-development/nova-inline-relationship": "^0.3.0",
     "kongulov/nova-tab-translatable": "^1.0",
     "laravel/framework": "^8.12",
     "laravel/nova": "*",

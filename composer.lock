@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79b873d33dbd9f666505cdf3a240788a",
+    "content-hash": "c674a4abe66772ae8c32621697263157",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -2400,6 +2400,58 @@
                 "source": "https://github.com/oleghalin/nova-link-field/tree/v1.2.4"
             },
             "time": "2020-08-24T16:40:40+00:00"
+        },
+        {
+            "name": "kirschbaum-development/nova-inline-relationship",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kirschbaum-development/nova-inline-relationship.git",
+                "reference": "e1d05de11ae1271e99ba20597fb6988a0f402e3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kirschbaum-development/nova-inline-relationship/zipball/e1d05de11ae1271e99ba20597fb6988a0f402e3e",
+                "reference": "e1d05de11ae1271e99ba20597fb6988a0f402e3e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.26.2",
+                "laravel/nova": "*",
+                "mockery/mockery": "^1.1",
+                "orchestra/testing": "^4.0",
+                "phpunit/phpunit": "^8.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KirschbaumDevelopment\\NovaInlineRelationship\\NovaInlineRelationshipServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KirschbaumDevelopment\\NovaInlineRelationship\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field for displaying relationship properties inline.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/kirschbaum-development/nova-inline-relationship/issues",
+                "source": "https://github.com/kirschbaum-development/nova-inline-relationship/tree/0.3.0"
+            },
+            "time": "2020-03-05T22:07:37+00:00"
         },
         {
             "name": "kongulov/nova-tab-translatable",
@@ -8509,7 +8561,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-develop",
+            "version": "dev-feature/0.3.04",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -8545,7 +8597,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-develop",
+            "version": "dev-feature/0.3.04",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -8581,7 +8633,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-develop",
+            "version": "dev-feature/0.3.04",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -8617,7 +8669,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-develop",
+            "version": "dev-feature/0.3.04",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -8653,7 +8705,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-develop",
+            "version": "dev-feature/0.3.04",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",

@@ -47,8 +47,6 @@ class TaxonomyWhere extends Resource {
      */
     public static $search = [
         'name',
-        'admin_level',
-        'author'
     ];
 
     public static function group() {
@@ -134,7 +132,6 @@ class TaxonomyWhere extends Resource {
                 ]),     
             ],
             'Media' => [
-                BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class),
                 ExternalImage::make(__('Feature Image'), function () {
                     $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                     if ('' !== $url && substr($url, 0, 4) !== 'http') {
@@ -190,11 +187,10 @@ class TaxonomyWhere extends Resource {
                 ]),     
             ],
             'Media' => [
-                FeatureImagePopup::make(__('Feature Image'), 'featureImage')
-                ->onlyOnForms()
-                ->feature($geojson ?? [])
-                ->apiBaseUrl('/api/ec/track/'),
-
+                BelongsTo::make('Feature Image','featureImage',EcMedia::class)
+                ->searchable()
+                ->showCreateRelationButton()
+                ->nullable(),
             ],
             'Map' => [
                 File::make('Geojson')->store(function (Request $request, $model) {
@@ -218,7 +214,8 @@ class TaxonomyWhere extends Resource {
                 Number::make(__('Max Size'), 'max_size'),
                 Number::make(__('Icon Zoom'), 'icon_zoom'),
                 Number::make(__('Icon Size'), 'icon_size'),
-        ]]
+             ]
+        ]
         ))->withToolbar()];
     }
 

@@ -21,7 +21,7 @@ class EcMedia extends Model {
      * @var array
      */
     protected $fillable = ['name', 'url'];
-    public array $translatable = ['name', 'description'];
+    public array $translatable = ['name', 'description','excerpt'];
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
