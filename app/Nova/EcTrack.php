@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcTrack;
+use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -11,14 +12,12 @@ use Chaseconey\ExternalImage\ExternalImage;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use NovaAttachMany\AttachMany;
 use Webmapp\EcMediaPopup\EcMediaPopup;
@@ -34,7 +33,8 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
-use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
+
 
 class EcTrack extends Resource {
 
@@ -117,6 +117,8 @@ class EcTrack extends Resource {
         return [
 
             Text::make('Name', 'name')->sortable(),
+
+            Text::make('cai scale','cai_scale'),
 
             BelongsTo::make('Author', 'author', User::class)->sortable(),
 
@@ -338,9 +340,18 @@ class EcTrack extends Resource {
             MegaFilter::make([
                 'columns' => [
                     Column::make('Name')->permanent(),
+                    Column::make('Cai Scale')->permanent(),
                     Column::make('Author'),
                     Column::make('Created At'),
                     Column::make('Updated At'),
+                    //Column::make('Cai Scale')
+                ],
+                'filters' => [
+                    (new EcTracksCaiScaleFilter()),
+                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
+                    (new DateRangeFilter('Created at','created_at')),
+                    (new DateRangeFilter('Updated at','updated_at')),
+
                 ]
             ]),
             (new EcTracksTotalValue()),
@@ -358,7 +369,6 @@ class EcTrack extends Resource {
      */
     public function filters(Request $request): array {
         return [
-           // (new NovaSearchableBelongsToFilter('User'))->fieldAttribute('user')->filterBy('user_id'),
         ];
     }
 
