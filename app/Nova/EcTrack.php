@@ -116,9 +116,10 @@ class EcTrack extends Resource {
     private function index() {
         return [
 
-            Text::make('Name', 'name')->sortable(),
-
-            Text::make('cai scale','cai_scale'),
+            Text::make('Name', function() {
+                $name = implode('<br />',explode( "\n", wordwrap( $this->name), 50));
+                return $name.'<br />CAI scale: '.$this->cai_scale;
+            })->asHtml(),
 
             BelongsTo::make('Author', 'author', User::class)->sortable(),
 
@@ -340,7 +341,6 @@ class EcTrack extends Resource {
             MegaFilter::make([
                 'columns' => [
                     Column::make('Name')->permanent(),
-                    Column::make('Cai Scale')->permanent(),
                     Column::make('Author'),
                     Column::make('Created At'),
                     Column::make('Updated At'),
@@ -352,7 +352,41 @@ class EcTrack extends Resource {
                     (new DateRangeFilter('Created at','created_at')),
                     (new DateRangeFilter('Updated at','updated_at')),
 
-                ]
+                ],
+                'settings' => [
+
+                    /**
+                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
+                     */
+                    'columnsWidth' => 'w-1/4',
+                    'filtersWidth' => 'w-1/3',
+                    
+                    /**
+                     * The default state of the main toggle buttons
+                     */
+                    'columnsActive' => false,
+                    'filtersActive' => false,
+                    'actionsActive' => false,
+            
+                    /**
+                     * Show/Hide elements
+                     */
+                    'showHeader' => true,
+                    
+                    /**
+                     * Labels
+                     */
+                    'headerLabel' => 'Columns and Filters',
+                    'columnsLabel' => 'Columns',
+                    'filtersLabel' => 'Filters',
+                    'actionsLabel' => 'Actions',
+                    'columnsSectionTitle' => 'Additional Columns',
+                    'filtersSectionTitle' => 'Filters',
+                    'actionsSectionTitle' => 'Actions',
+                    'columnsResetLinkTitle' => 'Reset Columns',
+                    'filtersResetLinkTitle' => 'Reset Filters',
+            
+                ],
             ]),
             (new EcTracksTotalValue()),
             (new EcTracksNewValue()),
