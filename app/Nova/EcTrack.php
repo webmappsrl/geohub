@@ -4,18 +4,20 @@ namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcTrack;
+use App\Nova\Filters\EcTracksCaiScaleFilter;
+use App\Nova\Metrics\EcTracksMyValue;
+use App\Nova\Metrics\EcTracksNewValue;
+use App\Nova\Metrics\EcTracksTotalValue;
 use Chaseconey\ExternalImage\ExternalImage;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use NovaAttachMany\AttachMany;
 use Webmapp\EcMediaPopup\EcMediaPopup;
@@ -28,11 +30,16 @@ use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 use Titasgailius\SearchRelations\SearchesRelations;
+use DigitalCreative\MegaFilter\MegaFilter;
+use DigitalCreative\MegaFilter\Column;
+use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
 
 class EcTrack extends Resource {
 
     use TabsOnEdit, SearchesRelations;
+    use HasMegaFilterTrait;
 
     /**
      * The model the resource corresponds to.
@@ -109,29 +116,20 @@ class EcTrack extends Resource {
     private function index() {
         return [
 
-            NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')->sortable(),
-            ])->onlyOnIndex(),
+            Text::make('Name', function() {
+                $name = implode('<br />',explode( "\n", wordwrap( $this->name), 50));
+                return $name.'<br />CAI scale: '.$this->cai_scale;
+            })->asHtml(),
 
-            BelongsTo::make('Author', 'author', User::class)->sortable()->onlyOnIndex(),
+            BelongsTo::make('Author', 'author', User::class)->sortable(),
 
-            DateTime::make(__('Created At'), 'created_at')->sortable()->onlyOnIndex(),
+            DateTime::make(__('Created At'), 'created_at')->sortable(),
 
-            DateTime::make(__('Updated At'), 'updated_at')->sortable()->onlyOnIndex(),
+            DateTime::make(__('Updated At'), 'updated_at')->sortable(),
 
-            Boolean::make(__('OS'), function() {
-                $val = false;
-                if(!is_null($this->out_source_feature_id)) {
-                    $val=true;
-                }
-                return $val;
-            })->onlyOnIndex(),
-
-            Link::make('GJ', 'id')
-            ->url(function () {
-                return isset($this->id) ? route('api.ec.track.view.geojson', ['id' => $this->id]) : '';
-            })
-            ->text(__('Open GeoJson'))->icon()->blank()->onlyOnIndex(),
+            Text::make('Geojson',function () {
+                return '<a href="'.route('api.ec.track.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
+            })->asHtml(),
         ];
 
     }
@@ -339,7 +337,61 @@ class EcTrack extends Resource {
      * @return array
      */
     public function cards(Request $request): array {
-        return [];
+        return [
+            MegaFilter::make([
+                'columns' => [
+                    Column::make('Name')->permanent(),
+                    Column::make('Author'),
+                    Column::make('Created At'),
+                    Column::make('Updated At'),
+                    //Column::make('Cai Scale')
+                ],
+                'filters' => [
+                    (new EcTracksCaiScaleFilter()),
+                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
+                    (new DateRangeFilter('Created at','created_at')),
+                    (new DateRangeFilter('Updated at','updated_at')),
+
+                ],
+                'settings' => [
+
+                    /**
+                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
+                     */
+                    'columnsWidth' => 'w-1/4',
+                    'filtersWidth' => 'w-1/3',
+                    
+                    /**
+                     * The default state of the main toggle buttons
+                     */
+                    'columnsActive' => false,
+                    'filtersActive' => false,
+                    'actionsActive' => false,
+            
+                    /**
+                     * Show/Hide elements
+                     */
+                    'showHeader' => true,
+                    
+                    /**
+                     * Labels
+                     */
+                    'headerLabel' => 'Columns and Filters',
+                    'columnsLabel' => 'Columns',
+                    'filtersLabel' => 'Filters',
+                    'actionsLabel' => 'Actions',
+                    'columnsSectionTitle' => 'Additional Columns',
+                    'filtersSectionTitle' => 'Filters',
+                    'actionsSectionTitle' => 'Actions',
+                    'columnsResetLinkTitle' => 'Reset Columns',
+                    'filtersResetLinkTitle' => 'Reset Filters',
+            
+                ],
+            ]),
+            (new EcTracksTotalValue()),
+            (new EcTracksNewValue()),
+            (new EcTracksMyValue()),
+        ];
     }
 
     /**
