@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,14 @@ class MontePisanoSeeder extends Seeder
     public function run()
     {
         // Import WHERE
+        $this->importAllWhere();
 
+        // Import Tracks
+        $this->importTracks();
+
+    }
+
+    private function importAllWhere() {
         // Toscana
         $this->importWhere('toscana');
         // Provincia di Lucca
@@ -40,7 +48,7 @@ class MontePisanoSeeder extends Seeder
         $this->importWhere('comune_vecchiano');
         // Comune di Pisa
         $this->importWhere('comune_pisa');
-        
+
     }
 
     private function importWhere($name) {
@@ -50,7 +58,7 @@ class MontePisanoSeeder extends Seeder
             $g = json_decode(file_get_contents($path));
             TaxonomyWhere::factory()->create(
                 [
-                    'name' => $g->properties->name,
+                    'name' => $g->properties->name->it,
                     'geometry' => DB::raw("ST_GeomFromGeoJSON('".json_encode($g->geometry)."')"),
                 ]
             );
@@ -58,5 +66,29 @@ class MontePisanoSeeder extends Seeder
         else {
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
+    }
+
+    /**
+     * Create tracks from https://overpass-turbo.eu/s/1f5e
+     *
+     * @return void
+     */
+    private function importTracks() {
+        $path = base_path().'/tests/Fixtures/MontePisano/tracks.geojson';
+        if(file_exists($path)) {
+            Log::info("Processing TRACKS");
+            $g = json_decode(file_get_contents($path));
+            foreach($g->features as $track) {
+                EcTrack::factory()->create([
+                    'name' => isset($track->properties->name) ? $track->properties->name : 'ND',
+                    'ref' => isset($track->properties->ref) ? $track->properties->ref : 'ND',
+                    'geometry' => DB::raw("ST_Force3D(ST_GeomFromGeoJSON('".json_encode($track->geometry)."'))"),
+                ]);
+            }
+        }
+        else {
+            Log::info("Warning $path does not exists... SKIPPING!!");
+        }
+
     }
 }
