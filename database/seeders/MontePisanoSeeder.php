@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\EcTrack;
+use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,9 @@ class MontePisanoSeeder extends Seeder
      */
     public function run()
     {
+        // Import Poi Types
+        $this->importAllPoiTypes();
+
         // Import WHERE
         $this->importAllWhere();
 
@@ -66,6 +70,21 @@ class MontePisanoSeeder extends Seeder
         else {
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
+    }
+
+    private function importAllPoiTypes() {
+        $this->importPoiType('Cultura','culture');
+        $this->importPoiType('Natura','nature');
+        // $this->importPoiType('','');
+    }
+
+    private function importPoiType($name,$identifier) {
+        TaxonomyPoiType::factory()->create(
+            [
+                'name' => $name,
+                'identifier' => $identifier,
+            ]
+        );
     }
 
     /**
