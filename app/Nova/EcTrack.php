@@ -269,15 +269,22 @@ class EcTrack extends Resource {
                     return $model->uploadAudio($file);
                 })->acceptedTypes('audio/*')->onlyOnForms(),
 
-                FeatureImagePopup::make(__('Feature Image'), 'featureImage')
+                FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
                     ->onlyOnForms()
                     ->feature($geojson ?? [])
                     ->apiBaseUrl('/api/ec/track/'),
 
-                EcMediaPopup::make(__('EcMedia'), 'ecMedia')
+                BelongsTo::make('Feature Image (by name)','featureImage',EcMedia::class)
+                    ->searchable()
+                    ->showCreateRelationButton()
+                    ->nullable(),
+
+
+                EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
                     ->onlyOnForms()
                     ->feature($geojson ?? [])
                     ->apiBaseUrl('/api/ec/track/'),
+
                 KeyValue::make('Related Url')
                     ->keyLabel('Label')
                     ->valueLabel('Url with https://')

@@ -74,33 +74,6 @@ class TaxonomyWhere extends Resource {
             return $this->form($request);
         }
 
-        return [
-            ErrorMessage::make('Error'),
-
-            Swatches::make('Color'),
-            Number::make('Zindex')->hideFromIndex(),
-            NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
-
-            Text::make(__('Source ID'), 'source_id')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
-            Text::make(__('Import method'), 'import_method')->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Number::make(__('Admin level'), 'admin_level')->sortable()->hideFromIndex(),
-
-            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
-            ExternalImage::make(__('Feature Image'), function () {
-                $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                if ('' !== $url && substr($url, 0, 4) !== 'http') {
-                    $url = Storage::disk('public')->url($url);
-                }
-
-                return $url;
-            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating()->hideFromIndex(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                ];
-            })->onlyOnDetail(),
-        ];
     }
 
     private function index() {

@@ -22,9 +22,19 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Titasgailius\SearchRelations\SearchesRelations;
+use DigitalCreative\MegaFilter\MegaFilter;
+use DigitalCreative\MegaFilter\Column;
+use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
+
 
 class EcMedia extends Resource
 {
+
+    use TabsOnEdit, SearchesRelations;
+    use HasMegaFilterTrait;
+
 
     use TabsOnEdit;
     /**
@@ -324,7 +334,58 @@ class EcMedia extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            MegaFilter::make([
+                'columns' => [
+                    Column::make('Name')->permanent(),
+                    Column::make('Author'),
+                    Column::make('Created At'),
+                    Column::make('Updated At'),
+                    //Column::make('Cai Scale')
+                ],
+                'filters' => [
+                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
+                    (new DateRangeFilter('Created at','created_at')),
+                    (new DateRangeFilter('Updated at','updated_at')),
+
+                ],
+                'settings' => [
+
+                    /**
+                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
+                     */
+                    'columnsWidth' => 'w-1/4',
+                    'filtersWidth' => 'w-1/3',
+                    
+                    /**
+                     * The default state of the main toggle buttons
+                     */
+                    'columnsActive' => false,
+                    'filtersActive' => false,
+                    'actionsActive' => false,
+            
+                    /**
+                     * Show/Hide elements
+                     */
+                    'showHeader' => true,
+                    
+                    /**
+                     * Labels
+                     */
+                    'headerLabel' => 'Columns and Filters',
+                    'columnsLabel' => 'Columns',
+                    'filtersLabel' => 'Filters',
+                    'actionsLabel' => 'Actions',
+                    'columnsSectionTitle' => 'Additional Columns',
+                    'filtersSectionTitle' => 'Filters',
+                    'actionsSectionTitle' => 'Actions',
+                    'columnsResetLinkTitle' => 'Reset Columns',
+                    'filtersResetLinkTitle' => 'Reset Filters',
+            
+                ],
+            ]),
+
+        ];
     }
 
     /**

@@ -21,6 +21,15 @@ class EcPoi extends Model {
     public array $translatable = ['name', 'description', 'excerpt'];
     public bool $skip_update = false;
 
+        /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'related_url' => 'array',
+    ];
+
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
     }

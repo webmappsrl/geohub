@@ -88,7 +88,12 @@ class EditorialContentController extends Controller {
             readfile($ec->url);
         } else {
             //Scaricare risorsa locale
-            return Storage::disk('public')->download($ec->url, 'name.' . $pathInfo['extension']);
+            if(isset($pathInfo['extension'])) {
+                return Storage::disk('public')->download($ec->url, 'name.' . $pathInfo['extension']);
+            }
+            else {
+                return Storage::disk('public')->download($ec->url, 'name');
+            }
         }
     }
 
