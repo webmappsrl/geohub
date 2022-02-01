@@ -75,6 +75,8 @@ class MontePisanoSeeder extends Seeder
     private function importAllPoiTypes() {
         $this->importPoiType('Cultura','culture');
         $this->importPoiType('Natura','nature');
+        $this->importPoiType('Centro Visite','visitor-center');
+        $this->importPoiType('Informazioni','tourist-information');
         // $this->importPoiType('','');
     }
 
