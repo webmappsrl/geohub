@@ -110,7 +110,7 @@ class AppController extends Controller {
      */
     private function config_section_theme(App $app): array {
         $data = [];
-        if (in_array($app->api, ['elbrus'])) {
+        if (in_array($app->api, ['elbrus','webapp'])) {
             // THEME section
             $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
             $data['THEME']['fontFamilyContent'] = $app->font_family_content;

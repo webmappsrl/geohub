@@ -89,22 +89,6 @@ class ImportDirectoryCommand extends Command
         }
 
         Log::info("Processing files");
-        // Loop on geojson
-        /**
-         * "name" => "Ufficio turistico di Fanano"
-  "taxonomy-poi-types" => "tourist-information"
-  "addr_street" => "piazza Guglielmo Marconi"
-  "addr_housenumber" => "1"
-  "addr_postcode" => "41021"
-  "addr_locality" => "Fanano"
-  "opening_hours" => "Jul-Aug: Mo-Su 09:30-12:30,16:00-19:00"
-  "contact_phone" => "+39 0536 68696"
-  "contact_email" => "info@fanano.eu"
-  "related_url" => "www.fanano.it"
-  "description" => "L'Ufficio Turistico di Fanano, ben organizzato ed efficiente, provvede ad offrire informazioni di carattere generale sul territorio del Parco del Frignano e distribuisce depliants, cartine, gadgets, etc. L'Ufficio fornisce anche il servizio di rilascio tesserini per la raccolta dei funghi epigei spontanei validi per la stagione in corso."
-  "image" => "AAMO_INF_04_UTFanano_01.jpeg"
-  "ele" => "628"
-         */
         $missing_taxonomy = [];
         $missing_images = [];
         foreach($geojsons as $path) {
