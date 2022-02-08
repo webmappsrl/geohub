@@ -88,15 +88,20 @@ class App extends Resource {
                 new Panel('API', $this->api_panel()),
                 new Panel('Maps', $this->maps_panel()),
             ];
-            $fields = array_merge($fields, $elbrus_fields);
-        } else {
+        } 
+        else if ($this->api == 'webapp') {
+            $elbrus_fields = [
+                new Panel('Theme', $this->theme_panel()),
+                new Panel('Geolocation', $this->geolocation_panel()),
+            ];
+        }  
+        else {
             $elbrus_fields = [
                 new Panel('Geolocation', $this->geolocation_panel()),
             ];
-            $fields = array_merge($fields, $elbrus_fields);
         }
 
-        return $fields;
+        return array_merge($fields, $elbrus_fields);
     }
 
     protected function app_panel(): array {
