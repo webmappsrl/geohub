@@ -3,8 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Models\EcMedia;
+use App\Models\User;
 use ErrorException;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
@@ -46,6 +50,13 @@ class ImportImagesList extends Command
         $createdEcMedia = [];
         $allowedMimeTypes = ['jpeg', 'gif', 'png', 'bmp', 'svg', 'jpg'];
 
+        $user_id = $this->argument('user_id');
+        $user = User::find($user_id);
+        if(empty($user)) {
+            throw new Exception("User_id $user_id does NOT exist.");
+        }
+        Auth::login($user);
+
         $url = $this->argument('url');
         $urlPathinfo = pathinfo($url);
         if ($urlPathinfo['extension'] != 'zip') {
@@ -56,6 +67,8 @@ class ImportImagesList extends Command
             if ($zip->open($url) === TRUE) {
                 $zip->extractTo($tmpzip);
                 $zip->close();
+            } else {
+                Log::info("cant open zip file $url");
             }
         }
         $this->info("file unzipped in $tmpzip");
@@ -80,6 +93,10 @@ class ImportImagesList extends Command
                     $pathInfoFile = pathinfo($dirFile);
                     $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $file . '/' . $pathInfoFile['basename']);
                     if (in_array($pathInfoFile['extension'], $allowedMimeTypes)) {
+
+                        Log::info('Waiting 2 seconds...');
+                        sleep(2);
+
                         $newEcmedia = EcMedia::create(['name' => $pathInfoFile['filename'], 'url' => '']);
                         Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
                         $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
@@ -101,6 +118,10 @@ class ImportImagesList extends Command
                 $pathInfoFile = pathinfo($file);
                 $contents = file_get_contents(base_path() . '/storage/tmp/imported_images/' . $pathInfoFile['basename']);
                 if (in_array($pathInfoFile['extension'], $allowedMimeTypes)) {
+                    
+                    Log::info('Waiting 2 seconds...');
+                    sleep(2);
+
                     $newEcmedia = EcMedia::create(['name' => $pathInfoFile['filename'], 'url' => '']);
                     Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
                     $newEcmedia->url = 'ec_media/' . $newEcmedia->id;
