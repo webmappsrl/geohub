@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\ExportEcpoi;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Metrics\EcTracksMyValue;
@@ -36,6 +37,7 @@ use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Number;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Panel;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 
 class EcPoi extends Resource {
@@ -405,6 +407,8 @@ class EcPoi extends Resource {
      * @return array
      */
     public function actions(Request $request) {
-        return [];
+        return [
+            (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
+        ];
     }
 }

@@ -33,6 +33,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
 
@@ -434,6 +435,7 @@ class EcTrack extends Resource {
     public function actions(Request $request): array {
         return [
             new RegenerateEcTrack(),
+            (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
         ];
     }
 }
