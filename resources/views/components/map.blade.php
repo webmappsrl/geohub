@@ -49,7 +49,6 @@ crossorigin=""/>
 integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 crossorigin=""></script>
 <div id="map" style="height: 686px;" class="md:rounded-l-lg poiLeafletMap">
-    <a target="_blank" href="https://4.app.geohub.webmapp.it/#/map?track={{$track->id}}"><p class="absolute left-6 bottom-6 text-base px-6 py-2 bg-white text-primary font-bold rounded-lg z-1000 hover:shadow-lg duration-150">Apri percoso nella mappa interattiva</p></a>
 </div>
 <script>
     var pois_collection = @json($pois_collection);

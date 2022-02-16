@@ -21,7 +21,7 @@
     if ($track->ele_max)
         $details['Quota massima'] = $track->ele_max.'m';
 
-    $elevation_chart = "https://ecmedia.s3.eu-central-1.amazonaws.com/ectrack/elevation_charts/$track->id.svg";
+    //$elevation_chart = "https://ecmedia.s3.eu-central-1.amazonaws.com/ectrack/elevation_charts/$track->id.svg";
     
 @endphp
 <div x-data="tabApp()" @flash.window="tab = $event.detail" id="tab_wrapper">
@@ -33,7 +33,6 @@
   
     <!-- The tabs content -->
     <div x-show="tab === 'details'" class="px-8 py-6">
-        <img src="{{$elevation_chart}}" alt="webmapp map" class="pb-6 w-full">
     
         @if (count($details) > 0)
             <h3 class="text-primary font-semibold text-xl">Dettagli Percorso</h3>

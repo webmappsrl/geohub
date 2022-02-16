@@ -39,28 +39,21 @@
 
             <!-- Taxonomy Where section -->
             <div class="col-span-full items-start px-4 sm:px-20 sm:col-span-2 flex">
-                @if ($track->taxonomyActivities->count() > 0 )
-                    <div class="py-2 inline-flex items-center">
-                        @foreach ($track->taxonomyActivities->pluck('identifier','name') as $name => $identifier)
-                            @svg(icon_mapping($identifier), 'icon-2lg bg-light-grey rounded-full p-1')
-                            <div class="pl-2 text-primary ">{{$name}}</div>
-                        @endforeach
-                    </div>
+                @if ($track->taxonomyWheres->count() > 0 )
+                    @foreach ($track->taxonomyWheres->pluck('name') as $name)
+                    <div class="taxonomyWheres w-auto text-white">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
+                    @endforeach
                 @endif
             </div>
 
             <!-- Taxonomy Activity section -->
             @if ($track->taxonomyActivities->count() > 0 )
-            <div id="taxonomyActivities" class="col-span-full flex-row flex items-center px-4 sm:px-20 sm:col-span-2 bg-white sm:bg-transparent">
-                @foreach ($track->taxonomyActivities->pluck('icon','name') as $name => $icon)
-                    <div class="block text-black sm:text-white {{ $loop->iteration > 1 ? 'pl-4' : '' }}">
-                        @if ($icon)
-                            <i class="activityIcon {{$icon}}"></i>{{ $loop->iteration > 1 ? ' ' : '' }}
-                        @endif
-                        {{$name}}
-                    </div>
-                @endforeach
-            </div>
+                <div class="py-2 inline-flex items-center">
+                    @foreach ($track->taxonomyActivities->pluck('identifier','name') as $name => $identifier)
+                        @svg(icon_mapping($identifier), 'icon-2lg bg-light-grey rounded-full p-1')
+                        <div class="pl-2 text-primary ">{{$name}}</div>
+                    @endforeach
+                </div>
             @endif
         </div>
         
