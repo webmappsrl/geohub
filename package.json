@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "cypress": "^7.1.0",
+    "leaflet": "^1.7.1",
     "portal-vue": "^2.1.7"
   }
 }

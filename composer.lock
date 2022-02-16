@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6362a761bdc0fefa5c215db42e1012f",
+    "content-hash": "655d56cf8f9fc442c4acf3287f4d3cee",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -340,6 +340,87 @@
                 "source": "https://github.com/bernhardh/nova-icon-select/tree/1.0.0"
             },
             "time": "2020-12-22T20:10:11+00:00"
+        },
+        {
+            "name": "blade-ui-kit/blade-icons",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/blade-ui-kit/blade-icons.git",
+                "reference": "5cfafd041b86bf513f0c2652a131f7861bdfe90c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/blade-ui-kit/blade-icons/zipball/5cfafd041b86bf513f0c2652a131f7861bdfe90c",
+                "reference": "5cfafd041b86bf513f0c2652a131f7861bdfe90c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^8.0|^9.0",
+                "illuminate/filesystem": "^8.0|^9.0",
+                "illuminate/support": "^8.0|^9.0",
+                "illuminate/view": "^8.0|^9.0",
+                "php": "^7.4|^8.0",
+                "symfony/console": "^5.3|^6.0",
+                "symfony/finder": "^5.3|^6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.3",
+                "orchestra/testbench": "^6.0|^7.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "bin": [
+                "bin/blade-icons-generate"
+            ],
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BladeUI\\Icons\\BladeIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "BladeUI\\Icons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of icons in your Laravel Blade views.",
+            "homepage": "https://github.com/blade-ui-kit/blade-icons",
+            "keywords": [
+                "blade",
+                "icons",
+                "laravel",
+                "svg"
+            ],
+            "support": {
+                "issues": "https://github.com/blade-ui-kit/blade-icons/issues",
+                "source": "https://github.com/blade-ui-kit/blade-icons"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/caneco",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/driesvints",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-01-20T12:30:16+00:00"
         },
         {
             "name": "brick/math",
@@ -9324,7 +9405,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/0.3.06.poi.excel",
+            "version": "dev-feature/0.2.17.8",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -9360,7 +9441,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/0.3.06.poi.excel",
+            "version": "dev-feature/0.2.17.8",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -9396,7 +9477,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/0.3.06.poi.excel",
+            "version": "dev-feature/0.2.17.8",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -9432,7 +9513,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/0.3.06.poi.excel",
+            "version": "dev-feature/0.2.17.8",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -9468,7 +9549,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/0.3.06.poi.excel",
+            "version": "dev-feature/0.2.17.8",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",

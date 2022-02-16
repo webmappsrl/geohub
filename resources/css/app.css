@@ -8,3 +8,37 @@
 .shadow-top {
     box-shadow: 0px -2px 12px rgba(0, 0, 0, 0.2);
 }
+
+.map-detail-tab .active {
+    border-bottom: 3px solid #72A747;
+    font-weight: bold;
+    color: #003300;
+}
+.leaflet-pane.leaflet-marker-pane img {
+    border-radius: 50%;
+}
+.explore-grid-item-overlay:before {
+    content: "";
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    opacity: 0.2;
+    border-radius: 0.75rem;
+}
+
+.taxonomyLeafletMap .leaflet-popup-close-button {
+    display: none;
+}
+.poiLeafletMap img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive:not(.endstart) {
+    border: 2px solid white;
+}
+.poiLeafletMap img.endstart {
+    z-index: 1000!important;
+}
+.poiMarkerWithHighlight {
+    box-shadow:0px 0px 0px 8px rgba(255, 0, 0, 0.3);
+}

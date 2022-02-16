@@ -1,6 +1,7 @@
 module.exports = {
   purge: [
-    './resources/**/*.blade.php',
+    './app/**/*.php',
+    './resources/**/*.php'
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -11,6 +12,9 @@ module.exports = {
       colors: {
         'primary': '#508AA8',
         'secondary': '#FF7E6B',
+      },
+      zIndex: {
+        '1000': '1000',
       }
     }
   },

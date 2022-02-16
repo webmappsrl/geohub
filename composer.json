@@ -15,6 +15,7 @@
     "ampeco/nova-date-range-filter": "^0.1.3",
     "arku/nova-multiselect": "dev-master",
     "bernhardh/nova-icon-select": "^1.0",
+    "blade-ui-kit/blade-icons": "^1.2",
     "chaseconey/nova-external-image": "^0.3.0",
     "christiankuri/laravel-favorite": "^1.4",
     "cloudcake/nova-fixed-bars": "^1.1",
@@ -82,7 +83,8 @@
     },
     "files": [
       "database/MigrationsHelpers.php",
-      "app/Providers/ResourceManager.php"
+      "app/Providers/ResourceManager.php",
+      "app/View/Components/helpers.php"
     ]
   },
   "autoload-dev": {
