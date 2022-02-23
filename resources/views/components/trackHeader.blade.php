@@ -48,10 +48,10 @@
 
             <!-- Taxonomy Activity section -->
             @if ($track->taxonomyActivities->count() > 0 )
-                <div class="py-2 inline-flex items-center">
+                <div class="col-span-full items-start px-4 sm:px-20 sm:col-span-2 flex ">
                     @foreach ($track->taxonomyActivities->pluck('identifier','name') as $name => $identifier)
-                        @svg(icon_mapping($identifier), 'icon-2lg bg-light-grey rounded-full p-1')
-                        <div class="pl-2 text-primary ">{{$name}}</div>
+                        @svg(icon_mapping($identifier), 'icon-2lg bg-white  rounded-full p-1')
+                        <div class="pl-2 text-white ">{{$name}}</div>
                     @endforeach
                 </div>
             @endif

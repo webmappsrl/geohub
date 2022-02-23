@@ -1,8 +1,8 @@
 @props(['poi'])
 @php
     if (!$poi->featureImage) {
-        $featured_image = asset('images/banner-1.png');
-        $featured_image_full = asset('images/banner-1.png');
+        $featured_image = asset('images/32.jpg');
+        $featured_image_full = asset('images/32.jpg');
     } else {
         $featured_image = $poi->featureImage->thumbnail('118x117');
         $featured_image_full = $poi->featureImage->thumbnail('1440x500');

@@ -18,7 +18,6 @@
     if ($start_end_distance > 100) {
         $linearTrip = true;
     }
-
     $geometry = $res[0]->geojson;
     $geometry = json_decode($geometry);
     $geometry = $geometry->coordinates;

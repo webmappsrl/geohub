@@ -1,6 +1,6 @@
 @props(['track'])
 @php
-    $classes = 'text-secondary uppercase border-b border-gray-300 border-solid w-full text-center pt-4 pb-2 tab-nav-link';
+    $classes = 'text-gray-400 uppercase border-b border-gray-300 border-solid w-full text-center pt-4 pb-2 tab-nav-link';
     $details = array();
     if ($track->distance)
         $details['Lunghezza'] = $track->distance.'km';

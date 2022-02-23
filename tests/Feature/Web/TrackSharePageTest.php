@@ -205,8 +205,12 @@ class TrackSharePageTest extends TestCase
      */
     public function when_visitor_access_to_track_with_taxonomy_activities_without_icon_then_status_200_and_class_activityIcon_does_not_exists()
     {
-        $tax1 = TaxonomyActivity::factory()->create();
-        $tax2 = TaxonomyActivity::factory()->create();
+        $tax1 = TaxonomyActivity::factory()->create([
+            'identifier' => 'hiking'
+        ]);
+        $tax2 = TaxonomyActivity::factory()->create([
+            'identifier' => 'cycling'
+        ]);
         $t = EcTrack::factory()->create();
         $t->taxonomyActivities()->attach([$tax1->id, $tax2->id]);
         $r = $this->get('/track/' . $t->id);
@@ -277,6 +281,8 @@ class TrackSharePageTest extends TestCase
             'ele_max' => null,
             'ele_from' => null,
             'ele_to' => null,
+            'difficulty' => null,
+            'duration_forward' => null,
         ]);
         $r = $this->get('/track/' . $t->id);
         $r->assertDontSee('trackDetails');

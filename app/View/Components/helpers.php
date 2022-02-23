@@ -14,10 +14,10 @@ if (!function_exists('icon_mapping')) {
 if (!function_exists('get_feature_image_thumbnail')) {
     function get_feature_image_thumbnail($feature,$size = '1440x500'){
         if (!$feature->featureImage)
-            return $featured_image = asset('images/banner-1.png');
+            return $featured_image = asset('images/32.jpg');
             
         if (!$feature->featureImage->thumbnail($size))
-            return $featured_image = asset('images/banner-1.png');
+            return $featured_image = asset('images/32.jpg');
 
         
         return $featured_image = $feature->featureImage->thumbnail($size);
