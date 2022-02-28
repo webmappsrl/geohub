@@ -11,7 +11,9 @@
         <x-mapsection :track="$track"/>
         <x-trackContentSection :track="$track" />
         @if ($gallery->count() > 0)
-            <x-carouselSection :track="$track" :gallery="$gallery"/>
+            <div class="max-w-screen-xl m-auto py-6 px-4 relative">
+                <x-carouselSection :track="$track" :gallery="$gallery"/>
+            </div>
         @endif
         @if ($agent->isMobile())
             <x-trackMobileDownloadSection :track="$track" :agent="$agent"/>

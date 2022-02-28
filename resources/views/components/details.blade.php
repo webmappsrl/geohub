@@ -32,7 +32,7 @@
     </nav>
   
     <!-- The tabs content -->
-    <div x-show="tab === 'details'" class="px-8 py-6">
+    <div x-show="tab === 'details'" class="px-4 md:px-8 py-6">
     
         @if (count($details) > 0)
             <h3 class="text-primary font-semibold text-xl">Dettagli Percorso</h3>

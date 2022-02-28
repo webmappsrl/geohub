@@ -41,17 +41,11 @@
         $pois_collection[$poi->id]['image'] = $featured_image;
     }
 @endphp
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-crossorigin=""></script>
-<div id="map" style="height: 686px;" class="md:rounded-l-lg poiLeafletMap">
+<div id="map" class="h-mapmobile md:h-mapdesktop md:rounded-l-lg poiLeafletMap">
 </div>
 <script>
     var pois_collection = @json($pois_collection);
-    var map = L.map('map').setView([43.689740, 10.392279], 12);
+    var map = L.map('map', { dragging: !L.Browser.mobile }).setView([43.689740, 10.392279], 12);
     L.tileLayer('https://api.webmapp.it/tiles/{z}/{x}/{y}.png', {
         attribution: '<a  href="http://webmapp.it" target="blank"> © Webmapp </a><a _ngcontent-wbl-c140="" href="https://www.openstreetmap.org/about/" target="blank">© OpenStreetMap </a>',
         maxZoom: 16,

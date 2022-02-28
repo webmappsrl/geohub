@@ -33,8 +33,11 @@
     "tailwindcss": "^2.2.15"
   },
   "dependencies": {
+    "alpinejs": "^3.9.0",
     "cypress": "^7.1.0",
+    "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
-    "portal-vue": "^2.1.7"
+    "portal-vue": "^2.1.7",
+    "swiper": "^8.0.6"
   }
 }

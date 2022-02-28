@@ -15,6 +15,10 @@ module.exports = {
       },
       zIndex: {
         '1000': '1000',
+      },
+      height: {
+        'mapdesktop' : '686px',
+        'mapmobile' : '400px',
       }
     }
   },

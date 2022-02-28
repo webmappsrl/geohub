@@ -12,7 +12,7 @@
     <div class="mx-auto bg-cover bg-center bg-no-repeat" style="background-image:url('{{$featured_image}}')">
         <div class="h-80 sm:h-96 grid grid-cols-3 grid-rows-6 transparent-overlay">
             <!-- Webmapp logo section -->
-            <div class="{{$agent->isMobile() ? 'row-span-3' : 'row-span-2'}} col-span-full sm:row-span-3 py-6 px-4 sm:px-20">
+            <div class="row-span-2 col-span-full sm:row-span-3 py-6 px-4 sm:px-20">
                 <img src="{{asset('images/webmapp-logo.png')}}" alt="webmapp logo" class="">
             </div>
 
@@ -38,10 +38,10 @@
             @endif
 
             <!-- Taxonomy Where section -->
-            <div class="col-span-full items-start px-4 sm:px-20 sm:col-span-2 flex">
+            <div class="{{$agent->isMobile() ? 'row-span-2' : ''}} col-span-full items-start px-4 sm:px-20 sm:col-span-2 inline w-full md:flex">
                 @if ($track->taxonomyWheres->count() > 0 )
                     @foreach ($track->taxonomyWheres->pluck('name') as $name)
-                    <div class="taxonomyWheres w-auto text-white">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
+                    <div class="taxonomyWheres w-auto text-white inline">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
                     @endforeach
                 @endif
             </div>
