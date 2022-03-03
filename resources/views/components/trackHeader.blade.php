@@ -24,8 +24,8 @@
                         <p class="font-semibold text-xl">Scarica l'APP!</p>
                     </div>
                     <div class="flex w-full justify-between">
-                        <div><a href="#"><img src="{{asset('images/google-play-icon.png')}}" width="140" alt="android download link"></a></div>
-                        <div><a href="#"><img src="{{asset('images/apple-store-icon.png')}}" width="130" alt="ios download link"></a></div>
+                        <div><a href="#"><img src="{{asset('images/google-play-icon.png')}}" alt="android download link"></a></div>
+                        <div><a href="#"><img src="{{asset('images/apple-store-icon.png')}}" alt="ios download link"></a></div>
                     </div>
                 </div>
             </div>
