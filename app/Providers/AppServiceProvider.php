@@ -38,6 +38,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /**
+         * Passes the language parameters to language switcher partial
+         */
+        view()->composer('partials.language_switcher', function ($view) {
+            $view->with('current_locale', app()->getLocale());
+            $view->with('available_locales', config('app.available_locales'));
+        });
+
         UgcMedia::deleting(function ($model) {
             $model->ugc_tracks()->sync([]);
             $model->ugc_pois()->sync([]);
