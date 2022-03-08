@@ -41,6 +41,7 @@
         $pois_collection[$poi->id]['image'] = $featured_image;
     }
 @endphp
+<x-schemaOrg :track="$track" :startPoint="$startPoint_geometry" />
 <div id="map" class="h-mapmobile md:h-mapdesktop md:rounded-l-lg poiLeafletMap">
 </div>
 <script>

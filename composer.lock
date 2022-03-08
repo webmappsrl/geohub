@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "655d56cf8f9fc442c4acf3287f4d3cee",
+    "content-hash": "8cd6688c964ed5b8e5b39536d2b5027a",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -652,6 +652,65 @@
                 }
             ],
             "time": "2021-08-10T01:44:12+00:00"
+        },
+        {
+            "name": "chriskonnertz/open-graph",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chriskonnertz/open-graph.git",
+                "reference": "75d2b5afeddd255bcf5d823cbe64f3623da3e01c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chriskonnertz/open-graph/zipball/75d2b5afeddd255bcf5d823cbe64f3623da3e01c",
+                "reference": "75d2b5afeddd255bcf5d823cbe64f3623da3e01c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "nesbot/carbon": "~1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ChrisKonnertz\\OpenGraph\\OpenGraphServiceProvider"
+                    ],
+                    "aliases": {
+                        "OpenGraph": "ChrisKonnertz\\OpenGraph\\OpenGraphFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ChrisKonnertz\\OpenGraph": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Konnertz"
+                }
+            ],
+            "description": "Class that assists in building Open Graph meta tags",
+            "keywords": [
+                "laravel",
+                "laravel5",
+                "ogp",
+                "open graph",
+                "opengraph"
+            ],
+            "support": {
+                "issues": "https://github.com/chriskonnertz/open-graph/issues",
+                "source": "https://github.com/chriskonnertz/open-graph/tree/v2.0.0"
+            },
+            "time": "2019-06-19T09:00:04+00:00"
         },
         {
             "name": "christiankuri/laravel-favorite",
@@ -6385,6 +6444,79 @@
             "time": "2020-10-29T18:22:10+00:00"
         },
         {
+            "name": "spatie/schema-org",
+            "version": "3.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/schema-org.git",
+                "reference": "7f07f79475388ebc62c0aac7f29bc3de7427a906"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/schema-org/zipball/7f07f79475388ebc62c0aac7f29bc3de7427a906",
+                "reference": "7f07f79475388ebc62c0aac7f29bc3de7427a906",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.6",
+                "graham-campbell/analyzer": "^3.0.5",
+                "illuminate/collections": "^8.62.0",
+                "league/flysystem": "^2.3.0 || ^3.0",
+                "phpunit/phpunit": "^9.4.3",
+                "symfony/console": "^5.3.7 || 6.0",
+                "twig/twig": "^3.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\SchemaOrg\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Tom Witkowski",
+                    "email": "dev.gummibeer@gmail.com",
+                    "homepage": "https://gummibeer.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A fluent builder Schema.org types and ld+json generator",
+            "homepage": "https://github.com/spatie/schema-org",
+            "keywords": [
+                "schema-org",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/schema-org/issues",
+                "source": "https://github.com/spatie/schema-org/tree/3.9.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-02-10T12:36:47+00:00"
+        },
+        {
             "name": "suenerds/nova-searchable-belongs-to-filter",
             "version": "v1.0.4",
             "source": {
@@ -9405,7 +9537,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/0.2.17.8",
+            "version": "dev-feature/schema-org",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -9441,7 +9573,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/0.2.17.8",
+            "version": "dev-feature/schema-org",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -9477,7 +9609,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/0.2.17.8",
+            "version": "dev-feature/schema-org",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -9513,7 +9645,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/0.2.17.8",
+            "version": "dev-feature/schema-org",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -9549,7 +9681,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/0.2.17.8",
+            "version": "dev-feature/schema-org",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -12250,5 +12382,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
