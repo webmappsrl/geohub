@@ -292,7 +292,7 @@ class EcTrack extends Model {
         if (count($relatedPoi) > 0) {
             $array['related_pois'] = [];
             foreach ($relatedPoi as $poi) {
-                $array['related_pois'][] = $poi->getBasicGeojson();
+                $array['related_pois'][] = $poi->getGeojson();
             }
         }
 

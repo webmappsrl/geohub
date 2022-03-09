@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -47,6 +48,7 @@ class EcPoiFactory extends Factory
             'addr_locality' => $this->faker->city(),
             'opening_hours' => '24/7',
             'ele' => $this->faker->randomNumber(3),
+            'feature_image' => EcMedia::factory(),
         ];
     }
 }
