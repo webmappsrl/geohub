@@ -78,7 +78,7 @@ class EcPoiGetTest extends TestCase {
         $kml = <<<KML
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-<Placemark><name>Test point</name><description>Test point description.</description><Point><coordinates>10.43,43.1</coordinates></Point></Placemark>
+<Placemark><name>Test point</name><Point><coordinates>10.43,43.1</coordinates></Point></Placemark>
 </kml>
 KML;
         $ecPoi = EcPoi::factory()->create($data);

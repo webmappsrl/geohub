@@ -50,9 +50,8 @@ trait GeometryFeatureTrait {
             $formattedGeometry = Gisconverter::geojsonToKml($geom);
 
             $name = '<name>' . ($this->name ?? '') . '</name>';
-            $description = '<description>' . ($this->description ?? '') . '</description>';
 
-            return $name . $description . $formattedGeometry;
+            return $name . $formattedGeometry;
         } else
             return null;
     }

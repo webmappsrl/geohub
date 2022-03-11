@@ -24,7 +24,7 @@ class TrackTest extends TestCase {
         $kml = <<<KML
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-<Placemark><name>Test track</name><description>Test track description.</description><LineString><coordinates>11,43 12,43 12,44 11,44</coordinates></LineString></Placemark>
+<Placemark><name>Test track</name><LineString><coordinates>11,43 12,43 12,44 11,44</coordinates></LineString></Placemark>
 </kml>
 KML;
         $ecTrack = EcTrack::factory()->create($data);
@@ -175,7 +175,6 @@ KML;
         $this->assertStringContainsString('kml', $content);
         $this->assertStringContainsString('<Placemark', $content);
         $this->assertStringContainsString('<name', $content);
-        $this->assertStringContainsString('<description', $content);
     }
 
     public function testFeatureImageWithImage() {
