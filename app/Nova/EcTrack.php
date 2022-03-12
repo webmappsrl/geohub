@@ -33,6 +33,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use Laravel\Nova\Fields\Heading;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
@@ -138,9 +139,10 @@ class EcTrack extends Resource {
     private function detail() {
         return [ (new Tabs("EC Track Details: {$this->name} ({$this->id})",[
             'Main' => [
-                Text::make('Geohub ID',function (){return $this->id;})->onlyOnDetail(),
-                DateTime::make('Created At')->onlyOnDetail(),
-                DateTime::make('Updated At')->onlyOnDetail(),
+                Text::make('Geohub ID',function (){return $this->id;}),
+                Text::make('Author',function (){return $this->user->name;}),
+                DateTime::make('Created At'),
+                DateTime::make('Updated At'),
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
                     Textarea::make(__('Excerpt'),'excerpt'),
@@ -148,15 +150,7 @@ class EcTrack extends Resource {
                     ])->onlyOnDetail(),
             ],
             'Media' => [
-                Text::make('Audio',function () {$this->audio;})->onlyOnDetail(),
-                ExternalImage::make(__('Feature Image'), function () {
-                    $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                    if ('' !== $url && substr($url, 0, 4) !== 'http') {
-                        $url = Storage::disk('public')->url($url);
-                    }
-
-                    return $url;
-                })->withMeta(['width' => 400])->onlyOnDetail(),
+                Text::make('Audio',function () {$this->audio;}),
                 Text::make('Related Url',function () {
                     $out = '';
                     if(is_array($this->related_url) && count($this->related_url)>0){
@@ -168,13 +162,21 @@ class EcTrack extends Resource {
                     }
                     return $out;
                 })->asHtml(),
+                ExternalImage::make(__('Feature Image'), function () {
+                    $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                    if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        $url = Storage::disk('public')->url($url);
+                    }
+
+                    return $url;
+                })->withMeta(['width' => 400]),
             ],
             'Map' => [
                 WmEmbedmapsField::make(__('Map'), 'geometry', function () {
                     return [
                         'feature' => $this->getGeojson(),
                     ];
-                })->onlyOnDetail(),
+                }),
             ],
             'Info' => [
                 Text::make('Ref'),
@@ -182,15 +184,15 @@ class EcTrack extends Resource {
                 Text::make('To'),
                 Boolean::make('Not Accessible'),
                 Textarea::make('Not Accessible Message')->alwaysShow(),
-                Text::make('Distance')->onlyOnDetail(),
-                Text::make('Duration Forward')->onlyOnDetail(),
-                Text::make('Duration Backward')->onlyOnDetail(),
-                Text::make('Ascent')->onlyOnDetail(),
-                Text::make('Descent')->onlyOnDetail(),
-                Text::make('Ele From')->onlyOnDetail(),
-                Text::make('Ele To')->onlyOnDetail(),
-                Text::make('Ele Max')->onlyOnDetail(),
-                Text::make('Ele Min')->onlyOnDetail(),
+                Text::make('Distance'),
+                Text::make('Duration Forward'),
+                Text::make('Duration Backward'),
+                Text::make('Ascent'),
+                Text::make('Descent'),
+                Text::make('Elevation (From)'),
+                Text::make('Elevation (To)'),
+                Text::make('Elevation (Min)'),
+                Text::make('Elevation (Max)'),
             ],
             'Scale' => [
                 Text::make('Difficulty'),
@@ -237,7 +239,12 @@ class EcTrack extends Resource {
                         return 'No Out Source associated';
                     }
                 })->onlyOnDetail(),    
-            ]
+            ],
+            'Data' => [
+                Heading::make($this->getData())->asHtml(),
+            ],
+
+
         ]))->withToolbar()];
 
     }
@@ -331,7 +338,7 @@ class EcTrack extends Resource {
                 AttachMany::make('TaxonomyTargets'),
                 AttachMany::make('TaxonomyWhens'),
                 AttachMany::make('TaxonomyThemes'),
-                ],
+                ],    
                 
         ]))];
 
@@ -438,4 +445,81 @@ class EcTrack extends Resource {
             (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
         ];
     }
+
+
+    /**
+     * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
+     * Refers to OFFICIAL DOCUMENTATION:
+     * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
+     *
+     * @return string
+     */
+    public function getData() : string {
+        $text = <<<HTML
+        <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<table>
+<tr><th>GROUP</th><th>NAME</th><th>TYPE</th><th>NULL</th><th>DEF</th><th>FK</th><th>I18N</th><th>LABEL</th><th>DESCRIPTION</th></tr>
+<tr><td><i>main</i></td><td>id</td><td>int8</td><td>NO</td><td>AUTO</td><td>-</td><td>NO</td><td>Geohub ID</td><td>TRACK identification code in the Geohub</td></tr>
+<tr><td><i>main</i></td><td>user_id</td><td>int4</td><td>NO</td><td>NULL</td><td>users</td><td>NO</td><td>Author</td><td>TRACK author: foreign key wiht table users</td></tr>
+<tr><td><i>main</i></td><td>created_at</td><td>timestamp(0)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Created At</td><td>When TRACK has been created: datetime</td></tr>
+<tr><td><i>main</i></td><td>updated_at</td><td>timestamp(0)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Updated At</td><td>When TRACK has been modified last time: datetime</td></tr>
+<tr><td><i>main</i></td><td>name</td><td>text</td><td>NO</td><td>NULL</td><td>-</td><td>YES</td><td>Name</td><td>Name of the TRACK, also know as title</td></tr>
+<tr><td><i>main</i></td><td>description</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>YES</td><td>Description</td><td>Descrption of the TRACK</td></tr>
+<tr><td><i>main</i></td><td>excerpt</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>YES</td><td>Excerpt</td><td>Short Description of the TRACK</td></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><i>media</i></td><td>audio</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>Audio</td><td>Audio file associated to the TRACK: tipically is the description text2speach</td></tr>
+<tr><td><i>media</i></td><td>related_url</td><td>json</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>Related Url</td><td>List (label->url) of URL associated to the TRACK</td></tr>
+<tr><td><i>media</i></td><td>feature_image</td><td>int4</td><td>YES</td><td>NULL</td><td>ec_media</td><td>NO</td><td>Feature Image</td><td>Main image representig the TRACK: foreign key with ec_media</td></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><i>map</i></td><td>geometry</td><td>geometry</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Map</td><td>The TRACK geometry (linestring, 3D)</td></tr>
+<tr><td><i>map</i></td><td>slope</td><td>json</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
+<tr><td><i>map</i></td><td>mbtiles</td><td>json</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
+<tr><td><i>map</i></td><td>elevation_chart_image</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><i>info</i></td><td>ref</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Ref</td><td>"ref" stands for "reference" and is used for reference numbers or codes. It represents, when it exists, the official number of the path associated with the TRACK, the one that is usually found on the ground in the horizontal and vertical signs</td></tr>
+<tr><td><i>info</i></td><td>from</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>From</td><td>TRACK's starting position: name of the town or similar</td></tr>
+<tr><td><i>info</i></td><td>to</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>To</td><td>TRACK's ending position: name of the town or similar</td></tr>
+<tr><td><i>info</i></td><td>not_accessible</td><td>bool</td><td>NO</td><td>FALSE</td><td>-</td><td>NO</td><td>Not Accessible</td><td>TRUE when the track is NOT accessible for some reason</td></tr>
+<tr><td><i>info</i></td><td>not_accessible_message</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>Not Accessible Message</td><td>Reason why TRACK is not accessible, used only whe field "not_accessible" is true</td></tr>
+<tr><td><i>info</i></td><td>distance</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Distance</td><td>TRACK's lenght in kilometer</td></tr>
+<tr><td><i>info</i></td><td>duration_forward</td><td>int4</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Duration Forward</td><td>Estimation of the duration of the TRACK when it is traveled from the "from" point to the "to" point (minutes)</td></tr>
+<tr><td><i>info</i></td><td>duration_backward</td><td>int4</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Duration Backward</td><td>Estimation of the duration of the TRACK when it is traveled from the "to" point to the "from" point (minutes)</td></tr>
+<tr><td><i>info</i></td><td>ascent</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Ascent</td><td>Positive elevation gain (meter)</td></tr>
+<tr><td><i>info</i></td><td>descent</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Descent</td><td>Negative elevation gain (meter)</td></tr>
+<tr><td><i>info</i></td><td>ele_from</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Elevation (from)</td><td>Elevation at the starting point (meter)</td></tr>
+<tr><td><i>info</i></td><td>ele_to</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Elevation (to)</td><td>Elevation at the ending point (meter)</td></tr>
+<tr><td><i>info</i></td><td>ele_min</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Elevation Min</td><td>Mininum elevation of the TRACK</td></tr>
+<tr><td><i>info</i></td><td>ele_max</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Elevation Max</td><td>Maximum elevation of the TRACK</td></tr>
+<tr><td><i>info</i></td><td>distance_comp</td><td>float8</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td></td></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><i>scale</i></td><td>difficulty</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>Difficulty</td><td>Difficulty free (short) description</td></tr>
+<tr><td><i>scale</i></td><td>cai_scale</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>CAI Scale</td><td>Hiking difficulty (T,E,EE,EEA)</td></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td><i>outsource</i></td><td>source_id</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td></td></tr>
+<tr><td><i>outsource</i></td><td>import_method</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td></td></tr>
+<tr><td><i>outsource</i></td><td>source</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td></td></tr>
+<tr><td><i>outsource</i></td><td>out_source_feature_id</td><td>int8</td><td>YES</td><td>NULL</td><td>out_source_features</td><td>NO</td><td>Out Source Feature</td><td>Out Source connected to the TRACK</td></tr>
+
+</table>
+HTML;
+               return $text;
+    }
+
+
 }
