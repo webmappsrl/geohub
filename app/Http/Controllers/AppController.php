@@ -105,13 +105,12 @@ class AppController extends Controller {
      */
     private function config_section_theme(App $app): array {
         $data = [];
-        if (in_array($app->api, ['elbrus','webapp'])) {
-            // THEME section
-            $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
-            $data['THEME']['fontFamilyContent'] = $app->font_family_content;
-            $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
-            $data['THEME']['primary'] = $app->primary_color;
-        }
+        // THEME section
+        
+        $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
+        $data['THEME']['fontFamilyContent'] = $app->font_family_content;
+        $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
+        $data['THEME']['primary'] = $app->primary_color;
 
         return $data;
     }
