@@ -26,6 +26,7 @@ class AppController extends Controller {
         $data = [];
 
         $data = array_merge($data, $this->config_section_app($app));
+        $data = array_merge($data, $this->config_section_home($app));
         $data = array_merge($data, $this->config_section_languages($app));
         $data = array_merge($data, $this->config_section_map($app));
         $data = array_merge($data, $this->config_section_theme($app));
@@ -46,15 +47,28 @@ class AppController extends Controller {
      * @return array
      */
     private function config_section_app(App $app): array {
-        $data = [];
+      $data = [];
 
-        $data['APP']['name'] = $app->name;
-        $data['APP']['id'] = $app->app_id;
-        $data['APP']['customerName'] = $app->customer_name;
-        $data['APP']['geohubId'] = $app->id;
+      $data['APP']['name'] = $app->name;
+      $data['APP']['id'] = $app->app_id;
+      $data['APP']['customerName'] = $app->customer_name;
+      $data['APP']['geohubId'] = $app->id;
 
-        return $data;
-    }
+      return $data;
+  }
+
+  /**
+     * @param App $app
+     *
+     * @return array
+     */
+    private function config_section_home(App $app): array {
+      $data = [];
+
+      $data['HOME']['title'] = $app->name;
+
+      return $data;
+  }
 
     /**
      * @param App $app
@@ -62,14 +76,9 @@ class AppController extends Controller {
      * @return array
      */
     private function config_section_languages(App $app): array {
-        $data = [];
-        if (in_array($app->api, ['elbrus'])) {
-            // LANGUAGES section
-            $data['LANGUAGES']['default'] = $app->default_language;
-            if (isset($app->available_languages))
-                $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
-        }
-
+      $data['LANGUAGES']['default'] = $app->default_language;
+      if (isset($app->available_languages))
+          $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
         return $data;
     }
 
@@ -80,15 +89,14 @@ class AppController extends Controller {
      */
     private function config_section_map(App $app): array {
         $data = [];
+        // MAP section (zoom)
+        $data['MAP']['defZoom'] = $app->map_def_zoom;
+        $data['MAP']['maxZoom'] = $app->map_max_zoom;
+        $data['MAP']['minZoom'] = $app->map_min_zoom;
+
+        // MAP section (bbox)
         if (in_array($app->api, ['elbrus'])) {
-            // MAP section (zoom)
-            $data['MAP']['defZoom'] = $app->map_def_zoom;
-            $data['MAP']['maxZoom'] = $app->map_max_zoom;
-            $data['MAP']['minZoom'] = $app->map_min_zoom;
-
-            // MAP section (bbox)
             $data['MAP']['bbox'] = $this->_getBBox($app);
-
             // Map section layers
             $data['MAP']['layers'][0]['label'] = 'Mappa';
             $data['MAP']['layers'][0]['type'] = 'maptile';
@@ -100,6 +108,7 @@ class AppController extends Controller {
             }
         }
 
+
         return $data;
     }
 
@@ -110,13 +119,12 @@ class AppController extends Controller {
      */
     private function config_section_theme(App $app): array {
         $data = [];
-        if (in_array($app->api, ['elbrus','webapp'])) {
-            // THEME section
-            $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
-            $data['THEME']['fontFamilyContent'] = $app->font_family_content;
-            $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
-            $data['THEME']['primary'] = $app->primary_color;
-        }
+        // THEME section
+
+        $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
+        $data['THEME']['fontFamilyContent'] = $app->font_family_content;
+        $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
+        $data['THEME']['primary'] = $app->primary_color;
 
         return $data;
     }
@@ -131,17 +139,19 @@ class AppController extends Controller {
         if (in_array($app->api, ['elbrus'])) {
             // OPTIONS section
             $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
-            $data['OPTIONS']['startUrl'] = $app->start_url;
-            $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
-            $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
-            $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
-            $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
-            $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
-            $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
-            $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
-            $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
-            $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
         }
+
+        $data['OPTIONS']['startUrl'] = $app->start_url;
+        $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
+        $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
+        $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
+        $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
+        $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
+        $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
+        $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
+        $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
+        $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
+
 
         return $data;
     }
@@ -244,6 +254,15 @@ class AppController extends Controller {
             }
             $data['AUTH']['enable'] = true;
             $data['AUTH']['loginToGeohub'] = true;
+        }
+        else {
+          if ($app->auth_show_at_startup) {
+            $data['AUTH']['enable'] = true;
+            $data['AUTH']['showAtStartup'] = true;
+          } else {
+            $data['AUTH']['enable'] = false;
+          }
+
         }
 
         return $data;
