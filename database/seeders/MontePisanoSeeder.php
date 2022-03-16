@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyWhere;
@@ -26,6 +27,9 @@ class MontePisanoSeeder extends Seeder
 
         // Import Tracks
         $this->importTracks();
+
+        // Create Apps
+        $this->createApps();
 
     }
 
@@ -111,5 +115,11 @@ class MontePisanoSeeder extends Seeder
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
 
+    }
+
+    private function createApps() {
+        $app_elbrus = App::factory()->create(['api'=>'elbrus']);
+        $app_webmapp = App::factory()->create(['api'=>'webmapp']);
+        $app_webapp = App::factory()->create(['api'=>'webapp']);
     }
 }
