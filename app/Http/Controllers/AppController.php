@@ -89,15 +89,14 @@ class AppController extends Controller {
      */
     private function config_section_map(App $app): array {
         $data = [];
+        // MAP section (zoom)
+        $data['MAP']['defZoom'] = $app->map_def_zoom;
+        $data['MAP']['maxZoom'] = $app->map_max_zoom;
+        $data['MAP']['minZoom'] = $app->map_min_zoom;
+
+        // MAP section (bbox)
         if (in_array($app->api, ['elbrus'])) {
-            // MAP section (zoom)
-            $data['MAP']['defZoom'] = $app->map_def_zoom;
-            $data['MAP']['maxZoom'] = $app->map_max_zoom;
-            $data['MAP']['minZoom'] = $app->map_min_zoom;
-
-            // MAP section (bbox)
             $data['MAP']['bbox'] = $this->_getBBox($app);
-
             // Map section layers
             $data['MAP']['layers'][0]['label'] = 'Mappa';
             $data['MAP']['layers'][0]['type'] = 'maptile';
@@ -108,6 +107,7 @@ class AppController extends Controller {
                 Log::warning("The overlays in the app " . $id . " are not correctly mapped. Error: " . $e->getMessage());
             }
         }
+
 
         return $data;
     }
