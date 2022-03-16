@@ -26,6 +26,7 @@ class AppController extends Controller {
         $data = [];
 
         $data = array_merge($data, $this->config_section_app($app));
+        $data = array_merge($data, $this->config_section_home($app));
         $data = array_merge($data, $this->config_section_languages($app));
         $data = array_merge($data, $this->config_section_map($app));
         $data = array_merge($data, $this->config_section_theme($app));
@@ -46,15 +47,28 @@ class AppController extends Controller {
      * @return array
      */
     private function config_section_app(App $app): array {
-        $data = [];
+      $data = [];
 
-        $data['APP']['name'] = $app->name;
-        $data['APP']['id'] = $app->app_id;
-        $data['APP']['customerName'] = $app->customer_name;
-        $data['APP']['geohubId'] = $app->id;
+      $data['APP']['name'] = $app->name;
+      $data['APP']['id'] = $app->app_id;
+      $data['APP']['customerName'] = $app->customer_name;
+      $data['APP']['geohubId'] = $app->id;
 
-        return $data;
-    }
+      return $data;
+  }
+
+  /**
+     * @param App $app
+     *
+     * @return array
+     */
+    private function config_section_home(App $app): array {
+      $data = [];
+
+      $data['HOME']['title'] = $app->name;
+
+      return $data;
+  }
 
     /**
      * @param App $app
@@ -106,7 +120,7 @@ class AppController extends Controller {
     private function config_section_theme(App $app): array {
         $data = [];
         // THEME section
-        
+
         $data['THEME']['fontFamilyHeader'] = $app->font_family_header;
         $data['THEME']['fontFamilyContent'] = $app->font_family_content;
         $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
