@@ -62,14 +62,9 @@ class AppController extends Controller {
      * @return array
      */
     private function config_section_languages(App $app): array {
-        $data = [];
-        if (in_array($app->api, ['elbrus'])) {
-            // LANGUAGES section
-            $data['LANGUAGES']['default'] = $app->default_language;
-            if (isset($app->available_languages))
-                $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
-        }
-
+      $data['LANGUAGES']['default'] = $app->default_language;
+      if (isset($app->available_languages))
+          $data['LANGUAGES']['available'] = json_decode($app->available_languages, true);
         return $data;
     }
 

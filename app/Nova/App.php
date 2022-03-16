@@ -146,13 +146,13 @@ class App extends Resource {
                     'webapp' => 'WebApp',
                 ]
             )->required(),
-            Text::make(__('App Id'), 'app_id'),
-            Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Customer Name'), 'customer_name')->sortable(),
+            Text::make(__('App Id'), 'app_id')->required(),
+            Text::make(__('Name'), 'name')->sortable()->required(),
+            Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options([
                 'en' => 'English',
                 'it' => 'Italiano',
-            ])->displayUsingLabels(),
+            ])->displayUsingLabels()->required(),
             Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options([
                 'en' => 'English',
                 'it' => 'Italiano',
@@ -200,9 +200,9 @@ class App extends Resource {
                     'webapp' => 'WebApp',
                 ]
             )->required(),
-            Text::make(__('App Id'), 'app_id'),
-            Text::make(__('Name'), 'name')->sortable(),
-            Text::make(__('Customer Name'), 'customer_name')->sortable(),
+            Text::make(__('App Id'), 'app_id')->required(),
+            Text::make(__('Name'), 'name')->sortable()->required(),
+            Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
         ];
     }
     protected function languages_tab(): array {
