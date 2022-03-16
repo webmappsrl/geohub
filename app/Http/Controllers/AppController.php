@@ -255,6 +255,15 @@ class AppController extends Controller {
             $data['AUTH']['enable'] = true;
             $data['AUTH']['loginToGeohub'] = true;
         }
+        else {
+          if ($app->auth_show_at_startup) {
+            $data['AUTH']['enable'] = true;
+            $data['AUTH']['showAtStartup'] = true;
+          } else {
+            $data['AUTH']['enable'] = false;
+          }
+
+        }
 
         return $data;
     }
