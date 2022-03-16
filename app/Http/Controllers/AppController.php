@@ -139,17 +139,19 @@ class AppController extends Controller {
         if (in_array($app->api, ['elbrus'])) {
             // OPTIONS section
             $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/';
-            $data['OPTIONS']['startUrl'] = $app->start_url;
-            $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
-            $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
-            $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
-            $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
-            $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
-            $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
-            $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
-            $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
-            $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
         }
+
+        $data['OPTIONS']['startUrl'] = $app->start_url;
+        $data['OPTIONS']['showEditLink'] = $app->show_edit_link;
+        $data['OPTIONS']['skipRouteIndexDownload'] = $app->skip_route_index_download;
+        $data['OPTIONS']['poiMinRadius'] = $app->poi_min_radius;
+        $data['OPTIONS']['poiMaxRadius'] = $app->poi_max_radius;
+        $data['OPTIONS']['poiIconZoom'] = $app->poi_icon_zoom;
+        $data['OPTIONS']['poiIconRadius'] = $app->poi_icon_radius;
+        $data['OPTIONS']['poiMinZoom'] = $app->poi_min_zoom;
+        $data['OPTIONS']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
+        $data['OPTIONS']['showTrackRefLabel'] = $app->show_track_ref_label;
+
 
         return $data;
     }
