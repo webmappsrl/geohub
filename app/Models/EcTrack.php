@@ -557,6 +557,23 @@ class EcTrack extends Model {
             ->first()
             ->geom;
 
+            $taxonomy_activities='';
+            if($this->taxonomyActivities()->count() >0) {
+                $taxonomy_activities = implode(',',$this->taxonomyActivities()->pluck('identifier')->toArray());
+            }
+
+            $postfields='{
+                "geometry" : '.$geom.',
+                "id": '.$this->id.',
+                "ref": "'.$this->ref.'",
+                "cai_scale": "'.$this->cai_scale.'",
+                "name": "'.$this->name.'",
+                "distance": "'.$this->distance.'",
+                "taxonomyActivities": "'.$taxonomy_activities.'"                
+              }';
+
+        Log::info($postfields);
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -567,12 +584,7 @@ class EcTrack extends Model {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>'{
-  "geometry" : '.$geom.',
-  "id": '.$this->id.',
-  "ref": "100",
-  "cai_scale": "E"
-}',
+            CURLOPT_POSTFIELDS =>$postfields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
                 'Authorization: Basic '.config('services.elastic.key')
