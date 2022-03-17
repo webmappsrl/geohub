@@ -21,7 +21,7 @@ class EcTrackIndexCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Generates ELATIC indexes https://elastic.sis-te.com/geohub_app_{app_id}';
 
     /**
      * Create a new command instance.

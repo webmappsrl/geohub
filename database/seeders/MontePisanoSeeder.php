@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\App;
 use App\Models\EcTrack;
+use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyWhere;
 use Illuminate\Database\Seeder;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class MontePisanoSeeder extends Seeder
 {
+
+    private $taxonomy_activity_hiking;
+    private $taxonomy_activity_cycling;
     /**
      * Run the database seeds.
      *
@@ -25,12 +29,20 @@ class MontePisanoSeeder extends Seeder
         // Import WHERE
         $this->importAllWhere();
 
+        // Import WHERE
+        $this->importAllActivities();
+
         // Import Tracks
         $this->importTracks();
 
         // Create Apps
         $this->createApps();
 
+    }
+
+    private function importAllActivities() {
+        $this->taxonomy_activity_hiking = TaxonomyActivity::factory()->create(['identifier'=>'hiking','name'=>'Escursionismo']);
+        $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier'=>'cycling','name'=>'In Bicicletta']);
     }
 
     private function importAllWhere() {
@@ -104,11 +116,14 @@ class MontePisanoSeeder extends Seeder
             Log::info("Processing TRACKS");
             $g = json_decode(file_get_contents($path));
             foreach($g->features as $track) {
-                EcTrack::factory()->create([
+                $t = EcTrack::factory()->create([
                     'name' => isset($track->properties->name) ? $track->properties->name : 'ND',
                     'ref' => isset($track->properties->ref) ? $track->properties->ref : 'ND',
                     'geometry' => DB::raw("ST_Force3D(ST_GeomFromGeoJSON('".json_encode($track->geometry)."'))"),
                 ]);
+                $t->TaxonomyActivities()->attach($this->taxonomy_activity_cycling);
+                $t->TaxonomyActivities()->attach($this->taxonomy_activity_hiking);
+                $t->save();
             }
         }
         else {
