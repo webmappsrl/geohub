@@ -3,11 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\App;
+use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyWhere;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -16,6 +18,7 @@ class MontePisanoSeeder extends Seeder
 
     private $taxonomy_activity_hiking;
     private $taxonomy_activity_cycling;
+    private $feature_image;
     /**
      * Run the database seeds.
      *
@@ -23,26 +26,17 @@ class MontePisanoSeeder extends Seeder
      */
     public function run()
     {
-        // Import Poi Types
+        // Taxonomies
         $this->importAllPoiTypes();
-
-        // Import WHERE
         $this->importAllWhere();
-
-        // Import WHERE
         $this->importAllActivities();
 
-        // Import Tracks
+        // Images
+        $this->importAllImages();
+
+        // Features
         $this->importTracks();
-
-        // Create Apps
         $this->createApps();
-
-    }
-
-    private function importAllActivities() {
-        $this->taxonomy_activity_hiking = TaxonomyActivity::factory()->create(['identifier'=>'hiking','name'=>'Escursionismo']);
-        $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier'=>'cycling','name'=>'In Bicicletta']);
     }
 
     private function importAllWhere() {
@@ -71,6 +65,26 @@ class MontePisanoSeeder extends Seeder
 
     }
 
+    private function importAllPoiTypes() {
+        $this->importPoiType('Cultura','culture');
+        $this->importPoiType('Natura','nature');
+        $this->importPoiType('Centro Visite','visitor-center');
+        $this->importPoiType('Informazioni','tourist-information');
+        // $this->importPoiType('','');
+    }
+
+    private function importAllActivities() {
+        $this->taxonomy_activity_hiking = TaxonomyActivity::factory()->create(['identifier'=>'hiking','name'=>'Escursionismo']);
+        $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier'=>'cycling','name'=>'In Bicicletta']);
+    }
+
+    private function importAllImages() {
+        Artisan::call('geohub:import_ec_media',
+                          ['url'=>'tests/Fixtures/EcMedia/test.jpg',
+                           'name'=>'TEST']);
+        $this->feature_image=EcMedia::all()->first();
+    }
+
     private function importWhere($name) {
         $path = base_path().'/tests/Fixtures/MontePisano/where/'.$name.'.geojson';
         if(file_exists($path)) {
@@ -86,14 +100,6 @@ class MontePisanoSeeder extends Seeder
         else {
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
-    }
-
-    private function importAllPoiTypes() {
-        $this->importPoiType('Cultura','culture');
-        $this->importPoiType('Natura','nature');
-        $this->importPoiType('Centro Visite','visitor-center');
-        $this->importPoiType('Informazioni','tourist-information');
-        // $this->importPoiType('','');
     }
 
     private function importPoiType($name,$identifier) {
@@ -123,6 +129,7 @@ class MontePisanoSeeder extends Seeder
                 ]);
                 $t->TaxonomyActivities()->attach($this->taxonomy_activity_cycling);
                 $t->TaxonomyActivities()->attach($this->taxonomy_activity_hiking);
+                $t->feature_image=$this->feature_image->id;
                 $t->save();
             }
         }
@@ -133,8 +140,9 @@ class MontePisanoSeeder extends Seeder
     }
 
     private function createApps() {
-        $app_elbrus = App::factory()->create(['api'=>'elbrus']);
-        $app_webmapp = App::factory()->create(['api'=>'webmapp']);
+        // TODO: uncomment elbrus and webmapp after ELASTIC stuff
+        // $app_elbrus = App::factory()->create(['api'=>'elbrus']);
+        // $app_webmapp = App::factory()->create(['api'=>'webmapp']);
         $app_webapp = App::factory()->create(['api'=>'webapp']);
     }
 }
