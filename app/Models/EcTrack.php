@@ -581,7 +581,7 @@ class EcTrack extends Model {
                 "name": "'.$this->name.'",
                 "distance": "'.$this->distance.'",
                 "taxonomyActivities": "'.$taxonomy_activities.'",
-                "feature_image": "'.$feature_image.'",
+                "feature_image": "'.$feature_image.'"
               }';
 
         Log::info($postfields);
