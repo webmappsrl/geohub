@@ -557,9 +557,20 @@ class EcTrack extends Model {
             ->first()
             ->geom;
 
+            // TODO: converti into array for ELASTIC correct datatype
+            // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
             $taxonomy_activities='';
             if($this->taxonomyActivities()->count() >0) {
                 $taxonomy_activities = implode(',',$this->taxonomyActivities()->pluck('identifier')->toArray());
+            }
+
+            // FEATURE IMAGE
+            $feature_image='';
+            if(isset($this->featureImage->thumbnails) ){
+                $sizes = json_decode($this->featureImage->thumbnails,TRUE);
+                if(isset($sizes['400x200'])) {
+                    $feature_image=$sizes['400x200'];
+                }
             }
 
             $postfields='{
@@ -569,7 +580,8 @@ class EcTrack extends Model {
                 "cai_scale": "'.$this->cai_scale.'",
                 "name": "'.$this->name.'",
                 "distance": "'.$this->distance.'",
-                "taxonomyActivities": "'.$taxonomy_activities.'"                
+                "taxonomyActivities": "'.$taxonomy_activities.'",
+                "feature_image": "'.$feature_image.'",
               }';
 
         Log::info($postfields);
