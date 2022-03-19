@@ -179,7 +179,7 @@ class EcTrack extends Model {
     }
 
     public function ecPois(): BelongsToMany {
-        return $this->belongsToMany(EcPoi::class);
+        return $this->belongsToMany(EcPoi::class)->withPivot('order')->orderByPivot('order');
     }
 
     public function taxonomyWheres() {
