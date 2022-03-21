@@ -64,6 +64,7 @@ class EcTrack extends Model {
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -79,12 +80,14 @@ class EcTrack extends Model {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                    $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
                 } catch (\Exception $e) {
                     Log::error('An error occurred during a store operation: ' . $e->getMessage());
                 }
             } else {
                 $ecTrack->skip_update = false;
             }
+        
         });
         /**
          * static::updated(function ($ecTrack) {
