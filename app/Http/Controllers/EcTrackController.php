@@ -174,6 +174,17 @@ class EcTrackController extends Controller {
             } else $ecTrack->$field = null;
         }
 
+        // Related POI Order
+        if(isset($request->related_pois_order)) {
+            if(is_array($request->related_pois_order) && count($request->related_pois_order)) {
+                $order = 1;
+                foreach($request->related_pois_order as $poi_id) {
+                    $ecTrack->ecPois()->updateExistingPivot($poi_id,['order'=>$order]);
+                    $order++;
+                }
+            }
+        }
+
         $ecTrack->skip_update = true;
         $ecTrack->save();
 
