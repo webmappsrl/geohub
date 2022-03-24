@@ -65,7 +65,7 @@ class Layer extends Resource
         if(NovaCurrentResourceActionHelper::isUpdate($request)) {
             return $this->update();
         }
-
+        // TODO: capire se è la scelta migliore
         return $this->create();
 
 
@@ -112,7 +112,7 @@ class Layer extends Resource
     public function create() {
         return [
             Text::make('Name')->required(),
-            BelongsTo::make('App'),
+            BelongsTo::make('App')->searchable()->showCreateRelationButton(),
         ];
     }
     public function update() {
