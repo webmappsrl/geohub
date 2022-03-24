@@ -68,7 +68,6 @@ class Layer extends Resource
         // TODO: capire se è la scelta migliore
         return $this->create();
 
-
     }
 
     public function index() {

@@ -163,6 +163,7 @@ class App extends Resource {
    
     }
     public function update() {
+        
         return [ (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections()))];
     }
 
@@ -170,22 +171,12 @@ class App extends Resource {
             return [
                 'APP' => $this->app_tab(),
                 'AUTH' => $this->auth_tab(),
-                // 'EVENTS' => $this->events_tab(),
-                // 'FILTERS' => $this->filters_tab(),
                 'GEOLOCATION' => $this->geolocation_tab(),
-                // TODO: 'HOME' => $this->home_tab(),
                 'ICONS' => $this->icons_tab(),
-                // 'INCLUDE' => $this->include_tab(),
                 'LANGUAGES' => $this->languages_tab(),
-                // 'LOAD' => $this->load_tab(),
                 'MAP' => $this->map_tab(),
-                // 'OFFLINE' => $this->offline_tab(),
                 'OPTIONS' => $this->options_tab(),
-                // 'PAGES' => $this->pages_tab(),
-                // 'REPORTS' => $this->reports_tab(),
                 'ROUTING' => $this->routing_tab(),
-                // 'SHARE' => $this->_tab(),
-                // 'STRINGS' => $this->_tab(),
                 'TABLE' => $this->table_tab(),
                 'THEME' => $this->theme_tab(),
                 'LAYERS' => $this->layers_tab(),
@@ -610,7 +601,18 @@ class App extends Resource {
 
     protected function layers_tab(): array {
         return [
-            HasMany::make('Layers'),
+            // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
+            Text::make('Layers',function () {
+                if($this->layers->count() > 0) {
+                    $out = '';
+                    foreach($this->layers as $l) {
+                        $out .= '<a href="/resources/layers/'.$l->id.'">'.$l->name.'</a></br>';
+                    }
+                    return $out;
+                } else {
+                    return 'No Layers';
+                }
+            })->asHtml(),
         ];
     }
 
