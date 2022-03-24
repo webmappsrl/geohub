@@ -115,6 +115,39 @@ class Layer extends Resource
         ];
     }
     public function update() {
+
+        $title = "EDIT LAYER: {$this->name} (LAYER GeohubId: {$this->id})";
+        if($this->app) {
+            $title = "EDIT LAYER: '{$this->name}' belongs to APP '{$this->app->name} '(LAYER GeohubId: {$this->id})";
+        }
+        return [ (new Tabs($title,[
+            'MAIN' => [
+                Text::make('Name')->required(),
+                Text::make('Title'),
+                Text::make('Subtitle'),
+                Textarea::make('Description')->alwaysShow()
+            ],
+            'BEHAVIOUR' => [
+                Boolean::make('No Details','noDetails'),
+                Boolean::make('No Interaction','noInteraction'),
+                Number::make('Zoom Min','minZoom'),
+                Number::make('Zoom Max','maxZoom'),
+                Boolean::make('Prevent Filter','preventFilter'),
+                Boolean::make('Invert Polygons','invertPolygons'),
+                Boolean::make('Alert','alert'),
+                Boolean::make('Show Label','show_label'),
+            ],
+            'STYLE' => [
+                Swatches::make('Color', 'color')->default('#de1b0d'),
+                Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
+                Number::make('Fill Opacity','fill_opacity'),
+                Number::make('Stroke Width','stroke_width'),
+                Number::make('Stroke Opacity','stroke_opacity'),
+                Number::make('Zindex','zindex'),
+                Text::make('Line Dash','line_dash')
+            ]
+        ]))->withToolbar()];
+
     }
 
     /**
