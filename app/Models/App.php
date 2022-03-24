@@ -42,6 +42,10 @@ class App extends Model {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
+    public function layers() {
+        return $this->hasMany(Layer::class);
+    }
+
     public function getGeojson() {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
