@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\App;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -51,7 +52,7 @@ STYLE
         Schema::create('layers', function (Blueprint $table) {
             // MAIN
             $table->id();
-            $table->unsignedBigInteger('app_id');
+            $table->foreignIdFor(App::class);
             $table->timestamps();
             $table->string('name');
             $table->string('title')->nullable();
@@ -80,11 +81,6 @@ STYLE
             $table->string('line_dash')->nullable();
 
 
-            // CONSTRAINTS
-            $table->foreign('app_id')
-                ->references('id')
-                ->on('apps')
-                ->onDelete('cascade');
         });
     }
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BooleanGroup;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -98,6 +99,7 @@ class App extends Resource {
      * @return array
      */
     public function fields(Request $request): array {
+
 
         if(NovaCurrentResourceActionHelper::isIndex($request)) {
             return $this->index();
@@ -186,6 +188,7 @@ class App extends Resource {
                 // 'STRINGS' => $this->_tab(),
                 'TABLE' => $this->table_tab(),
                 'THEME' => $this->theme_tab(),
+                'LAYERS' => $this->layers_tab(),
     
             ];
     }
@@ -602,6 +605,12 @@ class App extends Resource {
                     'features' => json_decode($model->getGeojson()),
                 ];
             })->onlyOnDetail(),
+        ];
+    }
+
+    protected function layers_tab(): array {
+        return [
+            HasMany::make('Layers'),
         ];
     }
 
