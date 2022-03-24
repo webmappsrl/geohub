@@ -66,6 +66,8 @@ class Layer extends Resource
             return $this->update();
         }
 
+        return $this->create();
+
 
     }
 
