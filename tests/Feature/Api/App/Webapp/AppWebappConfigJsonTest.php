@@ -61,22 +61,5 @@ class AppWebappConfigJsonTest extends TestCase
         $this->assertEquals($app->id, $json->APP->geohubId);
     }
 
-    public function test_api_is_webapp_it_has_only_app_section() {
-        $app = App::factory()->create(['api' => 'webmapp']);
-        $result = $this->getJson('/api/app/webapp/' . $app->id . '/config', []);
-        $this->assertEquals(200, $result->getStatusCode());
-        $json = json_decode($result->getContent());
-
-        $this->assertFalse(isset($json->LANGUAGES));
-        $this->assertFalse(isset($json->MAP));
-        $this->assertFalse(isset($json->THEME));
-        $this->assertFalse(isset($json->OPTIONS));
-        $this->assertFalse(isset($json->TABLE));
-        $this->assertFalse(isset($json->ROUTING));
-        $this->assertFalse(isset($json->REPORT));
-        $this->assertFalse(isset($json->GEOLOCATION));
-        $this->assertFalse(isset($json->AUTH));
-        $this->assertFalse(isset($json->OFFLINE));
-    }
 
 }
