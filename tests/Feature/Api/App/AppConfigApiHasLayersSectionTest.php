@@ -78,7 +78,7 @@ class AppConfigApiHasLayersSectionTest extends TestCase
                 }
             $behaviour_fields = ['noDetails','noInteraction','minZoom','maxZoom','preventFilter','invertPolygons','alert','show_label'];
             foreach($behaviour_fields as $field) {
-                $this->assertEquals($actual_layer->$field,$layer[$field]);
+                $this->assertEquals($actual_layer->$field,$layer['behaviour'][$field]);
             }
         }
     }
