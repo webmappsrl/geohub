@@ -125,8 +125,14 @@ class AppController extends Controller {
           $layers = [];
           foreach($app->layers as $layer) {
             $item=$layer->toArray();
+            // style
             foreach(['color','fill_color','fill_opacity','stroke_width','stroke_opacity','zindex','line_dash'] as $field) {
               $item['style'][$field]=$item[$field];
+              unset($item[$field]);
+            }
+            // behaviour
+            foreach(['noDetails','noInteraction','minZoom','maxZoom','preventFilter','invertPolygons','alert','show_label'] as $field) {
+              $item['behaviour'][$field]=$item[$field];
               unset($item[$field]);
             }
             unset($item['created_at']);
