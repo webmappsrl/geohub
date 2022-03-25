@@ -46,7 +46,6 @@ class AppConfigHomeSectionTest extends TestCase
         $home = $j['HOME'];
         $this->assertIsArray($home);
         $views=[];
-        $title='';
         foreach($home as $item) {
             $views[]=$item['view'];
             if($item['view']=='compact-horizontal'){
