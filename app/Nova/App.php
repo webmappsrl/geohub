@@ -239,10 +239,22 @@ class App extends Resource {
                 ->interval(0.1)
                 ->default(12)
                 ->onlyOnForms(),
+            Text::make(__('Bounding BOX'), 'map_bbox')
+                ->nullable()
+                ->onlyOnForms()
+                ->rules([
+                    function ($attribute, $value, $fail) {
+                        $decoded =json_decode($value);
+                        if(is_array($decoded) == false) {
+                            $fail('The '.$attribute.' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
+                        }
+                    }
+                ]),
 
             Number::make(__('Max Zoom'), 'map_max_zoom')->onlyOnDetail(),
             Number::make(__('Min Zoom'), 'minZoom')->onlyOnDetail(),
             Number::make(__('Def Zoom'), 'defZoom')->onlyOnDetail(),
+            Text::make(__('Bounding BOX'), 'bbox')->onlyOnDetail(),
         ];
     }
 

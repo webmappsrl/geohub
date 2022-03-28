@@ -94,6 +94,12 @@ class AppController extends Controller {
         $data['MAP']['maxZoom'] = $app->map_max_zoom;
         $data['MAP']['minZoom'] = $app->map_min_zoom;
 
+        if(is_null($app->map_bbox)) {
+          $data['MAP']['bbox'] =$this->_getBBox($app);
+        } else {
+          $data['MAP']['bbox'] = json_decode($app->map_bbox,true);
+        }
+
         // MAP section (bbox)
         if (in_array($app->api, ['elbrus'])) {
             $data['MAP']['bbox'] = $this->_getBBox($app);
