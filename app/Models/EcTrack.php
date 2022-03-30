@@ -544,7 +544,7 @@ class EcTrack extends Model {
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
     }
 
-    public function elasticIndex($index='ectracks')
+    public function elasticIndex($index='ectracks',$layers=[])
     {
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
@@ -575,7 +575,7 @@ class EcTrack extends Model {
                     $feature_image=$sizes['400x200'];
                 }
             }
-
+            
             $postfields='{
                 "geometry" : '.$geom.',
                 "id": '.$this->id.',
@@ -584,7 +584,8 @@ class EcTrack extends Model {
                 "name": "'.$this->name.'",
                 "distance": "'.$this->distance.'",
                 "taxonomyActivities": "'.$taxonomy_activities.'",
-                "feature_image": "'.$feature_image.'"
+                "feature_image": "'.$feature_image.'",
+                "layers": "'.json_encode($layers).'"
               }';
 
         Log::info($postfields);

@@ -133,10 +133,12 @@ class App extends Model {
      * Index all APP tracks using index name: app_id
      */
     public function elasticIndex() {
-        if(Arr::accessible($this->ecTracks)) {
+        
+        if(count($this->getTracksFromLayer())>0) {
             $index_name='app_'.$this->id;
-            foreach ($this->getEcTracks() as $t) {
-                $t->elasticIndex($index_name);
+            foreach ($this->getTracksFromLayer() as $tid => $layers) {
+                $t = EcTrack::find($tid);
+                $t->elasticIndex($index_name,$layers);
             }
         }
         else {
