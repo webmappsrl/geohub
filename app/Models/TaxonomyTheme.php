@@ -51,11 +51,15 @@ class TaxonomyTheme extends Model {
     }
 
     public function ecMedia() {
-        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_themeable');
+    }
+
+    public function ecTracks() {
+        return $this->morphedByMany(EcTrack::class, 'taxonomy_themeable');
     }
 
     public function layers(): MorphToMany {
-        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
+        return $this->morphedByMany(Layer::class, 'taxonomy_themeable');
     }
 
 

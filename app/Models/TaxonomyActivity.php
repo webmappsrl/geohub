@@ -52,15 +52,15 @@ class TaxonomyActivity extends Model {
     }
 
     public function ecMedia() {
-        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_activityable');
     }
 
-    public function ecTrack() {
-        return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
+    public function ecTracks() {
+        return $this->morphedByMany(EcTrack::class, 'taxonomy_activityable');
     }
 
     public function layers(): MorphToMany {
-        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
+        return $this->morphedByMany(Layer::class, 'taxonomy_activityable');
     }
 
 

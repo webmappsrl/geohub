@@ -51,11 +51,15 @@ class TaxonomyWhen extends Model {
     }
 
     public function ecMedia() {
-        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_whenable');
+    }
+
+    public function ecTracks() {
+        return $this->morphedByMany(EcTrack::class, 'taxonomy_whenable');
     }
 
     public function layers(): MorphToMany {
-        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
+        return $this->morphedByMany(Layer::class, 'taxonomy_whenable');
     }
 
     public function featureImage(): BelongsTo {

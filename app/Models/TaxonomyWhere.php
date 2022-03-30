@@ -120,11 +120,11 @@ class TaxonomyWhere extends Model {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 
-    public function ecTrack(): MorphToMany {
+    public function ecTracks(): MorphToMany {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
     }
 
-    public function ecPoi(): MorphToMany {
+    public function ecPois(): MorphToMany {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
 

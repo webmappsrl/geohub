@@ -51,11 +51,15 @@ class TaxonomyTarget extends Model {
     }
 
     public function ecMedia() {
-        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_targetable');
+    }
+
+    public function ecTracks() {
+        return $this->morphedByMany(EcTrack::class, 'taxonomy_targetable');
     }
 
     public function layers(): MorphToMany {
-        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
+        return $this->morphedByMany(Layer::class, 'taxonomy_targetable');
     }
 
     public function featureImage(): BelongsTo {
