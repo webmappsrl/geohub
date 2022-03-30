@@ -52,6 +52,10 @@ class LayerFactory extends Factory
             'zindex' => $this->faker->numberBetween(1,99),
             // TODO: line_dash '' => $this->faker->,
 
+            // DATA
+            'data_use_bbox' => $this->faker->boolean(),
+            'data_use_only_my_data' => $this->faker->boolean(),
+
         ];
     }
 }

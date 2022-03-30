@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -51,6 +52,10 @@ class TaxonomyTarget extends Model {
 
     public function ecMedia() {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+    }
+
+    public function layers(): MorphToMany {
+        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
     }
 
     public function featureImage(): BelongsTo {

@@ -8,11 +8,13 @@ use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaAttachMany\AttachMany;
 use Yna\NovaSwatches\Swatches;
 
 class Layer extends Resource
@@ -105,7 +107,43 @@ class Layer extends Resource
                 Number::make('Stroke Opacity','stroke_opacity'),
                 Number::make('Zindex','zindex'),
                 Text::make('Line Dash','line_dash')
+            ],
+            'DATA' => [
+                Heading::make('Here are shown rules used to assign data to this layer'),
+                Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
+                Boolean::make('Use features only created by myself','data_use_only_my_data'),
+                Text::make('Activities',function(){
+                    if($this->taxonomyActivities()->count() >0) {
+                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
+                    }
+                    return 'No activities';
+                }),
+                Text::make('Wheres',function(){
+                    if($this->taxonomyWheres()->count() >0) {
+                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
+                    }
+                    return 'No Wheres';
+                }),
+                Text::make('Themes',function(){
+                    if($this->taxonomyThemes()->count() >0) {
+                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                    }
+                    return 'No Themes';
+                }),
+                Text::make('Targets',function(){
+                    if($this->taxonomyTargets()->count() >0) {
+                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
+                    }
+                    return 'No Targets';
+                }),
+                Text::make('Whens',function(){
+                    if($this->taxonomyWhens()->count() >0) {
+                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
+                    }
+                    return 'No Whens';
+                }),
             ]
+
         ]))->withToolbar()];
     }
     public function create() {
@@ -145,6 +183,16 @@ class Layer extends Resource
                 Number::make('Stroke Opacity','stroke_opacity'),
                 Number::make('Zindex','zindex'),
                 Text::make('Line Dash','line_dash')
+            ],
+            'DATA' => [
+                Heading::make('Use this interface to define rules to assign data to this layer'),
+                Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
+                Boolean::make('Use features only created by myself','data_use_only_my_data'),
+                AttachMany::make('TaxonomyActivities'),
+                // AttachMany::make('TaxonomyThemes'),
+                // AttachMany::make('TaxonomyWheres'),
+                // AttachMany::make('TaxonomyTargets'),
+                // AttachMany::make('TaxonomyWhens'),
             ]
         ]))->withToolbar()];
 

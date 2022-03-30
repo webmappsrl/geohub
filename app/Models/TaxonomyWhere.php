@@ -128,6 +128,10 @@ class TaxonomyWhere extends Model {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
 
+    public function layers(): MorphToMany {
+        return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
+    }
+
     public function featureImage(): BelongsTo {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
