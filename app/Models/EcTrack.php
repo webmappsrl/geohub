@@ -562,9 +562,17 @@ class EcTrack extends Model {
 
             // TODO: converti into array for ELASTIC correct datatype
             // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-            $taxonomy_activities='';
-            if($this->taxonomyActivities()->count() >0) {
-                $taxonomy_activities = implode(',',$this->taxonomyActivities()->pluck('identifier')->toArray());
+            $taxonomy_activities='[]';
+            if($this->taxonomyActivities->count() >0) {
+                $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+            }
+            $taxonomy_wheres='[]';
+            if($this->taxonomyWheres->count() >0) {
+                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+            }
+            $taxonomy_themes='[]';
+            if($this->taxonomyThemes->count() >0) {
+                $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
             }
 
             // FEATURE IMAGE
@@ -575,7 +583,7 @@ class EcTrack extends Model {
                     $feature_image=$sizes['400x200'];
                 }
             }
-            
+
             $postfields='{
                 "geometry" : '.$geom.',
                 "id": '.$this->id.',
@@ -583,9 +591,11 @@ class EcTrack extends Model {
                 "cai_scale": "'.$this->cai_scale.'",
                 "name": "'.$this->name.'",
                 "distance": "'.$this->distance.'",
-                "taxonomyActivities": "'.$taxonomy_activities.'",
+                "taxonomyActivities": '.$taxonomy_activities.',
+                "taxonomyWheres": '.$taxonomy_wheres.',
+                "taxonomyThemes": '.$taxonomy_themes.',
                 "feature_image": "'.$feature_image.'",
-                "layers": "'.json_encode($layers).'"
+                "layers": '.json_encode($layers).'
               }';
 
         Log::info($postfields);
