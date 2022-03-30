@@ -146,7 +146,7 @@ class EcTrackUpdateTest extends TestCase {
         $this->assertIsString($result->getContent());
 
         $where = TaxonomyWhere::find($where->id);
-        $tracks = $where->ecTrack;
+        $tracks = $where->ecTracks;
         $this->assertCount(1, $tracks);
         $this->assertSame($ecTrack->id, $tracks->first()->id);
     }

@@ -5,19 +5,32 @@ namespace Database\Seeders;
 use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
+use App\Models\Layer;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
+use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhere;
+use App\Models\TaxonomyWhen;
+use App\Models\TaxonomyTarget;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class MontePisanoSeeder extends Seeder
 {
 
     private $taxonomy_activity_hiking;
     private $taxonomy_activity_cycling;
+    private $taxonomy_theme_nature;
+    private $taxonomy_theme_culture;
+    private $taxonomy_when_spring;
+    private $taxonomy_when_summer;
+    private $taxonomy_when_autumn;
+    private $taxonomy_when_winter;
+    private $taxonomy_target_children;
+    private $taxonomy_target_family;
     private $feature_image;
     /**
      * Run the database seeds.
@@ -30,13 +43,16 @@ class MontePisanoSeeder extends Seeder
         $this->importAllPoiTypes();
         $this->importAllWhere();
         $this->importAllActivities();
+        $this->importAllThemes();
+        $this->importAllWhens();
+        $this->importAllTargets();
 
         // Images
         $this->importAllImages();
 
         // Features
         $this->importTracks();
-        $this->createApps();
+        $this->createAppsAndLayers();
     }
 
     private function importAllWhere() {
@@ -78,6 +94,24 @@ class MontePisanoSeeder extends Seeder
         $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier'=>'cycling','name'=>'In Bicicletta']);
     }
 
+    private function importAllThemes() {
+        $this->taxonomy_theme_nature = TaxonomyTheme::factory()->create(['identifier'=>'nature','name'=>'Nature']);
+        $this->taxonomy_theme_culture = TaxonomyTheme::factory()->create(['identifier'=>'culture','name'=>'Culture']);
+    }
+
+    private function importAllWhens() {
+        $this->taxonomy_when_spring = TaxonomyWhen::factory()->create(['identifier'=>'spring','name'=>'Primavera']);
+        $this->taxonomy_when_summer = TaxonomyWhen::factory()->create(['identifier'=>'summer','name'=>'Estate']);
+        $this->taxonomy_when_autumn = TaxonomyWhen::factory()->create(['identifier'=>'autumn','name'=>'Autunno']);
+        $this->taxonomy_when_winter = TaxonomyWhen::factory()->create(['identifier'=>'winter','name'=>'Inverno']);
+    }
+
+    private function importAllTargets() {
+        $this->taxonomy_target_children = TaxonomyTarget::factory()->create(['identifier'=>'children','name'=>'Bambini']);
+        $this->taxonomy_target_family = TaxonomyTarget::factory()->create(['identifier'=>'family','name'=>'Famiglie']);
+        $this->taxonomy_target_sport = TaxonomyTarget::factory()->create(['identifier'=>'sport','name'=>'Sportivi']);
+    }
+
     private function importAllImages() {
         Artisan::call('geohub:import_ec_media',
                           ['url'=>'tests/Fixtures/EcMedia/test.jpg',
@@ -93,6 +127,7 @@ class MontePisanoSeeder extends Seeder
             TaxonomyWhere::factory()->create(
                 [
                     'name' => $g->properties->name->it,
+                    // TODO: unique 'identifier' => Str::slug($g->properties->name->it,'-'),
                     'geometry' => DB::raw("ST_GeomFromGeoJSON('".json_encode($g->geometry)."')"),
                 ]
             );
@@ -139,10 +174,13 @@ class MontePisanoSeeder extends Seeder
 
     }
 
-    private function createApps() {
+    private function createAppsAndLayers() {
         // TODO: uncomment elbrus and webmapp after ELASTIC stuff
         // $app_elbrus = App::factory()->create(['api'=>'elbrus']);
         // $app_webmapp = App::factory()->create(['api'=>'webmapp']);
-        $app_webapp = App::factory()->create(['api'=>'webapp']);
+        $app = App::factory()->create(['api'=>'webapp']);
+        Layer::factory()->create(['app_id'=>$app->id]);
+        Layer::factory()->create(['app_id'=>$app->id]);
+       
     }
 }

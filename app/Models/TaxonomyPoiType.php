@@ -50,7 +50,11 @@ class TaxonomyPoiType extends Model {
     }
 
     public function ecMedia() {
-        return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
+        return $this->morphedByMany(EcMedia::class, 'taxonomy_poi_typeable');
+    }
+
+    public function ecTracks() {
+        return $this->morphedByMany(EcTrack::class, 'taxonomy_poi_typeable');
     }
 
     public function featureImage(): BelongsTo {
