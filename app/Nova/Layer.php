@@ -67,8 +67,13 @@ class Layer extends Resource
         if(NovaCurrentResourceActionHelper::isUpdate($request)) {
             return $this->update();
         }
-        // TODO: capire se è la scelta migliore
-        return $this->create();
+        // TODO: gestire al meglio i fields non nova
+        $my_url = $request->server->get('HTTP_REFERER');
+        if( strpos($my_url,'/edit') !== FALSE ) {
+            return $this->update();
+        } else {
+            return $this->create();
+        }
 
     }
 
@@ -76,8 +81,8 @@ class Layer extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('App'),
-            Text::make('Name')->required()->sortable(),            
-        ]; 
+            Text::make('Name')->required()->sortable(),
+        ];
     }
 
     public function detail() {
