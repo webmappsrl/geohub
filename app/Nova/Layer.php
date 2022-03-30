@@ -7,6 +7,7 @@ use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
@@ -67,8 +68,12 @@ class Layer extends Resource
         if(NovaCurrentResourceActionHelper::isUpdate($request)) {
             return $this->update();
         }
-        // TODO: capire se è la scelta migliore
-        return $this->create();
+        $my_url = $request->server->get('HTTP_REFERER');
+        if( strpos($my_url,'/edit') !== FALSE ) {
+            return $this->update();
+        } else {
+            return $this->create();
+        }
 
     }
 
@@ -76,8 +81,8 @@ class Layer extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('App'),
-            Text::make('Name')->required()->sortable(),            
-        ]; 
+            Text::make('Name')->required()->sortable(),
+        ];
     }
 
     public function detail() {
@@ -188,7 +193,7 @@ class Layer extends Resource
                 Heading::make('Use this interface to define rules to assign data to this layer'),
                 Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
                 Boolean::make('Use features only created by myself','data_use_only_my_data'),
-                AttachMany::make('TaxonomyActivities'),
+                AttachMany::make('taxonomyActivities'),
                 // AttachMany::make('TaxonomyThemes'),
                 // AttachMany::make('TaxonomyWheres'),
                 // AttachMany::make('TaxonomyTargets'),
