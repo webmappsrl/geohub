@@ -27,6 +27,7 @@ class AppFactory extends Factory {
             'map_max_zoom' => $this->faker->numberBetween(15, 19),
             'map_def_zoom' => $this->faker->numberBetween(12, 14),
             'map_min_zoom' => $this->faker->numberBetween(9, 11),
+            'map_bbox' => json_encode([$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19)]),
             'font_family_header' => 'Roboto',
             'font_family_content' => 'Roboto',
             'default_feature_color' => $this->faker->hexColor(),
