@@ -7,6 +7,7 @@ use App\Nova\App;
 use App\Nova\EcMedia;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
+use App\Nova\Layer;
 use App\Nova\TaxonomyActivity;
 use App\Nova\TaxonomyPoiType;
 use App\Nova\TaxonomyTarget;
@@ -62,6 +63,7 @@ class ResourceManager extends Tool
             EcMedia::class,
             EcTrack::class,
             EcPoi::class,
+            Layer::class
         ];
 
         $UgcArray = [];

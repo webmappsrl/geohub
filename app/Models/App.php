@@ -42,6 +42,10 @@ class App extends Model {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
+    public function layers() {
+        return $this->hasMany(Layer::class);
+    }
+
     public function getGeojson() {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
@@ -129,10 +133,12 @@ class App extends Model {
      * Index all APP tracks using index name: app_id
      */
     public function elasticIndex() {
-        if(Arr::accessible($this->ecTracks)) {
+        
+        if(count($this->getTracksFromLayer())>0) {
             $index_name='app_'.$this->id;
-            foreach ($this->getEcTracks() as $t) {
-                $t->elasticIndex($index_name);
+            foreach ($this->getTracksFromLayer() as $tid => $layers) {
+                $t = EcTrack::find($tid);
+                $t->elasticIndex($index_name,$layers);
             }
         }
         else {
@@ -224,5 +230,39 @@ class App extends Model {
         ));
         curl_exec($curl);
         curl_close($curl);
+    }
+
+    /**
+     * Returns array of all tracks'id in APP through layers deifinition
+     *  $tracks = [ 
+     *               t1_d => [l11_id,l12_id, ... , l1N_1_id],
+     *               t2_d => [l21_id,l22_id, ... , l2N_2_id],
+     *               ... ,
+     *               tM_d => [lM1_id,lM2_id, ... , lMN_M_id],
+     *            ]
+     * where t*_id are tracks ids and l*_id are layers where tracks are found
+     * 
+     * @return array
+     */
+    public function getTracksFromLayer(): array {
+        $tracks = [];
+        if($this->layers->count()>0) {
+            foreach($this->layers as $layer) {
+                $taxonomies = ['Themes','Activities','Wheres'];
+                foreach($taxonomies as $taxonomy) {
+                    $taxonomy = 'taxonomy'.$taxonomy;
+                    if($layer->$taxonomy->count() >0) {
+                        foreach($layer->$taxonomy as $term) {
+                            if($term->ecTracks()->where('user_id',$this->user_id)->get()->count()>0) {
+                                foreach($term->ecTracks()->where('user_id',$this->user_id)->get() as $track) {
+                                    $tracks[$track->id][]=$layer->id;
+                                }
+                            } 
+                        }
+                    }    
+                }
+            }
+        }
+        return $tracks;
     }
 }

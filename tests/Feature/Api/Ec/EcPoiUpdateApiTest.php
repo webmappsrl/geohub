@@ -68,7 +68,7 @@ class EcPoiUpdateApiTest extends TestCase {
         $this->assertIsString($result->getContent());
 
         $where = TaxonomyWhere::find($where->id);
-        $pois = $where->ecPoi;
+        $pois = $where->ecPois;
         $this->assertCount(1, $pois);
         $this->assertSame($ecPoi->id, $pois->first()->id);
     }

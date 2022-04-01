@@ -310,7 +310,7 @@ class EcTrack extends Resource {
                         throw new Exception(__("The uploaded file is not valid"));
                     };
                 })->onlyOnForms(),
-                Ecpoipopup::make(__('EcPoi'))
+                Ecpoipopup::make(__('ecPoi'))
                     ->nullable()
                     ->onlyOnForms()
                     ->feature($geojson ?? []),
@@ -474,7 +474,7 @@ tr:nth-child(even) {
 }
 </style>
 <table>
-<tr><th>GROUP</th><th>NAME</th><th>TYPE</th><th>NULL</th><th>DEF</th><th>FK</th><th>I18N</th><th>LABEL</th><th>DESCRIPTION</th></tr>
+
 <tr><td><i>main</i></td><td>id</td><td>int8</td><td>NO</td><td>AUTO</td><td>-</td><td>NO</td><td>Geohub ID</td><td>TRACK identification code in the Geohub</td></tr>
 <tr><td><i>main</i></td><td>user_id</td><td>int4</td><td>NO</td><td>NULL</td><td>users</td><td>NO</td><td>Author</td><td>TRACK author: foreign key wiht table users</td></tr>
 <tr><td><i>main</i></td><td>created_at</td><td>timestamp(0)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Created At</td><td>When TRACK has been created: datetime</td></tr>
@@ -491,6 +491,7 @@ tr:nth-child(even) {
 <tr><td><i>map</i></td><td>slope</td><td>json</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
 <tr><td><i>map</i></td><td>mbtiles</td><td>json</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
 <tr><td><i>map</i></td><td>elevation_chart_image</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>TBD</td><td>TBD</td></tr>
+<tr><td><i>map</i></td><td>related_poi</td><td>N:N</td><td>YES</td><td>NULL</td><td>ec_poi_ec_track</td><td>NO</td><td>ecPoi</td><td>Related Pois: pois along the tracks, sorted by the direction of travel</td></tr>
 <tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
 <tr><td><i>info</i></td><td>ref</td><td>varchar(255)</td><td>YES</td><td>NULL</td><td>-</td><td>NO</td><td>Ref</td><td>"ref" stands for "reference" and is used for reference numbers or codes. It represents, when it exists, the official number of the path associated with the TRACK, the one that is usually found on the ground in the horizontal and vertical signs</td></tr>
 <tr><td><i>info</i></td><td>from</td><td>text</td><td>YES</td><td>NULL</td><td>-</td><td>NO*</td><td>From</td><td>TRACK's starting position: name of the town or similar</td></tr>

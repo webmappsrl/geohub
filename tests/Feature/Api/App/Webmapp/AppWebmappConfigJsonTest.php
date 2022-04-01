@@ -64,25 +64,6 @@ class AppWebmappConfigJsonTest extends TestCase
         $this->assertEquals($app->id, $json->APP->geohubId);
     }
 
-    public function test_api_is_webmapp_it_has_only_app_section()
-    {
-        $app = App::factory()->create(['api' => 'webmapp']);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
-        $this->assertEquals(200, $result->getStatusCode());
-        $json = json_decode($result->getContent());
-
-        $this->assertFalse(isset($json->LANGUAGES));
-        $this->assertFalse(isset($json->MAP));
-        $this->assertFalse(isset($json->THEME));
-        $this->assertFalse(isset($json->OPTIONS));
-        $this->assertFalse(isset($json->TABLE));
-        $this->assertFalse(isset($json->ROUTING));
-        $this->assertFalse(isset($json->REPORT));
-        $this->assertFalse(isset($json->GEOLOCATION));
-        $this->assertFalse(isset($json->AUTH));
-        $this->assertFalse(isset($json->OFFLINE));
-    }
-
     public function test_api_is_webmapp_and_has_record_enabled_it_should_have_geolocation_section()
     {
         $app = App::factory()->create([
@@ -92,16 +73,6 @@ class AppWebmappConfigJsonTest extends TestCase
         $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
-
-        $this->assertFalse(isset($json->LANGUAGES));
-        $this->assertFalse(isset($json->MAP));
-        $this->assertFalse(isset($json->THEME));
-        $this->assertFalse(isset($json->OPTIONS));
-        $this->assertFalse(isset($json->TABLE));
-        $this->assertFalse(isset($json->ROUTING));
-        $this->assertFalse(isset($json->REPORT));
-        $this->assertFalse(isset($json->AUTH));
-        $this->assertFalse(isset($json->OFFLINE));
 
         $this->assertTrue($json->GEOLOCATION->record->enable);
     }

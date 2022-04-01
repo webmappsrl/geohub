@@ -65,7 +65,20 @@ class AppController extends Controller {
     private function config_section_home(App $app): array {
       $data = [];
 
-      $data['HOME']['title'] = $app->name;
+      $data['HOME'][] = [
+        'view'=>'title',
+        'title'=>$app->name
+      ];
+
+      if($app->layers->count()>0) {
+        foreach($app->layers as $layer) {
+          $data['HOME'][] = [
+            'view'=>'compact-horizontal',
+            'title'=>$layer->title,
+            'terms'=>[$layer->id]
+          ];
+        } 
+      }
 
       return $data;
   }
@@ -94,6 +107,12 @@ class AppController extends Controller {
         $data['MAP']['maxZoom'] = $app->map_max_zoom;
         $data['MAP']['minZoom'] = $app->map_min_zoom;
 
+        if(is_null($app->map_bbox)) {
+          $data['MAP']['bbox'] =$this->_getBBox($app);
+        } else {
+          $data['MAP']['bbox'] = json_decode($app->map_bbox,true);
+        }
+
         // MAP section (bbox)
         if (in_array($app->api, ['elbrus'])) {
             $data['MAP']['bbox'] = $this->_getBBox($app);
@@ -108,7 +127,27 @@ class AppController extends Controller {
             }
         }
 
-
+        if($app->layers->count()>0) {
+          $layers = [];
+          foreach($app->layers as $layer) {
+            $item=$layer->toArray();
+            // style
+            foreach(['color','fill_color','fill_opacity','stroke_width','stroke_opacity','zindex','line_dash'] as $field) {
+              $item['style'][$field]=$item[$field];
+              unset($item[$field]);
+            }
+            // behaviour
+            foreach(['noDetails','noInteraction','minZoom','maxZoom','preventFilter','invertPolygons','alert','show_label'] as $field) {
+              $item['behaviour'][$field]=$item[$field];
+              unset($item[$field]);
+            }
+            unset($item['created_at']);
+            unset($item['updated_at']);
+            unset($item['app_id']);
+            $layers[]=$item;
+          }
+          $data['MAP']['layers']=$layers;
+        }
         return $data;
     }
 

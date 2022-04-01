@@ -64,6 +64,7 @@ class EcTrack extends Model {
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -79,12 +80,14 @@ class EcTrack extends Model {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                    $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
                 } catch (\Exception $e) {
                     Log::error('An error occurred during a store operation: ' . $e->getMessage());
                 }
             } else {
                 $ecTrack->skip_update = false;
             }
+        
         });
         /**
          * static::updated(function ($ecTrack) {
@@ -179,7 +182,7 @@ class EcTrack extends Model {
     }
 
     public function ecPois(): BelongsToMany {
-        return $this->belongsToMany(EcPoi::class);
+        return $this->belongsToMany(EcPoi::class)->withPivot('order')->orderByPivot('order');
     }
 
     public function taxonomyWheres() {
@@ -541,7 +544,7 @@ class EcTrack extends Model {
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
     }
 
-    public function elasticIndex($index='ectracks')
+    public function elasticIndex($index='ectracks',$layers=[])
     {
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
@@ -559,9 +562,17 @@ class EcTrack extends Model {
 
             // TODO: converti into array for ELASTIC correct datatype
             // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-            $taxonomy_activities='';
-            if($this->taxonomyActivities()->count() >0) {
-                $taxonomy_activities = implode(',',$this->taxonomyActivities()->pluck('identifier')->toArray());
+            $taxonomy_activities='[]';
+            if($this->taxonomyActivities->count() >0) {
+                $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+            }
+            $taxonomy_wheres='[]';
+            if($this->taxonomyWheres->count() >0) {
+                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+            }
+            $taxonomy_themes='[]';
+            if($this->taxonomyThemes->count() >0) {
+                $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
             }
 
             // FEATURE IMAGE
@@ -580,8 +591,11 @@ class EcTrack extends Model {
                 "cai_scale": "'.$this->cai_scale.'",
                 "name": "'.$this->name.'",
                 "distance": "'.$this->distance.'",
-                "taxonomyActivities": "'.$taxonomy_activities.'",
-                "feature_image": "'.$feature_image.'"
+                "taxonomyActivities": '.$taxonomy_activities.',
+                "taxonomyWheres": '.$taxonomy_wheres.',
+                "taxonomyThemes": '.$taxonomy_themes.',
+                "feature_image": "'.$feature_image.'",
+                "layers": '.json_encode($layers).'
               }';
 
         Log::info($postfields);
