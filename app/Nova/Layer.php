@@ -194,10 +194,10 @@ class Layer extends Resource
                 Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
                 Boolean::make('Use features only created by myself','data_use_only_my_data'),
                 AttachMany::make('taxonomyActivities'),
-                // AttachMany::make('TaxonomyThemes'),
-                // AttachMany::make('TaxonomyWheres'),
-                // AttachMany::make('TaxonomyTargets'),
-                // AttachMany::make('TaxonomyWhens'),
+                AttachMany::make('TaxonomyThemes'),
+                AttachMany::make('TaxonomyWheres'),
+                AttachMany::make('TaxonomyTargets'),
+                AttachMany::make('TaxonomyWhens'),
             ]
         ]))->withToolbar()];
 
