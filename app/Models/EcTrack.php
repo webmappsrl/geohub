@@ -206,6 +206,11 @@ class EcTrack extends Model {
             ->withPivot(['duration_forward', 'duration_backward']);
     }
 
+    public function taxonomyPoiTypes() {
+        return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
+    }
+
+
     public function featureImage(): BelongsTo {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
