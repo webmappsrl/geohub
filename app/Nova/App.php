@@ -255,10 +255,12 @@ class App extends Resource {
     protected function theme_tab(): array {
         $fontsOptions = [
             'Helvetica' => ['label' => 'Helvetica'],
+            'Inter' => ['label' => 'Inter'],
             'Lato' => ['label' => 'Lato'],
             'Merriweather' => ['label' => 'Merriweather'],
             'Montserrat' => ['label' => 'Montserrat'],
             'Montserrat Light' => ['label' => 'Montserrat Light'],
+            'Monrope' => ['label' => 'Monrope'],
             'Noto Sans' => ['label' => 'Noto Sans'],
             'Noto Serif' => ['label' => 'Noto Serif'],
             'Open Sans' => ['label' => 'Roboto'],
