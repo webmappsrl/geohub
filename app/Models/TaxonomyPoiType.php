@@ -56,6 +56,10 @@ class TaxonomyPoiType extends Model {
     public function ecTracks() {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_poi_typeable');
     }
+    
+    public function layers() {
+        return $this->morphedByMany(Layer::class, 'taxonomy_poi_typeable');
+    }
 
     public function featureImage(): BelongsTo {
         return $this->belongsTo(EcMedia::class, 'feature_image');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use App\Models\EcMedia;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -144,6 +145,66 @@ class AppController extends Controller {
             unset($item['created_at']);
             unset($item['updated_at']);
             unset($item['app_id']);
+
+            // FEATURE IMAGE:
+            $feature_image = null;
+            if($layer->taxonomyWheres->count()>0) {
+              foreach($layer->taxonomyWheres as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+            if($feature_image == null && $layer->taxonomyThemes->count()>0) {
+              foreach($layer->taxonomyThemes as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+
+            if($feature_image == null && $layer->taxonomyActivities->count()>0) {
+              foreach($layer->taxonomyActivities as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+
+            if($feature_image == null && $layer->taxonomyWhens->count()>0) {
+              foreach($layer->taxonomyWhens as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+
+            if($feature_image == null && $layer->taxonomyTargets->count()>0) {
+              foreach($layer->taxonomyTargets as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+
+            if($feature_image == null && $layer->taxonomyPoiTypes->count()>0) {
+              foreach($layer->taxonomyPoiTypes as $term) {
+                if(isset($term->feature_image) && !empty($term->feature_image)) {
+                  $feature_image = $term->feature_image;
+                }
+              }
+            }
+
+
+
+            if($feature_image != null) {
+              // Retrieve proper image
+              $image = EcMedia::find($feature_image);
+              if(!is_null($image->thumbnail('400x200'))) {
+                $item['feature_image']=$image->thumbnail('400x200');
+              }
+            }
+
             $layers[]=$item;
           }
           $data['MAP']['layers']=$layers;
