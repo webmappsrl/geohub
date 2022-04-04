@@ -24,6 +24,10 @@ class Layer extends Model
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
+    public function taxonomyPoiTypes() {
+        return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
+    }
+
     public function taxonomyThemes() {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
