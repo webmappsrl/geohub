@@ -584,8 +584,12 @@ class EcTrack extends Model {
             $feature_image='';
             if(isset($this->featureImage->thumbnails) ){
                 $sizes = json_decode($this->featureImage->thumbnails,TRUE);
+                // TODO: use proper ecMedia function
                 if(isset($sizes['400x200'])) {
                     $feature_image=$sizes['400x200'];
+                }
+                else if(isset($sizes['225x100'])) {
+                    $feature_image=$sizes['225x100'];
                 }
             }
 
