@@ -4,10 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Layer extends Model
 {
     use HasFactory;
+
+    protected static function booted() {
+        parent::booted();
+        static::creating(function ($l) {
+            $l->rank = DB::select( DB::raw('SELECT max(rank) from layers'))[0]->max +1;
+        });
+    }
+
+
 
     public function app() {
         return $this->belongsTo(App::class);
