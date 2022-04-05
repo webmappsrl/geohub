@@ -72,8 +72,8 @@ class AppController extends Controller {
       ];
 
       if($app->layers->count()>0) {
-        foreach($app->layers as $layer) {
-          $data['HOME'][] = [
+        foreach($app->layers()->orderBy('rank')->get() as $layer) {
+            $data['HOME'][] = [
             'view'=>'compact-horizontal',
             'title'=>$layer->title,
             'terms'=>[$layer->id]
