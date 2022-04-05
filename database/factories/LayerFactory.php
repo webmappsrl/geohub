@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\App;
 use App\Models\Layer;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 class LayerFactory extends Factory
 {
@@ -55,7 +56,6 @@ class LayerFactory extends Factory
             // DATA
             'data_use_bbox' => $this->faker->boolean(),
             'data_use_only_my_data' => $this->faker->boolean(),
-
         ];
     }
 }

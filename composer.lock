@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cd6688c964ed5b8e5b39536d2b5027a",
+    "content-hash": "0683b133326a4536e6e3b22b464816c1",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -4378,6 +4378,51 @@
                 "source": "https://github.com/namshi/jose/tree/master"
             },
             "time": "2016-12-05T07:27:31+00:00"
+        },
+        {
+            "name": "ncus/inline-index",
+            "version": "v0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Blueq-world/laravel-nova-inlineIndex.git",
+                "reference": "ca53ad5d752441020382d5d8b7f732fd64123b97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Blueq-world/laravel-nova-inlineIndex/zipball/ca53ad5d752441020382d5d8b7f732fd64123b97",
+                "reference": "ca53ad5d752441020382d5d8b7f732fd64123b97",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ncus\\InlineIndex\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ncus\\InlineIndex\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/Blueq-world/laravel-nova-inlineIndex/issues",
+                "source": "https://github.com/Blueq-world/laravel-nova-inlineIndex/tree/master"
+            },
+            "time": "2020-06-22T04:47:47+00:00"
         },
         {
             "name": "ndamiens/gisconverter",
@@ -9537,7 +9582,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/schema-org",
+            "version": "dev-hotfix/geohub.222.1.4",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -9573,7 +9618,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/schema-org",
+            "version": "dev-hotfix/geohub.222.1.4",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -9609,7 +9654,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/schema-org",
+            "version": "dev-hotfix/geohub.222.1.4",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -9645,7 +9690,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/schema-org",
+            "version": "dev-hotfix/geohub.222.1.4",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -9681,7 +9726,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/schema-org",
+            "version": "dev-hotfix/geohub.222.1.4",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -12382,5 +12427,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }
