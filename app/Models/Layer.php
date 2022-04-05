@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Layer extends Model
 {
     use HasFactory;
+    // protected $fillable = ['rank'];
 
     protected static function booted() {
         parent::booted();

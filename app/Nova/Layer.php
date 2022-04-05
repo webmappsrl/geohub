@@ -16,7 +16,10 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use NovaAttachMany\AttachMany;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Yna\NovaSwatches\Swatches;
+use Ncus\InlineIndex\InlineIndex;
+
 
 class Layer extends Resource
 {
@@ -82,6 +85,8 @@ class Layer extends Resource
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('App'),
             Text::make('Name')->required()->sortable(),
+            // Number::make('Rank')->sortable(),
+            InlineIndex::make('Rank')->sortable()->rules('required'),
         ];
     }
 
@@ -222,7 +227,11 @@ class Layer extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            (new NovaSearchableBelongsToFilter('App'))
+            ->fieldAttribute('app')
+            ->filterBy('app_id'),
+        ];
     }
 
     /**
