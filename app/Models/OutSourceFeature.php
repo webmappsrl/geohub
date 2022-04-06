@@ -19,10 +19,23 @@ class OutSourceFeature extends Model
 
     public function getName(): string {
         $name = "OutSourceTrack {$this->provider} {$this->source_id} (ID: {$this->id})";
-        if (isset($this->tags['name'])) {
-            return array_values($this->tags['name'])[0];
+        if (isset($this->tags['name']) && !is_null($this->tags['name'])) {
+            $val = array_values($this->tags['name'])[0];
+            if(!is_null($val)) {
+                return $val;
+            }
         }
         return $name;
+    }
+
+    // TODO: switch on provider
+    public function getNormalizedTags(): array {
+        $tags=[];
+        if(isset($this->tags['ref'])) {$tags['ref']=$this->tags['ref'];}
+        if(isset($this->tags['cai_scale'])) {$tags['cai_scale']=$this->tags['cai_scale'];}
+        if(isset($this->tags['from'])) {$tags['from']=$this->tags['from'];}
+        if(isset($this->tags['to'])) {$tags['to']=$this->tags['to'];}
+        return $tags;
     }
 
 }
