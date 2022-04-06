@@ -82,7 +82,15 @@ class OutSourceImportCommand extends Command
         foreach($this->getHardCodedOSMIds() as $id) {
             Log::info("Processing OSMID $id");
             $item = $provider->getItem($id);
-            var_dump($item);
+            $os = OutSourceTrack::firstOrCreate([
+                'provider' => 'App\Providers\OutSourceOSMProvider',
+                'type' => 'track',
+                'source_id' => $id,
+            ]);
+            $item = $provider->getItem($id);
+            $os->tags=$item['tags'];
+            $os->geometry=DB::raw("(ST_GeomFromGeoJSON('{$item['geometry']}'))");
+            $os->save();
         }
     }
 
