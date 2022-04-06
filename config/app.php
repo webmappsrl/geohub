@@ -208,6 +208,7 @@ return [
         App\Providers\EcTrackServiceProvider::class,
         App\Providers\PartnershipValidationProvider::class,
         App\Providers\OutSourceSentieroItaliaProvider::class,
+        App\Providers\OutSourceOSMProvider::class,
 
         /**
          * A PHP desktop/mobile user agent parser

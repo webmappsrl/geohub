@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\OutSourceTrack;
+use App\Providers\OutSourceOSMProvider;
 use App\Providers\OutSourceSentieroItaliaProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,8 @@ class OutSourceImportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_import';
+    protected $signature = 'geohub:out_source_import 
+                            {provider : Select the provider to be used for import (sicai or osm)}';
 
     /**
      * The console command description.
@@ -41,6 +43,23 @@ class OutSourceImportCommand extends Command
      */
     public function handle()
     {
+        $provider = $this->argument('provider');
+        switch ($provider) {
+            case 'sicai':
+                $this->handleSicai();
+                break;
+            case 'osm':
+                    $this->handleOSM();
+                break;
+                
+            default:
+                Log::error("INVALID PROVIDER");
+            break;
+        }
+    }
+
+    private function handleSicai() {
+        Log::info("Handling Sentiero Italia Provider");
         $si = app(OutSourceSentieroItaliaProvider::class);
         foreach ($si->getTrackList() as $id) {
             Log::info("Importing track: source_id -> {$id}");
@@ -55,5 +74,26 @@ class OutSourceImportCommand extends Command
             $os->save();
         }
         return 0;
+    }
+
+    private function handleOSM() {
+        Log::info("Handling OSM Provider");
+        $provider = app(OutSourceOSMProvider::class);
+        foreach($this->getHardCodedOSMIds() as $id) {
+            Log::info("Processing OSMID $id");
+            $item = $provider->getItem($id);
+            var_dump($item);
+        }
+    }
+
+    private function getHardCodedOSMIds() {
+        return [
+            7744463,
+            // 3523766,
+            // 2858770,
+            // 2858769,
+            // 12183019,
+            // 12204319,
+        ];
     }
 }
