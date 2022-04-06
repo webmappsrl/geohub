@@ -51,11 +51,20 @@ class OutSourceOSMProvider extends ServiceProvider
                 $geometry=$res[0]->geometry;
             }
 
+            // NAME
+            if(!empty($item->name)) {
+                $name = $item->name;
+            } else if(!empty($item->ref)) {
+                $name = "Percorso escursionistico {$item->ref}";
+            } else {
+                $name = "Percorso escursionistico (OSMID:$id)";
+            }
+
             $data=[
                 'provider' => get_class($this),
                 'source_id'=> $id,
                 'tags' => [
-                    'name' => ['it' => $item->name],
+                    'name' => ['it' => $name],
                     'ref' => $item->ref,
                     'cai_scale' => $item->cai_scale,
                     'from' => $item->from,
