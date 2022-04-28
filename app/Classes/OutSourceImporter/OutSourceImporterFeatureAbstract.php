@@ -6,42 +6,45 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
-abstract class OutSourceImporterListAbstract
+abstract class OutSourceImporterFeatureAbstract
 {
 
     // DATA
     protected $type;
     protected $endpoint;
+    protected $source_id;
 
     /**
-     * It sets all needed properties in order to perform the import
+     * It sets all needed properties in order to perform the import in the out_source_feature table
      * 
      *
      * @param string $type the of the feature (Track, Poi or Media)
      * @param string $endpoint the url from which import begins (https://stelvio.wp.webmapp.it)
+     * @param string $source_id the id of the feature being imported
      */
-    public function __construct(string $type, string  $endpoint) 
+    public function __construct(string $type, string  $endpoint, string $source_id) 
     {
         $this->type = strtolower($type);
         $this->endpoint = strtolower($endpoint);
+        $this->source_id = $source_id;
     }
 
-    abstract protected function getTrackList();
-    abstract protected function getPoiList();
-    abstract protected function getMediaList();
+    abstract protected function importTrack();
+    abstract protected function importPoi();
+    abstract protected function importMedia();
 
-    public function getList() {
+    public function importFeature() {
         switch ($this->type) {
             case 'track':
-                return $this->getTrackList();
+                return $this->importTrack();
                 break;
             
             case 'poi':
-                return $this->getPoiList();
+                return $this->importPoi();
                 break;
             
             case 'media':
-                return $this->getMediaList();
+                return $this->importMedia();
                 break;
             
             default:
