@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Helpers;
+
+class OutSourceImporterHelper {
+    public static function importerCurl($type, $endpoint)
+    {
+        //https://stelvio.wp.webmapp.it/wp-json/webmapp/v1/list?type=track 
+        $url = $endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $type;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $response;
+    }
+}
