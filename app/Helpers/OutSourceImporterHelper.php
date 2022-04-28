@@ -3,10 +3,14 @@
 namespace App\Helpers;
 
 class OutSourceImporterHelper {
-    public static function importerCurl($type, $endpoint)
+    public static function importerCurl($type, $endpoint, $source_id = '')
     {
         //https://stelvio.wp.webmapp.it/wp-json/webmapp/v1/list?type=track 
-        $url = $endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $type;
+        if (!empty($source_id)) {
+            $url = $endpoint . '/' . '/wp-json/wp/v2/' . $type . '/' . $source_id;
+        } else {
+            $url = $endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $type;
+        }
 
         $curl = curl_init();
 
