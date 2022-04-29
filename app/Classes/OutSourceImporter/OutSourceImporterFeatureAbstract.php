@@ -22,7 +22,7 @@ abstract class OutSourceImporterFeatureAbstract
      * @param string $endpoint the url from which import begins (https://stelvio.wp.webmapp.it)
      * @param string $source_id the id of the feature being imported
      */
-    public function __construct(string $type, string  $endpoint, string $source_id) 
+    public function __construct(string $type, string $endpoint, string $source_id) 
     {
         $this->type = strtolower($type);
         $this->endpoint = strtolower($endpoint);

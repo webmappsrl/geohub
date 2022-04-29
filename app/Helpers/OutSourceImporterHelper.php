@@ -6,6 +6,7 @@ class OutSourceImporterHelper {
     public static function importerCurl($type, $endpoint, $source_id = '')
     {
         //https://stelvio.wp.webmapp.it/wp-json/webmapp/v1/list?type=track 
+        //https://stelvio.wp.webmapp.it/wp-json/wp/v2/track/6 
         if (!empty($source_id)) {
             $url = $endpoint . '/' . '/wp-json/wp/v2/' . $type . '/' . $source_id;
         } else {

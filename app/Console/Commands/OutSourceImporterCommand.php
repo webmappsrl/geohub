@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +44,12 @@ class OutSourceImporterCommand extends Command
         $endpoint = $this->argument('endpoint');
 
         $tracks = new OutSourceImporterListWP($type,$endpoint);
-        print_r($tracks->getList());
+        $track_list = json_decode($tracks->getList(),true);
+        
+        foreach ($track_list as $id => $last_modified) {
+            $track = new OutSourceImporterFeatureWP($type,$endpoint,$id);
+            $track_json = $track->importFeature();
+            print_r($track_json);
+        }
     }
 }
