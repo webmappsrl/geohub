@@ -26,11 +26,16 @@ abstract class OutSourceImporterListAbstract
         $this->endpoint = strtolower($endpoint);
     }
 
-    abstract protected function getTrackList();
-    abstract protected function getPoiList();
-    abstract protected function getMediaList();
+    abstract protected function getTrackList():array;
+    abstract protected function getPoiList():array;
+    abstract protected function getMediaList():array;
 
-    public function getList() {
+    /**
+     * It returns the features list of a specific data provider as hash (id=>last_modified)
+     *
+     * @return array ['id1'=>'YYYY-MM-AA HH:MM:SS','id2'=>'YYYY-MM-AA HH:MM:SS',...]
+     */
+    public function getList():array {
         switch ($this->type) {
             case 'track':
                 return $this->getTrackList();
@@ -45,7 +50,7 @@ abstract class OutSourceImporterListAbstract
                 break;
             
             default:
-                return null;
+                return [];
                 break;
         }
     }

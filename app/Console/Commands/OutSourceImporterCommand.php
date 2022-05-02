@@ -44,12 +44,12 @@ class OutSourceImporterCommand extends Command
         $endpoint = $this->argument('endpoint');
 
         $tracks = new OutSourceImporterListWP($type,$endpoint);
-        $track_list = json_decode($tracks->getList(),true);
+        $track_list = $tracks->getList();
         
         foreach ($track_list as $id => $last_modified) {
             $track = new OutSourceImporterFeatureWP($type,$endpoint,$id);
             $track_json = $track->importFeature();
-            print_r($track_json);
+            Log::info("OutSourceImporterFeatureWP::importFeature() returns $track_json");
         }
     }
 }
