@@ -4,6 +4,7 @@ namespace App\Classes\OutSourceImporter;
 
 use App\Helpers\OutSourceImporterHelper;
 use App\Models\OutSourceFeature;
+use App\Providers\CurlServiceProvider;
 use Illuminate\Support\Facades\DB;
 
 class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract { 
@@ -15,7 +16,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
     public function importTrack(){
         
         // Curl request to get the feature information from external source
-        $track_obj = OutSourceImporterHelper::importerCurl($this->type, $this->endpoint, $this->source_id);
+        $curl = app(CurlServiceProvider::class);
+        $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
+        $track_obj = $curl->exec($url);
         $track = json_decode($track_obj,true);
 
         // prepare the value of tags data
@@ -23,7 +26,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
 
         // prepare feature parameters to pass to updateOrCreate function
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
-        $this->params['provider'] = 'wordpress';
+        $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
         $this->params['raw_data'] = json_encode($track);
         $this->params['tags'] = $this->tags;
@@ -47,7 +50,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 'endpoint' => $this->endpoint
             ],
             $params);
-        return $feature->id."\n";
+        return $feature->id;
     }
 
     protected function prepareTagsJson($track){
