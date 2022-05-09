@@ -33,7 +33,9 @@
   
     <!-- The tabs content -->
     <div x-show="tab === 'details'" class="px-4 md:px-8 py-6">
-        <img src="{{$elevation_chart}}" alt="webmapp map" class="pb-6 w-full">
+        @if (File::exists($elevation_chart))
+            <img src="{{$elevation_chart}}" alt="webmapp map" class="pb-6 w-full">
+        @endif
 
         @if (count($details) > 0)
             <h3 class="text-primary font-semibold text-xl">{{ __("Dettagli Percorso") }}</h3>
