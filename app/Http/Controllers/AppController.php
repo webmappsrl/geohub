@@ -375,16 +375,18 @@ class AppController extends Controller {
      */
     private function config_section_offline(App $app): array {
         $data = [];
-        if (in_array($app->api, ['elbrus'])) {
-            // OFFLINE section
-            $data['OFFLINE']['enable'] = false;
-            if ($app->offline_enable) {
-                $data['OFFLINE']['enable'] = true;
-            }
-            $data['OFFLINE']['forceAuth'] = false;
-            if ($app->offline_force_auth) {
-                $data['OFFLINE']['forceAuth'] = true;
-            }
+        // OFFLINE section
+        $data['OFFLINE']['enable'] = false;
+        if ($app->offline_enable) {
+            $data['OFFLINE']['enable'] = true;
+        }
+        $data['OFFLINE']['forceAuth'] = false;
+        if ($app->offline_force_auth) {
+            $data['OFFLINE']['forceAuth'] = true;
+        }
+        $data['OFFLINE']['tracksOnPayment'] = false;
+        if ($app->tracks_on_payment) {
+            $data['OFFLINE']['tracksOnPayment'] = true;
         }
 
         return $data;
