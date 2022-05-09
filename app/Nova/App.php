@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -171,6 +172,7 @@ class App extends Resource {
             return [
                 'APP' => $this->app_tab(),
                 'AUTH' => $this->auth_tab(),
+                'OFFLINE' => $this->offline_tab(),
                 'GEOLOCATION' => $this->geolocation_tab(),
                 'ICONS' => $this->icons_tab(),
                 'LANGUAGES' => $this->languages_tab(),
@@ -180,7 +182,6 @@ class App extends Resource {
                 'TABLE' => $this->table_tab(),
                 'THEME' => $this->theme_tab(),
                 'LAYERS' => $this->layers_tab(),
-    
             ];
     }
 
@@ -504,6 +505,11 @@ class App extends Resource {
                 ->default(false)
                 ->hideFromIndex(),
             Toggle::make(__('Force Auth'), 'offline_force_auth')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Tracks on payment'), 'tracks_on_payment')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
