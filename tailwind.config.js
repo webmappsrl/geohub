@@ -19,6 +19,7 @@ module.exports = {
       height: {
         'mapdesktop' : '686px',
         'mapmobile' : '400px',
+        '80screen' : '80vh',
       }
     }
   },
