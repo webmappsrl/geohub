@@ -13,25 +13,24 @@ else
     gunzip dump.sql.gz
 fi
 
-# Clear caches
-php artisan cache:clear
+composer install
+composer dump-autoload
 
 # Clear and cache routes
-php artisan route:clear
-php artisan route:cache
+# php artisan route:clear
+# php artisan route:cache
 
 # Clear and cache config
-php artisan config:clear
 php artisan config:cache
 
 # Clear the old cache
 php artisan clear-compiled
 
+# TODO: Uncomment when api.favorite issue will be resolved
+# php artisan optimize
+
 php artisan db:restore
 
 php artisan migrate
-
-composer dump-autoload
-php artisan optimize
 
 echo "Deployment finished!"
