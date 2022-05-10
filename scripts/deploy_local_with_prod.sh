@@ -4,11 +4,16 @@ set -e
 echo "Deployment started ..."
 
 # DB clean, download, restore
-rm -f dump.sql
-scp forge@116.203.186.2:/home/forge/backup/geohub.webmapp.it/dump.sql.gz ./ 
-gunzip dump.sql.gz
+if test -f "dump.sql"; 
+then
+    echo "File dump.sql exists: skipping download. If you want to downlad it again remove it."
+else
+    echo "File dump deos not exist: downloading and gunzipping."
+    scp forge@116.203.186.2:/home/forge/backup/geohub.webmapp.it/dump.sql.gz ./ 
+    gunzip dump.sql.gz
+fi
 php artisan db:restore
-rm -f dump.sql
+
 php artisan migrate
 
 # Clear caches

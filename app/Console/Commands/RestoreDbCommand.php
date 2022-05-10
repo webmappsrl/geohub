@@ -44,28 +44,27 @@ class RestoreDbCommand extends Command
         if(!file_exists(base_path().'/dump.sql')){
             throw new Exception("File dump.sql does not exist");
         }
-        #$this->call('db:wipe');
 
         $db_name = config('database.connections.pgsql.database');
 
+        // psql -c "DROP DATABASE geohub"
         $drop_cmd = 'psql -c "DROP DATABASE '.$db_name.'"';
         echo $drop_cmd . '\n';
         exec($drop_cmd);
         
+        // psql -c "CREATE DATABASE geohub"
         $create_cmd = 'psql -c "CREATE DATABASE '.$db_name.'"';
         echo $create_cmd . '\n';
         exec($create_cmd);
 
-        $postgis_cmd = 'psql -d geohub -c "create extension postgis";';
+        // psql -d geohub -c "create extension postgis"
+        $postgis_cmd = 'psql -d '.$db_name.' -c "create extension postgis";';
         echo $postgis_cmd . '\n';
         exec($postgis_cmd);
+        
+        // psql geohub < dump.sql
+        $restore_cmd = "psql $db_name < dump.sql";
 
-        // $raster_cmd = 'psql -d geohub -c "create extension raster";';
-        // echo $raster_cmd;
-        // exec($raster_cmd);
-
-        #$restore_cmd = 'pg_restore -Ft -C -d ' . $db_name . ' < dump.sql';
-        $restore_cmd = 'pg_restore -c -F t -d' . $db_name . ' < dump.sql';
         echo $restore_cmd . '\n';
         exec($restore_cmd);
 
