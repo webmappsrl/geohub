@@ -37,23 +37,24 @@
 
             <!-- Title section -->
             @if ($track->name)
-            <div class="text-white col-span-full text-2xl sm:text-3xl font-semibold px-4 sm:px-20 sm:col-span-2 flex items-end">
+            <div class="text-white col-span-full text-2xl sm:text-3xl font-semibold px-4 sm:px-6 lg:px-20 sm:col-span-2 flex items-end">
                 <h1>{!! $track->name !!}</h1>
             </div>
             @endif
 
             <!-- Taxonomy Where section -->
             @if ($track->taxonomyWheres->count() > 0 )
-            <div class="{{$agent->isMobile() ? 'row-span-2' : ''}} col-span-full items-start px-4 sm:px-20 sm:col-span-2 inline w-full md:flex">
+            <div class="{{$agent->isMobile() ? 'row-span-2' : ''}} col-span-full items-start px-4 sm:px-6 lg:px-20 sm:col-span-2 inline w-full md:inline text-sm md:text-base">
                     @foreach ($track->taxonomyWheres->pluck('name') as $name)
-                    <div class="taxonomyWheres w-auto text-white inline">{{ $loop->iteration > 1 ? ', ' : '' }}{{$name}}</div>
+
+                    <div class="taxonomyWheres w-auto text-white inline-block">{{$name}}{{ ($loop->iteration == 1 && $loop->count > 1 ) ? ', ' : '' }}{{ ($loop->iteration > 1 ) ? ', ' : '' }}</div>
                     @endforeach
                 </div>
             @endif
 
             <!-- Taxonomy Activity section -->
             @if ($track->taxonomyActivities->count() > 0 )
-                <div class="col-span-full items-start px-4 sm:px-20 sm:col-span-2 flex ">
+                <div class="col-span-full items-start px-4 sm:px-6 lg:px-20 sm:col-span-2 flex ">
                     @foreach ($track->taxonomyActivities->pluck('identifier','name') as $name => $identifier)
                         @svg(icon_mapping($identifier), 'icon-2lg bg-white  rounded-full p-1')
                         <div class="pl-2 text-white ">{{$name}}</div>
