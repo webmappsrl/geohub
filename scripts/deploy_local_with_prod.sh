@@ -4,11 +4,11 @@ set -e
 echo "Deployment started ..."
 
 # DB clean, download, restore
-# rm -f dump.sql
-# scp forge@116.203.186.2:/home/forge/backup/geohub/dump.sql.gz ./ 
-# gunzip dump.sql.gz
+rm -f dump.sql
+scp forge@116.203.186.2:/home/forge/backup/geohub.webmapp.it/dump.sql.gz ./ 
+gunzip dump.sql.gz
 php artisan db:restore
-# rm -f dump.sql
+rm -f dump.sql
 php artisan migrate
 
 # Clear caches
