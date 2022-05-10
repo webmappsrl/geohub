@@ -11,10 +11,11 @@ class OutSourceFeature extends Model
     protected $table = 'out_source_features';
 
     protected $fillable = [
-        'provider','source_id','type'
+        'provider','source_id','type','endpoint','raw_data','geometry','tags'
     ];
     protected $casts = [
         'tags' => 'array',
+        'source_id' => 'string',
     ];
 
     public function getName(): string {
