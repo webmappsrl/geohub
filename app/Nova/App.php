@@ -198,6 +198,8 @@ class App extends Resource {
             Text::make(__('App Id'), 'app_id')->required(),
             Text::make(__('Name'), 'name')->sortable()->required(),
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
+            Text::make(__('Play Store link (android)'), 'android_store_link'),
+            Text::make(__('App Store link (iOS)'), 'ios_store_link'),
         ];
     }
     protected function languages_tab(): array {
