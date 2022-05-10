@@ -42,7 +42,7 @@
     }
 @endphp
 <x-schemaOrg :track="$track" :startPoint="$startPoint_geometry" />
-<div id="map" class="h-mapmobile md:h-mapdesktop md:rounded-l-lg poiLeafletMap">
+<div id="map" class="h-full v-full poiLeafletMap">
 </div>
 <script>
     var pois_collection = @json($pois_collection);

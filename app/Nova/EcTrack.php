@@ -240,6 +240,23 @@ class EcTrack extends Resource {
                     }
                 })->onlyOnDetail(),    
             ],
+            'API' => [
+                Text::make('Public Page', function () {
+                    $url_pubblic = request()->root().'/track/'.$this->id;
+                
+                    return "<a target='_blank' href='{$url_pubblic}'>{$url_pubblic}</a>";
+                })->asHtml(),    
+                Text::make('Base API', function () {
+                    $url_base_api = request()->root().'/api/ec/track/'.$this->id;
+                
+                    return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                })->asHtml(),    
+                Text::make('Widget: Simple', function () {
+                    $url_widget_simple = request()->root().'/w/simple/'.$this->id;
+                
+                    return "<a target='_blank' href='{$url_widget_simple}'>{$url_widget_simple}</a>";
+                })->asHtml(),    
+            ],
             'Data' => [
                 Heading::make($this->getData())->asHtml(),
             ],
