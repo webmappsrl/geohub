@@ -9,14 +9,14 @@
     $iosStore = '#';
     $androidStore = '#';
     $appName = 'Webmapp';
-    $appIcon = public_path().'images/webmapp-logo-icon-only.png';
+    $appIcon = asset('images/webmapp-logo-icon-only.png');
     if (request('app_id')) {
         $app = App::find(request('app_id'));
-        ddd($app);
+        // ddd($app);
         $iosStore = $app->ios_store_link;
         $androidStore = $app->android_store_link;
         $appName = $app->name;
-        $appIcon = $app->icon_small;
+        $appIcon = asset('storage/'.$app->icon_small);
     }
 @endphp
 

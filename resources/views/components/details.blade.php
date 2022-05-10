@@ -33,7 +33,7 @@
   
     <!-- The tabs content -->
     <div x-show="tab === 'details'" class="px-4 md:px-8 py-6">
-        @if (File::exists($elevation_chart))
+        @if (stripos(get_headers($elevation_chart)[0],'200 OK'))
             <img src="{{$elevation_chart}}" alt="webmapp map" class="pb-6 w-full">
         @endif
 
