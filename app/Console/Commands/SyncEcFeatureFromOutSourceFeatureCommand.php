@@ -14,12 +14,12 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
      */
     protected $signature = 'geohub:sync-ec-from-out-source
                             {type : Set the Ec type (track, poi, media, taxonomy)}
-                            {author : Set the author that must be assigned to EcFeature crested, use email }
-                            {--app : Alternative way to set the EcFeature Author. Take the app author and set the same author. Use app ID}
-                            {--provider : Set the provider of the Out Source Features}
-                            {--endpoint : Set the endpoint of the Out Source Features}
-                            {--activity : Set the identifier activity taxonomy that must be assigned to EcFeature created}
-                            {--name_format : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}';
+                            {author : Set the author that must be assigned to EcFeature crested, use email or ID }
+                            {--app= : Alternative way to set the EcFeature Author. Take the app author and set the same author. Use app ID}
+                            {--P|provider= : Set the provider of the Out Source Features}
+                            {--E|endpoint= : Set the endpoint of the Out Source Features}
+                            {--activity= : Set the identifier activity taxonomy that must be assigned to EcFeature created}
+                            {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}';
 
     /**
      * The console command description.
@@ -45,6 +45,27 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
      */
     public function handle()
     {
-        return 0;
+        $type = $this->argument('type');
+        $author = $this->argument('author');
+
+        $provider = '';
+        $endpoint = '';
+        $activity = '';
+        $name_format = $this->option('name_format');
+        $app = 0;
+
+        if ($this->option('provider'))
+            $provider = $this->option('provider');
+            
+        if ($this->option('endpoint'))
+            $endpoint = $this->option('endpoint');
+        
+        if ($this->option('activity'))
+            $activity = $this->option('activity');
+        
+        if ($this->option('app'))
+            $app = $this->option('app');
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
     }
 }
