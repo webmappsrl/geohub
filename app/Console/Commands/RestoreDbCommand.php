@@ -6,7 +6,8 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 class RestoreDbCommand extends Command
 {
     /**
@@ -42,7 +43,12 @@ class RestoreDbCommand extends Command
     {
 
         if(!file_exists(base_path().'/dump.sql')){
-            throw new Exception("File dump.sql does not exist");
+            try {
+                Artisan::call('db:download');
+            } catch (Exception $e) {
+                echo $e;
+                return 0;
+            }
         }
 
         $db_name = config('database.connections.pgsql.database');
@@ -50,22 +56,25 @@ class RestoreDbCommand extends Command
         // psql -c "DROP DATABASE geohub"
         $drop_cmd = 'psql -c "DROP DATABASE '.$db_name.'"';
         echo $drop_cmd . '\n';
+        Log::info('db:restore ' . $drop_cmd);
         exec($drop_cmd);
         
         // psql -c "CREATE DATABASE geohub"
         $create_cmd = 'psql -c "CREATE DATABASE '.$db_name.'"';
         echo $create_cmd . '\n';
+        Log::info('db:restore ' . $create_cmd);
         exec($create_cmd);
 
         // psql -d geohub -c "create extension postgis"
         $postgis_cmd = 'psql -d '.$db_name.' -c "create extension postgis";';
         echo $postgis_cmd . '\n';
+        Log::info('db:restore ' . $postgis_cmd);
         exec($postgis_cmd);
-        
+
         // psql geohub < dump.sql
         $restore_cmd = "psql $db_name < dump.sql";
-
         echo $restore_cmd . '\n';
+        Log::info('db:restore ' . $restore_cmd);
         exec($restore_cmd);
 
         return 0;

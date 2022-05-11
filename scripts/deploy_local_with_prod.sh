@@ -3,16 +3,6 @@ set -e
 
 echo "Deployment started ..."
 
-# DB clean, download, restore
-if test -f "dump.sql"; 
-then
-    echo "File dump.sql exists: skipping download. If you want to downlad it again remove it."
-else
-    echo "File dump deos not exist: downloading and gunzipping."
-    scp forge@116.203.186.2:/home/forge/backup/geohub.webmapp.it/dump.sql.gz ./ 
-    gunzip dump.sql.gz
-fi
-
 composer install
 composer dump-autoload
 
@@ -22,6 +12,7 @@ composer dump-autoload
 
 # Clear and cache config
 php artisan config:cache
+php artisan config:clear
 
 # Clear the old cache
 php artisan clear-compiled
@@ -30,7 +21,6 @@ php artisan clear-compiled
 # php artisan optimize
 
 php artisan db:restore
-
 php artisan migrate
 
 echo "Deployment finished!"
