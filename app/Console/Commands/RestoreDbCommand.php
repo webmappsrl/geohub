@@ -41,8 +41,10 @@ class RestoreDbCommand extends Command
      */
     public function handle()
     {
-
-        if(!file_exists(base_path().'/dump.sql')){
+        $localDirectory = "database";
+        $localRootPath = "storage/app";
+        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/dump.sql";
+        if (!file_exists($AbsolutePath)) {
             try {
                 Artisan::call('db:download');
             } catch (Exception $e) {

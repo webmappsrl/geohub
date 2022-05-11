@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Storage;
 class DownloadDbCommand extends Command
 {
     /**
@@ -39,23 +39,35 @@ class DownloadDbCommand extends Command
      */
     public function handle()
     {
-        echo env('APP_name');
-        $BACKUP_SERVER =  env('BACKUP_SERVER');
-        if (!$BACKUP_SERVER) {
-            Log::error('db:download ENV BACKUP_SERVER does not exist');
-            throw new Exception("ENV: BACKUP_SERVER does not exist");
+        $fileName = "dump.sql.gz";
+        $lastDumpRemotePath = "geohub/$fileName";
+        $localDirectory = "database";
+        $localRootPath = "storage/app";
+        $lastDumpLocalPath = "$localDirectory/$fileName";
+        $wmdumps = Storage::disk('wmdumps');
+        $local = Storage::disk('local');
+        if (!$wmdumps->exists($lastDumpRemotePath)) {
+            Log::error('db:download -> ' . $lastDumpRemotePath . ' does not exist');
+            throw new Exception('db:download -> ' . $lastDumpRemotePath . ' does not exist');
         }
-        Log::info('db:download start download backup');
-        echo ('db:download start download backup');
-        $scp_command = "scp $BACKUP_SERVER ./";
-        exec($scp_command);
+        Log::info('db:download -> start download backup');
+        echo ('db:download -> start download backup');
+        $lastDump = $wmdumps->get($lastDumpRemotePath);
+        if (!$lastDump) {
+            Log::error('db:download -> ' . $lastDumpRemotePath . ' download error');
+            throw new Exception('db:download -> ' . $lastDumpRemotePath . ' download error');
+        }
+        $local->makeDirectory($localDirectory);
+        $local->put($lastDumpLocalPath, $lastDump);
 
-        if (!file_exists(base_path() . '/dump.sql.gz')) {
+        $GzAbsolutePath = base_path() . "/$localRootPath/$lastDumpLocalPath";
+        if (!file_exists($GzAbsolutePath)) {
             Log::error('db:download download dump.sql.gz FAILED');
             throw new Exception("File dump.sql.gz does not exist");
         }
-        exec('gunzip dump.sql.gz -f');
-        if (!file_exists(base_path() . '/dump.sql')) {
+        exec("gunzip $GzAbsolutePath  -f");
+        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/dump.sql";
+        if (!file_exists($AbsolutePath)) {
             Log::error('db:download download dump.sql FAILED');
             throw new Exception("File dump.sql does not exist");
         }
