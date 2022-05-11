@@ -54,8 +54,12 @@ class AppController extends Controller {
       $data['APP']['id'] = $app->app_id;
       $data['APP']['customerName'] = $app->customer_name;
       $data['APP']['geohubId'] = $app->id;
-      $data['APP']['androidStore'] = $app->android_store_link;
-      $data['APP']['iosStore'] = $app->ios_store_link;
+      
+      if ($app->android_store_link)
+        $data['APP']['androidStore'] = $app->android_store_link;
+
+      if ($app->ios_store_link)
+        $data['APP']['iosStore'] = $app->ios_store_link;
 
       return $data;
   }
