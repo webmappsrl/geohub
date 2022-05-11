@@ -39,15 +39,30 @@ class DumpDb extends Command {
      */
     public function handle() {
         try {
-            Storage::disk('local')->makeDirectory('database');
-            $dumpFileName = Storage::disk('local')->path('database/dump_' . date('Y-M-d_h-m-s') . '.sql');
+            $wmdumps = Storage::disk('wmdumps');
+            $local = Storage::disk('local');
+            $local->makeDirectory('database');
+            $dumpName = 'dump_' . date('Y-M-d_h-m-s') . '.sql';
+            $dumpFileName = $local->path('database/' . $dumpName);
             PostgreSql::create()
                 ->setDbName(config('database.connections.pgsql.database'))
                 ->setUserName(config('database.connections.pgsql.username'))
                 ->setPassword(config('database.connections.pgsql.password'))
                 ->dumpToFile($dumpFileName);
             Log::info('Database dump created successfully in ' . $dumpFileName);
+            if (!$local->exists('database/' . $dumpName)) {
+            }
+            exec("gzip $dumpFileName  -f");
+            $lastLocalDump = $local->get('database/' . $dumpName . '.gz');
+            $local->delete('database/' . $dumpName . '.gz');
 
+            Log::info('geohub:dump_db -> START upload to aws');
+            $wmdumps->put('geohub/' . $dumpName . '.gz', $lastLocalDump);
+            Log::info('geohub:dump_db -> DONE upload to aws');
+            //TODO: CREATE LAST DUMP ON REMOTE
+            Log::info('geohub:dump_db -> START create last-dump to aws');
+            $wmdumps->put('geohub/last-dump.sql.gz', $lastLocalDump);
+            Log::info('geohub:dump_db -> DONE create last-dump to aws');
             return 0;
         } catch (CannotStartDump $e) {
             Log::error('The dump process cannot be initialized: ' . $e->getMessage());

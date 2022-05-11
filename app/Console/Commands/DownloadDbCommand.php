@@ -39,13 +39,15 @@ class DownloadDbCommand extends Command
      */
     public function handle()
     {
-        $fileName = "dump.sql.gz";
+        $fileName = "last-dump.sql.gz";
         $lastDumpRemotePath = "geohub/$fileName";
         $localDirectory = "database";
         $localRootPath = "storage/app";
         $lastDumpLocalPath = "$localDirectory/$fileName";
+        
         $wmdumps = Storage::disk('wmdumps');
         $local = Storage::disk('local');
+
         if (!$wmdumps->exists($lastDumpRemotePath)) {
             Log::error('db:download -> ' . $lastDumpRemotePath . ' does not exist');
             throw new Exception('db:download -> ' . $lastDumpRemotePath . ' does not exist');
@@ -62,11 +64,11 @@ class DownloadDbCommand extends Command
 
         $GzAbsolutePath = base_path() . "/$localRootPath/$lastDumpLocalPath";
         if (!file_exists($GzAbsolutePath)) {
-            Log::error('db:download download dump.sql.gz FAILED');
+            Log::error('db:download download last-dump.sql.gz FAILED');
             throw new Exception("File dump.sql.gz does not exist");
         }
         exec("gunzip $GzAbsolutePath  -f");
-        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/dump.sql";
+        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/last-dump.sql";
         if (!file_exists($AbsolutePath)) {
             Log::error('db:download download dump.sql FAILED');
             throw new Exception("File dump.sql does not exist");
