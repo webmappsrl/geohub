@@ -19,7 +19,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     /**
      * @test
      */
-    public function when_command_variables_checkParamteres_should_return_true()
+    public function when_command_variables_are_currect_checkParamteres_should_return_true()
     {
         OutSourceTrack::factory()->create
         ([

@@ -2,6 +2,7 @@
 
 namespace App\Classes\EcSynchronizer;
 
+use App\Models\OutSourceFeature;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,6 @@ class SyncEcFromOutSource
 
     /**
      * It checks the parameters of the command geohub:sync-ec-from-out-source to see if they are
-     * available to use
      * 
      *
      * @return boolean 
@@ -157,5 +157,26 @@ class SyncEcFromOutSource
         // Check the app
 
         return true;
+    }
+
+
+    /**
+     * It creates a list if IDs from out_source_features table based on the parameters of the command geohub:sync-ec-from-out-source 
+     *
+     * @return array 
+     */
+    public function getList() 
+    {
+        $features = OutSourceFeature::where('type',$this->type)
+        ->when($this->provider, function ($query) {
+            return $query->where('provider', $this->provider);
+        })
+        ->when($this->endpoint, function ($query) {
+            return $query->where('endpoint', $this->endpoint);
+        })
+        ->get();
+
+        return $features->pluck('id');
+        
     }
 }
