@@ -1,7 +1,7 @@
 # how to backup and restore geohub
 ## UPDATE .ENV
 
-add [AWS_DUMPS_SECRET_ACCESS_KEY](https://gist.github.com/peppedeka/2940fef6338e6a1dfef17fcf5b8ee87b) and
+add [AWS_DUMPS_ACCESS_KEY_ID](https://gist.github.com/peppedeka/2940fef6338e6a1dfef17fcf5b8ee87b), [AWS_DUMPS_SECRET_ACCESS_KEY](https://gist.github.com/peppedeka/2940fef6338e6a1dfef17fcf5b8ee87b) and
  [AWS_DUMPS_BUCKET](https://gist.github.com/peppedeka/2940fef6338e6a1dfef17fcf5b8ee87b) keys
 in your local .env, after don't forget to update laravel conf by 
 ```bash
