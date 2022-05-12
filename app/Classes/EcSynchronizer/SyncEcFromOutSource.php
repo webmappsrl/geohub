@@ -2,6 +2,7 @@
 
 namespace App\Classes\EcSynchronizer;
 
+use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
 use App\Models\User;
 use Exception;
@@ -176,7 +177,36 @@ class SyncEcFromOutSource
         })
         ->get();
 
-        return $features->pluck('id');
+        return $features->pluck('id')->toArray();
         
+    }
+    
+    
+    /**
+     * It updates or creates the Ec features based on the list if IDs from out_source_features table 
+     *
+     * @param array $ids_array an array of ids to be synced to EcFeature
+     * @return array array of ids of newly created EcFeatures
+     */
+    public function sync(array $ids_array)
+    {
+        $new_ec_tracks = [];
+        foreach ($ids_array as $id) {
+            $out_source = OutSourceFeature::find($id);
+            if ($this->type == 'track') {
+                $ec_track = EcTrack::create([
+                    'name' => [
+                        'it' => 'name'
+                    ],
+                    'not_accessible' => false,
+                    'user_id' => $this->author,
+                    'out_source_feature_id' => $id,
+                ]);
+                
+                array_push($new_ec_tracks,$ec_track->id);
+            }
+        }
+
+        return $new_ec_tracks;
     }
 }

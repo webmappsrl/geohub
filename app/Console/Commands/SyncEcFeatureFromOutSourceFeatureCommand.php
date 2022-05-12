@@ -69,7 +69,11 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
 
         if ($SyncEcFromOutSource->checkParameters()) {
-            $id_list = $SyncEcFromOutSource->getList();
+            $ids_array = $SyncEcFromOutSource->getList();
+            
+            if (!empty($ids_list)) {
+                $loop = $SyncEcFromOutSource->sync($ids_array);
+            }
         }
 
     }
