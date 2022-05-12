@@ -44,7 +44,7 @@ class RestoreDbCommand extends Command
         Log::info("db:restore -> is started");
         $localDirectory = "database";
         $localRootPath = "storage/app";
-        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/dump.sql";
+        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/last-dump.sql";
 
         if (!file_exists($AbsolutePath)) {
             try {
