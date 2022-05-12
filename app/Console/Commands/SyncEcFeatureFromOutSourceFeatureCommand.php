@@ -67,5 +67,8 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             $app = $this->option('app');
 
         $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+
+        echo $SyncEcFromOutSource->checkParameters();
+
     }
 }

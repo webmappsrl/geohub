@@ -15,6 +15,8 @@ use Spatie\Translatable\HasTranslations;
 class TaxonomyActivity extends Model {
     use HasFactory, HasTranslations;
 
+    protected $fillable = ['identifier','name']; 
+    
     public $translatable = ['name', 'description', 'excerpt'];
 
     public function save(array $options = []) {
