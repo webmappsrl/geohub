@@ -22,7 +22,7 @@ class RestoreDbCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Restore a dump.sql file (must be in root dir)';
+    protected $description = 'Restore a last-dump.sql file (must be in root dir)';
 
     /**
      * Create a new command instance.
@@ -73,7 +73,7 @@ class RestoreDbCommand extends Command
         exec($postgis_cmd);
 
         // psql geohub < last-dump.sql
-        $restore_cmd = "psql $db_name < last-dump.sql";
+        $restore_cmd = "psql $db_name < $AbsolutePath";
         Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 
