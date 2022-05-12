@@ -72,8 +72,8 @@ class RestoreDbCommand extends Command
         Log::info("db:restore -> $postgis_cmd");
         exec($postgis_cmd);
 
-        // psql geohub < dump.sql
-        $restore_cmd = "psql $db_name < dump.sql";
+        // psql geohub < last-dump.sql
+        $restore_cmd = "psql $db_name < last-dump.sql";
         Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 
