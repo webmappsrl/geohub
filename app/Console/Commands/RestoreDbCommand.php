@@ -41,9 +41,11 @@ class RestoreDbCommand extends Command
      */
     public function handle()
     {
+        Log::info("db:restore -> is started");
         $localDirectory = "database";
         $localRootPath = "storage/app";
         $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/dump.sql";
+
         if (!file_exists($AbsolutePath)) {
             try {
                 Artisan::call('db:download');
@@ -57,28 +59,25 @@ class RestoreDbCommand extends Command
 
         // psql -c "DROP DATABASE geohub"
         $drop_cmd = 'psql -c "DROP DATABASE '.$db_name.'"';
-        echo $drop_cmd . '\n';
-        Log::info('db:restore ' . $drop_cmd);
+        Log::info("db:restore -> $drop_cmd");
         exec($drop_cmd);
         
         // psql -c "CREATE DATABASE geohub"
         $create_cmd = 'psql -c "CREATE DATABASE '.$db_name.'"';
-        echo $create_cmd . '\n';
-        Log::info('db:restore ' . $create_cmd);
+        Log::info("db:restore -> $create_cmd");
         exec($create_cmd);
 
         // psql -d geohub -c "create extension postgis"
         $postgis_cmd = 'psql -d '.$db_name.' -c "create extension postgis";';
-        echo $postgis_cmd . '\n';
-        Log::info('db:restore ' . $postgis_cmd);
+        Log::info("db:restore -> $postgis_cmd");
         exec($postgis_cmd);
 
         // psql geohub < dump.sql
         $restore_cmd = "psql $db_name < dump.sql";
-        echo $restore_cmd . '\n';
-        Log::info('db:restore ' . $restore_cmd);
+        Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 
+        Log::info("db:restore -> finished");
         return 0;
     }
 }

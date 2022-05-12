@@ -39,6 +39,7 @@ class DumpDb extends Command {
      */
     public function handle() {
         try {
+            Log::info('geohub:dump_db -> is started');
             $wmdumps = Storage::disk('wmdumps');
             $local = Storage::disk('local');
             $local->makeDirectory('database');
@@ -49,7 +50,7 @@ class DumpDb extends Command {
                 ->setUserName(config('database.connections.pgsql.username'))
                 ->setPassword(config('database.connections.pgsql.password'))
                 ->dumpToFile($dumpFileName);
-            Log::info('Database dump created successfully in ' . $dumpFileName);
+            Log::info('geohub:dump_db -> Database dump created successfully in ' . $dumpFileName);
             if (!$local->exists('database/' . $dumpName)) {
             }
             exec("gzip $dumpFileName  -f");
@@ -63,14 +64,16 @@ class DumpDb extends Command {
             Log::info('geohub:dump_db -> START create last-dump to aws');
             $wmdumps->put('geohub/last-dump.sql.gz', $lastLocalDump);
             Log::info('geohub:dump_db -> DONE create last-dump to aws');
+
+            Log::info('geohub:dump_db -> finished');
             return 0;
         } catch (CannotStartDump $e) {
-            Log::error('The dump process cannot be initialized: ' . $e->getMessage());
-            Log::error('Make sure to clear the config cache when changing the environment: `php artisan config:cache`');
+            Log::error('geohub:dump_db -> The dump process cannot be initialized: ' . $e->getMessage());
+            Log::error('geohub:dump_db -> Make sure to clear the config cache when changing the environment: `php artisan config:cache`');
 
             return 2;
         } catch (DumpFailed $e) {
-            Log::error('Error while creating the database dump: ' . $e->getMessage());
+            Log::error('geohub:dump_db -> Error while creating the database dump: ' . $e->getMessage());
 
             return 1;
         }
