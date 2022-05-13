@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\EcMedia;
 use App\Models\EcTrack;
+use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,6 +17,8 @@ class EcTrackTest extends TestCase {
     use RefreshDatabase;
 
     public function testSaveEcTrackOk() {
+        $user = User::factory()->create();
+        $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -28,6 +31,8 @@ class EcTrackTest extends TestCase {
     }
 
     public function testSaveEcTrackError() {
+        $user = User::factory()->create();
+        $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -169,6 +174,8 @@ class EcTrackTest extends TestCase {
      * quando cambio la geometria del Track perché altrimenti sarebbero potenzialmente sbagliate
      */
     public function testEcTrackChangeGeometry() {
+        $user = User::factory()->create();
+        $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()

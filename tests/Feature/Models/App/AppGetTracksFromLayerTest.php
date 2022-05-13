@@ -11,6 +11,7 @@ use App\Models\TaxonomyWhere;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class AppGetTracksFromLayerTest extends TestCase
@@ -19,6 +20,7 @@ class AppGetTracksFromLayerTest extends TestCase
 
     /** @test */
     public function no_layer_empty_array() {
+        
         $app = App::factory()->create();
         $this->assertEquals(0,$app->layers->count());
 
@@ -28,12 +30,12 @@ class AppGetTracksFromLayerTest extends TestCase
 
     /** @test */
     public function single_layer_with_single_matching_track_with_theme_same_author() {
-
         $author = User::factory()->create();
-        
+        $this->be($author);
+
         $theme_term = TaxonomyTheme::factory()->create();
         
-        $track = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track = EcTrack::factory()->create();
         $track->taxonomyThemes()->attach($theme_term);
         
         $app = App::factory()->create(['user_id'=>$author->id]);
@@ -52,12 +54,13 @@ class AppGetTracksFromLayerTest extends TestCase
 
     /** @test */
     public function single_layer_with_single_matching_track_with_activity_same_author() {
-
-        $author = User::factory()->create();
         
+        $author = User::factory()->create();
+        $this->be($author);
+
         $term = TaxonomyActivity::factory()->create();
         
-        $track = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track = EcTrack::factory()->create();
         $track->taxonomyActivities()->attach($term);
         
         $app = App::factory()->create(['user_id'=>$author->id]);
@@ -76,12 +79,13 @@ class AppGetTracksFromLayerTest extends TestCase
 
     /** @test */
     public function single_layer_with_single_matching_track_with_where_same_author() {
-
-        $author = User::factory()->create();
         
+        $author = User::factory()->create();
+        $this->be($author);
+
         $term = TaxonomyWhere::factory()->create();
         
-        $track = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track = EcTrack::factory()->create();
         $track->taxonomyWheres()->attach($term);
         
         $app = App::factory()->create(['user_id'=>$author->id]);
@@ -99,14 +103,16 @@ class AppGetTracksFromLayerTest extends TestCase
     }
     /** @test */
     public function single_layer_with_two_matching_tracks_with_theme_same_author() {
-        $author = User::factory()->create();
         
+        $author = User::factory()->create();
+        $this->be($author);
+
         $theme_term = TaxonomyTheme::factory()->create();
         
-        $track1 = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track1 = EcTrack::factory()->create();
         $track1->taxonomyThemes()->attach($theme_term);
 
-        $track2 = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track2 = EcTrack::factory()->create();
         $track2->taxonomyThemes()->attach($theme_term);
         
         $app = App::factory()->create(['user_id'=>$author->id]);
@@ -133,11 +139,13 @@ class AppGetTracksFromLayerTest extends TestCase
 
     /** @test */
     public function two_layers_with_same_maching_track_with_theme_same_author() {
-        $author = User::factory()->create();
         
+        $author = User::factory()->create();
+        $this->be($author);
+
         $theme_term = TaxonomyTheme::factory()->create();
         
-        $track = EcTrack::factory()->create(['user_id'=>$author->id]);
+        $track = EcTrack::factory()->create();
         $track->taxonomyThemes()->attach($theme_term);
         
         $app = App::factory()->create(['user_id'=>$author->id]);
