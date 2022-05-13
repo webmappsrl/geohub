@@ -56,8 +56,7 @@ class EcTrack extends Model {
         // EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
-            $ecTrack->author()->associate($user);
+            if (!is_null($user)) $ecTrack->author()->associate($user);
         });
 
         static::created(function ($ecTrack) {

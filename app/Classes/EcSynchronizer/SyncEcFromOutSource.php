@@ -42,7 +42,7 @@ class SyncEcFromOutSource
         $this->endpoint = strtolower($endpoint);            
         $this->activity = strtolower($activity);            
         $this->name_format = $name_format;            
-        $this->app = $app;            
+        $this->app = $app;   
     }
 
     /**
@@ -64,7 +64,9 @@ class SyncEcFromOutSource
         } else {
             try {
                 $user = User::where('email',strtolower($this->author))->first();
+                
                 $this->author_id = $user->id;
+                
             } catch (Exception $e) {
                 throw new Exception('No User found with this email '. $this->author); 
             }
@@ -201,6 +203,7 @@ class SyncEcFromOutSource
                     'not_accessible' => false,
                     'user_id' => $this->author_id,
                     'out_source_feature_id' => $id,
+                    'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
                 ]);
                 array_push($new_ec_tracks,$ec_track->id);
             }
