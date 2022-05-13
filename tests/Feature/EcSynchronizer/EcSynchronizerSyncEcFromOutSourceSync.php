@@ -30,11 +30,19 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
         ]);
         $source2 = OutSourceTrack::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '2',
+                'name' => 'second'
+            ],
         ]);
         $source3 = OutSourceTrack::factory()->create([
             'provider' => 'App\Providers\OutSourceOSMProvider',
@@ -83,11 +91,19 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
         ]);
         $source2 = OutSourceTrack::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '2',
+                'name' => 'second'
+            ],
         ]);
         $source3 = OutSourceTrack::factory()->create([
             'provider' => 'App\Providers\OutSourceOSMProvider',
@@ -143,11 +159,19 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
         ]);
         $source2 = OutSourceTrack::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
+            'tags' => [
+                'ref' => '2',
+                'name' => 'second'
+            ],
         ]);
         $source3 = OutSourceTrack::factory()->create([
             'provider' => 'App\Providers\OutSourceOSMProvider',
@@ -186,4 +210,63 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             $this->assertEquals($user->id,$ecTrack_user_id);
         }
     }
+
+    /**
+     * @test
+     */
+    public function when_check_ec_track_name_with_parameter_name_format_should_create_proper_ec_track()
+    {
+
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+
+        $source1 = OutSourceTrack::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
+        ]);
+        $source2 = OutSourceTrack::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'track',
+            'tags' => [
+                'ref' => '2',
+                'name' => 'second'
+            ],
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        $user = User::factory()->create();
+
+        $type = 'track';
+        $author = $user->email;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';            
+        $name_format = 'path {ref} - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+        $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
+
+        $this->assertEquals(2,EcTrack::count());
+
+        $ecTrack_names = EcTrack::get()->pluck('name')->toArray();
+        
+        $this->assertContains('path 1 - first',$ecTrack_names);
+        $this->assertContains('path 2 - second',$ecTrack_names);
+    }
+    
 }

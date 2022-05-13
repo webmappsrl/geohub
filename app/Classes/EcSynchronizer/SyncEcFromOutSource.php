@@ -136,7 +136,6 @@ class SyncEcFromOutSource
                     }
                 }
             }
-            // $sprintf_format = str_replace($available_name_formats, "%s", $format);            
         }
 
         // Check the avtivity
@@ -198,7 +197,8 @@ class SyncEcFromOutSource
             if ($this->type == 'track') {
                 $ec_track = EcTrack::create([
                     'name' => [
-                        'it' => 'name author_id '.$this->author_id
+                        // 'it' => 'path '. $out_source->tags['ref'] .' - ' . $out_source->tags['name']
+                        'it' => $this->generateName($out_source)
                     ],
                     'not_accessible' => false,
                     'user_id' => $this->author_id,
@@ -210,5 +210,31 @@ class SyncEcFromOutSource
         }
         
         return $new_ec_tracks;
+    }
+
+    /**
+     * It generate the Ec feature's name name_format parameter 
+     *
+     * @param array $out_source
+     * @return string 
+     */
+    private function generateName(OutSourceFeature $out_source) : string {    
+
+
+        $format = $this->name_format;
+        preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
+        
+        if (is_array($matches[0])) {
+            foreach($matches[0] as $m) {
+
+                $field = str_replace('{','',$m);
+                $field = str_replace('}','',$field);
+                if (isset($out_source->tags[$field])) {
+                    $format = str_replace($m,$out_source->tags[$field],$format);
+                } 
+            }
+        }
+
+        return $format;
     }
 }
