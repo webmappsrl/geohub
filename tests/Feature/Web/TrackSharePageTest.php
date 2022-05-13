@@ -139,7 +139,7 @@ class TrackSharePageTest extends TestCase
     }
 
     /**
-     * @test
+     * TODO: Make it better
      */
     public function when_visitor_access_to_track_with_taxonomy_activities_then_taxonomies_are_correct()
     {
