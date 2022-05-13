@@ -4,6 +4,7 @@ namespace App\Classes\EcSynchronizer;
 
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
+use App\Models\TaxonomyActivity;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -205,6 +206,8 @@ class SyncEcFromOutSource
                     'out_source_feature_id' => $id,
                     'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
                 ]);
+                
+                $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
                 array_push($new_ec_tracks,$ec_track->id);
             }
         }
@@ -226,11 +229,16 @@ class SyncEcFromOutSource
         
         if (is_array($matches[0])) {
             foreach($matches[0] as $m) {
-
                 $field = str_replace('{','',$m);
                 $field = str_replace('}','',$field);
+
                 if (isset($out_source->tags[$field])) {
-                    $format = str_replace($m,$out_source->tags[$field],$format);
+                    if (is_array($out_source->tags[$field])) {
+                        $val = $out_source->tags[$field]['it'];
+                    } else {
+                        $val = $out_source->tags[$field];
+                    }
+                    $format = str_replace($m,$val,$format);
                 } 
             }
         }

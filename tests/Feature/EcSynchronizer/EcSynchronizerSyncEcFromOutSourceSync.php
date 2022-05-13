@@ -269,4 +269,51 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
         $this->assertContains('path 2 - second',$ecTrack_names);
     }
     
+    /**
+     * @test
+     */
+    public function with_parameter_activity_should_associate_proper_taxonomy()
+    {
+
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+
+        $source1 = OutSourceTrack::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        $user = User::factory()->create();
+
+        $type = 'track';
+        $author = $user->email;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';            
+        $name_format = 'path {ref} - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+        $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
+
+        $this->assertEquals(1,EcTrack::count());
+
+        $ecTrack = EcTrack::first();
+
+        $this->assertContains($activity,$ecTrack->taxonomyActivities->pluck('identifier')->toArray());
+    }
 }
