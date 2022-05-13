@@ -22,7 +22,7 @@ use Symm\Gisconverter\Gisconverter;
 class EcTrack extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image','out_source_feature_id'];
+    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image','out_source_feature_id','user_id'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     
     /**

@@ -178,7 +178,6 @@ class SyncEcFromOutSource
         ->get();
 
         return $features->pluck('id')->toArray();
-        
     }
     
     
@@ -192,21 +191,21 @@ class SyncEcFromOutSource
     {
         $new_ec_tracks = [];
         foreach ($ids_array as $id) {
+
             $out_source = OutSourceFeature::find($id);
             if ($this->type == 'track') {
                 $ec_track = EcTrack::create([
                     'name' => [
-                        'it' => 'name'
+                        'it' => 'name author_id '.$this->author_id
                     ],
                     'not_accessible' => false,
-                    'user_id' => $this->author,
+                    'user_id' => $this->author_id,
                     'out_source_feature_id' => $id,
                 ]);
-                
                 array_push($new_ec_tracks,$ec_track->id);
             }
         }
-
+        
         return $new_ec_tracks;
     }
 }

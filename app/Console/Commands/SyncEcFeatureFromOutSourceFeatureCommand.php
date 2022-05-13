@@ -71,7 +71,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         if ($SyncEcFromOutSource->checkParameters()) {
             $ids_array = $SyncEcFromOutSource->getList();
             
-            if (!empty($ids_list)) {
+            if (!empty($ids_array)) {
                 $loop = $SyncEcFromOutSource->sync($ids_array);
             }
         }
