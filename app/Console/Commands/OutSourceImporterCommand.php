@@ -43,13 +43,13 @@ class OutSourceImporterCommand extends Command
         $type = $this->argument('type');
         $endpoint = $this->argument('endpoint');
 
-        $tracks = new OutSourceImporterListWP($type,$endpoint);
-        $track_list = $tracks->getList();
+        $features = new OutSourceImporterListWP($type,$endpoint);
+        $features_list = $features->getList();
         
-        foreach ($track_list as $id => $last_modified) {
-            $track = new OutSourceImporterFeatureWP($type,$endpoint,$id);
-            $track_json = $track->importFeature();
-            Log::info("OutSourceImporterFeatureWP::importFeature() returns $track_json");
+        foreach ($features_list as $id => $last_modified) {
+            $OSF = new OutSourceImporterFeatureWP($type,$endpoint,$id);
+            $OSF_id = $OSF->importFeature();
+            Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
         }
     }
 }
