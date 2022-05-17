@@ -143,6 +143,95 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $this->tags['excerpt'][$locale[0]] = $poi_decode['excerpt']['rendered'];
             }
         }
-        //TODO: Add other POI parameters like accessibility
+        // Adding POI parameters of accessibility
+        if ($poi['accessibility_validity_date'])
+            $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
+        if ($poi['accessibility_pdf'])
+            $this->tags['accessibility_pdf'] = $poi['accessibility_pdf'];
+        if ($poi['access_mobility_check'])
+            $this->tags['access_mobility_check'] = $poi['access_mobility_check'];
+        if ($poi['access_mobility_level'])
+            $this->tags['access_mobility_level'] = $poi['access_mobility_level'];
+        if ($poi['access_mobility_description'])
+            $this->tags['access_mobility_description'] = $poi['access_mobility_description'];
+        if ($poi['access_hearing_check'])
+            $this->tags['access_hearing_check'] = $poi['access_hearing_check'];
+        if ($poi['access_hearing_level'])
+            $this->tags['access_hearing_level'] = $poi['access_hearing_level'];
+        if ($poi['access_hearing_description'])
+            $this->tags['access_hearing_description'] = $poi['access_hearing_description'];
+        if ($poi['access_vision_check'])
+            $this->tags['access_vision_check'] = $poi['access_vision_check'];
+        if ($poi['access_vision_level'])
+            $this->tags['access_vision_level'] = $poi['access_vision_level'];
+        if ($poi['access_vision_description'])
+            $this->tags['access_vision_description'] = $poi['access_vision_description'];
+        if ($poi['access_cognitive_check'])
+            $this->tags['access_cognitive_check'] = $poi['access_cognitive_check'];
+        if ($poi['access_cognitive_level'])
+            $this->tags['access_cognitive_level'] = $poi['access_cognitive_level'];
+        if ($poi['access_cognitive_description'])
+            $this->tags['access_cognitive_description'] = $poi['access_cognitive_description'];
+        if ($poi['access_food_check'])
+            $this->tags['access_food_check'] = $poi['access_food_check'];
+        if ($poi['access_food_description'])
+            $this->tags['access_food_description'] = $poi['access_food_description'];
+            
+        // Adding POI parameters of reachability
+        if ($poi['reachability_by_bike_check'])
+            $this->tags['reachability_by_bike_check'] = $poi['reachability_by_bike_check'];
+        if ($poi['reachability_by_bike_description'])
+            $this->tags['reachability_by_bike_description'] = $poi['reachability_by_bike_description'];
+        if ($poi['reachability_on_foot_check'])
+            $this->tags['reachability_on_foot_check'] = $poi['reachability_on_foot_check'];
+        if ($poi['reachability_on_foot_description'])
+            $this->tags['reachability_on_foot_description'] = $poi['reachability_on_foot_description'];
+        if ($poi['reachability_by_car_check'])
+            $this->tags['reachability_by_car_check'] = $poi['reachability_by_car_check'];
+        if ($poi['reachability_by_car_description'])
+            $this->tags['reachability_by_car_description'] = $poi['reachability_by_car_description'];
+        if ($poi['reachability_by_public_transportation_check'])
+            $this->tags['reachability_by_public_transportation_check'] = $poi['reachability_by_public_transportation_check'];
+        if ($poi['reachability_by_public_transportation_description'])
+            $this->tags['reachability_by_public_transportation_description'] = $poi['reachability_by_public_transportation_description'];
+
+        // Adding POI parameters of general info
+        if ($poi['addr:street'])
+            $this->tags['addr_street'] = $poi['addr:street'];
+        if ($poi['addr:housenumber'])
+            $this->tags['addr_housenumber'] = $poi['addr:housenumber'];
+        if ($poi['addr:postcode'])
+            $this->tags['addr_postcode'] = $poi['addr:postcode'];
+        if ($poi['addr:city'])
+            $this->tags['addr_city'] = $poi['addr:city'];
+        if ($poi['contact:phone'])
+            $this->tags['contact_phone'] = $poi['contact:phone'];
+        if ($poi['contact:email'])
+            $this->tags['contact_email'] = $poi['contact:email'];
+        if ($poi['opening_hours'])
+            $this->tags['opening_hours'] = $poi['opening_hours'];
+        if ($poi['capacity'])
+            $this->tags['capacity'] = $poi['capacity'];
+        if ($poi['stars'])
+            $this->tags['stars'] = $poi['stars'];
+        if ($poi['n7webmap_rpt_related_url'])
+            $this->tags['related_url'] = $poi['n7webmap_rpt_related_url'];
+        if ($poi['ele'])
+            $this->tags['ele'] = $poi['ele'];
+        if ($poi['code'])
+            $this->tags['code'] = $poi['code'];
+            
+        // Adding POI parameters of style
+        if ($poi['color'])
+            $this->tags['color'] = $poi['color'];
+        if ($poi['icon'])
+            $this->tags['icon'] = $poi['icon'];
+        if ($poi['noDetails'])
+            $this->tags['noDetails'] = $poi['noDetails'];
+        if ($poi['noInteraction'])
+            $this->tags['noInteraction'] = $poi['noInteraction'];
+        if ($poi['zindex'])
+            $this->tags['zindex'] = $poi['zindex'];
+
     }
 }
