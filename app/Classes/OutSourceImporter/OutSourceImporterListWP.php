@@ -14,7 +14,9 @@ class OutSourceImporterListWP extends OutSourceImporterListAbstract {
     }
 
     public function getPoiList():array{
-        return [];
+        $curl=app(CurlServiceProvider::class);
+        $url = $this->endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $this->type;
+        return json_decode($curl->exec($url),true);
     }
 
     public function getMediaList():array{
