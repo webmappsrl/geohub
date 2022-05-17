@@ -95,15 +95,21 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      */
     protected function prepareTrackTagsJson($track){
         $this->tags['name']['it'] = $track['title']['rendered'];
-        if(!empty($track['wpml_translations'])) {
-            foreach($track['wpml_translations'] as $lang){
-                if ($lang['locale'] == 'en_US') {
-                    $this->tags['name']['en'] = $lang['post_title']; 
-                }
-            }
-        }
         $this->tags['description']['it'] = $track['content']['rendered'];
         $this->tags['excerpt']['it'] = $track['excerpt']['rendered'];
+        if(!empty($track['wpml_translations'])) {
+            foreach($track['wpml_translations'] as $lang){
+                $locale = explode('_',$lang['locale']);
+                $this->tags['name'][$locale[0]] = $lang['post_title'];
+                // Curl request to get the feature translation from external source
+                $curl = app(CurlServiceProvider::class);
+                $url = $this->endpoint.'/wp-json/wp/v2/track/'.$lang['id'];
+                $track_obj = $curl->exec($url);
+                $track_decode = json_decode($track_obj,true);
+                $this->tags['description'][$locale[0]] = $track_decode['content']['rendered'];
+                $this->tags['excerpt'][$locale[0]] = $track_decode['excerpt']['rendered']; 
+            }
+        }
         $this->tags['from'] = $track['n7webmap_start'];
         $this->tags['to'] = $track['n7webmap_end'];
         $this->tags['ele_from'] = $track['ele:from'];
@@ -122,15 +128,21 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      */
     protected function preparePOITagsJson($poi){
         $this->tags['name']['it'] = $poi['title']['rendered'];
-        if(!empty($poi['wpml_translations'])) {
-            foreach($poi['wpml_translations'] as $lang){
-                if ($lang['locale'] == 'en_US') {
-                    $this->tags['name']['en'] = $lang['post_title']; 
-                }
-            }
-        }
         $this->tags['description']['it'] = $poi['content']['rendered'];
         $this->tags['excerpt']['it'] = $poi['excerpt']['rendered'];
+        if(!empty($poi['wpml_translations'])) {
+            foreach($poi['wpml_translations'] as $lang){
+                $locale = explode('_',$lang['locale']);
+                $this->tags['name'][$locale[0]] = $lang['post_title']; 
+                // Curl request to get the feature translation from external source
+                $curl = app(CurlServiceProvider::class);
+                $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$lang['id'];
+                $poi_obj = $curl->exec($url);
+                $poi_decode = json_decode($poi_obj,true);
+                $this->tags['description'][$locale[0]] = $poi_decode['content']['rendered'];
+                $this->tags['excerpt'][$locale[0]] = $poi_decode['excerpt']['rendered'];
+            }
+        }
         //TODO: Add other POI parameters like accessibility
     }
 }

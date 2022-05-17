@@ -26,7 +26,7 @@ class OutSourceImporterFeatureWPImportTrackTest extends TestCase
         // PREPARE MOCK
         $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_track,$url){
             $mock->shouldReceive('exec')
-            ->once()
+            ->atLeast(1)
             ->with($url)
             ->andReturn($stelvio_track);
         });
