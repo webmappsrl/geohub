@@ -20,41 +20,41 @@ class AddAdditionalInfoToEcPois extends Migration
             $table->string('icon')->nullable();
             $table->string('code')->nullable();
 
-            $table->boolean('noDetails')->nullable();
-            $table->boolean('noInteraction')->nullable();
+            $table->boolean('noDetails')->nullable()->default(false);
+            $table->boolean('noInteraction')->nullable()->default(false);
 
             $table->timestamp('accessibility_validity_date')->nullable();
             $table->string('accessibility_pdf')->nullable();
             
-            $table->boolean('access_mobility_check')->nullable();
+            $table->boolean('access_mobility_check')->nullable()->default(false);
             $table->string('access_mobility_level')->nullable();
             $table->text('access_mobility_description')->nullable();
             
-            $table->boolean('access_hearing_check')->nullable();
+            $table->boolean('access_hearing_check')->nullable()->default(false);
             $table->string('access_hearing_level')->nullable();
             $table->text('access_hearing_description')->nullable();
             
-            $table->boolean('access_vision_check')->nullable();
+            $table->boolean('access_vision_check')->nullable()->default(false);
             $table->string('access_vision_level')->nullable();
             $table->text('access_vision_description')->nullable();
             
-            $table->boolean('access_cognitive_check')->nullable();
+            $table->boolean('access_cognitive_check')->nullable()->default(false);
             $table->string('access_cognitive_level')->nullable();
             $table->text('access_cognitive_description')->nullable();
             
-            $table->boolean('access_food_check')->nullable();
+            $table->boolean('access_food_check')->nullable()->default(false);
             $table->text('access_food_description')->nullable();
             
-            $table->boolean('reachability_by_bike_check')->nullable();
+            $table->boolean('reachability_by_bike_check')->nullable()->default(false);
             $table->text('reachability_by_bike_description')->nullable();
             
-            $table->boolean('reachability_on_foot_check')->nullable();
+            $table->boolean('reachability_on_foot_check')->nullable()->default(false);
             $table->text('reachability_on_foot_description')->nullable();
             
-            $table->boolean('reachability_by_car_check')->nullable();
+            $table->boolean('reachability_by_car_check')->nullable()->default(false);
             $table->text('reachability_by_car_description')->nullable();
             
-            $table->boolean('reachability_by_public_transportation_check')->nullable();
+            $table->boolean('reachability_by_public_transportation_check')->nullable()->default(false);
             $table->text('reachability_by_public_transportation_description')->nullable();
             
             $table->integer('zindex')->nullable();
