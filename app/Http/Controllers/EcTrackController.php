@@ -325,7 +325,7 @@ class EcTrackController extends Controller {
 
         try {
             $ids = $request->get('ids');
-            $ids = explode(',', $ids ?? void);
+            $ids = explode(',', $ids ?? null);
         } catch (Exception $e) {
         }
 

@@ -34,12 +34,21 @@ Route::get('language/{locale}', function ($locale) {
 
 Route::get('/track/{id}',function($id){
     $track = EcTrack::find($id);
-
     if ($track == null) {
         abort(404);
     }
     return view('track',[
         'track' => $track
     ]);
+});
 
+Route::get('/w/{type}/{id}',function($type,$id){
+    $track = EcTrack::find($id);
+    if ($track == null) {
+        abort(404);
+    }
+    return view('widget',[
+        'track' => $track,
+        'type' => $type
+    ]);
 });

@@ -22,7 +22,7 @@ use Symm\Gisconverter\Gisconverter;
 class EcTrack extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image'];
+    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image','out_source_feature_id','user_id'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
     
     /**
@@ -56,8 +56,7 @@ class EcTrack extends Model {
         // EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
-            $ecTrack->author()->associate($user);
+            if (!is_null($user)) $ecTrack->author()->associate($user);
         });
 
         static::created(function ($ecTrack) {

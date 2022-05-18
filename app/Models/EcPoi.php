@@ -28,6 +28,7 @@ class EcPoi extends Model {
      */
     protected $casts = [
         'related_url' => 'array',
+        'accessibility_validity_date' => 'datetime',
     ];
 
     public function __construct(array $attributes = []) {
