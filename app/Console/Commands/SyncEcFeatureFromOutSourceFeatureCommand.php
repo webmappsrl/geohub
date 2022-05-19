@@ -19,6 +19,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
                             {--P|provider= : Set the provider of the Out Source Features}
                             {--E|endpoint= : Set the endpoint of the Out Source Features}
                             {--activity= : Set the identifier activity taxonomy that must be assigned to EcFeature created}
+                            {--poi_type= : Set the identifier poi_type taxonomy that must be assigned to EcFeature created, the default is poi}
                             {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}';
 
     /**
@@ -51,6 +52,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $provider = '';
         $endpoint = '';
         $activity = '';
+        $poi_type = 'poi';
         $name_format = $this->option('name_format');
         $app = 0;
 
@@ -63,10 +65,13 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         if ($this->option('activity'))
             $activity = $this->option('activity');
         
+        if ($this->option('poi_type'))
+            $poi_type = $this->option('poi_type');
+        
         if ($this->option('app'))
             $app = $this->option('app');
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$poi_type);
 
         if ($SyncEcFromOutSource->checkParameters()) {
             $ids_array = $SyncEcFromOutSource->getList();
