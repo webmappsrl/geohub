@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyPoiType;
 use Illuminate\Database\Seeder;
 
 class TaxonomyActivitySeeder extends Seeder
@@ -33,6 +34,14 @@ class TaxonomyActivitySeeder extends Seeder
         TaxonomyActivity::factory()->create([
             'identifier' => 'skitouring',
             'name' => 'Skitouring',
+        ]);
+        TaxonomyPoiType::factory()->create([
+            'identifier' => 'poi',
+            'name' => 'Point Of Interest',
+        ]);
+        TaxonomyPoiType::factory()->create([
+            'identifier' => 'accomodation',
+            'name' => 'Accomodation',
         ]);
     }
 }
