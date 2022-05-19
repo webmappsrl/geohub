@@ -52,7 +52,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $provider = '';
         $endpoint = '';
         $activity = '';
-        $poi_type = 'poi';
+        $poi_type = '';
         $name_format = $this->option('name_format');
         $app = 0;
 

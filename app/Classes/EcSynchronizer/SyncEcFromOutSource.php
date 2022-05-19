@@ -35,7 +35,7 @@ class SyncEcFromOutSource
      * @param string $name_format the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
      * @param string $app the id of the app (eg. Parco Maremma = 1 )
      */
-    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = 'hiking' ,string $name_format, int $app = 0) 
+    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = 'hiking',string $poi_type = 'poi' ,string $name_format, int $app = 0) 
     {
         $this->type = $type;
         $this->author = $author;
@@ -153,6 +153,23 @@ class SyncEcFromOutSource
                 $this->activity = $this->activity;
             } else {
                 throw new Exception('The value of parameter activity '.$this->activity.' is not currect'); 
+            }
+        }
+        
+        // Check the poi_type
+        if (!empty($this->poi_type)) {
+            $all_poi_types = DB::table('taxonomy_poi_types')->select('identifier')->distinct()->get();
+            $mapped_poi_types = array_map(function($a){
+                if ($this->poi_type == $a){
+                    return true;
+                } else {
+                    return false;
+                }
+            },$all_poi_types->pluck('identifier')->toArray());
+            if (in_array(true , $mapped_poi_types )){
+                $this->poi_type = $this->poi_type;
+            } else {
+                throw new Exception('The value of parameter poi_type '.$this->poi_type.' is not currect'); 
             }
         }
 
