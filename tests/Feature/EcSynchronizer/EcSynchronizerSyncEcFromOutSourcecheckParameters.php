@@ -7,6 +7,7 @@ use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use App\Models\OutSourceFeature;
 use App\Models\OutSourceTrack;
 use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyPoiType;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -32,16 +33,22 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $type = 'track';
         $author = 'team@webmapp.it';
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
         $activity = 'hiking';            
+        $poi_type = 'poi';            
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
         // $this->expectException(Exception::class);
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
 
         $response = $SyncEcFromOutSource->checkParameters();
         $this->assertEquals(true,$response);
@@ -262,20 +269,66 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $type = 'track';
         $author = 'team@webmapp.it';
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking'; 
+        $poi_type = '';            
         $name_format = 'path {ref} - {xxx}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
 
         try {
             $SyncEcFromOutSource->checkParameters();
         } catch (Exception $e) {
+            print_r($e->getMessage());
             $this->assertEquals('The value of parameter {xxx} can not be found' ,$e->getMessage());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function when_parameter_poi_type_is_wrong_should_return_false()
+    {
+        OutSourceTrack::factory()->create
+        ([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+        ]);
+        
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+        
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
+        $type = 'poi';
+        $author = 'team@webmapp.it';
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';            
+        $poi_type = 'xxx';            
+        $name_format = 'path {ref} - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+
+        try {
+            $SyncEcFromOutSource->checkParameters();
+        } catch (Exception $e) {
+            $this->assertEquals('The value of parameter poi_type xxx is not currect' ,$e->getMessage());
         }
     }
 }

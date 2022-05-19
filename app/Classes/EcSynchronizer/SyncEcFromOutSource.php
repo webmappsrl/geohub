@@ -20,6 +20,7 @@ class SyncEcFromOutSource
     protected $provider;
     protected $endpoint;
     protected $activity;
+    protected $poi_type;
     protected $name_format;
     protected $app;
 
@@ -42,6 +43,7 @@ class SyncEcFromOutSource
         $this->provider = $provider;            
         $this->endpoint = strtolower($endpoint);            
         $this->activity = strtolower($activity);            
+        $this->poi_type = strtolower($poi_type);            
         $this->name_format = $name_format;            
         $this->app = $app;   
     }
