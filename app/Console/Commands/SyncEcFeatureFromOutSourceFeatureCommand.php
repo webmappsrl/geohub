@@ -71,7 +71,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         if ($this->option('app'))
             $app = $this->option('app');
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$poi_type);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
 
         if ($SyncEcFromOutSource->checkParameters()) {
             $ids_array = $SyncEcFromOutSource->getList();
