@@ -137,10 +137,17 @@ class SyncEcFromOutSource
         if (!empty($this->name_format)) {
             $format = $this->name_format;
             preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
-            $available_name_formats = array(
-                '{name}',
-                '{ref}',
-            );
+            if ($this->type == 'track') {
+                $available_name_formats = array(
+                    '{name}',
+                    '{ref}',
+                );
+            } 
+            if ($this->type == 'poi') {
+                $available_name_formats = array(
+                    '{name}',
+                );
+            }
             if (is_array($matches[0])) {
                 foreach($matches[0] as $m) {
                     if (!in_array($m, $available_name_formats)) {
@@ -239,9 +246,6 @@ class SyncEcFromOutSource
                 array_push($new_ec_features,$ec_track->id);
             }
             if ($this->type == 'poi') {
-                echo "\n";
-                print_r($this->author_id);
-                echo "\n";
                 $ec_poi = EcPoi::create([
                     'name' => [
                         'it' => $this->generateName($out_source)

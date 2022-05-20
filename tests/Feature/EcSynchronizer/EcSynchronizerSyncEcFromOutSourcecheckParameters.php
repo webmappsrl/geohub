@@ -288,7 +288,6 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         try {
             $SyncEcFromOutSource->checkParameters();
         } catch (Exception $e) {
-            print_r($e->getMessage());
             $this->assertEquals('The value of parameter {xxx} can not be found' ,$e->getMessage());
         }
     }
