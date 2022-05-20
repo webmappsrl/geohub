@@ -90,7 +90,7 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
     /**
      * @test
      */
-    public function when_compare_ec_feature_out_source_feature_id_with_out_source_feature_id_return_true()
+    public function when_type_track_compare_ec_feature_out_source_feature_id_with_out_source_feature_id_return_true()
     {
         $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
             $mock->shouldReceive('store')->atLeast(1);
@@ -413,5 +413,75 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
 
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
         $this->assertNotEmpty($new_ec_features_id);
+    }
+
+    /**
+     * @test
+     */
+    public function when_type_poi_compare_ec_feature_out_source_feature_id_with_out_source_feature_id_return_true()
+    {
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+        $source1 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'tags' => [
+                'name' => 'first'
+            ],
+        ]);
+        $source2 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'tags' => [
+                'name' => 'second'
+            ],
+        ]);
+        $source3 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Providers\OutSourceOSMProvider',
+            'endpoint' => 'https://osm.it',
+            'type' => 'poi',
+        ]);
+        $source4 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Providers\OutSourceOSMProvider',
+            'endpoint' => 'https://osm.it',
+            'type' => 'poi',
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
+        $user = User::factory()->create();
+
+        $type = 'track';
+        $author = $user->email;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
+        $name_format = 'path - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+
+        $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
+        foreach ($new_ec_features_id as $id) {
+            if ($type == 'poi') {
+                $ec = EcPoi::find($id)->first();
+                $this->assertContains( $ec->out_source_feature_id, $ids_array );
+            }
+        }
     }
 }
