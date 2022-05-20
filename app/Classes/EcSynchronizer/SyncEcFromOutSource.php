@@ -239,14 +239,16 @@ class SyncEcFromOutSource
                 array_push($new_ec_features,$ec_track->id);
             }
             if ($this->type == 'poi') {
+                echo "\n";
+                print_r($this->author_id);
+                echo "\n";
                 $ec_poi = EcPoi::create([
                     'name' => [
-                        // 'it' => 'path '. $out_source->tags['ref'] .' - ' . $out_source->tags['name']
                         'it' => $this->generateName($out_source)
                     ],
                     'user_id' => $this->author_id,
                     'out_source_feature_id' => $id,
-                    'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
+                    'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                 ]);
                 
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
