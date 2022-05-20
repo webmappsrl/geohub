@@ -143,6 +143,30 @@ class EcPoi extends Model {
      */
     public function getJson(): array {
         $array = $this->toArray();
+        // ddd($array);
+        if ($this->out_source_feature_id) {
+            $out_source_id = $this->out_source_feature_id;
+            $out_source_feature = OutSourcePoi::find($out_source_id)->first();
+            $locales = config('tab-translatable.locales');
+            // $array['tags'] = $locales;
+            foreach ($array as $key => $val) {
+                if (in_array($key,['name','description','excerpt'])) {
+                    foreach ($locales as $lang) {
+                        if (!array_key_exists($lang,$val) || empty($val[$lang])) {
+                            if (array_key_exists($key,$out_source_feature->tags) && array_key_exists($lang,$out_source_feature->tags[$key])) {
+                                $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+                            }
+                        }
+                    }
+                }
+                if (empty($val) || $val == false) {
+                    if (array_key_exists($key,$out_source_feature->tags)) {
+                        $array[$key] = $out_source_feature->tags[$key];
+                    }
+                }
+            }
+        }
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
