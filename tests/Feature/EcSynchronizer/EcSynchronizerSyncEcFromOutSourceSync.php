@@ -6,6 +6,7 @@ use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use App\Models\EcTrack;
 use App\Models\OutSourceTrack;
 use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -60,17 +61,23 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $user = User::factory()->create();
         
         $type = 'track';
         $author = $user->email;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
@@ -121,17 +128,23 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $user = User::factory()->create();
 
         $type = 'track';
         $author = $user->email;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
@@ -189,17 +202,23 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $user = User::factory()->create();
 
         $type = 'track';
         $author = $user->email;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
@@ -246,17 +265,23 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
         $user = User::factory()->create();
 
         $type = 'track';
         $author = $user->email;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
@@ -295,17 +320,23 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'identifier' => 'hiking'
         ]);
 
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+        
         $user = User::factory()->create();
 
         $type = 'track';
         $author = $user->email;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
         $endpoint = 'https://stelvio.wp.webmapp.it';            
-        $activity = 'hiking';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
