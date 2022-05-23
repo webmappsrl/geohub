@@ -205,7 +205,6 @@ class App extends Resource {
         ];
     }
     protected function home_tab(): array {
-
         return [
             Code::Make('Config Home')->language('json')->rules('json'),
         ];
