@@ -24,6 +24,7 @@ class EcPoiTest extends TestCase {
         });
         $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl']);
         $ecPoi->id = 1;
+        $ecPoi->user_id = 1;
         $ecPoi->save();
     }
 
@@ -41,6 +42,7 @@ class EcPoiTest extends TestCase {
         $geometry = DB::raw("(ST_GeomFromText('POINT(10 43)'))");
         $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl', 'geometry' => $geometry]);
         $ecPoi->id = 1;
+        $ecPoi->user_id = 1;
         $ecPoi->save();
 
         // ALTRO MOCK
@@ -67,6 +69,7 @@ class EcPoiTest extends TestCase {
             ->once();
         $ecPoi = new EcPoi(['name' => 'testName', 'url' => 'testUrl']);
         $ecPoi->id = 1;
+        $ecPoi->user_id = 1;
         $ecPoi->save();
     }
 

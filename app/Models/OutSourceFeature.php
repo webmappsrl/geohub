@@ -13,6 +13,7 @@ class OutSourceFeature extends Model
     protected $fillable = [
         'provider','source_id','type','endpoint','raw_data','geometry','tags'
     ];
+    
     protected $casts = [
         'tags' => 'array',
         'source_id' => 'string',

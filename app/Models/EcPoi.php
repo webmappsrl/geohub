@@ -17,7 +17,7 @@ use Spatie\Translatable\HasTranslations;
 class EcPoi extends Model {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','user_id', 'geometry','out_source_feature_id'];
     public array $translatable = ['name', 'description', 'excerpt'];
     public bool $skip_update = false;
 
@@ -39,8 +39,7 @@ class EcPoi extends Model {
         parent::booted();
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
-            $ecPoi->author()->associate($user);
+            if (!is_null($user)) $ecPoi->author()->associate($user);
         });
 
         static::created(function ($ecPoi) {
@@ -144,6 +143,30 @@ class EcPoi extends Model {
      */
     public function getJson(): array {
         $array = $this->toArray();
+        // ddd($array);
+        if ($this->out_source_feature_id) {
+            $out_source_id = $this->out_source_feature_id;
+            $out_source_feature = OutSourcePoi::find($out_source_id)->first();
+            $locales = config('tab-translatable.locales');
+            // $array['tags'] = $locales;
+            foreach ($array as $key => $val) {
+                if (in_array($key,['name','description','excerpt'])) {
+                    foreach ($locales as $lang) {
+                        if (!array_key_exists($lang,$val) || empty($val[$lang])) {
+                            if (array_key_exists($key,$out_source_feature->tags) && array_key_exists($lang,$out_source_feature->tags[$key])) {
+                                $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+                            }
+                        }
+                    }
+                }
+                if (empty($val) || $val == false) {
+                    if (array_key_exists($key,$out_source_feature->tags)) {
+                        $array[$key] = $out_source_feature->tags[$key];
+                    }
+                }
+            }
+        }
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
