@@ -32,7 +32,7 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
      */
     public function importPoi(){
 
-        $file = fopen(Storage::disk('local')->path($this->endpoint), "r");
+        $file = fopen(Storage::disk('local')->path('/'.$this->endpoint), "r");
         $header = NULL;
         $poi = array();
         while ( ($row = fgetcsv($file, 1000, ",")) !==FALSE )

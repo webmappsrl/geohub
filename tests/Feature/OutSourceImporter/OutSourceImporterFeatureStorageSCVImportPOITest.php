@@ -23,9 +23,6 @@ class OutSourceImporterFeatureStorageSCVImportPOITest extends TestCase
         $poi = new OutSourceImporterFeatureStorageCSV($type,$endpoint,$source_id);
         $poi_id = $poi->importFeature();
 
-        echo "\n";
-        print_r('SALAM');
-        print_r($poi);
         // VERIFY
         $out_source = OutSourceFeature::find($poi_id);
         $this->assertEquals('poi',$out_source->type);
@@ -36,9 +33,6 @@ class OutSourceImporterFeatureStorageSCVImportPOITest extends TestCase
         // TODO: add some checks on tags
         // TODO: add some checks on geometry
         // TODO: add some checks on raw_data
-        // This is not working:
-        // $this->assertEquals($stelvio_poi,$out_source->raw_data);
-
 
     }
 }

@@ -16,7 +16,7 @@ class OutSourceImporterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_importer {type : track or poi} {endpoint : url to the resource} {provider : WP,StorageCSV}';
+    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. importer/parco-maremma/esercizi.csv)} {provider : WP, StorageCSV}';
 
     /**
      * The console command description.
