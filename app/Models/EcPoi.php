@@ -149,13 +149,13 @@ class EcPoi extends Model {
             $locales = config('tab-translatable.locales');
             foreach ($array as $key => $val) {
                 if (in_array($key,['name','description','excerpt'])) {
-                    foreach ($locales as $lang) {
-                        if (!array_key_exists($lang,$val) || empty($val[$lang])) {
-                            if (array_key_exists($key,$out_source_feature->tags) && array_key_exists($lang,$out_source_feature->tags[$key])) {
-                                $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
-                            }
-                        }
-                    }
+                    // foreach ($locales as $lang) {
+                    //     if (!array_key_exists($lang,$val) || empty($val[$lang])) {
+                    //         if (array_key_exists($key,$out_source_feature->tags) && array_key_exists($lang,$out_source_feature->tags[$key])) {
+                    //             $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+                    //         }
+                    //     }
+                    // }
                 }
                 if (empty($val) || $val == false) {
                     if (array_key_exists($key,$out_source_feature->tags)) {
