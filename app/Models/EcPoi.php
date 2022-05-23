@@ -143,12 +143,10 @@ class EcPoi extends Model {
      */
     public function getJson(): array {
         $array = $this->toArray();
-        // ddd($array);
         if ($this->out_source_feature_id) {
             $out_source_id = $this->out_source_feature_id;
             $out_source_feature = OutSourcePoi::find($out_source_id)->first();
             $locales = config('tab-translatable.locales');
-            // $array['tags'] = $locales;
             foreach ($array as $key => $val) {
                 if (in_array($key,['name','description','excerpt'])) {
                     foreach ($locales as $lang) {
