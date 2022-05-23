@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
@@ -81,9 +82,9 @@ class OutSourceImporterCommand extends Command
         $features_list = $features->getList();
         
         foreach ($features_list as $id => $last_modified) {
-            // $OSF = new OutSourceImporterFeatureWP($this->type,$this->endpoint,$id);
-            // $OSF_id = $OSF->importFeature();
-            // Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+            $OSF = new OutSourceImporterFeatureStorageCSV($this->type,$this->endpoint,$id);
+            $OSF_id = $OSF->importFeature();
+            Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
         }
     }
 }

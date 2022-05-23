@@ -55,7 +55,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         
         // prepare the value of tags data
         $this->preparePOITagsJson($poi);
-        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lat'].']}';
+        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lng'].']}';
         // prepare feature parameters to pass to updateOrCreate function
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
         $this->params['provider'] = get_class($this);
