@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -171,6 +172,7 @@ class App extends Resource {
     public function sections() {
             return [
                 'APP' => $this->app_tab(),
+                'HOME' => $this->home_tab(),
                 'AUTH' => $this->auth_tab(),
                 'OFFLINE' => $this->offline_tab(),
                 'GEOLOCATION' => $this->geolocation_tab(),
@@ -200,6 +202,12 @@ class App extends Resource {
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
+        ];
+    }
+    protected function home_tab(): array {
+
+        return [
+            Code::Make('Config Home')->language('json')->rules('json'),
         ];
     }
     protected function languages_tab(): array {
