@@ -16,7 +16,7 @@ class OutSourceImporterFeatureStorageSCVImportPOITest extends TestCase
     {
         // WHEN
         $type = 'poi';
-        $endpoint = 'local;importer/parco-maremma/esercizi.csv';
+        $endpoint = 'importer;parco-maremma/esercizi.csv';
         $source_id = 1;
 
         // FIRE
@@ -27,7 +27,7 @@ class OutSourceImporterFeatureStorageSCVImportPOITest extends TestCase
         $out_source = OutSourceFeature::find($poi_id);
         $this->assertEquals('poi',$out_source->type);
         $this->assertEquals(1,$out_source->source_id);
-        $this->assertEquals('local;importer/parco-maremma/esercizi.csv',$out_source->endpoint);
+        $this->assertEquals('importer;parco-maremma/esercizi.csv',$out_source->endpoint);
         $this->assertEquals('App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV',$out_source->provider);
        
         // TODO: add some checks on tags
