@@ -568,7 +568,7 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             $mock->shouldReceive('store')->atLeast(1);
         });
 
-
+        $geometry1 = DB::select(DB::raw("SELECT (ST_GeomFromText('POINT(10.42 42.70)'))"))[0]->st_geomfromtext;
         $source1 = OutSourcePoi::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
@@ -576,26 +576,7 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
             'tags' => [
                 'name' => 'first'
             ],
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(10.42 42.70)'))"),
-        ]);
-        $source2 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
-            'endpoint' => 'https://stelvio.wp.webmapp.it',
-            'type' => 'poi',
-            'tags' => [
-                'name' => 'second'
-            ],
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(10.43 43.70)'))"),
-        ]);
-        $source3 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Providers\OutSourceOSMProvider',
-            'endpoint' => 'https://osm.it',
-            'type' => 'poi',
-        ]);
-        $source4 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Providers\OutSourceOSMProvider',
-            'endpoint' => 'https://osm.it',
-            'type' => 'poi',
+            'geometry' => $geometry1,
         ]);
 
         TaxonomyActivity::updateOrCreate([
@@ -624,16 +605,11 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
         $ids_array = $SyncEcFromOutSource->getList();
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
 
-        $this->assertEquals(2,EcPoi::count());
-        $ecPoi_geometry = EcPoi::get()->pluck('geometry')->toArray();
-        // echo "\n";
-        // print_r(DB::select("SELECT $source1->geometry As wkt")[0]->wkt);
-        // echo "\n";
-        // print_r(DB::select("SELECT $source2->geometry As wkt")[0]->wkt);
-        // echo "\n";
-        // print_r($ecPoi_geometry);
-        // $this->assertContains(DB::select("SELECT $source1->geometry As wkt")[0]->wkt,$ecPoi_geometry);
-        // $this->assertContains(DB::select("SELECT $source2->geometry As wkt")[0]->wkt,$ecPoi_geometry);
+        $this->assertEquals(1,EcPoi::count());
+        $ecPoi_geometry = EcPoi::first()->geometry;
+        $ecpoi_geojson = DB::select("SELECT ST_AsGeojson('$ecPoi_geometry')")[0]->st_asgeojson;
+        $geometry1_geojson = DB::select("SELECT ST_AsGeojson('$geometry1')")[0]->st_asgeojson;
+        $this->assertEquals($geometry1_geojson,$ecpoi_geojson);
     }
 
     /**

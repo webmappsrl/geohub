@@ -55,7 +55,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         
         // prepare the value of tags data
         $this->preparePOITagsJson($poi);
-        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lat'].']}';
+        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lng'].']}';
         // prepare feature parameters to pass to updateOrCreate function
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
         $this->params['provider'] = get_class($this);
@@ -144,93 +144,93 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             }
         }
         // Adding POI parameters of accessibility
-        if ($poi['accessibility_validity_date'])
+        if (isset(($poi['accessibility_validity_date'])))
             $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
-        if ($poi['accessibility_pdf'])
+        if (isset(($poi['accessibility_pdf'])))
             $this->tags['accessibility_pdf'] = $poi['accessibility_pdf'];
-        if ($poi['access_mobility_check'])
+        if (isset(($poi['access_mobility_check'])))
             $this->tags['access_mobility_check'] = $poi['access_mobility_check'];
-        if ($poi['access_mobility_level'])
+        if (isset(($poi['access_mobility_level'])))
             $this->tags['access_mobility_level'] = $poi['access_mobility_level'];
-        if ($poi['access_mobility_description'])
+        if (isset(($poi['access_mobility_description'])))
             $this->tags['access_mobility_description'] = $poi['access_mobility_description'];
-        if ($poi['access_hearing_check'])
+        if (isset(($poi['access_hearing_check'])))
             $this->tags['access_hearing_check'] = $poi['access_hearing_check'];
-        if ($poi['access_hearing_level'])
+        if (isset(($poi['access_hearing_level'])))
             $this->tags['access_hearing_level'] = $poi['access_hearing_level'];
-        if ($poi['access_hearing_description'])
+        if (isset(($poi['access_hearing_description'])))
             $this->tags['access_hearing_description'] = $poi['access_hearing_description'];
-        if ($poi['access_vision_check'])
+        if (isset(($poi['access_vision_check'])))
             $this->tags['access_vision_check'] = $poi['access_vision_check'];
-        if ($poi['access_vision_level'])
+        if (isset(($poi['access_vision_level'])))
             $this->tags['access_vision_level'] = $poi['access_vision_level'];
-        if ($poi['access_vision_description'])
+        if (isset(($poi['access_vision_description'])))
             $this->tags['access_vision_description'] = $poi['access_vision_description'];
-        if ($poi['access_cognitive_check'])
+        if (isset(($poi['access_cognitive_check'])))
             $this->tags['access_cognitive_check'] = $poi['access_cognitive_check'];
-        if ($poi['access_cognitive_level'])
+        if (isset(($poi['access_cognitive_level'])))
             $this->tags['access_cognitive_level'] = $poi['access_cognitive_level'];
-        if ($poi['access_cognitive_description'])
+        if (isset(($poi['access_cognitive_description'])))
             $this->tags['access_cognitive_description'] = $poi['access_cognitive_description'];
-        if ($poi['access_food_check'])
+        if (isset(($poi['access_food_check'])))
             $this->tags['access_food_check'] = $poi['access_food_check'];
-        if ($poi['access_food_description'])
+        if (isset(($poi['access_food_description'])))
             $this->tags['access_food_description'] = $poi['access_food_description'];
             
         // Adding POI parameters of reachability
-        if ($poi['reachability_by_bike_check'])
+        if (isset(($poi['reachability_by_bike_check'])))
             $this->tags['reachability_by_bike_check'] = $poi['reachability_by_bike_check'];
-        if ($poi['reachability_by_bike_description'])
+        if (isset(($poi['reachability_by_bike_description'])))
             $this->tags['reachability_by_bike_description'] = $poi['reachability_by_bike_description'];
-        if ($poi['reachability_on_foot_check'])
+        if (isset(($poi['reachability_on_foot_check'])))
             $this->tags['reachability_on_foot_check'] = $poi['reachability_on_foot_check'];
-        if ($poi['reachability_on_foot_description'])
+        if (isset(($poi['reachability_on_foot_description'])))
             $this->tags['reachability_on_foot_description'] = $poi['reachability_on_foot_description'];
-        if ($poi['reachability_by_car_check'])
+        if (isset(($poi['reachability_by_car_check'])))
             $this->tags['reachability_by_car_check'] = $poi['reachability_by_car_check'];
-        if ($poi['reachability_by_car_description'])
+        if (isset(($poi['reachability_by_car_description'])))
             $this->tags['reachability_by_car_description'] = $poi['reachability_by_car_description'];
-        if ($poi['reachability_by_public_transportation_check'])
+        if (isset(($poi['reachability_by_public_transportation_check'])))
             $this->tags['reachability_by_public_transportation_check'] = $poi['reachability_by_public_transportation_check'];
-        if ($poi['reachability_by_public_transportation_description'])
+        if (isset(($poi['reachability_by_public_transportation_description'])))
             $this->tags['reachability_by_public_transportation_description'] = $poi['reachability_by_public_transportation_description'];
 
         // Adding POI parameters of general info
-        if ($poi['addr:street'])
+        if (isset(($poi['addr:street'])))
             $this->tags['addr_street'] = $poi['addr:street'];
-        if ($poi['addr:housenumber'])
+        if (isset(($poi['addr:housenumber'])))
             $this->tags['addr_housenumber'] = $poi['addr:housenumber'];
-        if ($poi['addr:postcode'])
+        if (isset(($poi['addr:postcode'])))
             $this->tags['addr_postcode'] = $poi['addr:postcode'];
-        if ($poi['addr:city'])
+        if (isset(($poi['addr:city'])))
             $this->tags['addr_city'] = $poi['addr:city'];
-        if ($poi['contact:phone'])
+        if (isset(($poi['contact:phone'])))
             $this->tags['contact_phone'] = $poi['contact:phone'];
-        if ($poi['contact:email'])
+        if (isset(($poi['contact:email'])))
             $this->tags['contact_email'] = $poi['contact:email'];
-        if ($poi['opening_hours'])
+        if (isset(($poi['opening_hours'])))
             $this->tags['opening_hours'] = $poi['opening_hours'];
-        if ($poi['capacity'])
+        if (isset(($poi['capacity'])))
             $this->tags['capacity'] = $poi['capacity'];
-        if ($poi['stars'])
+        if (isset(($poi['stars'])))
             $this->tags['stars'] = $poi['stars'];
-        if ($poi['n7webmap_rpt_related_url'])
+        if (isset(($poi['n7webmap_rpt_related_url'])))
             $this->tags['related_url'] = $poi['n7webmap_rpt_related_url'];
-        if ($poi['ele'])
+        if (isset(($poi['ele'])))
             $this->tags['ele'] = $poi['ele'];
-        if ($poi['code'])
+        if (isset(($poi['code'])))
             $this->tags['code'] = $poi['code'];
             
         // Adding POI parameters of style
-        if ($poi['color'])
+        if (isset(($poi['color'])))
             $this->tags['color'] = $poi['color'];
-        if ($poi['icon'])
+        if (isset(($poi['icon'])))
             $this->tags['icon'] = $poi['icon'];
-        if ($poi['noDetails'])
+        if (isset(($poi['noDetails'])))
             $this->tags['noDetails'] = $poi['noDetails'];
-        if ($poi['noInteraction'])
+        if (isset(($poi['noInteraction'])))
             $this->tags['noInteraction'] = $poi['noInteraction'];
-        if ($poi['zindex'])
+        if (isset(($poi['zindex'])))
             $this->tags['zindex'] = $poi['zindex'];
 
     }

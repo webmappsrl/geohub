@@ -231,29 +231,35 @@ class SyncEcFromOutSource
 
             $out_source = OutSourceFeature::find($id);
             if ($this->type == 'track') {
-                $ec_track = EcTrack::create([
-                    'name' => [
-                        // 'it' => 'path '. $out_source->tags['ref'] .' - ' . $out_source->tags['name']
-                        'it' => $this->generateName($out_source)
+                $ec_track = EcTrack::updateOrCreate(
+                    [
+                        'user_id' => $this->author_id,
+                        'out_source_feature_id' => $id,
                     ],
-                    'not_accessible' => false,
-                    'user_id' => $this->author_id,
-                    'out_source_feature_id' => $id,
-                    'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
-                ]);
+                    [
+                        'name' => [
+                            'it' => $this->generateName($out_source)
+                        ],
+                        'not_accessible' => false,
+                        'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
+                    ]
+            );
                 
                 $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
                 array_push($new_ec_features,$ec_track->id);
             }
             if ($this->type == 'poi') {
-                $ec_poi = EcPoi::create([
-                    'name' => [
-                        'it' => $this->generateName($out_source)
+                $ec_poi = EcPoi::updateOrCreate(
+                    [
+                        'user_id' => $this->author_id,
+                        'out_source_feature_id' => $id,
                     ],
-                    'user_id' => $this->author_id,
-                    'out_source_feature_id' => $id,
-                    'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                ]);
+                    [
+                        'name' => [
+                            'it' => $this->generateName($out_source)
+                        ],
+                        'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                    ]);
                 
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 array_push($new_ec_features,$ec_poi->id);
