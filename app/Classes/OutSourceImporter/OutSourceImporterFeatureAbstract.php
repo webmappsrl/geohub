@@ -25,7 +25,7 @@ abstract class OutSourceImporterFeatureAbstract
     public function __construct(string $type, string $endpoint, string $source_id) 
     {
         $this->type = strtolower($type);
-        $this->endpoint = strtolower($endpoint);
+        $this->endpoint = $endpoint;
         $this->source_id = $source_id;
     }
 

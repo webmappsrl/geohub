@@ -2,9 +2,11 @@
 
 namespace App\Classes\EcSynchronizer;
 
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
 use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +22,7 @@ class SyncEcFromOutSource
     protected $provider;
     protected $endpoint;
     protected $activity;
+    protected $poi_type;
     protected $name_format;
     protected $app;
 
@@ -35,15 +38,23 @@ class SyncEcFromOutSource
      * @param string $name_format the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
      * @param string $app the id of the app (eg. Parco Maremma = 1 )
      */
-    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = 'hiking' ,string $name_format, int $app = 0) 
+    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = '',string $poi_type = '' ,string $name_format = '{name}', int $app = 0) 
     {
         $this->type = $type;
         $this->author = $author;
         $this->provider = $provider;            
         $this->endpoint = strtolower($endpoint);            
         $this->activity = strtolower($activity);            
+        $this->poi_type = strtolower($poi_type);            
         $this->name_format = $name_format;            
         $this->app = $app;   
+
+        if ($this->type == 'track' && empty($this->activity)) {
+            $this->activity = 'hiking';
+        }
+        if ($this->type == 'poi' && empty($this->poi_type)) {
+            $this->poi_type = 'poi';
+        }
     }
 
     /**
@@ -126,10 +137,17 @@ class SyncEcFromOutSource
         if (!empty($this->name_format)) {
             $format = $this->name_format;
             preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
-            $available_name_formats = array(
-                '{name}',
-                '{ref}',
-            );
+            if ($this->type == 'track') {
+                $available_name_formats = array(
+                    '{name}',
+                    '{ref}',
+                );
+            } 
+            if ($this->type == 'poi') {
+                $available_name_formats = array(
+                    '{name}',
+                );
+            }
             if (is_array($matches[0])) {
                 foreach($matches[0] as $m) {
                     if (!in_array($m, $available_name_formats)) {
@@ -153,6 +171,23 @@ class SyncEcFromOutSource
                 $this->activity = $this->activity;
             } else {
                 throw new Exception('The value of parameter activity '.$this->activity.' is not currect'); 
+            }
+        }
+        
+        // Check the poi_type
+        if (!empty($this->poi_type)) {
+            $all_poi_types = DB::table('taxonomy_poi_types')->select('identifier')->distinct()->get();
+            $mapped_poi_types = array_map(function($a){
+                if ($this->poi_type == $a){
+                    return true;
+                } else {
+                    return false;
+                }
+            },$all_poi_types->pluck('identifier')->toArray());
+            if (in_array(true , $mapped_poi_types )){
+                $this->poi_type = $this->poi_type;
+            } else {
+                throw new Exception('The value of parameter poi_type '.$this->poi_type.' is not currect'); 
             }
         }
 
@@ -191,28 +226,47 @@ class SyncEcFromOutSource
      */
     public function sync(array $ids_array)
     {
-        $new_ec_tracks = [];
+        $new_ec_features = [];
         foreach ($ids_array as $id) {
 
             $out_source = OutSourceFeature::find($id);
             if ($this->type == 'track') {
-                $ec_track = EcTrack::create([
-                    'name' => [
-                        // 'it' => 'path '. $out_source->tags['ref'] .' - ' . $out_source->tags['name']
-                        'it' => $this->generateName($out_source)
+                $ec_track = EcTrack::updateOrCreate(
+                    [
+                        'user_id' => $this->author_id,
+                        'out_source_feature_id' => $id,
                     ],
-                    'not_accessible' => false,
-                    'user_id' => $this->author_id,
-                    'out_source_feature_id' => $id,
-                    'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
-                ]);
+                    [
+                        'name' => [
+                            'it' => $this->generateName($out_source)
+                        ],
+                        'not_accessible' => false,
+                        'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
+                    ]
+            );
                 
                 $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
-                array_push($new_ec_tracks,$ec_track->id);
+                array_push($new_ec_features,$ec_track->id);
+            }
+            if ($this->type == 'poi') {
+                $ec_poi = EcPoi::updateOrCreate(
+                    [
+                        'user_id' => $this->author_id,
+                        'out_source_feature_id' => $id,
+                    ],
+                    [
+                        'name' => [
+                            'it' => $this->generateName($out_source)
+                        ],
+                        'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                    ]);
+                
+                $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
+                array_push($new_ec_features,$ec_poi->id);
             }
         }
         
-        return $new_ec_tracks;
+        return $new_ec_features;
     }
 
     /**

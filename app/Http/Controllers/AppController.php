@@ -77,7 +77,11 @@ class AppController extends Controller {
         'title'=>$app->name
       ];
 
-      if($app->layers->count()>0) {
+      if(!empty($app->config_home)) {
+        $data = json_decode($app->config_home,TRUE);
+      }
+
+      else if ($app->layers->count()>0) {
         foreach($app->layers()->orderBy('rank')->get() as $layer) {
             $data['HOME'][] = [
             'view'=>'compact-horizontal',

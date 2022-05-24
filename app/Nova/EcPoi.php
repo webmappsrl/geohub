@@ -192,6 +192,9 @@ class EcPoi extends Resource {
                 Text::make('Adress / locality','addr_locality'),
                 Text::make('Opening Hours'),
                 Number::Make('Elevation','ele'),
+                Text::make('Capacity'),
+                Text::make('Stars'),
+                Text::make('Code'),
             ],
 
             'Accessibility' => $this->accessibility_tab(),

@@ -30,6 +30,11 @@ return [
 
     'disks' => [
 
+        'importer' => [
+            'driver' => 'local',
+            'root' => storage_path('importer'),
+        ],
+        
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
