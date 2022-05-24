@@ -243,9 +243,22 @@ class SyncEcFromOutSource
                         'not_accessible' => false,
                         'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
                     ]
-            );
+                );
                 
                 $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
+
+                if (isset($out_source->tags['related_poi']) && is_array($out_source->tags['related_poi'])) {
+                    foreach ($out_source->tags['related_poi'] as $OSD_poi_id) {
+                        $EcPoi = EcPoi::where('out_source_feature_id',$OSD_poi_id)
+                                        ->where('user_id',$this->author_id)
+                                        ->first();
+                        
+                        if ($EcPoi && !is_null($EcPoi)) {
+                            $ec_track->ecPois()->attach($EcPoi);
+                        }
+                    }
+                }
+
                 array_push($new_ec_features,$ec_track->id);
             }
             if ($this->type == 'poi') {

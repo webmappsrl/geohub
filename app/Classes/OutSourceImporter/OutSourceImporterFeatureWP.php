@@ -118,6 +118,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['ele_min'] = $track['ele:min'];
         $this->tags['distance'] = $track['distance'];
         $this->tags['difficulty'] = $track['cai_scale'];
+
+        // Adds the EcOutSource:poi ID to EcOutSource:track's related_poi tags 
+        if (isset($track['n7webmap_related_poi']) && is_array($track['n7webmap_related_poi'])) {
+            $this->tags['related_poi'] = array();
+            foreach($track['n7webmap_related_poi'] as $poi) {
+                $OSF_poi = OutSourceFeature::where('endpoint',$this->endpoint)
+                            ->where('source_id',$poi['ID'])
+                            ->first();
+                if ($OSF_poi && !is_null($OSF_poi)) {
+                    array_push($this->tags['related_poi'],$OSF_poi->id);
+                }
+            }
+        }
     }
     
     /**
