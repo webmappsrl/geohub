@@ -725,4 +725,68 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
 
         $this->assertContains($poi_type,$ecPoi->taxonomyPoiTypes->pluck('identifier')->toArray());
     }
+
+    /**
+     * @test
+     */
+    public function when_sync_track_with_related_poi_ec_poi_ec_track_returns_true()
+    {
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+        $OSF_poi_1 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'source_id' => 2552
+        ]);
+
+        $osf_track = OutSourceTrack::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'track',
+            'tags' => [
+                'related_poi' => [$OSF_poi_1->id],
+                'name' => 'first'
+            ],
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
+        $user = User::factory()->create();
+
+        $type = 'track';
+        $author = $user->email;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
+        $name_format = '{name}';            
+        $app = 1; 
+
+        $sync_poi = new SyncEcFromOutSource('poi',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $sync_poi->checkParameters();
+        $ids_array = $sync_poi->getList();
+        $new_poi = $sync_poi->sync($ids_array);
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+
+        $new_track = $SyncEcFromOutSource->sync($ids_array);
+        $ecTrack = EcTrack::find($new_track)->first();
+        $ecPoi = EcPoi::find($new_poi)->first();
+        
+        $this->assertEquals($ecTrack->ecPois->first()->id,$new_poi[0]);
+        $this->assertEquals($ecPoi->ecTracks->first()->id,$new_track[0]);
+    }
 }
