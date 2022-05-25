@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Models\OutSourceFeature;
+use App\Models\OutSourcePoi;
 use App\Providers\CurlServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -79,6 +80,84 @@ class OutSourceImporterFeatureWPImportTrackTest extends TestCase
         // This is not working:
         // $this->assertEquals($stelvio_track_it,json_encode($out_source->raw_data));
 
+    }
+    
+    
+    /** @test */
+    public function when_track_has_related_poi_osf_track_should_return_ids_in_related_poi_tags()
+    {
+        // WHEN
+        $type = 'track';
+        $endpoint = 'https://stelvio.wp.webmapp.it';
+        $source_id = 6;
+        $source_id_en = 1239;
+        $source_id_de = 1241;
+        $stelvio_track_it = file_get_contents(base_path('tests/Feature/Stubs/stelvio_track.json'));
+        $stelvio_track_en = file_get_contents(base_path('tests/Feature/Stubs/stelvio_track_en.json'));
+        $stelvio_track_de = file_get_contents(base_path('tests/Feature/Stubs/stelvio_track_de.json'));
+        $url_it = $endpoint.'/wp-json/wp/v2/track/'.$source_id;
+        $url_en = $endpoint.'/wp-json/wp/v2/track/'.$source_id_en;
+        $url_de = $endpoint.'/wp-json/wp/v2/track/'.$source_id_de;
+
+        $OSF_poi_1 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'source_id' => 2552
+        ]);
+        $OSF_poi_2 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'source_id' => 2554
+        ]);
+        $OSF_poi_3 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'source_id' => 2556
+        ]);
+        $OSF_poi_4 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'source_id' => 2558
+        ]);
+
+        // PREPARE MOCK ITA
+        $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_track_it,$url_it,$url_en,$stelvio_track_en,$url_de,$stelvio_track_de){
+            $mock->shouldReceive('exec')
+            ->once()
+            ->with($url_it)
+            ->andReturn($stelvio_track_it);
+
+            $mock->shouldReceive('exec')
+            ->once()
+            ->with($url_en)
+            ->andReturn($stelvio_track_en);
+
+            $mock->shouldReceive('exec')
+            ->once()
+            ->with($url_de)
+            ->andReturn($stelvio_track_de);
+        });
+
+        // FIRE
+        $track = new OutSourceImporterFeatureWP($type,$endpoint,$source_id);
+        $track_id = $track->importFeature();
+
+        // VERIFY
+        $out_source = OutSourceFeature::find($track_id);
+        $this->assertEquals('track',$out_source->type);
+        $this->assertEquals(6,$out_source->source_id);
+        $this->assertEquals('https://stelvio.wp.webmapp.it',$out_source->endpoint);
+        $this->assertEquals('App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',$out_source->provider);
+       
+        // add some checks on tags
+        $this->assertContains($OSF_poi_1->id,$out_source->tags['related_poi']);
+        $this->assertContains($OSF_poi_2->id,$out_source->tags['related_poi']);
+        $this->assertContains($OSF_poi_3->id,$out_source->tags['related_poi']);
+        $this->assertContains($OSF_poi_4->id,$out_source->tags['related_poi']);
     }
 
 }
