@@ -12,6 +12,7 @@ use Tests\TestCase;
 class OutSourceImporterFeatureWPImportPOITest extends TestCase
 {
     use RefreshDatabase;
+    
     /** @test */
     public function when_endpoint_is_stelvio_and_type_is_poi_it_creates_proper_out_feature()
     {
