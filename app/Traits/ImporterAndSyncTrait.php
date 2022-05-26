@@ -39,15 +39,14 @@ trait ImporterAndSyncTrait {
      */
     public function createOSFMediaFromWP($media)
     {
+        $params['tags'] = $this->prepareMediaTagsJson($media);
         $params['type'] = 'media';
         $params['provider'] = get_class($this);
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $media['id'],
                 'endpoint' => $this->endpoint
-            ]
-            ,$params
-        );
+            ],$params);
         return $feature->id;
     }
 }

@@ -44,10 +44,14 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $poi = new OutSourceImporterFeatureWP($type,$endpoint,$source_id);
         $poi_id = $poi->importFeature();
 
+        $stelvio_media_decode = json_decode($stelvio_media);
+
         // VERIFY
         $out_source_poi = OutSourceFeature::find($poi_id);
         $out_source_media = OutSourceFeature::find($out_source_poi->tags['feature_image']);
+        print_r($stelvio_media_decode);
         $this->assertEquals($out_source_media->id,$out_source_poi->tags['feature_image']);
         $this->assertEquals($out_source_media->provider,'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
+        $this->assertEquals($out_source_media->tags['name']['it'],$stelvio_media_decode->title->rendered);
     }
 }

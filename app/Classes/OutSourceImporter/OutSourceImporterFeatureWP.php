@@ -90,9 +90,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function prepareTrackTagsJson($track){
-        $this->tags['name']['it'] = $track['title']['rendered'];
-        $this->tags['description']['it'] = $track['content']['rendered'];
-        $this->tags['excerpt']['it'] = $track['excerpt']['rendered'];
+        $this->tags['name'][explode('_',$track['wpml_current_locale'])[0]] = $track['title']['rendered'];
+        $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = $track['content']['rendered'];
+        $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = $track['excerpt']['rendered'];
         if(!empty($track['wpml_translations'])) {
             foreach($track['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -134,9 +134,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function preparePOITagsJson($poi){
-        $this->tags['name']['it'] = $poi['title']['rendered'];
-        $this->tags['description']['it'] = $poi['content']['rendered'];
-        $this->tags['excerpt']['it'] = $poi['excerpt']['rendered'];
+        $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['title']['rendered'];
+        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['content']['rendered'];
+        $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['excerpt']['rendered'];
         if(!empty($poi['wpml_translations'])) {
             foreach($poi['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -244,5 +244,29 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $media = $this->curlRequest($url);
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
+    }
+
+    /**
+     * It populates the tags variable of media so that it can be syncronized with EcMedia
+     * 
+     * @param array $media The OutSourceFeature parameters to be added or updated 
+     * 
+     */
+    public function prepareMediaTagsJson($media){ 
+        $tags = [];
+        $tags['name'][explode('_',$media['wpml_current_locale'])[0]] = $media['title']['rendered'];
+        $tags['description'][explode('_',$media['wpml_current_locale'])[0]] = $media['caption']['rendered'];
+        if(!empty($media['wpml_translations'])) {
+            foreach($media['wpml_translations'] as $lang){
+                $locale = explode('_',$lang['locale']);
+                $tags['name'][$locale[0]] = $lang['post_title']; 
+                // Curl request to get the feature translation from external source
+                $url = $this->endpoint.'/wp-json/wp/v2/media/'.$lang['id'];
+                $media_decode = $this->curlRequest($url);
+                $tags['description'][$locale[0]] = $media_decode['caption']['rendered'];
+            }
+        }
+
+        return $tags;
     }
 }
