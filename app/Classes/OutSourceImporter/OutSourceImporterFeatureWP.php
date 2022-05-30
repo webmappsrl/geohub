@@ -12,6 +12,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
     // DATA array
     protected array $params;
     protected array $tags;
+    protected string $mediaGeom;
 
     /**
      * It imports each track of the given list to the out_source_features table.
@@ -24,17 +25,18 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         // Curl request to get the feature information from external source
         $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
         $track = $this->curlRequest($url);
-        
-
-        // prepare the value of tags data
-        $this->prepareTrackTagsJson($track);
 
         // prepare feature parameters to pass to updateOrCreate function
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
+        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
         $this->params['raw_data'] = json_encode($track);
+
+        // prepare the value of tags data
+        $this->prepareTrackTagsJson($track);
         $this->params['tags'] = $this->tags;
+
 
         return $this->create_or_update_feature($this->params);
     }
@@ -50,15 +52,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$this->source_id;
         $poi = $this->curlRequest($url);
         
-        // prepare the value of tags data
-        $this->preparePOITagsJson($poi);
-        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lng'].']}';
+        
         // prepare feature parameters to pass to updateOrCreate function
-        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
+        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lng'].']}';
+        $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
+        $this->params['geometry'] = $geometry_poi;
+        $this->mediaGeom = $geometry_poi;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
         $this->params['raw_data'] = json_encode($poi);
+        
+        // prepare the value of tags data
+        $this->preparePOITagsJson($poi);
         $this->params['tags'] = $this->tags;
+        
 
         return $this->create_or_update_feature($this->params);
     }

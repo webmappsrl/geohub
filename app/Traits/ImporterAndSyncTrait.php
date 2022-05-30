@@ -42,6 +42,7 @@ trait ImporterAndSyncTrait {
         $params['tags'] = $this->prepareMediaTagsJson($media);
         $params['type'] = 'media';
         $params['provider'] = get_class($this);
+        $params['geometry'] = $this->mediaGeom;
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $media['id'],

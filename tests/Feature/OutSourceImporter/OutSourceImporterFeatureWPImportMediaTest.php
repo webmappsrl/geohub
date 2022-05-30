@@ -6,6 +6,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Models\OutSourceFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -49,9 +50,14 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         // VERIFY
         $out_source_poi = OutSourceFeature::find($poi_id);
         $out_source_media = OutSourceFeature::find($out_source_poi->tags['feature_image']);
+        $OSF_poi_geometry = $out_source_poi->geometry;
+        $OSF_media_geometry = $out_source_media->geometry;
+        $poi_geom = DB::select("SELECT ST_AsGeojson('$OSF_poi_geometry')")[0]->st_asgeojson;
+        $media_geom = DB::select("SELECT ST_AsGeojson('$OSF_media_geometry')")[0]->st_asgeojson;
         $this->assertEquals($out_source_media->id,$out_source_poi->tags['feature_image']);
         $this->assertEquals($out_source_media->provider,'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
         $this->assertEquals($out_source_media->tags['name']['it'],$stelvio_media_decode->title->rendered);
         $this->assertEquals($out_source_media->tags['url'],sha1($stelvio_media_decode->title->rendered).'.jpg');
+        $this->assertEquals($poi_geom,$media_geom);
     }
 }
