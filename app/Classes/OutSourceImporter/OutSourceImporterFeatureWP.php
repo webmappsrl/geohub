@@ -3,7 +3,9 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Models\OutSourceFeature;
+use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -133,6 +135,24 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 }
             }
         }
+
+        // Processing the feature image of Track
+        if (isset($track['featured_media']) && $track['featured_media']) {
+            $url = $this->endpoint.'/wp-json/wp/v2/media/'.$track['featured_media'];
+            $media = $this->curlRequest($url);
+            if ($media) {}
+            $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+        }
+        // Processing the image Gallery of Track
+        if (isset($track['n7webmap_track_media_gallery']) && $track['n7webmap_track_media_gallery']) {
+            if (is_array($track['n7webmap_track_media_gallery'])){
+                foreach($track['n7webmap_track_media_gallery'] as $img) {
+                    $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
+                    $media = $this->curlRequest($url);
+                    $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                }
+            }
+        }
     }
     
     /**
@@ -247,13 +267,13 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['zindex'] = $poi['zindex'];
 
         // Processing the feature image of POI
-        if (isset($poi['featured_media'])) {
+        if (isset($poi['featured_media']) && $poi['featured_media']) {
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$poi['featured_media'];
             $media = $this->curlRequest($url);
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
         // Processing the image Gallery of POI
-        if (isset($poi['n7webmap_media_gallery'])) {
+        if (isset($poi['n7webmap_media_gallery']) && $poi['n7webmap_media_gallery']) {
             if (is_array($poi['n7webmap_media_gallery'])){
                 foreach($poi['n7webmap_media_gallery'] as $img) {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
@@ -272,8 +292,13 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      */
     public function prepareMediaTagsJson($media){ 
         $tags = [];
-        $tags['name'][explode('_',$media['wpml_current_locale'])[0]] = $media['title']['rendered'];
-        $tags['description'][explode('_',$media['wpml_current_locale'])[0]] = $media['caption']['rendered'];
+        if(!empty($media['wpml_current_locale'])) { 
+            $local_lang = explode('_',$media['wpml_current_locale'])[0];
+        } else {
+            $local_lang = 'it';
+        }
+        $tags['name'][$local_lang] = $media['title']['rendered'];
+        $tags['description'][$local_lang] = $media['caption']['rendered'];
         if(!empty($media['wpml_translations'])) {
             foreach($media['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -285,15 +310,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             }
         }
 
-        // Saving the Media in to the s3-osfmedia storage
-        $wp_url = $media['guid']['rendered'];
-        $contents = file_get_contents($wp_url);
-        $basename = explode('.',basename($wp_url));
-        // TODO: Change importer to s3-osfmedia storage
-        $s3_osfmedia = Storage::disk('importer');
-        $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
+        try{
+            // Saving the Media in to the s3-osfmedia storage
+            $wp_url = $media['guid']['rendered'];
+            $contents = file_get_contents($wp_url);
+            $basename = explode('.',basename($wp_url));
+            // TODO: Change importer-osfmedia to s3-osfmedia storage
+            $s3_osfmedia = Storage::disk('importer-osfmedia');
+            $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
 
-        $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
+            $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
+        } catch(Exception $e) {
+            echo $e;
+        }
 
         return $tags;
     }
