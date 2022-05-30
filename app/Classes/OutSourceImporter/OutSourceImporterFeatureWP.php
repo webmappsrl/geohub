@@ -5,6 +5,7 @@ namespace App\Classes\OutSourceImporter;
 use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract { 
     use ImporterAndSyncTrait;
@@ -266,6 +267,16 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $tags['description'][$locale[0]] = $media_decode['caption']['rendered'];
             }
         }
+
+        // Saving the Media in to the s3-osfmedia storage
+        $wp_url = $media['guid']['rendered'];
+        $contents = file_get_contents($wp_url);
+        $basename = explode('.',basename($wp_url));
+        // TODO: Change importer to s3-osfmedia storage
+        $s3_osfmedia = Storage::disk('importer');
+        $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
+
+        $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
 
         return $tags;
     }
