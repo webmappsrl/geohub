@@ -252,6 +252,16 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $media = $this->curlRequest($url);
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
+        // Processing the image Gallery of POI
+        if (isset($poi['n7webmap_media_gallery'])) {
+            if (is_array($poi['n7webmap_media_gallery'])){
+                foreach($poi['n7webmap_media_gallery'] as $img) {
+                    $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
+                    $media = $this->curlRequest($url);
+                    $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                }
+            }
+        }
     }
 
     /**

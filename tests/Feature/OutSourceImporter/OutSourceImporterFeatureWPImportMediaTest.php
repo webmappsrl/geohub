@@ -50,6 +50,7 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         // VERIFY
         $out_source_poi = OutSourceFeature::find($poi_id);
         $out_source_media = OutSourceFeature::find($out_source_poi->tags['feature_image']);
+        $out_source_gallery = OutSourceFeature::find($out_source_poi->tags['image_gallery']);
         $OSF_poi_geometry = $out_source_poi->geometry;
         $OSF_media_geometry = $out_source_media->geometry;
         $poi_geom = DB::select("SELECT ST_AsGeojson('$OSF_poi_geometry')")[0]->st_asgeojson;
@@ -59,5 +60,7 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $this->assertEquals($out_source_media->tags['name']['it'],$stelvio_media_decode->title->rendered);
         $this->assertEquals($out_source_media->tags['url'],sha1($stelvio_media_decode->title->rendered).'.jpg');
         $this->assertEquals($poi_geom,$media_geom);
+        $this->assertContains($out_source_gallery[0]->id,$out_source_poi->tags['image_gallery']);
+        $this->assertContains($out_source_gallery[1]->id,$out_source_poi->tags['image_gallery']);
     }
 }
