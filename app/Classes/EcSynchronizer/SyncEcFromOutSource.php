@@ -2,6 +2,7 @@
 
 namespace App\Classes\EcSynchronizer;
 
+use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
@@ -19,6 +20,7 @@ class SyncEcFromOutSource
     protected $type;
     protected $author;
     protected $author_id;
+    protected $author_webmapp = 1;
     protected $provider;
     protected $endpoint;
     protected $activity;
@@ -143,7 +145,7 @@ class SyncEcFromOutSource
                     '{ref}',
                 );
             } 
-            if ($this->type == 'poi') {
+            if ($this->type == 'poi' || $this->type == 'media') {
                 $available_name_formats = array(
                     '{name}',
                 );
@@ -277,6 +279,21 @@ class SyncEcFromOutSource
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 array_push($new_ec_features,$ec_poi->id);
             }
+            if ($this->type == 'media') {
+                $ec_media = EcMedia::updateOrCreate(
+                    [
+                        'user_id' => $this->author_webmapp,
+                        'out_source_feature_id' => $id,
+                    ],
+                    [
+                        'name' => [
+                            'it' => $this->generateName($out_source)
+                        ],
+                        'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                        'url' => (!empty($out_source->tags['url']))?$out_source->tags['url']:'',
+                    ]);
+                array_push($new_ec_features,$ec_media->id);
+            }
         }
         
         return $new_ec_features;
@@ -285,7 +302,7 @@ class SyncEcFromOutSource
     /**
      * It generate the Ec feature's name name_format parameter 
      *
-     * @param array $out_source
+     * @param object $out_source
      * @return string 
      */
     private function generateName(OutSourceFeature $out_source) : string {    
@@ -311,5 +328,19 @@ class SyncEcFromOutSource
         }
 
         return $format;
+    }
+
+    /**
+     * It sets the featured image and gallery images of the Ec resource if its available in OSF 
+     *
+     * @param object $out_source
+     * @param object $ec_feature
+     * @return string 
+     */
+    private function syncOSFImagesToEcFeature(OutSourceFeature $out_source , $ec_feature) : string {    
+
+        
+
+        return true;
     }
 }
