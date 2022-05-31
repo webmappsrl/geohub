@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
+use App\Models\EcMedia;
 use App\Models\OutSourceFeature;
 use App\Models\OutSourcePoi;
 use App\Models\OutSourceTrack;
@@ -62,7 +63,8 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
-        print_r($users);
+        $ecmedia = EcMedia::find($new_ec_features_id[0]);
         $this->assertNotEmpty($new_ec_features_id);
+        $this->assertEquals($ecmedia->user_id,1);
     }
 }
