@@ -233,6 +233,7 @@ class SyncEcFromOutSource
 
             $out_source = OutSourceFeature::find($id);
             if ($this->type == 'track') {
+                // Create Track
                 $ec_track = EcTrack::updateOrCreate(
                     [
                         'user_id' => $this->author_id,
@@ -247,8 +248,10 @@ class SyncEcFromOutSource
                     ]
                 );
                 
+                // Attach Activities to track
                 $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
-
+                
+                // Attach related poi to Track
                 if (isset($out_source->tags['related_poi']) && is_array($out_source->tags['related_poi'])) {
                     foreach ($out_source->tags['related_poi'] as $OSD_poi_id) {
                         $EcPoi = EcPoi::where('out_source_feature_id',$OSD_poi_id)
@@ -258,6 +261,18 @@ class SyncEcFromOutSource
                         if ($EcPoi && !is_null($EcPoi)) {
                             $ec_track->ecPois()->attach($EcPoi);
                         }
+                    }
+                }
+
+                // Attach feature image to Track
+                if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                    $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
+                                    ->where('user_id',$this->author_webmapp)
+                                    ->first();
+                    
+                    if ($EcMedia && !is_null($EcMedia)) {
+                        $ec_track->featureImage()->associate($EcMedia);
+                        $ec_track->save();
                     }
                 }
 
@@ -277,10 +292,10 @@ class SyncEcFromOutSource
                         'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                     ]);
                 
-                // attach poi_type
+                // Attach poi_type to poi
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
 
-                // attach feature image
+                // Attach feature image to poi
                 if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                     $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
                                     ->where('user_id',$this->author_webmapp)
@@ -292,7 +307,7 @@ class SyncEcFromOutSource
                     }
                 }
                 
-                // attach EcMedia Gallery
+                // Attach EcMedia Gallery to poi
                 if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
                     foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                         $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
