@@ -291,6 +291,20 @@ class SyncEcFromOutSource
                         $ec_poi->save();
                     }
                 }
+                
+                // attach EcMedia Gallery
+                if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                    foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
+                        $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
+                                        ->where('user_id',$this->author_webmapp)
+                                        ->first();
+                        
+                        if ($EcMedia && !is_null($EcMedia)) {
+                            $ec_poi->ecMedia()->attach($EcMedia);
+                            $ec_poi->save();
+                        }
+                    }
+                }
 
                 array_push($new_ec_features,$ec_poi->id);
             }

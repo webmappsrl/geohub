@@ -134,4 +134,70 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         $ecpoi = EcPoi::find($new_ec_poi[0]);
         $this->assertEquals($ecpoi->featureImage->id,$new_ec_media[0] );
     }
+    /**
+     * @test
+     */
+    public function when_method_sync_with_type_poi_should_return_associated_gallery()
+    {
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+        $media1 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'media',
+            'tags' => [
+                'url' => 'first.jpg',
+                'name' => 'first'
+            ],
+        ]);
+        
+        $poi1 = OutSourcePoi::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'poi',
+            'tags' => [
+                'name' => 'first poi',
+                'image_gallery' => [$media1->id] 
+            ],
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
+        $users = User::all();
+        
+        $type = 'poi';
+        $author = 1;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';
+        $poi_type = 'poi';
+        $name_format = '{name}';            
+        $app = 1; 
+
+        // Sync Media
+        $SyncEcFromOutSource = new SyncEcFromOutSource('media',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+
+        $new_ec_media = $SyncEcFromOutSource->sync($ids_array);
+        
+        // Sync poi
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+
+        $new_ec_poi = $SyncEcFromOutSource->sync($ids_array);
+        $ecpoi = EcPoi::find($new_ec_poi);
+        $this->assertEquals($ecpoi[0]->ecMedia()->first()->id,$new_ec_media[0] );
+    }
 }
