@@ -2,9 +2,7 @@
 
 namespace App\Classes\OutSourceImporter;
 
-use App\Helpers\OutSourceImporterHelper;
 use App\Models\OutSourceFeature;
-use App\Providers\CurlServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ImporterAndSyncTrait;

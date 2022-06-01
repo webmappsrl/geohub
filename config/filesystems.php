@@ -34,6 +34,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('importer'),
         ],
+
+        'importer-osfmedia' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
         
         'local' => [
             'driver' => 'local',
@@ -63,6 +68,15 @@ return [
             'secret' => env('AWS_DUMPS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_DUMPS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+        ],
+        's3-osfmedia' => [
+            'driver' => 's3',
+            'key' => env('AWS_OSFMEDIA_ACCESS_KEY_ID'),
+            'secret' => env('AWS_OSFMEDIA_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_OSFMEDIA_BUCKET'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
