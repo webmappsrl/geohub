@@ -34,6 +34,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('importer'),
         ],
+        
+        'mapping' => [
+            'driver' => 'local',
+            'root' => storage_path('app/mapping'),
+        ],
 
         'importer-osfmedia' => [
             'driver' => 'local',

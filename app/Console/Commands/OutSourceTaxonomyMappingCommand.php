@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class OutSourceTaxonomyMappingCommand extends Command
 {
@@ -24,6 +25,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $endpoint;
     protected $activity;
     protected $poi_type;
+    protected $content;
 
     /**
      * Create a new command instance.
@@ -42,6 +44,8 @@ class OutSourceTaxonomyMappingCommand extends Command
      */
     public function handle()
     {
+        $this->content = "<?php \n";
+
         $this->endpoint = $this->argument('endpoint');
         $this->activity = $this->option('activity');
         $this->poi_type = $this->option('poi_type');
@@ -74,13 +78,22 @@ class OutSourceTaxonomyMappingCommand extends Command
             $this->importerWPPoiType();
             $this->importerWPActivity();
         }
+
+        $this->createMappingFile();
+        
     }
 
     private function importerWPPoiType(){
-        echo 'poi';
+        $this->content .= 'poi';
     }
 
     private function importerWPActivity(){
-        echo 'activity';
+        $this->content .= 'activity';
+    }
+    
+    private function createMappingFile(){
+        $path = parse_url($this->endpoint);
+        $file_name = str_replace('.','-',$path['host']);
+        Storage::disk('mapping')->put($file_name.'.php', $this->content);
     }
 }
