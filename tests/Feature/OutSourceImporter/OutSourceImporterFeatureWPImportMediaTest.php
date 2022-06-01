@@ -111,6 +111,7 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $this->assertEquals($track_geom,$media_geom);
         $basename = explode('.',basename($stelvio_media_decode->guid->rendered));
         $this->assertEquals($out_source_media->tags['url'],sha1($basename[0]).'.jpg');
+        // TODO: gallery assert not working
         // $this->assertContains($out_source_gallery[0]->id,$out_source_track->tags['image_gallery']);
     }
 }

@@ -313,7 +313,10 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         try{
             // Saving the Media in to the s3-osfmedia storage
             $wp_url = $media['guid']['rendered'];
-            $contents = file_get_contents($wp_url);
+            $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
+                return urlencode($match[0]);
+            }, $wp_url);
+            $contents = file_get_contents($url_encoded);
             $basename = explode('.',basename($wp_url));
             // TODO: Change importer-osfmedia to s3-osfmedia storage
             $s3_osfmedia = Storage::disk('importer-osfmedia');

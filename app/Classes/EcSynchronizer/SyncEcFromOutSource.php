@@ -264,6 +264,7 @@ class SyncEcFromOutSource
                 array_push($new_ec_features,$ec_track->id);
             }
             if ($this->type == 'poi') {
+                // create poi
                 $ec_poi = EcPoi::updateOrCreate(
                     [
                         'user_id' => $this->author_id,
@@ -276,14 +277,28 @@ class SyncEcFromOutSource
                         'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                     ]);
                 
+                // attach poi_type
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
+
+                // attach feature image
+                if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                    $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
+                                    ->where('user_id',$this->author_webmapp)
+                                    ->first();
+                    
+                    if ($EcMedia && !is_null($EcMedia)) {
+                        $ec_poi->featureImage()->associate($EcMedia);
+                        $ec_poi->save();
+                    }
+                }
+
                 array_push($new_ec_features,$ec_poi->id);
             }
             if ($this->type == 'media') {
                 $ec_media = EcMedia::updateOrCreate(
                     [
-                        'user_id' => $this->author_webmapp,
                         'out_source_feature_id' => $id,
+                        'user_id' => $this->author_webmapp,
                     ],
                     [
                         'name' => [

@@ -20,7 +20,7 @@ class EcMedia extends Model {
     /**
      * @var array
      */
-    protected $fillable = ['name', 'url'];
+    protected $fillable = ['name', 'url','geometry','out_source_feature_id','description','excerpt'];
     public array $translatable = ['name', 'description','excerpt'];
 
     public function __construct(array $attributes = []) {
