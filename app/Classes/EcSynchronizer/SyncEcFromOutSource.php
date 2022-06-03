@@ -12,6 +12,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class SyncEcFromOutSource
@@ -308,6 +309,34 @@ class SyncEcFromOutSource
                 
                 // Attach poi_type to poi
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
+                if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
+                    $path = parse_url($this->endpoint);
+                    $file_name = str_replace('.','-',$path['host']);
+                    $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                    
+                    foreach ($out_source->tags['poi_type'] as $cat) {
+                        if ($this->poi_type !== $cat) {
+                            foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                                if ($w['geohub_identifier'] == $cat) {
+                                    $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
+                                    if ($geohub_w && !is_null($geohub_w)) { 
+                                        $ec_poi->taxonomyPoiTypes()->attach($geohub_w);
+                                    } else {
+                                        $new_poi_type = TaxonomyPoiType::create(
+                                            [
+                                                'identifier' => $w['geohub_identifier'],
+                                                'name' => $w['source_title'],
+                                                'description' => $w['source_description'],
+                                            ]
+                                            );
+                                        $ec_poi->taxonomyPoiTypes()->attach($new_poi_type);
+                                    }
+                                }
+                            }
+                            $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
+                        }
+                    }
+                }
 
                 // Attach feature image to poi
                 if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {

@@ -12,6 +12,19 @@
                 "de": ""
             },
             "geohub_identifier": "poi"
+        },
+        "12": {
+            "source_title": {
+                "it": "test it",
+                "en": "test en",
+                "de": "test de"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "test"
         }
     },
     "activity": {
