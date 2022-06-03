@@ -56,7 +56,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         
         
         // prepare feature parameters to pass to updateOrCreate function
-        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lat'].','.$poi['n7webmap_coord']['lng'].']}';
+        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lng'].','.$poi['n7webmap_coord']['lat'].']}';
         $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
         $this->params['geometry'] = $geometry_poi;
         $this->mediaGeom = $geometry_poi;
