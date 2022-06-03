@@ -17,7 +17,8 @@ class AddOutSourceFeatureToEcMedia extends Migration
             $table->unsignedBigInteger('out_source_feature_id')->nullable();
             $table->foreign('out_source_feature_id')
                 ->references('id')
-                ->on('out_source_features');
+                ->on('out_source_features')
+                ->onDelete('cascade');
         });
     }
 

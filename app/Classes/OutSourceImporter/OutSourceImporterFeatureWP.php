@@ -143,6 +143,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             if ($media) {}
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
+
         // Processing the image Gallery of Track
         if (isset($track['n7webmap_track_media_gallery']) && $track['n7webmap_track_media_gallery']) {
             if (is_array($track['n7webmap_track_media_gallery'])){
@@ -150,6 +151,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
                     $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                }
+            }
+        }
+
+        // Processing the activity
+        $path = parse_url($this->endpoint);
+        $file_name = str_replace('.','-',$path['host']);
+        if (Storage::disk('mapping')->exists($file_name.'.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+            if (!empty(json_decode($taxonomy_map,true)['activity']) && $track['activity']) {
+                foreach ($track['activity'] as $tax) {
+                    $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$tax]['geohub_identifier'];
                 }
             }
         }
@@ -279,6 +293,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
                     $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                }
+            }
+        }
+
+        // Processing the poi_type
+        $path = parse_url($this->endpoint);
+        $file_name = str_replace('.','-',$path['host']);
+        if (Storage::disk('mapping')->exists($file_name.'.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+            if (!empty(json_decode($taxonomy_map,true)['poi_type']) && $poi['webmapp_category']) {
+                foreach ($poi['webmapp_category'] as $tax) {
+                    $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$tax]['geohub_identifier'];
                 }
             }
         }
