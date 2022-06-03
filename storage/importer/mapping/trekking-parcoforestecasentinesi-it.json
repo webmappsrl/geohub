@@ -1,0 +1,130 @@
+[
+    {
+        "webmapp_category": [
+            {
+                "source_id": 47,
+                "source_title": {
+                    "it": "Alberghi e Agriturismi",
+                    "en": "Hotels and agritourism"
+                },
+                "source_description": {
+                    "it": "Di seguito puoi scoprire tutte le altre strutture presenti dentro i confini del Parco Nazionale e nelle immediate vicinanze, ovvero alberghi, agriturismi e b&amp;b. ",
+                    "en": "Below you can discover all the other accommodation facility present within the borders of the National Park and in the proximity, like hotels, agritourism and b&amp;b.\r\n"
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 44,
+                "source_title": {
+                    "it": "Campeggi nel Parco",
+                    "en": "Camping in the Park"
+                },
+                "source_description": {
+                    "it": "Scopri i campeggi presenti nell'Area protetta e nelle immediate vicinanze, importanti strutture di appoggio per visitare il Parco e scoprire i suoi sentieri. ",
+                    "en": "Discover the campsites in the protected area and in the proximity, important accomodation facilities to visit the park and discover its paths.\n"
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 8,
+                "source_title": {
+                    "it": "Centri Visita e Punti Info",
+                    "en": "Visitor Centers and Info Point"
+                },
+                "source_description": {
+                    "it": "Scopri le nostre strutture didattico-informative, i Centri Visita, i punti informazione e gli uffici presenti sul territorio del Parco Nazionale delle Foreste Casentinesi.",
+                    "en": "Discover our educational structures, the Visitor Centers, information points and the offices in the National Park area."
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 21,
+                "source_title": {
+                    "it": "I luoghi da visitare",
+                    "en": "Places to visit"
+                },
+                "source_description": {
+                    "it": "Il Parco Nazionale offre infinite possibilit\u00e0 escursionistiche per tutti e in tutte le stagioni. Crinali panoramici, foreste millenarie e antiche mulattiere ci accompagnano nelle nostre esperienze, lungo gli oltre 600 km di sentieri, gli itinerari dedicati alla MTB, i sentieri natura e i percorsi ad alta accessibilit\u00e0. Scopri quali luoghi includere nella visita all'Area protetta.",
+                    "en": "The National Park offers endless hiking opportunities for everyone and in all seasons. Panoramic ridges, thousand-year-old forests and ancient mule tracks accompany us in our experiences, along the over 600 km of paths, the itineraries dedicated to MTB, the nature trails and the highly accessible paths. Find out which places to include in your visit to the Protected Area."
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 22,
+                "source_title": {
+                    "it": "I paesi del Parco",
+                    "en": "Villages of the Park"
+                },
+                "source_description": {
+                    "it": "",
+                    "en": ""
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 5,
+                "source_title": {
+                    "it": "Rifugi escursionistici",
+                    "en": "Hiking shelters"
+                },
+                "source_description": {
+                    "it": "Scopri i rifugi escursionistici e i rifugi alpini gestiti presenti sul territorio del Parco e individua quella in grado di soddisfare le tue esigenze.",
+                    "en": "Find out about the  hiking shelters and mountain huts in the Park area and find the one that can meet your needs."
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 43,
+                "source_title": {
+                    "it": "Rifugi in autogestione",
+                    "en": "self-managed shelters"
+                },
+                "source_description": {
+                    "it": "Scopri l'elenco dei rifugi e delle case per ferie che offrono un utilizzo esclusivamente in modalit\u00e0 \"autogestione\", ovvero con la consegna delle chiavi della struttura al gruppo di escursionistiche potr\u00e0 soggiornare in totale autonomia, previo contatto e accordo con il gestore o proprietario del rifugio. ",
+                    "en": "Find out the list of shelters and holiday homes that can be used exclusively in a \"self-management\" mode. That means with the handing over of the keys of the house to the hikers, who can stay in total autonomy, upon agreement with the manager or owner of the shelter.\r\n"
+                },
+                "geohub_identifier": ""
+            }
+        ]
+    },
+    {
+        "activity": [
+            {
+                "source_id": 17,
+                "source_title": {
+                    "it": "Mountain Bike",
+                    "en": "Mountain Bike"
+                },
+                "source_description": {
+                    "it": "Il Parco Nazionale delle Foreste Casentinesi rappresenta indubbiamente un ambiente d\u2019\u00e9lite per chi si vuole cimentare in meravigliose ed indimenticabili pedalate in un contesto naturale unico nel suo genere, con percorsi adatti a tutte le tipologie di bikers: che voi siate un agonista o un amatore, giovane o meno giovane, una famiglia con bambini, semplici curiosi delle due ruote, potrete trovare nel Parco Nazionale percorsi per tutti i gusti e per tutte le esigenze. Dagli emozionanti sentieri di crinale dove si pu\u00f2 ammirare un panorama mozzafiato, ai sentieri in mezzo al fresco di secolari faggete e abetine.",
+                    "en": "The Foreste Casentinesi National Park is undoubtedly a special environment for those who want to test themselves in wonderful and unforgettable rides in a unique natural environment: whether you are an athlete or an amateur, young or old, a family with children, or simply curious about two-wheeled vehicles, in the National Park you can find routes for all tastes and for all needs. From the exciting ridge paths where you can admire a breath-taking panorama, to the paths in the middle of the cool secular beech and fir wood."
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 16,
+                "source_title": {
+                    "it": "Trekking",
+                    "en": "Trekking"
+                },
+                "source_description": {
+                    "it": "Camminare \u00e8 il modo migliore per visitare un\u2019area protetta: camminando possono infatti essere osservati in dettaglio gli ambienti, il paesaggio, le tracce degli animali, i segni della storia, possono essere colti dettagli che altrimenti non noteremmo. Il territorio del Parco Nazionale delle Foreste Casentinesi, con la sua rete di oltre 600 km di sentieri, offre infinite possibilit\u00e0 escursionistiche per tutti e in tutte le stagioni, un\u2019ampia scelta di percorsi, diversi per lunghezza, grado di difficolt\u00e0 e ambienti naturali attraversati.",
+                    "en": ""
+                },
+                "geohub_identifier": ""
+            },
+            {
+                "source_id": 45,
+                "source_title": {
+                    "it": "Trekking di pi\u00f9 giorni",
+                    "en": "Trip ideas"
+                },
+                "source_description": {
+                    "it": "Per chi ha a disposizione pi\u00f9 giornate, la scelta di intraprendere un percorso a piedi di pi\u00f9 giorni \u00e8 sicuramente tra le pi\u00f9 appaganti per una visita ad un Parco Nazionale. Il progetto \"Da Rifugio a Rifugio\" propone 11 anelli di tre giorni (due pernotti) di collegamento tra Rifugi, ideali come proposta per un weekend lungo, descritti in un cofanetto in cui \u00e8 possibile trovare il dettaglio del percorso e dei punti tappa. Il \u201cSentiero delle Foreste sacre\u201d \u00e8 invece una proposta volta in sette tappe, da Lago di Ponte di Tredozio a La Verna, sette giorni per attraversare il Parco Nazionale e le sue millenarie foreste, una trans-parco per scoprire nel profondo il territorio dell'Area protetta",
+                    "en": "For anyone who has more days, undertake a walking for several days is certainly one of the most satisfying solutions to visit a National Park. The &#034;From Refuge to Refuge&#034; project proposes 11 three-day ring routes (two overnights), that includes connecting pathways between refuges ideal for a long weekend. This pathways are described in a box where you can find also the route and the route points details. The &#034;Path of the Sacred Forests&#034; is instead a proposal to cross the National Park and its millenary forests that develops into seven route points in seven days, from Lago di Ponte in Tredozio to La Verna, a trans park path to discover the protected area in the depth."
+                },
+                "geohub_identifier": ""
+            }
+        ]
+    }
+]

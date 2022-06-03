@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
 class OutSourceTaxonomyMappingCommand extends Command
 {
+    use ImporterAndSyncTrait;
     /**
      * The name and signature of the console command.
      *
@@ -25,7 +27,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $endpoint;
     protected $activity;
     protected $poi_type;
-    protected $content;
+    protected array $content;
 
     /**
      * Create a new command instance.
@@ -44,8 +46,6 @@ class OutSourceTaxonomyMappingCommand extends Command
      */
     public function handle()
     {
-        $this->content = "<?php \n";
-
         $this->endpoint = $this->argument('endpoint');
         $this->activity = $this->option('activity');
         $this->poi_type = $this->option('poi_type');
@@ -84,16 +84,68 @@ class OutSourceTaxonomyMappingCommand extends Command
     }
 
     private function importerWPPoiType(){
-        $this->content .= 'poi';
+        $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category';
+        $WC = $this->curlRequest($url);
+        $input["webmapp_category"] = [];
+        foreach ($WC as $c) {
+            $title = [];
+            $title = [
+                explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+            ];
+            $description = [
+                explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+            ];
+            if(!empty($c['wpml_translations'])) {
+                foreach($c['wpml_translations'] as $lang){
+                    $locale = explode('_',$lang['locale']);
+                    $title[$locale[0]] = $lang['name']; 
+                    $cat_decode = $this->curlRequest($lang['source']);
+                    $description[$locale[0]] = $cat_decode['description']; 
+                }
+            }
+            $input["webmapp_category"][] = [
+                'source_id' => $c['id'],
+                'source_title' => $title,
+                'source_description' => $description,
+                'geohub_identifier' => '',
+            ];
+        }
+        $this->content[] = $input;
     }
 
     private function importerWPActivity(){
-        $this->content .= 'activity';
+        $url = $this->endpoint.'/wp-json/wp/v2/activity';
+        $WC = $this->curlRequest($url);
+        $input["activity"] = [];
+        foreach ($WC as $c) {
+            $title = [];
+            $title = [
+                explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+            ];
+            $description = [
+                explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+            ];
+            if(!empty($c['wpml_translations'])) {
+                foreach($c['wpml_translations'] as $lang){
+                    $locale = explode('_',$lang['locale']);
+                    $title[$locale[0]] = $lang['name']; 
+                    $cat_decode = $this->curlRequest($lang['source']);
+                    $description[$locale[0]] = $cat_decode['description']; 
+                }
+            }
+            $input["activity"][] = [
+                'source_id' => $c['id'],
+                'source_title' => $title,
+                'source_description' => $description,
+                'geohub_identifier' => '',
+            ];
+        }
+        $this->content[] = $input;
     }
     
     private function createMappingFile(){
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.','-',$path['host']);
-        Storage::disk('mapping')->put($file_name.'.php', $this->content);
+        Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content,JSON_PRETTY_PRINT));
     }
 }

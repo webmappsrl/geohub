@@ -1,0 +1,18 @@
+{
+    "webmapp_category": [
+        {
+            "source_id": 11,
+            "source_title": {
+                "it": "Punto di interesse",
+                "en": "Point of interest",
+                "de": "Interessenpunkte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": ""
+        }
+    ]
+}
