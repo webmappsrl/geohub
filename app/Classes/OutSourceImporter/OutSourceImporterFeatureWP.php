@@ -282,6 +282,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 }
             }
         }
+
+        // Processing the poi_type
+        $path = parse_url($this->endpoint);
+        $file_name = str_replace('.','-',$path['host']);
+        if (Storage::disk('mapping')->exists($file_name.'.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+            if (!empty(json_decode($taxonomy_map,true)['poi_type']) && $poi['webmapp_category']) {
+                foreach ($poi['webmapp_category'] as $tax) {
+                    $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$tax]['geohub_identifier'];
+                }
+            }
+        }
     }
 
     /**

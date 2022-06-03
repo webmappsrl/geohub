@@ -27,7 +27,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $endpoint;
     protected $activity;
     protected $poi_type;
-    protected array $content;
+    protected $content;
 
     /**
      * Create a new command instance.
@@ -46,6 +46,11 @@ class OutSourceTaxonomyMappingCommand extends Command
      */
     public function handle()
     {
+        if(app()->environment('production')){
+            $this->error('Sorry, Alessio said you can not run this in production! :-P');
+            return;
+        }
+
         $this->endpoint = $this->argument('endpoint');
         $this->activity = $this->option('activity');
         $this->poi_type = $this->option('poi_type');
@@ -86,7 +91,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerWPPoiType(){
         $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category';
         $WC = $this->curlRequest($url);
-        $input["webmapp_category"] = [];
+        $input = [];
         foreach ($WC as $c) {
             $title = [];
             $title = [
@@ -103,20 +108,19 @@ class OutSourceTaxonomyMappingCommand extends Command
                     $description[$locale[0]] = $cat_decode['description']; 
                 }
             }
-            $input["webmapp_category"][] = [
-                'source_id' => $c['id'],
+            $input[$c['id']] = [
                 'source_title' => $title,
                 'source_description' => $description,
                 'geohub_identifier' => '',
             ];
         }
-        $this->content[] = $input;
+        $this->content["poi_type"] = $input;
     }
 
     private function importerWPActivity(){
         $url = $this->endpoint.'/wp-json/wp/v2/activity';
         $WC = $this->curlRequest($url);
-        $input["activity"] = [];
+        $input = [];
         foreach ($WC as $c) {
             $title = [];
             $title = [
@@ -133,14 +137,13 @@ class OutSourceTaxonomyMappingCommand extends Command
                     $description[$locale[0]] = $cat_decode['description']; 
                 }
             }
-            $input["activity"][] = [
-                'source_id' => $c['id'],
+            $input[$c['id']] = [
                 'source_title' => $title,
                 'source_description' => $description,
                 'geohub_identifier' => '',
             ];
         }
-        $this->content[] = $input;
+        $this->content["activity"] = $input;
     }
     
     private function createMappingFile(){
