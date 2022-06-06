@@ -115,7 +115,6 @@ class OutSourceImporterFeatureWPImportPOITest extends TestCase
         foreach ($features_list as $id => $last_modified) {
             $OSF = new OutSourceImporterFeatureWP($type,$endpoint,$id);
             $OSF_id = $OSF->importFeature();
-            print_r($OSF_id);
             if ($OSF_id) {
                 // VERIFY
                 $out_source = OutSourceFeature::find($OSF_ids[1]);
