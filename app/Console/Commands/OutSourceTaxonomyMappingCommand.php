@@ -90,7 +90,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     }
 
     private function importerWPPoiType(){
-        $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category';
+        $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
@@ -122,7 +122,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     }
 
     private function importerWPActivity(){
-        $url = $this->endpoint.'/wp-json/wp/v2/activity';
+        $url = $this->endpoint.'/wp-json/wp/v2/activity?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
