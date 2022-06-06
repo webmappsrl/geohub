@@ -7,6 +7,7 @@ use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract { 
@@ -29,6 +30,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $track = $this->curlRequest($url);
 
         // prepare feature parameters to pass to updateOrCreate function
+        Log::info('Preparing OSF Track with external ID: '.$this->source_id);
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
         $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
         $this->params['provider'] = get_class($this);
@@ -36,10 +38,11 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->params['raw_data'] = json_encode($track);
 
         // prepare the value of tags data
+        Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
         $this->prepareTrackTagsJson($track);
         $this->params['tags'] = $this->tags;
-
-
+        Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
+        Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
         return $this->create_or_update_feature($this->params);
     }
 
@@ -56,6 +59,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         
         
         // prepare feature parameters to pass to updateOrCreate function
+        Log::info('Preparing OSF POI with external ID: '.$this->source_id);
         $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lng'].','.$poi['n7webmap_coord']['lat'].']}';
         $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
         $this->params['geometry'] = $geometry_poi;
@@ -65,10 +69,11 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->params['raw_data'] = json_encode($poi);
         
         // prepare the value of tags data
+        Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
         $this->preparePOITagsJson($poi);
         $this->params['tags'] = $this->tags;
-        
-
+        Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
+        Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
         return $this->create_or_update_feature($this->params);
     }
 
@@ -100,6 +105,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function prepareTrackTagsJson($track){
+        Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_',$track['wpml_current_locale'])[0]] = $track['title']['rendered'];
         $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = $track['content']['rendered'];
         $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = $track['excerpt']['rendered'];
@@ -124,6 +130,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['difficulty'] = $track['cai_scale'];
 
         // Adds the EcOutSource:poi ID to EcOutSource:track's related_poi tags 
+        Log::info('Preparing OSF Track RELATED_POI with external ID: '.$this->source_id);
         if (isset($track['n7webmap_related_poi']) && is_array($track['n7webmap_related_poi'])) {
             $this->tags['related_poi'] = array();
             foreach($track['n7webmap_related_poi'] as $poi) {
@@ -137,20 +144,25 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         }
 
         // Processing the feature image of Track
+        Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
         if (isset($track['featured_media']) && $track['featured_media']) {
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$track['featured_media'];
             $media = $this->curlRequest($url);
-            if ($media) {}
-            $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            if ($media) {
+                $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            }
         }
 
         // Processing the image Gallery of Track
+        Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
         if (isset($track['n7webmap_track_media_gallery']) && $track['n7webmap_track_media_gallery']) {
             if (is_array($track['n7webmap_track_media_gallery'])){
                 foreach($track['n7webmap_track_media_gallery'] as $img) {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
-                    $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    if ($media) {
+                        $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    }
                 }
             }
         }
@@ -158,6 +170,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         // Processing the activity
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.','-',$path['host']);
+        Log::info('Preparing OSF Track ACTIVITY MAPPING with external ID: '.$this->source_id);
         if (Storage::disk('mapping')->exists($file_name.'.json')) {
             $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
 
@@ -176,6 +189,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function preparePOITagsJson($poi){
+        Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['title']['rendered'];
         $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['content']['rendered'];
         $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['excerpt']['rendered'];
@@ -191,6 +205,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             }
         }
         // Adding POI parameters of accessibility
+        Log::info('Preparing OSF POI ACCESSIBILITY with external ID: '.$this->source_id);
         if (isset($poi['accessibility_validity_date']))
             $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
         if (isset($poi['accessibility_pdf']))
@@ -225,6 +240,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['access_food_description'] = $poi['access_food_description'];
             
         // Adding POI parameters of reachability
+        Log::info('Preparing OSF POI REACHABILITY with external ID: '.$this->source_id);
         if (isset($poi['reachability_by_bike_check']))
             $this->tags['reachability_by_bike_check'] = $poi['reachability_by_bike_check'];
         if (isset($poi['reachability_by_bike_description']))
@@ -243,6 +259,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['reachability_by_public_transportation_description'] = $poi['reachability_by_public_transportation_description'];
 
         // Adding POI parameters of general info
+        Log::info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
         if (isset($poi['addr:street']))
             $this->tags['addr_street'] = $poi['addr:street'];
         if (isset($poi['addr:housenumber']))
@@ -269,6 +286,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['code'] = $poi['code'];
             
         // Adding POI parameters of style
+        Log::info('Preparing OSF POI STYLE with external ID: '.$this->source_id);
         if (isset($poi['color']))
             $this->tags['color'] = $poi['color'];
         if (isset($poi['icon']))
@@ -281,12 +299,14 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['zindex'] = $poi['zindex'];
 
         // Processing the feature image of POI
+        Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
         if (isset($poi['featured_media']) && $poi['featured_media']) {
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$poi['featured_media'];
             $media = $this->curlRequest($url);
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
         // Processing the image Gallery of POI
+        Log::info('Preparing OSF POI IMAGE_GALLERY with external ID: '.$this->source_id);
         if (isset($poi['n7webmap_media_gallery']) && $poi['n7webmap_media_gallery']) {
             if (is_array($poi['n7webmap_media_gallery'])){
                 foreach($poi['n7webmap_media_gallery'] as $img) {
@@ -298,6 +318,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         }
 
         // Processing the poi_type
+        Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.','-',$path['host']);
         if (Storage::disk('mapping')->exists($file_name.'.json')) {
@@ -318,6 +339,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     public function prepareMediaTagsJson($media){ 
+        Log::info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media['id']);
         $tags = [];
         if(!empty($media['wpml_current_locale'])) { 
             $local_lang = explode('_',$media['wpml_current_locale'])[0];
@@ -339,19 +361,22 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
 
         try{
             // Saving the Media in to the s3-osfmedia storage
+            // TODO: Change importer-osfmedia to s3-osfmedia storage
+            $storage_name = 'importer-osfmedia';
+            Log::info('Saving OSF MEDIA on storage '.$storage_name.'.');
             $wp_url = $media['guid']['rendered'];
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
                 return urlencode($match[0]);
             }, $wp_url);
             $contents = file_get_contents($url_encoded);
             $basename = explode('.',basename($wp_url));
-            // TODO: Change importer-osfmedia to s3-osfmedia storage
-            $s3_osfmedia = Storage::disk('importer-osfmedia');
+            $s3_osfmedia = Storage::disk($storage_name);
             $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
 
             $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
         } catch(Exception $e) {
             echo $e;
+            Log::info('Saving media in s3-osfmedia error:' . $e);
         }
 
         return $tags;

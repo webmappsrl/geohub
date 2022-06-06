@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
+use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureCommand extends Command
 {
@@ -72,12 +73,17 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             $app = $this->option('app');
 
         $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
-
+        Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
+            Log::info('Parameters checked successfully.');
+            Log::info('Getting List');
             $ids_array = $SyncEcFromOutSource->getList();
             
             if (!empty($ids_array)) {
+                Log::info('List acquired successfully.');
+                Log::info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($ids_array);
+                Log::info(count($loop) . ' EC features successfully created.');
             }
         }
 

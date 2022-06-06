@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class OutSourceTaxonomyMappingCommand extends Command
@@ -92,27 +93,30 @@ class OutSourceTaxonomyMappingCommand extends Command
         $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category';
         $WC = $this->curlRequest($url);
         $input = [];
-        foreach ($WC as $c) {
-            $title = [];
-            $title = [
-                explode('_',$c['wpml_current_locale'])[0] => $c['name'],
-            ];
-            $description = [
-                explode('_',$c['wpml_current_locale'])[0] => $c['description'],
-            ];
-            if(!empty($c['wpml_translations'])) {
-                foreach($c['wpml_translations'] as $lang){
-                    $locale = explode('_',$lang['locale']);
-                    $title[$locale[0]] = $lang['name']; 
-                    $cat_decode = $this->curlRequest($lang['source']);
-                    $description[$locale[0]] = $cat_decode['description']; 
+        if ($WC) {
+            foreach ($WC as $c) {
+                Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                $title = [];
+                $title = [
+                    explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+                ];
+                $description = [
+                    explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+                ];
+                if(!empty($c['wpml_translations'])) {
+                    foreach($c['wpml_translations'] as $lang){
+                        $locale = explode('_',$lang['locale']);
+                        $title[$locale[0]] = $lang['name']; 
+                        $cat_decode = $this->curlRequest($lang['source']);
+                        $description[$locale[0]] = $cat_decode['description']; 
+                    }
                 }
+                $input[$c['id']] = [
+                    'source_title' => $title,
+                    'source_description' => $description,
+                    'geohub_identifier' => '',
+                ];
             }
-            $input[$c['id']] = [
-                'source_title' => $title,
-                'source_description' => $description,
-                'geohub_identifier' => '',
-            ];
         }
         $this->content["poi_type"] = $input;
     }
@@ -121,27 +125,30 @@ class OutSourceTaxonomyMappingCommand extends Command
         $url = $this->endpoint.'/wp-json/wp/v2/activity';
         $WC = $this->curlRequest($url);
         $input = [];
-        foreach ($WC as $c) {
-            $title = [];
-            $title = [
-                explode('_',$c['wpml_current_locale'])[0] => $c['name'],
-            ];
-            $description = [
-                explode('_',$c['wpml_current_locale'])[0] => $c['description'],
-            ];
-            if(!empty($c['wpml_translations'])) {
-                foreach($c['wpml_translations'] as $lang){
-                    $locale = explode('_',$lang['locale']);
-                    $title[$locale[0]] = $lang['name']; 
-                    $cat_decode = $this->curlRequest($lang['source']);
-                    $description[$locale[0]] = $cat_decode['description']; 
+        if ($WC) {
+            foreach ($WC as $c) {
+                Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                $title = [];
+                $title = [
+                    explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+                ];
+                $description = [
+                    explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+                ];
+                if(!empty($c['wpml_translations'])) {
+                    foreach($c['wpml_translations'] as $lang){
+                        $locale = explode('_',$lang['locale']);
+                        $title[$locale[0]] = $lang['name']; 
+                        $cat_decode = $this->curlRequest($lang['source']);
+                        $description[$locale[0]] = $cat_decode['description']; 
+                    }
                 }
+                $input[$c['id']] = [
+                    'source_title' => $title,
+                    'source_description' => $description,
+                    'geohub_identifier' => '',
+                ];
             }
-            $input[$c['id']] = [
-                'source_title' => $title,
-                'source_description' => $description,
-                'geohub_identifier' => '',
-            ];
         }
         $this->content["activity"] = $input;
     }
@@ -149,6 +156,8 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function createMappingFile(){
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.','-',$path['host']);
+        Log::info('Creating mapping file: '.$file_name);
         Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content,JSON_PRETTY_PRINT));
+        Log::info('Finished creating file: '.$file_name);
     }
 }

@@ -69,6 +69,7 @@ class SyncEcFromOutSource
     public function checkParameters() 
     {
         // Check the author
+        Log::info('Checking paramtere AUTHOR');
         if (is_numeric($this->author)) {
             try {
                 $user = User::find(intval($this->author));
@@ -88,6 +89,7 @@ class SyncEcFromOutSource
         }
 
         // Check the type
+        Log::info('Checking paramtere TYPE');
         if (strtolower($this->type) == 'track' ||
             strtolower($this->type) == 'poi' || 
             strtolower($this->type) == 'media' || 
@@ -99,6 +101,7 @@ class SyncEcFromOutSource
             }
         
         // Check the provider
+        Log::info('Checking paramtere PROVIDER');
         if (!empty($this->provider)) {
             $all_providers = DB::table('out_source_features')->select('provider')->distinct()->get();
             $mapped_providers = array_map(function($p){
@@ -117,6 +120,7 @@ class SyncEcFromOutSource
         }
 
         // Check the endpoint
+        Log::info('Checking paramtere ENDPOINT');
         if (!empty($this->endpoint)) {
             $all_endpoints = DB::table('out_source_features')->select('endpoint')->distinct()->get();
             $mapped_endpoints = array_map(function($e){
@@ -137,6 +141,7 @@ class SyncEcFromOutSource
         }
 
         // Check the name_format
+        Log::info('Checking paramtere NAME_FORMAT');
         if (!empty($this->name_format)) {
             $format = $this->name_format;
             preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
@@ -161,6 +166,7 @@ class SyncEcFromOutSource
         }
 
         // Check the avtivity
+        Log::info('Checking paramtere ACTIVITY');
         if (!empty($this->activity)) {
             $all_activities = DB::table('taxonomy_activities')->select('identifier')->distinct()->get();
             $mapped_activities = array_map(function($a){
@@ -178,6 +184,7 @@ class SyncEcFromOutSource
         }
         
         // Check the poi_type
+        Log::info('Checking paramtere POI_TYPE');
         if (!empty($this->poi_type)) {
             $all_poi_types = DB::table('taxonomy_poi_types')->select('identifier')->distinct()->get();
             $mapped_poi_types = array_map(function($a){
@@ -235,6 +242,7 @@ class SyncEcFromOutSource
             $out_source = OutSourceFeature::find($id);
             if ($this->type == 'track') {
                 // Create Track
+                Log::info('Creating EC Track from OSF with id: '.$id);
                 $ec_track = EcTrack::updateOrCreate(
                     [
                         'user_id' => $this->author_id,
@@ -250,6 +258,7 @@ class SyncEcFromOutSource
                 );
                 
                 // Attach Activities to track
+                Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
                 $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
                 if ( !empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
                     $path = parse_url($this->endpoint);
@@ -259,6 +268,7 @@ class SyncEcFromOutSource
                     foreach ($out_source->tags['activity'] as $cat) {
                         if ($this->activity !== $cat) {
                             foreach (json_decode($taxonomy_map,true)['activity'] as $w ) {
+                                Log::info('Attaching more EC Track taxonomyActivities: '.$cat);
                                 if ($w['geohub_identifier'] == $cat) {
                                     $geohub_w = TaxonomyActivity::where('identifier',$w['geohub_identifier'])->first();
                                     if ($geohub_w && !is_null($geohub_w)) { 
@@ -275,13 +285,13 @@ class SyncEcFromOutSource
                                     }
                                 }
                             }
-                            $ec_track->taxonomyActivities()->attach(TaxonomyActivity::where('identifier',$this->activity)->first());
                         }
                     }
                 }
                 
                 // Attach related poi to Track
                 if (isset($out_source->tags['related_poi']) && is_array($out_source->tags['related_poi'])) {
+                    Log::info('Attaching EC Track RELATED_POI.');
                     foreach ($out_source->tags['related_poi'] as $OSD_poi_id) {
                         $EcPoi = EcPoi::where('out_source_feature_id',$OSD_poi_id)
                                         ->where('user_id',$this->author_id)
@@ -295,6 +305,7 @@ class SyncEcFromOutSource
 
                 // Attach feature image to Track
                 if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                    Log::info('Attaching EC Track FEATURE_IMAGE.');
                     $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
                                     ->where('user_id',$this->author_webmapp)
                                     ->first();
@@ -307,6 +318,7 @@ class SyncEcFromOutSource
 
                 // Attach EcMedia Gallery to track
                 if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                    Log::info('Attaching EC Track IMAGE_GALLERY.');
                     foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                         $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
                                         ->where('user_id',$this->author_webmapp)
@@ -323,6 +335,7 @@ class SyncEcFromOutSource
             }
             if ($this->type == 'poi') {
                 // create poi
+                Log::info('Creating EC POI from OSF with id: '.$id);
                 $ec_poi = EcPoi::updateOrCreate(
                     [
                         'user_id' => $this->author_id,
@@ -336,6 +349,7 @@ class SyncEcFromOutSource
                     ]);
                 
                 // Attach poi_type to poi
+                Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
                 $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
                     $path = parse_url($this->endpoint);
@@ -345,6 +359,7 @@ class SyncEcFromOutSource
                     foreach ($out_source->tags['poi_type'] as $cat) {
                         if ($this->poi_type !== $cat) {
                             foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w);
                                 if ($w['geohub_identifier'] == $cat) {
                                     $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
                                     if ($geohub_w && !is_null($geohub_w)) { 
@@ -361,13 +376,13 @@ class SyncEcFromOutSource
                                     }
                                 }
                             }
-                            $ec_poi->taxonomyPoiTypes()->attach(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                         }
                     }
                 }
 
                 // Attach feature image to poi
                 if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                    Log::info('Attaching EC POI FEATURE_IMAGE.');
                     $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
                                     ->where('user_id',$this->author_webmapp)
                                     ->first();
@@ -380,6 +395,7 @@ class SyncEcFromOutSource
                 
                 // Attach EcMedia Gallery to poi
                 if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                    Log::info('Attaching EC POI IMAGE_GALLERY.');
                     foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                         $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
                                         ->where('user_id',$this->author_webmapp)
@@ -395,6 +411,7 @@ class SyncEcFromOutSource
                 array_push($new_ec_features,$ec_poi->id);
             }
             if ($this->type == 'media') {
+                Log::info('Creating EC Media.');
                 $ec_media = EcMedia::updateOrCreate(
                     [
                         'out_source_feature_id' => $id,

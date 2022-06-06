@@ -67,11 +67,14 @@ class OutSourceImporterCommand extends Command
     private function importerWP(){
         $features = new OutSourceImporterListWP($this->type,$this->endpoint);
         $features_list = $features->getList();
-        
-        foreach ($features_list as $id => $last_modified) {
-            $OSF = new OutSourceImporterFeatureWP($this->type,$this->endpoint,$id);
-            $OSF_id = $OSF->importFeature();
-            Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+        if ($features_list) {
+            foreach ($features_list as $id => $last_modified) {
+                $OSF = new OutSourceImporterFeatureWP($this->type,$this->endpoint,$id);
+                $OSF_id = $OSF->importFeature();
+                Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+            }
+        } else {
+            Log::info('Importer WP get List is empty.');
         }
     }
     
@@ -79,10 +82,14 @@ class OutSourceImporterCommand extends Command
         $features = new OutSourceImporterListStorageCSV($this->type,$this->endpoint);
         $features_list = $features->getList();
         
-        foreach ($features_list as $id => $last_modified) {
-            $OSF = new OutSourceImporterFeatureStorageCSV($this->type,$this->endpoint,$id);
-            $OSF_id = $OSF->importFeature();
-            Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+        if ($features_list) {
+            foreach ($features_list as $id => $last_modified) {
+                $OSF = new OutSourceImporterFeatureStorageCSV($this->type,$this->endpoint,$id);
+                $OSF_id = $OSF->importFeature();
+                Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+            }
+        } else {
+            Log::info('Importer StorageCSV get List is empty.');
         }
     }
 }
