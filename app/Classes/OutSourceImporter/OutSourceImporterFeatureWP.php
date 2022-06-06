@@ -60,21 +60,28 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
-        $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lng'].','.$poi['n7webmap_coord']['lat'].']}';
-        $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
-        $this->params['geometry'] = $geometry_poi;
-        $this->mediaGeom = $geometry_poi;
-        $this->params['provider'] = get_class($this);
-        $this->params['type'] = $this->type;
-        $this->params['raw_data'] = json_encode($poi);
-        
-        // prepare the value of tags data
-        Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
-        $this->preparePOITagsJson($poi);
-        $this->params['tags'] = $this->tags;
-        Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
-        Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
-        return $this->create_or_update_feature($this->params);
+        try{
+            if (!is_numeric($poi['n7webmap_coord']['lng'])  || !is_numeric($poi['n7webmap_coord']['lat'])) 
+                throw new Exception('POI missing coordinates');
+
+            $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lng'].','.$poi['n7webmap_coord']['lat'].']}';
+            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
+            $this->params['geometry'] = $geometry_poi;
+            $this->mediaGeom = $geometry_poi;
+            $this->params['provider'] = get_class($this);
+            $this->params['type'] = $this->type;
+            $this->params['raw_data'] = json_encode($poi);
+            
+            // prepare the value of tags data
+            Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
+            $this->preparePOITagsJson($poi);
+            $this->params['tags'] = $this->tags;
+            Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
+            Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
+            return $this->create_or_update_feature($this->params);
+        } catch (Exception $e) {
+            Log::info('Error creating OSF : '.$e);
+        }
     }
 
     public function importMedia(){
