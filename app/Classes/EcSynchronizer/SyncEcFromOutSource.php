@@ -359,7 +359,7 @@ class SyncEcFromOutSource
                     foreach ($out_source->tags['poi_type'] as $cat) {
                         if ($this->poi_type !== $cat) {
                             foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w);
+                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
                                 if ($w['geohub_identifier'] == $cat) {
                                     $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
                                     if ($geohub_w && !is_null($geohub_w)) { 
