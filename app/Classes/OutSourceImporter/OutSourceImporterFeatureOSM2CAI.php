@@ -46,7 +46,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
 
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $this->params['geometry'] = DB::select("SELECT ST_AsText('$track->geometry')")[0]->st_astext;
+        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge('$track->geometry'))")[0]->st_astext;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
         $this->params['raw_data'] = json_encode($track);
@@ -104,7 +104,6 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
         $this->tags['excerpt']['it'] = $track->note;
         $this->tags['from'] = $track->from;
         $this->tags['to'] = $track->to;
-        $this->tags['distance'] = $track->distance;
         $this->tags['difficulty'] = $track->cai_scale;
         $this->tags['related_url'] = $track->website;
         $this->tags['ref'] = $track->ref;
