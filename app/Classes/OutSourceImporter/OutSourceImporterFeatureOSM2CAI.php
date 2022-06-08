@@ -104,7 +104,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
         $this->tags['excerpt']['it'] = $track->note;
         $this->tags['from'] = $track->from;
         $this->tags['to'] = $track->to;
-        $this->tags['difficulty'] = $track->cai_scale;
+        $this->tags['cai_scale'] = $track->cai_scale;
         $this->tags['related_url'] = $track->website;
         $this->tags['ref'] = $track->ref;
 
