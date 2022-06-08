@@ -8,6 +8,7 @@ use App\Models\OutSourceFeature;
 use App\Models\OutSourceTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
+use App\Models\TaxonomyTheme;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -48,7 +49,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $app = 1; 
 
         // $this->expectException(Exception::class);
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme = '');
 
         $response = $SyncEcFromOutSource->checkParameters();
         $this->assertEquals(true,$response);
@@ -78,7 +79,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -112,7 +113,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -145,7 +146,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -178,7 +179,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -211,7 +212,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -244,7 +245,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -283,7 +284,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $name_format = 'path {ref} - {xxx}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
@@ -319,15 +320,60 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
         $endpoint = 'https://stelvio.wp.webmapp.it';            
         $activity = 'hiking';            
         $poi_type = 'xxx';            
-        $name_format = 'path {ref} - {name}';            
+        $name_format = 'path - {name}';            
         $app = 1; 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format, $app ,$theme = '');
 
         try {
             $SyncEcFromOutSource->checkParameters();
         } catch (Exception $e) {
             $this->assertEquals('The value of parameter poi_type xxx is not currect' ,$e->getMessage());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function when_parameter_theme_is_wrong_should_return_false()
+    {
+        OutSourceTrack::factory()->create
+        ([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+        
+        TaxonomyTheme::updateOrCreate([
+            'name' => 'Hiking PEC',
+            'identifier' => 'hiking-pec'
+        ]);
+
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+
+        $type = 'track';
+        $author = 'team@webmapp.it';
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking'; 
+        $theme = 'xxx';
+        $poi_type = '';            
+        $name_format = 'path {ref} - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme);
+
+        try {
+            $SyncEcFromOutSource->checkParameters();
+        } catch (Exception $e) {
+            $this->assertEquals('The value of parameter theme xxx is not currect' ,$e->getMessage());
         }
     }
 }

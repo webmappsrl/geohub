@@ -1,0 +1,58 @@
+{
+    "poi_type": {
+        "11": {
+            "source_title": {
+                "it": "Punto di interesse",
+                "en": "Point of interest",
+                "de": "Interessenpunkte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "poi"
+        },
+        "12": {
+            "source_title": {
+                "it": "test it",
+                "en": "test en",
+                "de": "test de"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "test"
+        }
+    },
+    "activity": {
+        "9": {
+            "source_title": {
+                "it": "A piedi",
+                "en": "Hiking",
+                "de": "Wanderer"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "10": {
+            "source_title": {
+                "it": "test it",
+                "en": "test en",
+                "de": "test de"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "test"
+        }
+    }
+}

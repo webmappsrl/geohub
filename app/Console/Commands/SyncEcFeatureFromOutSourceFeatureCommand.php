@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
+use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureCommand extends Command
 {
@@ -18,7 +19,8 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
                             {--app= : Alternative way to set the EcFeature Author. Take the app author and set the same author. Use app ID}
                             {--P|provider= : Set the provider of the Out Source Features}
                             {--E|endpoint= : Set the endpoint of the Out Source Features}
-                            {--activity= : Set the identifier activity taxonomy that must be assigned to EcFeature created}
+                            {--activity= : Set the identifier of activity taxonomy that must be assigned to EcFeature created}
+                            {--theme= : Set the identifier of theme taxonomy that must be assigned to EcFeature created}
                             {--poi_type= : Set the identifier poi_type taxonomy that must be assigned to EcFeature created, the default is poi}
                             {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}';
 
@@ -52,6 +54,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $provider = '';
         $endpoint = '';
         $activity = '';
+        $theme = '';
         $poi_type = '';
         $name_format = $this->option('name_format');
         $app = 0;
@@ -65,19 +68,27 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         if ($this->option('activity'))
             $activity = $this->option('activity');
         
+        if ($this->option('theme'))
+            $theme = $this->option('theme');
+        
         if ($this->option('poi_type'))
             $poi_type = $this->option('poi_type');
         
         if ($this->option('app'))
             $app = $this->option('app');
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
-
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme);
+        Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
+            Log::info('Parameters checked successfully.');
+            Log::info('Getting List');
             $ids_array = $SyncEcFromOutSource->getList();
             
             if (!empty($ids_array)) {
+                Log::info('List acquired successfully.');
+                Log::info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($ids_array);
+                Log::info(count($loop) . ' EC features successfully created.');
             }
         }
 

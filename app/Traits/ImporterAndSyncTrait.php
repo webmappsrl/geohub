@@ -2,7 +2,11 @@
 
 namespace App\Traits;
 
+use App\Models\OutSourceFeature;
 use Illuminate\Support\Facades\Storage;
+use App\Providers\CurlServiceProvider;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 trait ImporterAndSyncTrait {
     /**
@@ -13,5 +17,48 @@ trait ImporterAndSyncTrait {
     public function CreateStoragePathFromEndpoint($endpoint){
         $endpoint_array = explode(";",$endpoint);
         return Storage::disk($endpoint_array[0])->path('/'.$endpoint_array[1]);
+    }
+
+    /**
+     * It uses the Curl Service Provider class and excecutes a curl.
+     * 
+     * @param string the complete url.
+     * @return array The result of curl. 
+     */
+    public function curlRequest($url)
+    {
+        $curl = app(CurlServiceProvider::class);
+        Log::info('Excecuting CURL service provider with: '.$url);
+        try{
+            $obj = $curl->exec($url);
+            Log::info('CURL executed with success.');
+            return json_decode($obj,true);
+        } catch (Exception $e) {
+            Log::info('Error Excecuting CURL: '.$e);
+        }
+    }
+
+    /**
+     * It creates an OutSourceFeature record of a given media from wordpress.
+     * 
+     * @param array the media array.
+     * @return int the ID of the new OutSourceFeature. 
+     */
+    public function createOSFMediaFromWP($media)
+    {
+        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$media['id']);
+        $params['tags'] = $this->prepareMediaTagsJson($media);
+        $params['type'] = 'media';
+        $params['provider'] = get_class($this);
+        $params['geometry'] = $this->mediaGeom;
+        $params['raw_data'] = json_encode($media);
+        Log::info('Finished preparing OSF MEDIA with external ID: '.$media['id']);
+        Log::info('Starting creating OSF MEDIA with external ID: '.$media['id']);
+        $feature = OutSourceFeature::updateOrCreate(
+            [
+                'source_id' => $media['id'],
+                'endpoint' => $this->endpoint
+            ],$params);
+        return $feature->id;
     }
 }

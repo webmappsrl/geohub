@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Helpers\OutSourceImporterHelper;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use App\Providers\CurlServiceProvider;
 use Mockery\MockInterface;

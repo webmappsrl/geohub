@@ -1,8 +1,6 @@
 <?php
 namespace App\Classes\OutSourceImporter;
 
-use App\Helpers\OutSourceImporterHelper;
-use App\Providers\CurlServiceProvider;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ImporterAndSyncTrait;
 

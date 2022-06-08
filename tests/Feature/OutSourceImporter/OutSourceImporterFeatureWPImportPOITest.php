@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Models\OutSourceFeature;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\MockInterface;
@@ -12,6 +13,7 @@ use Tests\TestCase;
 class OutSourceImporterFeatureWPImportPOITest extends TestCase
 {
     use RefreshDatabase;
+    
     /** @test */
     public function when_endpoint_is_stelvio_and_type_is_poi_it_creates_proper_out_feature()
     {
@@ -49,4 +51,76 @@ class OutSourceImporterFeatureWPImportPOITest extends TestCase
 
 
     }
+
+    /** @test */
+    public function when_poi_has_no_coordinates_expect_throw_exception()
+    {
+        // WHEN
+        $type = 'poi';
+        $endpoint = 'https://ucvs.wp.webmapp.it/';
+        
+        $source_id_coord = 849;
+        $stelvio_poi_no_coord = file_get_contents(base_path('tests/Feature/Stubs/stelvio_poi_no_coordinates.json'));
+        $url = $endpoint.'/wp-json/wp/v2/poi/'.$source_id_coord;
+
+        // PREPARE MOCK
+        $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_poi_no_coord,$url){
+            $mock->shouldReceive('exec')
+            ->atLeast(1)
+            ->with($url)
+            ->andReturn($stelvio_poi_no_coord);
+        });
+
+        // FIRE
+        $poi = new OutSourceImporterFeatureWP($type,$endpoint,$source_id_coord);
+
+        // VERIFY
+        try {
+            $poi->importFeature();
+        } catch (Exception $e) {
+            $this->assertEquals('Error creating OSF : POI missing coordinates' ,$e->getMessage());
+        }
+     }
+
+     /** @test */
+    public function when_poi_throw_exception_with_no_coord_should_continue_importing()
+    {
+        // WHEN
+        $type = 'poi';
+        $endpoint = 'https://ucvs.wp.webmapp.it/';
+        $source_id = 2654;
+        $stelvio_poi = file_get_contents(base_path('tests/Feature/Stubs/stelvio_poi.json'));
+        $url = 'https://stelvio.wp.webmapp.it/wp-json/wp/v2/poi/'.$source_id;
+        
+        $source_id_coord = 849;
+        $stelvio_poi_no_coord = file_get_contents(base_path('tests/Feature/Stubs/stelvio_poi_no_coordinates.json'));
+        $url_no_coor = $endpoint.'/wp-json/wp/v2/poi/'.$source_id_coord;
+
+        // PREPARE MOCK
+        $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_poi_no_coord,$url_no_coor,$stelvio_poi,$url){
+            $mock->shouldReceive('exec')
+            ->atLeast(1)
+            ->with($url_no_coor)
+            ->andReturn($stelvio_poi_no_coord);
+            
+            $mock->shouldReceive('exec')
+            ->atLeast(1)
+            ->with($url)
+            ->andReturn($stelvio_poi);
+        });
+
+        // FIRE
+        $features_list = ["849"=>"2019-06-14 15:15:40","2654"=>"2019-06-14 15:15:40"];
+        $OSF_ids = [];
+        foreach ($features_list as $id => $last_modified) {
+            $OSF = new OutSourceImporterFeatureWP($type,$endpoint,$id);
+            $OSF_id = $OSF->importFeature();
+            if ($OSF_id) {
+                // VERIFY
+                $out_source = OutSourceFeature::find($OSF_ids[1]);
+                $this->assertEquals('poi',$out_source->type);
+                $this->assertEquals(2654,$out_source->source_id);
+            }
+        }
+     }
 }

@@ -333,6 +333,7 @@ class EcTrack extends Model {
                 'ele_to',
                 'duration_forward',
                 'duration_backward',
+                'ref',
             ];
             foreach ($keys as $key) {
                 $array=$this->setOutSourceSingleValue($array,$key);

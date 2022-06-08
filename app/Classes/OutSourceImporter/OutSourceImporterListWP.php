@@ -2,21 +2,22 @@
 
 namespace App\Classes\OutSourceImporter;
 
-use App\Helpers\OutSourceImporterHelper;
-use App\Providers\CurlServiceProvider;
+use App\Traits\ImporterAndSyncTrait;
+use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterListWP extends OutSourceImporterListAbstract { 
+    use ImporterAndSyncTrait;
 
     public function getTrackList():array {
-        $curl=app(CurlServiceProvider::class);
         $url = $this->endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $this->type;
-        return json_decode($curl->exec($url),true);
+        Log::info('Starting Track List CURL request ...');
+        return  $this->curlRequest($url);
     }
-
+    
     public function getPoiList():array{
-        $curl=app(CurlServiceProvider::class);
         $url = $this->endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $this->type;
-        return json_decode($curl->exec($url),true);
+        Log::info('Starting POI List CURL request ...');
+        return $this->curlRequest($url);
     }
 
     public function getMediaList():array{
