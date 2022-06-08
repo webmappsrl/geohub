@@ -30,7 +30,7 @@ class OutSourceImporterListOSM2CAITest extends TestCase
         $features = $importer->getList();
 
         $this->assertIsArray($features);
-        $this->assertEquals(5,count($features));
+        $this->assertEquals(6,count($features));
         foreach(json_decode($osm2cai_tracklist,true) as $id => $last_modified) {
             $this->assertArrayHasKey($id,$features);
             $this->assertEquals($last_modified,$features[$id]);
