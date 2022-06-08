@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
+use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
@@ -16,7 +18,7 @@ class OutSourceImporterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV}';
+    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai}';
 
     /**
      * The console command description.
@@ -57,6 +59,10 @@ class OutSourceImporterCommand extends Command
             case 'storagecsv':
                 return $this->importerStorageCSV();
                 break;
+            
+            case 'osm2cai':
+                return $this->importerOSM2Cai();
+                break;
                     
             default:
                 return [];
@@ -91,11 +97,28 @@ class OutSourceImporterCommand extends Command
                 Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureStorageCSV($this->type,$this->endpoint,$id);
                 $OSF_id = $OSF->importFeature();
-                Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
+                Log::info("OutSourceImporterFeatureStorageCSV::importFeature() returns $OSF_id");
                 $count++;
             }
         } else {
             Log::info('Importer StorageCSV get List is empty.');
+        }
+    }
+    
+    private function importerOSM2Cai(){
+        $features = new OutSourceImporterListOSM2CAI($this->type,$this->endpoint);
+        $features_list = $features->getList();
+        if ($features_list) {
+            $count = 1;
+            foreach ($features_list as $id => $last_modified) {
+                Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                $OSF = new OutSourceImporterFeatureOSM2CAI($this->type,$this->endpoint,$id);
+                $OSF_id = $OSF->importFeature();
+                Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
+                $count++;
+            }
+        } else {
+            Log::info('Importer OSM2CAI get List is empty.');
         }
     }
 }

@@ -10,6 +10,7 @@ use App\Models\OutSourcePoi;
 use App\Models\OutSourceTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
+use App\Models\TaxonomyTheme;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -788,5 +789,65 @@ class EcSynchronizerSyncEcFromOutSourceSync extends TestCase
         
         $this->assertEquals($ecTrack->ecPois->first()->id,$new_poi[0]);
         $this->assertEquals($ecPoi->ecTracks->first()->id,$new_track[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function with_parameter_theme_should_associate_proper_taxonomy()
+    {
+
+        $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
+            $mock->shouldReceive('store')->atLeast(1);
+        });
+
+
+        $source1 = OutSourceTrack::factory()->create([
+            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'endpoint' => 'https://stelvio.wp.webmapp.it',
+            'type' => 'track',
+            'tags' => [
+                'ref' => '1',
+                'name' => 'first'
+            ],
+        ]);
+
+        TaxonomyActivity::updateOrCreate([
+            'name' => 'Hiking',
+            'identifier' => 'hiking'
+        ]);
+
+        TaxonomyTheme::updateOrCreate([
+            'name' => 'Hiking PEC',
+            'identifier' => 'hiking-pec'
+        ]);
+
+        TaxonomyPoiType::updateOrCreate([
+            'name' => 'Point Of Interest',
+            'identifier' => 'poi'
+        ]);
+        
+        $user = User::factory()->create();
+
+        $type = 'track';
+        $author = $user->email;
+        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $activity = 'hiking';
+        $theme = 'hiking-pec';
+        $poi_type = 'poi';
+        $name_format = 'path {ref} - {name}';            
+        $app = 1; 
+
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme);
+        $SyncEcFromOutSource->checkParameters();
+        $ids_array = $SyncEcFromOutSource->getList();
+        $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
+
+        $this->assertEquals(1,EcTrack::count());
+
+        $ecTrack = EcTrack::first();
+
+        $this->assertContains($theme,$ecTrack->taxonomyThemes->pluck('identifier')->toArray());
     }
 }

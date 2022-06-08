@@ -39,6 +39,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('importer/mapping'),
         ],
+        
+        'osm2cai' => [
+            'driver' => 'local',
+            'root' => storage_path('importer/osm2cai'),
+        ],
 
         'importer-osfmedia' => [
             'driver' => 'local',
