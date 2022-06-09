@@ -368,8 +368,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
 
         try{
             // Saving the Media in to the s3-osfmedia storage
-            // TODO: Change importer-osfmedia to s3-osfmedia storage
-            $storage_name = 'importer-osfmedia';
+            $storage_name = config('geohub.osf_media_storage_name');
             Log::info('Saving OSF MEDIA on storage '.$storage_name.'.');
             $wp_url = $media['guid']['rendered'];
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
