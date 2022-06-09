@@ -379,6 +379,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $s3_osfmedia = Storage::disk($storage_name);
             $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
 
+            Log::info('Saved OSF Media with name: '.sha1($basename[0]) . '.' . $basename[1]);
             $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
         } catch(Exception $e) {
             echo $e;
