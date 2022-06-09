@@ -199,6 +199,10 @@ class HoquServiceProvider extends ServiceProvider {
      * @throws HttpException
      */
     public function store(string $job, array $params): int {
+
+        if (env('APP_ENV') == 'local' || env('APP_ENV') == 'testing')
+            return 0;
+            
         $instance = config('hoqu.geohub_domain');
 
         Log::debug('Storing a new job to HOQU:');
