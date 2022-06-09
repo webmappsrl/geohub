@@ -1,0 +1,226 @@
+{
+    "poi_type": {
+        "29": {
+            "source_title": {
+                "it": "Case e palazzi",
+                "en": "Buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "building"
+        },
+        "31": {
+            "source_title": {
+                "it": "Edifici produttivi",
+                "en": "Production buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "production-building"
+        },
+        "30": {
+            "source_title": {
+                "it": "Edifici pubblici",
+                "en": "Public buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "public-building"
+        },
+        "20": {
+            "source_title": {
+                "it": "Edifici Storici",
+                "en": "Historical buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "21": {
+            "source_title": {
+                "it": "Elementi Naturalistici",
+                "en": "Naturalistic elements"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature"
+        },
+        "27": {
+            "source_title": {
+                "it": "Fortificazioni",
+                "en": "Fortifications"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fortification"
+        },
+        "18": {
+            "source_title": {
+                "it": "Fotografia storica",
+                "en": "Historical photograph"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-picture"
+        },
+        "22": {
+            "source_title": {
+                "it": "Frazioni",
+                "en": "hamlets"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hamlet"
+        },
+        "17": {
+            "source_title": {
+                "it": "Lago",
+                "en": "Lake"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "lake"
+        },
+        "28": {
+            "source_title": {
+                "it": "Luoghi di culto",
+                "en": "Places of worship"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-worship"
+        },
+        "19": {
+            "source_title": {
+                "it": "Luoghi di fede",
+                "en": "Places of faith"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-faith"
+        },
+        "33": {
+            "source_title": {
+                "it": "Luoghi pubblici",
+                "en": "Public places"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "public-place"
+        },
+        "24": {
+            "source_title": {
+                "it": "Monumenti",
+                "en": "Monuments"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monument"
+        },
+        "37": {
+            "source_title": {
+                "it": "Punto di partenza",
+                "en": "Start point"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "start"
+        },
+        "23": {
+            "source_title": {
+                "it": "Quartieri e piazze",
+                "en": "Neighborhoods and squares"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "25": {
+            "source_title": {
+                "it": "Rifugi",
+                "en": "Alpine huts"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "26": {
+            "source_title": {
+                "it": "Sport",
+                "en": "Sport"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "sport"
+        },
+        "32": {
+            "source_title": {
+                "it": "Ville e giardini",
+                "en": "Villas and gardens"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        }
+    },
+    "activity": {
+        "10": {
+            "source_title": {
+                "it": "A piedi",
+                "en": "hinking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "34": {
+            "source_title": {
+                "it": "Bici strada",
+                "en": "Road bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "road-bike"
+        },
+        "35": {
+            "source_title": {
+                "it": "Gravel",
+                "en": "Gravel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "gravel"
+        },
+        "11": {
+            "source_title": {
+                "it": "MTB",
+                "en": "MTB"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mtb"
+        }
+    }
+}

@@ -261,9 +261,11 @@ class SyncEcFromOutSource
     {
         $new_ec_features = [];
         $error_not_created = [];
+        $count = 1;
         foreach ($ids_array as $id) {
 
             $out_source = OutSourceFeature::find($id);
+            Log::info('Creating EC Feature number: '.$count. ' out of '. count($ids_array));
             if ($this->type == 'track') {
                 // Create Track
                 Log::info('Creating EC Track from OSF with id: '.$id);
@@ -465,6 +467,7 @@ class SyncEcFromOutSource
                     ]);
                 array_push($new_ec_features,$ec_media->id);
             }
+            $count++;
         }
         if ($error_not_created) {
             Log::info('Ec features not created from OSF with ID: ');
