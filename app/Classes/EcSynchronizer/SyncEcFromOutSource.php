@@ -262,9 +262,11 @@ class SyncEcFromOutSource
         $new_ec_features = [];
         $error_not_created = [];
         $count = 1;
+
         foreach ($ids_array as $id) {
 
             $out_source = OutSourceFeature::find($id);
+            
             Log::info('Creating EC Feature number: '.$count. ' out of '. count($ids_array));
             if ($this->type == 'track') {
                 // Create Track
@@ -452,6 +454,8 @@ class SyncEcFromOutSource
                 array_push($new_ec_features,$ec_poi->id);
             }
             if ($this->type == 'media') {
+                $storage_name = config('geohub.osf_media_storage_name');
+                $s3_osfmedia = Storage::disk($storage_name);
                 Log::info('Creating EC Media.');
                 $ec_media = EcMedia::updateOrCreate(
                     [
@@ -463,7 +467,7 @@ class SyncEcFromOutSource
                             'it' => $this->generateName($out_source)
                         ],
                         'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                        'url' => (!empty($out_source->tags['url']))?$out_source->tags['url']:'',
+                        'url' => ($s3_osfmedia->exists($out_source->tags['url']))?$s3_osfmedia->url($out_source->tags['url']):'',
                     ]);
                 array_push($new_ec_features,$ec_media->id);
             }
