@@ -18,7 +18,7 @@ class OutSourceImporterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai}';
+    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai} {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)}';
 
     /**
      * The console command description.
@@ -29,6 +29,7 @@ class OutSourceImporterCommand extends Command
 
     protected $type;
     protected $endpoint;
+    protected $single_feature;
 
     /**
      * Create a new command instance.
@@ -47,6 +48,8 @@ class OutSourceImporterCommand extends Command
      */
     public function handle()
     {
+        $this->single_feature = $this->option('single_feature');
+
         $this->type = $this->argument('type');
         $this->endpoint = $this->argument('endpoint');
         $provider = $this->argument('provider');
@@ -71,8 +74,12 @@ class OutSourceImporterCommand extends Command
     }
 
     private function importerWP(){
-        $features = new OutSourceImporterListWP($this->type,$this->endpoint);
-        $features_list = $features->getList();
+        if ($this->single_feature) {
+            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+        } else {
+            $features = new OutSourceImporterListWP($this->type,$this->endpoint);
+            $features_list = $features->getList();
+        }
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $last_modified) {

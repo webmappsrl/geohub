@@ -250,6 +250,28 @@ class SyncEcFromOutSource
         return $features->pluck('id')->toArray();
     }
     
+    /**
+     * It retrives a single IDs from out_source_features table if the parameter single_feature has any value geohub:sync-ec-from-out-source 
+     *
+     * @return array 
+     */
+    public function getOSFFromSingleFeature($single_feature) 
+    {
+        $features = OutSourceFeature::where('type',$this->type)
+        ->when($this->provider, function ($query) {
+            return $query->where('provider', $this->provider);
+        })
+        ->when($this->endpoint, function ($query) {
+            return $query->where('endpoint', $this->endpoint);
+        })
+        ->when($single_feature, function ($query,$single_feature) {
+            return $query->where('source_id', $single_feature);
+        })
+        ->get();
+
+        return $features->pluck('id')->toArray();
+    }
+    
     
     /**
      * It updates or creates the Ec features based on the list if IDs from out_source_features table 
@@ -402,8 +424,8 @@ class SyncEcFromOutSource
                     foreach ($out_source->tags['poi_type'] as $cat) {
                         if ($this->poi_type !== $cat) {
                             foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
                                 if ($w['geohub_identifier'] == $cat) {
+                                    Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
                                     $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
                                     if ($geohub_w && !is_null($geohub_w)) { 
                                         $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
@@ -431,8 +453,7 @@ class SyncEcFromOutSource
                                     ->first();
                     
                     if ($EcMedia && !is_null($EcMedia)) {
-                        $ec_poi->featureImage()->associate($EcMedia);
-                        $ec_poi->save();
+                        $ec_poi->featureImage()->attach($EcMedia);
                     }
                 }
                 
@@ -446,11 +467,10 @@ class SyncEcFromOutSource
                         
                         if ($EcMedia && !is_null($EcMedia)) {
                             $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
-                            $ec_poi->save();
                         }
                     }
                 }
-
+                $ec_poi->save();
                 array_push($new_ec_features,$ec_poi->id);
             }
             if ($this->type == 'media') {
