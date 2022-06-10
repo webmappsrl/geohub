@@ -377,10 +377,11 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $contents = file_get_contents($url_encoded);
             $basename = explode('.',basename($wp_url));
             $s3_osfmedia = Storage::disk($storage_name);
-            $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
+            $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
+            $s3_osfmedia->put($osf_name_tmp, $contents);
 
-            Log::info('Saved OSF Media with name: '.sha1($basename[0]) . '.' . $basename[1]);
-            $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
+            Log::info('Saved OSF Media with name: '.$osf_name_tmp);
+            $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp))?$osf_name_tmp:'';
         } catch(Exception $e) {
             echo $e;
             Log::info('Saving media in s3-osfmedia error:' . $e);

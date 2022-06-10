@@ -453,7 +453,7 @@ class SyncEcFromOutSource
                                     ->first();
                     
                     if ($EcMedia && !is_null($EcMedia)) {
-                        $ec_poi->featureImage()->attach($EcMedia);
+                        $ec_poi->featureImage()->associate($EcMedia);
                     }
                 }
                 
@@ -475,6 +475,7 @@ class SyncEcFromOutSource
             }
             if ($this->type == 'media') {
                 $storage_name = config('geohub.osf_media_storage_name');
+                $ec_storage_name = config('geohub.ec_media_storage_name');
                 $s3_osfmedia = Storage::disk($storage_name);
                 Log::info('Creating EC Media.');
                 $ec_media = EcMedia::updateOrCreate(
@@ -487,8 +488,12 @@ class SyncEcFromOutSource
                             'it' => $this->generateName($out_source)
                         ],
                         'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                        'url' => ($s3_osfmedia->exists($out_source->tags['url']))?$s3_osfmedia->url($out_source->tags['url']):'',
+                        'url' => '',
                     ]);
+                $new_media_name = $ec_media->id.'.'.explode('.',basename($out_source->tags['url']))[1];
+                Storage::disk($ec_storage_name)->put('EcMedia/'.$new_media_name, $s3_osfmedia->get($out_source->tags['url']));
+                $ec_media->url = (Storage::disk($ec_storage_name)->exists('EcMedia/'.$new_media_name))?'EcMedia/'.$new_media_name:'';
+                $ec_media->save();
                 array_push($new_ec_features,$ec_media->id);
             }
             $count++;
