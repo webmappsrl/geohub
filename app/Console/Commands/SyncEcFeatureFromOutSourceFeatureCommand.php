@@ -22,7 +22,8 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
                             {--activity= : Set the identifier of activity taxonomy that must be assigned to EcFeature created}
                             {--theme= : Set the identifier of theme taxonomy that must be assigned to EcFeature created}
                             {--poi_type= : Set the identifier poi_type taxonomy that must be assigned to EcFeature created, the default is poi}
-                            {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}';
+                            {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}
+                            {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)}';
 
     /**
      * The console command description.
@@ -57,6 +58,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $theme = '';
         $poi_type = '';
         $name_format = $this->option('name_format');
+        $single_feature = $this->option('single_feature');
         $app = 0;
 
         if ($this->option('provider'))
@@ -77,12 +79,17 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         if ($this->option('app'))
             $app = $this->option('app');
 
+
         $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme);
         Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
             Log::info('Parameters checked successfully.');
             Log::info('Getting List');
-            $ids_array = $SyncEcFromOutSource->getList();
+            if ($single_feature) {
+                $ids_array = $SyncEcFromOutSource->getOSFFromSingleFeature($single_feature);
+            } else {
+                $ids_array = $SyncEcFromOutSource->getList();
+            }
             
             if (!empty($ids_array)) {
                 Log::info('List acquired successfully.');

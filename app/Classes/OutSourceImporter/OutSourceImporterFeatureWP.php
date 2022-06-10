@@ -137,8 +137,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['difficulty'] = $track['cai_scale'];
 
         // Adds the EcOutSource:poi ID to EcOutSource:track's related_poi tags 
-        Log::info('Preparing OSF Track RELATED_POI with external ID: '.$this->source_id);
         if (isset($track['n7webmap_related_poi']) && is_array($track['n7webmap_related_poi'])) {
+            Log::info('Preparing OSF Track RELATED_POI with external ID: '.$this->source_id);
             $this->tags['related_poi'] = array();
             foreach($track['n7webmap_related_poi'] as $poi) {
                 $OSF_poi = OutSourceFeature::where('endpoint',$this->endpoint)
@@ -151,8 +151,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         }
 
         // Processing the feature image of Track
-        Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
         if (isset($track['featured_media']) && $track['featured_media']) {
+            Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$track['featured_media'];
             $media = $this->curlRequest($url);
             if ($media) {
@@ -161,9 +161,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         }
 
         // Processing the image Gallery of Track
-        Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
         if (isset($track['n7webmap_track_media_gallery']) && $track['n7webmap_track_media_gallery']) {
             if (is_array($track['n7webmap_track_media_gallery'])){
+                Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
                 foreach($track['n7webmap_track_media_gallery'] as $img) {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
@@ -306,16 +306,16 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['zindex'] = $poi['zindex'];
 
         // Processing the feature image of POI
-        Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
         if (isset($poi['featured_media']) && $poi['featured_media']) {
+            Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$poi['featured_media'];
             $media = $this->curlRequest($url);
             $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
         }
         // Processing the image Gallery of POI
-        Log::info('Preparing OSF POI IMAGE_GALLERY with external ID: '.$this->source_id);
         if (isset($poi['n7webmap_media_gallery']) && $poi['n7webmap_media_gallery']) {
             if (is_array($poi['n7webmap_media_gallery'])){
+                Log::info('Preparing OSF POI IMAGE_GALLERY with external ID: '.$this->source_id);
                 foreach($poi['n7webmap_media_gallery'] as $img) {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
@@ -369,18 +369,21 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         try{
             // Saving the Media in to the s3-osfmedia storage
             $storage_name = config('geohub.osf_media_storage_name');
-            Log::info('Saving OSF MEDIA on storage '.$storage_name.'.');
-            $wp_url = $media['guid']['rendered'];
+            Log::info('Saving OSF MEDIA on storage '.$storage_name);
+            Log::info(" ");
+            $wp_url = $this->endpoint.'/wp-content/uploads/'.$media['media_details']['file'];
+            Log::info('Geting image from url: '.$wp_url);
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
                 return urlencode($match[0]);
             }, $wp_url);
             $contents = file_get_contents($url_encoded);
             $basename = explode('.',basename($wp_url));
             $s3_osfmedia = Storage::disk($storage_name);
-            $s3_osfmedia->put(sha1($basename[0]) . '.' . $basename[1], $contents);
+            $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
+            $s3_osfmedia->put($osf_name_tmp, $contents);
 
-            Log::info('Saved OSF Media with name: '.sha1($basename[0]) . '.' . $basename[1]);
-            $tags['url'] = sha1($basename[0]) . '.' . $basename[1];
+            Log::info('Saved OSF Media with name: '.$osf_name_tmp);
+            $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp))?$osf_name_tmp:'';
         } catch(Exception $e) {
             echo $e;
             Log::info('Saving media in s3-osfmedia error:' . $e);
