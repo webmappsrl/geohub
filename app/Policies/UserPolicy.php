@@ -34,11 +34,6 @@ class UserPolicy {
     }
     
     public function viewAny(User $user): bool {
-
-        if ($user->hasRole('Editor')) {
-            return true;
-        }
-
         $user = User::getEmulatedUser($user);
 
         return $user->can('view_user') ||
