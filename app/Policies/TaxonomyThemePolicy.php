@@ -11,6 +11,23 @@ class TaxonomyThemePolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+            return false;
+        }
+    }
+    
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -30,7 +47,9 @@ class TaxonomyThemePolicy
      */
     public function view(User $user, TaxonomyTheme $taxonomyTheme)
     {
-        //
+        if ($user->hasRole('Editor')) {
+            return true;
+        }
     }
 
     /**

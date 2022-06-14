@@ -19,6 +19,22 @@ class AppPolicy
     {
     }
 
+    /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        if ($user->isInDefaultRoles($user)) {
+            return false;
+        }
+    }
 
     public function viewAny(User $user): bool
     {
@@ -38,6 +54,10 @@ class AppPolicy
 
     public function update(User $user, App $model): bool
     {
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+
         $user = User::getEmulatedUser($user);
 
         return $user->can('edit_self_apps');
@@ -45,6 +65,10 @@ class AppPolicy
 
     public function delete(User $user, App $model): bool
     {
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_self_apps');
@@ -52,6 +76,10 @@ class AppPolicy
 
     public function restore(User $user, App $model): bool
     {
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_apps');
@@ -59,6 +87,10 @@ class AppPolicy
 
     public function forceDelete(User $user, App $model): bool
     {
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+        
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_apps');
@@ -66,6 +98,10 @@ class AppPolicy
 
     public function emulate(User $user, App $model): bool
     {
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+        
         $user = User::getEmulatedUser($user);
 
         return $user->hasRole('Admin') && $user->id !== $model->id;
