@@ -157,6 +157,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $media = $this->curlRequest($url);
             if ($media) {
                 $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            } else {
+                Log::info('ERROR reaching media: '.$url);
             }
         }
 
@@ -169,6 +171,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                     $media = $this->curlRequest($url);
                     if ($media) {
                         $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    } else {
+                        Log::info('ERROR reaching media: '.$url);
                     }
                 }
             }
@@ -310,7 +314,11 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
             $url = $this->endpoint.'/wp-json/wp/v2/media/'.$poi['featured_media'];
             $media = $this->curlRequest($url);
-            $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            if ($media) {
+                $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            } else {
+                Log::info('ERROR reaching media: '.$url);
+            }
         }
         // Processing the image Gallery of POI
         if (isset($poi['n7webmap_media_gallery']) && $poi['n7webmap_media_gallery']) {
@@ -319,7 +327,11 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 foreach($poi['n7webmap_media_gallery'] as $img) {
                     $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
                     $media = $this->curlRequest($url);
-                    $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    if ($media) {
+                        $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    } else {
+                        Log::info('ERROR reaching media: '.$url);
+                    }
                 }
             }
         }
