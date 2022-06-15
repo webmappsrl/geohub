@@ -334,6 +334,8 @@ class EcTrack extends Model {
                 'duration_forward',
                 'duration_backward',
                 'ref',
+                'difficulty',
+                'cai_scale',
             ];
             foreach ($keys as $key) {
                 $array=$this->setOutSourceSingleValue($array,$key);
