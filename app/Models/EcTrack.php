@@ -321,7 +321,6 @@ class EcTrack extends Model {
         $array = $this->toArray();
         if(isset($this->out_source_feature_id)) {
             $keys = [
-                'name',
                 'description',
                 'excerpt',
                 'distance',

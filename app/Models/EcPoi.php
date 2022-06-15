@@ -114,9 +114,9 @@ class EcPoi extends Model {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    // public function outSourcePOI(): BelongsTo {
-    //     return $this->belongsTo(outSourcePOI::class,'out_source_feature_id');
-    // }
+    public function outSourcePOI(): BelongsTo {
+        return $this->belongsTo(OutSourcePoi::class,'out_source_feature_id');
+    }
 
     public function getNeighbourEcMedia(): array {
         $features = [];
@@ -140,14 +140,13 @@ class EcPoi extends Model {
     }
 
     /**
-     * Return the json version of the ec track, avoiding the geometry
+     * Return the json version of the ec poi, avoiding the geometry
      * TODO: unit TEST
      *
      * @return array
      */
     public function getJson(): array {
-        // $array = $this->setOutSourceValue();
-        $array = $this->toArray();
+        $array = $this->setOutSourceValue();
         if ($this->out_source_feature_id) {
             $out_source_id = $this->out_source_feature_id;
             $out_source_feature = OutSourcePoi::find($out_source_id)->first();
@@ -217,50 +216,49 @@ class EcPoi extends Model {
         return $array;
     }
 
-    // private function setOutSourceValue():array {
-    //     $array = $this->toArray();
-    //     if(isset($this->out_source_feature_id)) {
-    //         $keys = [
-    //             'name',
-    //             'description',
-    //             'excerpt',
-    //         ];
-    //         foreach ($keys as $key) {
-    //             $array=$this->setOutSourceSingleValue($array,$key);
-    //         }
-    //     }
-    //     return $array;
-    // }
+    private function setOutSourceValue():array {
+        $array = $this->toArray();
+        if(isset($this->out_source_feature_id)) {
+            $keys = [
+                'description',
+                'excerpt',
+            ];
+            foreach ($keys as $key) {
+                $array=$this->setOutSourceSingleValue($array,$key);
+            }
+        }
+        return $array;
+    }
 
-    // private function setOutSourceSingleValue($array,$varname):array {
-    //     if($this->isReallyEmpty($array[$varname])) {
-    //         if(isset($this->outSourcePOI->tags[$varname])) {
-    //             $array[$varname] = $this->outSourcePOI->tags[$varname];
-    //         }
-    //     }
-    //     return $array;
-    // }
+    private function setOutSourceSingleValue($array,$varname):array {
+        if($this->isReallyEmpty($array[$varname])) {
+            if(isset($this->outSourcePOI->tags[$varname])) {
+                $array[$varname] = $this->outSourcePOI->tags[$varname];
+            }
+        }
+        return $array;
+    }
 
-    // private function isReallyEmpty($val): bool {
-    //     if(is_null($val)) {
-    //         return true;
-    //     }
-    //     if(empty($val)) {
-    //         return true;
-    //     }
-    //     if(is_array($val)) {
-    //         if(count($val)==0) {
-    //             return true;
-    //         }
-    //         foreach($val as $lang => $cont) {
-    //             if(!empty($cont)) {
-    //                 return false;
-    //             }
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
+    private function isReallyEmpty($val): bool {
+        if(is_null($val)) {
+            return true;
+        }
+        if(empty($val)) {
+            return true;
+        }
+        if(is_array($val)) {
+            if(count($val)==0) {
+                return true;
+            }
+            foreach($val as $lang => $cont) {
+                if(!empty($cont)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Create a geojson from the ec track
