@@ -44,8 +44,13 @@ class CurlServiceProvider extends ServiceProvider
 
         $response = curl_exec($curl);
 
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        return $response;
+        if ($httpcode == 200) {
+            return $response;
+        }
+
+        return false;
     }
 }
