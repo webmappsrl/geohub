@@ -34,6 +34,7 @@ use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
@@ -80,6 +81,21 @@ class EcTrack extends Resource {
 
     public static function group() {
         return __('Editorial Content');
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->can('Admin')) {
+            return $query;
+        }
+        return $query->where('user_id', $request->user()->id);
     }
 
     /**
@@ -285,6 +301,12 @@ class EcTrack extends Resource {
                     Textarea::make(__('Excerpt'),'excerpt'),
                     Textarea::make('Description'),
                     ])->onlyOnForms(),
+                BelongsTo::make('Author','author',User::class)
+                    ->searchable()
+                    ->nullable()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('Admin', $this);
+                    })
             ],
             'Media' => [
 
