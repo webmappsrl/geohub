@@ -164,4 +164,15 @@ class User extends Authenticatable implements JWTSubject {
     public static function restoreEmulatedUser() {
         session(['emulate_user_id' => null]);
     }
+    
+    /**
+     * defines the default roles of this app
+     * @param User|null $user
+     */
+    public static function isInDefaultRoles(User $user) {
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+            return true;
+        }
+        return false;
+    }
 }
