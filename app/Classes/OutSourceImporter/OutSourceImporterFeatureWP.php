@@ -113,22 +113,22 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      */
     protected function prepareTrackTagsJson($track){
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
-        $this->tags['name'][explode('_',$track['wpml_current_locale'])[0]] = $track['title']['rendered'];
-        $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = $track['content']['rendered'];
-        $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = $track['excerpt']['rendered'];
+        $this->tags['name'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['title']['rendered']);
+        $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['content']['rendered']);
+        $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['excerpt']['rendered']);
         if(!empty($track['wpml_translations'])) {
             foreach($track['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
-                $this->tags['name'][$locale[0]] = $lang['post_title'];
+                $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']);
                 // Curl request to get the feature translation from external source
                 $url = $this->endpoint.'/wp-json/wp/v2/track/'.$lang['id'];
                 $track_decode = $this->curlRequest($url);
-                $this->tags['description'][$locale[0]] = $track_decode['content']['rendered'];
-                $this->tags['excerpt'][$locale[0]] = $track_decode['excerpt']['rendered']; 
+                $this->tags['description'][$locale[0]] = html_entity_decode($track_decode['content']['rendered']);
+                $this->tags['excerpt'][$locale[0]] = html_entity_decode($track_decode['excerpt']['rendered']); 
             }
         }
-        $this->tags['from'] = $track['n7webmap_start'];
-        $this->tags['to'] = $track['n7webmap_end'];
+        $this->tags['from'] = html_entity_decode($track['n7webmap_start']);
+        $this->tags['to'] = html_entity_decode($track['n7webmap_end']);
         $this->tags['ele_from'] = $track['ele:from'];
         $this->tags['ele_to'] = $track['ele:to'];
         $this->tags['ele_max'] = $track['ele:max'];
@@ -197,18 +197,18 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      */
     protected function preparePOITagsJson($poi){
         Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
-        $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['title']['rendered'];
-        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['content']['rendered'];
-        $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = $poi['excerpt']['rendered'];
+        $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
+        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
+        $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['excerpt']['rendered']);
         if(!empty($poi['wpml_translations'])) {
             foreach($poi['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
-                $this->tags['name'][$locale[0]] = $lang['post_title']; 
+                $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']); 
                 // Curl request to get the feature translation from external source
                 $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$lang['id'];
                 $poi_decode = $this->curlRequest($url);
-                $this->tags['description'][$locale[0]] = $poi_decode['content']['rendered'];
-                $this->tags['excerpt'][$locale[0]] = $poi_decode['excerpt']['rendered'];
+                $this->tags['description'][$locale[0]] = html_entity_decode($poi_decode['content']['rendered']);
+                $this->tags['excerpt'][$locale[0]] = html_entity_decode($poi_decode['excerpt']['rendered']);
             }
         }
         // Adding POI parameters of accessibility
@@ -222,53 +222,53 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         if (isset($poi['access_mobility_level']))
             $this->tags['access_mobility_level'] = $poi['access_mobility_level'];
         if (isset($poi['access_mobility_description']))
-            $this->tags['access_mobility_description'] = $poi['access_mobility_description'];
+            $this->tags['access_mobility_description'] = html_entity_decode($poi['access_mobility_description']);
         if (isset($poi['access_hearing_check']))
             $this->tags['access_hearing_check'] = $poi['access_hearing_check'];
         if (isset($poi['access_hearing_level']))
             $this->tags['access_hearing_level'] = $poi['access_hearing_level'];
         if (isset($poi['access_hearing_description']))
-            $this->tags['access_hearing_description'] = $poi['access_hearing_description'];
+            $this->tags['access_hearing_description'] = html_entity_decode($poi['access_hearing_description']);
         if (isset($poi['access_vision_check']))
             $this->tags['access_vision_check'] = $poi['access_vision_check'];
         if (isset($poi['access_vision_level']))
             $this->tags['access_vision_level'] = $poi['access_vision_level'];
         if (isset($poi['access_vision_description']))
-            $this->tags['access_vision_description'] = $poi['access_vision_description'];
+            $this->tags['access_vision_description'] = html_entity_decode($poi['access_vision_description']);
         if (isset($poi['access_cognitive_check']))
             $this->tags['access_cognitive_check'] = $poi['access_cognitive_check'];
         if (isset($poi['access_cognitive_level']))
             $this->tags['access_cognitive_level'] = $poi['access_cognitive_level'];
         if (isset($poi['access_cognitive_description']))
-            $this->tags['access_cognitive_description'] = $poi['access_cognitive_description'];
+            $this->tags['access_cognitive_description'] = html_entity_decode($poi['access_cognitive_description']);
         if (isset($poi['access_food_check']))
             $this->tags['access_food_check'] = $poi['access_food_check'];
         if (isset($poi['access_food_description']))
-            $this->tags['access_food_description'] = $poi['access_food_description'];
+            $this->tags['access_food_description'] = html_entity_decode($poi['access_food_description']);
             
         // Adding POI parameters of reachability
         Log::info('Preparing OSF POI REACHABILITY with external ID: '.$this->source_id);
         if (isset($poi['reachability_by_bike_check']))
             $this->tags['reachability_by_bike_check'] = $poi['reachability_by_bike_check'];
         if (isset($poi['reachability_by_bike_description']))
-            $this->tags['reachability_by_bike_description'] = $poi['reachability_by_bike_description'];
+            $this->tags['reachability_by_bike_description'] = html_entity_decode($poi['reachability_by_bike_description']);
         if (isset($poi['reachability_on_foot_check']))
             $this->tags['reachability_on_foot_check'] = $poi['reachability_on_foot_check'];
         if (isset($poi['reachability_on_foot_description']))
-            $this->tags['reachability_on_foot_description'] = $poi['reachability_on_foot_description'];
+            $this->tags['reachability_on_foot_description'] = html_entity_decode($poi['reachability_on_foot_description']);
         if (isset($poi['reachability_by_car_check']))
             $this->tags['reachability_by_car_check'] = $poi['reachability_by_car_check'];
         if (isset($poi['reachability_by_car_description']))
-            $this->tags['reachability_by_car_description'] = $poi['reachability_by_car_description'];
+            $this->tags['reachability_by_car_description'] = html_entity_decode($poi['reachability_by_car_description']);
         if (isset($poi['reachability_by_public_transportation_check']))
             $this->tags['reachability_by_public_transportation_check'] = $poi['reachability_by_public_transportation_check'];
         if (isset($poi['reachability_by_public_transportation_description']))
-            $this->tags['reachability_by_public_transportation_description'] = $poi['reachability_by_public_transportation_description'];
+            $this->tags['reachability_by_public_transportation_description'] = html_entity_decode($poi['reachability_by_public_transportation_description']);
 
         // Adding POI parameters of general info
         Log::info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
         if (isset($poi['addr:street']))
-            $this->tags['addr_street'] = $poi['addr:street'];
+            $this->tags['addr_street'] = html_entity_decode($poi['addr:street']);
         if (isset($poi['addr:housenumber']))
             $this->tags['addr_housenumber'] = $poi['addr:housenumber'];
         if (isset($poi['addr:postcode']))
