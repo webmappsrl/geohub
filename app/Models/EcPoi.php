@@ -171,6 +171,12 @@ class EcPoi extends Model {
             }
         }
 
+        if ($array['excerpt']) {
+            foreach ($array['excerpt'] as $lang => $val) {
+                $array['excerpt'][$lang] = strip_tags($val);
+            }
+        }
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
