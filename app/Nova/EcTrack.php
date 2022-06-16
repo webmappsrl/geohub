@@ -186,6 +186,19 @@ class EcTrack extends Resource {
 
                     return $url;
                 })->withMeta(['width' => 400]),
+
+                Text::make('Gallery',function(){
+                    if (count($this->ecMedia) == 0) {
+                        return 'No gallery';
+                    }
+                    
+                    $gallery = '';
+                    foreach ($this->ecMedia as $media) {
+                        $thumbnail = $media->thumbnail('150x150');
+                        $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                    }
+                    return $gallery;
+                })->asHtml()
             ],
             'Map' => [
                 WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -372,10 +385,10 @@ class EcTrack extends Resource {
                 ]),
             ],
             'Taxonomies' => [
-                AttachMany::make('TaxonomyWheres'),
+                // AttachMany::make('TaxonomyWheres'),
                 AttachMany::make('TaxonomyActivities'),
                 AttachMany::make('TaxonomyTargets'),
-                AttachMany::make('TaxonomyWhens'),
+                // AttachMany::make('TaxonomyWhens'),
                 AttachMany::make('TaxonomyThemes'),
                 ],    
                 
