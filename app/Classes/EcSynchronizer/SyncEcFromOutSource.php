@@ -310,7 +310,6 @@ class SyncEcFromOutSource
                     
                     // Attach Activities to track
                     Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
-                    $ec_track->taxonomyActivities()->syncWithoutDetaching(TaxonomyActivity::where('identifier',$this->activity)->first());
                     if ( !empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.','-',$path['host']);
@@ -338,6 +337,8 @@ class SyncEcFromOutSource
                                 }
                             }
                         }
+                    } else {
+                        $ec_track->taxonomyActivities()->syncWithoutDetaching(TaxonomyActivity::where('identifier',$this->activity)->first());
                     }
 
                     // Attach Themes to track
@@ -415,7 +416,6 @@ class SyncEcFromOutSource
                 
                 // Attach poi_type to poi
                 Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
                     $path = parse_url($this->endpoint);
                     $file_name = str_replace('.','-',$path['host']);
@@ -443,6 +443,8 @@ class SyncEcFromOutSource
                             }
                         }
                     }
+                } else {
+                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 }
 
                 // Attach feature image to poi
