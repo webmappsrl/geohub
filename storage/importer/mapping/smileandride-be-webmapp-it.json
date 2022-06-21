@@ -1,0 +1,708 @@
+{
+    "poi_type": {
+        "166": {
+            "source_title": {
+                "it": "Accomodation"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "318": {
+            "source_title": {
+                "it": "Agriturismo Farmhouse"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "200": {
+            "source_title": {
+                "it": "Archaeological site"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "502": {
+            "source_title": {
+                "it": "Art Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "175": {
+            "source_title": {
+                "it": "ATM"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "158": {
+            "source_title": {
+                "it": "Attention! Watch out!"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "304": {
+            "source_title": {
+                "it": "B&amp;B"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "170": {
+            "source_title": {
+                "it": "Bakery"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "168": {
+            "source_title": {
+                "it": "Bar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "238": {
+            "source_title": {
+                "it": "Bike service"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "245": {
+            "source_title": {
+                "it": "Bus station"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "247": {
+            "source_title": {
+                "it": "Cable car"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "305": {
+            "source_title": {
+                "it": "Camping"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "467": {
+            "source_title": {
+                "it": "Casa Palacio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "160": {
+            "source_title": {
+                "it": "Castle"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "389": {
+            "source_title": {
+                "it": "Cemeteries"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "161": {
+            "source_title": {
+                "it": "Church"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "177": {
+            "source_title": {
+                "it": "Drinking water"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "169": {
+            "source_title": {
+                "it": "Eating and Drinking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "232": {
+            "source_title": {
+                "it": "Excursion destination"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "397": {
+            "source_title": {
+                "it": "Exhibition and conference center"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "395": {
+            "source_title": {
+                "it": "Fashion and Made in Italy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "398": {
+            "source_title": {
+                "it": "Food Market"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "316": {
+            "source_title": {
+                "it": "Furnished flat"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "223": {
+            "source_title": {
+                "it": "Gastronomy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "317": {
+            "source_title": {
+                "it": "Guestroom"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "254": {
+            "source_title": {
+                "it": "Highlights from our tour guide"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "392": {
+            "source_title": {
+                "it": "Historical Garden"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "159": {
+            "source_title": {
+                "it": "History and culture"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "167": {
+            "source_title": {
+                "it": "Hotel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "491": {
+            "source_title": {
+                "it": "Ice cream"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "178": {
+            "source_title": {
+                "it": "Infopoint"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "388": {
+            "source_title": {
+                "it": "Interesting building"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "165": {
+            "source_title": {
+                "it": "Landscape"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "179": {
+            "source_title": {
+                "it": "Mechanic"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "162": {
+            "source_title": {
+                "it": "Monument"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "199": {
+            "source_title": {
+                "it": "Monumental tree"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "163": {
+            "source_title": {
+                "it": "Museum"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "196": {
+            "source_title": {
+                "it": "Natural Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "164": {
+            "source_title": {
+                "it": "Nature and Environment"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "461": {
+            "source_title": {
+                "it": "New Webmapp category Name"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "366": {
+            "source_title": {
+                "it": "Palace"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "471": {
+            "source_title": {
+                "it": "Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "180": {
+            "source_title": {
+                "it": "Parking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "202": {
+            "source_title": {
+                "it": "Peak"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "176": {
+            "source_title": {
+                "it": "Pharmacy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "390": {
+            "source_title": {
+                "it": "Pharmacy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "173": {
+            "source_title": {
+                "it": "Pic Nic Area"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "321": {
+            "source_title": {
+                "it": "Pizzeria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "183": {
+            "source_title": {
+                "it": "Post Office"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "174": {
+            "source_title": {
+                "it": "Public Toilets"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "182": {
+            "source_title": {
+                "it": "Public Transport"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "371": {
+            "source_title": {
+                "it": "Punto di interesse storico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "171": {
+            "source_title": {
+                "it": "Restaurant"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "172": {
+            "source_title": {
+                "it": "Services"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "250": {
+            "source_title": {
+                "it": "Ship\/boat, harbour"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "335": {
+            "source_title": {
+                "it": "Shop"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "391": {
+            "source_title": {
+                "it": "Square"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "396": {
+            "source_title": {
+                "it": "Square"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "387": {
+            "source_title": {
+                "it": "Suitablle for children"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "181": {
+            "source_title": {
+                "it": "Supermarket-shop"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "315": {
+            "source_title": {
+                "it": "Tasting"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "368": {
+            "source_title": {
+                "it": "Teatro"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "367": {
+            "source_title": {
+                "it": "Torre campanile"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "241": {
+            "source_title": {
+                "it": "Train station"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "394": {
+            "source_title": {
+                "it": "Unesco heritage"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "393": {
+            "source_title": {
+                "it": "Viewpoint"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "203": {
+            "source_title": {
+                "it": "Villa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "501": {
+            "source_title": {
+                "it": "Winery and wine tasting"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        }
+    },
+    "activity": {
+        "441": {
+            "source_title": {
+                "it": "Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "399": {
+            "source_title": {
+                "it": "City Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "401": {
+            "source_title": {
+                "it": "E-bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "519": {
+            "source_title": {
+                "it": "Gravel Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "126": {
+            "source_title": {
+                "it": "Hiking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "217": {
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "128": {
+            "source_title": {
+                "it": "Road Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "215": {
+            "source_title": {
+                "it": "Running"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "400": {
+            "source_title": {
+                "it": "Touring bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        }
+    }
+}
