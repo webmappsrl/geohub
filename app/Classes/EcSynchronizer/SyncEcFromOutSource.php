@@ -395,83 +395,88 @@ class SyncEcFromOutSource
                     $ec_track->save();
                     array_push($new_ec_features,$ec_track->id);
                 } catch (Exception $e) {
-                    array_push($error_not_created,$id);
+                    array_push($error_not_created,$out_source->source_id);
                     Log::info('Error creating EcTrack from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
                 }
             }
             if ($this->type == 'poi') {
                 // create poi
                 Log::info('Creating EC POI from OSF with id: '.$id);
-                $ec_poi = EcPoi::updateOrCreate(
-                    [
-                        'user_id' => $this->author_id,
-                        'out_source_feature_id' => $id,
-                    ],
-                    [
-                        'name' => [
-                            'it' => $this->generateName($out_source)
+                try{
+                    $ec_poi = EcPoi::updateOrCreate(
+                        [
+                            'user_id' => $this->author_id,
+                            'out_source_feature_id' => $id,
                         ],
-                        'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                    ]);
-                
-                // Attach poi_type to poi
-                Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
-                    $path = parse_url($this->endpoint);
-                    $file_name = str_replace('.','-',$path['host']);
-                    $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                        [
+                            'name' => [
+                                'it' => $this->generateName($out_source)
+                            ],
+                            'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                        ]);
                     
-                    foreach ($out_source->tags['poi_type'] as $cat) {
-                        foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                            if ($w['geohub_identifier'] == $cat) {
-                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
-                                $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
-                                if ($geohub_w && !is_null($geohub_w)) { 
-                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
-                                } else {
-                                    $new_poi_type = TaxonomyPoiType::create(
-                                        [
-                                            'identifier' => $w['geohub_identifier'],
-                                            'name' => $w['source_title'],
-                                            'description' => $w['source_description'],
-                                        ]
-                                        );
-                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                    // Attach poi_type to poi
+                    Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
+                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
+                        $path = parse_url($this->endpoint);
+                        $file_name = str_replace('.','-',$path['host']);
+                        $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                        
+                        foreach ($out_source->tags['poi_type'] as $cat) {
+                            foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                                if ($w['geohub_identifier'] == $cat) {
+                                    Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
+                                    $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
+                                    if ($geohub_w && !is_null($geohub_w)) { 
+                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                    } else {
+                                        $new_poi_type = TaxonomyPoiType::create(
+                                            [
+                                                'identifier' => $w['geohub_identifier'],
+                                                'name' => $w['source_title'],
+                                                'description' => $w['source_description'],
+                                            ]
+                                            );
+                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                     }
-                } else {
-                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
-                }
 
-                // Attach feature image to poi
-                if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
-                    Log::info('Attaching EC POI FEATURE_IMAGE.');
-                    $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
-                                    ->where('user_id',$this->author_webmapp)
-                                    ->first();
-                    
-                    if ($EcMedia && !is_null($EcMedia)) {
-                        $ec_poi->featureImage()->associate($EcMedia);
-                    }
-                }
-                
-                // Attach EcMedia Gallery to poi
-                if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
-                    Log::info('Attaching EC POI IMAGE_GALLERY.');
-                    foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
-                        $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
+                    // Attach feature image to poi
+                    if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                        Log::info('Attaching EC POI FEATURE_IMAGE.');
+                        $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
                                         ->where('user_id',$this->author_webmapp)
                                         ->first();
                         
                         if ($EcMedia && !is_null($EcMedia)) {
-                            $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
+                            $ec_poi->featureImage()->associate($EcMedia);
                         }
                     }
+                    
+                    // Attach EcMedia Gallery to poi
+                    if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                        Log::info('Attaching EC POI IMAGE_GALLERY.');
+                        foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
+                            $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
+                                            ->where('user_id',$this->author_webmapp)
+                                            ->first();
+                            
+                            if ($EcMedia && !is_null($EcMedia)) {
+                                $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
+                            }
+                        }
+                    }
+                    $ec_poi->save();
+                    array_push($new_ec_features,$ec_poi->id);
+                } catch (Exception $e) {
+                    array_push($error_not_created,$out_source->source_id);
+                    Log::info('Error creating EcPoi from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
                 }
-                $ec_poi->save();
-                array_push($new_ec_features,$ec_poi->id);
             }
             if ($this->type == 'media') {
                 $osf_storage_name = config('geohub.osf_media_storage_name');
@@ -499,9 +504,15 @@ class SyncEcFromOutSource
             $count++;
         }
         if ($error_not_created) {
-            Log::info('Ec features not created from OSF with ID: ');
-            foreach ($error_not_created as $id) {
-                Log::info('OSF ID: '. $id);
+            Log::info('Ec features not created from Source with ID: ');
+            if ($this->provider == 'OutSourceImporterFeatureOSM2CAI') {
+                foreach ($error_not_created as $id) {
+                    Log::info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
+                }
+            } else {
+                foreach ($error_not_created as $id) {
+                    Log::info('OSF ID: '. $id);
+                }
             }
         }
         return $new_ec_features;
