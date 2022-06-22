@@ -505,7 +505,7 @@ class SyncEcFromOutSource
         }
         if ($error_not_created) {
             Log::info('Ec features not created from Source with ID: ');
-            if ($this->provider == 'OutSourceImporterFeatureOSM2CAI') {
+            if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
                 foreach ($error_not_created as $id) {
                     Log::info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
                 }
@@ -546,19 +546,5 @@ class SyncEcFromOutSource
         }
 
         return $format;
-    }
-
-    /**
-     * It sets the featured image and gallery images of the Ec resource if its available in OSF 
-     *
-     * @param object $out_source
-     * @param object $ec_feature
-     * @return string 
-     */
-    private function syncOSFImagesToEcFeature(OutSourceFeature $out_source , $ec_feature) : string {    
-
-        
-
-        return true;
     }
 }
