@@ -7,6 +7,7 @@ use App\Models\OutSourceFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -32,7 +33,14 @@ class OutSourceImporterFeatureWPImporterTaxonomyTest extends TestCase
         $stelvio_media = file_get_contents(base_path('tests/Feature/Stubs/stelvio_media.json'));
         $url_media = $endpoint.'/wp-json/wp/v2/media/'.$source_id_media;
 
+        $storage = Storage::fake('mapping');
         $mapping = file_get_contents(base_path('tests/Feature/Stubs/stelvio-wp-webmapp-it.json')); 
+        $storage->put('stelvio-wp-webmapp-it.json', $mapping);
+        Storage::shouldReceive('disk')
+        ->with('mapping')
+        ->andReturn($storage)
+        ->shouldReceive('get')
+        ->andReturn($mapping);
 
         // PREPARE MOCK
         $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_poi,$url_poi,$stelvio_media,$url_media){
@@ -76,7 +84,14 @@ class OutSourceImporterFeatureWPImporterTaxonomyTest extends TestCase
         $stelvio_media = file_get_contents(base_path('tests/Feature/Stubs/stelvio_media_track.json'));
         $url_media = $endpoint.'/wp-json/wp/v2/media/'.$source_id_media;
 
+        $storage = Storage::fake('mapping');
         $mapping = file_get_contents(base_path('tests/Feature/Stubs/stelvio-wp-webmapp-it.json')); 
+        $storage->put('stelvio-wp-webmapp-it.json', $mapping);
+        Storage::shouldReceive('disk')
+        ->with('mapping')
+        ->andReturn($storage)
+        ->shouldReceive('get')
+        ->andReturn($mapping);
 
         // PREPARE MOCK
         $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_track,$url_track,$stelvio_media,$url_media){

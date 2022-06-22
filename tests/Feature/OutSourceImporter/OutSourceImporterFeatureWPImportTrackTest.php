@@ -107,8 +107,8 @@ class OutSourceImporterFeatureWPImportTrackTest extends TestCase
         // $this->assertEquals($stelvio_track_js_de['title']['rendered'],$out_source->tags['name']['de']);
 
         $this->assertEquals($stelvio_track_js_it['content']['rendered'],$out_source->tags['description']['it']);
-        $this->assertEquals($stelvio_track_js_en['content']['rendered'],$out_source->tags['description']['en']);
-        $this->assertEquals($stelvio_track_js_de['content']['rendered'],$out_source->tags['description']['de']);
+        $this->assertEquals(html_entity_decode($stelvio_track_js_en['content']['rendered']),$out_source->tags['description']['en']);
+        $this->assertEquals(html_entity_decode($stelvio_track_js_de['content']['rendered']),$out_source->tags['description']['de']);
 
         // TODO: add some checks on geometry
         // TODO: add some checks on raw_data
