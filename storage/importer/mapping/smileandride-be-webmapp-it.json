@@ -43,12 +43,12 @@
         "158": {
             "source_title": {
                 "it": "Attnezione!",
-                "en": "Attention! Watch out!"
+                "en": "Attention!"
             },
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "attenzione"
+            "geohub_identifier": "attention"
         },
         "170": {
             "source_title": {
@@ -72,7 +72,7 @@
         },
         "238": {
             "source_title": {
-                "it": "Biciclettaio",
+                "it": "Servizio Bici",
                 "en": "Bike service"
             },
             "source_description": {
@@ -122,7 +122,7 @@
         },
         "177": {
             "source_title": {
-                "it": "",
+                "it": "Fontana",
                 "en": "Drinking water"
             },
             "source_description": {
@@ -138,17 +138,17 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "drinking-eating"
+            "geohub_identifier": "eating-drinking"
         },
         "232": {
             "source_title": {
                 "it": "Meta dell'escursione",
-                "en": "Excursion destination"
+                "en": "Route destination"
             },
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "excursion-destination"
+            "geohub_identifier": "destination"
         },
         "397": {
             "source_title": {
@@ -158,7 +158,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "Exhibition-and-conference-center"
+            "geohub_identifier": "conference-centre"
         },
         "395": {
             "source_title": {
@@ -168,7 +168,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "fashion-and-made-in-italy"
+            "geohub_identifier": "fashion-made-in-italy"
         },
         "398": {
             "source_title": {
@@ -198,7 +198,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "highlights-from-our-tour-guide"
+            "geohub_identifier": "highlight"
         },
         "392": {
             "source_title": {
@@ -258,7 +258,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "interesting-building"
+            "geohub_identifier": "highlight"
         },
         "165": {
             "source_title": {
@@ -298,7 +298,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "monumenta-tree"
+            "geohub_identifier": "monumental-tree"
         },
         "163": {
             "source_title": {
@@ -318,7 +318,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "natural-Park"
+            "geohub_identifier": "natural-park"
         },
         "164": {
             "source_title": {
@@ -328,7 +328,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "nature-and-environment"
+            "geohub_identifier": "nature"
         },
         "366": {
             "source_title": {
@@ -408,7 +408,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "historic-point-of-interest"
+            "geohub_identifier": "historical"
         },
         "171": {
             "source_title": {
@@ -428,7 +428,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "services"
+            "geohub_identifier": "service"
         },
         "250": {
             "source_title": {
@@ -584,12 +584,13 @@
         },
         "399": {
             "source_title": {
-                "it": "City Bike"
+                "it": "City Bike",
+                "en": "City Bike"
             },
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "cycling"
+            "geohub_identifier": "city-bike"
         },
         "401": {
             "source_title": {
