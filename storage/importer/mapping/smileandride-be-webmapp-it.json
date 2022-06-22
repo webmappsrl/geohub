@@ -1,0 +1,661 @@
+{
+    "poi_type": {
+        "166": {
+            "source_title": {
+                "it": "Struttura ricettiva",
+                "en": "Accomodation"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "accomodation"
+        },
+        "200": {
+            "source_title": {
+                "it": "Sito Archeologico",
+                "en": "Archaeological site"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "archaeological-site"
+        },
+        "502": {
+            "source_title": {
+                "it": "Parco Artistico",
+                "en": "Art Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "art-park"
+        },
+        "175": {
+            "source_title": {
+                "it": "Bancomat",
+                "en": "ATM"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "atm"
+        },
+        "158": {
+            "source_title": {
+                "it": "Attnezione!",
+                "en": "Attention!"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "attention"
+        },
+        "170": {
+            "source_title": {
+                "it": "Panificio",
+                "en": "Bakery"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bakery"
+        },
+        "168": {
+            "source_title": {
+                "it": "Bar",
+                "en": "Bar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bar"
+        },
+        "238": {
+            "source_title": {
+                "it": "Servizio Bici",
+                "en": "Bike service"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bike-service"
+        },
+        "467": {
+            "source_title": {
+                "it": "Casa Palacio",
+                "en": "Palacio house"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "160": {
+            "source_title": {
+                "it": "",
+                "en": "Castle"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fortification"
+        },
+        "389": {
+            "source_title": {
+                "it": "Cimitero",
+                "en": "Cemetery"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cemetery"
+        },
+        "161": {
+            "source_title": {
+                "it": "",
+                "en": "Church"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-faith"
+        },
+        "177": {
+            "source_title": {
+                "it": "Fontana",
+                "en": "Drinking water"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fountain"
+        },
+        "169": {
+            "source_title": {
+                "it": "Magiare e Bere",
+                "en": "Eating and Drinking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "eating-drinking"
+        },
+        "232": {
+            "source_title": {
+                "it": "Meta dell'escursione",
+                "en": "Route destination"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "destination"
+        },
+        "397": {
+            "source_title": {
+                "it": "Centro esposizioni e congressi",
+                "en": "Exhibition and conference center"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "conference-centre"
+        },
+        "395": {
+            "source_title": {
+                "it": "Fashion and Made in Italy",
+                "en": "Fashion and Made in Italy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fashion-made-in-italy"
+        },
+        "398": {
+            "source_title": {
+                "it": "Supermercato",
+                "en": "Food Market"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "food-market"
+        },
+        "223": {
+            "source_title": {
+                "it": "Gastronomia",
+                "en": "Gastronomy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "gastronomy"
+        },
+        "254": {
+            "source_title": {
+                "it": "Punti salienti della nostra guida turistica",
+                "en": "Highlights from our tour guide"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highlight"
+        },
+        "392": {
+            "source_title": {
+                "it": "Giardino Storico",
+                "en": "Historical Garden"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-garden"
+        },
+        "159": {
+            "source_title": {
+                "it": "Storia e cultura",
+                "en": "History and culture"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "history-and-culture"
+        },
+        "167": {
+            "source_title": {
+                "it": "Hotel",
+                "en": "Hotel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "491": {
+            "source_title": {
+                "it": "Gelato",
+                "en": "Ice cream"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "ice-cream"
+        },
+        "178": {
+            "source_title": {
+                "it": "Informazioni Turistiche",
+                "en": "Tourist information"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tourist-information"
+        },
+        "388": {
+            "source_title": {
+                "it": "Edificio interessante",
+                "en": "Interesting building"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highlight"
+        },
+        "165": {
+            "source_title": {
+                "it": "Paesaggio",
+                "en": "Landscape"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "landscape"
+        },
+        "179": {
+            "source_title": {
+                "it": "Meccanico",
+                "en": "Mechanic"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mechanic"
+        },
+        "162": {
+            "source_title": {
+                "it": "Monumenti",
+                "en": "Monuments"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monument"
+        },
+        "199": {
+            "source_title": {
+                "it": "Albero monumentale",
+                "en": "Monumental tree"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monumental-tree"
+        },
+        "163": {
+            "source_title": {
+                "it": "Museo",
+                "en": "Museum"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "museum"
+        },
+        "196": {
+            "source_title": {
+                "it": "Parco Naturale",
+                "en": "Natural Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-park"
+        },
+        "164": {
+            "source_title": {
+                "it": "Natura e ambiente",
+                "en": "Nature and Environment"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature"
+        },
+        "366": {
+            "source_title": {
+                "it": "Palazzo",
+                "en": "Palace"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "palace"
+        },
+        "471": {
+            "source_title": {
+                "it": "Park",
+                "en": "Park"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "park"
+        },
+        "176": {
+            "source_title": {
+                "it": "Farmacia",
+                "en": "Pharmacy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pharmacy"
+        },
+        "390": {
+            "source_title": {
+                "it": "Farmacia",
+                "en": "Pharmacy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pharmacy"
+        },
+        "321": {
+            "source_title": {
+                "it": "Pizzeria",
+                "en": "Pizzeria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pizzeria"
+        },
+        "174": {
+            "source_title": {
+                "it": "Bagni pubblici",
+                "en": "Public Toilets"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "public-toilet"
+        },
+        "182": {
+            "source_title": {
+                "it": "Trasporto pubblico",
+                "en": "Public Transport"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "public-transport"
+        },
+        "371": {
+            "source_title": {
+                "it": "Punto di interesse storico",
+                "en": "Historic point of interest"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical"
+        },
+        "171": {
+            "source_title": {
+                "it": "Ristorante",
+                "en": "Restaurant"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "172": {
+            "source_title": {
+                "it": "Servizi",
+                "en": "Services"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "service"
+        },
+        "250": {
+            "source_title": {
+                "it": "Porto",
+                "en": "harbour"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "harbour"
+        },
+        "335": {
+            "source_title": {
+                "it": "Negozio",
+                "en": "Shop"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "Shop"
+        },
+        "391": {
+            "source_title": {
+                "it": "Piazza",
+                "en": "Square"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "396": {
+            "source_title": {
+                "it": "Piazza",
+                "en": "Square"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "387": {
+            "source_title": {
+                "it": "Adatto ai bambini",
+                "en": "Suitablle for children"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "suitablle-for-children"
+        },
+        "181": {
+            "source_title": {
+                "it": "Supermercato",
+                "en": "Supermarket-shop"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "food-market"
+        },
+        "315": {
+            "source_title": {
+                "it": "Degustazione",
+                "en": "Tasting"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tasting"
+        },
+        "368": {
+            "source_title": {
+                "it": "Teatro",
+                "en": "Theater"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "theater"
+        },
+        "367": {
+            "source_title": {
+                "it": "Torre campanile",
+                "en": "Bell tower"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bell-tower"
+        },
+        "241": {
+            "source_title": {
+                "it": "Stazione Treni",
+                "en": "Train station"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "train-station"
+        },
+        "394": {
+            "source_title": {
+                "it": "Patrimonio Unesco",
+                "en": "Unesco heritage"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "unesco-heritage"
+        },
+        "393": {
+            "source_title": {
+                "it": "Punto Panoramico",
+                "en": "Viewpoint"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "203": {
+            "source_title": {
+                "it": "Villa",
+                "en": "Villa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        },
+        "501": {
+            "source_title": {
+                "it": "Cantina e degustazione di vini",
+                "en": "Winery and wine tasting"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "winery-and-wine-tasting"
+        }
+    },
+    "activity": {
+        "441": {
+            "source_title": {
+                "it": "In bicicletta",
+                "en": "Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cycling"
+        },
+        "399": {
+            "source_title": {
+                "it": "City Bike",
+                "en": "City Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "city-bike"
+        },
+        "401": {
+            "source_title": {
+                "it": "Bici Elettrica",
+                "en": "E-bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "e-bike"
+        },
+        "519": {
+            "source_title": {
+                "it": "Gravel Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "gravel"
+        },
+        "126": {
+            "source_title": {
+                "it": "Hiking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "217": {
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mtb"
+        },
+        "128": {
+            "source_title": {
+                "it": "Road Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "road-bike"
+        },
+        "215": {
+            "source_title": {
+                "it": "Running"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "running"
+        },
+        "400": {
+            "source_title": {
+                "it": "Bici da turismo",
+                "en": "Touring bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "touring-bike"
+        }
+    }
+}

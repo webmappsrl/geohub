@@ -310,34 +310,33 @@ class SyncEcFromOutSource
                     
                     // Attach Activities to track
                     Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
-                    $ec_track->taxonomyActivities()->syncWithoutDetaching(TaxonomyActivity::where('identifier',$this->activity)->first());
                     if ( !empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.','-',$path['host']);
                         $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
                         
                         foreach ($out_source->tags['activity'] as $cat) {
-                            if ($this->activity !== $cat) {
-                                foreach (json_decode($taxonomy_map,true)['activity'] as $w ) {
-                                    Log::info('Attaching more EC Track taxonomyActivities: '.$cat);
-                                    if ($w['geohub_identifier'] == $cat) {
-                                        $geohub_w = TaxonomyActivity::where('identifier',$w['geohub_identifier'])->first();
-                                        if ($geohub_w && !is_null($geohub_w)) { 
-                                            $ec_track->taxonomyActivities()->syncWithoutDetaching($geohub_w);
-                                        } else {
-                                            $new_activity = TaxonomyActivity::create(
-                                                [
-                                                    'identifier' => $w['geohub_identifier'],
-                                                    'name' => $w['source_title'],
-                                                    'description' => $w['source_description'],
-                                                ]
-                                                );
-                                            $ec_track->taxonomyActivities()->syncWithoutDetaching($new_activity);
-                                        }
+                            foreach (json_decode($taxonomy_map,true)['activity'] as $w ) {
+                                Log::info('Attaching more EC Track taxonomyActivities: '.$cat);
+                                if ($w['geohub_identifier'] == $cat) {
+                                    $geohub_w = TaxonomyActivity::where('identifier',$w['geohub_identifier'])->first();
+                                    if ($geohub_w && !is_null($geohub_w)) { 
+                                        $ec_track->taxonomyActivities()->syncWithoutDetaching($geohub_w);
+                                    } else {
+                                        $new_activity = TaxonomyActivity::create(
+                                            [
+                                                'identifier' => $w['geohub_identifier'],
+                                                'name' => $w['source_title'],
+                                                'description' => $w['source_description'],
+                                            ]
+                                            );
+                                        $ec_track->taxonomyActivities()->syncWithoutDetaching($new_activity);
                                     }
                                 }
                             }
                         }
+                    } else {
+                        $ec_track->taxonomyActivities()->syncWithoutDetaching(TaxonomyActivity::where('identifier',$this->activity)->first());
                     }
 
                     // Attach Themes to track
@@ -415,34 +414,33 @@ class SyncEcFromOutSource
                 
                 // Attach poi_type to poi
                 Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
                     $path = parse_url($this->endpoint);
                     $file_name = str_replace('.','-',$path['host']);
                     $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
                     
                     foreach ($out_source->tags['poi_type'] as $cat) {
-                        if ($this->poi_type !== $cat) {
-                            foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                                if ($w['geohub_identifier'] == $cat) {
-                                    Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
-                                    $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
-                                    if ($geohub_w && !is_null($geohub_w)) { 
-                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
-                                    } else {
-                                        $new_poi_type = TaxonomyPoiType::create(
-                                            [
-                                                'identifier' => $w['geohub_identifier'],
-                                                'name' => $w['source_title'],
-                                                'description' => $w['source_description'],
-                                            ]
-                                            );
-                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
-                                    }
+                        foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                            if ($w['geohub_identifier'] == $cat) {
+                                Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
+                                $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
+                                if ($geohub_w && !is_null($geohub_w)) { 
+                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                } else {
+                                    $new_poi_type = TaxonomyPoiType::create(
+                                        [
+                                            'identifier' => $w['geohub_identifier'],
+                                            'name' => $w['source_title'],
+                                            'description' => $w['source_description'],
+                                        ]
+                                        );
+                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
                                 }
                             }
                         }
                     }
+                } else {
+                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                 }
 
                 // Attach feature image to poi
