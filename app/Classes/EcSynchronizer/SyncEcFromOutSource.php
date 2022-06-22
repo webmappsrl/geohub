@@ -154,6 +154,8 @@ class SyncEcFromOutSource
                 $available_name_formats = array(
                     '{name}',
                     '{ref}',
+                    '{from}',
+                    '{to}'
                 );
             } 
             if ($this->type == 'poi' || $this->type == 'media') {
