@@ -24,26 +24,37 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * @return int The ID of OutSourceFeature created 
      */
     public function importTrack(){
-        
-        // Curl request to get the feature information from external source
-        $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
-        $track = $this->curlRequest($url);
-
-        // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
-        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
-        $this->params['provider'] = get_class($this);
-        $this->params['type'] = $this->type;
-        $this->params['raw_data'] = json_encode($track);
-
-        // prepare the value of tags data
-        Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
-        $this->prepareTrackTagsJson($track);
-        $this->params['tags'] = $this->tags;
-        Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
-        Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
-        return $this->create_or_update_feature($this->params);
+        $error_not_created = [];
+        try {
+            // Curl request to get the feature information from external source
+            $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
+            $track = $this->curlRequest($url);
+    
+            // prepare feature parameters to pass to updateOrCreate function
+            Log::info('Preparing OSF Track with external ID: '.$this->source_id);
+            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
+            $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
+            $this->params['provider'] = get_class($this);
+            $this->params['type'] = $this->type;
+            $this->params['raw_data'] = json_encode($track);
+    
+            // prepare the value of tags data
+            Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+            $this->prepareTrackTagsJson($track);
+            $this->params['tags'] = $this->tags;
+            Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
+            Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+            return $this->create_or_update_feature($this->params);
+        } catch (Exception $e) {
+            array_push($error_not_created,$url);
+            Log::info('Error creating EcPoi from OSF with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
+        }
+        if ($error_not_created) {
+            Log::info('Ec features not created from Source with URL: ');
+            foreach ($error_not_created as $url) {
+                Log::info($url);
+            }
+        }
     }
 
     /**

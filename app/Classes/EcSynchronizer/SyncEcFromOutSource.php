@@ -302,9 +302,7 @@ class SyncEcFromOutSource
                             'out_source_feature_id' => $id,
                         ],
                         [
-                            'name' => [
-                                'it' => $this->generateName($out_source)
-                            ],
+                            'name' => $this->generateName($out_source),
                             'not_accessible' => false,
                             'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
                         ]
@@ -396,7 +394,7 @@ class SyncEcFromOutSource
                     array_push($new_ec_features,$ec_track->id);
                 } catch (Exception $e) {
                     array_push($error_not_created,$out_source->source_id);
-                    Log::info('Error creating EcTrack from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
+                    Log::info('Error creating EcTrack from OSF with id: '.$id."\n ERROR: ".$e);
                 }
             }
             if ($this->type == 'poi') {
@@ -409,9 +407,7 @@ class SyncEcFromOutSource
                             'out_source_feature_id' => $id,
                         ],
                         [
-                            'name' => [
-                                'it' => $this->generateName($out_source)
-                            ],
+                            'name' => $this->generateName($out_source),
                             'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                         ]);
                     
@@ -489,9 +485,7 @@ class SyncEcFromOutSource
                         'user_id' => $this->author_webmapp,
                     ],
                     [
-                        'name' => [
-                            'it' => $this->generateName($out_source)
-                        ],
+                        'name' => $this->generateName($out_source),
                         'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                         'url' => '',
                     ]);
@@ -522,29 +516,37 @@ class SyncEcFromOutSource
      * It generate the Ec feature's name name_format parameter 
      *
      * @param object $out_source
-     * @return string 
+     * @return array 
      */
-    private function generateName(OutSourceFeature $out_source) : string {    
-
-        $format = $this->name_format;
-        preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
+    private function generateName(OutSourceFeature $out_source) : array {    
+        $name = [];
         
-        if (is_array($matches[0])) {
-            foreach($matches[0] as $m) {
-                $field = str_replace('{','',$m);
-                $field = str_replace('}','',$field);
+        $languages = ['it','en'];
+        foreach ($languages as $language) {
+            $format = $this->name_format;
+            preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
+            if (is_array($matches[0])) {
+                foreach($matches[0] as $m) {
+                    $field = str_replace('{','',$m);
+                    $field = str_replace('}','',$field);
 
-                if (isset($out_source->tags[$field])) {
-                    if (is_array($out_source->tags[$field])) {
-                        $val = $out_source->tags[$field]['it'];
-                    } else {
-                        $val = $out_source->tags[$field];
-                    }
-                    $format = str_replace($m,$val,$format);
-                } 
+                    if (isset($out_source->tags[$field])) {
+                        if (is_array($out_source->tags[$field])) {
+                            if (isset($out_source->tags[$field][$language])) {
+                                $val = $out_source->tags[$field][$language];
+                            } else {
+                                $val = '';
+                            }
+                        } else {
+                            $val = $out_source->tags[$field];
+                        }
+                        $format = str_replace($m,$val,$format);
+                    } 
+                }
             }
+            $name[$language] = $format;
         }
 
-        return $format;
+        return $name;
     }
 }
