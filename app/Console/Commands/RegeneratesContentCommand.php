@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\EcMedia;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Console\Command;
@@ -63,6 +64,28 @@ class RegeneratesContentCommand extends Command
                         try {
                             $hoquServiceProvider = app(HoquServiceProvider::class);
                             $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
+                        } catch (\Exception $e) {
+                            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                        }
+                    }
+                }
+                break;
+            case 'EcPoi':
+                $this->info('Sending store to HOQU for EcPoi');
+                if (isset($id)) {
+                    $pois = EcPoi::all()->where('id', $id);
+                    $msg = ' with id ' . $id;
+                } else {
+                    $pois = EcPoi::all();
+                }
+                if (count($pois) == 0) {
+                    $this->warn('No EcPois found in geohub' . $msg);
+                } else {
+                    foreach ($pois as $poi) {
+                        $this->info('Hoqu Store for poi: ' . $poi->id);
+                        try {
+                            $hoquServiceProvider = app(HoquServiceProvider::class);
+                            $hoquServiceProvider->store('enrich_ec_poi', ['id' => $poi->id]);
                         } catch (\Exception $e) {
                             Log::error('An error occurred during a store operation: ' . $e->getMessage());
                         }

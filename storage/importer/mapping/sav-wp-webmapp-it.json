@@ -1,0 +1,99 @@
+{
+    "poi_type": {
+        "17": {
+            "source_title": {
+                "it": "Cave e Miniere",
+                "en": "Caves e Mines"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mine"
+        },
+        "9": {
+            "source_title": {
+                "it": "I Borghi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "village"
+        },
+        "11": {
+            "source_title": {
+                "it": "Natura e ambiente"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature"
+        },
+        "13": {
+            "source_title": {
+                "it": "Prodotti",
+                "en": "Products"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "product"
+        },
+        "14": {
+            "source_title": {
+                "it": "Ricettivit\u00e0"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "accomodation"
+        },
+        "18": {
+            "source_title": {
+                "it": "Ricettivit\u00e0|Ristorazione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "accomodation"
+        },
+        "15": {
+            "source_title": {
+                "it": "Ristorazione",
+                "en": "Catering"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "catering"
+        },
+        "12": {
+            "source_title": {
+                "it": "Storia e cultura"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "culture"
+        }
+    },
+    "activity": {
+        "19": {
+            "source_title": {
+                "it": "Le tappe del SAV"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "20": {
+            "source_title": {
+                "it": "Sentieri di collegamento SAV"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        }
+    }
+}
