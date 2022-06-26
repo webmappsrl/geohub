@@ -16,6 +16,7 @@ class GenerateHoquScriptsCommand extends Command
     protected $signature = 'geohub:generate_hoqu_script
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command} 
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command} 
+                            {--mbtiles : Use this option to add ec_track_generate_mbtiles job instead of enrich_ec_track, POI and MEDIA skipped}
                             ';
 
     /**
@@ -82,15 +83,20 @@ class GenerateHoquScriptsCommand extends Command
             return 0;
         }
 
-
         // Creates Script content
         $script_content = "#!/bin/bash \n";
-        // MEDIA
-        // POI
+        // MEDIA (skip with --mbtiles)
+
+        // POI (skip with --mbtiles)
+
         // TRACKS
         if($tracks->count()>0) {
             foreach ($tracks as $track) {
-                $script_content .= "php artisan geohub:hoqu_store enrich_ec_track {$track->id}\n";
+                if($this->option('mbtiles')) {
+                    $script_content .= "php artisan geohub:hoqu_store ec_track_generate_mbtiles {$track->id}\n";
+                }
+                else {
+                    $script_content .= "php artisan geohub:hoqu_store enrich_ec_track {$track->id}\n";                }
             }
         }
 
@@ -100,6 +106,7 @@ class GenerateHoquScriptsCommand extends Command
             $this->info("Directory $dir does not exist: creating;");
             system("mkdir -p $dir");
         }
+
         $path = "{$dir}/{$script_name}.sh";
         $this->info("Writing file $path");
         file_put_contents($path,$script_content);
