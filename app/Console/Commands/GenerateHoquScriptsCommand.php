@@ -132,14 +132,14 @@ class GenerateHoquScriptsCommand extends Command
         // Creates Script content
         $script_content = "#!/bin/bash \n";
         // MEDIA (skip with --mbtiles)
-        if(!$this->option('mbtiles') && $media->count()>0) {
+        if(!$this->option('mbtiles') && count($media)>0) {
             foreach($media as $item) {
                 $script_content .= "php artisan geohub:hoqu_store enrich_ec_media {$item->id}\n";
             }
         }
 
         // POI (skip with --mbtiles)
-        if(!$this->option('mbtiles') && $pois->count()>0) {
+        if(!$this->option('mbtiles') && count($pois)>0) {
             foreach($pois as $item) {
                 $script_content .= "php artisan geohub:hoqu_store enrich_ec_poi {$item->id}\n";
             }
