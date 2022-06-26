@@ -63,6 +63,19 @@ class GenerateHoquScriptsCommand extends Command
             }
             $script_name .= 'user_id_'.$user->id;
         }
+        else if($this->hasOption('user_email') && !empty($this->option('user_email'))) {
+            $user = User::where('email',$this->option('user_email'))->first();
+            if(is_null($user)) {
+                $this->info("No user found with email={$this->option('user_email')}");
+                return 0;
+            }
+            $tracks = $user->ecTracks;
+            if($tracks->count()==0) {
+                $this->info("No tracks found corresponding to user {$user->email},ID:{$user->id}");
+                return 0;
+            }
+            $script_name .= 'user_email_'.$user->email;
+        }
         else {
             $this->info('No option set: you have to set one of user_id,user_email,layer_id,app_id,osf_endpoint.');
             $this->info('Use php artisan geohub:generate_hoqu_script --help to have more details.');
