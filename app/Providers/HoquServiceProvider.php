@@ -234,7 +234,7 @@ class HoquServiceProvider extends ServiceProvider {
             return 0;            
         }
         if (self::$prevent_store) {
-            Log::debug('Skipping HOQU/store because set_prevent i TRUE');
+            Log::debug('Skipping HOQU/store because set_prevent is TRUE');
             return 0;            
         }
 

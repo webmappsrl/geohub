@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
+use App\Providers\HoquServiceProvider;
 use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureCommand extends Command
@@ -49,6 +50,10 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
      */
     public function handle()
     {
+        // TODO: remove this when problems with HOQU are resolved
+        $hoquServiceProvider = app(HoquServiceProvider::class);
+        $hoquServiceProvider->setPreventStore();
+
         $type = $this->argument('type');
         $author = $this->argument('author');
 
