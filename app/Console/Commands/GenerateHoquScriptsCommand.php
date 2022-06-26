@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\App;
+use App\Models\EcMedia;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
+use App\Models\OutSourceFeature;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -18,7 +21,8 @@ class GenerateHoquScriptsCommand extends Command
     protected $signature = 'geohub:generate_hoqu_script
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command} 
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command} 
-                            {--app_id= All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
+                            {--app_id= : All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
+                            {--osf_endpoint= : All tracks, pois and media referring to any osf belonging to endpoint are generated with enrich command}
                             {--mbtiles : Use this option to add ec_track_generate_mbtiles job instead of enrich_ec_track, POI and MEDIA skipped}
                             ';
 
@@ -53,7 +57,8 @@ class GenerateHoquScriptsCommand extends Command
         $tracks = $pois = $media = [];
 
         $script_name = Carbon::parse('now')->format('Ymd').'_';
-        
+
+        // OPTION USER_ID
         if($this->hasOption('user_id') && !empty($this->option('user_id'))) {
             $user = User::find($this->option('user_id'));
             if(is_null($user)) {
@@ -67,6 +72,7 @@ class GenerateHoquScriptsCommand extends Command
             }
             $script_name .= 'user_id_'.$user->id;
         }
+        // OPTION USER_EMAIL
         else if($this->hasOption('user_email') && !empty($this->option('user_email'))) {
             $user = User::where('email',$this->option('user_email'))->first();
             if(is_null($user)) {
@@ -80,6 +86,7 @@ class GenerateHoquScriptsCommand extends Command
             }
             $script_name .= 'user_email_'.$user->email;
         }
+        // OPTION APP_ID        
         else if(!empty($this->option('app_id'))) {
             $app = App::find($this->option('app_id'));
             if(is_null($app)) {
@@ -94,6 +101,28 @@ class GenerateHoquScriptsCommand extends Command
             $tracks = EcTrack::whereIn('id',array_keys($tracks))->get();
             $script_name .= 'app_'.$app->id;
         }
+        
+        // OPTION OSF_ENDPOINT
+        else if (!empty($this->option('osf_endpoint'))) {
+            $osfs = OutSourceFeature::where('endpoint',$this->option('osf_endpoint'))->get();
+            if($osfs->count()==0) {
+                $this->info("No OSF found with endpoint {$this->option('osf_endpoint')}");
+                return 0;
+            }
+            $ids = $osfs->pluck('id')->toArray();
+            $tracks = EcTrack::whereIn('out_source_feature_id',$ids)->get();
+            $pois = EcPoi::whereIn('out_source_feature_id',$ids)->get();
+            $media = EcMedia::whereIn('out_source_feature_id',$ids)->get();
+
+            if($tracks->count() == 0 &&
+            $pois->count() == 0 &&
+            $media->count() == 0 ) {
+                $this->info("No feature found corresponding to endpoint {$this->option('osf_endpoint')}");
+                return 0;
+            }
+
+            $script_name .= 'osf_'.preg_replace("(^https?://)","",$this->option('osf_endpoint'));
+        }
         else {
             $this->info('No option set: you have to set one of user_id,user_email,app_id,osf_endpoint.');
             $this->info('Use php artisan geohub:generate_hoqu_script --help to have more details.');
@@ -103,8 +132,18 @@ class GenerateHoquScriptsCommand extends Command
         // Creates Script content
         $script_content = "#!/bin/bash \n";
         // MEDIA (skip with --mbtiles)
+        if(!$this->option('mbtiles') && $media->count()>0) {
+            foreach($media as $item) {
+                $script_content .= "php artisan geohub:hoqu_store enrich_ec_media {$item->id}\n";
+            }
+        }
 
         // POI (skip with --mbtiles)
+        if(!$this->option('mbtiles') && $pois->count()>0) {
+            foreach($pois as $item) {
+                $script_content .= "php artisan geohub:hoqu_store enrich_ec_poi {$item->id}\n";
+            }
+        }
 
         // TRACKS
         if($tracks->count()>0) {
