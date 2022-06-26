@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\App;
+use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -16,6 +18,7 @@ class GenerateHoquScriptsCommand extends Command
     protected $signature = 'geohub:generate_hoqu_script
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command} 
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command} 
+                            {--app_id= All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
                             {--mbtiles : Use this option to add ec_track_generate_mbtiles job instead of enrich_ec_track, POI and MEDIA skipped}
                             ';
 
@@ -77,8 +80,22 @@ class GenerateHoquScriptsCommand extends Command
             }
             $script_name .= 'user_email_'.$user->email;
         }
+        else if(!empty($this->option('app_id'))) {
+            $app = App::find($this->option('app_id'));
+            if(is_null($app)) {
+                $this->info("No app found with id={$this->option('app_id')}");
+                return 0;
+            }
+            $tracks = $app->getTracksFromLayer();
+            if(count($tracks)==0) {
+                $this->info("No tracks found corresponding to user {$app->name},ID:{$app->id}");
+                return 0;
+            }
+            $tracks = EcTrack::whereIn('id',array_keys($tracks))->get();
+            $script_name .= 'app_'.$app->id;
+        }
         else {
-            $this->info('No option set: you have to set one of user_id,user_email,layer_id,app_id,osf_endpoint.');
+            $this->info('No option set: you have to set one of user_id,user_email,app_id,osf_endpoint.');
             $this->info('Use php artisan geohub:generate_hoqu_script --help to have more details.');
             return 0;
         }
