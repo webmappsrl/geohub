@@ -170,11 +170,11 @@ Route::name('api.')->group(function () {
             Route::get("/multiple", [EcTrackController::class, 'multiple'])->name('multiple');
             Route::put("/update/{id}", [EcTrackController::class, 'updateComputedData'])->name('update');
             Route::middleware('auth.jwt')
-                ->prefix('favorite')->name('favorite')->group(function () {
-                    Route::post("/add/{id}", [EcTrackController::class, 'addFavorite']);
-                    Route::post("/remove/{id}", [EcTrackController::class, 'removeFavorite']);
-                    Route::post("/toggle/{id}", [EcTrackController::class, 'toggleFavorite']);
-                    Route::get("/list", [EcTrackController::class, 'listFavorites']);
+                ->prefix('favorite')->name('favorite.')->group(function () {
+                    Route::post("/add/{id}", [EcTrackController::class, 'addFavorite'])->name('add');
+                    Route::post("/remove/{id}", [EcTrackController::class, 'removeFavorite'])->name('remove');
+                    Route::post("/toggle/{id}", [EcTrackController::class, 'toggleFavorite'])->name('toggle');
+                    Route::get("/list", [EcTrackController::class, 'listFavorites'])->name('list');
                 });
             Route::prefix('download')->group(function () {
                 Route::get("/{id}.geojson", [EditorialContentController::class, 'downloadEcGeojson'])->name('download.geojson');
