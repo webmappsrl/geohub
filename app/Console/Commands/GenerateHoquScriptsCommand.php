@@ -32,8 +32,8 @@ class GenerateHoquScriptsCommand extends Command
      * @var string
      */
     protected $description = 'It generates a bash scripts with proper single tasks to be executed.
-                              It saves file in storage/app/hoqu_scripts dir (created if not existing).
-                              Once it has been generated it can be exceuted.';
+    It saves file in storage/app/hoqu_scripts dir (created if not existing).
+    Once it has been generated it can be exceuted.';
 
     /**
      * Create a new command instance.
@@ -101,7 +101,7 @@ class GenerateHoquScriptsCommand extends Command
             $tracks = EcTrack::whereIn('id',array_keys($tracks))->get();
             $script_name .= 'app_'.$app->id;
         }
-        
+
         // OPTION OSF_ENDPOINT
         else if (!empty($this->option('osf_endpoint'))) {
             $osfs = OutSourceFeature::where('endpoint',$this->option('osf_endpoint'))->get();
