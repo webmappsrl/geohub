@@ -3,6 +3,7 @@
 namespace App\Nova\Actions;
 
 use App\Models\EcPoi;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
@@ -20,9 +21,10 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'updated_at',
             'name',
             'geohub_backend',
+            'lat',
+            'lng',
             'description',
             'excerpt',
-            'user_id',
             'feature_image',
             'contact_phone',
             'contact_email',
@@ -83,7 +85,13 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
         $featureImage = '';
         $image_gallery = '';
         $poi_type = '';
+        $lng = 0;
+        $lat = 0;
         
+        if ($poi->geometry) {
+            $lng = DB::select("SELECT ST_X(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
+            $lat = DB::select("SELECT ST_Y(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
+        }
         $geohub_backend = url('/').'/resources/ec-pois/'. $poi->id;
         if($poi->featureImage) {
             if (strpos($poi->featureImage->url,'ecmedia')){
@@ -105,9 +113,10 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi->updated_at,
             $poi->name,
             $geohub_backend,
+            $lat,
+            $lng,
             $poi->description,
             $poi->excerpt,
-            $poi->user_id,
             $featureImage,
             $poi->contact_phone,
             $poi->contact_email,
