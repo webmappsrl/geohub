@@ -14,8 +14,10 @@ use App\Models\TaxonomyPoiType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Storage;
 use Mockery\MockInterface;
 use Tests\TestCase;
+use Faker\Generator as Faker;
 
 class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 {
@@ -23,11 +25,21 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
     /**
      * @test
      */
-    public function when_method_sync_with_type_track_it_returns_array_of_ids()
+    public function when_method_sync_with_type_media_it_returns_array_of_ids()
     {
         $this->mock(HoquServiceProvider::class, function (MockInterface $mock) {
             $mock->shouldReceive('store')->atLeast(1);
         });
+
+        $faker = new Faker;
+        $storage = Storage::fake('s3-osfmedia-test');
+        $image = file_get_contents($faker->imageUrl(640, 480, 'animals', true)); 
+        $storage->put('first.jpg', $image);
+        Storage::shouldReceive('disk')
+        ->with('s3-osfmedia-test')
+        ->andReturn($storage)
+        ->shouldReceive('get')
+        ->andReturn($image);
 
         $source1 = OutSourcePoi::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
@@ -38,6 +50,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
                 'name' => 'first'
             ],
         ]);
+        
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',

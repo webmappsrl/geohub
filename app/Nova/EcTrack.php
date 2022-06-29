@@ -34,6 +34,7 @@ use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
@@ -80,6 +81,21 @@ class EcTrack extends Resource {
 
     public static function group() {
         return __('Editorial Content');
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->can('Admin')) {
+            return $query;
+        }
+        return $query->where('user_id', $request->user()->id);
     }
 
     /**
@@ -170,6 +186,19 @@ class EcTrack extends Resource {
 
                     return $url;
                 })->withMeta(['width' => 400]),
+
+                Text::make('Gallery',function(){
+                    if (count($this->ecMedia) == 0) {
+                        return 'No gallery';
+                    }
+                    
+                    $gallery = '';
+                    foreach ($this->ecMedia as $media) {
+                        $thumbnail = $media->thumbnail('150x150');
+                        $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                    }
+                    return $gallery;
+                })->asHtml()
             ],
             'Map' => [
                 WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -285,6 +314,12 @@ class EcTrack extends Resource {
                     Textarea::make(__('Excerpt'),'excerpt'),
                     Textarea::make('Description'),
                     ])->onlyOnForms(),
+                BelongsTo::make('Author','author',User::class)
+                    ->searchable()
+                    ->nullable()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('Admin', $this);
+                    })
             ],
             'Media' => [
 
@@ -350,10 +385,10 @@ class EcTrack extends Resource {
                 ]),
             ],
             'Taxonomies' => [
-                AttachMany::make('TaxonomyWheres'),
+                // AttachMany::make('TaxonomyWheres'),
                 AttachMany::make('TaxonomyActivities'),
                 AttachMany::make('TaxonomyTargets'),
-                AttachMany::make('TaxonomyWhens'),
+                // AttachMany::make('TaxonomyWhens'),
                 AttachMany::make('TaxonomyThemes'),
                 ],    
                 

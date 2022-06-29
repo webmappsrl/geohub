@@ -235,6 +235,12 @@ class EcTrack extends Model {
 
         $array = $this->setOutSourceValue();
 
+        if ($array['excerpt']) {
+            foreach ($array['excerpt'] as $lang => $val) {
+                $array['excerpt'][$lang] = strip_tags($val);
+            }
+        }
+        
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
@@ -321,7 +327,6 @@ class EcTrack extends Model {
         $array = $this->toArray();
         if(isset($this->out_source_feature_id)) {
             $keys = [
-                'name',
                 'description',
                 'excerpt',
                 'distance',
@@ -334,6 +339,8 @@ class EcTrack extends Model {
                 'duration_forward',
                 'duration_backward',
                 'ref',
+                'difficulty',
+                'cai_scale',
             ];
             foreach ($keys as $key) {
                 $array=$this->setOutSourceSingleValue($array,$key);

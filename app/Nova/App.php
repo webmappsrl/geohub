@@ -202,6 +202,12 @@ class App extends Resource {
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
+            BelongsTo::make('Author','author',User::class)
+                    ->searchable()
+                    ->nullable()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('Admin', $this);
+                    }),
         ];
     }
     protected function home_tab(): array {

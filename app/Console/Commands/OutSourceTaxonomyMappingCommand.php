@@ -95,27 +95,43 @@ class OutSourceTaxonomyMappingCommand extends Command
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
-                Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
-                $title = [];
-                $title = [
-                    explode('_',$c['wpml_current_locale'])[0] => $c['name'],
-                ];
-                $description = [
-                    explode('_',$c['wpml_current_locale'])[0] => $c['description'],
-                ];
-                if(!empty($c['wpml_translations'])) {
-                    foreach($c['wpml_translations'] as $lang){
-                        $locale = explode('_',$lang['locale']);
-                        $title[$locale[0]] = $lang['name']; 
-                        $cat_decode = $this->curlRequest($lang['source']);
-                        $description[$locale[0]] = $cat_decode['description']; 
+                if ($c['count'] > 0) {
+                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                    $title = [];
+                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                        $title = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+                        ];
+                        $description = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+                        ];
+                        if(!empty($c['wpml_translations'])) {
+                            foreach($c['wpml_translations'] as $lang){
+                                $locale = explode('_',$lang['locale']);
+                                $title[$locale[0]] = $lang['name']; 
+                                $cat_decode = $this->curlRequest($lang['source']);
+                                $description[$locale[0]] = $cat_decode['description']; 
+                            }
+                        }
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
+                    } else {
+                        $title = [
+                            'it' => $c['name'],
+                        ];
+                        $description = [
+                            'it' => $c['description'],
+                        ];
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
                     }
                 }
-                $input[$c['id']] = [
-                    'source_title' => $title,
-                    'source_description' => $description,
-                    'geohub_identifier' => '',
-                ];
             }
         }
         $this->content["poi_type"] = $input;
@@ -127,27 +143,43 @@ class OutSourceTaxonomyMappingCommand extends Command
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
-                Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
-                $title = [];
-                $title = [
-                    explode('_',$c['wpml_current_locale'])[0] => $c['name'],
-                ];
-                $description = [
-                    explode('_',$c['wpml_current_locale'])[0] => $c['description'],
-                ];
-                if(!empty($c['wpml_translations'])) {
-                    foreach($c['wpml_translations'] as $lang){
-                        $locale = explode('_',$lang['locale']);
-                        $title[$locale[0]] = $lang['name']; 
-                        $cat_decode = $this->curlRequest($lang['source']);
-                        $description[$locale[0]] = $cat_decode['description']; 
+                if ($c['count'] > 0) {
+                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                        $title = [];
+                        $title = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+                        ];
+                        $description = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+                        ];
+                        if(!empty($c['wpml_translations'])) {
+                            foreach($c['wpml_translations'] as $lang){
+                                $locale = explode('_',$lang['locale']);
+                                $title[$locale[0]] = $lang['name']; 
+                                $cat_decode = $this->curlRequest($lang['source']);
+                                $description[$locale[0]] = $cat_decode['description']; 
+                            }
+                        }
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
+                    } else {
+                        $title = [
+                            'it' => $c['name'],
+                        ];
+                        $description = [
+                            'it' => $c['description'],
+                        ];
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
                     }
                 }
-                $input[$c['id']] = [
-                    'source_title' => $title,
-                    'source_description' => $description,
-                    'geohub_identifier' => '',
-                ];
             }
         }
         $this->content["activity"] = $input;

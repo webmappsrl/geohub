@@ -5,7 +5,12 @@ if (!function_exists('icon_mapping')) {
         $mapping = $array = [
             'hiking' => 'hiking-15',
             'mtb' => 'cyc_mtb',
-            'cycling' => 'cyc_bici'
+            'cycling' => 'cyc_bici',
+            'gravel' => 'cyc_gravel',
+            'road-bike' => 'cyc_bici-da-corsa',
+            'skitouring' => 'cyc_trekking2',
+            'walking' => 'cyc_trekking1',
+            'running' => 'hiking-15',
         ];
         return $mapping[$slug];
     }

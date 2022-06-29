@@ -187,6 +187,17 @@ class HoquServiceProvider extends ServiceProvider {
         return $code;
     }
 
+
+    /**
+     * If true it skips HOQU store.
+     *
+     * @var boolean
+     */
+    private static $prevent_store=false; 
+    public  function setPreventStore($value=true) {
+        self::$prevent_store = $value;
+    }
+
     /**
      * Perform a store operation on HOQU
      *
@@ -200,18 +211,32 @@ class HoquServiceProvider extends ServiceProvider {
      */
     public function store(string $job, array $params): int {
 
-        if (env('APP_ENV') == 'local' || env('APP_ENV') == 'testing')
-            return 0;
-            
         $instance = config('hoqu.geohub_domain');
-
-        Log::debug('Storing a new job to HOQU:');
 
         $payload = [
             'instance' => $instance,
             'job' => $job,
             'parameters' => $params,
         ];
+
+        $id = 'ND';
+        if(isset($params['id'])) {
+            $id = $params['id'];
+        }
+
+        Log::debug("HOQU/store -> ID:$id JOB:$job INST.:$instance");
+        if (env('APP_ENV') == 'local') {
+            Log::debug('Skipping HOQU/store because you are in local ENV');
+            return 0;            
+        }
+        if (env('APP_ENV') == 'testing') {
+            Log::debug('Skipping HOQU/store because you are in tesing ENV');
+            return 0;            
+        }
+        if (self::$prevent_store) {
+            Log::debug('Skipping HOQU/store because set_prevent is TRUE');
+            return 0;            
+        }
 
         $ch = $this->_getCurl(STORE_ENDPOINT, $payload);
         $result = curl_exec($ch);
@@ -224,4 +249,5 @@ class HoquServiceProvider extends ServiceProvider {
 
         return $code;
     }
+
 }
