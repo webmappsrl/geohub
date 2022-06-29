@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\DownloadExcelEcTrackAction;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Metrics\EcTracksMyValue;
@@ -494,7 +495,7 @@ class EcTrack extends Resource {
     public function actions(Request $request): array {
         return [
             new RegenerateEcTrack(),
-            (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
+            (new DownloadExcelEcTrackAction)->allFields()->except('geometry')->withHeadings(),
         ];
     }
 

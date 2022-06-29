@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\ExportEcpoi;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
@@ -634,7 +635,7 @@ HTML;
      */
     public function actions(Request $request) {
         return [
-            (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
+            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
         ];
     }
 }
