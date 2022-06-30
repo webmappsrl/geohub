@@ -50,7 +50,6 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             'related_url',
             'not_accessible',
             'not_accessible_message',
-            'Author',
             'image_gallery',
             'activity',
             'theme',
