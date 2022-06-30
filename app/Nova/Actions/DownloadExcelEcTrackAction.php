@@ -24,8 +24,6 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             'geohub_frontend',
             'description',
             'excerpt',
-            'source_id',
-            'import_method',
             'source',
             'distance_comp',
             'user_id',
@@ -78,7 +76,7 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
         $wheres = '';
         $whens = '';
         $targets = '';
-        
+
         $geohub_backend = url('/').'/resources/ec-tracks/'. $track->id;
         $geohub_frontend = url('/').'/track/'. $track->id;
         if($track->featureImage) {
@@ -107,6 +105,7 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             $targets = implode(',',$track->taxonomyTargets->pluck('name')->toArray());   
         }
 
+        $track = (object) $this->setOutSourceValue($track);
         return [
             $track->id,
             $track->created_at,
@@ -116,8 +115,6 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             $geohub_frontend,
             $track->description,
             $track->excerpt,
-            $track->source_id,
-            $track->import_method,
             $track->source,
             $track->distance_comp,
             $track->user_id,
@@ -144,7 +141,6 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             $track->related_url,
             $track->not_accessible,
             $track->not_accessible_message,
-            $track->Author,
             $image_gallery,
             $activities,
             $themes,
@@ -152,5 +148,61 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             $whens,
             $targets,
         ];
+    }
+
+    private function setOutSourceValue($track):array {
+        $array = $track->toArray();
+        if(isset($track->out_source_feature_id)) {
+            $keys = [
+                'description',
+                'excerpt',
+                'distance',
+                'ascent',
+                'descent',
+                'ele_min',
+                'ele_max',
+                'ele_from',
+                'ele_to',
+                'duration_forward',
+                'duration_backward',
+                'ref',
+                'difficulty',
+                'cai_scale',
+            ];
+            foreach ($keys as $key) {
+                $array= $this->setOutSourceSingleValue($array,$key,$track);
+            }
+        }
+        return $array;
+    }
+
+    private function setOutSourceSingleValue($array,$varname,$track):array {
+        if($this->isReallyEmpty($array[$varname])) {
+            if(isset($track->outSourceTrack->tags[$varname])) {
+                $array[$varname] = $track->outSourceTrack->tags[$varname];
+            }
+        }
+        return $array;
+    }
+
+    private function isReallyEmpty($val): bool {
+        if(is_null($val)) {
+            return true;
+        }
+        if(empty($val)) {
+            return true;
+        }
+        if(is_array($val)) {
+            if(count($val)==0) {
+                return true;
+            }
+            foreach($val as $lang => $cont) {
+                if(!empty($cont)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
