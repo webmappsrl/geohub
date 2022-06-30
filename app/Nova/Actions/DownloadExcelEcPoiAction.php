@@ -107,6 +107,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi_type = implode(',',$poi->taxonomyPoiTypes->pluck('name')->toArray());
         }
 
+        $poi = (object) $this->setOutSourceValue($poi);
         return [
             $poi->id,
             $poi->created_at,
@@ -165,5 +166,60 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $image_gallery,
             $poi_type,
         ];
+    }
+
+    private function setOutSourceValue($poi):array {
+        $array = $poi->toArray();
+        if(isset($poi->out_source_feature_id)) {
+            $keys = [
+                'description',
+                'excerpt',
+                'feature_image',
+                'contact_phone',
+                'contact_email',
+                'audio',
+                'related_url',
+                'ele',
+                'addr_street',
+                'addr_housenumber',
+                'addr_postcode',
+                'addr_locality',
+                'opening_hours',
+            ];
+            foreach ($keys as $key) {
+                $array= $this->setOutSourceSingleValue($array,$key,$poi);
+            }
+        }
+        return $array;
+    }
+
+    private function setOutSourceSingleValue($array,$varname,$poi):array {
+        if($this->isReallyEmpty($array[$varname])) {
+            if(isset($poi->outSourcePoi->tags[$varname])) {
+                $array[$varname] = $poi->outSourcePoi->tags[$varname];
+            }
+        }
+        return $array;
+    }
+
+    private function isReallyEmpty($val): bool {
+        if(is_null($val)) {
+            return true;
+        }
+        if(empty($val)) {
+            return true;
+        }
+        if(is_array($val)) {
+            if(count($val)==0) {
+                return true;
+            }
+            foreach($val as $lang => $cont) {
+                if(!empty($cont)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
