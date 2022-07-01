@@ -117,7 +117,7 @@ class OutSourceImporterCommand extends Command
         $features_list = $features->getList();
         if ($features_list) {
             $count = 1;
-            foreach ($features_list as $id => $last_modified) {
+            foreach ($features_list as $id) {
                 Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureOSM2CAI($this->type,$this->endpoint,$id);
                 $OSF_id = $OSF->importFeature();
