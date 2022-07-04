@@ -73,13 +73,12 @@ class App extends Model {
     }
     
     public function getAllPois() {
-        $themes = $this->taxonomyThemes();
-
+        $themes = $this->taxonomyThemes()->get();
+  
         $pois = [];
-        foreach ( $themes as $theme ) {
-            array_push($pois, $theme->ecPois());
-        }
+        $themes->each(function ($tax,$pois) { array_push($pois, $tax->ecPois()->get());});
         return $pois;
+        
     }
 
 

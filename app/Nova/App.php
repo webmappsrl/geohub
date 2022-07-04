@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -24,6 +25,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Nova\Multiselect\Multiselect;
+use NovaAttachMany\AttachMany;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
@@ -137,7 +139,9 @@ class App extends Resource {
   
   
     private function detail() {
-        return [ (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections()))->withToolbar()];
+        return [ 
+            (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections()))->withToolbar(),
+        ];
     }
     public function create() {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
@@ -166,7 +170,9 @@ class App extends Resource {
     }
     public function update() {
         
-        return [ (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections()))];
+        return [ 
+            (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections())),
+        ];
     }
 
     public function sections() {
@@ -180,6 +186,7 @@ class App extends Resource {
                 'LANGUAGES' => $this->languages_tab(),
                 'MAP' => $this->map_tab(),
                 'OPTIONS' => $this->options_tab(),
+                'POIS' => $this->pois_tab(),
                 'ROUTING' => $this->routing_tab(),
                 'TABLE' => $this->table_tab(),
                 'THEME' => $this->theme_tab(),
@@ -188,7 +195,6 @@ class App extends Resource {
     }
 
     protected function app_tab(): array {
-
         return [
             Select::make(__('API type'), 'api')->options(
                 [
@@ -210,6 +216,7 @@ class App extends Resource {
                     }),
         ];
     }
+
     protected function home_tab(): array {
         return [
             Code::Make('Config Home')->language('json')->rules('json'),
@@ -322,6 +329,22 @@ class App extends Resource {
                 ->falseValue('Off')
                 ->default(true)
                 ->onlyOnForms(),
+            Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+
+        ];
+    }
+    
+    protected function pois_tab(): array {
+        return [
+            Toggle::make(__('Show Pois Layer on APP'), 'app_pois_api_layer')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
             NovaSliderField::make(__('Poi Min Radius'), 'poi_min_radius')
                 ->min(0.1)
                 ->max(3.5)
@@ -358,11 +381,6 @@ class App extends Resource {
                 ->default(10.5)
                 ->interval(0.1)
                 ->onlyOnForms(),
-            Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
 
             Number::make(__('Poi Min Radius'), 'poi_min_radius')->onlyOnDetail(),
             Number::make(__('Poi Max Radius'), 'poi_max_radius')->onlyOnDetail(),
@@ -370,6 +388,12 @@ class App extends Resource {
             Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
             Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
             Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
+            Text::make('Themes',function(){
+                if($this->taxonomyThemes()->count() >0) {
+                    return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                }
+                return 'No Themes';
+            })->onlyOnDetail(),
         ];
     }
 
