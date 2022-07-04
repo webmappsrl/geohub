@@ -825,4 +825,25 @@ EOT;
 
         return $bbox;
     }
+
+    /**
+     * Display all pois of the specified resource.
+     *
+     * @param int $id the app id in the database
+     *
+     * @return JsonResponse
+     */
+    public function pois(int $id) {
+      $app = App::find($id);
+      if (is_null($app)) {
+          return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+      }
+
+      $data = [
+        "type" => "FeatureCollection",
+      ];
+
+      $data['features'] = $app->getAllPoisGeojson();
+      return response()->json($data);
+  }
 }

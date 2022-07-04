@@ -237,4 +237,13 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
         });
     });
+
+    /**
+     * API VERSION 1 (/api/v1)
+     */
+    Route::prefix('v1')->name('v1.')->group(function () {
+        Route::prefix('app')->name('v1.app.')->group(function () {
+            Route::get("/{id}/pois.geojson", [AppController::class, 'pois'])->name('app_pois');
+        });
+    });
 });

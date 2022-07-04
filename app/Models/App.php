@@ -72,13 +72,16 @@ class App extends Model {
         return $this->author->ecTracks();
     }
     
-    public function getAllPois() {
+    public function getAllPoisGeojson() {
         $themes = $this->taxonomyThemes()->get();
   
         $pois = [];
-        $themes->each(function ($tax,$pois) { array_push($pois, $tax->ecPois()->get());});
+        foreach ( $themes as $theme ) {
+            foreach( $theme->ecPois()->get() as $poi) {
+                array_push($pois, $poi->getGeojson());
+            }
+        }
         return $pois;
-        
     }
 
 
