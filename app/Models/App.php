@@ -71,6 +71,16 @@ class App extends Model {
     public function ecTracks(): HasMany {
         return $this->author->ecTracks();
     }
+    
+    public function getAllPois() {
+        $themes = $this->taxonomyThemes();
+
+        $pois = [];
+        foreach ( $themes as $theme ) {
+            array_push($pois, $theme->ecPois());
+        }
+        return $pois;
+    }
 
 
     /**
