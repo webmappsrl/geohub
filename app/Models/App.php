@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -44,6 +45,10 @@ class App extends Model {
 
     public function layers() {
         return $this->hasMany(Layer::class);
+    }
+
+    public function taxonomyThemes(): MorphToMany {
+        return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
     public function getGeojson() {

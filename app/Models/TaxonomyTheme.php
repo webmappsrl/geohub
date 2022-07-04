@@ -59,6 +59,14 @@ class TaxonomyTheme extends Model {
     public function ecTracks() {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_themeable');
     }
+    
+    public function ecPois() {
+        return $this->morphedByMany(EcPoi::class, 'taxonomy_themeable');
+    }
+    
+    public function apps() {
+        return $this->morphedByMany(App::class, 'taxonomy_themeable');
+    }
 
     public function layers(): MorphToMany {
         return $this->morphedByMany(Layer::class, 'taxonomy_themeable');
