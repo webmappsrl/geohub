@@ -1,0 +1,243 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GEOHUB",
+        "description": "Api documentation",
+        "contact": {
+            "email": "info@webmapp.it"
+        },
+        "version": "1.0.0",
+        "x-logo": {
+            "url": "http://localhost:8000/images/webmapp-logo-colored.png"
+        }
+    },
+    "paths": {
+        "/api/v1/app/{id}/pois.geojson": {
+            "get": {
+                "tags": [
+                    "pois"
+                ],
+                "operationId": "504b7a6ae761e16d85c7bfd550d50ebf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The internal ID of the APP",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a Feature Collection of pois related to the app by Theme taxonomy",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "type": {
+                                            "description": "FeatureCollection geojson",
+                                            "type": "string"
+                                        },
+                                        "features": {
+                                            "description": "An array of features",
+                                            "properties": {
+                                                "": {
+                                                    "properties": {
+                                                        "type": {
+                                                            "description": "Feature",
+                                                            "type": "string"
+                                                        },
+                                                        "properties": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "description": "Internal POI ID",
+                                                                    "type": "integer"
+                                                                },
+                                                                "created_at": {
+                                                                    "description": "Creation date",
+                                                                    "type": "string",
+                                                                    "format": "date"
+                                                                },
+                                                                "name": {
+                                                                    "description": "Name of the feature in different languages",
+                                                                    "type": "object"
+                                                                },
+                                                                "description": {
+                                                                    "description": "Description of the feature in different languages",
+                                                                    "type": "object"
+                                                                },
+                                                                "excerpt": {
+                                                                    "description": "Excerpt of the feature in different languages",
+                                                                    "type": "object"
+                                                                },
+                                                                "user_id": {
+                                                                    "description": "Internal ID of the owner user",
+                                                                    "type": "integer"
+                                                                },
+                                                                "out_source_feature_id": {
+                                                                    "description": "Internal ID of the corrispondent feature in OSF table",
+                                                                    "type": "integer"
+                                                                },
+                                                                "noDetails": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "noInteraction": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "access_mobility_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "access_hearing_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "access_vision_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "access_cognitive_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "access_food_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "reachability_by_bike_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "reachability_on_foot_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "reachability_by_car_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "reachability_by_public_transportation_check": {
+                                                                    "description": "",
+                                                                    "type": "boolean"
+                                                                },
+                                                                "geojson_url": {
+                                                                    "description": "Geojson API of the feature",
+                                                                    "type": "string"
+                                                                },
+                                                                "gpx_url": {
+                                                                    "description": "GPX API of the feature",
+                                                                    "type": "string"
+                                                                },
+                                                                "kml_url": {
+                                                                    "description": "KML API of the feature",
+                                                                    "type": "string"
+                                                                },
+                                                                "taxonomy": {
+                                                                    "description": "array of taxonomies related to this feature with internal taxonomy ID",
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        },
+                                                        "geometry": {
+                                                            "properties": {
+                                                                "type": {
+                                                                    "description": "Postgis geometry type: POINT",
+                                                                    "type": "string"
+                                                                },
+                                                                "coordinates": {
+                                                                    "description": "POINT coordinates (WGS84)",
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "type": "FeatureCollection",
+                                        "features": [
+                                            {
+                                                "type": "Feature",
+                                                "properties": {
+                                                    "id": 531,
+                                                    "created_at": "2022-06-23T08:36:21.000000Z",
+                                                    "updated_at": "2022-07-04T16:37:27.000000Z",
+                                                    "name": {
+                                                        "it": "MERCADO DE LA LONJA DEL BARRANCO",
+                                                        "de": null
+                                                    },
+                                                    "description": {
+                                                        "en": "<p>This building was conceived to host the Fish Market of Seville",
+                                                        "it": "<p>Questo edificio è stato concepito per ospitare il mercato del pesce di Siviglia"
+                                                    },
+                                                    "excerpt": {
+                                                        "en": "This building was conceived to host the Fish Market",
+                                                        "it": "Questo edificio è stato concepito per ospitare il mercato"
+                                                    },
+                                                    "user_id": 17455,
+                                                    "out_source_feature_id": 3263,
+                                                    "noDetails": false,
+                                                    "noInteraction": false,
+                                                    "access_mobility_check": false,
+                                                    "access_hearing_check": false,
+                                                    "access_vision_check": false,
+                                                    "access_cognitive_check": false,
+                                                    "access_food_check": false,
+                                                    "reachability_by_bike_check": false,
+                                                    "reachability_on_foot_check": false,
+                                                    "reachability_by_car_check": false,
+                                                    "reachability_by_public_transportation_check": false,
+                                                    "geojson_url": "https://geohub.webmapp.it/api/ec/poi/download/531.geojson",
+                                                    "gpx_url": "https://geohub.webmapp.it/api/ec/poi/download/531.gpx",
+                                                    "kml_url": "https://geohub.webmapp.it/api/ec/poi/download/531.kml",
+                                                    "taxonomy": {
+                                                        "theme": [
+                                                            9
+                                                        ],
+                                                        "poi_type": [
+                                                            35,
+                                                            37,
+                                                            38,
+                                                            39,
+                                                            47,
+                                                            49
+                                                        ]
+                                                    }
+                                                },
+                                                "geometry": {
+                                                    "type": "Point",
+                                                    "coordinates": [
+                                                        -6.002129316,
+                                                        37.387627623
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "pois",
+            "description": "Feature Collection"
+        }
+    ]
+}
