@@ -460,6 +460,23 @@ class SyncEcFromOutSource
                         }
                     }
                     
+                    // Add OSF tags properties to ECPOI
+                    Log::info('Attaching EC POI infos.');
+                    if (isset($out_source->tags['address_complete']))
+                        $ec_poi->addr_complete = $out_source->tags['address_complete'];
+                    if (isset($out_source->tags['contact_phone']))
+                        $ec_poi->contact_phone = $out_source->tags['contact_phone'];
+                    if (isset($out_source->tags['contact_email']))
+                        $ec_poi->contact_email = $out_source->tags['contact_email'];
+                    if (isset($out_source->tags['capacity']))
+                        $ec_poi->capacity = $out_source->tags['capacity'];
+                    if (isset($out_source->tags['stars']))
+                        $ec_poi->stars = $out_source->tags['stars'];
+                    if (isset($out_source->tags['related_url']))
+                        $ec_poi->related_url = $out_source->tags['related_url'];
+                    if (isset($out_source->tags['code']))
+                        $ec_poi->code = $out_source->tags['code'];
+
                     // Attach EcMedia Gallery to poi
                     if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
                         Log::info('Attaching EC POI IMAGE_GALLERY.');
