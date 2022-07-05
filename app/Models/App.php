@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -46,6 +47,10 @@ class App extends Model {
         return $this->hasMany(Layer::class);
     }
 
+    public function taxonomyThemes(): MorphToMany {
+        return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
+    }
+
     public function getGeojson() {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
@@ -65,6 +70,20 @@ class App extends Model {
 
     public function ecTracks(): HasMany {
         return $this->author->ecTracks();
+    }
+    
+    public function getAllPoisGeojson() {
+        $themes = $this->taxonomyThemes()->get();
+  
+        $pois = [];
+        foreach ( $themes as $theme ) {
+            foreach( $theme->ecPois()->get() as $poi) {
+                $item = $poi->getGeojson();
+                unset($item['properties']['pivot']);
+                array_push($pois, $item);
+            }
+        }
+        return $pois;
     }
 
 

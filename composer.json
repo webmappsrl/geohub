@@ -20,6 +20,7 @@
     "chriskonnertz/open-graph": "^2.0",
     "christiankuri/laravel-favorite": "^1.4",
     "cloudcake/nova-fixed-bars": "^1.1",
+    "darkaonline/l5-swagger": "^8.3",
     "davidpiesse/nova-toggle": "^0.0.8",
     "digital-creative/nova-mega-filter": "^0.6.0",
     "dillingham/nova-attach-many": "^1.3",
