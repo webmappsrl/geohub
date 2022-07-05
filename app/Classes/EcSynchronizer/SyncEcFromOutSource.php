@@ -442,6 +442,12 @@ class SyncEcFromOutSource
                         $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                     }
 
+                    // Attach Themes to poi
+                    if ($this->theme) {
+                        Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
+                        $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier',$this->theme)->first());
+                    }
+
                     // Attach feature image to poi
                     if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                         Log::info('Attaching EC POI FEATURE_IMAGE.');

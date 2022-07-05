@@ -20,6 +20,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebmappAppController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
+use App\Http\Controllers\V1\AppAPIController;
 use App\Http\Resources\UgcMediaCollection;
 use App\Http\Resources\UgcPoiCollection;
 use App\Http\Resources\UgcTrackCollection;
@@ -235,6 +236,15 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/config", [AppController::class, 'config'])->name('config');
             Route::get("/{id}/vector_style", [AppController::class, 'vectorStyle'])->name('vector_style');
             Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
+        });
+    });
+
+    /**
+     * API VERSION 1 (/api/v1)
+     */
+    Route::prefix('v1')->name('v1.')->group(function () {
+        Route::prefix('app')->name('v1.app.')->group(function () {
+            Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
         });
     });
 });
