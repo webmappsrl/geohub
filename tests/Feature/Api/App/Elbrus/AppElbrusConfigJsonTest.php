@@ -214,12 +214,6 @@ class AppElbrusConfigJsonTest extends TestCase {
             'start_url' => 'startUrl',
             'show_edit_link' => 'showEditLink',
             'skip_route_index_download' => 'skipRouteIndexDownload',
-            'poi_min_radius' => 'poiMinRadius',
-            'poi_max_radius' => 'poiMaxRadius',
-            'poi_icon_zoom' => 'poiIconZoom',
-            'poi_icon_radius' => 'poiIconRadius',
-            'poi_min_zoom' => 'poiMinZoom',
-            'poi_label_min_zoom' => 'poiLabelMinZoom',
             'show_track_ref_label' => 'showTrackRefLabel',
 
         ];
