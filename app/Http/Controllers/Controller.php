@@ -12,13 +12,13 @@ use Illuminate\Routing\Controller as BaseController;
  *      version="1.0.0",
  *      x={
  *          "logo": {
- *              "url": "http://localhost:8000/assets/images/logo_sosec.jpg"
+ *              "url": "http://localhost:8000/images/webmapp-logo-colored.png"
  *          }
  *      },
- *      title="OSM2CAI",
+ *      title="GEOHUB",
  *      description="Api documentation",
  *      @OA\Contact(
- *          email="catastorei@cai.it"
+ *          email="info@webmapp.it"
  *      ),
  * )
  */
