@@ -19,6 +19,7 @@ class GenerateHoquScriptsCommand extends Command
      * @var string
      */
     protected $signature = 'geohub:generate_hoqu_script
+                            {name : file name}
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command} 
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command} 
                             {--app_id= : All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
@@ -52,6 +53,8 @@ class GenerateHoquScriptsCommand extends Command
      */
     public function handle()
     {
+        // Mandatory parameter name used for file name
+        $name = $this->argument('name');
 
         // Build tracks / poi / media collections
         $tracks = $pois = $media = [];
@@ -121,7 +124,7 @@ class GenerateHoquScriptsCommand extends Command
                 return 0;
             }
 
-            $script_name .= 'osf_'.preg_replace("(^https?://)","",$this->option('osf_endpoint'));
+            $script_name .= $name;
         }
         else {
             $this->info('No option set: you have to set one of user_id,user_email,app_id,osf_endpoint.');
