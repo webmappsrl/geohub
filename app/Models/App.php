@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,10 +21,12 @@ use Illuminate\Support\Facades\Log;
  * @property string app_id
  * @property string available_languages
  */
-class App extends Model {
+class App extends Model
+{
     use HasFactory;
 
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::booted();
 
         static::creating(function ($app) {
@@ -39,19 +42,23 @@ class App extends Model {
         });
     }
 
-    public function author(): BelongsTo {
+    public function author(): BelongsTo
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function layers() {
+    public function layers()
+    {
         return $this->hasMany(Layer::class);
     }
 
-    public function taxonomyThemes(): MorphToMany {
+    public function taxonomyThemes(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function getGeojson() {
+    public function getGeojson()
+    {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
         if (!is_null($tracks)) {
@@ -68,16 +75,18 @@ class App extends Model {
         }
     }
 
-    public function ecTracks(): HasMany {
+    public function ecTracks(): HasMany
+    {
         return $this->author->ecTracks();
     }
-    
-    public function getAllPoisGeojson() {
+
+    public function getAllPoisGeojson()
+    {
         $themes = $this->taxonomyThemes()->get();
-  
+
         $pois = [];
-        foreach ( $themes as $theme ) {
-            foreach( $theme->ecPois()->get() as $poi) {
+        foreach ($themes as $theme) {
+            foreach ($theme->ecPois()->get() as $poi) {
                 $item = $poi->getGeojson();
                 unset($item['properties']['pivot']);
                 array_push($pois, $item);
@@ -90,17 +99,19 @@ class App extends Model {
     /**
      * @return Collection
      */
-    public function getEcTracks(): Collection {
-        if($this->api == 'webmapp') {
+    public function getEcTracks(): Collection
+    {
+        if ($this->api == 'webmapp') {
             return EcTrack::all();
         }
-        return EcTrack::where('user_id',$this->user_id)->get();
+        return EcTrack::where('user_id', $this->user_id)->get();
     }
 
     /**
      * @todo: differenziare la tassonomia "taxonomyActivities" !!!
      */
-    public function listTracksByTerm($term, $taxonomy_name): array {
+    public function listTracksByTerm($term, $taxonomy_name): array
+    {
         switch ($taxonomy_name) {
             case 'activity':
                 $query = EcTrack::where('user_id', $this->user_id)
@@ -151,25 +162,26 @@ class App extends Model {
     /**
      * Index all APP tracks using index name: app_id
      */
-    public function elasticIndex() {
-        
-        if(count($this->getTracksFromLayer())>0) {
-            $index_name='app_'.$this->id;
+    public function elasticIndex()
+    {
+
+        if (count($this->getTracksFromLayer()) > 0) {
+            $index_name = 'app_' . $this->id;
             foreach ($this->getTracksFromLayer() as $tid => $layers) {
                 $t = EcTrack::find($tid);
-                $t->elasticIndex($index_name,$layers);
+                $t->elasticIndex($index_name, $layers);
             }
-        }
-        else {
-            Log::info('No tracks in APP '.$this->id);
+        } else {
+            Log::info('No tracks in APP ' . $this->id);
         }
     }
     /**
      * Delete APP INDEX
      */
-    public function elasticIndexDelete() {
+    public function elasticIndexDelete()
+    {
         Log::info('Deleting Elastic Indexing APP ' . $this->id);
-        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
+        $url = config('services.elastic.host') . '/geohub_app_' . $this->id;
         Log::info($url);
 
         $curl = curl_init();
@@ -184,23 +196,28 @@ class App extends Model {
             CURLOPT_CUSTOMREQUEST => 'DELETE',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic '.config('services.elastic.key')
+                'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-
+        if (env('ELASTIC_DEV')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
         $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
         Log::info($response);
         curl_close($curl);
-
     }
     /**
      * Delete APP INDEX
      */
-    public function elasticIndexCreate() {
+    public function elasticIndexCreate()
+    {
         Log::info('Creating Elastic Indexing APP ' . $this->id);
 
         // Create Index
-        $url=config('services.elastic.host').'/geohub_app_'.$this->id;
+        $url = config('services.elastic.host') . '/geohub_app_' . $this->id;
         $posts = '
                {
                   "mappings": {
@@ -214,13 +231,16 @@ class App extends Model {
                     }
                   }
                }';
-        $this->_curlExec($url,'PUT',$posts);
+        try {
+            $this->_curlExec($url, 'PUT', $posts);
+        } catch (Exception $e) {
+            Log::info("\n ERROR: " . $e);
+        }
 
         // Settings
-        $url=config('services.elastic.host').'/geohub_app_'.$this->id.'/_settings';
+        $url = config('services.elastic.host') . '/geohub_app_' . $this->id . '/_settings';
         $posts = '{"max_result_window": 50000}';
-        $this->_curlExec($url,'PUT',$posts);
-
+        $this->_curlExec($url, 'PUT', $posts);
     }
 
     /**
@@ -228,7 +248,8 @@ class App extends Model {
      * @param string $type
      * @param string $posts
      */
-    private function _curlExec(string $url, string $type,string $posts): void {
+    private function _curlExec(string $url, string $type, string $posts): void
+    {
         Log::info("CURL EXEC TYPE:$type URL:$url");
 
         $curl = curl_init();
@@ -244,10 +265,16 @@ class App extends Model {
             CURLOPT_POSTFIELDS => $posts,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic '.config('services.elastic.key')
+                'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-        curl_exec($curl);
+        if (env('ELASTIC_DEV')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
         curl_close($curl);
     }
 
@@ -263,22 +290,23 @@ class App extends Model {
      * 
      * @return array
      */
-    public function getTracksFromLayer(): array {
+    public function getTracksFromLayer(): array
+    {
         $tracks = [];
-        if($this->layers->count()>0) {
-            foreach($this->layers as $layer) {
-                $taxonomies = ['Themes','Activities','Wheres'];
-                foreach($taxonomies as $taxonomy) {
-                    $taxonomy = 'taxonomy'.$taxonomy;
-                    if($layer->$taxonomy->count() >0) {
-                        foreach($layer->$taxonomy as $term) {
-                            if($term->ecTracks()->where('user_id',$this->user_id)->get()->count()>0) {
-                                foreach($term->ecTracks()->where('user_id',$this->user_id)->get() as $track) {
-                                    $tracks[$track->id][]=$layer->id;
+        if ($this->layers->count() > 0) {
+            foreach ($this->layers as $layer) {
+                $taxonomies = ['Themes', 'Activities', 'Wheres'];
+                foreach ($taxonomies as $taxonomy) {
+                    $taxonomy = 'taxonomy' . $taxonomy;
+                    if ($layer->$taxonomy->count() > 0) {
+                        foreach ($layer->$taxonomy as $term) {
+                            if ($term->ecTracks()->where('user_id', $this->user_id)->get()->count() > 0) {
+                                foreach ($term->ecTracks()->where('user_id', $this->user_id)->get() as $track) {
+                                    $tracks[$track->id][] = $layer->id;
                                 }
-                            } 
+                            }
                         }
-                    }    
+                    }
                 }
             }
         }
