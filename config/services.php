@@ -31,8 +31,8 @@ return [
     ],
 
     'elastic' => [
-        'host' => env('ELASTIC_DEV') ? env('ELASTIC_HOST_DEV') :  env('ELASTIC_HOST'),
-        'key' => env('ELASTIC_DEV') ? env('ELASTIC_KEY_DEV') : env('ELASTIC_KEY')
+        'host' => env('ELASTIC_HOST'),
+        'key' => env('ELASTIC_KEY')
     ]
 
 ];

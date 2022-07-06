@@ -665,7 +665,7 @@ class EcTrack extends Model
                 'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-        if (env('ELASTIC_DEV')) {
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
         $response = curl_exec($curl);

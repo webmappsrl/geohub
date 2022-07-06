@@ -35,7 +35,7 @@ class EcTrackElasticObserver
 
         //$hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
 
-        $host = env('ELASTIC_DEV') ? env('ELASTIC_HTTP_HOST_DEV') : env('ELASTIC_HTTP_HOST');
+        $host = env('ELASTIC_HTTP_HOST');
         $hosts = [$host];
         $client = ClientBuilder::create()->setHosts($hosts)->build();
 
@@ -56,7 +56,7 @@ class EcTrackElasticObserver
         $curl = curl_init();
         // https://elastic.sis-te.com/geohub
         //             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
-        $CURLOPT_URL = env('ELASTIC_DEV') ? env('ELASTIC_HOST_DEV') : env('ELASTIC_HOST');
+        $CURLOPT_URL = env('ELASTIC_HOST');
         curl_setopt_array($curl, array(
             //    CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/' . $ecTrack->id,
             CURLOPT_URL =>  $CURLOPT_URL . '/geohub/_doc/' . $ecTrack->id,
@@ -76,11 +76,11 @@ class EcTrackElasticObserver
 }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic ' . env('ELASTIC_DEV') ? env('ELASTIC_KEY_DEV') : env('ELASTIC_KEY'),
+                'Authorization: Basic ' . env('ELASTIC_KEY'),
             ),
         ));
 
-        if (env('ELASTIC_DEV')) {
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
         $response = curl_exec($curl);
