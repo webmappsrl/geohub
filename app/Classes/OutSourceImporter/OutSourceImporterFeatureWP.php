@@ -300,14 +300,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['capacity'] = $poi['capacity'];
         if (isset($poi['stars']))
             $this->tags['stars'] = $poi['stars'];
-        if (isset($poi['n7webmap_rpt_related_url']) && $poi['n7webmap_rpt_related_url']){
-            $related_url_name = parse_url($poi['n7webmap_rpt_related_url']);
-            $host = $poi['n7webmap_rpt_related_url'];
-            if (isset($related_url_name['host']) && $related_url_name['host']) {
-                $host = $related_url_name['host'];
-            }
-            $this->tags['related_url'][$host] = $poi['n7webmap_rpt_related_url'];
-        }
+        if (isset($poi['n7webmap_rpt_related_url']))
+            $this->tags['related_url'] = $poi['n7webmap_rpt_related_url'];
         if (isset($poi['ele']))
             $this->tags['ele'] = $poi['ele'];
         if (isset($poi['code']))
