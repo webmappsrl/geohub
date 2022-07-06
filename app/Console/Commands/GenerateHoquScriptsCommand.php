@@ -19,6 +19,7 @@ class GenerateHoquScriptsCommand extends Command
      * @var string
      */
     protected $signature = 'geohub:generate_hoqu_script
+                            {name : unique file name (.sh extention will be automatically added)}
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command} 
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command} 
                             {--app_id= : All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
@@ -52,11 +53,11 @@ class GenerateHoquScriptsCommand extends Command
      */
     public function handle()
     {
+        // Mandatory parameter name used for file name
+        $script_name = $this->argument('name');
 
         // Build tracks / poi / media collections
         $tracks = $pois = $media = [];
-
-        $script_name = Carbon::parse('now')->format('Ymd').'_';
 
         // OPTION USER_ID
         if($this->hasOption('user_id') && !empty($this->option('user_id'))) {
@@ -70,7 +71,6 @@ class GenerateHoquScriptsCommand extends Command
                 $this->info("No tracks found corresponding to user {$user->email},ID:{$user->id}");
                 return 0;
             }
-            $script_name .= 'user_id_'.$user->id;
         }
         // OPTION USER_EMAIL
         else if($this->hasOption('user_email') && !empty($this->option('user_email'))) {
@@ -84,7 +84,6 @@ class GenerateHoquScriptsCommand extends Command
                 $this->info("No tracks found corresponding to user {$user->email},ID:{$user->id}");
                 return 0;
             }
-            $script_name .= 'user_email_'.$user->email;
         }
         // OPTION APP_ID        
         else if(!empty($this->option('app_id'))) {
@@ -99,7 +98,6 @@ class GenerateHoquScriptsCommand extends Command
                 return 0;
             }
             $tracks = EcTrack::whereIn('id',array_keys($tracks))->get();
-            $script_name .= 'app_'.$app->id;
         }
 
         // OPTION OSF_ENDPOINT
@@ -120,8 +118,6 @@ class GenerateHoquScriptsCommand extends Command
                 $this->info("No feature found corresponding to endpoint {$this->option('osf_endpoint')}");
                 return 0;
             }
-
-            $script_name .= 'osf_'.preg_replace("(^https?://)","",$this->option('osf_endpoint'));
         }
         else {
             $this->info('No option set: you have to set one of user_id,user_email,app_id,osf_endpoint.');
