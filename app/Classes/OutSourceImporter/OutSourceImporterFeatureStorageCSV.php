@@ -103,19 +103,25 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
         $this->tags['name']['it'] = $poi['name'];
 
         // Adding POI parameters of general info
-        if (isset($poi['address_complete']))
+        if (isset($poi['address_complete']) && $poi['address_complete'])
             $this->tags['address_complete'] = $poi['address_complete'];
-        if (isset($poi['contact_phone']))
+        if (isset($poi['contact_phone']) && $poi['contact_phone'])
             $this->tags['contact_phone'] = $poi['contact_phone'];
-        if (isset($poi['contact_email']))
+        if (isset($poi['contact_email']) && $poi['contact_email'])
             $this->tags['contact_email'] = $poi['contact_email'];
-        if (isset($poi['capacity']))
+        if (isset($poi['capacity']) && $poi['capacity'])
             $this->tags['capacity'] = $poi['capacity'];
-        if (isset($poi['stars']))
+        if (isset($poi['stars']) && $poi['stars'])
             $this->tags['stars'] = $poi['stars'];
-        if (isset($poi['related_url']))
-            $this->tags['related_url'] = $poi['related_url'];
-        if (isset($poi['code']))
+        if (isset($poi['related_url']) && $poi['related_url']){
+            $related_url_name = parse_url($poi['related_url']);
+            $host = $poi['related_url'];
+            if (isset($related_url_name['host']) && $related_url_name['host']) {
+                $host = $related_url_name['host'];
+            }
+            $this->tags['related_url'][$host] = $poi['related_url'];
+        }
+        if (isset($poi['code']) && $poi['code'])
             $this->tags['code'] = $poi['code'];
 
     }

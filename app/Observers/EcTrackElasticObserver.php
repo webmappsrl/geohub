@@ -7,6 +7,7 @@ use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class EcTrackElasticObserver
 {
@@ -18,7 +19,6 @@ class EcTrackElasticObserver
      */
     public function save(EcTrack $ecTrack)
     {
-
     }
 
     /**
@@ -33,7 +33,10 @@ class EcTrackElasticObserver
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
 
-        $hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
+        //$hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
+
+        $host = env('ELASTIC_HTTP_HOST');
+        $hosts = [$host];
         $client = ClientBuilder::create()->setHosts($hosts)->build();
 
 
@@ -42,7 +45,7 @@ class EcTrackElasticObserver
 
 
 
-        Log::info('Indexing track '.$ecTrack->id);
+        Log::info('Indexing track ' . $ecTrack->id);
         $geom = $ecTrack::where('id', '=', $ecTrack->id)
             ->select(
                 DB::raw("ST_AsGeoJSON(geometry) as geom")
@@ -51,10 +54,12 @@ class EcTrackElasticObserver
             ->geom;
 
         $curl = curl_init();
-// https://elastic.sis-te.com/geohub
-//             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
+        // https://elastic.sis-te.com/geohub
+        //             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
+        $CURLOPT_URL = env('ELASTIC_HOST');
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/'.$ecTrack->id,
+            //    CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/' . $ecTrack->id,
+            CURLOPT_URL =>  $CURLOPT_URL . '/geohub/_doc/' . $ecTrack->id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -62,25 +67,31 @@ class EcTrackElasticObserver
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>'{
-  "geometry" : '.$geom.',
-  "id": '.$ecTrack->id.',
+            CURLOPT_POSTFIELDS => '{
+  "geometry" : ' . $geom . ',
+  "id": ' . $ecTrack->id . ',
   "ref": "100",
   "cai_scale": "E",
    "piccioli": "fava"
 }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic Zm9yZ2U6MWIwVlVKeFJGeGVPdXBralBlaWU='
+                'Authorization: Basic ' . env('ELASTIC_KEY'),
             ),
         ));
 
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
         $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
 
 
         curl_close($curl);
         Log::info('Index OK');
-     }
+    }
 
     /**
      * Handle the EcTrack "deleted" event.
