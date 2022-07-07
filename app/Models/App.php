@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class App
@@ -164,10 +165,10 @@ class App extends Model
      */
     public function elasticIndex()
     {
-
-        if (count($this->getTracksFromLayer()) > 0) {
+        $tracksFromLayer = $this->getTracksFromLayer();
+        if (count($tracksFromLayer) > 0) {
             $index_name = 'app_' . $this->id;
-            foreach ($this->getTracksFromLayer() as $tid => $layers) {
+            foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
                 $t->elasticIndex($index_name, $layers);
             }
@@ -292,24 +293,18 @@ class App extends Model
      */
     public function getTracksFromLayer(): array
     {
-        $tracks = [];
+        $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                $taxonomies = ['Themes', 'Activities', 'Wheres'];
-                foreach ($taxonomies as $taxonomy) {
-                    $taxonomy = 'taxonomy' . $taxonomy;
-                    if ($layer->$taxonomy->count() > 0) {
-                        foreach ($layer->$taxonomy as $term) {
-                            if ($term->ecTracks()->where('user_id', $this->user_id)->get()->count() > 0) {
-                                foreach ($term->ecTracks()->where('user_id', $this->user_id)->get() as $track) {
-                                    $tracks[$track->id][] = $layer->id;
-                                }
-                            }
-                        }
+                $tracks = $layer->getTracks();
+                $layer->computeBB();
+                if (count($tracks) > 0) {
+                    foreach ($tracks as $track) {
+                        $res[$track][] = $layer->id;
                     }
                 }
             }
         }
-        return $tracks;
+        return $res;
     }
 }
