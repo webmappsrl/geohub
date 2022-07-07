@@ -140,11 +140,11 @@ class OutSourceImporterCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id) {
-                Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                $OSF = new OutSourceImporterFeatureSICAI($this->type,$this->endpoint,$id);
-                $OSF_id = $OSF->importFeature();
-                Log::info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
-                $count++;
+                // Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                // $OSF = new OutSourceImporterFeatureSICAI($this->type,$this->endpoint,$id);
+                // $OSF_id = $OSF->importFeature();
+                // Log::info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
+                // $count++;
             }
         } else {
             Log::info('Importer SICAI get List is empty.');
