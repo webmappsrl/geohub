@@ -6,6 +6,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
+use App\Classes\OutSourceImporter\OutSourceImporterListSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
