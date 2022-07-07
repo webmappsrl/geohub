@@ -14,7 +14,7 @@ class EcTrackIndexCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:index-tracks';
+    protected $signature = 'geohub:index-tracks {app_id?}';
 
     /**
      * The console command description.
@@ -40,13 +40,43 @@ class EcTrackIndexCommand extends Command
      */
     public function handle()
     {
+        $app_id = $this->argument('app_id');
+
+        if (!isset($app_id)) {
+            $this->defaultIndex();
+        } else if (isset($app_id)) {
+            $this->appIndex($app_id);
+        }
+
+        return 0;
+    }
+
+    private function appIndex($appId)
+    {
+        $app = App::find($appId);
+        Log::info('===========================');
+        Log::info('===========================');
+        Log::info('===========================');
+        Log:
+        info('Indexing app ' . $app->id);
+        $app->elasticIndexDelete();
+        $app->elasticIndexCreate();
+        $app->elasticIndex();
+        Log::info('===========================');
+        Log::info('DONE !!');
+        Log::info('===========================');
+        Log::info(' ');
+    }
+
+    private function defaultIndex()
+    {
         $apps = App::all();
-        foreach($apps as $app)
-        {
+        foreach ($apps as $app) {
             Log::info('===========================');
             Log::info('===========================');
             Log::info('===========================');
-            Log:info('Indexing app '.$app->id);
+            Log:
+            info('Indexing app ' . $app->id);
             $app->elasticIndexDelete();
             $app->elasticIndexCreate();
             $app->elasticIndex();
@@ -55,6 +85,5 @@ class EcTrackIndexCommand extends Command
             Log::info('===========================');
             Log::info(' ');
         }
-        return 0;
     }
 }

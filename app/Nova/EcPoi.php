@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\ExportEcpoi;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
@@ -199,6 +200,7 @@ class EcPoi extends Resource {
             'Info' => [
                 Text::make('Contact Phone'),
                 Text::make('Contact Email'),
+                Text::make('Adress / complete','addr_complete'),
                 Text::make('Adress / street','addr_street'),
                 Text::make('Adress / housenumber','addr_housenumber'),
                 Text::make('Adress / postcode','addr_postcode'),
@@ -318,6 +320,7 @@ class EcPoi extends Resource {
             'Style' => $this->style_tab(),
 
             'Info' => [
+                Text::make('Adress / complete','addr_complete'),
                 Text::make('Adress / street','addr_street'),
                 Text::make('Adress / housenumber','addr_housenumber'),
                 Text::make('Adress / postcode','addr_postcode'),
@@ -634,7 +637,7 @@ HTML;
      */
     public function actions(Request $request) {
         return [
-            (new DownloadExcel)->allFields()->except('geometry')->withHeadings(),
+            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
         ];
     }
 }

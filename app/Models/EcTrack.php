@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
@@ -19,12 +20,13 @@ use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
-class EcTrack extends Model {
+class EcTrack extends Model
+{
     use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image','out_source_feature_id','user_id'];
+    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image', 'out_source_feature_id', 'user_id'];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
-    
+
     /**
      * The attributes that should be cast.
      *
@@ -45,13 +47,15 @@ class EcTrack extends Model {
     ];
     public bool $skip_update = false;
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
     }
 
     public static string $geometryType = 'LineString';
 
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::booted();
         // EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
@@ -86,7 +90,6 @@ class EcTrack extends Model {
             } else {
                 $ecTrack->skip_update = false;
             }
-        
         });
         /**
          * static::updated(function ($ecTrack) {
@@ -102,19 +105,23 @@ class EcTrack extends Model {
          * }); **/
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         parent::save($options);
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function uploadAudio($file) {
+    public function uploadAudio($file)
+    {
         $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
         $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
@@ -125,7 +132,8 @@ class EcTrack extends Model {
     /**
      * @param string json encoded geometry.
      */
-    public function fileToGeometry($fileContent = '') {
+    public function fileToGeometry($fileContent = '')
+    {
         $geometry = $contentType = null;
         if ($fileContent) {
             if (substr($fileContent, 0, 5) == "<?xml") {
@@ -176,54 +184,66 @@ class EcTrack extends Model {
         return $geometry;
     }
 
-    public function ecMedia(): BelongsToMany {
+    public function ecMedia(): BelongsToMany
+    {
         return $this->belongsToMany(EcMedia::class);
     }
 
-    public function ecPois(): BelongsToMany {
+    public function ecPois(): BelongsToMany
+    {
         return $this->belongsToMany(EcPoi::class)->withPivot('order')->orderByPivot('order');
     }
 
-    public function taxonomyWheres() {
+    public function taxonomyWheres()
+    {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function taxonomyWhens() {
+    public function taxonomyWhens()
+    {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyTargets() {
+    public function taxonomyTargets()
+    {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes() {
+    public function taxonomyThemes()
+    {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyActivities() {
+    public function taxonomyActivities()
+    {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable')
             ->withPivot(['duration_forward', 'duration_backward']);
     }
 
-    public function taxonomyPoiTypes() {
+    public function taxonomyPoiTypes()
+    {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    public function usersCanDownload(): BelongsToMany {
+    public function usersCanDownload(): BelongsToMany
+    {
         return $this->belongsToMany(User::class, 'downloadable_ec_track_user');
     }
 
-    public function partnerships(): BelongsToMany {
+    public function partnerships(): BelongsToMany
+    {
         return $this->belongsToMany(Partnership::class, 'ec_track_partnership');
     }
 
-    public function outSourceTrack(): BelongsTo {
-        return $this->belongsTo(OutSourceTrack::class,'out_source_feature_id');
+    public function outSourceTrack(): BelongsTo
+    {
+        return $this->belongsTo(OutSourceTrack::class, 'out_source_feature_id');
     }
 
     /**
@@ -231,7 +251,8 @@ class EcTrack extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
 
         $array = $this->setOutSourceValue();
 
@@ -240,7 +261,7 @@ class EcTrack extends Model {
                 $array['excerpt'][$lang] = strip_tags($val);
             }
         }
-        
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
@@ -295,9 +316,11 @@ class EcTrack extends Model {
 
         $propertiesToClear = ['geometry', 'slope'];
         foreach ($array as $property => $value) {
-            if (in_array($property, $propertiesToClear)
+            if (
+                in_array($property, $propertiesToClear)
                 || is_null($value)
-                || (is_array($value) && count($value) === 0))
+                || (is_array($value) && count($value) === 0)
+            )
                 unset($array[$property]);
         }
 
@@ -323,9 +346,10 @@ class EcTrack extends Model {
         return $array;
     }
 
-    private function setOutSourceValue():array {
+    private function setOutSourceValue(): array
+    {
         $array = $this->toArray();
-        if(isset($this->out_source_feature_id)) {
+        if (isset($this->out_source_feature_id)) {
             $keys = [
                 'description',
                 'excerpt',
@@ -343,34 +367,36 @@ class EcTrack extends Model {
                 'cai_scale',
             ];
             foreach ($keys as $key) {
-                $array=$this->setOutSourceSingleValue($array,$key);
+                $array = $this->setOutSourceSingleValue($array, $key);
             }
         }
         return $array;
     }
 
-    private function setOutSourceSingleValue($array,$varname):array {
-        if($this->isReallyEmpty($array[$varname])) {
-            if(isset($this->outSourceTrack->tags[$varname])) {
+    private function setOutSourceSingleValue($array, $varname): array
+    {
+        if ($this->isReallyEmpty($array[$varname])) {
+            if (isset($this->outSourceTrack->tags[$varname])) {
                 $array[$varname] = $this->outSourceTrack->tags[$varname];
             }
         }
         return $array;
     }
 
-    private function isReallyEmpty($val): bool {
-        if(is_null($val)) {
+    private function isReallyEmpty($val): bool
+    {
+        if (is_null($val)) {
             return true;
         }
-        if(empty($val)) {
+        if (empty($val)) {
             return true;
         }
-        if(is_array($val)) {
-            if(count($val)==0) {
+        if (is_array($val)) {
+            if (count($val) == 0) {
                 return true;
             }
-            foreach($val as $lang => $cont) {
-                if(!empty($cont)) {
+            foreach ($val as $lang => $cont) {
+                if (!empty($cont)) {
                     return false;
                 }
                 return true;
@@ -384,7 +410,8 @@ class EcTrack extends Model {
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
@@ -404,7 +431,8 @@ class EcTrack extends Model {
      *
      * @return array
      */
-    public function getElbrusGeojson(): array {
+    public function getElbrusGeojson(): array
+    {
         $geojson = $this->getGeojson();
         // MAPPING
         $geojson['properties']['id'] = 'ec_track_' . $this->id;
@@ -431,7 +459,8 @@ class EcTrack extends Model {
      *
      * @return array
      */
-    private function _mapElbrusGeojsonProperties(array $geojson): array {
+    private function _mapElbrusGeojsonProperties(array $geojson): array
+    {
         $fields = ['ele_min', 'ele_max', 'ele_from', 'ele_to', 'duration_forward', 'duration_backward', 'contact_phone', 'contact_email'];
         foreach ($fields as $field) {
             if (isset($geojson['properties'][$field])) {
@@ -470,18 +499,19 @@ class EcTrack extends Model {
 
         if (isset($geojson['properties']['feature_image'])) {
             $geojson['properties']['image'] = $geojson['properties']['feature_image'];
-            unset ($geojson['properties']['feature_image']);
+            unset($geojson['properties']['feature_image']);
         }
 
         if (isset($geojson['properties']['image_gallery'])) {
             $geojson['properties']['imageGallery'] = $geojson['properties']['image_gallery'];
-            unset ($geojson['properties']['image_gallery']);
+            unset($geojson['properties']['image_gallery']);
         }
 
         return $geojson;
     }
 
-    public function getNeighbourEcMedia(): array {
+    public function getNeighbourEcMedia(): array
+    {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
@@ -502,7 +532,8 @@ class EcTrack extends Model {
         ]);
     }
 
-    public function getNeighbourEcPoi(): array {
+    public function getNeighbourEcPoi(): array
+    {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_pois
@@ -533,7 +564,8 @@ class EcTrack extends Model {
      *
      * @return array
      */
-    public function bbox(): array {
+    public function bbox(): array
+    {
         $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
         $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
 
@@ -545,10 +577,12 @@ class EcTrack extends Model {
      *
      * @return array [lon, lat] of the point
      */
-    public function getCentroid(): array {
+    public function getCentroid(): array
+    {
         $rawResult = EcTrack::where('id', $this->id)
             ->selectRaw(
-                'ST_X(ST_AsText(ST_Centroid(geometry))) as lon')
+                'ST_X(ST_AsText(ST_Centroid(geometry))) as lon'
+            )
             ->selectRaw(
                 'ST_Y(ST_AsText(ST_Centroid(geometry))) as lat'
             )->first();
@@ -556,13 +590,13 @@ class EcTrack extends Model {
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
     }
 
-    public function elasticIndex($index='ectracks',$layers=[])
+    public function elasticIndex($index = 'ectracks', $layers = [])
     {
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
 
         Log::info('Elastic Indexing track ' . $this->id);
-        $url=config('services.elastic.host').'/geohub_'.$index.'/_doc/'.$this->id;
+        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
         Log::info($url);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -572,46 +606,45 @@ class EcTrack extends Model {
             ->first()
             ->geom;
 
-            // TODO: converti into array for ELASTIC correct datatype
-            // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-            $taxonomy_activities='[]';
-            if($this->taxonomyActivities->count() >0) {
-                $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
-            }
-            $taxonomy_wheres='[]';
-            if($this->taxonomyWheres->count() >0) {
-                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
-            }
-            $taxonomy_themes='[]';
-            if($this->taxonomyThemes->count() >0) {
-                $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
-            }
+        // TODO: converti into array for ELASTIC correct datatype
+        // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
+        $taxonomy_activities = '[]';
+        if ($this->taxonomyActivities->count() > 0) {
+            $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+        }
+        $taxonomy_wheres = '[]';
+        if ($this->taxonomyWheres->count() > 0) {
+            $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+        }
+        $taxonomy_themes = '[]';
+        if ($this->taxonomyThemes->count() > 0) {
+            $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
+        }
 
-            // FEATURE IMAGE
-            $feature_image='';
-            if(isset($this->featureImage->thumbnails) ){
-                $sizes = json_decode($this->featureImage->thumbnails,TRUE);
-                // TODO: use proper ecMedia function
-                if(isset($sizes['400x200'])) {
-                    $feature_image=$sizes['400x200'];
-                }
-                else if(isset($sizes['225x100'])) {
-                    $feature_image=$sizes['225x100'];
-                }
+        // FEATURE IMAGE
+        $feature_image = '';
+        if (isset($this->featureImage->thumbnails)) {
+            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            // TODO: use proper ecMedia function
+            if (isset($sizes['400x200'])) {
+                $feature_image = $sizes['400x200'];
+            } else if (isset($sizes['225x100'])) {
+                $feature_image = $sizes['225x100'];
             }
+        }
 
-            $postfields='{
-                "geometry" : '.$geom.',
-                "id": '.$this->id.',
-                "ref": "'.$this->ref.'",
-                "cai_scale": "'.$this->cai_scale.'",
-                "name": "'.$this->name.'",
-                "distance": "'.$this->distance.'",
-                "taxonomyActivities": '.$taxonomy_activities.',
-                "taxonomyWheres": '.$taxonomy_wheres.',
-                "taxonomyThemes": '.$taxonomy_themes.',
-                "feature_image": "'.$feature_image.'",
-                "layers": '.json_encode($layers).'
+        $postfields = '{
+                "geometry" : ' . $geom . ',
+                "id": ' . $this->id . ',
+                "ref": "' . $this->ref . '",
+                "cai_scale": "' . $this->cai_scale . '",
+                "name": "' . $this->name . '",
+                "distance": "' . $this->distance . '",
+                "taxonomyActivities": ' . $taxonomy_activities . ',
+                "taxonomyWheres": ' . $taxonomy_wheres . ',
+                "taxonomyThemes": ' . $taxonomy_themes . ',
+                "feature_image": "' . $feature_image . '",
+                "layers": ' . json_encode($layers) . '
               }';
 
         Log::info($postfields);
@@ -626,18 +659,22 @@ class EcTrack extends Model {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>$postfields,
+            CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: Basic '.config('services.elastic.key')
+                'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
         $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
 
         Log::info($response);
 
         curl_close($curl);
-
     }
 }

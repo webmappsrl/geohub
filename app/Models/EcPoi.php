@@ -267,7 +267,7 @@ class EcPoi extends Model {
     }
 
     /**
-     * Create a geojson from the ec track
+     * Create a geojson from the ec poi
      *
      * @return array
      */
