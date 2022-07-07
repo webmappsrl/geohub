@@ -146,7 +146,9 @@ class AppController extends Controller
       $layers = [];
       foreach ($app->layers as $layer) {
         $item = $layer->toArray();
-        $item['bbox'] = array_map('floatval', json_decode($item['bbox'], true));
+        if (isset($item['bbox'])) {
+          $item['bbox'] = array_map('floatval', json_decode($item['bbox'], true));
+        }
         // style
         foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
           $item['style'][$field] = $item[$field];
