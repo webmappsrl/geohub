@@ -430,7 +430,7 @@
                                         <span style="margin-left:10px">
                                             {
                                                 "box_type": "layer",
-                                                "title": {{ $layer->name }},
+                                                "title": {{ $layer->title }},
                                                 "layer": {{ $layer->id }}
                                             },<br>
                                         </span>
