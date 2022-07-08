@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
+use Eminiarts\Tabs\ActionsInTabs;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
@@ -53,11 +54,13 @@ use Yna\NovaSwatches\Swatches;
  * TABLES
  * THEME
  */
-class App extends Resource {
+class App extends Resource
+{
 
     use TabsOnEdit;
 
-    public static function indexQuery(NovaRequest $request, $query) {
+    public static function indexQuery(NovaRequest $request, $query)
+    {
         $user = \App\Models\User::getEmulatedUser();
         if ($user->hasRole('Admin')) {
             $query = parent::indexQuery($request, $query);
@@ -91,7 +94,8 @@ class App extends Resource {
         'name',
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Editorial Content');
     }
 
@@ -102,48 +106,51 @@ class App extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
 
 
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
+        if (NovaCurrentResourceActionHelper::isIndex($request)) {
             return $this->index();
         }
 
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
+        if (NovaCurrentResourceActionHelper::isDetail($request)) {
             return $this->detail();
         }
 
-        if(NovaCurrentResourceActionHelper::isCreate($request)) {
+        if (NovaCurrentResourceActionHelper::isCreate($request)) {
             return $this->create();
         }
 
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+        if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             return $this->update();
         }
 
         // Default:
         return $this->index();
-
     }
 
-    public function index(){
-        return [ 
+    public function index()
+    {
+        return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable(),
-            Text::make('API type','api')->sortable(),
+            Text::make('API type', 'api')->sortable(),
             Text::make('Name')->sortable(),
             Text::make('Customer Name'),
-        ];   
-    }
-
-  
-  
-    private function detail() {
-        return [ 
-            (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections()))->withToolbar(),
         ];
     }
-    public function create() {
+
+
+
+    private function detail()
+    {
+        return [
+            (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
+        ];
+    }
+    public function create()
+    {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
@@ -166,35 +173,37 @@ class App extends Resource {
                 'it' => 'Italiano',
             ], $availableLanguages)
         ];
-   
     }
-    public function update() {
-        
-        return [ 
-            (new Tabs("APP Details: {$this->name} ({$this->id})",$this->sections())),
+    public function update()
+    {
+
+        return [
+            (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections())),
         ];
     }
 
-    public function sections() {
-            return [
-                'APP' => $this->app_tab(),
-                'HOME' => $this->home_tab(),
-                'AUTH' => $this->auth_tab(),
-                'OFFLINE' => $this->offline_tab(),
-                'GEOLOCATION' => $this->geolocation_tab(),
-                'ICONS' => $this->icons_tab(),
-                'LANGUAGES' => $this->languages_tab(),
-                'MAP' => $this->map_tab(),
-                'OPTIONS' => $this->options_tab(),
-                'POIS' => $this->pois_tab(),
-                'ROUTING' => $this->routing_tab(),
-                'TABLE' => $this->table_tab(),
-                'THEME' => $this->theme_tab(),
-                'LAYERS' => $this->layers_tab(),
-            ];
+    public function sections()
+    {
+        return [
+            'APP' => $this->app_tab(),
+            'HOME' => $this->home_tab(),
+            'AUTH' => $this->auth_tab(),
+            'OFFLINE' => $this->offline_tab(),
+            'GEOLOCATION' => $this->geolocation_tab(),
+            'ICONS' => $this->icons_tab(),
+            'LANGUAGES' => $this->languages_tab(),
+            'MAP' => $this->map_tab(),
+            'OPTIONS' => $this->options_tab(),
+            'POIS' => $this->pois_tab(),
+            'ROUTING' => $this->routing_tab(),
+            'TABLE' => $this->table_tab(),
+            'THEME' => $this->theme_tab(),
+            'LAYERS' => $this->layers_tab(),
+        ];
     }
 
-    protected function app_tab(): array {
+    protected function app_tab(): array
+    {
         return [
             Select::make(__('API type'), 'api')->options(
                 [
@@ -208,21 +217,25 @@ class App extends Resource {
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
-            BelongsTo::make('Author','author',User::class)
-                    ->searchable()
-                    ->nullable()
-                    ->canSee(function ($request) {
-                        return $request->user()->can('Admin', $this);
-                    }),
+            BelongsTo::make('Author', 'author', User::class)
+                ->searchable()
+                ->nullable()
+                ->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                }),
         ];
     }
 
-    protected function home_tab(): array {
+    protected function home_tab(): array
+    {
         return [
-            Code::Make('Config Home')->language('json')->rules('json'),
+            Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
+                view('layers', ['layers' => $this->layers])->render()
+            )
         ];
     }
-    protected function languages_tab(): array {
+    protected function languages_tab(): array
+    {
 
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
@@ -238,7 +251,8 @@ class App extends Resource {
         ];
     }
 
-    protected function map_tab(): array {
+    protected function map_tab(): array
+    {
         return [
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
@@ -261,9 +275,9 @@ class App extends Resource {
                 ->onlyOnForms()
                 ->rules([
                     function ($attribute, $value, $fail) {
-                        $decoded =json_decode($value);
-                        if(is_array($decoded) == false) {
-                            $fail('The '.$attribute.' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
+                        $decoded = json_decode($value);
+                        if (is_array($decoded) == false) {
+                            $fail('The ' . $attribute . ' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
                         }
                     }
                 ]),
@@ -275,7 +289,8 @@ class App extends Resource {
         ];
     }
 
-    protected function theme_tab(): array {
+    protected function theme_tab(): array
+    {
         $fontsOptions = [
             'Helvetica' => ['label' => 'Helvetica'],
             'Inter' => ['label' => 'Inter'],
@@ -311,7 +326,8 @@ class App extends Resource {
         ];
     }
 
-    protected function options_tab(): array {
+    protected function options_tab(): array
+    {
         return [
             Select::make(__('Start Url'), 'start_url')
                 ->options([
@@ -337,8 +353,9 @@ class App extends Resource {
 
         ];
     }
-    
-    protected function pois_tab(): array {
+
+    protected function pois_tab(): array
+    {
         return [
             Toggle::make(__('Show Pois Layer on APP'), 'app_pois_api_layer')
                 ->trueValue('On')
@@ -388,16 +405,17 @@ class App extends Resource {
             Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
             Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
             Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
-            Text::make('Themes',function(){
-                if($this->taxonomyThemes()->count() >0) {
-                    return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+            Text::make('Themes', function () {
+                if ($this->taxonomyThemes()->count() > 0) {
+                    return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
                 return 'No Themes';
             })->onlyOnDetail(),
         ];
     }
 
-    protected function auth_tab(): array {
+    protected function auth_tab(): array
+    {
         return [
             Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')
                 ->trueValue('On')
@@ -407,7 +425,8 @@ class App extends Resource {
         ];
     }
 
-    protected function table_tab(): array {
+    protected function table_tab(): array
+    {
         return [
             Toggle::make(__('Show Related POI'), 'table_details_show_related_poi')
                 ->trueValue('On')
@@ -508,7 +527,8 @@ class App extends Resource {
         ];
     }
 
-    protected function geolocation_tab(): array {
+    protected function geolocation_tab(): array
+    {
         return [
             Toggle::make(__('Enable UGC record'), 'geolocation_record_enable')
                 ->trueValue('On')
@@ -518,7 +538,8 @@ class App extends Resource {
         ];
     }
 
-    protected function routing_tab(): array {
+    protected function routing_tab(): array
+    {
         return [
             Toggle::make(__('Enable Routing'), 'enable_routing')
                 ->trueValue('On')
@@ -528,7 +549,8 @@ class App extends Resource {
         ];
     }
 
-    protected function overlays_tab(): array {
+    protected function overlays_tab(): array
+    {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')
                 ->rows(10)
@@ -536,7 +558,8 @@ class App extends Resource {
         ];
     }
 
-    protected function offline_tab(): array {
+    protected function offline_tab(): array
+    {
         return [
             Toggle::make(__('Enable Offline'), 'offline_enable')
                 ->trueValue('On')
@@ -556,7 +579,8 @@ class App extends Resource {
         ];
     }
 
-    protected function icons_tab(): array {
+    protected function icons_tab(): array
+    {
         return [
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
@@ -618,7 +642,8 @@ class App extends Resource {
         ];
     }
 
-    protected function api_tab(): array {
+    protected function api_tab(): array
+    {
         return [
             Text::make(__('API List'), function () {
                 return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
@@ -648,7 +673,8 @@ class App extends Resource {
         ];
     }
 
-    protected function maps_tab(): array {
+    protected function maps_tab(): array
+    {
         return [
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
@@ -658,14 +684,15 @@ class App extends Resource {
         ];
     }
 
-    protected function layers_tab(): array {
+    protected function layers_tab(): array
+    {
         return [
             // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
-            Text::make('Layers',function () {
-                if($this->layers->count() > 0) {
+            Text::make('Layers', function () {
+                if ($this->layers->count() > 0) {
                     $out = '';
-                    foreach($this->layers as $l) {
-                        $out .= '<a href="/resources/layers/'.$l->id.'">'.$l->name.'</a></br>';
+                    foreach ($this->layers as $l) {
+                        $out .= '<a href="/resources/layers/' . $l->id . '">' . $l->name . '</a></br>';
                     }
                     return $out;
                 } else {
@@ -682,7 +709,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request)
+    {
         return [];
     }
 
@@ -693,7 +721,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request)
+    {
         return [];
     }
 
@@ -704,7 +733,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request)
+    {
         return [];
     }
 
@@ -715,7 +745,8 @@ class App extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         return [];
     }
 }
