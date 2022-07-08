@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
@@ -139,12 +140,12 @@ class OutSourceImporterCommand extends Command
         $features_list = $features->getList();
         if ($features_list) {
             $count = 1;
-            foreach ($features_list as $id) {
-                // Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                // $OSF = new OutSourceImporterFeatureSICAI($this->type,$this->endpoint,$id);
-                // $OSF_id = $OSF->importFeature();
-                // Log::info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
-                // $count++;
+            foreach ($features_list as $id => $date) {
+                Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                $OSF = new OutSourceImporterFeatureSICAI($this->type,$this->endpoint,$id);
+                $OSF_id = $OSF->importFeature();
+                Log::info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
+                $count++;
             }
         } else {
             Log::info('Importer SICAI get List is empty.');
