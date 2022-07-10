@@ -136,10 +136,11 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         // if ($track->percorribilità && $track->percorribilità == 'Non percorribile') {
         //     $this->tags['not_accessible'] = true;
         // }
-        // $p = DB::select("SELECT ST_AsText('$p[0]->geometry')");
-        // $pp = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER('$geometry',500),geometry)");
-        // DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER(ST_GeomFromText('$geometry')::Geography),500),geometry)");
-        // DB::select("SELECT * as p from out_source_features where type='poi' and endpoint='sicai' and ST_contains(ST_BUFFER($geometry,500),p.geometry)"); 
+        
+        
+        $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),10, 'endcap=round join=round'),geometry::geometry);");
+
+
         // if () {
         //     $this->tags['related_poi'][] = $osf_id;
         // }
