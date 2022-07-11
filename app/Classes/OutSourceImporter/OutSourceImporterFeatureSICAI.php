@@ -34,6 +34,7 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF Track with external ID: '.$this->source_id);
         $geometry = DB::select("SELECT ST_AsText(ST_LineMerge(ST_Transform('$track->geom',4326)))")[0]->st_astext;
+        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_Transform('$track->geom',4326))))")[0]->st_astext;
         $this->params['geometry'] = $geometry;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
@@ -65,7 +66,7 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF poi with external ID: '.$this->source_id);
-            $geometry_poi = DB::select("SELECT ST_AsText('$poi->geom') As wkt")[0]->wkt;
+            $geometry_poi = DB::select("SELECT ST_Transform('$poi->geom',4326) As g")[0]->g;
             $this->params['geometry'] = $geometry_poi;
             $this->mediaGeom = $geometry_poi;
             $this->params['provider'] = get_class($this);
@@ -137,12 +138,22 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         //     $this->tags['not_accessible'] = true;
         // }
         
-        
-        $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),10, 'endcap=round join=round'),geometry::geometry);");
+        if ($geometry) {
+            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
+    
+    
+            if (is_array($related_pois) && !empty($related_pois)) {
+                foreach ($related_pois as $poi) {
+                    $this->tags['related_poi'][] = $poi->id;
+                }
+            }
+        }
 
-
-        // if () {
-        //     $this->tags['related_poi'][] = $osf_id;
+        // // Processing the feature image of Track
+        // if (isset($track->immagine) && $track->immagine) {
+        //     Log::info('Preparing OSF track FEATURE_IMAGE with external track ID: '.$this->source_id);
+            
+        //     $this->tags['feature_image'] = $this->createOSFMedia($track->immagine,$track,000);
         // }
     }
     
@@ -185,40 +196,40 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         }
             
 
-        // Processing the feature image of POI
-        if (isset($poi['immagine']) && $poi['immagine']) {
-            Log::info('Preparing OSF POI FEATURE_IMAGE with external POI ID: '.$this->source_id);
+        // // Processing the feature image of POI
+        // if (isset($poi['immagine']) && $poi['immagine']) {
+        //     Log::info('Preparing OSF POI FEATURE_IMAGE with external POI ID: '.$this->source_id);
             
-            $this->tags['feature_image'] = $this->createOSFMedia($poi['immagine'],$poi,000);
-        }
+        //     $this->tags['feature_image'] = $this->createOSFMedia($poi['immagine'],$poi,000);
+        // }
         
-        // Processing the gallery image of POI
-        if (isset($poi['foto02']) && $poi['foto02']) {
-            Log::info('Preparing OSF POI GALLERY foto02 with external POI ID: '.$this->source_id);
+        // // Processing the gallery image of POI
+        // if (isset($poi['foto02']) && $poi['foto02']) {
+        //     Log::info('Preparing OSF POI GALLERY foto02 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,001);
-        }
+        //     $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,001);
+        // }
         
-        // Processing the gallery image of POI
-        if (isset($poi['foto03']) && $poi['foto03']) {
-            Log::info('Preparing OSF POI GALLERY foto03 with external POI ID: '.$this->source_id);
+        // // Processing the gallery image of POI
+        // if (isset($poi['foto03']) && $poi['foto03']) {
+        //     Log::info('Preparing OSF POI GALLERY foto03 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,003);
-        }
+        //     $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,003);
+        // }
         
-        // Processing the gallery image of POI
-        if (isset($poi['foto04']) && $poi['foto04']) {
-            Log::info('Preparing OSF POI GALLERY foto04 with external POI ID: '.$this->source_id);
+        // // Processing the gallery image of POI
+        // if (isset($poi['foto04']) && $poi['foto04']) {
+        //     Log::info('Preparing OSF POI GALLERY foto04 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,004);
-        }
+        //     $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,004);
+        // }
         
-        // Processing the gallery image of POI
-        if (isset($poi['foto05']) && $poi['foto05']) {
-            Log::info('Preparing OSF POI GALLERY foto05 with external POI ID: '.$this->source_id);
+        // // Processing the gallery image of POI
+        // if (isset($poi['foto05']) && $poi['foto05']) {
+        //     Log::info('Preparing OSF POI GALLERY foto05 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,005);
-        }
+        //     $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,005);
+        // }
 
         // Processing the poi_type
         // Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
@@ -233,10 +244,21 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
      * @param array $media The OutSourceFeature parameters to be added or updated 
      * 
      */
-    public function createOSFMedia($image,$poi,$suffix){ 
+    public function createOSFMedia($image,$item,$suffix){ 
         $base = 'https://sentieroitaliamappe.cai.it/index.php/view/media/getMedia?repository=sicaipubblico&project=SICAI_Pubblico&path=';
-        Log::info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$poi['id_0']);
-        $tags['name']['it'] = $poi['name'];
+        $item = json_decode(json_encode($item),true);
+
+        if (isset($item['name']) && $item['name']) {
+            $tags['name']['it'] = $item['name'];
+        } else {
+            $tags['name']['it'] = $item['tappa'];
+        }
+        if (isset($item['id_0']) && $item['id_0']) {
+            $item_id = $item['id_0'];
+        } else {
+            $item_id = $item['id_2'];
+        }
+        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$item_id);
         try{
             // Saving the Media in to the s3-osfmedia storage
             $storage_name = config('geohub.osf_media_storage_name');
@@ -257,16 +279,16 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
             Log::info('Saving media in s3-osfmedia error:' . $e);
         }
 
-        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$poi['id_0']);
+        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$item_id);
         $params['tags'] = $tags;
         $params['type'] = 'media';
         $params['provider'] = get_class($this);
         $params['geometry'] = $this->mediaGeom;
-        Log::info('Finished preparing OSF MEDIA with external ID: '.$poi['id_0']);
-        Log::info('Starting creating OSF MEDIA with external ID: '.$poi['id_0']);
+        Log::info('Finished preparing OSF MEDIA with external ID: '.$item_id);
+        Log::info('Starting creating OSF MEDIA with external ID: '.$item_id);
         $feature = OutSourceFeature::updateOrCreate(
             [
-                'source_id' => $poi['id_0'].$suffix,
+                'source_id' => $item_id.$suffix,
                 'endpoint' => $this->endpoint
             ],$params);
         return $feature->id;
