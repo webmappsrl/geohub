@@ -66,7 +66,8 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF poi with external ID: '.$this->source_id);
-            $geometry_poi = DB::select("SELECT ST_Transform('$poi->geom',4326) As g")[0]->g;
+            // $geometry_poi = DB::select("SELECT ST_Transform('$poi->geom',4326) As g")[0]->g;
+            $geometry_poi = DB::select("SELECT ST_Transform(Geometry('$poi->geom'),4326) As g")[0]->g;
             $this->params['geometry'] = $geometry_poi;
             $this->mediaGeom = $geometry_poi;
             $this->params['provider'] = get_class($this);
