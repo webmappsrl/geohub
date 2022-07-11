@@ -33,8 +33,8 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
 
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $geometry = DB::select("SELECT ST_AsText(ST_LineMerge(ST_Transform('$track->geom',4326)))")[0]->st_astext;
-        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_Transform('$track->geom',4326))))")[0]->st_astext;
+        $geometry = DB::select("SELECT ST_AsText(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326)))")[0]->st_astext;
+        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326))))")[0]->st_astext;
         $this->params['geometry'] = $geometry;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
