@@ -66,7 +66,6 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF poi with external ID: '.$this->source_id);
-            // $geometry_poi = DB::select("SELECT ST_Transform('$poi->geom',4326) As g")[0]->g;
             $geometry_poi = DB::select("SELECT ST_Transform(Geometry('$poi->geom'),4326) As g")[0]->g;
             $this->params['geometry'] = $geometry_poi;
             $this->mediaGeom = $geometry_poi;
@@ -195,9 +194,8 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name']['it'] = $poi['name'];
         if(!empty($poi['Descrizione'])) {
-            $this->tags['description']['it'] .= $poi['Descrizione'];
+            $this->tags['description']['it'] = $poi['Descrizione'];
         }
-        
 
         // Adding POI parameters of general info
         Log::info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
