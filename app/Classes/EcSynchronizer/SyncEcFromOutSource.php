@@ -413,7 +413,7 @@ class SyncEcFromOutSource
                     
                     // Attach poi_type to poi
                     Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type'])) {
+                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai' ) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.','-',$path['host']);
                         $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
