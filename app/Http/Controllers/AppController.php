@@ -32,6 +32,7 @@ class AppController extends Controller
     $data = array_merge($data, $this->config_section_home($app));
     $data = array_merge($data, $this->config_section_languages($app));
     $data = array_merge($data, $this->config_section_map($app));
+    $data = array_merge($data, $this->config_section_project($app));
     $data = array_merge($data, $this->config_section_theme($app));
     $data = array_merge($data, $this->config_section_options($app));
     $data = array_merge($data, $this->config_section_tables($app));
@@ -254,6 +255,22 @@ class AppController extends Controller
     $data['THEME']['fontFamilyContent'] = $app->font_family_content;
     $data['THEME']['defaultFeatureColor'] = $app->default_feature_color;
     $data['THEME']['primary'] = $app->primary_color;
+
+    return $data;
+  }
+
+    /**
+   * @param App $app
+   *
+   * @return array
+   */
+  private function config_section_project(App $app): array
+  {
+    $data = [];
+    // PROJECT section
+
+    $data['PROJECT']['HTML'] = $app->page_project;
+
 
     return $data;
   }

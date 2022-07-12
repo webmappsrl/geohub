@@ -26,7 +26,6 @@ use Laravel\Nova\NovaApplicationServiceProvider;
 use Silvanite\NovaToolPermissions\NovaToolPermissions;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
 use Webmapp\Import\Import;
-
 class NovaServiceProvider extends NovaApplicationServiceProvider {
     /**
      * Bootstrap any application services.
