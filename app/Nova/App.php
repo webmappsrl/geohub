@@ -30,7 +30,7 @@ use NovaAttachMany\AttachMany;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
-
+use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
  * Config SECTIONS:
@@ -187,6 +187,7 @@ class App extends Resource
         return [
             'APP' => $this->app_tab(),
             'HOME' => $this->home_tab(),
+            'PROJECT' => $this->project_tab(),
             'AUTH' => $this->auth_tab(),
             'OFFLINE' => $this->offline_tab(),
             'GEOLOCATION' => $this->geolocation_tab(),
@@ -232,6 +233,14 @@ class App extends Resource
             Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
                 view('layers', ['layers' => $this->layers])->render()
             )
+        ];
+    }
+
+    protected function project_tab(): array
+    {
+        return [
+            NovaTinymce5Editor::make('Page Project', 'page_project'),
+
         ];
     }
     protected function languages_tab(): array
