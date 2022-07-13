@@ -48,7 +48,6 @@ class EcPoi extends Resource {
 
 
     use TabsOnEdit, SearchesRelations;
-    use HasMegaFilterTrait;
 
     /**
      * The model the resource corresponds to.
@@ -102,7 +101,11 @@ class EcPoi extends Resource {
             ID::make('id'),
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')
-                ])
+            ]),
+            AttachMany::make('TaxonomyPoiTypes'),
+            AttachMany::make('TaxonomyActivities'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyThemes'),
         ];
 
 
@@ -326,14 +329,14 @@ class EcPoi extends Resource {
             'Accessibility' => $this->accessibility_tab(),
             'Reachability' => $this->reachability_tab(),
 
-            // 'Taxonomies' => [
-            //     AttachMany::make('TaxonomyPoiTypes'),
-            //     // AttachMany::make('TaxonomyWheres'),
-            //     AttachMany::make('TaxonomyActivities'),
-            //     AttachMany::make('TaxonomyTargets'),
-            //     // AttachMany::make('TaxonomyWhens'),
-            //     AttachMany::make('TaxonomyThemes'),
-            //     ],
+            'Taxonomies' => [
+                AttachMany::make('TaxonomyPoiTypes'),
+                // AttachMany::make('TaxonomyWheres'),
+                AttachMany::make('TaxonomyActivities'),
+                AttachMany::make('TaxonomyTargets'),
+                // AttachMany::make('TaxonomyWhens'),
+                AttachMany::make('TaxonomyThemes'),
+                ],
             ]
         )),
         new Panel('Map / Geographical info', [
@@ -546,55 +549,6 @@ HTML;
      */
     public function cards(Request $request) {
         return [
-            MegaFilter::make([
-                'columns' => [
-                    Column::make('Name')->permanent(),
-                    Column::make('Author'),
-                    Column::make('Created At'),
-                    Column::make('Updated At'),
-                    //Column::make('Cai Scale')
-                ],
-                'filters' => [
-                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
-                    (new DateRangeFilter('Created at','created_at')),
-                    (new DateRangeFilter('Updated at','updated_at')),
-
-                ],
-                'settings' => [
-
-                    /**
-                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
-                     */
-                    'columnsWidth' => 'w-1/4',
-                    'filtersWidth' => 'w-1/3',
-                    
-                    /**
-                     * The default state of the main toggle buttons
-                     */
-                    'columnsActive' => false,
-                    'filtersActive' => false,
-                    'actionsActive' => false,
-            
-                    /**
-                     * Show/Hide elements
-                     */
-                    'showHeader' => true,
-                    
-                    /**
-                     * Labels
-                     */
-                    'headerLabel' => 'Columns and Filters',
-                    'columnsLabel' => 'Columns',
-                    'filtersLabel' => 'Filters',
-                    'actionsLabel' => 'Actions',
-                    'columnsSectionTitle' => 'Additional Columns',
-                    'filtersSectionTitle' => 'Filters',
-                    'actionsSectionTitle' => 'Actions',
-                    'columnsResetLinkTitle' => 'Reset Columns',
-                    'filtersResetLinkTitle' => 'Reset Filters',
-            
-                ],
-            ]),
 
         ];
     }
