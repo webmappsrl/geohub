@@ -37,6 +37,7 @@ use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Panel;
@@ -97,31 +98,18 @@ class EcPoi extends Resource {
      */
     public function fields(Request $request) {
 
-        ///////////////////////
-        // Index (onlyOnIndex)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
-            return $this->index();
-        }
-
-        ///////////////////////
-        // Detail (onlyOnDetail)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
-            return $this->detail();
-        }
-
-        ////////////////////////////////////////////////////////
-        // Form (onlyOnForms,hideWhenCreating,hideWhenUpdating)
-        ////////////////////////////////////////////////////////
-        if(NovaCurrentResourceActionHelper::isForm($request)) {
-            return $this->forms($request);
-        }
+        return [
+            ID::make('id'),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')
+                ])
+        ];
 
 
     }
 
-    private function index() {
+
+    public function fieldsForIndex(Request $request) {
         return [
 
             Text::make('Name')->sortable(),
@@ -139,7 +127,7 @@ class EcPoi extends Resource {
 
     }
 
-    private function detail() {
+    public function fieldsForDetail(Request $request) {
         return [ (new Tabs("EC Poi Details: {$this->name} ({$this->id})",[
             'Main' => [
                 Text::make('Geohub ID',function (){return $this->id;}),
@@ -260,11 +248,11 @@ class EcPoi extends Resource {
         ]))->withToolbar(),
 
         // TODO:: Implement ecMdia
-        // BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        BelongsToMany::make('ecMedia')->searchable()->nullable(),
     ];
-
     }
-    private function forms($request) {
+
+    public function fieldsForUpdate(Request $request) {
 
         try {
             $geojson = $this->model()->getGeojson();
@@ -273,11 +261,12 @@ class EcPoi extends Resource {
         }
 
         $tab_title = "New EC Poi";
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
-            $tab_title = "EC Poi Edit: {$this->name} ({$this->id})";
-        }
+        // if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+        //     $tab_title = "EC Poi Edit: {$this->name} ({$this->id})";
+        // }
 
-        return [(new Tabs($tab_title,[
+        return [
+            (new Tabs($tab_title,[
             'Main' => [
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
@@ -337,27 +326,31 @@ class EcPoi extends Resource {
             'Accessibility' => $this->accessibility_tab(),
             'Reachability' => $this->reachability_tab(),
 
-            'Taxonomies' => [
-                AttachMany::make('TaxonomyPoiTypes'),
-                // AttachMany::make('TaxonomyWheres'),
-                AttachMany::make('TaxonomyActivities'),
-                AttachMany::make('TaxonomyTargets'),
-                // AttachMany::make('TaxonomyWhens'),
-                AttachMany::make('TaxonomyThemes'),
-                ],
-                
-            ])),
-            new Panel('Map / Geographical info', [
-                WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
-                    return [
-                        'feature' => $geojson,
-                    ];
-                }),    
-            ]),
+            // 'Taxonomies' => [
+            //     AttachMany::make('TaxonomyPoiTypes'),
+            //     // AttachMany::make('TaxonomyWheres'),
+            //     AttachMany::make('TaxonomyActivities'),
+            //     AttachMany::make('TaxonomyTargets'),
+            //     // AttachMany::make('TaxonomyWhens'),
+            //     AttachMany::make('TaxonomyThemes'),
+            //     ],
+            ]
+        )),
+        new Panel('Map / Geographical info', [
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
+                return [
+                    'feature' => $geojson,
+                ];
+            }),    
+        ]),
     
     
     ];
 
+    }
+
+    public function fieldsForCreate(Request $request) {
+        return $this->fieldsForUpdate($request);
     }
 
     private function style_tab() {

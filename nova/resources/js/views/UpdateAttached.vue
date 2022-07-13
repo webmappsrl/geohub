@@ -60,6 +60,7 @@
               :options="availableResources"
               :label="'display'"
               :selected="selectedResourceId"
+              :value="selectedResourceId"
             >
               <option value="" disabled selected>
                 {{ __('Choose :field', { field: field.name }) }}
@@ -124,9 +125,15 @@ import {
   Errors,
   PreventsFormAbandonment,
 } from 'laravel-nova'
+import HandlesFormRequest from '@/mixins/HandlesFormRequest'
 
 export default {
-  mixins: [PerformsSearches, TogglesTrashed, PreventsFormAbandonment],
+  mixins: [
+    HandlesFormRequest,
+    PerformsSearches,
+    TogglesTrashed,
+    PreventsFormAbandonment,
+  ],
 
   metaInfo() {
     if (this.relatedResourceLabel && this.title) {
@@ -163,6 +170,9 @@ export default {
     viaRelationship: {
       default: '',
     },
+    viaPivotId: {
+      default: null,
+    },
     polymorphic: {
       default: false,
     },
@@ -176,7 +186,6 @@ export default {
     field: null,
     softDeletes: false,
     fields: [],
-    validationErrors: new Errors(),
     selectedResource: null,
     selectedResourceId: null,
     lastRetrievedAt: null,
@@ -255,6 +264,7 @@ export default {
               editing: true,
               editMode: 'update-attached',
               viaRelationship: this.viaRelationship,
+              viaPivotId: this.viaPivotId,
             },
           }
         )
@@ -346,18 +356,7 @@ export default {
           this.canLeave = false
         }
 
-        if (error.response.status == 422) {
-          this.validationErrors = new Errors(error.response.data.errors)
-          Nova.error(this.__('There was a problem submitting the form.'))
-        }
-
-        if (error.response.status == 409) {
-          Nova.error(
-            this.__(
-              'Another user has updated this resource since this page was loaded. Please refresh the page and try again.'
-            )
-          )
-        }
+        this.handleOnUpdateResponseError(error)
       }
     },
 
@@ -379,18 +378,7 @@ export default {
       } catch (error) {
         this.submittedViaUpdateAndContinueEditing = false
 
-        if (error.response.status == 422) {
-          this.validationErrors = new Errors(error.response.data.errors)
-          Nova.error(this.__('There was a problem submitting the form.'))
-        }
-
-        if (error.response.status == 409) {
-          Nova.error(
-            this.__(
-              'Another user has updated this resource since this page was loaded. Please refresh the page and try again.'
-            )
-          )
-        }
+        this.handleOnUpdateResponseError(error)
       }
     },
 
@@ -405,6 +393,7 @@ export default {
           params: {
             editing: true,
             editMode: 'update-attached',
+            viaPivotId: this.viaPivotId,
           },
         }
       )

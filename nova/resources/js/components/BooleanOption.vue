@@ -2,6 +2,7 @@
   <div>
     <checkbox-with-label
       class="m-2"
+      :dusk="`${option.value}-checkbox`"
       :checked="isChecked"
       @input="updateCheckedState(option.value, $event.target.checked)"
     >

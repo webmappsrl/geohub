@@ -57,6 +57,7 @@ import HelpText from '@/components/Form/HelpText'
 import HelpIcon from '@/components/Icons/Help'
 import Icon from '@/components/Icons/Icon'
 import Image from '@/components/Icons/Editor/Image'
+import IndexErrorDialog from '@/components/IndexErrorDialog'
 import Index from './views/Index'
 import Italic from '@/components/Icons/Editor/Italic'
 import Label from '@/components/Form/Label'
@@ -74,6 +75,7 @@ import PaginationSimple from '@/components/Pagination/PaginationSimple'
 import PanelItem from '@/components/PanelItem'
 import PartitionMetric from '@/components/Metrics/PartitionMetric'
 import Play from '@/components/Icons/Play'
+import LoadingButton from '@/components/LoadingButton'
 import ProgressButton from '@/components/ProgressButton'
 import Refresh from '@/components/Icons/Refresh'
 import ResourcePollingButton from '@/components/ResourcePollingButton'
@@ -166,6 +168,7 @@ Vue.component('icon-search', Search)
 Vue.component('icon-view', View)
 Vue.component('icon-menu', Menu)
 Vue.component('inline-action-selector', InlineActionSelector)
+Vue.component('index-error-dialog', IndexErrorDialog)
 Vue.component('lens', Lens)
 Vue.component('lens-selector', LensSelector)
 Vue.component('loader', Loader)
@@ -178,6 +181,7 @@ Vue.component('pagination-simple', PaginationSimple)
 Vue.component('panel-item', PanelItem)
 Vue.component('form-panel', FormPanel)
 Vue.component('partition-metric', PartitionMetric)
+Vue.component('loading-button', LoadingButton)
 Vue.component('progress-button', ProgressButton)
 Vue.component('resource-index', Index)
 Vue.component('resource-table', ResourceTable)
