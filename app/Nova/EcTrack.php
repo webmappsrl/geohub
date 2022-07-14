@@ -117,7 +117,7 @@ class EcTrack extends Resource {
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyThemes'),
             // Do not remove below code, necessary for data binding
-            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
         ];
 
     }
@@ -179,18 +179,18 @@ class EcTrack extends Resource {
                     return $url;
                 })->withMeta(['width' => 400]),
 
-                Text::make('Gallery',function(){
-                    if (count($this->ecMedia) == 0) {
-                        return 'No gallery';
-                    }
+                // Text::make('Gallery',function(){
+                //     if (count($this->ecMedia) == 0) {
+                //         return 'No gallery';
+                //     }
                     
-                    $gallery = '';
-                    foreach ($this->ecMedia as $media) {
-                        $thumbnail = $media->thumbnail('150x150');
-                        $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
-                    }
-                    return $gallery;
-                })->asHtml()
+                //     $gallery = '';
+                //     foreach ($this->ecMedia as $media) {
+                //         $thumbnail = $media->thumbnail('150x150');
+                //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                //     }
+                //     return $gallery;
+                // })->asHtml()
             ],
             'Map' => [
                 WmEmbedmapsField::make(__('Map'), 'geometry', function () {
@@ -285,7 +285,7 @@ class EcTrack extends Resource {
 
             ]))->withToolbar(),
             // Necessary for view
-            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
 
@@ -389,7 +389,7 @@ class EcTrack extends Resource {
                 
             ])),
             // Do not remove below code, necessary for Edit mode  
-            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
 

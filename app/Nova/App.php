@@ -416,9 +416,10 @@ class App extends Resource
             Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
             Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
             Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
+            AttachMany::make('TaxonomyThemes'),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
-                    return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
+                    return implode(', ', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
                 return 'No Themes';
             })->onlyOnDetail(),
