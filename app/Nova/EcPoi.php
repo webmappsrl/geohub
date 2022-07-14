@@ -106,6 +106,8 @@ class EcPoi extends Resource {
             AttachMany::make('TaxonomyActivities'),
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyThemes'),
+            // Do not remove below code, necessary for data binding
+            BelongsToMany::make('ecMedia')->searchable()->nullable(),
         ];
 
 
@@ -250,7 +252,7 @@ class EcPoi extends Resource {
 
         ]))->withToolbar(),
 
-        // TODO:: Implement ecMdia
+        // Necessary for view
         BelongsToMany::make('ecMedia')->searchable()->nullable(),
     ];
     }
@@ -346,7 +348,9 @@ class EcPoi extends Resource {
                 ];
             }),    
         ]),
-    
+
+        // Do not remove below code, necessary for Edit mode  
+        BelongsToMany::make('ecMedia')->searchable()->nullable(),
     
     ];
 

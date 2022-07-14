@@ -35,6 +35,7 @@ use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
@@ -43,7 +44,6 @@ use PosLifestyle\DateRangeFilter\DateRangeFilter;
 class EcTrack extends Resource {
 
     use TabsOnEdit, SearchesRelations;
-    use HasMegaFilterTrait;
 
     /**
      * The model the resource corresponds to.
@@ -108,31 +108,22 @@ class EcTrack extends Resource {
      */
     public function fields(Request $request): array {
 
-        ///////////////////////
-        // Index (onlyOnIndex)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
-            return $this->index();
-        }
-
-        ///////////////////////
-        // Detail (onlyOnDetail)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
-            return $this->detail();
-        }
-
-        ////////////////////////////////////////////////////////
-        // Form (onlyOnForms,hideWhenCreating,hideWhenUpdating)
-        ////////////////////////////////////////////////////////
-        if(NovaCurrentResourceActionHelper::isForm($request)) {
-            return $this->forms($request);
-        }
+        return [
+            ID::make('id'),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')
+            ]),
+            AttachMany::make('TaxonomyActivities'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyThemes'),
+            // Do not remove below code, necessary for data binding
+            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        ];
 
     }
 
 
-    private function index() {
+    public function fieldsForIndex(Request $request) {
         return [
 
             Text::make('Name', function() {
@@ -153,7 +144,7 @@ class EcTrack extends Resource {
 
     }
 
-    private function detail() {
+    public function fieldsForDetail(Request $request) {
         return [ (new Tabs("EC Track Details: {$this->name} ({$this->id})",[
             'Main' => [
                 Text::make('Geohub ID',function (){return $this->id;}),
@@ -292,10 +283,13 @@ class EcTrack extends Resource {
             ],
 
 
-        ]))->withToolbar()];
-
+            ]))->withToolbar(),
+            // Necessary for view
+            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        ];
     }
-    private function forms($request) {
+
+    public function fieldsForUpdate(Request $request) {
 
         try {
             $geojson = $this->model()->getGeojson();
@@ -393,8 +387,14 @@ class EcTrack extends Resource {
                 AttachMany::make('TaxonomyThemes'),
                 ],    
                 
-        ]))];
+            ])),
+            // Do not remove below code, necessary for Edit mode  
+            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        ];
+    }
 
+    public function fieldsForCreate(Request $request) {
+        return $this->fieldsForUpdate($request);
     }
 
     /**
@@ -405,61 +405,7 @@ class EcTrack extends Resource {
      * @return array
      */
     public function cards(Request $request): array {
-        return [
-            MegaFilter::make([
-                'columns' => [
-                    Column::make('Name')->permanent(),
-                    Column::make('Author'),
-                    Column::make('Created At'),
-                    Column::make('Updated At'),
-                    //Column::make('Cai Scale')
-                ],
-                'filters' => [
-                    (new EcTracksCaiScaleFilter()),
-                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
-                    (new DateRangeFilter('Created at','created_at')),
-                    (new DateRangeFilter('Updated at','updated_at')),
-
-                ],
-                'settings' => [
-
-                    /**
-                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
-                     */
-                    'columnsWidth' => 'w-1/4',
-                    'filtersWidth' => 'w-1/3',
-                    
-                    /**
-                     * The default state of the main toggle buttons
-                     */
-                    'columnsActive' => false,
-                    'filtersActive' => false,
-                    'actionsActive' => false,
-            
-                    /**
-                     * Show/Hide elements
-                     */
-                    'showHeader' => true,
-                    
-                    /**
-                     * Labels
-                     */
-                    'headerLabel' => 'Columns and Filters',
-                    'columnsLabel' => 'Columns',
-                    'filtersLabel' => 'Filters',
-                    'actionsLabel' => 'Actions',
-                    'columnsSectionTitle' => 'Additional Columns',
-                    'filtersSectionTitle' => 'Filters',
-                    'actionsSectionTitle' => 'Actions',
-                    'columnsResetLinkTitle' => 'Reset Columns',
-                    'filtersResetLinkTitle' => 'Reset Filters',
-            
-                ],
-            ]),
-            (new EcTracksTotalValue()),
-            (new EcTracksNewValue()),
-            (new EcTracksMyValue()),
-        ];
+        return [];
     }
 
     /**
