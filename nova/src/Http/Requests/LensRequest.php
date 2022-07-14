@@ -116,7 +116,9 @@ class LensRequest extends NovaRequest
                 $this, $lenResource->resolveFields($this)
             ), function ($payload) use ($lenResource) {
                 $payload['actions'] = collect(array_values($lenResource->actions($this)))
-                        ->filter->authorizedToSee($this)->values();
+                        ->filter(function ($action) {
+                            return $action->shownOnIndex() || $action->shownOnTableRow();
+                        })->filter->authorizedToSee($this)->values();
 
                 return $payload;
             });
@@ -126,7 +128,7 @@ class LensRequest extends NovaRequest
     /**
      * Get foreign key name for relation.
      *
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $relation
      * @return string
      */
     protected function getRelationForeignKeyName(Relation $relation)
@@ -134,5 +136,33 @@ class LensRequest extends NovaRequest
         return method_exists($relation, 'getForeignKeyName')
             ? $relation->getForeignKeyName()
             : $relation->getForeignKey();
+    }
+
+    /**
+     * Get per page.
+     *
+     * @return int
+     */
+    public function perPage()
+    {
+        $resource = $this->resource();
+
+        $perPageOptions = $resource::perPageOptions();
+
+        if (empty($perPageOptions)) {
+            $perPageOptions = [$resource::newModel()->getPerPage()];
+        }
+
+        return (int) in_array($this->perPage, $perPageOptions) ? $this->perPage : $perPageOptions[0];
+    }
+
+    /**
+     * Determine if this request is an action request.
+     *
+     * @return bool
+     */
+    public function isActionRequest()
+    {
+        return $this->segment(5) == 'actions';
     }
 }

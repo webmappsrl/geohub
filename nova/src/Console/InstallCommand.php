@@ -63,13 +63,25 @@ class InstallCommand extends Command
     {
         $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
 
-        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), "{$namespace}\\Providers\\NovaServiceProvider::class")) {
-            file_put_contents(config_path('app.php'), str_replace(
-                "{$namespace}\\Providers\EventServiceProvider::class,".PHP_EOL,
-                "{$namespace}\\Providers\EventServiceProvider::class,".PHP_EOL."        {$namespace}\Providers\NovaServiceProvider::class,".PHP_EOL,
-                $appConfig
-            ));
+        $appConfig = file_get_contents(config_path('app.php'));
+
+        if (Str::contains($appConfig, "{$namespace}\\Providers\\NovaServiceProvider::class")) {
+            return;
         }
+
+        $lineEndingCount = [
+            "\r\n" => substr_count($appConfig, "\r\n"),
+            "\r" => substr_count($appConfig, "\r"),
+            "\n" => substr_count($appConfig, "\n"),
+        ];
+
+        $eol = array_keys($lineEndingCount, max($lineEndingCount))[0];
+
+        file_put_contents(config_path('app.php'), str_replace(
+            "{$namespace}\\Providers\EventServiceProvider::class,".$eol,
+            "{$namespace}\\Providers\EventServiceProvider::class,".$eol."        {$namespace}\Providers\NovaServiceProvider::class,".$eol,
+            $appConfig
+        ));
     }
 
     /**

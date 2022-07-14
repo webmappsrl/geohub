@@ -108,29 +108,18 @@ class App extends Resource
      */
     public function fields(Request $request): array
     {
-
-
-        if (NovaCurrentResourceActionHelper::isIndex($request)) {
-            return $this->index();
-        }
-
-        if (NovaCurrentResourceActionHelper::isDetail($request)) {
-            return $this->detail();
-        }
-
-        if (NovaCurrentResourceActionHelper::isCreate($request)) {
-            return $this->create();
-        }
-
-        if (NovaCurrentResourceActionHelper::isUpdate($request)) {
-            return $this->update();
-        }
-
         // Default:
-        return $this->index();
+        return [
+            ID::make(__('ID'), 'id')->sortable(),
+            BelongsTo::make('Author', 'author', User::class)->sortable(),
+            Text::make('API type', 'api')->sortable(),
+            Text::make('Name')->sortable(),
+            Text::make('Customer Name'),
+            AttachMany::make('TaxonomyThemes'),
+        ];
     }
 
-    public function index()
+    public function fieldsForIndex(Request $request)
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
@@ -143,13 +132,14 @@ class App extends Resource
 
 
 
-    private function detail()
+    public function fieldsForDetail(Request $request)
     {
         return [
             (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
         ];
     }
-    public function create()
+
+    public function fieldsForCreate(Request $request)
     {
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
@@ -174,7 +164,7 @@ class App extends Resource
             ], $availableLanguages)
         ];
     }
-    public function update()
+    public function fieldsForUpdate(Request $request)
     {
 
         return [
@@ -224,6 +214,13 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
                 }),
+            AttachMany::make('TaxonomyThemes'),
+            Text::make('Themes',function(){
+                if($this->taxonomyThemes()->count() >0) {
+                    return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                }
+                return 'No Themes';
+            }),
         ];
     }
 

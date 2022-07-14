@@ -6,6 +6,7 @@ use Cake\Chronos\Chronos;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Laravel\Nova\Nova;
@@ -302,8 +303,8 @@ abstract class Trend extends RangedMetric
     /**
      * Return a value result showing a max aggregate over months.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Illuminate\Database\Eloquent\Builder|string $model
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Database\Eloquent\Builder|string  $model
      * @param  \Illuminate\Database\Query\Expression|string  $column
      * @param  string  $dateColumn
      * @return TrendResult
@@ -536,7 +537,7 @@ abstract class Trend extends RangedMetric
             array_shift($results);
         }
 
-        return $this->result()->trend(
+        return $this->result(Arr::last($results))->trend(
             $results
         );
     }
@@ -553,7 +554,7 @@ abstract class Trend extends RangedMetric
         $now = Chronos::now();
 
         $range = $request->range;
-        $ranges = array_keys($this->ranges());
+        $ranges = collect($this->ranges())->keys()->values()->all();
 
         if (count($ranges) > 0 && ! in_array($range, $ranges)) {
             $range = min($range, max($ranges));

@@ -8,8 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
-use Laravel\Nova\Tools\Dashboard;
-use Laravel\Nova\Tools\ResourceManager;
 
 class NovaServiceProvider extends ServiceProvider
 {
@@ -24,14 +22,10 @@ class NovaServiceProvider extends ServiceProvider
             $this->registerPublishing();
         }
 
-        $this->registerDashboards();
         $this->registerResources();
-        $this->registerTools();
         $this->registerCarbonMacros();
         $this->registerCollectionMacros();
         $this->registerJsonVariables();
-
-        Nova::resources([config('nova.actions.resource')]);
     }
 
     /**
@@ -54,7 +48,7 @@ class NovaServiceProvider extends ServiceProvider
         ], 'nova-assets');
 
         $this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/nova'),
+            __DIR__.'/../resources/lang' => lang_path('vendor/nova'),
         ], 'nova-lang');
 
         $this->publishes([
@@ -67,18 +61,6 @@ class NovaServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the dashboards used by Nova.
-     *
-     * @return void
-     */
-    protected function registerDashboards()
-    {
-        Nova::serving(function (ServingNova $event) {
-            Nova::copyDefaultDashboardCards();
-        });
-    }
-
-    /**
      * Register the package resources such as routes, templates, etc.
      *
      * @return void
@@ -87,7 +69,7 @@ class NovaServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'nova');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'nova');
-        $this->loadJsonTranslationsFrom(resource_path('lang/vendor/nova'));
+        $this->loadJsonTranslationsFrom(lang_path('vendor/nova'));
 
         if (Nova::runsMigrations()) {
             $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -125,19 +107,6 @@ class NovaServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the standard Nova tools.
-     *
-     * @return void
-     */
-    protected function registerTools()
-    {
-        Nova::tools([
-            new Dashboard,
-            new ResourceManager,
-        ]);
-    }
-
-    /**
      * Register the Nova Carbon macros.
      *
      * @return void
@@ -158,11 +127,11 @@ class NovaServiceProvider extends ServiceProvider
         Nova::serving(function (ServingNova $event) {
             // Load the default Nova translations.
             Nova::translations(
-                resource_path('lang/vendor/nova/'.app()->getLocale().'.json')
+                lang_path('vendor/nova/'.app()->getLocale().'.json')
             );
 
             Nova::provideToScript([
-                'appName' => config('app.name', 'Laravel Nova'),
+                'appName' => Nova::name() ?? config('app.name', 'Laravel Nova'),
                 'timezone' => config('app.timezone', 'UTC'),
                 'translations' => Nova::allTranslations(),
                 'userTimezone' => Nova::resolveUserTimezone($event->request),

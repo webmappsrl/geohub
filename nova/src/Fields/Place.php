@@ -2,6 +2,9 @@
 
 namespace Laravel\Nova\Fields;
 
+/**
+ * @deprecated Places API will stop functioning on May 31st, 2022
+ */
 class Place extends Text
 {
     /**

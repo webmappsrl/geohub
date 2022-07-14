@@ -37,6 +37,7 @@ use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Panel;
@@ -47,7 +48,6 @@ class EcPoi extends Resource {
 
 
     use TabsOnEdit, SearchesRelations;
-    use HasMegaFilterTrait;
 
     /**
      * The model the resource corresponds to.
@@ -97,31 +97,24 @@ class EcPoi extends Resource {
      */
     public function fields(Request $request) {
 
-        ///////////////////////
-        // Index (onlyOnIndex)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
-            return $this->index();
-        }
-
-        ///////////////////////
-        // Detail (onlyOnDetail)
-        ///////////////////////
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
-            return $this->detail();
-        }
-
-        ////////////////////////////////////////////////////////
-        // Form (onlyOnForms,hideWhenCreating,hideWhenUpdating)
-        ////////////////////////////////////////////////////////
-        if(NovaCurrentResourceActionHelper::isForm($request)) {
-            return $this->forms($request);
-        }
+        return [
+            ID::make('id'),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')
+            ]),
+            AttachMany::make('TaxonomyPoiTypes'),
+            AttachMany::make('TaxonomyActivities'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyThemes'),
+            // Do not remove below code, necessary for data binding
+            BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        ];
 
 
     }
 
-    private function index() {
+
+    public function fieldsForIndex(Request $request) {
         return [
 
             Text::make('Name')->sortable(),
@@ -139,7 +132,7 @@ class EcPoi extends Resource {
 
     }
 
-    private function detail() {
+    public function fieldsForDetail(Request $request) {
         return [ (new Tabs("EC Poi Details: {$this->name} ({$this->id})",[
             'Main' => [
                 Text::make('Geohub ID',function (){return $this->id;}),
@@ -259,12 +252,12 @@ class EcPoi extends Resource {
 
         ]))->withToolbar(),
 
-        // TODO:: Implement ecMdia
-        // BelongsToMany::make('ecMedia')->searchable()->nullable(),
+        // Necessary for view
+        BelongsToMany::make('ecMedia')->searchable()->nullable(),
     ];
-
     }
-    private function forms($request) {
+
+    public function fieldsForUpdate(Request $request) {
 
         try {
             $geojson = $this->model()->getGeojson();
@@ -273,11 +266,12 @@ class EcPoi extends Resource {
         }
 
         $tab_title = "New EC Poi";
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
-            $tab_title = "EC Poi Edit: {$this->name} ({$this->id})";
-        }
+        // if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+        //     $tab_title = "EC Poi Edit: {$this->name} ({$this->id})";
+        // }
 
-        return [(new Tabs($tab_title,[
+        return [
+            (new Tabs($tab_title,[
             'Main' => [
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
@@ -345,19 +339,25 @@ class EcPoi extends Resource {
                 // AttachMany::make('TaxonomyWhens'),
                 AttachMany::make('TaxonomyThemes'),
                 ],
-                
-            ])),
-            new Panel('Map / Geographical info', [
-                WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
-                    return [
-                        'feature' => $geojson,
-                    ];
-                }),    
-            ]),
-    
+            ]
+        )),
+        new Panel('Map / Geographical info', [
+            WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
+                return [
+                    'feature' => $geojson,
+                ];
+            }),    
+        ]),
+
+        // Do not remove below code, necessary for Edit mode  
+        BelongsToMany::make('ecMedia')->searchable()->nullable(),
     
     ];
 
+    }
+
+    public function fieldsForCreate(Request $request) {
+        return $this->fieldsForUpdate($request);
     }
 
     private function style_tab() {
@@ -553,55 +553,6 @@ HTML;
      */
     public function cards(Request $request) {
         return [
-            MegaFilter::make([
-                'columns' => [
-                    Column::make('Name')->permanent(),
-                    Column::make('Author'),
-                    Column::make('Created At'),
-                    Column::make('Updated At'),
-                    //Column::make('Cai Scale')
-                ],
-                'filters' => [
-                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
-                    (new DateRangeFilter('Created at','created_at')),
-                    (new DateRangeFilter('Updated at','updated_at')),
-
-                ],
-                'settings' => [
-
-                    /**
-                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
-                     */
-                    'columnsWidth' => 'w-1/4',
-                    'filtersWidth' => 'w-1/3',
-                    
-                    /**
-                     * The default state of the main toggle buttons
-                     */
-                    'columnsActive' => false,
-                    'filtersActive' => false,
-                    'actionsActive' => false,
-            
-                    /**
-                     * Show/Hide elements
-                     */
-                    'showHeader' => true,
-                    
-                    /**
-                     * Labels
-                     */
-                    'headerLabel' => 'Columns and Filters',
-                    'columnsLabel' => 'Columns',
-                    'filtersLabel' => 'Filters',
-                    'actionsLabel' => 'Actions',
-                    'columnsSectionTitle' => 'Additional Columns',
-                    'filtersSectionTitle' => 'Filters',
-                    'actionsSectionTitle' => 'Actions',
-                    'columnsResetLinkTitle' => 'Reset Columns',
-                    'filtersResetLinkTitle' => 'Reset Filters',
-            
-                ],
-            ]),
 
         ];
     }
