@@ -31,6 +31,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
+
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
  * Config SECTIONS:
@@ -215,9 +216,9 @@ class App extends Resource
                     return $request->user()->can('Admin', $this);
                 }),
             AttachMany::make('TaxonomyThemes'),
-            Text::make('Themes',function(){
-                if($this->taxonomyThemes()->count() >0) {
-                    return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+            Text::make('Themes', function () {
+                if ($this->taxonomyThemes()->count() > 0) {
+                    return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
                 return 'No Themes';
             }),
@@ -260,6 +261,10 @@ class App extends Resource
     protected function map_tab(): array
     {
         return [
+            Multiselect::make(__('Tiles'), 'tiles')->options([
+                'https://api.webmapp.it/tiles/{z}/{x}/{y}.png' => 'webmapp',
+                'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=0Z7ou7nfFFXipdDXHChf' => 'satellite',
+            ], ['https://api.webmapp.it/tiles/{z}/{x}/{y}.png'])->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(19)
