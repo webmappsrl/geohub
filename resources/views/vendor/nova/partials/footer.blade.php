@@ -1,5 +1,5 @@
 <p class="mt-8 text-center text-xs text-80">
-    GeoHub v{{ config('app.version') }}
+    GeoHub v: {{ config('app.version') }}
     <span class="px-1">&middot;</span>
     &copy; <a href="https://webmapp.it" class="text-primary dim no-underline">Webmapp</a>
     <span class="px-1">&middot;</span>

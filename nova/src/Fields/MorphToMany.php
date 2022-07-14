@@ -7,16 +7,19 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Contracts\Deletable as DeletableContract;
 use Laravel\Nova\Contracts\ListableField;
 use Laravel\Nova\Contracts\PivotableField;
+use Laravel\Nova\Contracts\QueryBuilder;
 use Laravel\Nova\Contracts\RelatableField;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Query\Builder;
-use Laravel\Nova\Rules\NotAttached;
 use Laravel\Nova\Rules\RelatableAttachment;
 use Laravel\Nova\TrashedStatus;
 
 class MorphToMany extends Field implements DeletableContract, ListableField, PivotableField, RelatableField
 {
-    use Deletable, DetachesPivotModels, FormatsRelatableDisplayValues, Searchable;
+    use Deletable,
+        DetachesPivotModels,
+        FormatsRelatableDisplayValues,
+        ManyToManyCreationRules,
+        Searchable;
 
     /**
      * The field's component.
@@ -107,6 +110,8 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
         $this->actionsCallback = function () {
             return [];
         };
+
+        $this->noDuplicateRelations();
     }
 
     /**
@@ -160,9 +165,7 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     public function getCreationRules(NovaRequest $request)
     {
         return array_merge_recursive(parent::getCreationRules($request), [
-            $this->attribute => [
-                new NotAttached($request, $request->findModelOrFail()),
-            ],
+            $this->attribute => array_filter($this->getManyToManyCreationRules($request)),
         ]);
     }
 
@@ -171,13 +174,13 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  bool  $withTrashed
-     * @return \Laravel\Nova\Query\Builder
+     * @return \Laravel\Nova\Contracts\QueryBuilder
      */
     public function buildAttachableQuery(NovaRequest $request, $withTrashed = false)
     {
         $model = forward_static_call([$resourceClass = $this->resourceClass, 'newModel']);
 
-        $query = new Builder($resourceClass);
+        $query = app()->make(QueryBuilder::class, [$resourceClass]);
 
         $request->first === 'true'
                         ? $query->whereKey($model->newQueryWithoutScopes(), $request->current)
@@ -294,6 +297,7 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return array_merge([

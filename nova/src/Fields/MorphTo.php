@@ -6,18 +6,21 @@ use Closure;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Nova\Contracts\QueryBuilder;
 use Laravel\Nova\Contracts\RelatableField;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Http\Requests\ResourceIndexRequest;
 use Laravel\Nova\Nova;
-use Laravel\Nova\Query\Builder;
 use Laravel\Nova\Resource;
 use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\TrashedStatus;
+use Laravel\Nova\Util;
 
 class MorphTo extends Field implements RelatableField
 {
-    use ResolvesReverseRelation, DeterminesIfCreateRelationCanBeShown, Searchable;
+    use DeterminesIfCreateRelationCanBeShown,
+        ResolvesReverseRelation,
+        Searchable;
 
     /**
      * The field's component.
@@ -192,7 +195,7 @@ class MorphTo extends Field implements RelatableField
             } else {
                 $resource = new $this->resourceClass($value);
 
-                $this->morphToId = optional(ID::forResource($resource))->value ?? $this->morphToId;
+                $this->morphToId = Util::safeInt($this->morphToId);
 
                 $this->value = $this->formatDisplayValue(
                     $value, Nova::resourceForModel($value)
@@ -327,13 +330,13 @@ class MorphTo extends Field implements RelatableField
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $relatedResource
      * @param  bool  $withTrashed
-     * @return \Laravel\Nova\Query\Builder
+     * @return \Laravel\Nova\Contracts\QueryBuilder
      */
     public function buildMorphableQuery(NovaRequest $request, $relatedResource, $withTrashed = false)
     {
         $model = $relatedResource::newModel();
 
-        $query = new Builder($relatedResource);
+        $query = app()->make(QueryBuilder::class, [$relatedResource]);
 
         $request->first === 'true'
                         ? $query->whereKey($model->newQueryWithoutScopes(), $request->current)
@@ -393,7 +396,7 @@ class MorphTo extends Field implements RelatableField
             'avatar' => $resource->resolveAvatarUrl($request),
             'display' => $this->formatDisplayValue($resource, $relatedResource),
             'subtitle' => $resource->subtitle(),
-            'value' => $resource->getKey(),
+            'value' => Util::safeInt($resource->getKey()),
         ]);
     }
 
@@ -527,7 +530,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Set the default relation resource class to be selected.
      *
-     * @param \Closure|string $resourceClass
+     * @param  \Closure|string  $resourceClass
      * @return $this
      */
     public function defaultResource($resourceClass)
@@ -552,7 +555,7 @@ class MorphTo extends Field implements RelatableField
                 $class = $this->defaultResourceCallable;
             }
 
-            if (class_exists($class)) {
+            if (! empty($class) && class_exists($class)) {
                 return $class::uriKey();
             }
         }
@@ -563,6 +566,7 @@ class MorphTo extends Field implements RelatableField
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $resourceClass = $this->resourceClass;

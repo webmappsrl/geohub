@@ -7,9 +7,17 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Http\Requests\UpdateResourceRequest;
 use Laravel\Nova\Nova;
+use Throwable;
 
 class ResourceUpdateController extends Controller
 {
+    /**
+     * The action event for the action.
+     *
+     * @var ActionEvent
+     */
+    protected $actionEvent = null;
+
     /**
      * Create a new resource.
      *
@@ -18,33 +26,38 @@ class ResourceUpdateController extends Controller
      */
     public function handle(UpdateResourceRequest $request)
     {
-        [$model, $resource] = DB::transaction(function () use ($request) {
-            $model = $request->findModelQuery()->lockForUpdate()->firstOrFail();
+        $model = $request->findModelQuery()->lockForUpdate()->firstOrFail();
 
-            $resource = $request->newResourceWith($model);
-            $resource->authorizeToUpdate($request);
-            $resource::validateForUpdate($request, $resource);
+        try {
+            [$model, $resource] = DB::connection($model->getConnectionName())->transaction(function () use ($request, $model) {
+                $resource = $request->newResourceWith($model);
+                $resource->authorizeToUpdate($request);
+                $resource::validateForUpdate($request, $resource);
 
-            if ($this->modelHasBeenUpdatedSinceRetrieval($request, $model)) {
-                return response('', 409)->throwResponse();
-            }
+                if ($this->modelHasBeenUpdatedSinceRetrieval($request, $model)) {
+                    return response('', 409)->throwResponse();
+                }
 
-            [$model, $callbacks] = $resource::fillForUpdate($request, $model);
+                [$model, $callbacks] = $resource::fillForUpdate($request, $model);
 
-            Nova::actionEvent()->forResourceUpdate($request->user(), $model)->save();
+                Nova::actionEvent()->forResourceUpdate($request->user(), $model)->save();
 
-            $model->save();
+                $model->save();
 
-            collect($callbacks)->each->__invoke();
+                collect($callbacks)->each->__invoke();
 
-            return [$model, $resource];
-        });
+                return [$model, $resource];
+            });
 
-        return response()->json([
-            'id' => $model->getKey(),
-            'resource' => $model->attributesToArray(),
-            'redirect' => $resource::redirectAfterUpdate($request, $resource),
-        ]);
+            return response()->json([
+                'id' => $model->getKey(),
+                'resource' => $model->attributesToArray(),
+                'redirect' => $resource::redirectAfterUpdate($request, $resource),
+            ]);
+        } catch (Throwable $e) {
+            optional($this->actionEvent)->delete();
+            throw $e;
+        }
     }
 
     /**

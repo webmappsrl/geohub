@@ -32,10 +32,29 @@ import slugify from '@/util/slugify'
 export default {
   mixins: [HandlesValidationErrors, FormField],
 
+  data: () => ({
+    isListeningToChanges: false,
+  }),
+
   mounted() {
+    const listenToCreateModalClosed = () => {
+      if (this.isListeningToChanges === true) {
+        this.registerChangeListener()
+      }
+    }
+
+    Nova.$on('create-relation-modal-opened', this.removeChangeListener)
+    Nova.$on('create-relation-modal-closed', listenToCreateModalClosed)
+
     if (this.shouldRegisterInitialListener) {
       this.registerChangeListener()
     }
+
+    this.$once('hook:beforeDestroy', () => {
+      Nova.$off('create-relation-modal-opened', this.removeChangeListener)
+      Nova.$off('create-relation-modal-closed', listenToCreateModalClosed)
+      this.removeChangeListener()
+    })
   },
 
   methods: {
@@ -46,14 +65,25 @@ export default {
     },
 
     registerChangeListener() {
-      Nova.$on(this.eventName, value => {
-        this.value = slugify(value, this.field.separator)
-      })
+      Nova.$on(this.eventName, this.handleChange)
+
+      this.isListeningToChanges = true
+    },
+
+    removeChangeListener() {
+      if (this.isListeningToChanges === true) {
+        Nova.$off(this.eventName)
+      }
+    },
+
+    handleChange(value) {
+      this.value = slugify(value, this.field.separator)
     },
 
     toggleCustomizeClick() {
       if (this.field.readonly) {
-        Nova.$off(this.eventName)
+        this.removeChangeListener()
+        this.isListeningToChanges = false
         this.field.readonly = false
         this.field.extraAttributes.readonly = false
         this.field.showCustomizeButton = false

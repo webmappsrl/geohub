@@ -193,9 +193,8 @@ export default {
           ? 'Cmd-'
           : 'Ctrl-'
       )
-      this.codemirror.options.extraKeys[realMap] = actions[keyMaps[map]].bind(
-        this
-      )
+      this.codemirror.options.extraKeys[realMap] =
+        actions[keyMaps[map]].bind(this)
     })
 
     this.doc.on('change', (cm, changeObj) => {

@@ -5,6 +5,7 @@
     </h3>
 
     <BooleanOption
+      :dusk="`${filter.name}-boolean-filter-${option.value}-option`"
       :resource-name="resourceName"
       :key="option.value"
       v-for="option in options"

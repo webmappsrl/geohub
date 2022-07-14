@@ -8,10 +8,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
+use Throwable;
 
 class ResourceAttachController extends Controller
 {
     use HandlesCustomRelationKeys;
+
+    /**
+     * The action event for the action.
+     *
+     * @var ActionEvent
+     */
+    protected $actionEvent = null;
 
     /**
      * Attach a related resource to the given resource.
@@ -31,19 +39,29 @@ class ResourceAttachController extends Controller
 
         $this->validate($request, $model, $resource);
 
-        DB::transaction(function () use ($request, $resource, $model) {
-            [$pivot, $callbacks] = $resource::fillPivot(
-                $request, $model, $this->initializePivot(
-                    $request, $model->{$request->viaRelationship}()
-                )
-            );
+        try {
+            DB::connection($model->getConnectionName())->transaction(function () use ($request, $resource, $model) {
+                [$pivot, $callbacks] = $resource::fillPivot(
+                    $request,
+                    $model,
+                    $this->initializePivot(
+                        $request,
+                        $model->{$request->viaRelationship}()
+                    )
+                );
 
-            Nova::actionEvent()->forAttachedResource($request, $model, $pivot)->save();
+                DB::transaction(function () use ($request, $model, $pivot) {
+                    $this->actionEvent = Nova::actionEvent()->forAttachedResource($request, $model, $pivot)->save();
+                });
 
-            $pivot->save();
+                $pivot->save();
 
-            collect($callbacks)->each->__invoke();
-        });
+                collect($callbacks)->each->__invoke();
+            });
+        } catch (Throwable $e) {
+            optional($this->actionEvent)->delete();
+            throw $e;
+        }
     }
 
     /**
@@ -91,6 +109,7 @@ class ResourceAttachController extends Controller
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Relations\BelongsToMany  $relationship
      * @return \Illuminate\Database\Eloquent\Relations\Pivot
+     *
      * @throws \Exception
      */
     protected function initializePivot(NovaRequest $request, $relationship)

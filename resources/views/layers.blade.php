@@ -393,6 +393,14 @@
             body {
                 font-family: 'Nunito', sans-serif;
             }
+            .comment {
+                color:green;
+                background-color:white;
+            }
+            .workin {
+                color:white;
+                background-color:green;
+            }
         </style>
  <script type="text/javascript">
             window.copyLayer =   function() {
@@ -426,6 +434,13 @@
                                     <code>
                                     {
                                         "HOME": [<br>
+                                        <span class="workin">**APP WEBAPP**</span><br>
+                                        <span class="comment">**"box_type": "title" permette di inserire un testo che verra visualizzato dentro un h1**</span><br>
+                                        <span style="margin-left:10px">
+                                            {"box_type": "title","title": "Titolo"},<br>
+                                        </span>
+                                        <span class="workin">**APP WEBAPP**</span><br>
+                                        <span class="comment">**"box_type": "layer" permette di inserire box layer, di seguito sono generati tutti i box layers della app**</span><br>
                                         @foreach($layers as $layer)
                                         <span style="margin-left:10px">
                                             {
@@ -435,8 +450,50 @@
                                             },<br>
                                         </span>
                                             @endforeach
-                                            ]
-                                        }
+                                        <span class="workin">**WEBAPP**</span><br>
+                                        <span class="comment">**"box_type": "slug" permette di inserire la pagina project**</span><br>
+                                        <span style="margin-left:10px">
+                                            {<br>
+                                                "box_type": "slug",<br>
+                                            "title": "pagina progetto",<br>
+                                            "slug":"project", //non modificare<br>
+                                            "image_url": "https://webmapp.it/wp-content/uploads/2022/02/mappadigitalesentieroitalia-min.gif"<br>
+                                            },<br>
+                                        </span>
+                                        <span class="workin">**APP**</span><br>
+                                        <span class="comment">**"box_type": "external_url" permette di inserire un box che aprirà un url**</span><br>
+                                        <span style="margin-left:10px">
+                                            {<br>
+                                                "box_type": "external_url",<br>
+                                                "title": "Chi siamo",<br>
+                                                "image_url": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/225x100/615_225x100.jpg",<br>
+                                                "url": "http://www.fumaiolosentieri.it/chi-siamo/"<br>
+                                              },<br>
+                                        </span>
+                                        <span class="workin">**APP**</span><br>
+                                        <span class="comment">**"box_type": "base" permette di inserire gallerie di tracks a scorrimento laterale**</span><br>
+                                        <span style="margin-left:10px">
+                                            {<br>
+                                                "box_type": "base",<br>
+                                                "title": "Itinerari scelti",<br>
+                                                "items": [{<br>
+                                                    "title": "La Sorgente del Tevere e il Giro dei Rifugi",<br>
+                                                    "image_url": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/225x100/639_225x100.jpg",<br>
+                                                    "track_id": 1559<br>
+                                                  },<br>
+                                                  {<br>
+                                                    "title": "La cascata dell'Alferello",<br>
+                                                    "image_url": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/225x100/642_225x100.jpg",<br>
+                                                    "track_id": 1561<br>
+                                                  },<br>
+                                                  {<br>
+                                                    "title": "I luoghi dello spirito",<br>
+                                                    "image_url": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/225x100/638_225x100.jpg",<br>
+                                                    "track_id": 1558<br>
+                                                  }]<br>
+                                              }<br>
+                                        </span>
+                                            ]}
                                     </code>
                                 </div>
                             </div>

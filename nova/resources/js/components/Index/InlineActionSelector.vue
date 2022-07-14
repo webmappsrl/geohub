@@ -41,7 +41,7 @@
         :selected-resources="selectedResources"
         :resource-name="resourceName"
         :action="selectedAction"
-        :endpoint="actionsEndpoint"
+        :endpoint="endpoint"
         :errors="errors"
         @confirm="executeAction"
         @close="closeConfirmationModal"

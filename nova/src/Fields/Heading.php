@@ -21,7 +21,7 @@ class Heading extends Field
      */
     public function __construct($name, $attribute = null, $resolveCallback = null)
     {
-        parent::__construct(null, $attribute, $resolveCallback);
+        parent::__construct(null, $attribute ?? '', $resolveCallback);
 
         $this->withMeta(['value' => $name]);
         $this->hideFromIndex();

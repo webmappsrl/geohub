@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { Minimum } from 'laravel-nova'
 import { mixin as clickaway } from 'vue-clickaway'
 import { CancelToken, Cancel } from 'axios'
@@ -130,7 +131,7 @@ export default {
   },
 
   destroyed() {
-    Nova.removeShortcut('/')
+    Nova.disableShortcut('/')
   },
 
   methods: {
