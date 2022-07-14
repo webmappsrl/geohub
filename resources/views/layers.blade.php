@@ -434,12 +434,10 @@
                                     <code>
                                     {
                                         "HOME": [<br>
-                                        <span class="workin">**APP WEBAPP**</span><br>
                                         <span class="comment">**"box_type": "title" permette di inserire un testo che verra visualizzato dentro un h1**</span><br>
                                         <span style="margin-left:10px">
                                             {"box_type": "title","title": "Titolo"},<br>
                                         </span>
-                                        <span class="workin">**APP WEBAPP**</span><br>
                                         <span class="comment">**"box_type": "layer" permette di inserire box layer, di seguito sono generati tutti i box layers della app**</span><br>
                                         @foreach($layers as $layer)
                                         <span style="margin-left:10px">
@@ -460,7 +458,6 @@
                                             "image_url": "https://webmapp.it/wp-content/uploads/2022/02/mappadigitalesentieroitalia-min.gif"<br>
                                             },<br>
                                         </span>
-                                        <span class="workin">**APP**</span><br>
                                         <span class="comment">**"box_type": "external_url" permette di inserire un box che aprirà un url**</span><br>
                                         <span style="margin-left:10px">
                                             {<br>
@@ -470,7 +467,6 @@
                                                 "url": "http://www.fumaiolosentieri.it/chi-siamo/"<br>
                                               },<br>
                                         </span>
-                                        <span class="workin">**APP**</span><br>
                                         <span class="comment">**"box_type": "base" permette di inserire gallerie di tracks a scorrimento laterale**</span><br>
                                         <span style="margin-left:10px">
                                             {<br>
