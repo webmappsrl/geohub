@@ -260,11 +260,13 @@ class App extends Resource
 
     protected function map_tab(): array
     {
+        $selectedTileLayers = is_null($this->model()->tiles) ? [] : json_decode($this->model()->tiles, true);
+        $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         return [
             Multiselect::make(__('Tiles'), 'tiles')->options([
-                'https://api.webmapp.it/tiles/{z}/{x}/{y}.png' => 'webmapp',
-                'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=0Z7ou7nfFFXipdDXHChf' => 'satellite',
-            ], ['https://api.webmapp.it/tiles/{z}/{x}/{y}.png'])->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
+                "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
+                "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
+            ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(19)
