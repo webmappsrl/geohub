@@ -412,8 +412,7 @@ class SyncEcFromOutSource
                         ]);
                     
                     // Attach poi_type to poi
-                    Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai' ) {
+                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.','-',$path['host']);
                         $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
@@ -438,7 +437,31 @@ class SyncEcFromOutSource
                                 }
                             }
                         }
+                    } elseif (!empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint == 'sicai_pt_accoglienza_unofficial') {
+                        foreach ($out_source->tags['poi_type'] as $cat) {
+                            $cat = trim($cat);
+                            $cat_identifier = strtolower($cat);
+                            $cat_identifier = str_replace(' ','-',$cat_identifier);
+                            if ($cat_identifier == 'b&b') {
+                                $cat_identifier = 'b-and-b';
+                            }
+                            $cat_name = ucwords($cat);
+                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$cat_identifier);
+                            $geohub_w = TaxonomyPoiType::where('identifier',$cat_identifier)->first();
+                            if ($geohub_w && !is_null($geohub_w)) { 
+                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                            } else {
+                                $new_poi_type = TaxonomyPoiType::create(
+                                    [
+                                        'identifier' => $cat_identifier,
+                                        'name' => $cat_name,
+                                    ]
+                                    );
+                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                            }
+                        }
                     } else {
+                        Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
                         $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
                     }
 

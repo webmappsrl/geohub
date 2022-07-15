@@ -25,7 +25,7 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
      */
     public function importTrack(){
         
-        // Curl request to get the feature information from external source
+        // DB connection to get the feature information from external source
         $db = DB::connection('out_source_sicai');
         $track = $db->table('sentiero_italia.SI_Tappe')
             ->where('id_2',$this->source_id)
@@ -165,7 +165,7 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         // }
         
         if ($geometry) {
-            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
+            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='sicai_pt_accoglienza_unofficial' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
     
     
             if (is_array($related_pois) && !empty($related_pois)) {
@@ -232,33 +232,33 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         if (isset($poi['foto02']) && $poi['foto02']) {
             Log::info('Preparing OSF POI GALLERY foto02 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,001);
+            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['foto02'],$poi,001);
         }
         
         // Processing the gallery image of POI
         if (isset($poi['foto03']) && $poi['foto03']) {
             Log::info('Preparing OSF POI GALLERY foto03 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,003);
+            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['foto03'],$poi,003);
         }
         
         // Processing the gallery image of POI
         if (isset($poi['foto04']) && $poi['foto04']) {
             Log::info('Preparing OSF POI GALLERY foto04 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,004);
+            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['foto04'],$poi,004);
         }
         
         // Processing the gallery image of POI
         if (isset($poi['foto05']) && $poi['foto05']) {
             Log::info('Preparing OSF POI GALLERY foto05 with external POI ID: '.$this->source_id);
             
-            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['immagine'],$poi,005);
+            $this->tags['image_gallery'][] = $this->createOSFMedia($poi['foto05'],$poi,005);
         }
 
         // Processing the poi_type
         Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
-        if (isset($poi['tourism'])) {
+        if (isset($poi['tourism']) && $poi['tourism']) {
             $this->tags['poi_type'][] = $poi['tourism'];
         }
     }
@@ -272,6 +272,8 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
     public function createOSFMedia($image,$item,$suffix){ 
         $base = 'https://sentieroitaliamappe.cai.it/index.php/view/media/getMedia?repository=sicaipubblico&project=SICAI_Pubblico&path=';
         $item = json_decode(json_encode($item),true);
+
+        $image = explode(',',$image)[0];
 
         if (isset($item['name']) && $item['name']) {
             $tags['name']['it'] = $item['name'];
@@ -316,6 +318,7 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
         } catch(Exception $e) {
             echo $e;
             Log::info('Saving media in s3-osfmedia error:' . $e);
+            return null;
         }
 
         return null;
