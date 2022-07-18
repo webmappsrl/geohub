@@ -37,20 +37,6 @@ class EcMedia extends Model {
         });
 
         static::created(function ($ecMedia) {
-            static::creating(function ($ecMedia) {
-                $user = User::getEmulatedUser();
-                if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
-                $ecMedia->author()->associate($user);
-            });
-
-            static::created(function ($ecMedia) {
-                try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('enrich_ec_media', ['id' => $ecMedia->id]);
-                } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
-                }
-            });
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_media', ['id' => $ecMedia->id]);
