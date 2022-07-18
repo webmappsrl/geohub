@@ -166,23 +166,25 @@ class EcPoi extends Model
         $array = $this->setOutSourceValue();
         if ($this->out_source_feature_id) {
             $out_source_id = $this->out_source_feature_id;
-            $out_source_feature = OutSourcePoi::find($out_source_id)->first();
-            $locales = config('tab-translatable.locales');
-            foreach ($array as $key => $val) {
-                if (in_array($key, ['name', 'description', 'excerpt'])) {
-                    foreach ($locales as $lang) {
-                        if ($val) {
-                            if (!array_key_exists($lang, $val) || empty($val[$lang])) {
-                                if (array_key_exists($key, $out_source_feature->tags) && array_key_exists($lang, $out_source_feature->tags[$key])) {
-                                    $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+            $out_source_feature = OutSourcePoi::find($out_source_id);
+            if ($out_source_feature) {
+                $locales = config('tab-translatable.locales');
+                foreach ($array as $key => $val) {
+                    if (in_array($key, ['name', 'description', 'excerpt'])) {
+                        foreach ($locales as $lang) {
+                            if ($val) {
+                                if (!array_key_exists($lang, $val) || empty($val[$lang])) {
+                                    if (array_key_exists($key, $out_source_feature->tags) && array_key_exists($lang, $out_source_feature->tags[$key])) {
+                                        $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                if (empty($val) || $val == false) {
-                    if (array_key_exists($key, $out_source_feature->tags)) {
-                        $array[$key] = $out_source_feature->tags[$key];
+                    if (empty($val) || $val == false) {
+                        if (array_key_exists($key, $out_source_feature->tags)) {
+                            $array[$key] = $out_source_feature->tags[$key];
+                        }
                     }
                 }
             }
@@ -212,6 +214,10 @@ class EcPoi extends Model
             $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);
         }
 
+        if (!is_array($array['related_url']) && empty($array['related_url'])) { 
+            unset($array['related_url']);
+        }
+        
         $taxonomies = [
             'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
