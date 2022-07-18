@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 
-class EcPoi extends Model {
+class EcPoi extends Model
+{
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
-    protected $fillable = ['name','user_id', 'geometry','out_source_feature_id'];
+    protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id'];
     public array $translatable = ['name', 'description', 'excerpt'];
     public bool $skip_update = false;
 
-        /**
+    /**
      * The attributes that should be cast.
      *
      * @var array
@@ -31,11 +32,13 @@ class EcPoi extends Model {
         'accessibility_validity_date' => 'datetime',
     ];
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
     }
 
-    protected static function booted() {
+    protected static function booted()
+    {
         parent::booted();
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
@@ -66,11 +69,13 @@ class EcPoi extends Model {
         });
     }
 
-    public function author(): BelongsTo {
+    public function author(): BelongsTo
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function uploadAudio($file): string {
+    public function uploadAudio($file): string
+    {
         $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
         $cloudPath = 'ecpoi/audio/' . $this->id . '/' . $filename;
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
@@ -78,47 +83,58 @@ class EcPoi extends Model {
         return Storage::cloud()->url($cloudPath);
     }
 
-    public function ecMedia(): BelongsToMany {
+    public function ecMedia(): BelongsToMany
+    {
         return $this->belongsToMany(EcMedia::class);
     }
 
-    public function ecTracks(): BelongsToMany {
+    public function ecTracks(): BelongsToMany
+    {
         return $this->belongsToMany(EcTrack::class);
     }
 
-    public function taxonomyWheres(): MorphToMany {
+    public function taxonomyWheres(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
     }
 
-    public function taxonomyWhens(): MorphToMany {
+    public function taxonomyWhens(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyWhen::class, 'taxonomy_whenable');
     }
 
-    public function taxonomyTargets(): MorphToMany {
+    public function taxonomyTargets(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyTarget::class, 'taxonomy_targetable');
     }
 
-    public function taxonomyThemes(): MorphToMany {
+    public function taxonomyThemes(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
 
-    public function taxonomyActivities(): MorphToMany {
+    public function taxonomyActivities(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable');
     }
 
-    public function taxonomyPoiTypes(): MorphToMany {
+    public function taxonomyPoiTypes(): MorphToMany
+    {
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    public function outSourcePOI(): BelongsTo {
-        return $this->belongsTo(OutSourcePoi::class,'out_source_feature_id');
+    public function outSourcePOI(): BelongsTo
+    {
+        return $this->belongsTo(OutSourcePoi::class, 'out_source_feature_id');
     }
 
-    public function getNeighbourEcMedia(): array {
+    public function getNeighbourEcMedia(): array
+    {
         $features = [];
         $result = DB::select(
             'SELECT id FROM ec_media
@@ -145,18 +161,19 @@ class EcPoi extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $array = $this->setOutSourceValue();
         if ($this->out_source_feature_id) {
             $out_source_id = $this->out_source_feature_id;
             $out_source_feature = OutSourcePoi::find($out_source_id)->first();
             $locales = config('tab-translatable.locales');
             foreach ($array as $key => $val) {
-                if (in_array($key,['name','description','excerpt'])) {
+                if (in_array($key, ['name', 'description', 'excerpt'])) {
                     foreach ($locales as $lang) {
                         if ($val) {
-                            if (!array_key_exists($lang,$val) || empty($val[$lang])) {
-                                if (array_key_exists($key,$out_source_feature->tags) && array_key_exists($lang,$out_source_feature->tags[$key])) {
+                            if (!array_key_exists($lang, $val) || empty($val[$lang])) {
+                                if (array_key_exists($key, $out_source_feature->tags) && array_key_exists($lang, $out_source_feature->tags[$key])) {
                                     $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
                                 }
                             }
@@ -164,7 +181,7 @@ class EcPoi extends Model {
                     }
                 }
                 if (empty($val) || $val == false) {
-                    if (array_key_exists($key,$out_source_feature->tags)) {
+                    if (array_key_exists($key, $out_source_feature->tags)) {
                         $array[$key] = $out_source_feature->tags[$key];
                     }
                 }
@@ -203,6 +220,14 @@ class EcPoi extends Model {
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
             'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
         ];
+        $taxonomiesVerbose = [
+            'activity' => $this->getValuesOfMorphToMany($this->taxonomyActivities()),
+            'theme' => $this->getValuesOfMorphToMany($this->taxonomyThemes()),
+            'when' => $this->getValuesOfMorphToMany($this->taxonomyWhens()),
+            'where' => $this->getValuesOfMorphToMany($this->taxonomyWheres()),
+            'who' => $this->getValuesOfMorphToMany($this->taxonomyTargets()),
+            'poi_type' => $this->getValuesOfMorphToMany($this->taxonomyPoiTypes())
+        ];
 
         foreach ($taxonomies as $key => $value) {
             if (count($value) === 0)
@@ -210,54 +235,68 @@ class EcPoi extends Model {
         }
 
         $array['taxonomy'] = $taxonomies;
+        // TODO non so se modificare taxonomy rompe qualcosa per ora ho inseritono una nuova proprietà
+        $array['taxonomyVerbose'] = $taxonomiesVerbose;
 
         $propertiesToClear = ['geometry'];
-        foreach ($array as $property => $value) {
-            if (in_array($property, $propertiesToClear)
+        foreach ($array as $property => $taxonomies) {
+            if (
+                in_array($property, $propertiesToClear)
                 || is_null($value)
-                || (is_array($value) && count($value) === 0))
+                || (is_array($value) && count($value) === 0)
+            )
                 unset($array[$property]);
         }
 
         return $array;
     }
+    private function getValuesOfMorphToMany($relation): array
+    {
+        return $relation->get(['identifier', 'name', 'id'])->map(function ($item) {
+            unset($item['pivot']);
+            return $item;
+        })->toArray();
+    }
 
-    private function setOutSourceValue():array {
+    private function setOutSourceValue(): array
+    {
         $array = $this->toArray();
-        if(isset($this->out_source_feature_id)) {
+        if (isset($this->out_source_feature_id)) {
             $keys = [
                 'description',
                 'excerpt',
             ];
             foreach ($keys as $key) {
-                $array=$this->setOutSourceSingleValue($array,$key);
+                $array = $this->setOutSourceSingleValue($array, $key);
             }
         }
         return $array;
     }
 
-    private function setOutSourceSingleValue($array,$varname):array {
-        if($this->isReallyEmpty($array[$varname])) {
-            if(isset($this->outSourcePOI->tags[$varname])) {
+    private function setOutSourceSingleValue($array, $varname): array
+    {
+        if ($this->isReallyEmpty($array[$varname])) {
+            if (isset($this->outSourcePOI->tags[$varname])) {
                 $array[$varname] = $this->outSourcePOI->tags[$varname];
             }
         }
         return $array;
     }
 
-    private function isReallyEmpty($val): bool {
-        if(is_null($val)) {
+    private function isReallyEmpty($val): bool
+    {
+        if (is_null($val)) {
             return true;
         }
-        if(empty($val)) {
+        if (empty($val)) {
             return true;
         }
-        if(is_array($val)) {
-            if(count($val)==0) {
+        if (is_array($val)) {
+            if (count($val) == 0) {
                 return true;
             }
-            foreach($val as $lang => $cont) {
-                if(!empty($cont)) {
+            foreach ($val as $lang => $cont) {
+                if (!empty($cont)) {
                     return false;
                 }
                 return true;
@@ -271,7 +310,8 @@ class EcPoi extends Model {
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
@@ -285,14 +325,15 @@ class EcPoi extends Model {
      *
      * @return array|null
      */
-    public function getBasicGeojson(): ?array {
+    public function getBasicGeojson(): ?array
+    {
         $geojson = $this->getGeojson();
         if (isset($geojson["properties"])) {
             $geojson["properties"] = $this->getJson();
             $neededProperties = ['id', 'name', 'feature_image'];
             foreach ($geojson['properties'] as $property => $value) {
                 if (!in_array($property, $neededProperties))
-                    unset ($geojson['properties'][$property]);
+                    unset($geojson['properties'][$property]);
             }
 
             return $geojson;
@@ -304,7 +345,8 @@ class EcPoi extends Model {
      *
      * @return array
      */
-    public function getElbrusGeojson(): array {
+    public function getElbrusGeojson(): array
+    {
         $geojson = $this->getGeojson();
         // MAPPING
         $geojson['properties']['id'] = 'ec_poi_' . $this->id;
@@ -320,7 +362,8 @@ class EcPoi extends Model {
      *
      * @return array
      */
-    private function _mapElbrusGeojsonProperties(array $geojson): array {
+    private function _mapElbrusGeojsonProperties(array $geojson): array
+    {
         $fields = ['ele_min', 'ele_max', 'ele_from', 'ele_to', 'duration_forward', 'duration_backward', 'contact_phone', 'contact_email'];
         foreach ($fields as $field) {
             if (isset($geojson['properties'][$field])) {
@@ -351,12 +394,12 @@ class EcPoi extends Model {
 
         if (isset($geojson['properties']['feature_image'])) {
             $geojson['properties']['image'] = $geojson['properties']['feature_image'];
-            unset ($geojson['properties']['feature_image']);
+            unset($geojson['properties']['feature_image']);
         }
 
         if (isset($geojson['properties']['image_gallery'])) {
             $geojson['properties']['imageGallery'] = $geojson['properties']['image_gallery'];
-            unset ($geojson['properties']['image_gallery']);
+            unset($geojson['properties']['image_gallery']);
         }
 
         return $geojson;
