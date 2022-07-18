@@ -24,29 +24,40 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
      * @return int The ID of OutSourceFeature created 
      */
     public function importTrack(){
-        
-        // DB connection to get the feature information from external source
-        $db = DB::connection('out_source_sicai');
-        $track = $db->table('sentiero_italia.SI_Tappe')
-            ->where('id_2',$this->source_id)
-            ->first();
+        $error_not_created = [];
+        try {
+            // DB connection to get the feature information from external source
+            $db = DB::connection('out_source_sicai');
+            $track = $db->table('sentiero_italia.SI_Tappe')
+                ->where('id_2',$this->source_id)
+                ->first();
 
-        // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $geometry = DB::select("SELECT ST_AsText(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326)))")[0]->st_astext;
-        $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326))))")[0]->st_astext;
-        $this->params['geometry'] = $geometry;
-        $this->params['provider'] = get_class($this);
-        $this->params['type'] = $this->type;
-        $this->params['raw_data'] = json_encode($track);
+            // prepare feature parameters to pass to updateOrCreate function
+            Log::info('Preparing OSF Track with external ID: '.$this->source_id);
+            $geometry = DB::select("SELECT ST_AsText(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326)))")[0]->st_astext;
+            $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_Transform(Geometry('$track->geom'),4326))))")[0]->st_astext;
+            $this->params['geometry'] = $geometry;
+            $this->params['provider'] = get_class($this);
+            $this->params['type'] = $this->type;
+            $this->params['raw_data'] = json_encode($track);
 
-        // prepare the value of tags data
-        Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
-        $this->prepareTrackTagsJson($track,$geometry);
-        $this->params['tags'] = $this->tags;
-        Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
-        Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
-        return $this->create_or_update_feature($this->params);
+            // prepare the value of tags data
+            Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+            $this->prepareTrackTagsJson($track,$geometry);
+            $this->params['tags'] = $this->tags;
+            Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
+            Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+            return $this->create_or_update_feature($this->params);
+        } catch (Exception $e) {
+            array_push($error_not_created,$track->id_0);
+            Log::info('Error creating EcPoi from OSF with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
+        }
+        if ($error_not_created) {
+            Log::info('Ec features not created from Source with osf ID: ');
+            foreach ($error_not_created as $id) {
+                Log::info($id);
+            }
+        }
     }
 
     /**
@@ -85,9 +96,9 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
             Log::info('Error creating EcPoi from OSF with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
         }
         if ($error_not_created) {
-            Log::info('Ec features not created from Source with URL: ');
-            foreach ($error_not_created as $url) {
-                Log::info($url);
+            Log::info('Ec features not created from Source with osf ID: ');
+            foreach ($error_not_created as $id) {
+                Log::info($id);
             }
         }
     }
