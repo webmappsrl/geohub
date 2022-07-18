@@ -281,23 +281,23 @@ class OutSourceImporterFeatureSICAI extends OutSourceImporterFeatureAbstract {
      * 
      */
     public function createOSFMedia($image,$item,$suffix){ 
-        $base = 'https://sentieroitaliamappe.cai.it/index.php/view/media/getMedia?repository=sicaipubblico&project=SICAI_Pubblico&path=';
-        $item = json_decode(json_encode($item),true);
-
-        $image = explode(',',$image)[0];
-
-        if (isset($item['name']) && $item['name']) {
-            $tags['name']['it'] = $item['name'];
-        } else {
-            $tags['name']['it'] = $item['tappa'];
-        }
-        if (isset($item['id_0']) && $item['id_0']) {
-            $item_id = $item['id_0'];
-        } else {
-            $item_id = $item['id_2'];
-        }
-        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$item_id);
         try{
+            $base = 'https://sentieroitaliamappe.cai.it/index.php/view/media/getMedia?repository=sicaipubblico&project=SICAI_Pubblico&path=';
+            $item = json_decode(json_encode($item),true);
+    
+            $image = explode(',',$image)[0];
+    
+            if (isset($item['name']) && $item['name']) {
+                $tags['name']['it'] = $item['name'];
+            } else {
+                $tags['name']['it'] = $item['tappa'];
+            }
+            if (isset($item['id_0']) && $item['id_0']) {
+                $item_id = $item['id_0'];
+            } else {
+                $item_id = $item['id_2'];
+            }
+            Log::info('Preparing OSF MEDIA TAGS with external ID: '.$item_id);
             // Saving the Media in to the s3-osfmedia storage
             $storage_name = config('geohub.osf_media_storage_name');
             Log::info('Saving OSF MEDIA on storage '.$storage_name);
