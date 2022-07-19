@@ -95,6 +95,31 @@ class App extends Model
         }
         return $pois;
     }
+    public function getAllPoiTaxonomies()
+    {
+        $themes = $this->taxonomyThemes()->get();
+        $res = [
+            'activity' => [],
+            'theme' => [],
+            'when' => [],
+            'where' => [],
+            'who' => [],
+            'poi_type' => []
+        ];
+        foreach ($themes as $theme) {
+            foreach ($theme->ecPois()->get() as $poi) {
+                $res = [
+                    //'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    //'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'where' => array_unique(array_merge($res['where'], $poi->taxonomyWheres()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    //'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'poi_type' => array_unique(array_merge($res['poi_type'], $poi->taxonomyPoiTypes()->pluck('identifier')->toArray()), SORT_REGULAR),
+                ];
+            }
+        }
+        return $res;
+    }
 
 
     /**
