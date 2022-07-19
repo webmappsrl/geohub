@@ -240,6 +240,7 @@ class AppController extends Controller
     $data['MAP']['pois']['poiIconRadius'] = $app->poi_icon_radius;
     $data['MAP']['pois']['poiMinZoom'] = $app->poi_min_zoom;
     $data['MAP']['pois']['poiLabelMinZoom'] = $app->poi_label_min_zoom;
+    $data['MAP']['pois']['taxonomies'] = $app->getAllPoiTaxonomies();
 
     return $data;
   }
