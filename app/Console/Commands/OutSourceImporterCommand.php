@@ -136,8 +136,12 @@ class OutSourceImporterCommand extends Command
     }
     
     private function importerSICAI(){
-        $features = new OutSourceImporterListSICAI($this->type,$this->endpoint);
-        $features_list = $features->getList();
+        if ($this->single_feature) {
+            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+        } else {
+            $features = new OutSourceImporterListSICAI($this->type,$this->endpoint);
+            $features_list = $features->getList();
+        }
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $date) {
