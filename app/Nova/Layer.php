@@ -2,15 +2,16 @@
 
 namespace App\Nova;
 
-use App\Helpers\NovaCurrentResourceActionHelper;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -55,42 +56,38 @@ class Layer extends Resource
      */
     public function fields(Request $request)
     {
-
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
-            return $this->index();
-        }
-
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
-            return $this->detail();
-        }
-
-        if(NovaCurrentResourceActionHelper::isCreate($request)) {
-            return $this->create();
-        }
-
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
-            return $this->update();
-        }
-        $my_url = $request->server->get('HTTP_REFERER');
-        if( strpos($my_url,'/edit') !== FALSE ) {
-            return $this->update();
-        } else {
-            return $this->create();
-        }
-
+        // $my_url = $request->server->get('HTTP_REFERER');
+        // if( strpos($my_url,'/edit') !== FALSE ) {
+        //     return $this->update();
+        // } else {
+        //     return $this->create();
+        // }
+        return [
+            ID::make('id'),
+            NovaTabTranslatable::make([
+                Text::make(__('Name'), 'name')
+            ]),
+            AttachMany::make('taxonomyActivities'),
+            AttachMany::make('TaxonomyThemes'),
+            AttachMany::make('TaxonomyTargets'),
+            AttachMany::make('TaxonomyWhens'),
+            AttachMany::make('TaxonomyWheres'),
+            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
+        ];
     }
 
-    public function index() {
+    public function fieldsForIndex(Request $request) {
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('App'),
             Text::make('Name')->required()->sortable(),
             // Number::make('Rank')->sortable(),
             InlineIndex::make('Rank')->sortable()->rules('required'),
+            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
         ];
     }
 
-    public function detail() {
+    public function fieldsForDetail(Request $request) {
         return [ (new Tabs("LAYER Details: {$this->name} (GeohubId: {$this->id})",[
             'MAIN' => [
                 BelongsTo::make('App'),
@@ -154,15 +151,17 @@ class Layer extends Resource
                 }),
             ]
 
-        ]))->withToolbar()];
+        ]))->withToolbar(),
+        // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
+    ];
     }
-    public function create() {
+    public function fieldsForCreate(Request $request) {
         return [
             Text::make('Name')->required(),
             BelongsTo::make('App')->searchable()->showCreateRelationButton(),
         ];
     }
-    public function update() {
+    public function fieldsForUpdate(Request $request) {
 
         $title = "EDIT LAYER: {$this->name} (LAYER GeohubId: {$this->id})";
         if($this->app) {
@@ -200,11 +199,12 @@ class Layer extends Resource
                 Boolean::make('Use features only created by myself','data_use_only_my_data'),
                 AttachMany::make('taxonomyActivities'),
                 AttachMany::make('TaxonomyThemes'),
-                AttachMany::make('TaxonomyWheres'),
                 AttachMany::make('TaxonomyTargets'),
                 AttachMany::make('TaxonomyWhens'),
             ]
-        ]))->withToolbar()];
+        ]))->withToolbar(),
+        // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
+    ];
 
     }
 
