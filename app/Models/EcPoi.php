@@ -214,10 +214,10 @@ class EcPoi extends Model
             $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);
         }
 
-        if (!is_array($array['related_url']) && empty($array['related_url'])) { 
+        if (!is_array($array['related_url']) && empty($array['related_url'])) {
             unset($array['related_url']);
         }
-        
+
         $taxonomies = [
             'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
@@ -226,14 +226,15 @@ class EcPoi extends Model
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
             'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
         ];
-        $taxonomiesVerbose = [
-            'activity' => $this->getValuesOfMorphToMany($this->taxonomyActivities()),
-            'theme' => $this->getValuesOfMorphToMany($this->taxonomyThemes()),
-            'when' => $this->getValuesOfMorphToMany($this->taxonomyWhens()),
-            'where' => $this->getValuesOfMorphToMany($this->taxonomyWheres()),
-            'who' => $this->getValuesOfMorphToMany($this->taxonomyTargets()),
-            'poi_type' => $this->getValuesOfMorphToMany($this->taxonomyPoiTypes())
-        ];
+
+        $taxonomiesidentifiers = array_merge(
+            $this->addPrefix($this->taxonomyActivities()->pluck('identifier')->toArray(), 'activity'),
+            $this->addPrefix($this->taxonomyThemes()->pluck('identifier')->toArray(), 'theme'),
+            $this->addPrefix($this->taxonomyWhens()->pluck('identifier')->toArray(), 'when'),
+            $this->addPrefix($this->taxonomyWheres()->pluck('identifier')->toArray(), 'where'),
+            $this->addPrefix($this->taxonomyTargets()->pluck('identifier')->toArray(), 'who'),
+            $this->addPrefix($this->taxonomyPoiTypes()->pluck('identifier')->toArray(), 'poi_type'),
+        );
 
         foreach ($taxonomies as $key => $value) {
             if (count($value) === 0)
@@ -242,7 +243,7 @@ class EcPoi extends Model
 
         $array['taxonomy'] = $taxonomies;
         // TODO non so se modificare taxonomy rompe qualcosa per ora ho inseritono una nuova proprietà
-        $array['taxonomyVerbose'] = $taxonomiesVerbose;
+        $array['taxonomyIdentifiers'] = $taxonomiesidentifiers;
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $taxonomies) {
@@ -256,10 +257,28 @@ class EcPoi extends Model
 
         return $array;
     }
-    private function getValuesOfMorphToMany($relation): array
+    private function addPrefix($array, $prefix)
     {
-        return $relation->get(['identifier', 'name', 'id'])->map(function ($item) {
+        return array_map(function ($elem) use ($prefix) {
+            return $prefix . "_" . $elem;
+        }, $array);
+    }
+    function getTaxonomies()
+    {
+        return [
+            'activity' => $this->getValuesOfMorphToMany($this->taxonomyActivities(), 'activity'),
+            'theme' => $this->getValuesOfMorphToMany($this->taxonomyThemes(), 'theme'),
+            'when' => $this->getValuesOfMorphToMany($this->taxonomyWhens(), 'when'),
+            'where' => $this->getValuesOfMorphToMany($this->taxonomyWheres(), 'where'),
+            'who' => $this->getValuesOfMorphToMany($this->taxonomyTargets(), 'who'),
+            'poi_type' => $this->getValuesOfMorphToMany($this->taxonomyPoiTypes(), 'poi_type')
+        ];
+    }
+    private function getValuesOfMorphToMany($relation, $slug): array
+    {
+        return $relation->get(['identifier', 'name', 'id'])->map(function ($item)  use ($slug) {
             unset($item['pivot']);
+            $item['identifier'] = $slug . "_" . $item['identifier'];
             return $item;
         })->toArray();
     }

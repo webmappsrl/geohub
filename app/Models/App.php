@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
+use App\Traits\ConfTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class App
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\DB;
  */
 class App extends Model
 {
-    use HasFactory;
+    use HasFactory, ConfTrait;
 
     protected static function booted()
     {
@@ -95,6 +96,26 @@ class App extends Model
         }
         return $pois;
     }
+
+    function BuildPoisGeojson()
+    {
+        $poisUri = $this->id . ".geojson";
+        $json = [
+            "type" => "FeatureCollection",
+            "features" => $this->getAllPoisGeojson(),
+        ];
+        Storage::disk('pois')->put($poisUri, json_encode($json));
+        return $json;
+    }
+
+    function BuildConfJson()
+    {
+        $confUri = $this->id . ".json";
+        $json = $this->config();
+        Storage::disk('conf')->put($confUri, json_encode($json));
+        return $json;
+    }
+
     public function getAllPoiTaxonomies()
     {
         $themes = $this->taxonomyThemes()->get();
@@ -108,16 +129,24 @@ class App extends Model
         ];
         foreach ($themes as $theme) {
             foreach ($theme->ecPois()->get() as $poi) {
+                $poiTaxonomies = $poi->getTaxonomies();
                 $res = [
-                    //'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
                     //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    //'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'where' => array_unique(array_merge($res['where'], $poi->taxonomyWheres()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    //'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'poi_type' => array_unique(array_merge($res['poi_type'], $poi->taxonomyPoiTypes()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
+                    'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
+                    'poi_type' => array_unique(array_merge($res['poi_type'], $poiTaxonomies['poi_type']), SORT_REGULAR),
                 ];
             }
         }
+        $keys = array_keys((array)$res);
+        foreach ($keys as $key) {
+            if (count($res[$key]) === 0) {
+                unset($res[$key]);
+            }
+        }
+
         return $res;
     }
 
@@ -267,6 +296,15 @@ class App extends Model
         $url = config('services.elastic.host') . '/geohub_app_' . $this->id . '/_settings';
         $posts = '{"max_result_window": 50000}';
         $this->_curlExec($url, 'PUT', $posts);
+    }
+
+    public  function elasticRoutine()
+    {
+        $this->elasticIndexDelete();
+        $this->elasticIndexCreate();
+        $this->BuildPoisGeojson();
+        $this->BuildConfJson();
+        $this->elasticIndex();
     }
 
     /**
