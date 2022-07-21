@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\executeJob;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -761,6 +762,8 @@ class App extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new executeJob())->onlyOnIndex(),
+        ];
     }
 }
