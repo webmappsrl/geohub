@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Models\App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AppAPIController extends Controller
 {
@@ -84,17 +85,20 @@ class AppAPIController extends Controller
      * )
      * 
      */
-    public function pois(int $id) {
+    public function pois(int $id)
+    {
         $app = App::find($id);
         if (is_null($app)) {
             return response()->json(['code' => 404, 'error' => '404 not found'], 404);
         }
-  
-        $data = [
-          "type" => "FeatureCollection",
-        ];
-  
-        $data['features'] = $app->getAllPoisGeojson();
-        return response()->json($data);
+
+        $poisUri = $id . ".geojson";
+        if (Storage::disk('pois')->exists($poisUri)) {
+            $json = Storage::disk('pois')->get($poisUri);
+            return response()->json(json_decode($json));
+        } else {
+            $json = $app->BuildPoisGeojson($id);
+            return response()->json($json);
+        }
     }
 }

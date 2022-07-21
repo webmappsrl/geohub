@@ -34,12 +34,22 @@ return [
             'driver' => 'local',
             'root' => storage_path('importer'),
         ],
-        
+
         'mapping' => [
             'driver' => 'local',
             'root' => storage_path('importer/mapping'),
         ],
-        
+
+        'pois' => [
+            'driver' => 'local',
+            'root' => storage_path('json/pois'),
+        ],
+
+        'conf' => [
+            'driver' => 'local',
+            'root' => storage_path('json/conf'),
+        ],
+
         'osm2cai' => [
             'driver' => 'local',
             'root' => storage_path('importer/osm2cai'),
@@ -49,7 +59,7 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
-        
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),

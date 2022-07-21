@@ -57,11 +57,8 @@ class EcTrackIndexCommand extends Command
         Log::info('===========================');
         Log::info('===========================');
         Log::info('===========================');
-        Log:
-        info('Indexing app ' . $app->id);
-        $app->elasticIndexDelete();
-        $app->elasticIndexCreate();
-        $app->elasticIndex();
+        Log::info('Indexing app ' . $app->id);
+        $app->elasticRoutine();
         Log::info('===========================');
         Log::info('DONE !!');
         Log::info('===========================');
@@ -75,11 +72,8 @@ class EcTrackIndexCommand extends Command
             Log::info('===========================');
             Log::info('===========================');
             Log::info('===========================');
-            Log:
-            info('Indexing app ' . $app->id);
-            $app->elasticIndexDelete();
-            $app->elasticIndexCreate();
-            $app->elasticIndex();
+            Log::info('Indexing app ' . $app->id);
+            $app->elasticRoutine();
             Log::info('===========================');
             Log::info('DONE !!');
             Log::info('===========================');
