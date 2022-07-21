@@ -90,6 +90,7 @@ class App extends Model
         foreach ($themes as $theme) {
             foreach ($theme->ecPois()->get() as $poi) {
                 $item = $poi->getGeojson();
+                $item['properties']['related'] = false;
                 unset($item['properties']['pivot']);
                 array_push($pois, $item);
             }
