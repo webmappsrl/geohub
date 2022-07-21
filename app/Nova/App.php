@@ -9,7 +9,6 @@ use Eminiarts\Tabs\ActionsInTabs;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
@@ -59,10 +58,7 @@ use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 class App extends Resource
 {
 
-    use TabsOnEdit, Notifiable;
-    protected $dispatchesEvents = [
-        'saved' => AppSaved::class,
-    ];
+    use TabsOnEdit;
 
     public static function indexQuery(NovaRequest $request, $query)
     {
