@@ -303,6 +303,7 @@ class App extends Model
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->BuildPoisGeojson();
+        $this->BuildConfJson();
         $this->elasticIndex();
     }
 

@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\elasticIndex;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -765,6 +766,13 @@ class App extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new elasticIndex())->canSee(function ($request) {
+                return true;
+            })
+                ->canRun(function ($request, $zone) {
+                    return true;
+                }),
+        ];
     }
 }
