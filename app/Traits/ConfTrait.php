@@ -222,6 +222,8 @@ trait ConfTrait
                 $layers[] = $item;
             }
             $data['MAP']['layers'] = $layers;
+
+            
         }
 
         // POIS section
@@ -234,6 +236,12 @@ trait ConfTrait
         $data['MAP']['pois']['poiMinZoom'] = $this->poi_min_zoom;
         $data['MAP']['pois']['poiLabelMinZoom'] = $this->poi_label_min_zoom;
         $data['MAP']['pois']['taxonomies'] = $this->getAllPoiTaxonomies();
+
+        // Other Options
+        $data['MAP']['start_end_icons_show']=$this->start_end_icons_show;
+        $data['MAP']['start_end_icons_min_zoom']=$this->start_end_icons_min_zoom;
+        $data['MAP']['ref_on_track_show']=$this->ref_on_track_show;
+        $data['MAP']['ref_on_track_min_zoom']=$this->ref_on_track_min_zoom;
 
         return $data;
     }
