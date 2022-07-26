@@ -62,7 +62,12 @@ class AppFactory extends Factory {
             'table_details_show_ref' => $this->faker->boolean(),
             'table_details_show_surface' => $this->faker->boolean(),
             'table_details_show_geojson_download' => $this->faker->boolean(),
-            'table_details_show_shapefile_download' => $this->faker->boolean()
+            'table_details_show_shapefile_download' => $this->faker->boolean(),
+            'start_end_icons_show' => $this->faker->boolean(),
+            'start_end_icons_min_zoom' => $this->faker->numberBetween(10,20),
+            'ref_on_track_show' => $this->faker->boolean(),
+            'ref_on_track_min_zoom' => $this->faker->numberBetween(10,20),
+            'tiles' => json_encode([$this->faker->url(),$this->faker->url()]),
         ];
     }
 }

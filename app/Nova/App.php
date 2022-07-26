@@ -223,6 +223,10 @@ class App extends Resource
                 }
                 return 'No Themes';
             }),
+            Text::make('API conf',function () {
+                $url = route('api.app.webmapp.config',['id'=>$this->id]);
+                return '<a href="'.$url.'" target="_blank">CONF</a>';
+            })->asHtml(),
         ];
     }
 
@@ -300,6 +304,17 @@ class App extends Resource
             Number::make(__('Min Zoom'), 'minZoom')->onlyOnDetail(),
             Number::make(__('Def Zoom'), 'defZoom')->onlyOnDetail(),
             Text::make(__('Bounding BOX'), 'bbox')->onlyOnDetail(),
+
+            Boolean::make('start_end_icons_show')
+            ->help('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.'),
+            Number::make(__('start_end_icons_min_zoom'))->min(10)->max(20)
+            ->help('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)'),
+
+            Boolean::make('ref_on_track_show')
+            ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
+            Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
+            ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
+        
         ];
     }
 

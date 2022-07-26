@@ -14,7 +14,7 @@ class EcTrackIndexCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:index-tracks {app_id?}';
+    protected $signature = 'geohub:index-tracks {app_id?} {--no-elastic}';
 
     /**
      * The console command description.
@@ -58,7 +58,15 @@ class EcTrackIndexCommand extends Command
         Log::info('===========================');
         Log::info('===========================');
         Log::info('Indexing app ' . $app->id);
-        $app->elasticRoutine();
+        if ($this->option('no-elastic')) {
+            Log::info('Only config and pois file');
+            $app->BuildPoisGeojson();
+            $app->BuildConfJson();
+        }
+        else {
+            Log::info('Complete index elastic+files');
+            // $app->elasticRoutine();
+        }
         Log::info('===========================');
         Log::info('DONE !!');
         Log::info('===========================');
@@ -69,15 +77,7 @@ class EcTrackIndexCommand extends Command
     {
         $apps = App::all();
         foreach ($apps as $app) {
-            Log::info('===========================');
-            Log::info('===========================');
-            Log::info('===========================');
-            Log::info('Indexing app ' . $app->id);
-            $app->elasticRoutine();
-            Log::info('===========================');
-            Log::info('DONE !!');
-            Log::info('===========================');
-            Log::info(' ');
+            $this->appIndex($app->id);
         }
     }
 }
