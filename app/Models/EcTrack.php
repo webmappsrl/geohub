@@ -620,7 +620,6 @@ class EcTrack extends Model
         if ($this->taxonomyThemes->count() > 0) {
             $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
         }
-
         // FEATURE IMAGE
         $feature_image = '';
         if (isset($this->featureImage->thumbnails)) {
@@ -632,11 +631,16 @@ class EcTrack extends Model
                 $feature_image = $sizes['225x100'];
             }
         }
+        $coordinates = json_decode($geom)->coordinates;
+        $coordinatesCount = count($coordinates);
+
 
         $postfields = '{
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
+                "start:"' . $coordinates[0] . '",
+                "end":"' . $coordinates[$coordinatesCount - 1] . '",
                 "cai_scale": "' . $this->cai_scale . '",
                 "name": "' . $this->name . '",
                 "distance": "' . $this->distance . '",
