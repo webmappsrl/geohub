@@ -631,16 +631,23 @@ class EcTrack extends Model
                 $feature_image = $sizes['225x100'];
             }
         }
-        $coordinates = json_decode($geom)->coordinates;
-        $coordinatesCount = count($coordinates);
+        try {
+            $coordinates = json_decode($geom)->coordinates;
+            $coordinatesCount = count($coordinates);
+            $start = json_encode($coordinates[0]);
+            $end = json_encode($coordinates[$coordinatesCount - 1]);
+        } catch (Exception $e) {
+            $start = '[]';
+            $end = '[]';
+        }
 
 
         $postfields = '{
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
-                "start:"' . json_encode($coordinates[0]) . '",
-                "end":"' . json_encode($coordinates[$coordinatesCount - 1]) . '",
+                "start": ' . $start . ',
+                "end": ' . $end . ',
                 "cai_scale": "' . $this->cai_scale . '",
                 "name": "' . $this->name . '",
                 "distance": "' . $this->distance . '",

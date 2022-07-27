@@ -62,10 +62,9 @@ class EcTrackIndexCommand extends Command
             Log::info('Only config and pois file');
             $app->BuildPoisGeojson();
             $app->BuildConfJson();
-        }
-        else {
+        } else {
             Log::info('Complete index elastic+files');
-            // $app->elasticRoutine();
+            $app->elasticRoutine();
         }
         Log::info('===========================');
         Log::info('DONE !!');
