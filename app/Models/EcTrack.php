@@ -649,6 +649,8 @@ class EcTrack extends Model
                 "start": ' . $start . ',
                 "end": ' . $end . ',
                 "cai_scale": "' . $this->cai_scale . '",
+                "from": "' . $this->from . '",
+                "to": "' . $this->to . '",
                 "name": "' . $this->name . '",
                 "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
