@@ -365,6 +365,8 @@ class EcTrack extends Model
                 'ref',
                 'difficulty',
                 'cai_scale',
+                'from',
+                'to',
             ];
             foreach ($keys as $key) {
                 $array = $this->setOutSourceSingleValue($array, $key);
