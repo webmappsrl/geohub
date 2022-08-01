@@ -3,21 +3,21 @@
 namespace App\Nova\Actions;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
-class elasticIndex extends Action
+class GenerateConfigPoisAction extends Action
 {
     use InteractsWithQueue, Queueable;
 
 
     public function name(): string
     {
-        return __("Elastic Index");
+        return __("Generate Config/Pois");
     }
-
 
     /**
      * Perform the action on the given models.
@@ -29,7 +29,7 @@ class elasticIndex extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->elasticRoutine();
+            $model->GenerateConfigPois();
         }
 
         return Action::message('job executed');

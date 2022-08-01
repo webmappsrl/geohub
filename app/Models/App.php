@@ -299,13 +299,19 @@ class App extends Model
         $this->_curlExec($url, 'PUT', $posts);
     }
 
-    public  function elasticRoutine()
+    public function elasticRoutine()
     {
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
         $this->elasticIndex();
+    }
+    
+    public function GenerateConfigPois()
+    {
+        $this->BuildPoisGeojson();
+        $this->BuildConfJson();
     }
 
     /**
