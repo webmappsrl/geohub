@@ -385,6 +385,19 @@ class EcTrack extends Model
         return $array;
     }
 
+    public function getActualOrOSFValue($field) {
+        if(!empty($this->$field)) {
+            return $this->$field;
+        }
+        if(!empty($this->out_source_feature_id)) {
+            $osf = OutSourceTrack::find($this->out_source_feature_id);
+            if(array_key_exists($field,$osf->tags)) {
+                return $osf->tags[$field];
+            }
+        }
+        return null;
+    }
+
     private function isReallyEmpty($val): bool
     {
         if (is_null($val)) {
@@ -651,8 +664,8 @@ class EcTrack extends Model
                 "start": ' . $start . ',
                 "end": ' . $end . ',
                 "cai_scale": "' . $this->cai_scale . '",
-                "from": "' . $this->from . '",
-                "to": "' . $this->to . '",
+                "from": "' . $this->getActualOrOSFValue('from') . '",
+                "to": "' . $this->getActualOrOSFValue('to') . '",
                 "name": "' . $this->name . '",
                 "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
