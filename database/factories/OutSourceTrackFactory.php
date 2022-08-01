@@ -36,6 +36,8 @@ class OutSourceTrackFactory extends Factory
             'tags' => [
                 'name' => [ 'it' => $this->faker->name() ],
                 'description' => [ 'it' => $this->faker->text()],
+                'from' => $this->faker->city(),
+                'to' => $this->faker->city(),
             ],
             'geometry' => $geometry,
         ];
