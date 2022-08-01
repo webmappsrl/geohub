@@ -1,8 +1,8 @@
 @props(['track','agent','androidStore','iosStore','appName', 'appIcon'])
 
-<div class="px-4 flex flex-row fixed bottom-0 bg-white h-20 w-full shadow-top z-1000">
-    <div class="flex gap-x-6 justify-left items-center w-4/6">
-        <div><img src="{{$appIcon}}" width="50"  alt="App icon"></div>
+<div class="px-2 flex flex-row fixed bottom-0 bg-white h-20 w-full shadow-top z-1000">
+    <div class="flex gap-x-4 justify-left items-center w-4/6">
+        <div><img src="{{$appIcon}}" width="100"  alt="App icon"></div>
         <div>
             <p class="font-semibold text-xl">Scarica l'APP</p>
             <p class="">{{$appName}}</p>
