@@ -26,9 +26,11 @@
 @endphp
 <div x-data="tabApp()" @flash.window="tab = $event.detail" id="tab_wrapper">
     <!-- The tabs navigation -->
-    <nav class="map-detail-tab grid grid-cols-2">
+    <nav class="map-detail-tab grid {{(count($track->ecPois) !== 0) ? 'grid-cols-2' : 'grid-cols-1'}}">
         <a class="{{$classes}}" :class="{ 'active': tab === 'details' }" @click.prevent="tab = 'details'; window.location.hash = 'details'" href="#">{{ __("Dettagli tecnici") }}</a>
-        <a class="{{$classes}}" :class="{ 'active': tab === 'relatedpois' }" @click.prevent="tab = 'relatedpois'; window.location.hash = 'relatedpois'" href="#">{{ __("Punti di interesse") }}</a>
+        @if (count($track->ecPois) !== 0)
+            <a class="{{$classes}}" :class="{ 'active': tab === 'relatedpois' }" @click.prevent="tab = 'relatedpois'; window.location.hash = 'relatedpois'" href="#">{{ __("Punti di interesse") }}</a>
+        @endif
     </nav>
   
     <!-- The tabs content -->
@@ -49,9 +51,11 @@
             </div>
         @endif
      </div>
-     <div x-show="tab === 'relatedpois'" class="overflow-y-auto poi-list" style="max-height: 615px;">
-         @foreach ($track->ecPois as $poi)
-            <x-poi :poi="$poi"/>
-         @endforeach
-     </div>
+     @if (count($track->ecPois) !== 0)
+        <div x-show="tab === 'relatedpois'" class="overflow-y-auto poi-list" style="max-height: 615px;">
+            @foreach ($track->ecPois as $poi)
+                <x-poi :poi="$poi"/>
+            @endforeach
+        </div>
+     @endif
 </div>

@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\elasticIndex;
+use App\Nova\Actions\GenerateConfigPoisAction;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -779,6 +780,12 @@ class App extends Resource
     {
         return [
             (new elasticIndex())->canSee(function ($request) {
+                return true;
+            })
+                ->canRun(function ($request, $zone) {
+                    return true;
+                }),
+            (new GenerateConfigPoisAction())->canSee(function ($request) {
                 return true;
             })
                 ->canRun(function ($request, $zone) {

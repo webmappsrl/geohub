@@ -12,7 +12,6 @@
     $appIcon = asset('images/webmapp-logo-icon-only.png');
     if (request('app_id')) {
         $app = App::find(request('app_id'));
-        // ddd($app);
         $iosStore = $app->ios_store_link;
         $androidStore = $app->android_store_link;
         $appName = $app->name;
