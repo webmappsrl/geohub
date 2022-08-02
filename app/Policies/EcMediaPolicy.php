@@ -19,12 +19,12 @@ class EcMediaPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasRole('Admin')) {
-            return true;
-        }
-        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
-            return false;
-        }
+        // if ($user->hasRole('Admin') || $user->hasRole('Editor')) {
+        //     return true;
+        // }
+        // if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+        //     return false;
+        // }
     }
        
     /**
@@ -35,7 +35,12 @@ class EcMediaPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->hasRole('Admin') || $user->hasRole('Editor')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+            return false;
+        }
     }
 
     /**
@@ -47,8 +52,11 @@ class EcMediaPolicy
      */
     public function view(User $user, EcMedia $ecMedia)
     {
-        if ($user->hasRole('Editor')) {
+        if ($user->hasRole('Admin')) {
             return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+            return false;
         }
     }
 
@@ -60,7 +68,12 @@ class EcMediaPolicy
      */
     public function create(User $user)
     {
-        //
+        if ($user->hasRole('Admin') || $user->hasRole('Editor')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+            return false;
+        }
     }
 
     /**
@@ -72,7 +85,12 @@ class EcMediaPolicy
      */
     public function update(User $user, EcMedia $ecMedia)
     {
-        //
+        if ($user->hasRole('Admin') || $user->hasRole('Editor')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
+            return false;
+        }
     }
 
     /**
@@ -84,7 +102,12 @@ class EcMediaPolicy
      */
     public function delete(User $user, EcMedia $ecMedia)
     {
-        //
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+            return false;
+        }
     }
 
     /**
@@ -96,7 +119,12 @@ class EcMediaPolicy
      */
     public function restore(User $user, EcMedia $ecMedia)
     {
-        //
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+            return false;
+        }
     }
 
     /**
@@ -108,6 +136,11 @@ class EcMediaPolicy
      */
     public function forceDelete(User $user, EcMedia $ecMedia)
     {
-        //
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
+        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+            return false;
+        }
     }
 }
