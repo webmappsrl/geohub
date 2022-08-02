@@ -39,6 +39,7 @@ use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Laravel\Nova\Panel;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
@@ -87,6 +88,22 @@ class EcPoi extends Resource {
     public static function group() {
         return __('Editorial Content');
     }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->can('Admin')) {
+            return $query;
+        }
+        return $query->where('user_id', $request->user()->id);
+    }
+
 
     /**
      * Get the fields displayed by the resource.
