@@ -35,7 +35,9 @@ class EcPoiPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->hasRole('Editor')) {
+            return true;
+        }
     }
 
     /**
@@ -47,9 +49,10 @@ class EcPoiPolicy
      */
     public function view(User $user, EcPoi $ecPoi)
     {
-        if ($user->hasRole('Editor')) {
+        if ($user->hasRole('Editor') && $user->id === $ecPoi->user_id) {
             return true;
         }
+        return false;
     }
 
     /**
@@ -60,7 +63,10 @@ class EcPoiPolicy
      */
     public function create(User $user)
     {
-        //
+        if ($user->hasRole('Editor')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -70,9 +76,12 @@ class EcPoiPolicy
      * @param  \App\Models\EcPoi  $ecPoi
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, EcPoi $ecPoi)
+    public function update(User $user, EcPoi $model)
     {
-        //
+        if ($user->hasRole('Editor') && $user->id === $model->user_id) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -84,7 +93,7 @@ class EcPoiPolicy
      */
     public function delete(User $user, EcPoi $ecPoi)
     {
-        //
+        return false;
     }
 
     /**
@@ -96,7 +105,7 @@ class EcPoiPolicy
      */
     public function restore(User $user, EcPoi $ecPoi)
     {
-        //
+        return false;
     }
 
     /**
@@ -108,6 +117,6 @@ class EcPoiPolicy
      */
     public function forceDelete(User $user, EcPoi $ecPoi)
     {
-        //
+        return false;
     }
 }

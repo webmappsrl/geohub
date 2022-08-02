@@ -35,7 +35,9 @@ class TaxonomyPoiTypePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->hasRole('Editor')) {
+            return true;
+        }
     }
 
     /**
