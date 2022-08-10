@@ -137,7 +137,7 @@ class App extends Model
                     'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
                     'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
                     'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'poi_type' => array_unique(array_merge($res['poi_type'], $poiTaxonomies['poi_type']), SORT_REGULAR),
+                    'poi_type' => array_unique(array_merge($res['poi_type'], [end($poiTaxonomies['poi_type'])]), SORT_REGULAR),
                 ];
             }
         }
@@ -299,7 +299,7 @@ class App extends Model
         $this->_curlExec($url, 'PUT', $posts);
     }
 
-    public function elasticRoutine()
+    public  function elasticRoutine()
     {
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
@@ -307,12 +307,15 @@ class App extends Model
         $this->BuildConfJson();
         $this->elasticIndex();
     }
-    
+<<<<<<< Updated upstream
+=======
+
     public function GenerateConfigPois()
     {
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
     }
+>>>>>>> Stashed changes
 
     /**
      * @param string $url
