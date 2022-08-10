@@ -229,11 +229,10 @@ class EcPoi extends Model
 
         $taxonomiesidentifiers = array_merge(
             $this->addPrefix($this->taxonomyActivities()->pluck('identifier')->toArray(), 'activity'),
-            $this->addPrefix($this->taxonomyThemes()->pluck('identifier')->toArray(), 'theme'),
             $this->addPrefix($this->taxonomyWhens()->pluck('identifier')->toArray(), 'when'),
             $this->addPrefix($this->taxonomyWheres()->pluck('identifier')->toArray(), 'where'),
             $this->addPrefix($this->taxonomyTargets()->pluck('identifier')->toArray(), 'who'),
-            $this->addPrefix($this->taxonomyPoiTypes()->pluck('identifier')->toArray(), 'poi_type'),
+            $this->addTaxonomyPoiTypes()
         );
 
         foreach ($taxonomies as $key => $value) {
@@ -262,6 +261,18 @@ class EcPoi extends Model
         return array_map(function ($elem) use ($prefix) {
             return $prefix . "_" . $elem;
         }, $array);
+    }
+    private function addTaxonomyPoiTypes() {
+        $taxonomyPoiTypes = $this->taxonomyPoiTypes()->pluck('identifier')->toArray();
+        if (count($taxonomyPoiTypes) > 1 && in_array('poi',$taxonomyPoiTypes) == true) {
+            $taxonomyPoiTypes = array_diff($taxonomyPoiTypes, ['poi']);
+            return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
+        }
+        if (in_array('poi',$taxonomyPoiTypes) == false) {
+            return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
+        }
+        return ['poi_type_poi'];
+
     }
     function getTaxonomies()
     {
