@@ -130,6 +130,10 @@ class App extends Resource
             Text::make('API type', 'api')->sortable(),
             Text::make('Name')->sortable(),
             Text::make('Customer Name'),
+            Text::make(__('WEBAPP'), function () {
+                $url = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
+                return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>WEBAPP</a>";
+            })->asHtml(),
         ];
     }
 
@@ -226,8 +230,12 @@ class App extends Resource
             }),
             Text::make('API conf',function () {
                 $url = route('api.app.webmapp.config',['id'=>$this->id]);
-                return '<a href="'.$url.'" target="_blank">CONF</a>';
+                return '<a class="btn btn-default btn-primary" href="'.$url.'" target="_blank">CONF</a>';
             })->asHtml(),
+            Text::make(__('WEBAPP'), function () {
+                $url = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
+                return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>WEBAPP</a>";
+            })->asHtml()->onlyOnDetail(),
         ];
     }
 
@@ -315,7 +323,10 @@ class App extends Resource
             ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
             Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
             ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
-        
+            Text::make(__('POIS API'), function () {
+                $url = '/api/v1/app/' . $this->model()->id . '/pois.geojson';
+                return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>POIS API</a>";
+            })->asHtml()->onlyOnDetail(),
         ];
     }
 
