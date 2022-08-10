@@ -299,7 +299,7 @@ class App extends Model
         $this->_curlExec($url, 'PUT', $posts);
     }
 
-    public  function elasticRoutine()
+    public function elasticRoutine()
     {
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
@@ -307,15 +307,12 @@ class App extends Model
         $this->BuildConfJson();
         $this->elasticIndex();
     }
-<<<<<<< Updated upstream
-=======
 
     public function GenerateConfigPois()
     {
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
     }
->>>>>>> Stashed changes
 
     /**
      * @param string $url
