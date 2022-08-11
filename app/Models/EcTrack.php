@@ -367,6 +367,7 @@ class EcTrack extends Model
                 'cai_scale',
                 'from',
                 'to',
+                'audio',
             ];
             foreach ($keys as $key) {
                 $array = $this->setOutSourceSingleValue($array, $key);

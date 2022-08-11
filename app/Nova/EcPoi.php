@@ -117,7 +117,8 @@ class EcPoi extends Resource {
         return [
             ID::make('id'),
             NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')
+                Text::make(__('Name'), 'name'),
+                // Text::make(__('Audio'),'audio'),
             ]),
             AttachMany::make('TaxonomyPoiTypes'),
             AttachMany::make('TaxonomyActivities'),
@@ -163,7 +164,10 @@ class EcPoi extends Resource {
                     ])->onlyOnDetail(),
             ],
             'Media' => [
-                Text::make('Audio',function () {$this->audio;})->onlyOnDetail(),
+                // NovaTabTranslatable::make([
+                //     Text::make(__('Audio'),'audio')->onlyOnDetail(),
+                // ])->onlyOnDetail(),
+                Text::make(__('Audio'),'audio')->onlyOnDetail(),
                 Text::make('Related Url',function () {
                     $out = '';
                     if(is_array($this->related_url) && count($this->related_url)>0){
@@ -294,15 +298,15 @@ class EcPoi extends Resource {
                     Text::make(__('Name'), 'name'),
                     Textarea::make(__('Excerpt'),'excerpt'),
                     Textarea::make('Description'),
-                    ])->onlyOnForms(),
+                ])->onlyOnForms(),
             ],
             'Media' => [
-
-                File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
-                    $file = $request->file('audio');
-
-                    return $model->uploadAudio($file);
-                })->acceptedTypes('audio/*')->onlyOnForms(),
+                // TODO: not working with NovaTabTranslatable
+                // NovaTabTranslatable::make([
+                //     File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                //         return $model->uploadAudio($request->file());
+                //     })->acceptedTypes('audio/*')->onlyOnForms(),
+                // ]),
 
                 FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
                     ->onlyOnForms()

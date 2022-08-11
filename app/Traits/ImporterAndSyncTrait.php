@@ -61,4 +61,28 @@ trait ImporterAndSyncTrait {
             ],$params);
         return $feature->id;
     }
+    
+    /**
+     * It uploads the audio file to AWS from external source (wordpress or k.webmapp.it).
+     * 
+     * @param array the media array.
+     * @return int the ID of the new OutSourceFeature. 
+     */
+    public function uploadAudioAWS($audio_url,$locale)
+    {
+        try {
+            $url = '';
+            Log::info('Preparing uploading Audio to AWS, locale:' .$locale);
+            $filename = explode('.',basename($audio_url));
+            $cloudPath = 'ec'.$this->type.'/audio/' . $locale . '/' . sha1($filename[0]) . '.' . $filename[1];
+            Storage::disk('s3')->put($cloudPath, file_get_contents($audio_url));
+            // Save the result url to the current langage 
+            $url = Storage::disk('s3')->url($cloudPath);
+    
+            return $url;
+        } catch(Exception $e) {
+            Log::info('Could not upload audio file: '.$audio_url);
+            Log::info('Error message: '. $e->getMessage());
+        }
+    }
 }
