@@ -123,10 +123,13 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function prepareTrackTagsJson($track){
+        $domain_path = parse_url($this->endpoint);
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['title']['rendered']);
         $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['content']['rendered']);
         $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['excerpt']['rendered']);
+        // Add audio for default language
+        $this->tags['audio'][explode('_',$track['wpml_current_locale'])[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.explode('_',$track['wpml_current_locale'])[0].'.mp3',explode('_',$track['wpml_current_locale'])[0]);
         if(!empty($track['wpml_translations'])) {
             foreach($track['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -136,6 +139,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $track_decode = $this->curlRequest($url);
                 $this->tags['description'][$locale[0]] = html_entity_decode($track_decode['content']['rendered']);
                 $this->tags['excerpt'][$locale[0]] = html_entity_decode($track_decode['excerpt']['rendered']); 
+                // Add audio for other languages
+                $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.$locale[0].'.mp3',$locale[0]);
             }
         }
         $this->tags['from'] = html_entity_decode($track['n7webmap_start']);
@@ -215,6 +220,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
         $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
         $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['excerpt']['rendered']);
+        if (isset($poi['audio']) && $poi['audio']){
+            $this->tags['audio'][explode('_',$poi['wpml_current_locale'])[0]] = $this->uploadAudioAWS($poi['audio']['url'],explode('_',$poi['wpml_current_locale'])[0]);
+        }
         if(!empty($poi['wpml_translations'])) {
             foreach($poi['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -224,6 +232,10 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $poi_decode = $this->curlRequest($url);
                 $this->tags['description'][$locale[0]] = html_entity_decode($poi_decode['content']['rendered']);
                 $this->tags['excerpt'][$locale[0]] = html_entity_decode($poi_decode['excerpt']['rendered']);
+
+                // Add audio file
+                $domain_path = parse_url($this->endpoint);
+                $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$poi['id'].'_'.$locale[0].'.mp3',$locale[0]);
             }
         }
         // Adding POI parameters of accessibility

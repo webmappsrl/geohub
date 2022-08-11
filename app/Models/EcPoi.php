@@ -19,7 +19,7 @@ class EcPoi extends Model
     use HasFactory, GeometryFeatureTrait, HasTranslations;
 
     protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id'];
-    public array $translatable = ['name', 'description', 'excerpt'];
+    public array $translatable = ['name', 'description', 'excerpt', 'audio'];
     public bool $skip_update = false;
 
     /**
@@ -74,13 +74,32 @@ class EcPoi extends Model
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function uploadAudio($file): string
-    {
-        $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-        $cloudPath = 'ecpoi/audio/' . $this->id . '/' . $filename;
-        Storage::disk('s3')->put($cloudPath, file_get_contents($file));
+    // public function uploadAudio($file): string
+    // {
+    //     $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+    //     $cloudPath = 'ecpoi/audio/' . $this->id . '/' . $filename;
+    //     Storage::disk('s3')->put($cloudPath, file_get_contents($file));
 
-        return Storage::cloud()->url($cloudPath);
+    //     return Storage::cloud()->url($cloudPath);
+    // }
+    public function uploadAudio($files): string
+    {
+        $output = [];
+        foreach ($files as $key => $file) {
+            if (strpos($key,'audio')) {
+                // To get the current language
+                $key_array = explode('_',$key);
+                // Add sha1 to name
+                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+                // Create the path with language folder
+                $cloudPath = 'ecpoi/audio/' . $key_array[2] . '/' . $this->id . '_' . $filename;
+                Storage::disk('s3-osfmedia-test')->put($cloudPath, file_get_contents($file));
+                // Save the result url to the current langage 
+                $output[$key_array[2]] = Storage::disk('s3-osfmedia-test')->url($cloudPath);
+            }
+        }
+
+        return json_encode($output);
     }
 
     public function ecMedia(): BelongsToMany
