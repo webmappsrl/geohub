@@ -222,8 +222,6 @@ trait ConfTrait
                 $layers[] = $item;
             }
             $data['MAP']['layers'] = $layers;
-
-            
         }
 
         // POIS section
@@ -238,10 +236,11 @@ trait ConfTrait
         $data['MAP']['pois']['taxonomies'] = $this->getAllPoiTaxonomies();
 
         // Other Options
-        $data['MAP']['start_end_icons_show']=$this->start_end_icons_show;
-        $data['MAP']['start_end_icons_min_zoom']=$this->start_end_icons_min_zoom;
-        $data['MAP']['ref_on_track_show']=$this->ref_on_track_show;
-        $data['MAP']['ref_on_track_min_zoom']=$this->ref_on_track_min_zoom;
+        $data['MAP']['start_end_icons_show'] = $this->start_end_icons_show;
+        $data['MAP']['start_end_icons_min_zoom'] = $this->start_end_icons_min_zoom;
+        $data['MAP']['ref_on_track_show'] = $this->ref_on_track_show;
+        $data['MAP']['ref_on_track_min_zoom'] = $this->ref_on_track_min_zoom;
+        $data['MAP']['record_track_show'] = $this->geolocation_record_enable;
 
         return $data;
     }
