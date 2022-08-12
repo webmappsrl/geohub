@@ -187,7 +187,6 @@ class App extends Resource
             'PROJECT' => $this->project_tab(),
             'AUTH' => $this->auth_tab(),
             'OFFLINE' => $this->offline_tab(),
-            'GEOLOCATION' => $this->geolocation_tab(),
             'ICONS' => $this->icons_tab(),
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
@@ -228,9 +227,9 @@ class App extends Resource
                 }
                 return 'No Themes';
             }),
-            Text::make('API conf',function () {
-                $url = route('api.app.webmapp.config',['id'=>$this->id]);
-                return '<a class="btn btn-default btn-primary" href="'.$url.'" target="_blank">CONF</a>';
+            Text::make('API conf', function () {
+                $url = route('api.app.webmapp.config', ['id' => $this->id]);
+                return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">CONF</a>';
             })->asHtml(),
             Text::make(__('WEBAPP'), function () {
                 $url = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
@@ -313,20 +312,24 @@ class App extends Resource
             Number::make(__('Min Zoom'), 'minZoom')->onlyOnDetail(),
             Number::make(__('Def Zoom'), 'defZoom')->onlyOnDetail(),
             Text::make(__('Bounding BOX'), 'bbox')->onlyOnDetail(),
-
-            Boolean::make('start_end_icons_show')
-            ->help('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.'),
             Number::make(__('start_end_icons_min_zoom'))->min(10)->max(20)
-            ->help('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)'),
-
-            Boolean::make('ref_on_track_show')
-            ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
+                ->help('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)'),
             Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
-            ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
+                ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
             Text::make(__('POIS API'), function () {
                 $url = '/api/v1/app/' . $this->model()->id . '/pois.geojson';
                 return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>POIS API</a>";
             })->asHtml()->onlyOnDetail(),
+            Toggle::make('start_end_icons_show')
+                ->help('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.'),
+            Toggle::make('ref_on_track_show')
+                ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
+            Toggle::make(__('Enable UGC record'), 'geolocation_record_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help('Activate this option if you want enable user track record')
         ];
     }
 
@@ -569,16 +572,6 @@ class App extends Resource
         ];
     }
 
-    protected function geolocation_tab(): array
-    {
-        return [
-            Toggle::make(__('Enable UGC record'), 'geolocation_record_enable')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
-        ];
-    }
 
     protected function routing_tab(): array
     {
