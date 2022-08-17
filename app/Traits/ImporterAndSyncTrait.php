@@ -72,12 +72,15 @@ trait ImporterAndSyncTrait {
     {
         try {
             $url = '';
+            // Saving the Audio Media in to the s3 storage (.env in production)
+            $storage_name = config('geohub.audio_media_storage_name');
             Log::info('Preparing uploading Audio to AWS, locale:' .$locale);
             $filename = explode('.',basename($audio_url));
+            $s3_storage = Storage::disk($storage_name);
             $cloudPath = 'ec'.$this->type.'/audio/' . $locale . '/' . sha1($filename[0]) . '.' . $filename[1];
-            Storage::disk('s3')->put($cloudPath, file_get_contents($audio_url));
+            $s3_storage->put($cloudPath, file_get_contents($audio_url));
             // Save the result url to the current langage 
-            $url = Storage::disk('s3')->url($cloudPath);
+            $url = $s3_storage->url($cloudPath);
     
             return $url;
         } catch(Exception $e) {
