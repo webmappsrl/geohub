@@ -1,7 +1,7 @@
 <?php
 
 return [
-    // 'osf_media_storage_name' => env('OUT_SOURCE_FEATURE_STORAGE_NAME', 's3-osfmedia-test'),
+    'audio_media_storage_name' => env('AUDIO_MEDIA_STORAGE_NAME', 's3-osfmedia-test'),
     'osf_media_storage_name' => env('OUT_SOURCE_FEATURE_STORAGE_NAME', 'importer-osfmedia'),
     'ec_media_storage_name' => env('EC_MEDIA_STORAGE_NAME', 'public'),
     'use_local_storage' => env('SAVE_MEDIA_ON_LOCAL_STORAGE', false),
