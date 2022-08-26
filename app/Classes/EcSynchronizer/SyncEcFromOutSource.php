@@ -592,6 +592,11 @@ class SyncEcFromOutSource
             }
             $name[$language] = $format;
         }
+        
+        // Temprorary solution to fill italian translation when it is empty
+        if (empty($name['it'])) {
+            $name['it'] = $name['en'];
+        }
 
         return $name;
     }
