@@ -521,25 +521,30 @@ class SyncEcFromOutSource
                 }
             }
             if ($this->type == 'media') {
-                $osf_storage_name = config('geohub.osf_media_storage_name');
-                $ec_storage_name = config('geohub.ec_media_storage_name');
-                $s3_osfmedia = Storage::disk($osf_storage_name);
-                Log::info('Creating EC Media.');
-                $ec_media = EcMedia::updateOrCreate(
-                    [
-                        'out_source_feature_id' => $id,
-                        'user_id' => $this->author_webmapp,
-                    ],
-                    [
-                        'name' => $this->generateName($out_source),
-                        'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                        'url' => '',
-                    ]);
-                $new_media_name = $ec_media->id.'.'.explode('.',basename($out_source->tags['url']))[1];
-                Storage::disk($ec_storage_name)->put('ec_media/'.$new_media_name, $s3_osfmedia->get($out_source->tags['url']));
-                $ec_media->url = (Storage::disk($ec_storage_name)->exists('ec_media/'.$new_media_name))?'ec_media/'.$new_media_name:'';
-                $ec_media->save();
-                array_push($new_ec_features,$ec_media->id);
+                try{
+                    $osf_storage_name = config('geohub.osf_media_storage_name');
+                    $ec_storage_name = config('geohub.ec_media_storage_name');
+                    $s3_osfmedia = Storage::disk($osf_storage_name);
+                    Log::info('Creating EC Media.');
+                    $ec_media = EcMedia::updateOrCreate(
+                        [
+                            'out_source_feature_id' => $id,
+                            'user_id' => $this->author_webmapp,
+                        ],
+                        [
+                            'name' => $this->generateName($out_source),
+                            'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                            'url' => '',
+                        ]);
+                    $new_media_name = $ec_media->id.'.'.explode('.',basename($out_source->tags['url']))[1];
+                    Storage::disk($ec_storage_name)->put('ec_media/'.$new_media_name, $s3_osfmedia->get($out_source->tags['url']));
+                    $ec_media->url = (Storage::disk($ec_storage_name)->exists('ec_media/'.$new_media_name))?'ec_media/'.$new_media_name:'';
+                    $ec_media->save();
+                    array_push($new_ec_features,$ec_media->id);
+                } catch (Exception $e) {
+                    array_push($error_not_created,$out_source->source_id);
+                    Log::info('Error creating EcMedia from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
+                }
             }
             $count++;
         }
