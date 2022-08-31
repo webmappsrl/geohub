@@ -241,6 +241,8 @@ trait ConfTrait
         $data['MAP']['ref_on_track_show'] = $this->ref_on_track_show;
         $data['MAP']['ref_on_track_min_zoom'] = $this->ref_on_track_min_zoom;
         $data['MAP']['record_track_show'] = $this->geolocation_record_enable;
+        $data['MAP']['alert_poi_show'] = $this->alert_poi_show;
+        $data['MAP']['alert_poi_radius'] = $this->alert_poi_radius;
 
         return $data;
     }
