@@ -324,12 +324,15 @@ class App extends Resource
                 ->help('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.'),
             Toggle::make('ref_on_track_show')
                 ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
-            Toggle::make(__('Enable UGC record'), 'geolocation_record_enable')
+            Toggle::make(__('geolocation_record_enable'), 'geolocation_record_enable')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex()
-                ->help('Activate this option if you want enable user track record')
+                ->help('Activate this option if you want enable user track record'),
+            Toggle::make('alert_poi_show')
+                ->help('Activate this option if you want to show a poi proximity alert'),
+            Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert')
         ];
     }
 
