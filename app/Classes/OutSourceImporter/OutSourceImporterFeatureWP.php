@@ -413,9 +413,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $locale = explode('_',$lang['locale']);
                 $tags['name'][$locale[0]] = $lang['post_title']; 
                 // Curl request to get the feature translation from external source
-                $url = $this->endpoint.'/wp-json/wp/v2/media/'.$lang['id'];
-                $media_decode = $this->curlRequest($url);
-                $tags['description'][$locale[0]] = $media_decode['caption']['rendered'];
+                // $url = $this->endpoint.'/wp-json/wp/v2/media/'.$lang['id'];
+                // $media_decode = $this->curlRequest($url);
+                // $tags['description'][$locale[0]] = $media_decode['caption']['rendered'];
             }
         }
 
@@ -424,7 +424,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $storage_name = config('geohub.osf_media_storage_name');
             Log::info('Saving OSF MEDIA on storage '.$storage_name);
             Log::info(" ");
-            if (isset($media['media_details'])) {
+            if (isset($media['media_details']) && isset($media['media_details']['file'])) {
                 $wp_url = $this->endpoint.'/wp-content/uploads/'.$media['media_details']['file'];
             } elseif (isset($media['guid'])) {
                 $wp_url = $media['media_details']['rendered'];
