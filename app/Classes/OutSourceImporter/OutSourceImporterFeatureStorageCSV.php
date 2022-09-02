@@ -3,6 +3,7 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Models\OutSourceFeature;
+use App\Models\TaxonomyPoiType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ImporterAndSyncTrait;
@@ -124,5 +125,18 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
         if (isset($poi['code']) && $poi['code'])
             $this->tags['code'] = $poi['code'];
 
+        // Adding poi_type taxonomy
+        if (isset($poi['poi_type']) && $poi['poi_type']) {
+            $poi_types = explode(',',$poi['poi_type']);
+            if (is_Array($poi_types)) {
+                foreach ($poi_types as $poi_type) {
+                    $poi_type = strtolower($poi_type);
+                    $geohub_tax = TaxonomyPoiType::where('identifier',$poi_type)->first();
+                    if ($geohub_tax && !is_null($geohub_tax)) { 
+                        $this->tags['poi_type'][] = $poi_type;
+                    }
+                }
+            }
+        }
     }
 }
