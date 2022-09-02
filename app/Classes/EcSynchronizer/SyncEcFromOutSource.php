@@ -413,26 +413,35 @@ class SyncEcFromOutSource
                     
                     // Attach poi_type to poi
                     if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
-                        $path = parse_url($this->endpoint);
-                        $file_name = str_replace('.','-',$path['host']);
-                        $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
-                        
-                        foreach ($out_source->tags['poi_type'] as $cat) {
-                            foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                                if ($w['geohub_identifier'] == $cat) {
-                                    Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
-                                    $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
-                                    if ($geohub_w && !is_null($geohub_w)) { 
-                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
-                                    } else {
-                                        $new_poi_type = TaxonomyPoiType::create(
-                                            [
-                                                'identifier' => $w['geohub_identifier'],
-                                                'name' => $w['source_title'],
-                                                'description' => $w['source_description'],
-                                            ]
-                                            );
-                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                        if (strtolower($this->provider) == 'storagecsv') {
+                            foreach ($out_source->tags['poi_type'] as $cat) { 
+                                $geohub_w = TaxonomyPoiType::where('identifier',$cat)->first();
+                                if ($geohub_w && !is_null($geohub_w)) { 
+                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                }
+                            }
+                        } else {
+                            $path = parse_url($this->endpoint);
+                            $file_name = str_replace('.','-',$path['host']);
+                            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                            
+                            foreach ($out_source->tags['poi_type'] as $cat) {
+                                foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                                    if ($w['geohub_identifier'] == $cat) {
+                                        Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
+                                        $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
+                                        if ($geohub_w && !is_null($geohub_w)) { 
+                                            $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                        } else {
+                                            $new_poi_type = TaxonomyPoiType::create(
+                                                [
+                                                    'identifier' => $w['geohub_identifier'],
+                                                    'name' => $w['source_title'],
+                                                    'description' => $w['source_description'],
+                                                ]
+                                                );
+                                            $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                                        }
                                     }
                                 }
                             }
