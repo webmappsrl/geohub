@@ -1,0 +1,99 @@
+id,last_modified,code,name,address_complete,contact_phone,contact_email,related_url,capacity,description,poi_type,lat,lon
+1,01/09/2022,,Tonni Teresa,"4 Piazza Don Pietro Boifava, Serle, BS 25080",,,,,Alimentari,shop-convenience,45.56149827222984,10.368522019736856
+2,01/09/2022,,Rosso Farfalla di Zanetti Luisa,"Via Roma, 38, 25080 Serle BS",,,,,Casalinghi,shop-houseware,45.56259121723594,10.36994627280919
+3,01/09/2022,,Aliment Group SRL,"Via Lazzaretto, 4, 25080 Serle BS",,,,,Alimentari,shop-convenience,45.56631683563879,10.369616361141853
+4,01/09/2022,,Macelleria Paiot Dei F.Lli Ancolli Ido & Bortolo (S.N.C.),"Via Marconi, 36, 25080 Serle BS",,,,,"Macelleria,Alimentari","shop-butcher,shop-convenience",45.566530900911744,10.369079919380598
+5,01/09/2022,,La Fragranza del Pane ,"Via Primo Maggio, 27, 25080 Serle BS",,,,,Forneria,shop-bakery,45.57032760832063,10.367905111529915
+6,01/09/2022,,Boifava Palma Tabaccheria,"Via Primo Maggio, 28, 25080 Serle BS",,,,,Minimarket,shop-convenience,45.570379889899165,10.369024068814063
+7,01/09/2022,,Limus Chiocciole,"Via Caderusso, 20, 25085 Gavardo BS",,,,,Allevamento e Vendita Lumache,shop-farm,45.603945502924994,10.419561266740544
+8,01/09/2022,,Alimentari Fabio di Prandini Fabio,"Via G. Marconi, 54, 25080 Porle BS",,,,,Minimarket ,shop-convenience ,45.606906975178624,10.380452455854309
+9,01/09/2022,,La Bottega di Guido Zerneri,"Via Panoramica, 25083 Val di Sur-San Michele BS",,,,,Alimentari,shop-convenience,45.635145969701554,10.550058557531498
+10,01/09/2022,,Alberti Franca,"Via Roma, 5, 25071 Agnosine BS",,,,,,,45.64951457884245,10.351637262011433
+11,01/09/2022,,shop-bakery - Facchetti Il Forno,"Via Guglielmo Marconi, 10c, 25071 Agnosine BS",,,,,Forneria,shop-bakery,45.649577043273446,10.352519834040717
+12,01/09/2022,,Macelleria Pace Giuseppe,Via Fontana Trebbio 1 - 25071 Agnosine (BS),,,,,Macelleria,shop-butcher,45.650527652282946,10.35088502774265
+13,01/09/2022,,Ferremi Giovanni,"Via Fontana Trebbio, 33, 25071 Agnosine BS",,,,,Forneria,shop-bakery,45.65093205068052,10.350993531900563
+14,01/09/2022,,Ferremi Alberto,"Via Fontana Trebbio, 22, 25071 Agnosine BS",,,,,Orto Frutta,shop-greengrocer,45.65117204236134,10.351465600648535
+15,01/09/2022,,Alimentari Merceria di Ricchini Giacomo,"Via Castello, 3, 25070 San Faustino BS",,,,,Bottega Alimentari,shop-convenience,45.66546042457634,10.34508879765296
+16,01/09/2022,,Copetz cafè - Bar Tabacchi shop-kiosk,"Via Don Giuseppe Bazzoli, 10, 25070 Bione BS",,,,,Bar,amenity-bar,45.67132133752195,10.341763640118327
+17,01/09/2022,,shop-bakery Grandi Gianluca,"Via Secondo Calzoni, 36, 25070 Pieve BS",,,,,Forneria,shop-bakery,45.67457529284477,10.342042489261338
+18,01/09/2022,,Alimentari Agricoop,"Via Trento, 10, 25084 Gargnano BS",,,,,Alimentari,shop-convenience,45.67523084913355,10.651101783366864
+19,01/09/2022,,Zabeni Michela,"Via Giarelli, 23, 25070 Barghe BS",,,,,Alimentari,shop-convenience,45.67886249554221,10.407528986005234
+20,01/09/2022,,Il Quadrifoglio di Sforza Roberta,"Via Giovanni, Via Giarelli, 2, 25070 Barghe BS",,,,,"shop-kiosk,Articoli regalo","shop-kiosk,shop-gift",45.679080836768044,10.407496641494587
+21,01/09/2022,,Alimentari Girelli di Girelli Rosa e Girelli Giuseppina S.N.C. ,"Via Nazionale, 64, 25070 Barghe BS",,,,,Alimentari,shop-convenience,45.67912484433204,10.407170751944308
+22,01/09/2022,,Bertoletti Cinzia,"Via Nuova 14, 25079, Degagna BS",,,,,"Bar,Tabacchi ","amenity-bar,shop-tobacco ",45.68363866829873,10.506429624642548
+23,01/09/2022,,Macelleria Alimentari di Mazzola Milena,"Via Monsignor G. Tavernini, 30, 25084 Gargnano BS",,,,,Macelleria,shop-butcher,45.685008435794806,10.634037648808468
+24,01/09/2022,,Bertella Bontempi Renata,"Via Monsignor G. Tavernini, 38, 25084 Gargnano BS",,,,,,,45.68526218562471,10.634360135639442
+25,01/09/2022,,Sinibaldi Giancarla ,"Piazza Feltrinelli, 10, 25084 Gargnano BS",,,,,"Cartoleria,Articoli da Regalo","shop-stationery,shop-gift",45.688394274297316,10.663408755978537
+26,01/09/2022,,Alimentari Tonni di Carniel Valter,"Via Roma, 26, 25070 Provaglio Val sabbia BS",,,,,Alimentari,shop-convenience,45.689429606802726,10.45482038480511
+27,01/09/2022,,Alimentari Tonni S.N.C. Di Tonni Lara E Botelli Genni,"Via Chiese, 1, 25070 Preseglie BS",,,,,,,45.69153958463054,10.45522718453554
+28,01/09/2022,,Orti del Monte,"Via Passo del Giovo, n. 22, 25070 Provaglio Val sabbia BS",,,,,Vendita prodotti produzione propria (Azienda Agricola),shop-farm,45.691580515480275,10.454616536927706
+29,01/09/2022,,Da Pisturì SAS di Forti Luca,"Via Sasso, 35, 25084 Gargnano BS",,,,,"Bar,Alimentari","amenity-bar,shop-convenience",45.69441248954354,10.650487072930982
+30,01/09/2022,,Tabaccheria - Nevica Francesco,"Via Roma, 28, 25070 Casto BS",,,,,Tabaccheria,shop-tobacco,45.69462072691125,10.32150254182993
+31,01/09/2022,,Coop. di Consumo La Savallese,"Piazza Passerini, 1, 25070 Casto BS",,,,,,,45.694667608239065,10.320128617224793
+32,01/09/2022,,Coop. di Consumo La Savallese,"Frazione Alone, 20, 25070 Casto BS",,,,,Alimentari,shop-convenience,45.6955396645452,10.319650047506087
+33,01/09/2022,,Coop. di Consumo La Savallese,25070 Malpaga BS,,,,,,,45.69672510648348,10.331795271191645
+34,01/09/2022,,Spagnoli Daniela,"Via Roma, 71/73, 25080 Vallio Terme BS",,,,,shop-bakery,shop-bakery,45.69966688958856,10.41113672272567
+35,01/09/2022,,Coop. di Consumo La Savallese,"Località Briale, 11, 25070 Briale BS",,,,,Alimentari,shop-convenience,45.70243351779612,10.31836258728434
+36,01/09/2022,,L'Antica Bottega di Xodo Claudia,"Via S. Martino, 18, 25079 Degagna BS",,,,,"Alimentari,Rivendita Pane","shop-convenience,shop-bakery",45.70950092406651,10.509294079635186
+37,01/09/2022,,Alimentari Massari Paola,"Via Tito Speri, 29, 25070 Vico BS",,,,,Alimentari,shop-convenience,45.71290959130922,10.471564427134398
+38,01/09/2022,,Ravani Gianprimo,"Via Garibaldi, 1/a, 25070 Mura BS",,,,,"Alimentari,Tabacchi,Macelleria,shop-kiosk","shop-convenience,shop-tobacco,shop-butcher,shop-kiosk",45.713334724287016,10.342747512995464
+39,01/09/2022,,Coop. di Consumo La Savallese,25070 - Capovalle(Brescia),,,,,Alimentari,shop-convenience,"45.69595931468905, 10.320079200913336","45.69595931468905, 10.320079200913336"
+40,01/09/2022,,La Dispensa,"Via Trento, 54, 25074 Idro BS",,,,,Minimarket,shop-convenience,45.73456624559441,10.458118355644615
+41,01/09/2022,,shop-bakery Gasparini Silvano,"Via Vittorio Veneto, 34, 25074 Crone BS",,,,,"Forneria,Alimentari","shop-bakery,shop-convenience",45.73517300623776,10.467165069463567
+42,01/09/2022,,La Bottega di Idro,"Via Vittorio Veneto, 27, 25074 Lemprato BS",,,,,"Alimentari,Articoli Casa","shop-convenience,shop-houseware",45.735349002115946,10.466577269836476
+43,01/09/2022,,Il Germoglio di Milani Mario Silvestro,"Via Provinciale, 40, 25074 Crone BS",,,,,"Vivaio,Fiorista","shop-garden_centre,shop-florist",45.73593682474851,10.482099609126372
+44,01/09/2022,,Zambelli Felice,"Via Segore, 6, 25074 Idro BS",,,,,Pasticceria da Asporto,shop-pastry,45.7362084410697,10.474903644095331
+45,01/09/2022,,Centro Acquisti,"Via Chiesa, 24, 25080 Gardola BS",,,,,,,45.738350747714506,10.720652776983053
+46,01/09/2022,,L'Angolo della Tradizione,"Via Campello, 2, 25080 Gardola BS",,,,,Forneria,shop-bakery,45.73861446096301,10.720288922737044
+47,01/09/2022,,Service Fruit,"Vicolo Zan Zanone, 25080 Tignale BS",,,,,Negozio Frutta e Verdura,shop-greengrocer,45.73863529257264,10.721553999177907
+48,01/09/2022,,Da Lory Minimarket,"Vicolo Zan Zanone, 17, 25080 Tignale BS",,,,,,,45.73865026857765,10.721199947601356
+49,01/09/2022,,Macelleria Moschini,"Via Roma, 6, 25080 Gardola BS",,,,,Macelleria,shop-butcher,45.738785052441884,10.720835167189154
+50,01/09/2022,,Bonfanti Sabina,"Via Nazionale, 109, 25074 Lavenone BS",,,,, Tabaccheria , shop-tobacco ,45.73898901463246,10.438643136392278
+51,01/09/2022,,La Bottega dei Vani e dei Braghì,"Via Nazionale, 101, 25074 Lavenone BS",,,,,"Negozio di intimo,Merceria,Servizi Al pubblico",shop-sewing,45.73907418996319,10.438256897655757
+52,01/09/2022,,Alimentari ,"Via Mario Giupponi, 25074 Crone BS",,,,,,,45.74002185529882,10.480854100311378
+53,01/09/2022,,Macelleria  Pizzoni Mario,"Via Roma, 3, 25074 Idro BS",,,,,Macelleria,shop-butcher,45.740368934019486,10.480527562611458
+54,01/09/2022,,Jolly Market di Pizzoni Fiore,"Via Lungo Lago Vittoria, 4, 25074 Crone BS",,,,,"Alimentari,Articoli Casa,Abiti e Borse","shop-convenience,shop-houseware,shop-clothes",45.740422175516386,10.480619029775353
+55,01/09/2022,,Latteria Turnaria Bio Oleificio,"Via Alessandro Manzoni, 1, 25080 Tignale BS",,,,,,,45.74078032482235,10.719988515259676
+56,01/09/2022,,Margherita Conad,"Via XXIV Maggio, Snc, 25080 Gardola BS",,,,,Alimentari,shop-convenience,45.740997707754644,10.721124845696092
+57,01/09/2022,,Forneria Milani Francesco ,"Via Lungo Lago Vittoria, 46, 25074 Idro BS",,,,,"Pasticceria,Forneria","shop-pastry,shop-bakery",45.74140223685739,10.481224936928914
+58,01/09/2022,,Cooperativa -  Sentieri e Verbena Solidali,"Via Fontane, 25070 Livemmo BS",,,,,Alimentari,shop-convenience,45.7435320462978,10.344591272128955
+59,01/09/2022,,Beltrami Giuseppina,"Via Gomba, 1, 25070 Capovalle BS",,,,,Forneria,shop-bakery,45.754459584067654,10.548972912997076
+60,01/09/2022,,Al Bazar di Baga Daniela,"Via Marconi, 8, 25070 Anfo BS",,,,,Merceria,shop-sewing,45.76624673880562,10.492094401441367
+61,01/09/2022,,Mondo Frutta SNC di Care’ e Orsi,"Via Caduti, 23, 25070 Anfo BS",,,,,Orto Frutta,shop-greengrocer,45.76663217891755,10.491493586682205
+62,01/09/2022,,Alimentari Elda - Verificare se aperto,"Via Marconi, 14, 25070 Anfo BS",,,,,Alimentari,shop-convenience,45.76672947405559,10.492298249309808
+63,01/09/2022,,Dagani Adam,"Via Giuseppe Garibaldi, 2, 25070 Anfo BS",,,,,Alimentari,shop-convenience,45.76690161119631,10.492207054210771
+64,01/09/2022,,Michela Ghidoni,"Piazza Madonna Pellegrina, 17, 25080 Valvestino BS",,,,,Bar Multiservizi,amenity-bar,45.77109406839918,10.598368872412129
+65,01/09/2022,,Fantasia di Frigerio Francesca,"Piazza Arturo Cozzaglio, 11, 25010 Tremosine BS",,,,,Tabaccheria,shop-tobacco,45.772539198577945,10.760345714114509
+66,01/09/2022,,La Botega Snc Di Cozzaglio Daniele & C.,"Via Roma, 4, 25010 Pieve BS",,,,,Alimentari,shop-convenience,45.77277866864106,10.760002391373613
+67,01/09/2022,,Margherita Conad,"Via Roma, 4, 25010 Tremosine BS",,,,,Minimarket,shop-convenience,45.78023527830463,10.757458888250369
+68,01/09/2022,,Girardi Alessandra Market Carburanti,"Via Monsignor G. Zanini, 23, 25010 Tremosine BS",,,,,,,45.79245863335241,10.744037613643227
+69,01/09/2022,,Plus Market di Giuntelli S.n.C,"Via XXV Aprile, 40, Via Cav. di Vittorio Veneto, 19, 25010 Pregasio BS",,,,,Alimentari,shop-convenience,45.793011592587995,10.756469040855645
+70,01/09/2022,,Da Gloria di Faustini Isabella,"Via Giacomo Zanini, 70, 25010 Tremosine BS",,,,,shop-kiosk,shop-kiosk,45.796062819674646,10.744505970109007
+71,01/09/2022,,Tabaccheria shop-kiosk Ferrero,"Via Roma, 18, 25080 Gardola BS",,,,,"Alimentari,shop-kiosk,Tabaccheria","shop-convenience,shop-kiosk,shop-tobacco",45.81037612531499,10.705072757797659
+72,01/09/2022,,GALVAGNI MONICA & C. SNC,via Ocla 20,,,,,Alimentari,shop-convenience,45.8187481243653,10.523258272787704
+73,01/09/2022,,MACELLERIA MORA SNC DI BAZZANI L. E ROMIGLIO D.,"via Caduti, 72",,,,,Macelleria ,shop-butcher ,45.82126229480373,10.526976682589398
+74,01/09/2022,,Alimentari Da Nello - Bagoss,"Via S. Giorgio, 94, 25072 Bagolino BS",,,,,Alimentari,shop-convenience,45.82170379806462,10.464910695896263
+75,01/09/2022,,Scalvini Andreino,"Via S. Giorgio, 41, 25072 Bagolino BS",,,,,Alimentari,shop-convenience,45.821945145435855,10.464837649501137
+76,01/09/2022,,Macelleria Zanelli Marco,"Via S. Giorgio, Bagolino, BS 25072",,,,,Macelleria,shop-butcher,45.82219690643016,10.463760013270967
+77,01/09/2022,,Degiacomi Evelina,"Via S. Giorgio, 79, 25072 Bagolino BS",,,,,"Bar,Pasticceria,Tabacchi","amenity-bar,shop-pastry,shop-tobacco",45.82224889100811,10.4640310133853
+78,01/09/2022,,Salumeria Bagossa ,"Via San Giorgio, 55 - ",,,,,Alimentari,shop-convenience,45.822308107412745,10.463630293448794
+79,01/09/2022,,Antica Salumeria Drogheria Schivalocchi,"Via S. Giorgio, 24, 25072 Bagolino BS",,,,,Alimentari,shop-convenience,45.82306143306971,10.463300382844752
+80,01/09/2022,,Macelleria Mora Adriano,"Via S. Giorgio, 5, 25072 Bagolino BS",,,,,Macelleria,shop-butcher,45.8231393358855,10.463569591387152
+81,01/09/2022,,TAaffi Enrico,P.za Marconi 14,,,,,Alimentari,shop-convenience,45.823263809031715,10.463418149346191
+82,01/09/2022,,Cosi Michele - Antico Forno,Via S.Rocco 28 - 25072 Bagolino BS,,,,,Forneria,shop-bakery,45.823914868180445,10.462572003469361
+83,01/09/2022,,Carè Claudia - Gran Posteria pane e un pó di tutto,"P.zza Marconi , 8",,,,,Alimentari,shop-convenience,45.82398825894063,10.462523913271049
+84,01/09/2022,,La Bottega del Pane,"P.zza Marconi, 11",,,,,Forneria,shop-bakery,45.82399927132549,10.462208590812835
+85,01/09/2022,,Alimentari Stagnoli Jessica,"Via S. Rocco, 1, 25072 Bagolino BS",,,,,Alimentari,shop-convenience,45.82428062365484,10.461030983456427
+86,01/09/2022,,shop-kiosk Carta Canta di Bertini Andrea,"Via Lungo Lago Vittoria, 6, 25074 Idro BS",,,,,shop-kiosk,shop-kiosk,45.831721831064854,10.450744767828883
+87,01/09/2022,,Scavoni Paolo,"Via Valle Dorizzo, 4/c, 25072 Valle Dorizzo BS",,,,,"Alimentari,Affitta Camere","shop-convenience,tourism-guest_house",45.88242660909299,10.451452382320639
+88,01/09/2022,,"""Bagoss "" prodotti locali","Via Valle Dorizzo, 29 25072 Valle Dorizzo BS",,,,,"Alimentari,Ristorante","shop-convenience,Restaurant",ND,ND
+89,01/09/2022,,Bianchi Giacomo,"Via B. Vallini, 10",,,,,Macelleria,shop-butcher,ND,ND
+90,01/09/2022,,Il Botteghino - Costa Patrizia,"Via Don Giuseppe Bazzoli, 10 B, 25070 Bione BS",,,,,Alimentari,shop-convenience,ND,ND
+91,01/09/2022,,Alimentari - shop-kiosk di Fucina Alberto,"Via Maggiore, 26, 25070 Capovalle BS",,,,,shop-kiosk Alimentari,"shop-kiosk,shop-convenience",ND,ND
+92,01/09/2022,,Bottega Agricola - Az. Agr. Le due Casine,"Loc. Muraghe, 25070 Capovalle BS",,,,,Rivendita prodotti Agricoli,shop-convenience,ND,ND
+93,01/09/2022,,Merceria Piccini Giulietta,"Via degli Eroi 10 B, 25070 Capovalle BS",,,,,"Merceria,Cartoleria","shop-sewing,shop-stationery",ND,ND
+94,01/09/2022,,Il Pertecheese di Ilaria Pialorsi,"Via Roma, 12 - Forno D'Ono BS",,,,,Alimentari,shop-convenience,ND,ND
+95,01/09/2022,,La Bottega S.N.C. di Flocchini Hermese,"Via Parroccchia 36, Ono Degno BS",,,,,Alimentari,shop-convenience,ND,ND
+96,01/09/2022,,Macelleria Togni,"Via Roma 55, 25070 Treviso bresciano BS",,,,,"Alimentari,Macelleria","shop-convenience,shop-butcher",ND,ND
+97,01/09/2022,,Comini Maria Josè,"Via Roma, 12, 25080 Vallio Terme BS",,,,,Tabaccheria,shop-tobacco,ND,ND
+98,01/09/2022,,Scalvini Giambattista,"Via Forno, 31, 25072 Bagolino BS",,,,,Tabaccheria,shop-tobacco,ND,ND
