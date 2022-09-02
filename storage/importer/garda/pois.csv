@@ -37,7 +37,7 @@ id,last_modified,code,name,address_complete,contact_phone,contact_email,related_
 36,01/09/2022,,L'Antica Bottega di Xodo Claudia,"Via S. Martino, 18, 25079 Degagna BS",,,,,"Alimentari,Rivendita Pane","shop-convenience,shop-bakery",45.70950092406651,10.509294079635186
 37,01/09/2022,,Alimentari Massari Paola,"Via Tito Speri, 29, 25070 Vico BS",,,,,Alimentari,shop-convenience,45.71290959130922,10.471564427134398
 38,01/09/2022,,Ravani Gianprimo,"Via Garibaldi, 1/a, 25070 Mura BS",,,,,"Alimentari,Tabacchi,Macelleria,shop-kiosk","shop-convenience,shop-tobacco,shop-butcher,shop-kiosk",45.713334724287016,10.342747512995464
-39,01/09/2022,,Coop. di Consumo La Savallese,25070 - Capovalle(Brescia),,,,,Alimentari,shop-convenience,"45.69595931468905, 10.320079200913336","45.69595931468905, 10.320079200913336"
+39,01/09/2022,,Coop. di Consumo La Savallese,25070 - Capovalle(Brescia),,,,,Alimentari,shop-convenience,45.69595931468905,10.320079200913336
 40,01/09/2022,,La Dispensa,"Via Trento, 54, 25074 Idro BS",,,,,Minimarket,shop-convenience,45.73456624559441,10.458118355644615
 41,01/09/2022,,shop-bakery Gasparini Silvano,"Via Vittorio Veneto, 34, 25074 Crone BS",,,,,"Forneria,Alimentari","shop-bakery,shop-convenience",45.73517300623776,10.467165069463567
 42,01/09/2022,,La Bottega di Idro,"Via Vittorio Veneto, 27, 25074 Lemprato BS",,,,,"Alimentari,Articoli Casa","shop-convenience,shop-houseware",45.735349002115946,10.466577269836476
@@ -86,14 +86,3 @@ id,last_modified,code,name,address_complete,contact_phone,contact_email,related_
 85,01/09/2022,,Alimentari Stagnoli Jessica,"Via S. Rocco, 1, 25072 Bagolino BS",,,,,Alimentari,shop-convenience,45.82428062365484,10.461030983456427
 86,01/09/2022,,shop-kiosk Carta Canta di Bertini Andrea,"Via Lungo Lago Vittoria, 6, 25074 Idro BS",,,,,shop-kiosk,shop-kiosk,45.831721831064854,10.450744767828883
 87,01/09/2022,,Scavoni Paolo,"Via Valle Dorizzo, 4/c, 25072 Valle Dorizzo BS",,,,,"Alimentari,Affitta Camere","shop-convenience,tourism-guest_house",45.88242660909299,10.451452382320639
-88,01/09/2022,,"""Bagoss "" prodotti locali","Via Valle Dorizzo, 29 25072 Valle Dorizzo BS",,,,,"Alimentari,Ristorante","shop-convenience,Restaurant",ND,ND
-89,01/09/2022,,Bianchi Giacomo,"Via B. Vallini, 10",,,,,Macelleria,shop-butcher,ND,ND
-90,01/09/2022,,Il Botteghino - Costa Patrizia,"Via Don Giuseppe Bazzoli, 10 B, 25070 Bione BS",,,,,Alimentari,shop-convenience,ND,ND
-91,01/09/2022,,Alimentari - shop-kiosk di Fucina Alberto,"Via Maggiore, 26, 25070 Capovalle BS",,,,,shop-kiosk Alimentari,"shop-kiosk,shop-convenience",ND,ND
-92,01/09/2022,,Bottega Agricola - Az. Agr. Le due Casine,"Loc. Muraghe, 25070 Capovalle BS",,,,,Rivendita prodotti Agricoli,shop-convenience,ND,ND
-93,01/09/2022,,Merceria Piccini Giulietta,"Via degli Eroi 10 B, 25070 Capovalle BS",,,,,"Merceria,Cartoleria","shop-sewing,shop-stationery",ND,ND
-94,01/09/2022,,Il Pertecheese di Ilaria Pialorsi,"Via Roma, 12 - Forno D'Ono BS",,,,,Alimentari,shop-convenience,ND,ND
-95,01/09/2022,,La Bottega S.N.C. di Flocchini Hermese,"Via Parroccchia 36, Ono Degno BS",,,,,Alimentari,shop-convenience,ND,ND
-96,01/09/2022,,Macelleria Togni,"Via Roma 55, 25070 Treviso bresciano BS",,,,,"Alimentari,Macelleria","shop-convenience,shop-butcher",ND,ND
-97,01/09/2022,,Comini Maria Josè,"Via Roma, 12, 25080 Vallio Terme BS",,,,,Tabaccheria,shop-tobacco,ND,ND
-98,01/09/2022,,Scalvini Giambattista,"Via Forno, 31, 25072 Bagolino BS",,,,,Tabaccheria,shop-tobacco,ND,ND
