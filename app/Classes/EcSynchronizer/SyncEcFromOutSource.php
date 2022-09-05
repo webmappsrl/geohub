@@ -413,7 +413,7 @@ class SyncEcFromOutSource
                     
                     // Attach poi_type to poi
                     if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
-                        if (strtolower($this->provider) == 'storagecsv') {
+                        if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
                             foreach ($out_source->tags['poi_type'] as $cat) { 
                                 $geohub_w = TaxonomyPoiType::where('identifier',$cat)->first();
                                 if ($geohub_w && !is_null($geohub_w)) { 
