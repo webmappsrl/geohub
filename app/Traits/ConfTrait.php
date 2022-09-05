@@ -58,6 +58,9 @@ trait ConfTrait
         if ($this->ios_store_link)
             $data['APP']['iosStore'] = $this->ios_store_link;
 
+        if ($this->social_track_text)
+            $data['APP']['socialTrackText'] = $this->social_track_text;
+
         return $data;
     }
 
