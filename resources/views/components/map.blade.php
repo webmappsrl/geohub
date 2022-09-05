@@ -1,4 +1,4 @@
-@props(['track'])
+@props(['track','appSocialText'])
 @php
     use App\Models\EcPoi;
 
@@ -41,7 +41,7 @@
         $pois_collection[$poi->id]['image'] = $featured_image;
     }
 @endphp
-<x-schemaOrg :track="$track" :startPoint="$startPoint_geometry" />
+<x-schemaOrg :track="$track" :startPoint="$startPoint_geometry" :appSocialText="$appSocialText"/>
 <div id="map" class="h-full v-full poiLeafletMap">
 </div>
 <script>

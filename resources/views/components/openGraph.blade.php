@@ -5,7 +5,7 @@
         'width' => 1440,
         'height' => 500
     ])
-    ->description($track->excerpt?$track->excerpt:$track->description)
+    ->description($appSocialText)
     ->url(url()->current());
 @endphp
 {!! $og->renderTags() !!}
