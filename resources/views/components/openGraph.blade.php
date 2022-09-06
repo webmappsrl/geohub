@@ -5,7 +5,6 @@
         'width' => 1440,
         'height' => 500
     ])
-    ->description($appSocialText)
-    ->url(url()->current());
+    ->description($appSocialText);
 @endphp
 {!! $og->renderTags() !!}
