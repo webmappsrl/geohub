@@ -14,7 +14,6 @@
         )
         ->dateCreated($track->created_at)
         ->datePublished($track->updated_at)
-        ->url(url()->current())
         ->description($appSocialText)
         ->image($track->featureImage?$track->featureImage->thumbnail('1440x500'):asset('images/ectrack_share_page_feature_image_placeholder.jpg'))
         ->mainEntity(Schema::TouristAttraction()
