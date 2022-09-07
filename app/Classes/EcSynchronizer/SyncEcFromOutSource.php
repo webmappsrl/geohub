@@ -344,6 +344,15 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track taxonomyThemes: '.$this->theme);
                         $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier',$this->theme)->first());
                     }
+                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
+                        if (isset($out_source->tags['sda'])){
+                            $sda = $out_source->tags['sda'];
+                            if ($sda) {
+                                Log::info('Attaching EC Track OSM2CAI SDA taxonomyThemes: sda' . $sda);
+                                $ec_track->taxonomyThemes()->sync(TaxonomyTheme::where('identifier','osm2cai-sda'.$sda)->first());
+                            }
+                        }
+                    }
                     
                     // Attach related poi to Track
                     if (isset($out_source->tags['related_poi']) && is_array($out_source->tags['related_poi'])) {
