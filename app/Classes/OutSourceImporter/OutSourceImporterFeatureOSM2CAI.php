@@ -30,6 +30,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
         $track = $db->table('hiking_routes')
             ->where('id',$this->source_id)
             ->select([
+                'id',
                 'ref',
                 'name',
                 'cai_scale',
@@ -41,6 +42,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
                 'note',
                 'website',
                 'distance',
+                'osm2cai_status'
             ])
             ->first();
 
@@ -100,7 +102,12 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
     protected function prepareTrackTagsJson($track){
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name']['it'] = $track->name;
-        $this->tags['description']['it'] = $track->description;
+        $this->tags['description']['it'] = '';
+        if ($track->description)
+            $this->tags['description']['it'] = $track->description .'<br>';
+
+        $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' .$track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
+        $this->tags['description']['it'] .= "<a href='https://osm2cai.cai.it/resources/hiking-routes/$track->id' target='_blank'>Modifica questo percorso</a>";
         $this->tags['excerpt']['it'] = $track->note;
         $this->tags['from'] = $track->from;
         $this->tags['to'] = $track->to;
@@ -135,5 +142,33 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
      */
     public function prepareMediaTagsJson($media){ 
         return [];
+    }
+    
+    /**
+     * It returns the description of the osm2cai status
+     * 
+     * @param integer $sda track osm2cai status
+     * 
+     */
+    public function getSDADescription($sda){ 
+        $description = '';
+        switch ($sda) {
+            case '0':
+                $description = 'Non rilevato, senza scala di difficoltà';
+                break;
+            case '1':
+                $description = 'Percorsi non rilevati, con scala di difficoltà';
+                break;
+            case '2':
+                $description = 'Percorsi rilevati, senza scala di difficoltá';
+                break;
+            case '3':
+                $description = 'Percorsi rilevati, con scala di difficoltá';
+                break;
+            case '4':
+                $description = 'Percorsi importati in INFOMONT';
+                break;
+        }
+        return $description;
     }
 }
