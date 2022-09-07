@@ -101,17 +101,30 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
      */
     protected function prepareTrackTagsJson($track){
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
-        $this->tags['name']['it'] = $track->name;
+        if ($track->name) {
+            $this->tags['name']['it'] = $track->name;
+        }
         $this->tags['description']['it'] = '';
-        if ($track->description)
+        if ($track->description) {
             $this->tags['description']['it'] = $track->description .'<br>';
-
-        $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' .$track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
+        }        
+        if ($track->osm2cai_status) {
+            $this->tags['sda'] = $track->osm2cai_status;
+            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' .$track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
+        }
         $this->tags['description']['it'] .= "<a href='https://osm2cai.cai.it/resources/hiking-routes/$track->id' target='_blank'>Modifica questo percorso</a>";
-        $this->tags['excerpt']['it'] = $track->note;
-        $this->tags['from'] = $track->from;
-        $this->tags['to'] = $track->to;
-        $this->tags['cai_scale'] = $track->cai_scale;
+        if ($track->note) {
+            $this->tags['excerpt']['it'] = $track->note;
+        }
+        if ($track->from) {
+            $this->tags['from'] = $track->from;
+        }
+        if ($track->to) {
+            $this->tags['to'] = $track->to;
+        }
+        if ($track->cai_scale) {
+            $this->tags['cai_scale'] = $track->cai_scale;
+        }
         if (isset($track->website) && $track->website){
             $related_url_name = parse_url($track->website);
             $host = $track->website;
@@ -120,7 +133,9 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
             }
             $this->tags['related_url'][$host] = $track->website;
         }
-        $this->tags['ref'] = $track->ref;
+        if ($track->ref) {
+            $this->tags['ref'] = $track->ref;
+        }
 
     }
     
