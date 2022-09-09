@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Partnership;
 use App\Models\User;
+use App\Models\EcMedia;
+use App\Models\TaxonomyActivity;
 use App\Providers\PartnershipValidationProvider;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -22,7 +27,8 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function signup(): JsonResponse {
+    public function signup(): JsonResponse
+    {
         $credentials = request(['email', 'password', 'name', 'last_name', 'referrer', 'fiscal_code']);
 
         if (!isset($credentials['email']) || !isset($credentials['password'])) {
@@ -76,8 +82,10 @@ class AuthController extends Controller {
         $service = app(PartnershipValidationProvider::class);
         $partnershipsIds = [];
         foreach ($partnerships as $partnership) {
-            if (method_exists(PartnershipValidationProvider::class, $partnership->validator)
-                && $service->{$partnership->validator}($user)) {
+            if (
+                method_exists(PartnershipValidationProvider::class, $partnership->validator)
+                && $service->{$partnership->validator}($user)
+            ) {
                 $partnershipsIds[] = $partnership->id;
             }
         }
@@ -101,7 +109,8 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function login(): JsonResponse {
+    public function login(): JsonResponse
+    {
         $credentials = request(['email', 'password']);
 
         if (!$token = auth('api')->attempt($credentials)) {
@@ -114,11 +123,36 @@ class AuthController extends Controller {
     }
 
     /**
+     * Delete user.
+     *
+     * @return JsonResponse
+     */
+    public function delete(): JsonResponse
+    {
+        try {
+            $userFromAPI = auth('api')->user();
+            $user = User::find($userFromAPI->id);
+            if (!$user->hasRole('Contributor')) {
+                throw new Exception("this user can't be deleted by api");
+            }
+            auth('api')->logout();
+            $user->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => "this user can't be deleted by api",
+                'code' => 400
+            ], 400);
+        }
+        return response()->json(['success' => 'account user deleted']);
+    }
+
+    /**
      * Get the authenticated User.
      *
      * @return JsonResponse
      */
-    public function me(): JsonResponse {
+    public function me(): JsonResponse
+    {
         $user = auth('api')->user();
         $roles = array_map(function ($value) {
             return strtolower($value);
@@ -144,7 +178,8 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function logout(): JsonResponse {
+    public function logout(): JsonResponse
+    {
         auth('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
@@ -155,7 +190,8 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function refresh(): JsonResponse {
+    public function refresh(): JsonResponse
+    {
         return $this->respondWithToken(auth('api')->refresh());
     }
 
@@ -166,7 +202,8 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    protected function respondWithToken(string $token): JsonResponse {
+    protected function respondWithToken(string $token): JsonResponse
+    {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
