@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 
+use Exception;
+
 class EcPoi extends Model
 {
     use HasFactory, GeometryFeatureTrait, HasTranslations;
@@ -86,9 +88,9 @@ class EcPoi extends Model
     {
         $output = [];
         foreach ($files as $key => $file) {
-            if (strpos($key,'audio')) {
+            if (strpos($key, 'audio')) {
                 // To get the current language
-                $key_array = explode('_',$key);
+                $key_array = explode('_', $key);
                 // Add sha1 to name
                 $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
                 // Create the path with language folder
@@ -155,13 +157,19 @@ class EcPoi extends Model
     public function getNeighbourEcMedia(): array
     {
         $features = [];
-        $result = DB::select(
-            'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_poi_media_distance") . ');',
-            [
-                $this->geometry,
-            ]
-        );
+        try {
+            $result = DB::select(
+                'SELECT id,St_Distance(geometry,?) as dist 
+                 FROM ec_media
+                 WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_poi_media_distance") . ') ORDER by St_Distance(geometry,?);',
+                [
+                    $this->geometry, $this->geometry, $this->geometry,
+                ]
+            );
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            $result = [];
+        }
         foreach ($result as $row) {
             $geojson = EcMedia::find($row->id)->getGeojson();
             if (isset($geojson))
@@ -281,17 +289,17 @@ class EcPoi extends Model
             return $prefix . "_" . $elem;
         }, $array);
     }
-    private function addTaxonomyPoiTypes() {
+    private function addTaxonomyPoiTypes()
+    {
         $taxonomyPoiTypes = $this->taxonomyPoiTypes()->pluck('identifier')->toArray();
-        if (count($taxonomyPoiTypes) > 1 && in_array('poi',$taxonomyPoiTypes) == true) {
+        if (count($taxonomyPoiTypes) > 1 && in_array('poi', $taxonomyPoiTypes) == true) {
             $taxonomyPoiTypes = array_diff($taxonomyPoiTypes, ['poi']);
             return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
         }
-        if (in_array('poi',$taxonomyPoiTypes) == false) {
+        if (in_array('poi', $taxonomyPoiTypes) == false) {
             return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
         }
         return ['poi_type_poi'];
-
     }
     function getTaxonomies()
     {

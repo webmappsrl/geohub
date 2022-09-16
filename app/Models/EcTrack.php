@@ -386,13 +386,14 @@ class EcTrack extends Model
         return $array;
     }
 
-    public function getActualOrOSFValue($field) {
-        if(!empty($this->$field)) {
+    public function getActualOrOSFValue($field)
+    {
+        if (!empty($this->$field)) {
             return $this->$field;
         }
-        if(!empty($this->out_source_feature_id)) {
+        if (!empty($this->out_source_feature_id)) {
             $osf = OutSourceTrack::find($this->out_source_feature_id);
-            if(array_key_exists($field,$osf->tags)) {
+            if (array_key_exists($field, $osf->tags)) {
                 return $osf->tags[$field];
             }
         }
@@ -529,13 +530,21 @@ class EcTrack extends Model
     public function getNeighbourEcMedia(): array
     {
         $features = [];
-        $result = DB::select(
-            'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_media_distance") . ');',
-            [
-                $this->geometry,
-            ]
-        );
+        try {
+            // select id 
+            // from ec_media 
+            // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5) order by st_linelocatepoint(st_geomfromgeojson(st_asgeojson((select geometry from ec_tracks where id = 2029))),st_geomfromgeojson(st_asgeojson(geometry)));
+            $result = DB::select(
+                'SELECT id FROM ec_media
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_media_distance") . ')
+                    order by St_Linelocatepoint(St_Geomfromgeojson(St_Asgeojson(?)),St_Geomfromgeojson(St_Asgeojson(geometry)));',
+                [
+                    $this->geometry, $this->geometry,
+                ]
+            );
+        } catch (Exception $e) {
+            $result = [];
+        }
         foreach ($result as $row) {
             $geojson = EcMedia::find($row->id)->getGeojson();
             if (isset($geojson))
@@ -551,13 +560,23 @@ class EcTrack extends Model
     public function getNeighbourEcPoi(): array
     {
         $features = [];
-        $result = DB::select(
-            'SELECT id FROM ec_pois
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_ec_poi_distance") . ');',
-            [
-                $this->geometry,
-            ]
-        );
+        // select id 
+        // from ec_pois
+        // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5) 
+        //order by st_linelocatepoint(st_geomfromgeojson(st_asgeojson((select geometry from ec_tracks where id = 2029))),st_geomfromgeojson(st_asgeojson(geometry)));
+        try {
+            $result = DB::select(
+                'SELECT id FROM ec_pois
+                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_ec_poi_distance") . ')
+                    order by St_Linelocatepoint(St_Geomfromgeojson(St_Asgeojson(?)),St_Geomfromgeojson(St_Asgeojson(geometry)));',
+                [
+                    $this->geometry,
+                    $this->geometry,
+                ]
+            );
+        } catch (Exception $e) {
+            $result = [];
+        }
         foreach ($result as $row) {
             $poi = EcPoi::find($row->id);
             $geojson = $poi->getGeojson();
