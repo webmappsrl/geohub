@@ -52,21 +52,14 @@ class FeatureImagePopup extends Field
         if (is_null($uploadFeature)) {
             return null;
         }
-        $storage = Storage::disk('public');
         try {
             $name = $uploadFeature['properties']['name'];
-            $ext = explode('image/', basename($uploadFeature['properties']['ext']))[0];
-
-            $base64 = $uploadFeature['properties']['base64'];
             $url = $uploadFeature['properties']['url'];
-            $contents =  base64_decode(explode(',', $base64)[1]);
-
             $coords = $uploadFeature['geometry']['coordinates'];
             $geometry = (DB::select(DB::raw("SELECT ST_GeomFromText('POINT({$coords[0]} {$coords[1]})') as g;")))[0]->g;
-            $storage->put($url,  $contents); // salvo l'image sullo storage come concatenazione id estensione
 
             $ecMedia = new EcMedia(['name' => $name, 'url' => $url, 'geometry' => $geometry]);
-            $ecMedia->save(); // salvo la prima volta per avere assegnato un id
+            $ecMedia->save();
             Log::info('featureImagePopup: url generated' . $url);
         } catch (Exception $e) {
             Log::error("featureImage: create ec media -> $e->getMessage()");
