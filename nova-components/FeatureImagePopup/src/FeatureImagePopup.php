@@ -64,7 +64,7 @@ class FeatureImagePopup extends Field
 
             $ecMedia = new EcMedia(['name' => $name, 'url' => '', 'geometry' => $geometry]);
             $ecMedia->save(); // salvo la prima volta per avere assegnato un id
-            $url = 'ec_media/' . $ecMedia->id . '-' . sha1($ecMedia->id)  . '.' . $ext;
+            $url = 'ecMedia/' . $ecMedia->id   . '.' . $ext;
             Log::info('featureImagePopup: url generated' . $url);
             $storage->put($url,  $contents); // salvo l'image sullo storage come concatenazione id estensione
             $ecMedia->url = $url; // assegno all'ec media l'url dello storage
