@@ -313,10 +313,6 @@ class EcPoi extends Resource {
                     ->feature($geojson ?? [])
                     ->apiBaseUrl('/api/ec/poi/'),
 
-                BelongsTo::make('Feature Image (by name)','featureImage',EcMedia::class)
-                    ->searchable()
-                    ->showCreateRelationButton()
-                    ->nullable(),
     
                 EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
                     ->onlyOnForms()
