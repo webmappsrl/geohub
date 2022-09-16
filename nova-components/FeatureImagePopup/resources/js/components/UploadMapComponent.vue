@@ -35,7 +35,7 @@ import { getDistance } from "ol/sphere";
 import Overlay from "ol/Overlay";
 
 export default {
-  name: "MapComponent",
+  name: "UploadMapComponent",
   props: {
     feature: {},
     media: {},
@@ -251,7 +251,6 @@ export default {
     setTimeout(() => {
       this.map.updateSize();
       this.drawFeature();
-      this.drawMedia();
     }, 500);
   },
   watch: {
@@ -259,8 +258,14 @@ export default {
       this.mediaLayer.changed();
       this.map.render();
     },
-    reload(val) {
-      console.log("asd");
+    media(val) {
+      console.log("media changed", val);
+      this.mediaLayer.getSource().clear();
+      this.map.updateSize();
+      this.drawMedia();
+      this.drawFeature();
+      this.mediaLayer.changed();
+      this.map.render();
     },
   },
   methods: {
@@ -407,6 +412,10 @@ export default {
         this.featureSource.addFeatures([features[0]]);
 
         const extent = this.featureSource.getExtent();
+        const firstFeature = this.featureSource.getFeatures()[0];
+        this.featureSource.clear();
+        this.featureSource.addFeatures([firstFeature]);
+        this.featureLayer.changed();
 
         this.view.fit(extent, {
           padding: [20, 20, 40, 20],
@@ -414,14 +423,21 @@ export default {
       }
     },
     drawMedia() {
+      console.log("draw media upload");
       if (!!this.media) {
+        console.log(this.media);
+        this.mediaSource.clear();
         const features = new GeoJSON({
           featureProjection: "EPSG:3857",
         }).readFeatures(this.media);
-        for (let i in features) {
-          features[i].setId(features[i].get("id"));
-        }
+        this.mediaSource.changed();
+        const extent = this.featureSource.getExtent();
+
+        this.view.fit(extent, {
+          padding: [20, 20, 40, 20],
+        });
         this.mediaSource.addFeatures(features);
+        this.mediaLayer.changed();
       }
     },
     showOverlay(id) {

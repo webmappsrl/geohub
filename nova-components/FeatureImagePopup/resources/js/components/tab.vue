@@ -1,6 +1,6 @@
 <template>
-  <div v-show="isActive">
-    <slot></slot>
+  <div>
+    <slot v-if="isActive"></slot>
   </div>
 </template>
 
@@ -8,8 +8,8 @@
 export default {
   name: "tab",
   props: {
-    name: {required: true},
-    selected: {default: false}
+    name: { required: true },
+    selected: { default: false }
   },
   data() {
     return {
