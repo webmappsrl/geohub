@@ -435,9 +435,12 @@ export default {
                 if (lat != null && lon != null) {
                   resolve([lon, lat]);
                 } else {
-                  resolve(this.field.geojson.geometry.coordinates);
+                  console.log("no exif");
+                  resolve(null);
                 }
               } catch (_) {
+                console.log("no exif");
+                resolve(null);
                 reject;
               }
             });
@@ -458,14 +461,15 @@ export default {
       let base64 = [];
       await Promise.all(coordinates$).then((val) => (coordinates = val));
       await Promise.all(files$).then((val) => (base64 = val));
-
+      const defaultCoordinates = Array.isArray(
+        this.field.geojson.geometry.coordinates[0]
+      )
+        ? this.field.geojson.geometry.coordinates[0]
+        : this.field.geojson.geometry.coordinates;
       Array.from(files).forEach((f, index) => {
-        const geometry = this.field.geojson.geometry;
-        let c = coordinates[index];
         let b64 = base64[index];
-        if (c != null) {
-          geometry.coordinates = c;
-        }
+        let c = coordinates[index] ? coordinates[index] : defaultCoordinates;
+
         features.push({
           type: "Feature",
           properties: {
