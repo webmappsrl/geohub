@@ -41,7 +41,8 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 
 
-class EcTrack extends Resource {
+class EcTrack extends Resource
+{
 
     use TabsOnEdit, SearchesRelations;
 
@@ -80,7 +81,8 @@ class EcTrack extends Resource {
         'taxonomyThemes' => ['name'],
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Editorial Content');
     }
 
@@ -106,7 +108,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
 
         return [
             ID::make('id'),
@@ -117,18 +120,18 @@ class EcTrack extends Resource {
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyThemes'),
             // Do not remove below code, necessary for data binding
-            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
-
     }
 
 
-    public function fieldsForIndex(Request $request) {
+    public function fieldsForIndex(Request $request)
+    {
         return [
 
-            Text::make('Name', function() {
-                $name = implode('<br />',explode( "\n", wordwrap( $this->name), 50));
-                return $name.'<br />CAI scale: '.$this->cai_scale;
+            Text::make('Name', function () {
+                $name = implode('<br />', explode("\n", wordwrap($this->name), 50));
+                return $name . '<br />CAI scale: ' . $this->cai_scale;
             })->asHtml(),
 
             BelongsTo::make('Author', 'author', User::class)->sortable(),
@@ -137,159 +140,166 @@ class EcTrack extends Resource {
 
             DateTime::make(__('Updated At'), 'updated_at')->sortable(),
 
-            Text::make('Geojson',function () {
-                return '<a href="'.route('api.ec.track.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
+            Text::make('Geojson', function () {
+                return '<a href="' . route('api.ec.track.view.geojson', ['id' => $this->id]) . '" target="_blank">[x]</a>';
             })->asHtml(),
         ];
-
     }
 
-    public function fieldsForDetail(Request $request) {
-        return [ (new Tabs("EC Track Details: {$this->name} ({$this->id})",[
-            'Main' => [
-                Text::make('Geohub ID',function (){return $this->id;}),
-                Text::make('Author',function (){return $this->user->name;}),
-                DateTime::make('Created At'),
-                DateTime::make('Updated At'),
-                NovaTabTranslatable::make([
-                    Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Excerpt'),'excerpt'),
-                    Textarea::make('Description'),
+    public function fieldsForDetail(Request $request)
+    {
+        return [
+            (new Tabs("EC Track Details: {$this->name} ({$this->id})", [
+                'Main' => [
+                    Text::make('Geohub ID', function () {
+                        return $this->id;
+                    }),
+                    Text::make('Author', function () {
+                        return $this->user->name;
+                    }),
+                    DateTime::make('Created At'),
+                    DateTime::make('Updated At'),
+                    NovaTabTranslatable::make([
+                        Text::make(__('Name'), 'name'),
+                        Textarea::make(__('Excerpt'), 'excerpt'),
+                        Textarea::make('Description'),
                     ])->onlyOnDetail(),
-            ],
-            'Media' => [
-                Text::make('Audio',function () {$this->audio;}),
-                Text::make('Related Url',function () {
-                    $out = '';
-                    if(is_array($this->related_url) && count($this->related_url)>0){
-                        foreach($this->related_url as $label => $url) {
-                            $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
+                ],
+                'Media' => [
+                    Text::make('Audio', function () {
+                        $this->audio;
+                    }),
+                    Text::make('Related Url', function () {
+                        $out = '';
+                        if (is_array($this->related_url) && count($this->related_url) > 0) {
+                            foreach ($this->related_url as $label => $url) {
+                                $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
+                            }
+                        } else {
+                            $out = "No related Url";
                         }
-                    } else {
-                        $out = "No related Url";
-                    }
-                    return $out;
-                })->asHtml(),
-                ExternalImage::make(__('Feature Image'), function () {
-                    $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                    if ('' !== $url && substr($url, 0, 4) !== 'http') {
-                        $url = Storage::disk('public')->url($url);
-                    }
+                        return $out;
+                    })->asHtml(),
+                    ExternalImage::make(__('Feature Image'), function () {
+                        $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                            $url = Storage::disk('public')->url($url);
+                        }
 
-                    return $url;
-                })->withMeta(['width' => 400]),
+                        return $url;
+                    })->withMeta(['width' => 400]),
 
-                // Text::make('Gallery',function(){
-                //     if (count($this->ecMedia) == 0) {
-                //         return 'No gallery';
-                //     }
-                    
-                //     $gallery = '';
-                //     foreach ($this->ecMedia as $media) {
-                //         $thumbnail = $media->thumbnail('150x150');
-                //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
-                //     }
-                //     return $gallery;
-                // })->asHtml()
-            ],
-            'Map' => [
-                WmEmbedmapsField::make(__('Map'), 'geometry', function () {
-                    return [
-                        'feature' => $this->getGeojson(),
-                    ];
-                }),
-            ],
-            'Info' => [
-                Text::make('Ref'),
-                Text::make('From'),
-                Text::make('To'),
-                Boolean::make('Not Accessible'),
-                Textarea::make('Not Accessible Message')->alwaysShow(),
-                Text::make('Distance'),
-                Text::make('Duration Forward'),
-                Text::make('Duration Backward'),
-                Text::make('Ascent'),
-                Text::make('Descent'),
-                Text::make('Elevation (From)'),
-                Text::make('Elevation (To)'),
-                Text::make('Elevation (Min)'),
-                Text::make('Elevation (Max)'),
-            ],
-            'Scale' => [
-                Text::make('Difficulty'),
-                Text::make('Cai Scale')
-            ],
-            'Taxonomies' => [
-                Text::make('Activities',function(){
-                    if($this->taxonomyActivities()->count() >0) {
-                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
-                    }
-                    return 'No activities';
-                }),
-                Text::make('Wheres',function(){
-                    if($this->taxonomyWheres()->count() >0) {
-                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
-                    }
-                    return 'No Wheres';
-                }),
-                Text::make('Themes',function(){
-                    if($this->taxonomyThemes()->count() >0) {
-                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
-                    }
-                    return 'No Themes';
-                }),
-                Text::make('Targets',function(){
-                    if($this->taxonomyTargets()->count() >0) {
-                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
-                    }
-                    return 'No Targets';
-                }),
-                Text::make('Whens',function(){
-                    if($this->taxonomyWhens()->count() >0) {
-                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
-                    }
-                    return 'No Whens';
-                }),
-            ],
-            'Out Source' => [
-                Text::make('Out Source Feature', function() {
-                    if(!is_null($this->out_source_feature_id)) {
-                        return $this->out_source_feature_id;
-                    }
-                    else {
-                        return 'No Out Source associated';
-                    }
-                })->onlyOnDetail(),    
-            ],
-            'API' => [
-                Text::make('Public Page', function () {
-                    $url_pubblic = request()->root().'/track/'.$this->id;
-                
-                    return "<a target='_blank' href='{$url_pubblic}'>{$url_pubblic}</a>";
-                })->asHtml(),    
-                Text::make('Base API', function () {
-                    $url_base_api = request()->root().'/api/ec/track/'.$this->id;
-                
-                    return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
-                })->asHtml(),    
-                Text::make('Widget: Simple', function () {
-                    $url_widget_simple = request()->root().'/w/simple/'.$this->id;
-                
-                    return "<a target='_blank' href='{$url_widget_simple}'>{$url_widget_simple}</a>";
-                })->asHtml(),    
-            ],
-            'Data' => [
-                Heading::make($this->getData())->asHtml(),
-            ],
+                    // Text::make('Gallery',function(){
+                    //     if (count($this->ecMedia) == 0) {
+                    //         return 'No gallery';
+                    //     }
+
+                    //     $gallery = '';
+                    //     foreach ($this->ecMedia as $media) {
+                    //         $thumbnail = $media->thumbnail('150x150');
+                    //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                    //     }
+                    //     return $gallery;
+                    // })->asHtml()
+                ],
+                'Map' => [
+                    WmEmbedmapsField::make(__('Map'), 'geometry', function () {
+                        return [
+                            'feature' => $this->getGeojson(),
+                        ];
+                    }),
+                ],
+                'Info' => [
+                    Text::make('Ref'),
+                    Text::make('From'),
+                    Text::make('To'),
+                    Boolean::make('Not Accessible'),
+                    Textarea::make('Not Accessible Message')->alwaysShow(),
+                    Text::make('Distance'),
+                    Text::make('Duration Forward'),
+                    Text::make('Duration Backward'),
+                    Text::make('Ascent'),
+                    Text::make('Descent'),
+                    Text::make('Elevation (From)'),
+                    Text::make('Elevation (To)'),
+                    Text::make('Elevation (Min)'),
+                    Text::make('Elevation (Max)'),
+                ],
+                'Scale' => [
+                    Text::make('Difficulty'),
+                    Text::make('Cai Scale')
+                ],
+                'Taxonomies' => [
+                    Text::make('Activities', function () {
+                        if ($this->taxonomyActivities()->count() > 0) {
+                            return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
+                        }
+                        return 'No activities';
+                    }),
+                    Text::make('Wheres', function () {
+                        if ($this->taxonomyWheres()->count() > 0) {
+                            return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
+                        }
+                        return 'No Wheres';
+                    }),
+                    Text::make('Themes', function () {
+                        if ($this->taxonomyThemes()->count() > 0) {
+                            return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
+                        }
+                        return 'No Themes';
+                    }),
+                    Text::make('Targets', function () {
+                        if ($this->taxonomyTargets()->count() > 0) {
+                            return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
+                        }
+                        return 'No Targets';
+                    }),
+                    Text::make('Whens', function () {
+                        if ($this->taxonomyWhens()->count() > 0) {
+                            return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
+                        }
+                        return 'No Whens';
+                    }),
+                ],
+                'Out Source' => [
+                    Text::make('Out Source Feature', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            return $this->out_source_feature_id;
+                        } else {
+                            return 'No Out Source associated';
+                        }
+                    })->onlyOnDetail(),
+                ],
+                'API' => [
+                    Text::make('Public Page', function () {
+                        $url_pubblic = request()->root() . '/track/' . $this->id;
+
+                        return "<a target='_blank' href='{$url_pubblic}'>{$url_pubblic}</a>";
+                    })->asHtml(),
+                    Text::make('Base API', function () {
+                        $url_base_api = request()->root() . '/api/ec/track/' . $this->id;
+
+                        return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                    })->asHtml(),
+                    Text::make('Widget: Simple', function () {
+                        $url_widget_simple = request()->root() . '/w/simple/' . $this->id;
+
+                        return "<a target='_blank' href='{$url_widget_simple}'>{$url_widget_simple}</a>";
+                    })->asHtml(),
+                ],
+                'Data' => [
+                    Heading::make($this->getData())->asHtml(),
+                ],
 
 
             ]))->withToolbar(),
             // Necessary for view
-            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
 
-    public function fieldsForUpdate(Request $request) {
+    public function fieldsForUpdate(Request $request)
+    {
 
         try {
             $geojson = $this->model()->getGeojson();
@@ -298,102 +308,98 @@ class EcTrack extends Resource {
         }
 
         $tab_title = "New EC Track";
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+        if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Track Edit: {$this->name} ({$this->id})";
         }
 
-        return [(new Tabs($tab_title,[
-            'Main' => [
-                NovaTabTranslatable::make([
-                    Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Excerpt'),'excerpt'),
-                    Textarea::make('Description'),
+        return [
+            (new Tabs($tab_title, [
+                'Main' => [
+                    NovaTabTranslatable::make([
+                        Text::make(__('Name'), 'name'),
+                        Textarea::make(__('Excerpt'), 'excerpt'),
+                        Textarea::make('Description'),
                     ])->onlyOnForms(),
-                BelongsTo::make('Author','author',User::class)
-                    ->searchable()
-                    ->nullable()
-                    ->canSee(function ($request) {
-                        return $request->user()->can('Admin', $this);
-                    })
-            ],
-            'Media' => [
+                    BelongsTo::make('Author', 'author', User::class)
+                        ->searchable()
+                        ->nullable()
+                        ->canSee(function ($request) {
+                            return $request->user()->can('Admin', $this);
+                        })
+                ],
+                'Media' => [
 
-                File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
-                    $file = $request->file('audio');
+                    File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                        $file = $request->file('audio');
 
-                    return $model->uploadAudio($file);
-                })->acceptedTypes('audio/*')->onlyOnForms(),
+                        return $model->uploadAudio($file);
+                    })->acceptedTypes('audio/*')->onlyOnForms(),
 
-                FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
-                    ->onlyOnForms()
-                    ->feature($geojson ?? [])
-                    ->apiBaseUrl('/api/ec/track/'),
+                    FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
+                        ->onlyOnForms()
+                        ->feature($geojson ?? [])
+                        ->apiBaseUrl('/api/ec/track/'),
 
-                BelongsTo::make('Feature Image (by name)','featureImage',EcMedia::class)
-                    ->searchable()
-                    ->showCreateRelationButton()
-                    ->nullable(),
+                    EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
+                        ->onlyOnForms()
+                        ->feature($geojson ?? [])
+                        ->apiBaseUrl('/api/ec/track/'),
 
+                    KeyValue::make('Related Url')
+                        ->keyLabel('Label')
+                        ->valueLabel('Url with https://')
+                        ->actionText('Add new related url')
+                        ->rules('json'),
+                ],
+                'Map' => [
+                    File::make('Geojson')->store(function (Request $request, $model) {
+                        $content = file_get_contents($request->geojson);
+                        $geometry = $model->fileToGeometry($content);
 
-                EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
-                    ->onlyOnForms()
-                    ->feature($geojson ?? [])
-                    ->apiBaseUrl('/api/ec/track/'),
+                        return $geometry ? [
+                            'geometry' => $geometry,
+                        ] : function () {
+                            throw new Exception(__("The uploaded file is not valid"));
+                        };
+                    })->onlyOnForms(),
+                    Ecpoipopup::make(__('ecPoi'))
+                        ->nullable()
+                        ->onlyOnForms()
+                        ->feature($geojson ?? []),
+                ],
+                'Info' => [
+                    Text::make('Ref'),
+                    Text::make('From'),
+                    Text::make('To'),
+                    Boolean::make('Not Accessible'),
+                    Textarea::make('Not Accessible Message')->alwaysShow(),
 
-                KeyValue::make('Related Url')
-                    ->keyLabel('Label')
-                    ->valueLabel('Url with https://')
-                    ->actionText('Add new related url')
-                    ->rules('json'),
-            ],
-            'Map' => [
-                File::make('Geojson')->store(function (Request $request, $model) {
-                    $content = file_get_contents($request->geojson);
-                    $geometry = $model->fileToGeometry($content);
+                ],
+                'Scale' => [
+                    Text::make('Difficulty'),
+                    Select::make('Cai Scale')->options([
+                        'T' => 'Turistico (T)',
+                        'E' => 'Escursionistico (E)',
+                        'EE' => 'Per escursionisti esperti (EE)',
+                        'EEA' => 'Alpinistico (EEA)'
+                    ]),
+                ],
+                'Taxonomies' => [
+                    // AttachMany::make('TaxonomyWheres'),
+                    AttachMany::make('TaxonomyActivities'),
+                    AttachMany::make('TaxonomyTargets'),
+                    // AttachMany::make('TaxonomyWhens'),
+                    AttachMany::make('TaxonomyThemes'),
+                ],
 
-                    return $geometry ? [
-                        'geometry' => $geometry,
-                    ] : function () {
-                        throw new Exception(__("The uploaded file is not valid"));
-                    };
-                })->onlyOnForms(),
-                Ecpoipopup::make(__('ecPoi'))
-                    ->nullable()
-                    ->onlyOnForms()
-                    ->feature($geojson ?? []),
-            ],
-            'Info' => [
-                Text::make('Ref'),
-                Text::make('From'),
-                Text::make('To'),
-                Boolean::make('Not Accessible'),
-                Textarea::make('Not Accessible Message')->alwaysShow(),
-
-            ],
-            'Scale' => [
-                Text::make('Difficulty'),
-                Select::make('Cai Scale')->options([
-                    'T' => 'Turistico (T)',
-                    'E' => 'Escursionistico (E)',
-                    'EE' => 'Per escursionisti esperti (EE)',
-                    'EEA' => 'Alpinistico (EEA)'
-                ]),
-            ],
-            'Taxonomies' => [
-                // AttachMany::make('TaxonomyWheres'),
-                AttachMany::make('TaxonomyActivities'),
-                AttachMany::make('TaxonomyTargets'),
-                // AttachMany::make('TaxonomyWhens'),
-                AttachMany::make('TaxonomyThemes'),
-                ],    
-                
             ])),
             // Do not remove below code, necessary for Edit mode  
-            BelongsToMany::make('Gallery','ecMedia','App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
 
-    public function fieldsForCreate(Request $request) {
+    public function fieldsForCreate(Request $request)
+    {
         return $this->fieldsForUpdate($request);
     }
 
@@ -404,7 +410,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -415,9 +422,9 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
-        return [
-        ];
+    public function filters(Request $request): array
+    {
+        return [];
     }
 
     /**
@@ -427,7 +434,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -438,7 +446,8 @@ class EcTrack extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [
             new RegenerateEcTrack(),
             (new DownloadExcelEcTrackAction)->allFields()->except('geometry')->withHeadings(),
@@ -453,7 +462,8 @@ class EcTrack extends Resource {
      *
      * @return string
      */
-    public function getData() : string {
+    public function getData(): string
+    {
         $text = <<<HTML
         <style>
 table {
@@ -518,8 +528,6 @@ tr:nth-child(even) {
 
 </table>
 HTML;
-               return $text;
+        return $text;
     }
-
-
 }

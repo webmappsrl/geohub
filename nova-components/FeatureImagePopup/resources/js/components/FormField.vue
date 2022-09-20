@@ -388,12 +388,14 @@ export default {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => (base64 = reader.result);
+      const defaultCoordinates = Array.isArray(
+        this.field.geojson.geometry.coordinates[0]
+      )
+        ? this.field.geojson.geometry.coordinates[0]
+        : this.field.geojson.geometry.coordinates;
       await reader.onload();
       setTimeout(() => {
-        const geometry = this.field.geojson.geometry;
-        if (coordinates != null) {
-          geometry.coordinates = coordinates;
-        }
+        let c = coordinates ? coordinates : defaultCoordinates;
         this.uploadedMediaFeature = {
           type: "Feature",
           properties: {
@@ -403,7 +405,10 @@ export default {
             url: URL.createObjectURL(file),
             base64,
           },
-          geometry,
+          geometry: {
+            type: "Point",
+            coordinates: c,
+          },
         };
 
         this.refreshUploadedMediaList([this.uploadedMediaFeature]);
