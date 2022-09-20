@@ -1,14 +1,19 @@
 <template>
-  <div style="width: 100%;">
+  <div style="width: 100%">
     <div class="tabs">
       <ul>
-        <li class="tabName" v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
+        <li v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
           <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a>
         </li>
-        <li style="margin-left: auto;">
-          <a href="javascript:;" class="close-button" @click="cancelUpload()"
-             style="border-bottom: 0px solid #dbdbdb;">
-            <i class="webmapp-icon-close-outline"></i></a>
+        <li style="margin-left: auto">
+          <a
+            href="javascript:;"
+            class="close-button"
+            @click="cancelUpload()"
+            style="border-bottom: 0px solid #dbdbdb"
+          >
+            <i class="webmapp-icon-close-outline"></i
+          ></a>
         </li>
       </ul>
     </div>
@@ -22,16 +27,18 @@
 <script>
 export default {
   name: "tabs",
+  emits: ["currentTab"],
   data() {
-    return {tabs: []};
+    return { tabs: [] };
   },
   created() {
     this.tabs = this.$children;
   },
   methods: {
     selectTab(selectedTab) {
-      this.tabs.forEach(tab => {
-        tab.isActive = (tab.name == selectedTab.name);
+      this.$emit("currentTab", selectedTab.name);
+      this.tabs.forEach((tab) => {
+        tab.isActive = tab.name == selectedTab.name;
       });
     },
     cancelUpload() {
@@ -92,12 +99,12 @@ a {
   -ms-flex-pack: center;
   justify-content: center;
   margin-bottom: -1px;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   vertical-align: top;
 }
 
 .tabs li.is-active a {
-  border-bottom: 2px solid #63A2DE !important;
+  border-bottom: 2px solid #63a2de !important;
   color: black;
   font-weight: bold;
 }

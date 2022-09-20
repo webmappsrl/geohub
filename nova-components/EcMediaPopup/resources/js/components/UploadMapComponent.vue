@@ -1,6 +1,9 @@
 <template>
-  <div style="width: 100%; height: 100%" class="ec-media-popup-container">
-    <div ref="ec-media-map-root" style="width: 100%; height: 100%"></div>
+  <div style="width: 100%; height: 100%" class="feature-image-popup-container">
+    <div
+      :ref="`feature-ec-media-map-root`"
+      style="width: 100%; height: 100%"
+    ></div>
     <div id="overlayPopupContainer">
       <div id="overlayPopup">
         <div id="popupImage" style="height: 85%; width: 70%"></div>
@@ -27,12 +30,13 @@ import Style from "ol/style/Style";
 import CircleStyle from "ol/style/Circle";
 import Stroke from "ol/style/Stroke";
 import Fill from "ol/style/Fill";
-import { defaults as defaultInteractions, Select } from "ol/interaction";
+import { defaults as defaultInteractions } from "ol/interaction";
 import { getDistance } from "ol/sphere";
-import { Overlay } from "ol";
+import Overlay from "ol/Overlay";
+import { extend } from "ol/extent";
 
 export default {
-  name: "MapComponent",
+  name: "UploadMapComponent",
   props: {
     feature: {},
     media: {},
@@ -68,9 +72,7 @@ export default {
     this.mediaLayer = new VectorLayer({
       source: this.mediaSource,
       visible: true,
-      style: (feature) => {
-        return this._style(feature, true);
-      },
+      style: (feature) => this._style(feature, true),
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: 60,
@@ -85,7 +87,7 @@ export default {
       zoom: 6,
     });
     this.map = new Map({
-      target: this.$refs["ec-media-map-root"],
+      target: Object.values(this.$refs)[0],
       layers: [
         new TileLayer({
           source: new XYZ({
@@ -237,13 +239,8 @@ export default {
       if (poi) id = poi.getId();
       else if (track) id = track.getId();
       if (id) {
-        if (this.selectedMedia.indexOf(id) === -1) {
-          this.selectedMedia.push(id);
-          this.loadedImages.push(poi["values_"]);
-        } else {
-          this.selectedMedia.splice(this.selectedMedia.indexOf(id), 1);
-          this.loadedImages.splice(this.loadedImages.indexOf(id), 1);
-        }
+        this.selectedMedia = [id];
+        this.loadedImages = [poi["values_"]];
 
         this.mediaLayer.changed();
         this.map.render();
@@ -253,11 +250,16 @@ export default {
     setTimeout(() => {
       this.map.updateSize();
       this.drawFeature();
-      this.drawMedia();
     }, 500);
   },
   watch: {
     selectedMedia() {
+      this.mediaLayer.changed();
+      this.map.render();
+    },
+    media(val) {
+      this.drawMedia();
+      this.drawFeature();
       this.mediaLayer.changed();
       this.map.render();
     },
@@ -282,11 +284,10 @@ export default {
       return transformExtent(extent, "EPSG:4326", "EPSG:3857");
     },
     _style(feature, isMedia) {
-      const isSelected =
-        isMedia && this.selectedMedia.indexOf(feature.getId()) >= 0;
-      if (feature.getGeometry().getType() === "Point")
+      const isSelected = isMedia;
+      if (feature.getGeometry().getType() === "Point") {
         return this._getPoiStyle(feature, isMedia, isSelected);
-      else if (
+      } else if (
         feature.getGeometry().getType() === "LineString" ||
         feature.getGeometry().getType() === "MultiLineString"
       )
@@ -406,6 +407,10 @@ export default {
         this.featureSource.addFeatures([features[0]]);
 
         const extent = this.featureSource.getExtent();
+        const firstFeature = this.featureSource.getFeatures()[0];
+        this.featureSource.clear();
+        this.featureSource.addFeatures([firstFeature]);
+        this.featureLayer.changed();
 
         this.view.fit(extent, {
           padding: [20, 20, 40, 20],
@@ -414,6 +419,7 @@ export default {
     },
     drawMedia() {
       if (!!this.media) {
+        this.mediaSource.clear();
         const features = new GeoJSON({
           featureProjection: "EPSG:3857",
         }).readFeatures(this.media);
@@ -421,6 +427,15 @@ export default {
           features[i].setId(features[i].get("id"));
         }
         this.mediaSource.addFeatures(features);
+        this.mediaSource.changed();
+        this.mediaLayer.changed();
+        setTimeout(() => {
+          const extent = this.mediaSource.getExtent();
+          extend(extent, this.featureSource.getExtent());
+          this.view.fit(extent, {
+            padding: [40, 40, 40, 40],
+          });
+        }, 300);
       }
     },
     showOverlay(id) {
@@ -450,9 +465,9 @@ export default {
         this.map.addOverlay(this.overlayPopup);
         let properties = feature.getProperties(),
           url =
-            properties["sizes"] && properties["sizes"]["150x150"]
-              ? properties["sizes"]["150x150"]
-              : properties["url"],
+            properties.sizes && properties.sizes["150x150"]
+              ? properties.sizes["150x150"]
+              : properties.url,
           nameObj = properties.name ? properties.name : {},
           name = "";
 

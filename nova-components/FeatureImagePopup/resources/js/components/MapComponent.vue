@@ -259,9 +259,6 @@ export default {
       this.mediaLayer.changed();
       this.map.render();
     },
-    reload(val) {
-      console.log("asd");
-    },
   },
   methods: {
     getFixedDistance(point1, point2) {
