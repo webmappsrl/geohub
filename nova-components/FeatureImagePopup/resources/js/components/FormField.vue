@@ -410,9 +410,7 @@ export default {
       }, 300);
     },
     updateTab(tabName) {
-      console.log("update tab", tabName);
       if (tabName === "Upload media") {
-        console.log("chiamo refresh medialist");
         this.buttonSaveText = "Upload and attach media";
         this.refreshUploadedMediaList(null);
       } else {
@@ -420,7 +418,6 @@ export default {
       }
     },
     refreshUploadedMediaList(features) {
-      console.log("refresh medialist");
       if (features != null) {
         this.uploadedMediaList.features = features;
       } else {
@@ -431,11 +428,6 @@ export default {
       this.uploadedMediaList = JSON.parse(
         JSON.stringify(this.uploadedMediaList)
       );
-    },
-  },
-  watch: {
-    modalOpen() {
-      console.log("open");
     },
   },
 };

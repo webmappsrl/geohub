@@ -259,7 +259,6 @@ export default {
       this.map.render();
     },
     media(val) {
-      console.log("media changed", val);
       this.mediaLayer.getSource().clear();
       this.map.updateSize();
       this.drawMedia();
@@ -423,9 +422,7 @@ export default {
       }
     },
     drawMedia() {
-      console.log("draw media upload");
       if (!!this.media) {
-        console.log(this.media);
         this.mediaSource.clear();
         const features = new GeoJSON({
           featureProjection: "EPSG:3857",
