@@ -42,7 +42,7 @@ class TaxonomyPoiType extends Resource {
      */
     public static $search = [
         'name',
-        'author'
+        'identifier'
     ];
 
     public static function group() {

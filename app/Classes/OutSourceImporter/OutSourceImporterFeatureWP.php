@@ -242,8 +242,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         Log::info('Preparing OSF POI ACCESSIBILITY with external ID: '.$this->source_id);
         if (isset($poi['accessibility_validity_date']))
             $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
-        if (isset($poi['accessibility_pdf']))
-            $this->tags['accessibility_pdf'] = $poi['accessibility_pdf'];
+        if (isset($poi['accessibility_pdf']) && $poi['accessibility_pdf']) {
+            $this->tags['accessibility_pdf'] = $this->uploadPDFtoAWS($poi['accessibility_pdf']['url'],explode('_',$poi['wpml_current_locale'])[0]);
+        }
         if (isset($poi['access_mobility_check']))
             $this->tags['access_mobility_check'] = $poi['access_mobility_check'];
         if (isset($poi['access_mobility_level']))
