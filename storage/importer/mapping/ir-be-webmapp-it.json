@@ -29,7 +29,7 @@
                 "en": "",
                 "fr": ""
             },
-            "geohub_identifier": "history-and-culture"
+            "geohub_identifier": "chapel"
         },
         "396": {
             "source_title": {
@@ -38,7 +38,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "historical-building"
+            "geohub_identifier": "castle"
         },
         "367": {
             "source_title": {
@@ -47,7 +47,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "church"
         },
         "392": {
             "source_title": {
@@ -56,7 +56,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "church"
         },
         "378": {
             "source_title": {
@@ -65,7 +65,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "place-of-faith"
         },
         "371": {
             "source_title": {
@@ -83,7 +83,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "historical-building"
+            "geohub_identifier": "fortification"
         },
         "395": {
             "source_title": {
@@ -114,7 +114,7 @@
                 "en": "",
                 "fr": ""
             },
-            "geohub_identifier": "religion"
+            "geohub_identifier": "place-of-worship"
         },
         "385": {
             "source_title": {
@@ -141,7 +141,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "fountain"
+            "geohub_identifier": "natural-spring"
         },
         "376": {
             "source_title": {
