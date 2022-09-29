@@ -82,7 +82,7 @@ class Layer extends Model
 
     public function computeBB()
     {
-        $bbox = [];
+        $bbox = null;
         $tracks = $this->getTracks();
         if (count($tracks) > 0) {
             $q = "select ST_Extent(geometry::geometry)
