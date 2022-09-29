@@ -183,6 +183,7 @@ class App extends Resource
     {
         return [
             'APP' => $this->app_tab(),
+            'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
             'PROJECT' => $this->project_tab(),
             'AUTH' => $this->auth_tab(),
@@ -196,6 +197,17 @@ class App extends Resource
             'TABLE' => $this->table_tab(),
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
+        ];
+    }
+
+    protected function webapp_tab(): array
+    {
+        return [
+            Toggle::make(__('Show Draw track'), 'draw_track_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
         ];
     }
 

@@ -46,7 +46,7 @@ class TaxonomyWhere extends Resource {
      * @var array
      */
     public static $search = [
-        'name',
+        'name'
     ];
 
     public static function group() {

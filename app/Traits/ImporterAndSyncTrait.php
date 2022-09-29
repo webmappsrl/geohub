@@ -88,4 +88,31 @@ trait ImporterAndSyncTrait {
             Log::info('Error message: '. $e->getMessage());
         }
     }
+    
+    /**
+     * It uploads the PDF file to AWS from external source (wordpress or k.webmapp.it).
+     * 
+     * @param array the media array.
+     * @return int the ID of the new OutSourceFeature. 
+     */
+    public function uploadPDFtoAWS($pdf_url,$locale)
+    {
+        try {
+            $url = '';
+            // Saving the PDF Media in to the s3 storage (.env in production)
+            $storage_name = config('geohub.audio_media_storage_name');
+            Log::info('Preparing uploading PDF to AWS, locale:' .$locale);
+            $filename = explode('.',basename($pdf_url));
+            $s3_storage = Storage::disk($storage_name);
+            $cloudPath = 'ec'.$this->type.'/pdf/' . $locale . '/' . sha1($filename[0]) . '.' . $filename[1];
+            $s3_storage->put($cloudPath, file_get_contents($pdf_url));
+            // Save the result url to the current langage 
+            $url = $s3_storage->url($cloudPath);
+    
+            return $url;
+        } catch(Exception $e) {
+            Log::info('Could not upload PDF file: '.$pdf_url);
+            Log::info('Error message: '. $e->getMessage());
+        }
+    }
 }

@@ -129,7 +129,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['description'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['content']['rendered']);
         $this->tags['excerpt'][explode('_',$track['wpml_current_locale'])[0]] = html_entity_decode($track['excerpt']['rendered']);
         // Add audio for default language
-        $this->tags['audio'][explode('_',$track['wpml_current_locale'])[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.explode('_',$track['wpml_current_locale'])[0].'.mp3',explode('_',$track['wpml_current_locale'])[0]);
+        // $this->tags['audio'][explode('_',$track['wpml_current_locale'])[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.explode('_',$track['wpml_current_locale'])[0].'.mp3',explode('_',$track['wpml_current_locale'])[0]);
         if(!empty($track['wpml_translations'])) {
             foreach($track['wpml_translations'] as $lang){
                 $locale = explode('_',$lang['locale']);
@@ -140,7 +140,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $this->tags['description'][$locale[0]] = html_entity_decode($track_decode['content']['rendered']);
                 $this->tags['excerpt'][$locale[0]] = html_entity_decode($track_decode['excerpt']['rendered']); 
                 // Add audio for other languages
-                $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.$locale[0].'.mp3',$locale[0]);
+                // $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.$locale[0].'.mp3',$locale[0]);
             }
         }
         $this->tags['from'] = html_entity_decode($track['n7webmap_start']);
@@ -219,6 +219,27 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
         $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
+
+        // Adding ACF of Itinera Romanica to description
+        if (isset($poi['acf'])){
+            if (isset($poi['acf']['titolo_alternativo']) && $poi['acf']['titolo_alternativo']) {
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Titolo alternativo:</strong></br>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['titolo_alternativo'];
+            }
+            if (isset($poi['acf']['rilevanza_storica']) && $poi['acf']['rilevanza_storica']) {
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Rilevanza storica:</strong></br>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['rilevanza_storica'];
+            }
+            if (isset($poi['acf']['rilevanza_stile_romanico']) && $poi['acf']['rilevanza_stile_romanico']) {
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Rilevanza stile romanica:</strong></br>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['rilevanza_stile_romanico'];
+            }
+            if (isset($poi['acf']['come_arrivare']) && $poi['acf']['come_arrivare']) {
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Come arrivare:</strong></br>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['come_arrivare'];
+            }
+        }
+
         $this->tags['excerpt'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['excerpt']['rendered']);
         if (isset($poi['audio']) && $poi['audio']){
             $this->tags['audio'][explode('_',$poi['wpml_current_locale'])[0]] = $this->uploadAudioAWS($poi['audio']['url'],explode('_',$poi['wpml_current_locale'])[0]);
@@ -231,19 +252,41 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$lang['id'];
                 $poi_decode = $this->curlRequest($url);
                 $this->tags['description'][$locale[0]] = html_entity_decode($poi_decode['content']['rendered']);
+
+                // Adding ACF of Itinera Romanica to description
+                if (isset($poi_decode['acf'])){
+                    if (isset($poi_decode['acf']['titolo_alternativo']) && $poi_decode['acf']['titolo_alternativo']) {
+                        $this->tags['description'][$locale[0]] .= "<strong>Alternative title:</strong></br>";
+                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['titolo_alternativo'];
+                    }
+                    if (isset($poi_decode['acf']['rilevanza_storica']) && $poi_decode['acf']['rilevanza_storica']) {
+                        $this->tags['description'][$locale[0]] .= "<strong>Historical relevance:</strong></br>";
+                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['rilevanza_storica'];
+                    }
+                    if (isset($poi_decode['acf']['rilevanza_stile_romanico']) && $poi_decode['acf']['rilevanza_stile_romanico']) {
+                        $this->tags['description'][$locale[0]] .= "<strong>Relevance of the Romanesque style:</strong></br>";
+                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['rilevanza_stile_romanico'];
+                    }
+                    if (isset($poi_decode['acf']['come_arrivare']) && $poi_decode['acf']['come_arrivare']) {
+                        $this->tags['description'][$locale[0]] .= "<strong>How to get:</strong></br>";
+                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['come_arrivare'];
+                    }
+                }
+
                 $this->tags['excerpt'][$locale[0]] = html_entity_decode($poi_decode['excerpt']['rendered']);
 
                 // Add audio file
-                $domain_path = parse_url($this->endpoint);
-                $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$poi['id'].'_'.$locale[0].'.mp3',$locale[0]);
+                // $domain_path = parse_url($this->endpoint);
+                // $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$poi['id'].'_'.$locale[0].'.mp3',$locale[0]);
             }
         }
         // Adding POI parameters of accessibility
         Log::info('Preparing OSF POI ACCESSIBILITY with external ID: '.$this->source_id);
         if (isset($poi['accessibility_validity_date']))
             $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
-        if (isset($poi['accessibility_pdf']))
-            $this->tags['accessibility_pdf'] = $poi['accessibility_pdf'];
+        if (isset($poi['accessibility_pdf']) && $poi['accessibility_pdf']) {
+            $this->tags['accessibility_pdf'] = $this->uploadPDFtoAWS($poi['accessibility_pdf']['url'],explode('_',$poi['wpml_current_locale'])[0]);
+        }
         if (isset($poi['access_mobility_check']))
             $this->tags['access_mobility_check'] = $poi['access_mobility_check'];
         if (isset($poi['access_mobility_level']))
@@ -326,7 +369,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                     if (isset($related_url_name['host']) && $related_url_name['host']) {
                         $host = $related_url_name['host'];
                     }
-                    $this->tags['related_url'][$host] = $link;
+                    if (!empty($link) && !empty($host)) {
+                        $this->tags['related_url'][$host] = $link;
+                    }
                 }
             } else {
                 $this->tags['related_url'] = $poi['n7webmap_rpt_related_url'];
@@ -349,7 +394,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['noInteraction'] = $poi['noInteraction'];
         if (isset($poi['zindex']))
             $this->tags['zindex'] = $poi['zindex'];
-
+        
         // Processing the feature image of POI
         if (isset($poi['featured_media']) && $poi['featured_media']) {
             Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);

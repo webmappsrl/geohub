@@ -22,6 +22,7 @@ trait ConfTrait
         $data = [];
 
         $data = array_merge($data, $this->config_section_app());
+        $data = array_merge($data, $this->config_section_webapp());
         $data = array_merge($data, $this->config_section_home());
         $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
@@ -63,7 +64,19 @@ trait ConfTrait
 
         return $data;
     }
+    /**
+     * @param 
+     *
+     * @return array
+     */
+    private function config_section_webapp(): array
+    {
+        $data = [];
 
+        $data['WEBAPP']['draw_track_show'] = $this->draw_track_show;
+
+        return $data;
+    }
     /**
      * @param 
      *

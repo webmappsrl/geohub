@@ -1,0 +1,194 @@
+{
+    "poi_type": {
+        "394": {
+            "source_title": {
+                "it": "Abbazia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-worship"
+        },
+        "391": {
+            "source_title": {
+                "it": "Canonica Regolare"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-faith"
+        },
+        "390": {
+            "source_title": {
+                "it": "Cappella",
+                "en": "Cappella",
+                "fr": "Cappella"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "fr": ""
+            },
+            "geohub_identifier": "chapel"
+        },
+        "396": {
+            "source_title": {
+                "it": "Castello"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "castle"
+        },
+        "367": {
+            "source_title": {
+                "it": "Chiesa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "church"
+        },
+        "392": {
+            "source_title": {
+                "it": "Chiesa monastica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "church"
+        },
+        "378": {
+            "source_title": {
+                "it": "Eremo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-faith"
+        },
+        "371": {
+            "source_title": {
+                "it": "Fontanella"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fountain"
+        },
+        "393": {
+            "source_title": {
+                "it": "Insediamenti fortificati"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fortification"
+        },
+        "395": {
+            "source_title": {
+                "it": "Monastero"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-worship"
+        },
+        "386": {
+            "source_title": {
+                "it": "Piazza"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "375": {
+            "source_title": {
+                "it": "Pieve",
+                "en": "Pieve",
+                "fr": "Pieve"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "fr": ""
+            },
+            "geohub_identifier": "place-of-worship"
+        },
+        "385": {
+            "source_title": {
+                "it": "Ponte"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "384": {
+            "source_title": {
+                "it": "Sito Archeologico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "archaeological-site"
+        },
+        "372": {
+            "source_title": {
+                "it": "Sorgente"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-spring"
+        },
+        "376": {
+            "source_title": {
+                "it": "Stazione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "train-station"
+        },
+        "387": {
+            "source_title": {
+                "it": "Torre"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tower"
+        },
+        "388": {
+            "source_title": {
+                "it": "Villa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        }
+    },
+    "activity": {
+        "368": {
+            "source_title": {
+                "it": "Itinerari a Piedi"
+            },
+            "source_description": {
+                "it": "Scopri gli Itinerari Romanici dell'Alto Tirreno"
+            },
+            "geohub_identifier": "hiking"
+        },
+        "389": {
+            "source_title": {
+                "it": "itinerari in Macchina"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "by-car"
+        }
+    }
+}
