@@ -349,7 +349,14 @@ class SyncEcFromOutSource
                             $sda = $out_source->tags['sda'];
                             if ($sda) {
                                 Log::info('Attaching EC Track OSM2CAI SDA taxonomyThemes: sda' . $sda);
-                                $ec_track->taxonomyThemes()->sync(TaxonomyTheme::where('identifier','osm2cai-sda'.$sda)->first());
+                                $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier','osm2cai-sda'.$sda)->first());
+                            }
+                            if ($sda == 4) {
+                                if ($this->endpoint) {
+                                    $array_endpoint = explode('/',$this->endpoint);
+                                    Log::info('Attaching EC Track OSM2CAI taxonomyThemes: Infomont - ' . $array_endpoint[7]);
+                                    $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier','infomont-'.$array_endpoint[7])->first());
+                                }
                             }
                         }
                     }
