@@ -258,7 +258,7 @@ class App extends Resource
     {
         return [
             NovaTabTranslatable::make([
-                Text::make(__('welcome'), 'welcome')
+                NovaTinymce5Editor::make(__('welcome'), 'welcome')
                     ->help(__('is the welcome message displayed as the first element of the home')),
             ]),
             Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
