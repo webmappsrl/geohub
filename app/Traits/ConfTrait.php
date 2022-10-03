@@ -53,6 +53,11 @@ trait ConfTrait
         $data['APP']['customerName'] = $this->customer_name;
         $data['APP']['geohubId'] = $this->id;
 
+        if (!is_null($this->welcome)) {
+            $data['APP']['welcome'] = [];
+            $welcome = $this->toArray()['welcome'];
+            $data['APP']['welcome'] = $welcome;
+        }
         if ($this->android_store_link)
             $data['APP']['androidStore'] = $this->android_store_link;
 
