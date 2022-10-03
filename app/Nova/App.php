@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateConfigPoisAction;
 use App\Rules\AppImagesRule;
@@ -256,6 +257,10 @@ class App extends Resource
     protected function home_tab(): array
     {
         return [
+            NovaTabTranslatable::make([
+                Text::make(__('welcome'), 'welcome')
+                    ->help(__('is the welcome message displayed as the first element of the home')),
+            ]),
             Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
                 view('layers', ['layers' => $this->layers])->render()
             )
