@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class App
@@ -25,8 +26,10 @@ use Illuminate\Support\Facades\Storage;
  */
 class App extends Model
 {
-    use HasFactory, ConfTrait;
+    use HasFactory, ConfTrait, HasTranslations;
 
+    protected $fillable = ['welcome'];
+    public array $translatable = ['welcome'];
     protected static function booted()
     {
         parent::booted();
