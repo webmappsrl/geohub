@@ -7,7 +7,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "place-of-faith"
         },
         "391": {
             "source_title": {
@@ -29,7 +29,7 @@
                 "en": "",
                 "fr": ""
             },
-            "geohub_identifier": "chapel"
+            "geohub_identifier": "place-of-faith"
         },
         "396": {
             "source_title": {
@@ -38,7 +38,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "castle"
+            "geohub_identifier": "fortification"
         },
         "367": {
             "source_title": {
@@ -47,7 +47,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "church"
+            "geohub_identifier": "place-of-faith"
         },
         "392": {
             "source_title": {
@@ -56,7 +56,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "church"
+            "geohub_identifier": "place-of-faith"
         },
         "378": {
             "source_title": {
@@ -92,7 +92,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "place-of-faith"
         },
         "386": {
             "source_title": {
@@ -114,7 +114,7 @@
                 "en": "",
                 "fr": ""
             },
-            "geohub_identifier": "place-of-worship"
+            "geohub_identifier": "place-of-faith"
         },
         "385": {
             "source_title": {
@@ -159,7 +159,7 @@
             "source_description": {
                 "it": ""
             },
-            "geohub_identifier": "tower"
+            "geohub_identifier": "fortification"
         },
         "388": {
             "source_title": {
