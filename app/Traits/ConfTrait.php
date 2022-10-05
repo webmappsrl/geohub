@@ -79,6 +79,7 @@ trait ConfTrait
         $data = [];
 
         $data['WEBAPP']['draw_track_show'] = $this->draw_track_show;
+        $data['WEBAPP']['editing_inline_show'] = $this->editing_inline_show;
 
         return $data;
     }

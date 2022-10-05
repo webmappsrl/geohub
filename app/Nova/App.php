@@ -204,7 +204,12 @@ class App extends Resource
     protected function webapp_tab(): array
     {
         return [
-            Toggle::make(__('Show Draw track'), 'draw_track_show')
+            Toggle::make(__('Show draw track'), 'draw_track_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
+            Toggle::make(__('Show editing inline'), 'editing_inline_show')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
