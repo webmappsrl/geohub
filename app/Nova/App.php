@@ -98,6 +98,14 @@ class App extends Resource
         'name',
     ];
 
+    private $languages  = [
+        'en' => 'English',
+        'it' => 'Italiano',
+        'fr' => 'Français',
+        'de' => 'Deutsch',
+        'sp' => 'español'
+    ];
+
     public static function group()
     {
         return __('Editorial Content');
@@ -162,14 +170,8 @@ class App extends Resource
             Text::make(__('App Id'), 'app_id')->required(),
             Text::make(__('Name'), 'name')->sortable()->required(),
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
-            Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options([
-                'en' => 'English',
-                'it' => 'Italiano',
-            ])->displayUsingLabels()->required(),
-            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options([
-                'en' => 'English',
-                'it' => 'Italiano',
-            ], $availableLanguages)
+            Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels()->required(),
+            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages)
         ];
     }
     public function fieldsForUpdate(Request $request)
@@ -285,14 +287,8 @@ class App extends Resource
         $availableLanguages = is_null($this->model()->available_languages) ? [] : json_decode($this->model()->available_languages, true);
 
         return [
-            Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options([
-                'en' => 'English',
-                'it' => 'Italiano',
-            ])->displayUsingLabels(),
-            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options([
-                'en' => 'English',
-                'it' => 'Italiano',
-            ], $availableLanguages)
+            Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels(),
+            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages)
         ];
     }
 
