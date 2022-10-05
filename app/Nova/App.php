@@ -697,6 +697,9 @@ class App extends Resource
                 })
                 ->help(__('Required svg image'))
                 ->hideFromIndex(),
+            Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('json')->help(
+                'import icoonmoon selection.json file'
+            )
         ];
     }
 

@@ -223,20 +223,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         // Adding ACF of Itinera Romanica to description
         if (isset($poi['acf'])){
             if (isset($poi['acf']['titolo_alternativo']) && $poi['acf']['titolo_alternativo']) {
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Titolo alternativo:</strong></br>";
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['titolo_alternativo'];
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "</br><p><strong>Titolo alternativo:</strong></p>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= html_entity_decode($poi['acf']['titolo_alternativo']);
             }
             if (isset($poi['acf']['rilevanza_storica']) && $poi['acf']['rilevanza_storica']) {
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Rilevanza storica:</strong></br>";
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['rilevanza_storica'];
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "</br><p><strong>Rilevanza storica:</strong></p>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= html_entity_decode($poi['acf']['rilevanza_storica']);
             }
             if (isset($poi['acf']['rilevanza_stile_romanico']) && $poi['acf']['rilevanza_stile_romanico']) {
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Rilevanza stile romanica:</strong></br>";
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['rilevanza_stile_romanico'];
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "</br><p><strong>Rilevanza stile romanico:</strong></p>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= html_entity_decode($poi['acf']['rilevanza_stile_romanico']);
             }
             if (isset($poi['acf']['come_arrivare']) && $poi['acf']['come_arrivare']) {
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "<strong>Come arrivare:</strong></br>";
-                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= $poi['acf']['come_arrivare'];
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= "</br><p><strong>Come arrivare:</strong></p>";
+                $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= html_entity_decode($poi['acf']['come_arrivare']);
             }
         }
 
@@ -256,20 +256,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 // Adding ACF of Itinera Romanica to description
                 if (isset($poi_decode['acf'])){
                     if (isset($poi_decode['acf']['titolo_alternativo']) && $poi_decode['acf']['titolo_alternativo']) {
-                        $this->tags['description'][$locale[0]] .= "<strong>Alternative title:</strong></br>";
-                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['titolo_alternativo'];
+                        $this->tags['description'][$locale[0]] .= "</br><p><strong>Alternative title:</strong></p>";
+                        $this->tags['description'][$locale[0]] .= html_entity_decode($poi_decode['acf']['titolo_alternativo']);
                     }
                     if (isset($poi_decode['acf']['rilevanza_storica']) && $poi_decode['acf']['rilevanza_storica']) {
-                        $this->tags['description'][$locale[0]] .= "<strong>Historical relevance:</strong></br>";
-                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['rilevanza_storica'];
+                        $this->tags['description'][$locale[0]] .= "</br><p><strong>Historical relevance:</strong></p>";
+                        $this->tags['description'][$locale[0]] .= html_entity_decode($poi_decode['acf']['rilevanza_storica']);
                     }
                     if (isset($poi_decode['acf']['rilevanza_stile_romanico']) && $poi_decode['acf']['rilevanza_stile_romanico']) {
-                        $this->tags['description'][$locale[0]] .= "<strong>Relevance of the Romanesque style:</strong></br>";
-                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['rilevanza_stile_romanico'];
+                        $this->tags['description'][$locale[0]] .= "</br><p><strong>Relevance of the Romanesque style:</strong></p>";
+                        $this->tags['description'][$locale[0]] .= html_entity_decode($poi_decode['acf']['rilevanza_stile_romanico']);
                     }
                     if (isset($poi_decode['acf']['come_arrivare']) && $poi_decode['acf']['come_arrivare']) {
-                        $this->tags['description'][$locale[0]] .= "<strong>How to get:</strong></br>";
-                        $this->tags['description'][$locale[0]] .= $poi_decode['acf']['come_arrivare'];
+                        $this->tags['description'][$locale[0]] .= "</br><p><strong>How to get:</strong></p>";
+                        $this->tags['description'][$locale[0]] .= html_entity_decode($poi_decode['acf']['come_arrivare']);
                     }
                 }
 
