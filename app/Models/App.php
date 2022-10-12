@@ -257,6 +257,9 @@ class App extends Model
     public function elasticIndexDelete($suffix = '')
     {
         Log::info('Deleting Elastic Indexing APP ' . $this->id);
+        if (strlen($suffix) > 0) {
+            $suffix = $suffix . '_';
+        }
         $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
         Log::info($url);
 
@@ -291,7 +294,9 @@ class App extends Model
     public function elasticIndexCreate($suffix = '')
     {
         Log::info('Creating Elastic Indexing APP ' . $this->id);
-
+        if (strlen($suffix) > 0) {
+            $suffix = $suffix . '_';
+        }
         // Create Index
         $url = config('services.elastic.host') . '/geohub_app_' . $suffix .  $this->id;
         $posts = '
@@ -314,9 +319,9 @@ class App extends Model
         }
 
         // Settings
-        $url = config('services.elastic.host') . '/geohub_app_' . $this->id . '/_settings';
+        $urls = $url . '/_settings';
         $posts = '{"max_result_window": 50000}';
-        $this->_curlExec($url, 'PUT', $posts);
+        $this->_curlExec($urls, 'PUT', $posts);
     }
 
     public function elasticRoutine()
