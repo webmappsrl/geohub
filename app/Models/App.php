@@ -234,13 +234,30 @@ class App extends Model
             Log::info('No tracks in APP ' . $this->id);
         }
     }
+
+
+    public function elasticLowIndex()
+    {
+        $tracksFromLayer = $this->getTracksFromLayer();
+        if (count($tracksFromLayer) > 0) {
+            $index_name = 'app_low_' . $this->id;
+            foreach ($tracksFromLayer as $tid => $layers) {
+                $t = EcTrack::find($tid);
+                $tollerance = 100;
+                $t->elasticLowIndex($index_name, $layers, $tollerance);
+            }
+        } else {
+            Log::info('No tracks in APP ' . $this->id);
+        }
+    }
+
     /**
      * Delete APP INDEX
      */
-    public function elasticIndexDelete()
+    public function elasticIndexDelete($suffix = '')
     {
         Log::info('Deleting Elastic Indexing APP ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_app_' . $this->id;
+        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
         Log::info($url);
 
         $curl = curl_init();
@@ -271,12 +288,12 @@ class App extends Model
     /**
      * Delete APP INDEX
      */
-    public function elasticIndexCreate()
+    public function elasticIndexCreate($suffix = '')
     {
         Log::info('Creating Elastic Indexing APP ' . $this->id);
 
         // Create Index
-        $url = config('services.elastic.host') . '/geohub_app_' . $this->id;
+        $url = config('services.elastic.host') . '/geohub_app_' . $suffix .  $this->id;
         $posts = '
                {
                   "mappings": {
@@ -305,10 +322,13 @@ class App extends Model
     public function elasticRoutine()
     {
         $this->elasticIndexDelete();
+        $this->elasticIndexDelete('low');
         $this->elasticIndexCreate();
+        $this->elasticIndexCreate('low');
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
         $this->elasticIndex();
+        $this->elasticLowIndex();
     }
 
     public function GenerateConfigPois()
