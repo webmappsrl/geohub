@@ -171,8 +171,8 @@ class EcMedia extends Resource
                 DateTime::make(__('Updated At'), 'updated_at'),        
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Description'), 'description'),
                     Textarea::make(__('Excerpt'), 'excerpt'),
+                    Textarea::make(__('Description'), 'description'),
                 ]),     
             ],
             'Images' => $this->getImages(),
@@ -242,8 +242,8 @@ class EcMedia extends Resource
             'Main' => [
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Description'), 'description'),
                     Textarea::make(__('Excerpt'), 'excerpt'),
+                    Textarea::make(__('Description'), 'description'),
                 ]),     
             ],
             'Images' => [
