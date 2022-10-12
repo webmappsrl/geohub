@@ -36,6 +36,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
+use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -297,7 +298,7 @@ class EcPoi extends Resource {
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
                     Textarea::make(__('Excerpt'),'excerpt'),
-                    Textarea::make('Description'),
+                    NovaTinymce5Editor::make('Description'),
                 ])->onlyOnForms(),
             ],
             'Media' => [
