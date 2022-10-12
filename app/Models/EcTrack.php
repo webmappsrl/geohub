@@ -737,7 +737,7 @@ class EcTrack extends Model
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(ST_Simplify(geometry,$tollerance))) as geom")
+                DB::raw("ST_AsGeoJSON(ST_Force2D(ST_Simplify(geometry,$tollerance, true))) as geom")
             )
             ->first()
             ->geom;
