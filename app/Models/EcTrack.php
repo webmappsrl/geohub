@@ -726,7 +726,7 @@ class EcTrack extends Model
         curl_close($curl);
     }
 
-    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 100)
+    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
     {
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
