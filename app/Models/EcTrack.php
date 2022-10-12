@@ -725,4 +725,105 @@ class EcTrack extends Model
 
         curl_close($curl);
     }
+
+    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 100)
+    {
+        #REF: https://github.com/elastic/elasticsearch-php/
+        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
+
+        Log::info('Elastic Indexing track ' . $this->id);
+        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
+        Log::info($url);
+
+        $geom = EcTrack::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(ST_Simplify(geometry,$tollerance))) as geom")
+            )
+            ->first()
+            ->geom;
+
+        // TODO: converti into array for ELASTIC correct datatype
+        // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
+        $taxonomy_activities = '[]';
+        if ($this->taxonomyActivities->count() > 0) {
+            $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+        }
+        $taxonomy_wheres = '[]';
+        if ($this->taxonomyWheres->count() > 0) {
+            $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+        }
+        $taxonomy_themes = '[]';
+        if ($this->taxonomyThemes->count() > 0) {
+            $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
+        }
+        // FEATURE IMAGE
+        $feature_image = '';
+        if (isset($this->featureImage->thumbnails)) {
+            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            // TODO: use proper ecMedia function
+            if (isset($sizes['400x200'])) {
+                $feature_image = $sizes['400x200'];
+            } else if (isset($sizes['225x100'])) {
+                $feature_image = $sizes['225x100'];
+            }
+        }
+        try {
+            $coordinates = json_decode($geom)->coordinates;
+            $coordinatesCount = count($coordinates);
+            $start = json_encode($coordinates[0]);
+            $end = json_encode($coordinates[$coordinatesCount - 1]);
+        } catch (Exception $e) {
+            $start = '[]';
+            $end = '[]';
+        }
+
+
+        $postfields = '{
+                "geometry" : ' . $geom . ',
+                "id": ' . $this->id . ',
+                "ref": "' . $this->ref . '",
+                "start": ' . $start . ',
+                "end": ' . $end . ',
+                "cai_scale": "' . $this->cai_scale . '",
+                "from": "' . $this->getActualOrOSFValue('from') . '",
+                "to": "' . $this->getActualOrOSFValue('to') . '",
+                "name": "' . $this->name . '",
+                "distance": "' . $this->distance . '",
+                "taxonomyActivities": ' . $taxonomy_activities . ',
+                "taxonomyWheres": ' . $taxonomy_wheres . ',
+                "taxonomyThemes": ' . $taxonomy_themes . ',
+                "feature_image": "' . $feature_image . '",
+                "layers": ' . json_encode($layers) . '
+              }';
+
+        Log::info($postfields);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $postfields,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Basic ' . config('services.elastic.key')
+            ),
+        ));
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
+
+        Log::info($response);
+
+        curl_close($curl);
+    }
 }
