@@ -243,7 +243,7 @@ class App extends Model
             $index_name = 'app_low_' . $this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
-                $tollerance = 0.3;
+                $tollerance = 0.006;
                 $t->elasticLowIndex($index_name, $layers, $tollerance);
             }
         } else {
