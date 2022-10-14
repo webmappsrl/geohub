@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class EcTrackController extends Controller {
+class EcTrackController extends Controller
+{
     /**
      * Return EcTrack JSON.
      *
@@ -22,7 +23,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse {
+    public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse
+    {
         $track = EcTrack::find($id);
 
         if (is_null($track))
@@ -38,7 +40,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public static function getNeighbourEcMedia(int $idTrack): JsonResponse {
+    public static function getNeighbourEcMedia(int $idTrack): JsonResponse
+    {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
@@ -53,7 +56,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public static function getNeighbourEcPoi(int $idTrack): JsonResponse {
+    public static function getNeighbourEcPoi(int $idTrack): JsonResponse
+    {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
@@ -68,7 +72,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public static function getAssociatedEcMedia(int $idTrack): JsonResponse {
+    public static function getAssociatedEcMedia(int $idTrack): JsonResponse
+    {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
@@ -90,7 +95,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public static function getAssociatedEcPois(int $idTrack): JsonResponse {
+    public static function getAssociatedEcPois(int $idTrack): JsonResponse
+    {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
@@ -106,7 +112,8 @@ class EcTrackController extends Controller {
         return response()->json($result);
     }
 
-    public static function getFeatureImage(int $idTrack): JsonResponse {
+    public static function getFeatureImage(int $idTrack): JsonResponse
+    {
         $track = EcTrack::find($idTrack);
         if (is_null($track))
             return response()->json(['error' => 'Track not found'], 404);
@@ -120,7 +127,8 @@ class EcTrackController extends Controller {
      * @param Request $request the request with data from geomixer POST
      * @param int     $id      the id of the EcTrack
      */
-    public function updateComputedData(Request $request, int $id): JsonResponse {
+    public function updateComputedData(Request $request, int $id): JsonResponse
+    {
         $ecTrack = EcTrack::find($id);
         if (is_null($ecTrack)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
@@ -175,11 +183,11 @@ class EcTrackController extends Controller {
         }
 
         // Related POI Order
-        if(isset($request->related_pois_order)) {
-            if(is_array($request->related_pois_order) && count($request->related_pois_order)) {
+        if (isset($request->related_pois_order)) {
+            if (is_array($request->related_pois_order) && count($request->related_pois_order)) {
                 $order = 1;
-                foreach($request->related_pois_order as $poi_id) {
-                    $ecTrack->ecPois()->updateExistingPivot($poi_id,['order'=>$order]);
+                foreach ($request->related_pois_order as $poi_id) {
+                    $ecTrack->ecPois()->updateExistingPivot($poi_id, ['order' => $order]);
                     $order++;
                 }
             }
@@ -198,7 +206,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public function search(Request $request): JsonResponse {
+    public function search(Request $request): JsonResponse
+    {
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -251,7 +260,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public function nearestToLocation(Request $request, string $lon, string $lat): JsonResponse {
+    public function nearestToLocation(Request $request, string $lon, string $lat): JsonResponse
+    {
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -272,10 +282,14 @@ class EcTrackController extends Controller {
             "type" => "FeatureCollection",
             "features" => []
         ];
-        if ($lon === strval(floatval($lon)) && $lat === strval(floatval($lat))) {
-            $lon = floatval($lon);
-            $lat = floatval($lat);
-            $featureCollection = EcTrackServiceProvider::getNearestToLonLat($app, $lon, $lat);
+        try {
+
+            if ($lon === strval(floatval($lon)) && $lat === strval(floatval($lat))) {
+                $lon = floatval($lon);
+                $lat = floatval($lat);
+                $featureCollection = EcTrackServiceProvider::getNearestToLonLat($app, $lon, $lat);
+            }
+        } catch (Exception $e) {
         }
 
         return response()->json($featureCollection);
@@ -288,7 +302,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public function mostViewed(Request $request): JsonResponse {
+    public function mostViewed(Request $request): JsonResponse
+    {
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -317,7 +332,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse
      */
-    public function multiple(Request $request): JsonResponse {
+    public function multiple(Request $request): JsonResponse
+    {
         $featureCollection = [
             "type" => "FeatureCollection",
             "features" => []
@@ -352,7 +368,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse with the current
      */
-    public function addFavorite(Request $request, int $id): JsonResponse {
+    public function addFavorite(Request $request, int $id): JsonResponse
+    {
         $track = EcTrack::find($id);
         if (!isset($track))
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
@@ -372,7 +389,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse with the current
      */
-    public function removeFavorite(Request $request, int $id): JsonResponse {
+    public function removeFavorite(Request $request, int $id): JsonResponse
+    {
         $track = EcTrack::find($id);
         if (!isset($track))
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
@@ -392,7 +410,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse with the current
      */
-    public function toggleFavorite(Request $request, int $id): JsonResponse {
+    public function toggleFavorite(Request $request, int $id): JsonResponse
+    {
         $track = EcTrack::find($id);
         if (!isset($track))
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
@@ -410,7 +429,8 @@ class EcTrackController extends Controller {
      *
      * @return JsonResponse with the current
      */
-    public function listFavorites(Request $request): JsonResponse {
+    public function listFavorites(Request $request): JsonResponse
+    {
         $user = auth('api')->user();
 
         $ids = $user->favorite(EcTrack::class)->pluck('id');
