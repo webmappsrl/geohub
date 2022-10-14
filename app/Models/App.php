@@ -236,15 +236,17 @@ class App extends Model
     }
 
 
-    public function elasticLowIndex()
+    public function elasticJidoIndex()
     {
         $tracksFromLayer = $this->getTracksFromLayer();
         if (count($tracksFromLayer) > 0) {
-            $index_name = 'app_low_' . $this->id;
+            $index_low_name = 'app_low_' . $this->id;
+            $index_high_name = 'app_high_' . $this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
                 $tollerance = 0.006;
-                $t->elasticLowIndex($index_name, $layers, $tollerance);
+                $t->elasticLowIndex($index_low_name, $layers, $tollerance);
+                $t->elasticHighIndex($index_high_name, $layers);
             }
         } else {
             Log::info('No tracks in APP ' . $this->id);
@@ -327,13 +329,15 @@ class App extends Model
     public function elasticRoutine()
     {
         $this->elasticIndexDelete();
-        $this->elasticIndexDelete('low');
         $this->elasticIndexCreate();
+        $this->elasticIndex();
+        $this->elasticIndexDelete('low');
+        $this->elasticIndexDelete('high');
         $this->elasticIndexCreate('low');
+        $this->elasticIndexCreate('high');
+        $this->elasticJidoIndex();
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
-        $this->elasticIndex();
-        $this->elasticLowIndex();
     }
 
     public function GenerateConfigPois()
