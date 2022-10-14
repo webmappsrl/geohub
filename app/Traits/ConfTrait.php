@@ -166,7 +166,7 @@ trait ConfTrait
             foreach ($this->layers as $layer) {
                 $item = $layer->toArray();
                 if (isset($item['bbox'])) {
-                    $item['bbox'] = array_map('floatval', json_decode($item['bbox'], true));
+                    $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {

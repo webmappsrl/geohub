@@ -726,7 +726,7 @@ class EcTrack extends Model
         curl_close($curl);
     }
 
-    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
+    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.006)
     {
         Log::info('Elastic Indexing track ' . $this->id);
         $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
@@ -735,6 +735,56 @@ class EcTrack extends Model
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
                 DB::raw("ST_AsGeoJSON(ST_Force2D(ST_SimplifyPreserveTopology(geometry,$tollerance))) as geom")
+            )
+            ->first()
+            ->geom;
+
+        $postfields = '{
+                "geometry" : ' . $geom . ',
+                "id": ' . $this->id . ',
+                "ref": "' . $this->ref . '",
+                "layers": ' . json_encode($layers) . '
+              }';
+
+        Log::info($postfields);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $postfields,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Basic ' . config('services.elastic.key')
+            ),
+        ));
+        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        $response = curl_exec($curl);
+        if ($response === false) {
+            throw new Exception(curl_error($curl), curl_errno($curl));
+        }
+
+        Log::info($response);
+
+        curl_close($curl);
+    }
+    public function elasticHighIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
+    {
+        Log::info('Elastic Indexing track ' . $this->id);
+        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
+        Log::info($url);
+
+        $geom = EcTrack::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
             )
             ->first()
             ->geom;
