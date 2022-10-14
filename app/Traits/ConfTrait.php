@@ -165,8 +165,13 @@ trait ConfTrait
             $layers = [];
             foreach ($this->layers as $layer) {
                 $item = $layer->toArray();
-                if (isset($item['bbox'])) {
-                    $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
+                try {
+
+                    if (isset($item['bbox'])) {
+                        $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
+                    }
+                } catch (\Exception  $e) {
+                    Log::warning("The bbox value " . $item['bbox'] . " are not correct. Error: " . $e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
