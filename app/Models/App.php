@@ -328,9 +328,9 @@ class App extends Model
 
     public function elasticRoutine()
     {
-        // $this->elasticIndexDelete();
-        // $this->elasticIndexCreate();
-        //  $this->elasticIndex();
+        $this->elasticIndexDelete();
+        $this->elasticIndexCreate();
+        $this->elasticIndex();
         $this->elasticIndexDelete('low');
         $this->elasticIndexDelete('high');
         $this->elasticIndexCreate('low');
