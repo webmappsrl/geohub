@@ -14,7 +14,7 @@ class EcTrackIndexCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:index-tracks {app_id?} {--no-elastic}';
+    protected $signature = 'geohub:index-tracks {app_id?} {--no-elastic} {--info-elastic} {--jido-elastic}';
 
     /**
      * The console command description.
@@ -62,6 +62,12 @@ class EcTrackIndexCommand extends Command
             Log::info('Only config and pois file');
             $app->BuildPoisGeojson();
             $app->BuildConfJson();
+        } else if ($this->option('info-elastic')) {
+            Log::info('Only info elastic');
+            $app->elasticInfoRoutine();
+        } else if ($this->option('jido-elastic')) {
+            Log::info('Only jido elastic');
+            $app->elasticJidoRoutine();
         } else {
             Log::info('Complete index elastic+files');
             $app->elasticRoutine();
