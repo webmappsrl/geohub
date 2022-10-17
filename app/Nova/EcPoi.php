@@ -300,6 +300,9 @@ class EcPoi extends Resource {
                     Textarea::make(__('Excerpt'),'excerpt'),
                     NovaTinymce5Editor::make('Description'),
                 ])->onlyOnForms(),
+                BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                }),
             ],
             'Media' => [
                 // TODO: not working with NovaTabTranslatable
