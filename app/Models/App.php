@@ -328,16 +328,24 @@ class App extends Model
 
     public function elasticRoutine()
     {
+        $this->elasticInfoRoutine();
+        $this->elasticJidoRoutine();
+        $this->BuildPoisGeojson();
+        $this->BuildConfJson();
+    }
+    public function elasticInfoRoutine()
+    {
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->elasticIndex();
+    }
+    public function elasticJidoRoutine()
+    {
         $this->elasticIndexDelete('low');
         $this->elasticIndexDelete('high');
         $this->elasticIndexCreate('low');
         $this->elasticIndexCreate('high');
         $this->elasticJidoIndex();
-        $this->BuildPoisGeojson();
-        $this->BuildConfJson();
     }
 
     public function GenerateConfigPois()
