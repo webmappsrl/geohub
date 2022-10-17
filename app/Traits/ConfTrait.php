@@ -171,7 +171,7 @@ trait ConfTrait
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
                 } catch (\Exception  $e) {
-                    Log::warning("The bbox value " . strval($item['bbox'])  . " are not correct. Error: " . $e->getMessage());
+                    Log::warning("The bbox value " . $layer->id  . " are not correct. Error: " . $e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
