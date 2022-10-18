@@ -641,7 +641,6 @@ HTML;
      */
     public function filters(Request $request) {
         return [
-            new HasDescription,
             new HasFeatureImage,
             new HasImageGallery
         ];

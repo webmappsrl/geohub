@@ -20,7 +20,7 @@ class SyncECTagsFromOSFCommand extends Command
     protected $signature = 'geohub:sync-ec-tags-from-osf
                             {type : Set the Ec type (track, poi)}
                             {author : Set the author that must be assigned to EcFeature crested, use email or ID}
-                            {tag : Set the name of the input that should be syncronized (es. description)}';
+                            {--tag= : Set the name of the input that should be syncronized (es. description)}';
 
     /**
      * The console command description.
@@ -54,7 +54,8 @@ class SyncECTagsFromOSFCommand extends Command
     {
         $this->type = $this->argument('type');
         $this->author = $this->argument('author');
-        $this->tag = $this->argument('tag');
+        if ($this->option('tag'))
+            $this->tag = $this->option('tag');
 
         $this->checkParameters();
         
@@ -63,10 +64,65 @@ class SyncECTagsFromOSFCommand extends Command
 
     public function sync($feature){
         $out_source = OutSourceFeature::find($feature->out_source_feature_id);
-        if ($out_source) {
-            $osf_tag = json_encode($out_source->tags[$this->tag]);
-            if (strpos($feature->description, ':null') || empty($feature->description)) {
-                $feature->description = $out_source->tags[$this->tag];
+        if ($this->tag != 'all') {
+            if ($out_source) {
+                if (empty($feature->description)) {
+                    $feature->description = $out_source->tags[$this->tag];
+                    $feature->save();
+                    return true;
+                }
+            }
+        } else {
+            if ($out_source) {
+                if (empty($feature->description)) {
+                    if (isset($out_source->tags['description']))
+                        $feature->description = $out_source->tags['description'];
+                }
+                if (empty($feature->addr_locality)) {
+                    if (isset($out_source->tags['addr_city']))
+                        $feature->addr_locality = $out_source->tags['addr_city'];
+                }
+                if (empty($feature->addr_housenumber)) {
+                    if (isset($out_source->tags['addr_housenumber']))
+                        $feature->addr_housenumber = $out_source->tags['addr_housenumber'];
+                }
+                if (empty($feature->addr_street)) {
+                    if (isset($out_source->tags['addr_street']))
+                        $feature->addr_street = $out_source->tags['addr_street'];
+                }
+                if (empty($feature->addr_postcode)) {
+                    if (isset($out_source->tags['addr_postcode']))
+                        $feature->addr_postcode = $out_source->tags['addr_postcode'];
+                }
+                if (empty($feature->opening_hours)) {
+                    if (isset($out_source->tags['opening_hours']))
+                        $feature->opening_hours = $out_source->tags['opening_hours'];
+                }
+                if (empty($feature->contact_phone)) {
+                    if (isset($out_source->tags['contact_phone']))
+                        $feature->contact_phone = $out_source->tags['contact_phone'];
+                }
+                if (empty($feature->contact_email)) {
+                    if (isset($out_source->tags['contact_email']))
+                        $feature->contact_email = $out_source->tags['contact_email'];
+                }
+                if (empty($feature->capacity)) {
+                    if (isset($out_source->tags['capacity']))
+                        $feature->capacity = $out_source->tags['capacity'];
+                }
+                if (empty($feature->stars)) {
+                    if (isset($out_source->tags['stars']))
+                        $feature->stars = $out_source->tags['stars'];
+                }
+                // if (empty($feature->related_url)) {
+                //     $urls = [];
+                //     foreach ($out_source->tags['related_url'] as $key => $val) {
+                //         if ($val) {
+                //             $urls[] = [$key => $val];
+                //         }
+                //     }
+                //     $feature->related_url = implode(",",$urls);
+                // }
                 $feature->save();
                 return true;
             }
@@ -134,12 +190,16 @@ class SyncECTagsFromOSFCommand extends Command
         
         // Check the type
         Log::info('Checking paramtere TAG');
-        if (strtolower($this->tag) == 'description' ||
-            strtolower($this->tag) == 'excerpt'
-            ) {
-                $this->tag = strtolower($this->tag);
-            } else {
-                throw new Exception('The value of parameter tag: '.$this->tag.' is not currect'); 
-            }
+        if ($this->tag) {
+            if (strtolower($this->tag) == 'description' ||
+                strtolower($this->tag) == 'excerpt'
+                ) {
+                    $this->tag = strtolower($this->tag);
+                } else {
+                    throw new Exception('The value of parameter tag: '.$this->tag.' is not currect'); 
+                }
+        } else {
+            $this->tag = 'all';
+        }
     }
 }

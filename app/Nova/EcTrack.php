@@ -482,7 +482,6 @@ class EcTrack extends Resource
     public function filters(Request $request): array
     {
         return [
-            new HasDescription,
             new HasFeatureImage,
             new HasImageGallery
         ];
