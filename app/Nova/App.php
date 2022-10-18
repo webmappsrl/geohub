@@ -139,9 +139,14 @@ class App extends Resource
             Text::make('API type', 'api')->sortable(),
             Text::make('Name')->sortable(),
             Text::make('Customer Name'),
-            Text::make(__('WEBAPP'), function () {
-                $url = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>WEBAPP</a>";
+            Text::make(__('APP'), function () {
+                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
+                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
+                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                return "
+                <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
+                <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlDesktop' target='_blank'>DESKTOP</a>
+                <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlMobile' target='_blank'>MOBILE</a>";
             })->asHtml(),
         ];
     }
@@ -251,9 +256,14 @@ class App extends Resource
                 $url = route('api.app.webmapp.config', ['id' => $this->id]);
                 return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">CONF</a>';
             })->asHtml(),
-            Text::make(__('WEBAPP'), function () {
-                $url = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>WEBAPP</a>";
+            Text::make(__('APP'), function () {
+                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
+                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
+                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                return "
+                <a class='btn btn-default btn-primary' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
+                <a class='btn btn-default btn-primary' style='margin:3px' href='$urlDesktop' target='_blank'>DESKTOP</a>
+                <a class='btn btn-default btn-primary' style='margin:3px' href='$urlMobile' target='_blank'>MOBILE</a>";
             })->asHtml()->onlyOnDetail(),
             Textarea::make('social_track_text')
                 ->help(__('Add a description for meta tags of social share. You can customize the description with these keywords: {app.name} e {track.name}'))

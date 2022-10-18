@@ -7,6 +7,9 @@ use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\ExportEcpoi;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
+use App\Nova\Filters\HasDescription;
+use App\Nova\Filters\HasFeatureImage;
+use App\Nova\Filters\HasImageGallery;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -138,14 +141,67 @@ class EcPoi extends Resource {
 
             Text::make('Name')->sortable(),
 
-            BelongsTo::make('Author', 'author', User::class)->sortable(),
+            Boolean::make('Description', function(){
+                if ($this->description) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
+            
+            Boolean::make('Feature Image', function(){
+                if ($this->featureImage) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
+            
+            Boolean::make('Image Gallery', function(){
+                if (count($this->ecMedia) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
 
-            DateTime::make(__('Created At'), 'created_at')->sortable(),
+            Text::make('Poi Types', function(){
+                if($this->taxonomyPoiTypes()->count() >0) {
+                    return implode(',',$this->taxonomyPoiTypes()->pluck('name')->toArray());
+                }
+                return 'No Poi Types';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
 
-            DateTime::make(__('Updated At'), 'updated_at')->sortable(),
+            BelongsTo::make('Author', 'author', User::class)->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
 
-            Text::make('Geojson',function () {
-                return '<a href="'.route('api.ec.poi.view.geojson', ['id' => $this->id]).'" target="_blank">[x]</a>';
+            DateTime::make(__('Created At'), 'created_at')->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
+
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
+
+            Text::make('API',function () {
+                return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
             })->asHtml(),
         ];
 
@@ -300,6 +356,9 @@ class EcPoi extends Resource {
                     Textarea::make(__('Excerpt'),'excerpt'),
                     NovaTinymce5Editor::make('Description'),
                 ])->onlyOnForms(),
+                BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                }),
             ],
             'Media' => [
                 // TODO: not working with NovaTabTranslatable
@@ -581,7 +640,10 @@ HTML;
      * @return array
      */
     public function filters(Request $request) {
-        return [];
+        return [
+            new HasFeatureImage,
+            new HasImageGallery
+        ];
     }
 
     /**
