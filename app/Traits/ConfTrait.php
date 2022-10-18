@@ -270,6 +270,9 @@ trait ConfTrait
         $data['MAP']['record_track_show'] = $this->geolocation_record_enable;
         $data['MAP']['alert_poi_show'] = $this->alert_poi_show;
         $data['MAP']['alert_poi_radius'] = $this->alert_poi_radius;
+        $data['MAP']['flow_line_quote_show'] = $this->flow_line_quote_show;
+        $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
+        $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
 
         return $data;
     }
