@@ -6,6 +6,9 @@ use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\DownloadExcelEcTrackAction;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
+use App\Nova\Filters\HasDescription;
+use App\Nova\Filters\HasFeatureImage;
+use App\Nova\Filters\HasImageGallery;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -135,14 +138,67 @@ class EcTrack extends Resource
                 return $name . '<br />CAI scale: ' . $this->cai_scale;
             })->asHtml(),
 
-            BelongsTo::make('Author', 'author', User::class)->sortable(),
+            Boolean::make('Description', function(){
+                if ($this->description) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
+            
+            Boolean::make('Feature Image', function(){
+                if ($this->featureImage) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
+            
+            Boolean::make('Image Gallery', function(){
+                if (count($this->ecMedia) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
 
-            DateTime::make(__('Created At'), 'created_at')->sortable(),
+            Text::make('Activities', function(){
+                if ($this->taxonomyActivities()->count() > 0) {
+                    return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
+                }
+                return 'No activities';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            }),
 
-            DateTime::make(__('Updated At'), 'updated_at')->sortable(),
+            BelongsTo::make('Author', 'author', User::class)->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
 
-            Text::make('Geojson', function () {
-                return '<a href="' . route('api.ec.track.view.geojson', ['id' => $this->id]) . '" target="_blank">[x]</a>';
+            DateTime::make(__('Created At'), 'created_at')->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
+
+            DateTime::make(__('Updated At'), 'updated_at')->sortable()->canSee(function ($request) {
+                return $request->user()->can('Admin', $this);
+            }),
+
+            Text::make('API', function () {
+                return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
             })->asHtml(),
         ];
     }
@@ -425,7 +481,11 @@ class EcTrack extends Resource
      */
     public function filters(Request $request): array
     {
-        return [];
+        return [
+            new HasDescription,
+            new HasFeatureImage,
+            new HasImageGallery
+        ];
     }
 
     /**
