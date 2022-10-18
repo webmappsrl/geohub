@@ -353,7 +353,11 @@ class App extends Resource
                 ->help('Activate this option if you want enable user track record'),
             Toggle::make('alert_poi_show')
                 ->help('Activate this option if you want to show a poi proximity alert'),
-            Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert')
+            Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert'),
+            Toggle::make('flow_line_quote_show')
+                ->help('Activate this option if you want to color track by quote'),
+            Number::make(__('flow_line_quote_orange'))->default(800)->help('defines the elevation by which the track turns orange'),
+            Number::make(__('flow_line_quote_red'))->default(1500)->help('defines the elevation by which the track turns red'),
         ];
     }
 
