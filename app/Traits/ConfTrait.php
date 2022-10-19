@@ -194,6 +194,9 @@ trait ConfTrait
                         if (isset($term->feature_image) && !empty($term->feature_image)) {
                             $feature_image = $term->feature_image;
                         }
+                        if (isset($term->geometry)) {
+                            unset($term->geometry);
+                        }
                     }
                 }
                 if ($feature_image == null && $layer->taxonomyThemes->count() > 0) {
