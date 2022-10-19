@@ -123,13 +123,24 @@ class OutSourceImporterCommand extends Command
         $features_list = $features->getList();
         if ($features_list) {
             $count = 1;
-            foreach ($features_list as $id) {
-                Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                $OSF = new OutSourceImporterFeatureOSM2CAI($this->type,$this->endpoint,$id);
-                $OSF_id = $OSF->importFeature();
-                Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
-                $count++;
+            if (strpos($this->endpoint,'.txt')) {
+                foreach ($features_list as $id => $date) {
+                    Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                    $OSF = new OutSourceImporterFeatureOSM2CAI($this->type,$this->endpoint,$id);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
+                    $count++;
+                }
+            } else {
+                foreach ($features_list as $id) {
+                    Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                    $OSF = new OutSourceImporterFeatureOSM2CAI($this->type,$this->endpoint,$id);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
+                    $count++;
+                }
             }
+            
         } else {
             Log::info('Importer OSM2CAI get List is empty.');
         }
