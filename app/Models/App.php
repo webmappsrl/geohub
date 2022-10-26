@@ -116,6 +116,10 @@ class App extends Model
     {
         $confUri = $this->id . ".json";
         $json = $this->config();
+        $jidoTime = $this->config_get_jido_time();
+        if (!is_null($jidoTime)) {
+            $json['JIDO_UPDATE_TIME'] = $jidoTime;
+        }
         Storage::disk('conf')->put($confUri, json_encode($json));
         return $json;
     }
@@ -341,17 +345,37 @@ class App extends Model
     }
     public function elasticJidoRoutine()
     {
-        $this->elasticIndexDelete('low');
-        $this->elasticIndexDelete('high');
-        $this->elasticIndexCreate('low');
-        $this->elasticIndexCreate('high');
-        $this->elasticJidoIndex();
+        // $this->elasticIndexDelete('low');
+        // $this->elasticIndexDelete('high');
+        // $this->elasticIndexCreate('low');
+        // $this->elasticIndexCreate('high');
+        // $this->elasticJidoIndex();
+        $this->config_update_jido_time();
     }
 
     public function GenerateConfigPois()
     {
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
+    }
+
+    public function config_update_jido_time()
+    {
+        $confUri = $this->id . ".json";
+        if (Storage::disk('conf')->exists($confUri)) {
+            $json = json_decode(Storage::disk('conf')->get($confUri));
+            $json->JIDO_UPDATE_TIME = floor(microtime(true) * 1000);
+            Storage::disk('conf')->put($confUri, json_encode($json));
+        }
+    }
+    public function config_get_jido_time()
+    {
+        $confUri = $this->id . ".json";
+        if (Storage::disk('conf')->exists($confUri)) {
+            $json = json_decode(Storage::disk('conf')->get($confUri));
+            return $json->JIDO_UPDATE_TIME;
+        }
+        return null;
     }
 
     /**
