@@ -345,11 +345,11 @@ class App extends Model
     }
     public function elasticJidoRoutine()
     {
-        // $this->elasticIndexDelete('low');
-        // $this->elasticIndexDelete('high');
-        // $this->elasticIndexCreate('low');
-        // $this->elasticIndexCreate('high');
-        // $this->elasticJidoIndex();
+        $this->elasticIndexDelete('low');
+        $this->elasticIndexDelete('high');
+        $this->elasticIndexCreate('low');
+        $this->elasticIndexCreate('high');
+        $this->elasticJidoIndex();
         $this->config_update_jido_time();
     }
 
