@@ -3,6 +3,7 @@
 namespace App\Nova\Actions;
 
 use App\Models\EcPoi;
+use App\Models\OutSourcePoi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -20,8 +21,12 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'created_at',
             'updated_at',
             'name',
+            'name_it',
+            'name_en',
+            'name_fr',
             'geohub_backend',
             'geohub_backend_edit',
+            'public_app_link',
             'lat',
             'lng',
             'description',
@@ -76,6 +81,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'addr_complete',
             'image_gallery',
             'poi_type',
+            'wheres'
         ];
     }
     
@@ -111,6 +117,9 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi_type = implode(',',$poi->taxonomyPoiTypes->pluck('name')->toArray());
         }
 
+        if ($poi->taxonomyWheres) {
+            $wheres = implode(',',$poi->taxonomyWheres->pluck('name')->toArray());
+        }
         
         $poi = (object) $this->setOutSourceValue($poi);
 
@@ -118,15 +127,31 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
         $description_en = isset($poi->description['en'])?$poi->description['en']:'';
         $description_fr = isset($poi->description['fr'])?$poi->description['fr']:'';
 
+        $name_it = isset($poi->name['it'])?$poi->name['it']:'';
+        $name_en = isset($poi->name['en'])?$poi->name['en']:'';
+        $name_fr = isset($poi->name['fr'])?$poi->name['fr']:'';
+
         $geohub_backend_edit = "https://geohub.webmapp.it/resources/ec-pois/$poi->id/edit";
+
+        $user = auth()->user();
+        $public_app_link = '';
+        if ($user->id == 19839) {
+            $out_source_id = $poi->out_source_feature_id;
+            $out_source_feature = OutSourcePoi::find($out_source_id);
+            $public_app_link = "http://ir.j.webmapp.it/#/main/details/$out_source_feature->source_id";
+        }
 
         return [
             $poi->id,
             $poi->created_at,
             $poi->updated_at,
             $poi->name,
+            $name_it,
+            $name_en,
+            $name_fr,
             $geohub_backend,
             $geohub_backend_edit,
+            $public_app_link,
             $lat,
             $lng,
             $poi->description,
@@ -181,6 +206,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi->addr_complete,
             $image_gallery,
             $poi_type,
+            $wheres
         ];
     }
 
