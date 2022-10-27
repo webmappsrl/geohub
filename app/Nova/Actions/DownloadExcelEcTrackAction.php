@@ -21,8 +21,13 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             'updated_at',
             'name',
             'geohub_backend',
+            'geohub_backend_edit',
             'geohub_frontend',
+            'public_app_link',
             'description',
+            'description_it',
+            'description_en',
+            'description_fr',
             'excerpt',
             'source',
             'distance_comp',
@@ -105,14 +110,33 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
         }
 
         $track = (object) $this->setOutSourceValue($track);
+
+        $description_it = isset($track->description['it'])?$track->description['it']:'';
+        $description_en = isset($track->description['en'])?$track->description['en']:'';
+        $description_fr = isset($track->description['fr'])?$track->description['fr']:'';
+
+        $geohub_backend_edit = "https://geohub.webmapp.it/resources/ec-tracks/$track->id/edit";
+
+        $user = auth()->user();
+        $public_app_link = '';
+        if (!empty($user->apps)) {
+            $app_id = $user->apps[0]->id;
+            $public_app_link = "https://$app_id.app.geohub.webmapp.it/#/map?track=$track->id";
+        }
+
         return [
             $track->id,
             $track->created_at,
             $track->updated_at,
             $track->name,
             $geohub_backend,
+            $geohub_backend_edit,
             $geohub_frontend,
+            $public_app_link,
             $track->description,
+            $description_it, 
+            $description_en, 
+            $description_fr,
             $track->excerpt,
             $track->source,
             $track->distance_comp,
