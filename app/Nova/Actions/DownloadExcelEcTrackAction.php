@@ -20,6 +20,9 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             'created_at',
             'updated_at',
             'name',
+            'name_it',
+            'name_en',
+            'name_fr',
             'geohub_backend',
             'geohub_backend_edit',
             'geohub_frontend',
@@ -115,11 +118,15 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
         $description_en = isset($track->description['en'])?$track->description['en']:'';
         $description_fr = isset($track->description['fr'])?$track->description['fr']:'';
 
+        $name_it = isset($track->name['it'])?$track->name['it']:'';
+        $name_en = isset($track->name['en'])?$track->name['en']:'';
+        $name_fr = isset($track->name['fr'])?$track->name['fr']:'';
+
         $geohub_backend_edit = "https://geohub.webmapp.it/resources/ec-tracks/$track->id/edit";
 
         $user = auth()->user();
         $public_app_link = '';
-        if (!empty($user->apps)) {
+        if (count($user->apps) > 0) {
             $app_id = $user->apps[0]->id;
             $public_app_link = "https://$app_id.app.geohub.webmapp.it/#/map?track=$track->id";
         }
@@ -129,6 +136,9 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
             $track->created_at,
             $track->updated_at,
             $track->name,
+            $name_it,
+            $name_en,
+            $name_fr,
             $geohub_backend,
             $geohub_backend_edit,
             $geohub_frontend,
