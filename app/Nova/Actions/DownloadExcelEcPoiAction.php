@@ -21,9 +21,13 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'updated_at',
             'name',
             'geohub_backend',
+            'geohub_backend_edit',
             'lat',
             'lng',
             'description',
+            'description_it',
+            'description_en',
+            'description_fr',
             'excerpt',
             'feature_image',
             'contact_phone',
@@ -107,16 +111,28 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi_type = implode(',',$poi->taxonomyPoiTypes->pluck('name')->toArray());
         }
 
+        
         $poi = (object) $this->setOutSourceValue($poi);
+
+        $description_it = isset($poi->description['it'])?$poi->description['it']:'';
+        $description_en = isset($poi->description['en'])?$poi->description['en']:'';
+        $description_fr = isset($poi->description['fr'])?$poi->description['fr']:'';
+
+        $geohub_backend_edit = "https://geohub.webmapp.it/resources/ec-pois/$poi->id/edit";
+
         return [
             $poi->id,
             $poi->created_at,
             $poi->updated_at,
             $poi->name,
             $geohub_backend,
+            $geohub_backend_edit,
             $lat,
             $lng,
             $poi->description,
+            $description_it, 
+            $description_en, 
+            $description_fr,
             $poi->excerpt,
             $featureImage,
             $poi->contact_phone,
