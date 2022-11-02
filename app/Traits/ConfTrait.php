@@ -137,6 +137,8 @@ trait ConfTrait
         $data['MAP']['defZoom'] = $this->map_def_zoom;
         $data['MAP']['maxZoom'] = $this->map_max_zoom;
         $data['MAP']['minZoom'] = $this->map_min_zoom;
+        $data['MAP']['maxStrokeWidth'] = $this->map_max_stroke_width;
+        $data['MAP']['minStrokeWidth'] = $this->map_min_stroke_width;
         $data['MAP']['tiles'] = array_map(function ($v) {
             return json_decode($v);
         }, json_decode($this->tiles, true));
