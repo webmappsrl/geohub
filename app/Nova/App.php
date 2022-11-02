@@ -316,11 +316,20 @@ class App extends Resource
                 ->max(19)
                 ->default(16)
                 ->onlyOnForms(),
+            Number::make(__('Max Stroke width'), 'map_max_stroke_width')
+                ->min(0)
+                ->max(19)
+                ->default(6)
+                ->help('Set max stoke width of line string, the max stroke width is applyed when the app is on max level zoom'),
             NovaSliderField::make(__('Min Zoom'), 'map_min_zoom')
                 ->min(5)
                 ->max(19)
-                ->default(12)
-                ->onlyOnForms(),
+                ->default(12),
+            Number::make(__('Min Stroke width'), 'map_min_stroke_width')
+                ->min(0)
+                ->max(19)
+                ->default(3)
+                ->help('Set min stoke width of line string, the min stroke width is applyed when the app is on min level zoom'),
             NovaSliderField::make(__('Def Zoom'), 'map_def_zoom')
                 ->min(5)
                 ->max(19)
