@@ -24,7 +24,8 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
                             {--theme= : Set the identifier of theme taxonomy that must be assigned to EcFeature created}
                             {--poi_type= : Set the identifier poi_type taxonomy that must be assigned to EcFeature created, the default is poi}
                             {--name_format=name : Set how the command must save the name. Is a string with curly brackets notation to use dynamics tags value}
-                            {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)}';
+                            {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)}
+                            {--only_related_url : Only sync the related urls from the OSF}';
 
     /**
      * The console command description.
@@ -64,6 +65,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $poi_type = '';
         $name_format = $this->option('name_format');
         $single_feature = $this->option('single_feature');
+        $only_related_url = $this->option('only_related_url');
         $app = 0;
 
         if ($this->option('provider'))
@@ -85,7 +87,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             $app = $this->option('app');
 
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme,$only_related_url);
         Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
             Log::info('Parameters checked successfully.');
