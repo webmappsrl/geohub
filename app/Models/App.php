@@ -373,7 +373,11 @@ class App extends Model
         $confUri = $this->id . ".json";
         if (Storage::disk('conf')->exists($confUri)) {
             $json = json_decode(Storage::disk('conf')->get($confUri));
-            return $json->JIDO_UPDATE_TIME;
+            if (isset($json->JIDO_UPDATE_TIME)) {
+                return $json->JIDO_UPDATE_TIME;
+            } else {
+                return null;
+            }
         }
         return null;
     }
