@@ -245,6 +245,10 @@ class EcPoi extends Model
             unset($array['related_url']);
         }
 
+        // foreach ($this->taxonomyPoiTypes as $poitype) {
+        //     $poitypes[] = $poitype->getJson();
+        // }
+
         $taxonomies = [
             'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
