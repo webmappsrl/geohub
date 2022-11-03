@@ -255,8 +255,8 @@ class EcPoi extends Model
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
-            'poi_type' => $poitypes
-            // 'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
+            // 'poi_type' => $poitypes
+            'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
         ];
 
         $taxonomiesidentifiers = array_merge(
