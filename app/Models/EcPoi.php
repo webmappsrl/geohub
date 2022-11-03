@@ -245,17 +245,18 @@ class EcPoi extends Model
             unset($array['related_url']);
         }
 
-        // foreach ($this->taxonomyPoiTypes as $poitype) {
-        //     $poitypes[] = $poitype->getJson();
-        // }
+        foreach ($this->taxonomyPoiTypes as $poitype) {
+            $poitypes[] = $poitype->getJson();
+        }
 
-        $taxonomies = [
+        $taxonomy = [
             'activity' => $this->taxonomyActivities()->pluck('id')->toArray(),
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
-            'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
+            'poi_type' => $poitypes
+            // 'poi_type' => $this->taxonomyPoiTypes()->pluck('id')->toArray()
         ];
 
         $taxonomiesidentifiers = array_merge(
@@ -266,14 +267,20 @@ class EcPoi extends Model
             $this->addTaxonomyPoiTypes()
         );
 
-        foreach ($taxonomies as $key => $value) {
+        foreach ($taxonomy as $key => $value) {
             if (count($value) === 0)
-                unset($taxonomies[$key]);
+                unset($taxonomy[$key]);
         }
 
-        $array['taxonomy'] = $taxonomies;
+        $taxonomies = [
+            'poi_type' => $poitypes
+        ];
+
+        $array['taxonomy'] = $taxonomy;
         // TODO non so se modificare taxonomy rompe qualcosa per ora ho inseritono una nuova proprietà
         $array['taxonomyIdentifiers'] = $taxonomiesidentifiers;
+
+        $array['taxonomies'] = $taxonomies;
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $taxonomies) {

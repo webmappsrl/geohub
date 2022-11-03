@@ -30,6 +30,7 @@ class SyncEcFromOutSource
     protected $poi_type;
     protected $name_format;
     protected $app;
+    protected $only_related_url;
 
     /**
      * It sets all needed properties in order to perform the sync ec_tracks table from out_source_features
@@ -44,8 +45,9 @@ class SyncEcFromOutSource
      * @param string $name_format the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
      * @param int $app the id of the app (eg. Parco Maremma = 1 )
      * @param string $theme the theme to associate with the feature. it takes the Identifier (eg. hiking-pec)
+     * @param bool $only_related_url true if only sync related url value
      */
-    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = '',string $poi_type = '' ,string $name_format = '{name}', $app = 0, string $theme = '') 
+    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = '',string $poi_type = '' ,string $name_format = '{name}', $app = 0, string $theme = '', bool $only_related_url = false) 
     {
         $this->type = $type;
         $this->author = $author;
@@ -56,6 +58,7 @@ class SyncEcFromOutSource
         $this->poi_type = strtolower($poi_type);            
         $this->name_format = $name_format;            
         $this->app = $app;   
+        $this->only_related_url = $only_related_url;   
 
         if ($this->type == 'track' && empty($this->activity)) {
             $this->activity = 'hiking';
@@ -413,20 +416,30 @@ class SyncEcFromOutSource
                     Log::info('Error creating EcTrack from OSF with id: '.$id."\n ERROR: ".$e);
                 }
             }
+
             if ($this->type == 'poi') {
                 // create poi
                 Log::info('Creating EC POI from OSF with id: '.$id);
                 try{
-                    $ec_poi = EcPoi::updateOrCreate(
-                        [
-                            'user_id' => $this->author_id,
-                            'out_source_feature_id' => $id,
-                        ],
-                        [
-                            'name' => $this->generateName($out_source),
-                            'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
-                        ]);
-                    
+                    if ($this->only_related_url) {
+                        $ec_poi = EcPoi::updateOrCreate(
+                            [
+                                'user_id' => $this->author_id,
+                                'out_source_feature_id' => $id,
+                            ]);
+                    } else {
+                        $ec_poi = EcPoi::updateOrCreate(
+                            [
+                                'user_id' => $this->author_id,
+                                'out_source_feature_id' => $id,
+                            ],
+                            [
+                                'name' => $this->generateName($out_source),
+                                'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
+                            ]);
+                    }
+
+                    if (!$this->only_related_url) { // start sync if only related url is not true
                     // Attach poi_type to poi
                     if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
                         if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
@@ -520,8 +533,13 @@ class SyncEcFromOutSource
                         $ec_poi->capacity = $out_source->tags['capacity'];
                     if (isset($out_source->tags['stars']))
                         $ec_poi->stars = $out_source->tags['stars'];
+
+                    } // end sync if only related url is not true
+
                     if (isset($out_source->tags['related_url']))
                         $ec_poi->related_url = $out_source->tags['related_url'];
+                    
+                    if (!$this->only_related_url) { // start sync if only related url is not true
                     if (isset($out_source->tags['code']))
                         $ec_poi->code = $out_source->tags['code'];
 
@@ -538,6 +556,7 @@ class SyncEcFromOutSource
                             }
                         }
                     }
+                    }// end sync if only related url is not true
                     $ec_poi->save();
                     array_push($new_ec_features,$ec_poi->id);
                 } catch (Exception $e) {
