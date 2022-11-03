@@ -358,7 +358,7 @@ class SyncEcFromOutSource
                                 if ($this->endpoint) {
                                     $array_endpoint = explode('/',$this->endpoint);
                                     Log::info('Attaching EC Track OSM2CAI taxonomyThemes: Infomont - ' . $array_endpoint[7]);
-                                    $ec_track->taxonomyThemes()->sync(TaxonomyTheme::where('identifier','infomont-'.$array_endpoint[7])->first());
+                                    $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier','infomont-'.$array_endpoint[7])->first());
                                 }
                             }
                         }
