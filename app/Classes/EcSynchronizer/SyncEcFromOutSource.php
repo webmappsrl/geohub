@@ -45,8 +45,9 @@ class SyncEcFromOutSource
      * @param string $name_format the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
      * @param int $app the id of the app (eg. Parco Maremma = 1 )
      * @param string $theme the theme to associate with the feature. it takes the Identifier (eg. hiking-pec)
+     * @param bool $only_related_url true if only sync related url value
      */
-    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = '',string $poi_type = '' ,string $name_format = '{name}', $app = 0, string $theme = '', $only_related_url = false) 
+    public function __construct(string $type, string $author, string $provider = '', string $endpoint = '',string $activity = '',string $poi_type = '' ,string $name_format = '{name}', $app = 0, string $theme = '', bool $only_related_url = false) 
     {
         $this->type = $type;
         $this->author = $author;

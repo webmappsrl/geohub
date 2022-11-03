@@ -21,8 +21,9 @@ abstract class OutSourceImporterFeatureAbstract
      * @param string $type the of the feature (Track, Poi or Media)
      * @param string $endpoint the url from which import begins (https://stelvio.wp.webmapp.it)
      * @param string $source_id the id of the feature being imported
+     * @param bool $only_related_url true if only import related url value
      */
-    public function __construct(string $type, string $endpoint, string $source_id, $only_related_url) 
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false) 
     {
         $this->type = strtolower($type);
         $this->endpoint = $endpoint;
