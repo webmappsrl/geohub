@@ -73,4 +73,26 @@ class TaxonomyPoiType extends Model {
 
         throw  ValidationException::withMessages($messageBag->getMessages());
     }
+
+    /**
+     * Create a json for the activity
+     *
+     * @return array
+     */
+    public function getJson(): array {
+        $json = $this->toArray();
+
+        unset($json['pivot']);
+        unset($json['import_method']);
+        unset($json['source']);
+        unset($json['source_id']);
+        unset($json['user_id']);
+
+        foreach (array_keys($json) as $key) {
+            if (is_null($json[$key]))
+                unset($json[$key]);
+        }
+
+        return $json;
+    }
 }

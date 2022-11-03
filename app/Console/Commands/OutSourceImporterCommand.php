@@ -20,7 +20,7 @@ class OutSourceImporterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai, sicai} {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)}';
+    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai, sicai} {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)} {--only_related_url : Only imports the related urls to the OSF}';
 
     /**
      * The console command description.
@@ -32,6 +32,7 @@ class OutSourceImporterCommand extends Command
     protected $type;
     protected $endpoint;
     protected $single_feature;
+    protected $only_related_url;
 
     /**
      * Create a new command instance.
@@ -51,6 +52,7 @@ class OutSourceImporterCommand extends Command
     public function handle()
     {
         $this->single_feature = $this->option('single_feature');
+        $this->only_related_url = $this->option('only_related_url');
 
         $this->type = $this->argument('type');
         $this->endpoint = $this->argument('endpoint');
@@ -90,7 +92,7 @@ class OutSourceImporterCommand extends Command
             $count = 1;
             foreach ($features_list as $id => $last_modified) {
                 Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                $OSF = new OutSourceImporterFeatureWP($this->type,$this->endpoint,$id);
+                $OSF = new OutSourceImporterFeatureWP($this->type,$this->endpoint,$id,$this->only_related_url);
                 $OSF_id = $OSF->importFeature();
                 Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
                 $count++;

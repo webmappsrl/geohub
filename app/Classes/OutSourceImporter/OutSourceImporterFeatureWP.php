@@ -216,6 +216,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function preparePOITagsJson($poi){
+        if (!$this->only_related_url) { // skip import if only related url is true
         Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
         $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
@@ -355,6 +356,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['capacity'] = $poi['capacity'];
         if (isset($poi['stars']))
             $this->tags['stars'] = $poi['stars'];
+        } // end of only related urls
         if (isset($poi['n7webmap_rpt_related_url'])) {
             if (is_array($poi['n7webmap_rpt_related_url'])) {
                 foreach($poi['n7webmap_rpt_related_url'] as $url) {
@@ -377,6 +379,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 $this->tags['related_url'] = $poi['n7webmap_rpt_related_url'];
             }
         }
+        if (!$this->only_related_url) { // skip import if only related url is true
+
         if (isset($poi['ele']))
             $this->tags['ele'] = $poi['ele'];
         if (isset($poi['code']))
@@ -435,6 +439,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                 }
             }
         }
+        } // end import only related url if is true
     }
 
     /**

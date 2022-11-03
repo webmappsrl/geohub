@@ -253,6 +253,9 @@ trait ConfTrait
 
                 $layers[] = $item;
             }
+
+            $rank = array_column($layers, 'rank');
+            $layers = array_multisort($rank, SORT_ASC, $layers);
             $data['MAP']['layers'] = $layers;
         }
 
