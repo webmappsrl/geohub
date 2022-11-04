@@ -40,6 +40,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
     
             // prepare the value of tags data
             Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+            $this->tags = [];
             $this->prepareTrackTagsJson($track);
             $this->params['tags'] = $this->tags;
             Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
