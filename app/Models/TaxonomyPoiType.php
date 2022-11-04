@@ -81,18 +81,13 @@ class TaxonomyPoiType extends Model {
      */
     public function getJson(): array {
         $json = $this->toArray();
+        
+        $data = [];
 
-        unset($json['pivot']);
-        unset($json['import_method']);
-        unset($json['source']);
-        unset($json['source_id']);
-        unset($json['user_id']);
+        $data['id'] = $json['id'];
+        $data['name'] = $json['name'];
+        $data['description'] = $json['description'];
 
-        foreach (array_keys($json) as $key) {
-            if (is_null($json[$key]))
-                unset($json[$key]);
-        }
-
-        return $json;
+        return $data;
     }
 }
