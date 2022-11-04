@@ -14,7 +14,10 @@ class EcTrackIndexCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:index-tracks {app_id?} {--no-elastic} {--info-elastic} {--jido-elastic}';
+    protected $signature = 'geohub:index-tracks {app_id?} 
+                            {--no-elastic : Refreshes the config.json and POI geojson}
+                            {--info-elastic : Redefines the info and non geometrich information of the resources}
+                            {--jido-elastic : Redifines only the geometry of the resources}';
 
     /**
      * The console command description.
