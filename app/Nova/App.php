@@ -103,7 +103,7 @@ class App extends Resource
         'it' => 'Italiano',
         'fr' => 'Français',
         'de' => 'Deutsch',
-        'sp' => 'español'
+        'es' => 'español'
     ];
 
     public static function group()
@@ -181,10 +181,18 @@ class App extends Resource
     }
     public function fieldsForUpdate(Request $request)
     {
-
-        return [
-            (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections())),
-        ];
+        if ($request->user()->can('Admin')) {
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections())),
+            ];
+        } else {
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", [
+                    'HOME' => $this->home_tab(),
+                    'PROJECT' => $this->project_tab()
+                ])),
+            ];
+        }
     }
 
     public function sections()

@@ -283,7 +283,7 @@ class EcPoi extends Model
         $array['taxonomyIdentifiers'] = $taxonomiesidentifiers;
 
         $propertiesToClear = ['geometry'];
-        foreach ($array as $property => $taxonomies) {
+        foreach ($array as $property => $value) {
             if (
                 in_array($property, $propertiesToClear)
                 || is_null($value)

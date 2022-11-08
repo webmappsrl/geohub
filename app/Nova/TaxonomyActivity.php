@@ -68,7 +68,7 @@ class TaxonomyActivity extends Resource {
             Number::make('Zindex')->hideFromIndex(),
             NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
-            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->onlyOnForms(),
+            BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->searchable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {

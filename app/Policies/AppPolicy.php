@@ -54,13 +54,10 @@ class AppPolicy
 
     public function update(User $user, App $model): bool
     {
-        if ($user->hasRole('Editor')) {
-            return false;
+        if ($user->hasRole('Editor') && $user->id === $model->user_id) {
+            return true;
         }
-
-        $user = User::getEmulatedUser($user);
-
-        return $user->can('edit_self_apps');
+        return false;
     }
 
     public function delete(User $user, App $model): bool
