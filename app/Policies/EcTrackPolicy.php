@@ -63,6 +63,9 @@ class EcTrackPolicy {
     }
 
     public function delete(User $user, EcTrack $model): bool {
+        if ($user->hasRole('Editor')) {
+            return true;
+        }
         return false;
     }
 
