@@ -595,7 +595,10 @@ class SyncEcFromOutSource
         if ($error_not_created) {
             Log::info('Ec features not created from Source with ID: ');
             if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
+                Log::channel('osm2cai')->info(" ");
+                Log::channel('osm2cai')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
+                    Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
                     Log::info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
                 }
             } else {
