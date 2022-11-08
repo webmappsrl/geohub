@@ -110,6 +110,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'osm2cai' => [
+            'driver' => 'single',
+            'days' => '1',
+            'level'  => 'debug',
+            'path'   => storage_path('logs/osm2cai.log'),
+            'bubble' => false
+        ]
     ],
 
 ];
