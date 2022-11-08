@@ -131,19 +131,29 @@ class EcMedia extends Resource
     private function index() {
         return [
             ExternalImage::make('Image', function () {
-                $url = $this->model()->url;
-                if (substr($url, 0, 4) !== 'http')
-                    $url = Storage::disk('public')->url($url);
-
+                $thumbnails = $this->model()->thumbnails;
+                $url = '';
+                if ($thumbnails) {
+                    $thumbnails = json_decode($thumbnails,true);
+                    if ($thumbnails[array_key_first($thumbnails)]) {
+                        $url = $thumbnails[array_key_first($thumbnails)];
+                    }
+                }
+                if (!$url) {
+                    $url = $this->model()->url;
+                    if (substr($url, 0, 4) !== 'http')
+                        $url = Storage::disk('public')->url($url);
+                }
+                        
                 return $url;
-            })->withMeta(['width' => 100]),
+            }),
 
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name'),
             ]),
-            BelongsTo::make('Author', 'author', User::class)->sortable(),
-            Date::make(__('Created At'), 'created_at')->sortable(),
-            Date::make(__('Updated At'), 'updated_at')->sortable(),
+            BelongsTo::make('Author', 'author', User::class)->sortable()->hideFromIndex(),
+            Date::make(__('Created At'), 'created_at')->sortable()->hideFromIndex(),
+            Date::make(__('Updated At'), 'updated_at')->sortable()->hideFromIndex(),
             Text::make('Url', function () {
                 $url = $this->model()->url;
                 if (substr($url, 0, 4) !== 'http')
@@ -151,7 +161,7 @@ class EcMedia extends Resource
 
                 return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
             })->asHtml(),
-            Link::make('GJ', 'id')
+            Link::make('GeoJSON', 'id')
                 ->url(function () {
                     return isset($this->id) ? route('api.ec.media.geojson', ['id' => $this->id]) : '';
                 })
@@ -252,7 +262,6 @@ class EcMedia extends Resource
             'Map' => [
             ],
             'Taxonomies' => [
-                AttachMany::make('TaxonomyWheres'),
                 AttachMany::make('TaxonomyActivities'),
                 AttachMany::make('TaxonomyTargets'),
                 AttachMany::make('TaxonomyWhens'),
@@ -340,56 +349,6 @@ class EcMedia extends Resource
     public function cards(Request $request)
     {
         return [
-            MegaFilter::make([
-                'columns' => [
-                    Column::make('Name')->permanent(),
-                    Column::make('Author'),
-                    Column::make('Created At'),
-                    Column::make('Updated At'),
-                    //Column::make('Cai Scale')
-                ],
-                'filters' => [
-                    // https://packagist.org/packages/pos-lifestyle/laravel-nova-date-range-filter
-                    (new DateRangeFilter('Created at','created_at')),
-                    (new DateRangeFilter('Updated at','updated_at')),
-
-                ],
-                'settings' => [
-
-                    /**
-                     * Tailwind width classes: w-full w-1/2 w-1/3 w-1/4 etc.
-                     */
-                    'columnsWidth' => 'w-1/4',
-                    'filtersWidth' => 'w-1/3',
-                    
-                    /**
-                     * The default state of the main toggle buttons
-                     */
-                    'columnsActive' => false,
-                    'filtersActive' => false,
-                    'actionsActive' => false,
-            
-                    /**
-                     * Show/Hide elements
-                     */
-                    'showHeader' => true,
-                    
-                    /**
-                     * Labels
-                     */
-                    'headerLabel' => 'Columns and Filters',
-                    'columnsLabel' => 'Columns',
-                    'filtersLabel' => 'Filters',
-                    'actionsLabel' => 'Actions',
-                    'columnsSectionTitle' => 'Additional Columns',
-                    'filtersSectionTitle' => 'Filters',
-                    'actionsSectionTitle' => 'Actions',
-                    'columnsResetLinkTitle' => 'Reset Columns',
-                    'filtersResetLinkTitle' => 'Reset Filters',
-            
-                ],
-            ]),
-
         ];
     }
 
