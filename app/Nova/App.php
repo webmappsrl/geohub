@@ -276,6 +276,7 @@ class App extends Resource
             Textarea::make('social_track_text')
                 ->help(__('Add a description for meta tags of social share. You can customize the description with these keywords: {app.name} e {track.name}'))
                 ->placeholder('Add social Meta Tag for description'),
+            Boolean::make('dashboard_show'),
         ];
     }
 
