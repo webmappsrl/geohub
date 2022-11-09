@@ -22,7 +22,7 @@ class UgcTrackPolicy
         if ($user->hasRole('Admin')) {
             return true;
         }
-        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
             return false;
         }
     }
@@ -35,7 +35,9 @@ class UgcTrackPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+            return true;
+        }
     }
 
     /**
@@ -47,7 +49,9 @@ class UgcTrackPolicy
      */
     public function view(User $user, UgcTrack $ugcTrack)
     {
-        //
+        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+            return true;
+        }
     }
 
     /**
