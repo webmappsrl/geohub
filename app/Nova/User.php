@@ -58,7 +58,8 @@ class User extends Resource {
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        return $query->where('id', $request->user()->id);
+
+        return $query->where('id', $request->user()->id)->orWhere('referrer', $request->user()->apps[0]->app_id);
     }
 
     public static function group() {
