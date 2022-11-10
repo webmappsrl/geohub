@@ -34,6 +34,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
+use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
@@ -160,8 +161,15 @@ class App extends Resource
                 (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
             ];
         } else {
-            return [
-                (new Tabs("APP Details: {$this->name} ({$this->id})", [
+            
+            $tab_array = [
+                'APP' => $this->app_tab(),
+                'HOME' => $this->home_tab(),
+                'PROJECT' => $this->project_tab(),
+                'ICONS' => $this->icons_tab(),
+            ];
+            if ($request->user()->apps[0]->dashboard_show == true) {
+                $tab_array = [
                     'APP' => $this->app_tab(),
                     'HOME' => $this->home_tab(),
                     'PROJECT' => $this->project_tab(),
@@ -169,7 +177,10 @@ class App extends Resource
                     'APP Analytics' => $this->app_analytics_tab(),
                     'POI Analytics' => $this->poi_analytics_tab(),
                     'MAP Analytics' => $this->map_analytics_tab(),
-                ])),
+                ];
+            }
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array )),
             ];
         }
     }
@@ -834,9 +845,24 @@ class App extends Resource
 
     protected function poi_analytics_tab(): array
     {
+        $mostviewedpois = $this->model()->getMostViewedPoiGeojson();
         return [
-            Text::make('Layers', function () {
-                return 'Work in progress';
+            MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
+                'center' => ["43", "10"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'defaultZoom' => 10,
+                'poigeojson' => $mostviewedpois
+            ]),
+            Text::make('Most Viewed POIs List', function () use ($mostviewedpois) {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody>';
+                $collection = json_decode($mostviewedpois);
+                foreach($collection->features as $count => $feature) {
+                    $count ++;
+                    $html .= '<tr><td style="width: 50%;">'. $count .' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
+                }
+                $html .= '</tbody></table>';
+                return $html;
             })->asHtml(),
         ];
     }

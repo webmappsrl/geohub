@@ -79,6 +79,28 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
+    
+    public function getMostViewedPoiGeojson()
+    {
+        $pois = EcPoi::where('user_id', $this->user_id)->limit(10)->get();
+
+        if (!is_null($pois)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($pois as $count => $poi) {
+                $feature = $poi->getEmptyGeojson();
+                if (isset($feature["properties"])) {
+                    $feature["properties"]["name"] = $poi->name;
+                     $feature["properties"]["visits"] = (11-$count)*10;
+                }
+
+                $features[] = $feature;
+            }
+            $geoJson["features"] = $features;
+
+            return json_encode($geoJson);
+        }
+    }
 
     public function ecTracks(): HasMany
     {
