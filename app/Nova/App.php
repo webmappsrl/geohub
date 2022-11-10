@@ -166,6 +166,9 @@ class App extends Resource
                     'HOME' => $this->home_tab(),
                     'PROJECT' => $this->project_tab(),
                     'ICONS' => $this->icons_tab(),
+                    'APP Analytics' => $this->app_analytics_tab(),
+                    'POI Analytics' => $this->poi_analytics_tab(),
+                    'MAP Analytics' => $this->map_analytics_tab(),
                 ])),
             ];
         }
@@ -803,6 +806,33 @@ class App extends Resource
                 } else {
                     return 'No Layers';
                 }
+            })->asHtml(),
+        ];
+    }
+
+    protected function app_analytics_tab(): array
+    {
+        return [
+            Text::make('Layers', function () {
+                return 'Work in progress';
+            })->asHtml(),
+        ];
+    }
+
+    protected function poi_analytics_tab(): array
+    {
+        return [
+            Text::make('Layers', function () {
+                return 'Work in progress';
+            })->asHtml(),
+        ];
+    }
+
+    protected function map_analytics_tab(): array
+    {
+        return [
+            Text::make('Layers', function () {
+                return 'Work in progress';
             })->asHtml(),
         ];
     }
