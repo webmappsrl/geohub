@@ -155,9 +155,20 @@ class App extends Resource
 
     public function fieldsForDetail(Request $request)
     {
-        return [
-            (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
-        ];
+        if ($request->user()->can('Admin')) {
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
+            ];
+        } else {
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", [
+                    'APP' => $this->app_tab(),
+                    'HOME' => $this->home_tab(),
+                    'PROJECT' => $this->project_tab(),
+                    'ICONS' => $this->icons_tab(),
+                ])),
+            ];
+        }
     }
 
     public function fieldsForCreate(Request $request)
