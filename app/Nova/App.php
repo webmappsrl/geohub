@@ -869,10 +869,19 @@ class App extends Resource
 
     protected function map_analytics_tab(): array
     {
+        $poigeojson = $this->model()->getUGCPoiGeojson();
+        $mediageojson = $this->model()->getUGCMediaGeojson();
+        $trackgeojson = $this->model()->getiUGCTrackGeojson();
         return [
-            Text::make('Layers', function () {
-                return 'Work in progress';
-            })->asHtml(),
+            MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
+                'center' => ["43", "10"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'defaultZoom' => 10,
+                'poigeojson' => $poigeojson,
+                'mediageojson' => $mediageojson,
+                'trackgeojson' => $trackgeojson
+            ]),
         ];
     }
 

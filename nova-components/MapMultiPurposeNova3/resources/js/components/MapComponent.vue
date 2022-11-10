@@ -20,6 +20,8 @@ const linestringOption = {
 };
 let mapDiv = null;
 let pois = null;
+let medias = null;
+let tracks = null;
 export default {
     name: "MapMultiPurpose",
     mixins: [FormField, HandlesValidationErrors],
@@ -37,6 +39,8 @@ export default {
                 const center = this.field.center ?? this.center ?? DEFAULT_CENTER;
                 const defaultZoom = this.field.defaultZoom ?? DEFAULT_DEFAULTZOOM;
                 const poigeojson = this.field.poigeojson;
+                const mediageojson = this.field.mediageojson;
+                const trackgeojson = this.field.trackgeojson;
                 mapDiv = L.map(this.mapRef).setView(center, defaultZoom);
                 L.tileLayer(
                     this.field.tiles ?? DEFAULT_TILES,
@@ -69,10 +73,39 @@ export default {
                     pois = L.geoJson(JSON.parse(poigeojson), {
                         pointToLayer: createorangeIcon,
                         onEachFeature: function (feature, pois) {
-                            pois.bindPopup('<h1>'+feature.properties.name+'</h1><p>visits: '+feature.properties.visits+'</p>');
+                            if (typeof feature.properties.view !== 'undefined') {
+                                pois.bindPopup('<a target="_blank" href="'+feature.properties.view+'">View POI\'s Details</a>');
+                            } else {
+                                pois.bindPopup('<h1>'+feature.properties.name+'</h1><p>visits: '+feature.properties.visits+'</p>');
+                            }
                         }
                     }).addTo(mapDiv);
                     mapDiv.fitBounds(pois.getBounds());
+                }
+                if (mediageojson != null) {
+                    medias = L.geoJson(JSON.parse(mediageojson), {
+                        pointToLayer: creategreenIcon,
+                        onEachFeature: function (feature, medias) {
+                            if (typeof feature.properties.view !== 'undefined') {
+                                medias.bindPopup('<a target="_blank" href="'+feature.properties.view+'">View Media\'s Details</a>');
+                            } else {
+                                medias.bindPopup('<h1>'+feature.properties.name+'</h1><p>visits: '+feature.properties.visits+'</p>');
+                            }
+                        }
+                    }).addTo(mapDiv);
+                    mapDiv.fitBounds(medias.getBounds());
+                }
+                if (trackgeojson != null) {
+                    tracks = L.geoJson(JSON.parse(trackgeojson), {
+                        onEachFeature: function (feature, tracks) {
+                            if (typeof feature.properties.view !== 'undefined') {
+                                tracks.bindPopup('<a target="_blank" href="'+feature.properties.view+'">View Track\'s Details</a>');
+                            } else {
+                                tracks.bindPopup('<h1>'+feature.properties.name+'</h1><p>visits: '+feature.properties.visits+'</p>');
+                            }
+                        }
+                    }).addTo(mapDiv);
+                    mapDiv.fitBounds(tracks.getBounds());
                 }
             }, 300);
         }
