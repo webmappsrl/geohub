@@ -87,8 +87,9 @@ class StelvioSeeder extends Seeder
         for ($i=0;$i<20;$i++) {
             $lon = $this->faker->randomFloat(5,10.2858,10.6344);
             $lat = $this->faker->randomFloat(5,46.0319,46.5595);
-            $line[]="$lon $lat";   
+            $line[$lat*100000]="$lon $lat";   
         }
+        ksort($line);
         $linestring = implode(',',$line);
         $geometry = DB::raw("(ST_GeomFromText('LINESTRING($linestring)'))");
         return $geometry;
