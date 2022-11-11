@@ -20,5 +20,4 @@ yarn-error.log
 /geodata
 /storage/tmp
 /storage/api-docs
-/storage/*
 dump.sql
