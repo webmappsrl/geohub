@@ -1,0 +1,528 @@
+{
+    "poi_type": {
+        "107": {
+            "source_title": {
+                "it": "acquedotto"
+            },
+            "source_description": {
+                "en": ""
+            },
+            "geohub_identifier": "historic-aqueduct"
+        },
+        "14": {
+            "source_title": {
+                "it": "Albergo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "39": {
+            "source_title": {
+                "it": "Area Sosta"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "105": {
+            "source_title": {
+                "it": "arrampicata"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "climbing-crag"
+        },
+        "75": {
+            "source_title": {
+                "it": "Arrivo tappa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "arrival"
+        },
+        "80": {
+            "source_title": {
+                "it": "arrivo variante"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "arrival"
+        },
+        "32": {
+            "source_title": {
+                "it": "B&amp;B"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "b-and-b"
+        },
+        "13": {
+            "source_title": {
+                "it": "Bar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bar"
+        },
+        "21": {
+            "source_title": {
+                "it": "Bivacco"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bivacco"
+        },
+        "10": {
+            "source_title": {
+                "it": "Bivio-incrocio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "crossroads"
+        },
+        "26": {
+            "source_title": {
+                "it": "Camping"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "camping"
+        },
+        "103": {
+            "source_title": {
+                "it": "campo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "leisure-pitch"
+        },
+        "92": {
+            "source_title": {
+                "it": "cascata"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "waterway-waterfall"
+        },
+        "102": {
+            "source_title": {
+                "it": "cimitero"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cemetery"
+        },
+        "25": {
+            "source_title": {
+                "it": "Confuenza sul crinale"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "crossroads"
+        },
+        "82": {
+            "source_title": {
+                "it": "Croce segnavia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "information-guidepost"
+        },
+        "95": {
+            "source_title": {
+                "it": "diga"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "waterway-dam"
+        },
+        "70": {
+            "source_title": {
+                "it": "Dormire"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "72": {
+            "source_title": {
+                "it": "Escursionismo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "42": {
+            "source_title": {
+                "it": "Fermata Bus"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highway-bus_stop"
+        },
+        "17": {
+            "source_title": {
+                "it": "Fonte acqua"
+            },
+            "source_description": {
+                "it": "Fonte acqua"
+            },
+            "geohub_identifier": "fountain"
+        },
+        "96": {
+            "source_title": {
+                "it": "foresta"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-wood "
+        },
+        "93": {
+            "source_title": {
+                "it": "grotta speleologica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-cave_entrance"
+        },
+        "30": {
+            "source_title": {
+                "it": "Informazioni Turistiche"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tourist-information"
+        },
+        "83": {
+            "source_title": {
+                "it": "Lago-fiume"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "water-lake"
+        },
+        "88": {
+            "source_title": {
+                "it": "Linea elettrica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "power-line"
+        },
+        "77": {
+            "source_title": {
+                "it": "Localita"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-locality"
+        },
+        "34": {
+            "source_title": {
+                "it": "Locanda"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "86": {
+            "source_title": {
+                "it": "Monastero"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "amenity-monastery"
+        },
+        "78": {
+            "source_title": {
+                "it": "Monumento storico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-monument"
+        },
+        "104": {
+            "source_title": {
+                "it": "mulino"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "man_made=watermill"
+        },
+        "22": {
+            "source_title": {
+                "it": "Natura"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature"
+        },
+        "76": {
+            "source_title": {
+                "it": "Ostello"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "ostello"
+        },
+        "31": {
+            "source_title": {
+                "it": "Paese"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "village"
+        },
+        "37": {
+            "source_title": {
+                "it": "Pannello informativo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "information-panel"
+        },
+        "24": {
+            "source_title": {
+                "it": "Panorama"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "73": {
+            "source_title": {
+                "it": "Partenza tappa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "start"
+        },
+        "79": {
+            "source_title": {
+                "it": "Partenza Variante"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "start"
+        },
+        "41": {
+            "source_title": {
+                "it": "Pensione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "101": {
+            "source_title": {
+                "it": "pista cavalli"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "paddock"
+        },
+        "100": {
+            "source_title": {
+                "it": "Podere"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historic-manor"
+        },
+        "81": {
+            "source_title": {
+                "it": "Poggio"
+            },
+            "source_description": {
+                "it": "tenere distinti i poggi dalle vette"
+            },
+            "geohub_identifier": "natural-hill"
+        },
+        "99": {
+            "source_title": {
+                "it": "ponte"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highway-bridge"
+        },
+        "87": {
+            "source_title": {
+                "it": "Posteggio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "19": {
+            "source_title": {
+                "it": "Religione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "religion"
+        },
+        "11": {
+            "source_title": {
+                "it": "Rifugio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "12": {
+            "source_title": {
+                "it": "Ristorante"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "91": {
+            "source_title": {
+                "it": "Ruderi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historic-ruins"
+        },
+        "98": {
+            "source_title": {
+                "it": "sbarra"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "barrier-gate"
+        },
+        "106": {
+            "source_title": {
+                "it": "seccatoio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "squeegee"
+        },
+        "33": {
+            "source_title": {
+                "it": "Spartiacque Appenninico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-saddle"
+        },
+        "43": {
+            "source_title": {
+                "it": "Stazione ferroviaria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "train-station"
+        },
+        "16": {
+            "source_title": {
+                "it": "Storia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "history-and-culture"
+        },
+        "97": {
+            "source_title": {
+                "it": "Uliveto"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "trees-olive"
+        },
+        "15": {
+            "source_title": {
+                "it": "Valico-passo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-saddle"
+        },
+        "18": {
+            "source_title": {
+                "it": "Vetta"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-peak"
+        },
+        "94": {
+            "source_title": {
+                "it": "viadotti"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highway-bridge"
+        }
+    },
+    "activity": {
+        "9": {
+            "source_title": {
+                "it": "A piedi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        }
+    }
+}

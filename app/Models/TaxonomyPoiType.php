@@ -87,6 +87,7 @@ class TaxonomyPoiType extends Model {
         $data['id'] = $json['id'];
         $data['name'] = $json['name'];
         $data['description'] = $json['description'];
+        $data['color'] = $json['color'];
 
         return $data;
     }
