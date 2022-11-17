@@ -325,7 +325,7 @@ class EcPoi extends Model
     }
     private function getValuesOfMorphToMany($relation, $slug): array
     {
-        return $relation->get(['identifier', 'name', 'id', 'icon'])->map(function ($item)  use ($slug) {
+        return $relation->get(['identifier', 'name', 'id', 'icon', 'color'])->map(function ($item)  use ($slug) {
             unset($item['pivot']);
             $item['identifier'] = $slug . "_" . $item['identifier'];
             return $item;
