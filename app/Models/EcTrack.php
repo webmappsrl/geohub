@@ -472,7 +472,7 @@ class EcTrack extends Model
 
     private function _isRoundtrip(array $coords): bool
     {
-        $treshold = 0.02;
+        $treshold = 0.001; // diff < 300 metri ref trackid:1592
         $len = count($coords);
         $firstCoord = $coords[0];
         $lastCoord = $coords[$len - 1];
