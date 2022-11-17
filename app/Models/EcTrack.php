@@ -432,6 +432,7 @@ class EcTrack extends Model
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
+            $feature["properties"]["roundtrip"] = $this->_isRoundtrip($feature["geometry"]["coordinates"]);
             $slope = json_decode($this->slope, true);
             if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
                 foreach ($slope as $key => $value) {
@@ -467,6 +468,19 @@ class EcTrack extends Model
         }
 
         return $geojson;
+    }
+
+    private function _isRoundtrip(array $coords): bool
+    {
+        $treshold = 0.02;
+        $len = count($coords);
+        $firstCoord = $coords[0];
+        $lastCoord = $coords[$len - 1];
+        $firstX = $firstCoord[0];
+        $lastX = $lastCoord[0];
+        $firstY = $firstCoord[1];
+        $lastY = $lastCoord[1];
+        return (abs($lastX - $firstX) < $treshold) && (abs($lastY - $firstY) < $treshold);
     }
 
     /**
