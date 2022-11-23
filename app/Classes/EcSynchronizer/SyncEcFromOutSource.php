@@ -449,6 +449,11 @@ class SyncEcFromOutSource
                                     $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                 }
                             }
+                        } else if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                            $geohub_w = TaxonomyPoiType::where('identifier',$out_source->tags['poi_type'])->first();
+                            if ($geohub_w && !is_null($geohub_w)) { 
+                                $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
+                            }
                         } else {
                             $path = parse_url($this->endpoint);
                             $file_name = str_replace('.','-',$path['host']);
