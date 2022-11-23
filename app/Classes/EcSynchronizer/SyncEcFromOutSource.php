@@ -299,17 +299,31 @@ class SyncEcFromOutSource
                 // Create Track
                 Log::info('Creating EC Track from OSF with id: '.$id);
                 try{
-                    $ec_track = EcTrack::updateOrCreate(
-                        [
-                            'user_id' => $this->author_id,
-                            'out_source_feature_id' => $id,
-                        ],
-                        [
-                            'name' => $this->generateName($out_source),
-                            'not_accessible' => false,
-                            'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
-                        ]
-                    );
+                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                        $ec_track = EcTrack::updateOrCreate(
+                            [
+                                'user_id' => $this->author_id,
+                                'out_source_feature_id' => $id,
+                            ],
+                            [
+                                'name' => $this->generateName($out_source),
+                                'not_accessible' => false,
+                                'geometry' => DB::raw("(ST_Force3D(ST_LineMerge('$out_source->geometry')))"),
+                            ]
+                        );
+                    } else {
+                        $ec_track = EcTrack::updateOrCreate(
+                            [
+                                'user_id' => $this->author_id,
+                                'out_source_feature_id' => $id,
+                            ],
+                            [
+                                'name' => $this->generateName($out_source),
+                                'not_accessible' => false,
+                                'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
+                            ]
+                        );
+                    }
                     
                     // Attach Activities to track
                     Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
@@ -448,6 +462,11 @@ class SyncEcFromOutSource
                                 if ($geohub_w && !is_null($geohub_w)) { 
                                     $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                 }
+                            }
+                        } else if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                            $geohub_w = TaxonomyPoiType::where('identifier',$out_source->tags['poi_type'])->first();
+                            if ($geohub_w && !is_null($geohub_w)) { 
+                                $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
                             }
                         } else {
                             $path = parse_url($this->endpoint);
@@ -600,6 +619,12 @@ class SyncEcFromOutSource
                 foreach ($error_not_created as $id) {
                     Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
                     Log::info('https://osm2cai.cai.it/resources/hiking-routes/'. $id);
+                }
+            } else if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                Log::channel('euma')->info($this->endpoint);
+                foreach ($error_not_created as $id) {
+                    Log::channel('euma')->info('https://prod.eumadb.webmapp.it/resources/trails/'. $id);
+                    Log::info('https://prod.eumadb.webmapp.it/resources/trails/'. $id);
                 }
             } else {
                 foreach ($error_not_created as $id) {
