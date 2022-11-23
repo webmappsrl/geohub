@@ -353,10 +353,14 @@ class App extends Model
         $this->config_update_jido_time();
     }
 
-    public function GenerateConfigPois()
+    public function GenerateAppConfig()
+    {
+        $this->BuildConfJson();
+    }
+
+    public function GenerateAppPois()
     {
         $this->BuildPoisGeojson();
-        $this->BuildConfJson();
     }
 
     public function config_update_jido_time()

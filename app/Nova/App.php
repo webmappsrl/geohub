@@ -5,7 +5,8 @@ namespace App\Nova;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
-use App\Nova\Actions\GenerateConfigPoisAction;
+use App\Nova\Actions\GenerateAppConfigAction;
+use App\Nova\Actions\GenerateAppPoisAction;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -843,16 +844,19 @@ class App extends Resource
         return [
             (new elasticIndex())->canSee(function ($request) {
                 return true;
-            })
-                ->canRun(function ($request, $zone) {
+            })->canRun(function ($request, $zone) {
                     return true;
-                }),
-            (new GenerateConfigPoisAction())->canSee(function ($request) {
+            }),
+            (new GenerateAppConfigAction())->canSee(function ($request) {
                 return true;
-            })
-                ->canRun(function ($request, $zone) {
+            })->canRun(function ($request, $zone) {
                     return true;
-                }),
+            }),
+            (new GenerateAppPoisAction())->canSee(function ($request) {
+                return true;
+            })->canRun(function ($request, $zone) {
+                    return true;
+            }),
         ];
     }
 }

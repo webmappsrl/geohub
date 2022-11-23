@@ -9,14 +9,13 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
-class GenerateConfigPoisAction extends Action
+class GenerateAppPoisAction extends Action
 {
     use InteractsWithQueue, Queueable;
 
-
     public function name(): string
     {
-        return __("Generate Config/Pois");
+        return __("Generate Pois");
     }
 
     /**
@@ -29,7 +28,7 @@ class GenerateConfigPoisAction extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->GenerateConfigPois();
+            $model->GenerateAppPois();
         }
 
         return Action::message('job executed');

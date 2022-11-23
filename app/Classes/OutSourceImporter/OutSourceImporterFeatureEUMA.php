@@ -71,7 +71,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
         }
         if (strpos($this->endpoint,'climbingrockarea')) {
             $url = 'https://prod.eumadb.webmapp.it/api/v1/climbingrockarea/geojson/'.$this->source_id;
-            $this->poi_type = 'cliff';
+            $this->poi_type = 'climbing-crag';
 
         }
         $poi = $this->curlRequest($url);
@@ -127,7 +127,6 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function prepareTrackTagsJson($track){
-        $domain_path = parse_url($this->endpoint);
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track['properties']['name'])){
             $trackname = html_entity_decode($track['properties']['name']);
@@ -135,11 +134,6 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
             $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
         }
         $this->tags['name']['it'] = $trackname;
-
-
-        // Processing the activity
-        Log::info('Preparing OSF Track ACTIVITY MAPPING with external ID: '.$this->source_id);
-        $this->tags['activity'][] = 'hiking';
     }
     
     /**
