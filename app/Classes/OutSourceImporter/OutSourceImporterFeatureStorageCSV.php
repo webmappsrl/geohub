@@ -104,6 +104,8 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
         $this->tags['name']['it'] = $poi['name'];
 
         // Adding POI parameters of general info
+        if (isset($poi['description']) && $poi['description'])
+            $this->tags['description'] = $poi['description'];
         if (isset($poi['address_complete']) && $poi['address_complete'])
             $this->tags['address_complete'] = $poi['address_complete'];
         if (isset($poi['contact_phone']) && $poi['contact_phone'])
