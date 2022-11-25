@@ -1,4 +1,4 @@
-id,last_modified,code,poy_type,name,description,address_complete,lat,lon,capacity,contact_phone,contact_email,related_url
+id,last_modified,code,poi_type,name,description,address_complete,lat,lon,capacity,contact_phone,contact_email,related_url
 1-3,24/11/2022,1-3,"alpine-hut,restaurant",Rifugio Ca' Silvestro,rifugio ben attrezzato con camere e ristorante,"Via Giardini, 2/a, 41022, Fiumalbo MO",44.18633750111002,10.644349501749263,25,+39 338 6717221,rifugiocasilvestro@gmail.com ,http://www.parchiemiliacentrale.it/parco.frignano/centri-visita-dettaglio.php?id=300
 1-1,24/11/2022,1-1,religion,Chiesa di San Bartolomeo,Chiesa del patrono della Via e di Fiumalbo,"Piazza Umberto Primo, 41022, Fiumalbo MO",44.1798246598111,10.64761325187001,,+39 0536 73278,,https://www.Chiesamodenanonantola.it/wd-annuario-enti/parrocchia-s-bartolomeo-apostolo-fiumalbo-306/
 1-4,24/11/2022,1-4,"hotel,restaurant",Hotel Appennino,ospitalità commerciale,"Piazza Iolanda , 21, 41022, Fiumalbo MO",44.17912328171558,10.647279620122625,,"+39 0536 73124,+39 329 2342757",info@hotelappennino.com  ,www.hotelappennino.com
