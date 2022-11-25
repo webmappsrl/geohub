@@ -68,12 +68,14 @@ class SyncECTagsFromOSFCommand extends Command
             if ($out_source) {
                 $thistag = $this->tag;
                 if (empty($feature->$thistag)) {
-                    if (isset($out_source->tag[$thistag])) {
+                    if (isset($out_source->tags[$thistag])) {
                         $feature->$thistag = $out_source->tags[$this->tag];
                         $feature->save();
                         return true;
                     }
+                    return false;
                 }
+                return false;
             }
         } else {
             if ($out_source) {
