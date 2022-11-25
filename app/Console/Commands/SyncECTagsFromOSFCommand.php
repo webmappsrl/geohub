@@ -81,7 +81,7 @@ class SyncECTagsFromOSFCommand extends Command
             if ($out_source) {
                 if (empty($feature->description)) {
                     if (isset($out_source->tags['description']))
-                        $feature->description = $out_source->tags['description'];
+                        $feature->description['it'] = $out_source->tags['description'];
                 }
                 if (empty($feature->addr_locality)) {
                     if (isset($out_source->tags['addr_city']))
