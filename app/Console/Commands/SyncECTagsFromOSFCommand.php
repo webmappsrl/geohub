@@ -66,10 +66,13 @@ class SyncECTagsFromOSFCommand extends Command
         $out_source = OutSourceFeature::find($feature->out_source_feature_id);
         if ($this->tag != 'all') {
             if ($out_source) {
-                if (empty($feature->description)) {
-                    $feature->description = $out_source->tags[$this->tag];
-                    $feature->save();
-                    return true;
+                $thistag = $this->tag;
+                if (empty($feature->$thistag)) {
+                    if (isset($out_source->tag[$thistag])) {
+                        $feature->$thistag = $out_source->tags[$this->tag];
+                        $feature->save();
+                        return true;
+                    }
                 }
             }
         } else {
