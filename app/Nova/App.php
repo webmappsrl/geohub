@@ -512,7 +512,11 @@ class App extends Resource
                 }
                 return 'No Themes';
             })->onlyOnDetail(),
-        ];
+            Text::make('Download GeoJSON collection', function () {
+                $url = url('/api/v1/app/'.$this->id.'/pois.geojson');
+                return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>';
+            })->asHtml()->onlyOnDetail(),
+        ]; 
     }
 
     protected function auth_tab(): array
