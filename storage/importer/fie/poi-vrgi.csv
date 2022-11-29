@@ -1,0 +1,173 @@
+id,last_modified,code,poi_type,name,description,address_complete,lat,lon,capacity,contact_phone,contact_email,related_url
+1-3,24/11/2022,1-3,"alpine-hut,restaurant",Rifugio Ca' Silvestro,rifugio ben attrezzato con camere e ristorante,"Via Giardini, 2/a, 41022, Fiumalbo MO",44.18633750111002,10.644349501749263,25,+39 338 6717221,rifugiocasilvestro@gmail.com ,http://www.parchiemiliacentrale.it/parco.frignano/centri-visita-dettaglio.php?id=300
+1-1,24/11/2022,1-1,religion,Chiesa di San Bartolomeo,Chiesa del patrono della Via e di Fiumalbo,"Piazza Umberto Primo, 41022, Fiumalbo MO",44.1798246598111,10.64761325187001,,+39 0536 73278,,https://www.Chiesamodenanonantola.it/wd-annuario-enti/parrocchia-s-bartolomeo-apostolo-fiumalbo-306/
+1-4,24/11/2022,1-4,"hotel,restaurant",Hotel Appennino,ospitalità commerciale,"Piazza Iolanda , 21, 41022, Fiumalbo MO",44.17912328171558,10.647279620122625,,"+39 0536 73124,+39 329 2342757",info@hotelappennino.com  ,www.hotelappennino.com
+1-2,24/11/2022,1-2,"hotel,restaurant",Albergo Il Laghetto,ospitalità commerciale  + trasporto persone/zaino,"Via Versurone, 205, 41022, Fiumalbo MO",44.177150736852134,10.651411303260577,70," + 39 0536 73108,+39 335 6167673",info@hotelillaghetto.it,www.hotelillaghetto.it 
+1-6,24/11/2022,1-6,b-and-b,Abetone b & b,ospitalità,"Via Brennero, 249, 51021, Abetone, Abetone Cutigliano PT",44.1432065850961,10.66586742543635,,"+39 392 510 7443,+39  348 7808465 ",,https://bbAbetone.business.site/
+1-7,24/11/2022,1-7,"hotel,restaurant",Hotel Primula,ospitalità,"Via Brennero, 195, 51021, Abetone, Abetone Cutigliano PT",44.140248924914324,10.67108156933612,40,+39  0573 60108,albergoprimula@Abetone.com,https://www.hotelprimula.com/
+1-8,24/11/2022,1-8,"b-and-b,camping",Bucaneve Camping e B&B,ospitalità,"Via Secchia e del Bicchiere, 103, 51021, Abetone, Abetone Cutigliano PT",44.139396723801504,10.695807064124411,,"+39 0573 607001,+39 333 8341034,+39 339 6049593",campingbucaneve@tiscali.it,www.campingbucaneve.com   
+1-9,24/11/2022,1-9,"b-and-b,restaurant",Lo Scoiattolo,ospitalità,"Via degli Scoiattoli, 102, 51021, Rivoreta, Abetone Cutigliano PT",44.1307784772069,10.71922787684117,,+39 0573 629268,,http://rivoreta-52.laazienda.it/agriturismo-lo-scoiattolo.html/
+1-11,24/11/2022,1-11,"hotel,restaurant",Hotel Miramonte,ospitalità,"Piazza Catilina, 12, 51021, Cutigliano, Abetone Cutigliano PT",44.1009539106919,10.754283457672267,,+39 0573 68012,hotelmiramonte@hotelmiramonte.it,www.hotelmiramonte.it
+1-12,24/11/2022,1-12,"hotel,restaurant",Hotel La Valle ,ospitalità,"Via Carega, 10, 51021, Cutigliano, Abetone Cutigliano PT",44.10047967113995,10.754278684624632,,+39 0573 68035,info@hotellavalle.it,http://www.hotellavalle.it/
+1-14,24/11/2022,1-14,"history-and-culture,amenity-townhall",Palazzo dei Capitani,Municipio ,"Piazza Umberto Primo, 3, 51021, Cutigliano, Abetone Cutigliano PT",44.10010808829817,10.755713169280074,,+39 0573 68881,,
+1-13,24/11/2022,1-13,"religion,ostello",Chiesa di San Bartolomeo,Chiesa patrono Via e Cutigliano - ospitalità donativo,"Via della Libertà, 51021, Cutigliano, Abetone Cutigliano PT",44.098815454839446,10.756596113229403,6,+ 39 0573 68022,,
+1-5,24/11/2022,1-5,viewpoint,Panorama Monte Cimone e Fiumalbo,panorama,"41022, Fiumalbo MO",44.08588,10.38060,,,,
+1-10,24/11/2022,1-10,viewpoint,panorama Libro Aperto,panorama,"51021, Borello, Abetone Cutigliano PT",44.06454,10.44927,,,,
+2-17,24/11/2022,2-17,village,San Marcello Pistoiese,località turistica,"Via Roma, 51028, San Marcello Pistoiese, San Marcello Piteglio PT",44.05726421596896,10.793539096708436,,+39 0573 991532,montagna@obiettivopistoia.it,https://tuscanymountain.it/
+2-22,24/11/2022,2-22,"museum,history-and-culture",Ecomuseo della Montagna Pistoiese Gavinana,"Archivio sonoro tradizioni orali, museo dell'emigrazione","Piazza Achilli, 7, 51028, Gavinana, San Marcello Piteglio PT",44.0565307913102,10.820973712365186,,+39 800974102,ecomuseopt@gmail.com,http://www.ecomuseopt.it/itinerari/palazzo-achilli/
+2-26,24/11/2022,2-26,hotel,Hotel Giardini Villa Ada,ospitalità,"Porta Apiciana, 281, 51028, Gavinana, San Marcello Piteglio PT",44.0553103999699,10.823992598114772,,+39 0573 62232,info@hotelgiardini.it,
+2-25,24/11/2022,2-25,hotel,Albergo Il Poggiolo,ospitalità,"Via del Poggiolo, 52, 51030, San Marcello Pistoiese                  , San Marcello Piteglio PT",44.05511620002054,10.790408840442492,,+39  0573 630153,albergoilpoggiolo@gmail.com ,www.albergoilpoggiolo.it
+2-18,24/11/2022,2-18,village,Gavinana,"località storica, battaglia Francesco Ferrucci","51028, Gavinana, San Marcello Piteglio PT",44.054126901359005,10.822364214079203,,,,
+2-20,24/11/2022,2-20,village,Maresca,"località turistica, cippo a ricordo segnaVia CAI",,44.051687867306185,10.849617468247622,,,,
+2-16,24/11/2022,2-16,"viewpoint,history-and-culture",Ciotolato Sambuca,tratto su basolato medievale,,44.04380,10.46898,,,,
+2-19,24/11/2022,2-19,"viewpoint,history-and-culture",Ciotolato Sambuca,tratto su basolato medievale,,44.04380,10.46898,,,,
+2-23,24/11/2022,2-23,"museum,history-and-culture",Ecomuseo della Montagna Pistoiese Pontepetri,Sentiero del ferro,"Via Morelli Gualtierotti, 30A, 51029, Pontepetri, San Marcello Piteglio PT",44.039082361505855,10.882875524181943,,+39 800 974102,ecomuseopt@gmail.com,http://www.ecomuseopt.it/
+2-21,24/11/2022,2-21,"museum,history-and-culture",Museo e Rifugi S.M.I. ,"Ex fabbrica munizioni, rifugi epoca bellica","Viale L. Orlando, 325, 51028, Campo Tizzoro, San Marcello Piteglio PT",44.038465867745536,10.86530534044194,,+39 0573 65724,rifugismi@irsap.it,https://www.irsapt.it/it/smi/
+2-24,24/11/2022,2-24,"museum,history-and-culture",Ecomuseo della Montagna Pistoiese Pontepetri,Sentiero della ghiacciaia,"Via la Piana - SR 66, 69, 51028, Pontepetri, San Marcello Piteglio PT",44.03739494293183,10.885040512093036,,,,
+2-28,24/11/2022,2-28,locanda,Locanda Le Panche,ospitalità,"Via Modenese, 758, 51100, Pontepetri, San Marcello Piteglio PT",44.032875038856275,10.875594717435986,,+39 328 3888687,gmgholidays@gmail.com,www.locandalepanche.com
+2-27,24/11/2022,2-27,ostello,Affittacamere La Ferriera,ospitalità,"Ponte Petri, 51028, Pontepetri, San Marcello Piteglio PT",44.02338,10.52980,,+39 333 5765618,,
+4-44,24/11/2022,4-44,"religion,history-and-culture",Chiesa Di San Bartolomeo,"Abbazia di San Bartolomeo ""imn Pantano"" VIII sec DC","Piazza S. Bartolomeo, 11, 51100, Pistoia PT",43.94136,10.920153,,,,http://www.parrocchiasanbartolomeo.it/
+4-51,24/11/2022,4-51,"religion,history-and-culture",Tabernacolo delle Sei Arcole,,"Via delle Sei Arcole, 51100, Pistoia PT",43.94098,10.94212,,,,
+4-66,24/11/2022,4-66,"hotel,restaurant",Il Cochino,Albergo,"Via Fratelli Masini, 15, 51037, Montale PT",43.936011583775226,11.015994635015433,,+39 0573 959280,il.cocchino@tiscalinet.it,
+4-59,24/11/2022,4-59,"religion,history-and-culture",San Giovanni Evangelista,,"Piazza Giacomo Matteotti, 19, 51037, Montale PT",43.93552410052537,11.016304584404889,,+39 0573 55116,,
+4-62,24/11/2022,4-62,amenity-taxi,Taxi,Taxi Montale,"51037, Montale PT",43.93502,11.021672,,+39 0573 1797,,
+4-57,24/11/2022,4-57,village,Montale,,"51037, Montale PT",43.9350,11.02167,,,,
+4-52,24/11/2022,4-52,b-and-b,Relais Buonfanti,B&B camere,"Via Buonfanti , 28, 51100, Pistoia PT",43.93499149721536,10.919612669274795,,"+39 0573 34941,+39 3333837871,+39 329 2320217",info@relaisbuonfanti,
+4-58,24/11/2022,4-58,amenity-townhall,Comune di Montale,,"Via Antonio Gramsci, 19, 51037, Montale PT",43.934916045165444,11.021674326733127,,+39 0573 9521,,https://www.comune.montale.pt.it/home
+4-53,24/11/2022,4-53,b-and-b,Locanda dei Fiori,B&B camere,"Via Porta San Marco, 18, 51100, Pistoia PT",43.93490841908060,10.920522666221439,,"+39 0573 358211,+39 324 5544113",info@locandadefiori.it,www.locandadefiori.it
+4-67,24/11/2022,4-67,locanda,La Rotonda,Locanda,"Via IV Novembre, 90, 51037, Montale PT",43.93483438834635,11.003155897897205,,"+39 0573 55342,+39 340 5471736",info@locandalarotonda.com,
+4-63,24/11/2022,4-63,highway-bus-stop,BUS,"fermate BUS per info, Autolinee Toscane","Stradaprovinciale N 7, 51037, Montale PT",43.93479560000001,11.01572469775033,,+39 0573 363243,,
+4-76,24/11/2022,4-76,history-and-culture,Villa del Barone,,"Via Baronese, 46, 59013, Montemurlo PO",43.934592319,11.06722830,,,,
+4-64,24/11/2022,4-64,amenity-hospital,Croce d'Oro,Ambullanze,"Via Enzo Nesti, 2, 51037, Montale PT",43.93450612952328,11.011219293929168,,+39 0573 55251,,
+4-65,24/11/2022,4-65,amenity-hospital,Arciconfraternita della Misericordia,Ambulanzee Studi Medici,"Via Martin Luther King, 13, 51037, Montale PT",43.9344589104372,11.020746794461774,,+39 0573 959591,,
+4-60,24/11/2022,4-60,history-and-culture,Abbadia San Salvatore in Agna,Edificio di epoca longobarda,"Via Giovanni Boccaccio, 20, 51037, Montale PT",43.93431281511509,11.023599297897242,,,,
+4-55,24/11/2022,4-55,"religion,history-and-culture",Cattedrale di San Zeno,Duomo,"Piazza del Duomo , 51100, Pistoia PT",43.93373179497,10.917359619,,,,
+4-56,24/11/2022,4-56,"religion,history-and-culture",Battistero,,"Piazza del Duomo , 51100, Pistoia PT",43.93373179497,10.91735962,,,,
+4-45,24/11/2022,4-45,amenity-townhall,Comune di Pistoia,Municipio,"Piazza del Duomo , 1, 51100, Pistoia PT",43.93373179496869,10.917359618915349,,+39 0573 3711,,
+4-49,24/11/2022,4-49,tourist-information,IAT Ufficio Turistico,Ufficio Turistico Pistoia,"Piazza del Duomo , 1, 51100, Pistoia PT",43.93373179496869,10.917359618915349,,+39 0573 21622,,
+4-54,24/11/2022,4-54,b-and-b,Canto alla Porta Vecchia,B&B camere,"Via Curtatone e Montanara, 2, 51100, Pistoia PT",43.93331327989524,10.915668409930587,,"+39 0573 27692,+39 3332266218",cantoallaportavecchia@gmail.com,
+4-61,24/11/2022,4-61,history-and-culture,Villa Castello di Smilea,villa Fortificata,"Via Giuseppe Garibaldi, 51037, Montale PT",43.930895585768496,11.022937228584214,,,,
+4-48,24/11/2022,4-48,amenity-taxi,Taxi Amico,Servizio Taxi Pistoia,"Francesco Guicciardini, 4, 51100, Pistoia PT",43.92941943079743,10.922698807316884,,+39 0573 1797,,
+4-74,24/11/2022,4-74,b-and-b,Borgo della Rocca,Bed & Breakfast,"Via della Rocca, 24, 59013, Montemurlo PO",43.92880566,11.04613171,,+39 327 9944507,info@borgodellarocca.it,
+4-75,24/11/2022,4-75,history-and-culture,Castello di Montemurlo,,"Via Nino Bixio, 59013, Castello, Montemurlo PO",43.92878614,11.0448215,,,,
+4-50,24/11/2022,4-50,train-station,Stazione Ferroviaria,Stazione FS Pistoia,"Piazza Dante, 51100, Pistoia PT",43.9271731,10.91428975,,,,
+4-46,24/11/2022,4-46,highway-bus-stop,BUS Autolinee Toscane,Terminal e Biglietteria BUS,"Piazza Dante, 51100, Pistoia PT",43.92717308,10.9142897,,+39 0573 363243,,
+4-72,24/11/2022,4-72,village,Montemurlo,,"59013, Montemurlo PO",43.9250166, 11.04061417,,,,
+4-73,24/11/2022,4-73,amenity-townhall,Comune di Montemurlo,,"Via Montalese, 472, 59013, Montemurlo PO",43.9250166, 11.04061417,,,,
+4-68,24/11/2022,4-68,village,Agliana,,"51031, Agliana PT",43.9028905,11.00663176,,,,
+4-70,24/11/2022,4-70,amenity-townhall,Comune di Agliana,,"Piazza della Resistenza , 2, 51031, Agliana PT",43.9028905,11.00663176,,,,
+4-69,24/11/2022,4-69,highway-bus-stop,BUS,"fermate BUS, per info, Autolinee Toscane","Via Magni Magnino , 23, 51031, Agliana PT",43.9028166,11.00607305,,+39 0573 363243,,
+4-84,24/11/2022,4-84,"ostello,religion,history-and-culture",Monastero di San Leonardo,"Fraternita di San leonardo al Palco, Accoglienza Donativo","Via del Palco, 229, 59100, Prato PO",43.896117,11.10977797,,+39 377 1253268,info@sanleonardoprato.it,
+4-77,24/11/2022,4-77,village,Prato,,"Via Lorenzo da Prato, 15, 59100, Prato PO",43.8912525,11.075081,,,,
+4-83,24/11/2022,4-83,amenity-townhall,Comune di Prato,,"Via Lorenzo da Prato, 20, 59100, Prato PO",43.8912525,11.075081,,800 0588850,,
+4-82,24/11/2022,4-82,amenity-hospital,Ospedale,Ospedale Prato,"Via Suor Niccolina Infermiera, 20, 59100, Prato PO",43.8911155,11.063816,,+39 0574 801111,,
+4-80,24/11/2022,4-80,train-station,Prato Porta al Serraglio,Stazione FS,"Via Felice Cavallotti, 1, 59100, Prato PO",43.884624018,11.09829866,,,,
+4-86,24/11/2022,4-86,ostello,Magnolfi Nuovo,Ostello,"Via P. Gobetti, 79, 59100, Prato PO",43.88294940,11.1054591,,+39 0574442906,info@magnolfinuovo.it,www.ostellomagnolfi.it
+5-91,24/11/2022,5-91,religion,San Bartolomeo,"Chiesa ricostruita sul convenyo del Carmine, distrutto per eventi bellici","Via del Carmine, 20, 59100, Prato PO",43.88191810962112,11.101244688511818,,,,
+4-87,24/11/2022,4-87,hotel,Flora,Hotel,"Via Cairoli, 31, 59100, Prato PO",43.8801069, 11.09809877,,+39 0574 33521,,
+4-85,24/11/2022,4-85,"bar,shop-convenience,",Messer Lampredotto,Street Food,"Via Mazzini, 4, 59100, Prato PO",43.879338646,11.0995670,,+39 0574 605033,,
+4-79,24/11/2022,4-79,train-station,Prato Centrale,Stazione FS ,"Piazza Stazione Centrale, 59100, Prato PO",43.87917997, 11.108942,,,,
+4-81,24/11/2022,4-81,highway-bus-stop,BUS,Fermate Bus Prato,"Piazza Stazione Centrale, 4, 59100, Prato PO",43.8791793,11.108770,,,,https://www.at-bus.it/it/
+5-99,24/11/2022,5-99,religion,San Lorenzo a Pizzidimonte,Chiesa,"Via Baccio Bandinelli, 32, 59100, Prato PO",43.86769027658327,11.143497453928088,,+39 0574 592802,,
+5-94,24/11/2022,5-94,amenity-townhall,Municipio di Calenzano,,"Piazza Vittorio Veneto, 12, 50041, Calenzano FI",43.86551171374238,11.168137900828402,,,,
+5-88,24/11/2022,5-88,history-and-culture,Cementizia Marchino,Archeologia industriale,"Via Poggio Castiglioni, 59100, Prato PO",43.86548102193475,11.131596015344538,,,,
+5-89,24/11/2022,5-89,village,Calenzano,Comune di Calenzano,"Piazza Vittorio Veneto, 12, 50041, Calenzano FI",43.8653419827803,11.167256069084427,,+39 055 88331,calenzano.protocollo@postacert.toscana.it,https://www.comune.calenzano.fi.it/node/383
+5-90,24/11/2022,5-90,museum,Museo del Figurino Storico,,"Via del Castello, 7, 50041, Calenzano FI",43.86378857414382,11.16823953068907,,+39 055 0500234,museofigurinostorico@atccalenzano.it,https://www.museofigurinostorico.it/
+5-93,24/11/2022,5-93,history-and-culturevillage,Calenzano Alto,Borgo Medievoale,"Via del Castello, 50041, Calenzano FI",43.86338900163614,11.161197646033605,,,,
+5-92,24/11/2022,5-92,history-and-culture,Villa Peragallo,Interesssante il Parco,"Via del Castello, 48, 50041, Calenzano FI",43.86292178558096,11.157925313264984,,,,
+4-47,24/11/2022,4-47,amenity-hospital,Ospedale San Jacopo,Ospedale di Pistoia,"Via Ciliegiole, 97, 51100, Pistoia PT",43.86191964439702,11.09010898263693,,+39 0573 3521,,
+4-71,24/11/2022,4-71,history-and-culture,Gonfienti,Scavi archeologici etruschi,"Via Interporto nella città degli Etruschi, 59100, Prato PO",43.85742,11.13164,,,,
+4-78,24/11/2022,4-78,amenity-taxi,Taxi COTRAPRA,Cooperativa Tassisti,"Via Filipppo Brunelleschi, 20, 59100, Prato PO",43.846391668,11.1204144268,,+39 0574 5656,,
+5-95,24/11/2022,5-95,village,Querceto,Antico Borgo,"50019, Sesto Fiorentino FI",43.84425114782173,11.198446604756919,,,,
+5-96,24/11/2022,5-96,history-and-culture,Villa Ginori,Villa del XVII secolo,"Va Doccia, 38-46, 50019, Doccia, Sesto Fiorentino FI",43.83934887450271,11.215411353204493,,,,
+5-107,24/11/2022,5-107,history-and-culture,Proloco Sesto Fiorentino,,"Via G. Veronelli, 2, 50019, Sesto Fiorentino FI",43.835088791934666,11.207850468476598,,"+39 3313447457,+39 3317561566",prolocosesto@gmail.com,https://www.prolocosestofiorentino.it/
+5-106,24/11/2022,5-106,amenity-townhall,Comune di Sestro Fiorentino,,"Piazza Vittorio Veneto, 1, 50019, Sesto Fiorentino FI",43.83228121269588,11.198553928261045,,+39 055055,,http://www.comune.sesto-fiorentino.fi.it/it
+5-98,24/11/2022,5-98,history-and-culture,Villa Reale,Villa Medicea sede Accademia della Crusca,"Via di Castello, 46, 50141, Castello, Firenze FI",43.819691284680935,11.228246326035732,,+39 055 452691,,https://accademiadellacrusca.it/
+5-100,24/11/2022,5-100,"history-and-culture,museum",Villa La Quiete,Convento delle Suore Montalve e Polo Museale Ateneo di Firenze,"Via Boldrone, 2, 50141, Firenze FI",43.81425958478052,11.242222253970127,,+39 055 2756444,,
+5-101,24/11/2022,5-101,amenity-hospital,Ospesale di Careggi,Ospedale,"Largo Palagi, 50139, Firenze FI",43.803383975932555,11.24762071016498,,,,
+5-102,24/11/2022,5-102,highway-bus-stop,Capolinea Tramvia,Capolinea Linea1 Tramvia di Firenze per centro storico,"Largo Palagi, 50139, Firenze FI",43.80323119228471,11.246629606950183,,,,
+5-103,24/11/2022,5-103,village,Artimino,Frazione di Carmignano,"59015, Artimino PO",43.78323790204841,11.035523999849095,,,,
+5-97,24/11/2022,5-97,"religion,history-and-culture",San Jacopo,"Chiesa con ""Cristo Miracoloso""","Via Benedetto Marcello, 24, 50144, Castello, Firenze FI",43.782338260169254,11.239476226218347,,+39 055 354600,,https://www.sanjacopino.it/
+5-104,24/11/2022,5-104,history-and-culture,Villa La Ferdinanda,"Villa Medicea, Tenuta di Artimino","Viale Papa Giovanni XXIII, 1, 59015, Artimino PO",43.78197402891996,11.044340692336531,,+39 0558751426,,
+6-120,24/11/2022,6-120,religion,Badia di San Benedetto,Badia Millenaria,"Piazza della Badia, Bagno a Ripoli Firenze",43.7554666667,11.2993333333,,,,https://it.wikipedia.org/wiki/Abbazia_di_San_Bartolomeo_a_Ripoli
+6-121,24/11/2022,6-121,religion,Pieve di San Pietro,Pieve romanica,"Via Roma , 16, Bagno a Ripoli Firenze",43.7538,11.30975,,,,https://it.wikipedia.org/wiki/Pieve_di_San_Pietro_(Bagno_a_Ripoli)
+5-105,24/11/2022,5-105,history-and-culture,Villa Capponi,Villa storica,"Via del Pian dei Giullari, 3, 50125, Firenze FI",43.75280558711541,11.253658623294916,,+39 055.0162537,forbes@buildingheritage.it,https://www.villa-capponi.com/it/
+6-109,24/11/2022,6-109,shop-convenience,Antica Macelleria Tarchi,"Carni, salumi e preparazioni già pronte","Via Roma , 389, Bagno a Ripoli Firenze",43.7465833333,11.3375,,055-633689,,
+6-108,24/11/2022,6-108,bar ,Bar Gianni,Colazioni e pranzi veloci,"Via Roma , 290, Bagno a Ripoli Firenze",43.7463666667,11.3377,,055-698218,,
+6-110,24/11/2022,6-110,ostello,Il Bigallo,Ostello storico,"Via del Bigallo e Apparita, 14, Bagno a Ripoli Firenze",43.7385333333,11.35,,055-630907,,https//www.anticospedalebigallo.it/
+6-111,24/11/2022,6-111,shop-convenience,Alimentari Bittarelli,Alimentari e cibi pronti- Tabacchi,"Via Roma , 468, Osteria Nuova Firenze",43.7298333333,11.346,,055-620700,,
+6-123,24/11/2022,6-123,history-and-culture,Torre a Cona,Villa rinascimentale nata su castello medievale,"Via Fiorentina, Torre a Cona, San Donato in Collina Firenze",43.7256,11.3900666667,,,,https://www.torreacona.com/
+6-122,24/11/2022,6-122,nature,San Lorenzo a Montisoni,Panorama su Firenze,"Via di Montisoni,  Firenze",43.72265,11.3549166667,,,,https://caivaldarnosuperiore.it/la-chiesa-di-san-lorenzo-a-montisoni/
+6-114,24/11/2022,6-114,bar,La Bottega,Bar Tabacchi Alimentari gastronomia,"Via San Donato, 8, San.Donato in Collina Firenze",43.72175,11.4031166667,,055-699008,,
+6-113,24/11/2022,6-113,bar,Circolo S.M.S. San Donato ,Circolo ricreativo con bar,"Via San Donato, 25, San.Donato in Collina Firenze",43.7212,11.383,,055-699250,,
+6-112,24/11/2022,6-112,b-and-b,Villa Il Colle,,"Via di Montisoni, 45, Antella Firenze",43.7206166667,11.3395166667,,055-621822,,https//www.villailcolle.it/
+6-115,24/11/2022,6-115,shop-convenience,Minimarket La Buchetta,Piccolo emporio Tabacchi ricariche telefoniche,"Via Fiorentina, 74/76, Troghi Firenze",43.7136666667,11.3961166667,,055-8307632,,
+6-124,24/11/2022,6-124,history-and-culture,Villa La Chiocciola,Villa rinascimentale,"Via Fiorentina , 105, Cellai Firenze",43.7065666667,11.3341666667,,,,https://www.lachiocciolafirenze.com/
+6-117,24/11/2022,6-117,bar,Circolo ARCI,Circolo ricreativo con bar,"Via Guglielmo Ghiandelli, 1, Cellai Firenze",43.7047666667,11.40315,,055-8307520,,
+6-116,24/11/2022,6-116,b-and-b,La Cucina,,"Strada comunale di S.Quirico, 138, Cellai Firenze",43.7023666667,11.4085166667,,3922757434,,
+6-118,24/11/2022,6-118,camping,Camping Village Il Poggetto,Con ristorante/pizzeria Giovedi-Domenica,"Via Fiorentina, 212, Cellai Firenze",43.7013666667,11.4052166667,,055-8307323,,https//www.campingilpoggetto.com/
+6-125,24/11/2022,6-125,history-and-culture,Villa dei Bagnani,Villa rinascimentale,"Sentiero, Bagnani, Palazzolo Firenze",43.6895,11.4243166667,,,,https://caivaldarnosuperiore.it/la-villa-fattoria-di-bargnani/
+6-119,24/11/2022,6-119,bar,Circolo ARCI Palazzolo,Circolo ricreativo con bar,"Via Di S.Lorenzo a Cappiano , 1, Palazzolo Firenze",43.6887833333,11.4357,,3314787380,,
+7-126,24/11/2022,7-126,locanda,La Bottega del Burchio,Alimentari Ristorante,"Strada Provinciale, 13/A, Il Burchio,  Firenze",43.6792,11.4452,,055-8330631,,
+7-127,24/11/2022,7-127,b-and-b,Il Giglio Bianco,,"Via di San Quirico, 25,  Firenze",43.6785333333,11.4453666667,,,,http://www.casavacanzagigliobianco.com/
+7-130,24/11/2022,7-130,b-and-b,Agriturismo Bellavista,,"Via di Montelfi, 1, Figline Incisa Firenze",43.6660166667,11.4420333333,,055-8335143,,https://www.agriturismobellavista.com/
+7-139,24/11/2022,7-139,religion,Convento dei Santi Cosma e Damiano,Bellissimo convento cinquecentesco,"Via San Francesco d'Assisi, Incisa Valdarno Firenze",43.6554,11.4483333333,,,,https://caivaldarnosuperiore.it/la-chiesa-dei-santi-cosma-e-damiano-al-vivaio-incisa/
+7-129,24/11/2022,7-129,shop-convenience,Supermercato Carrefour,Alimentari cibi pronti,"Via Roma , 25, Incisa Valdarno Firenze",43.65465,11.4504166667,,055-8027685,,
+7-131,24/11/2022,7-131,locanda,Osteria Il Postiglione,Ristorante,"Via P.P.Pasolini, 15, La Massa,  Firenze",43.6439666667,11.4515166667,,055-8335757,,
+7-132,24/11/2022,7-132,shop-convenience,Supermercato Coop,Alimentari cibi pronti,"Via Ungheria, Figline Incisa Firenze",43.6303166667,11.4615333333,,,,
+7-133,24/11/2022,7-133,hotel,Hotel Toscana,Albergo con ristorante,"Via San Biagio, 2, Figline Incisa Firenze",43.62565,11.4628666667,,055-951424,,https://www.albergo-toscana.com/wp/
+7-134,24/11/2022,7-134,b-and-b,Casa Carlo e Ila,Alloggio con possibilità di cena,"Via Aretina, Figline Incisa Firenze",43.6061833333,11.4873,,,,
+7-128,24/11/2022,7-128,religion,Centro Internazionale Loppiano,Ristorante Ostello,"Via di San Vito, 48, Figline Incisa Firenze",43.5830333333,11.4293833333,,055-9051102,,https://www.loppiano.it/
+7-138,24/11/2022,7-138,religion,Santa Maria Teotokos,Una chiesa tutta al femminile,"Via di San Vito, 48, Loppiano Firenze",43.5830333333,11.4293833333,,,,https://caivaldarnosuperiore.it/santuario-di-maria-theotokos-a-loppiano-incisa-in-val-darno/
+8-147,24/11/2022,8-147,hotel,Hotel Valdarno,Albergo,"Via Nello Traquandi, 13/15, Montevarchi Arezzo",43.5714666667,11.5215666667,,055-9103499,,https://www.hotelvaldarno.net/
+7-136,24/11/2022,7-136,locanda,Ristorante Pizzeria Las Vegas,Ristorante,"Lungarno 7 F.lli Cervi, 3, San Giovanni Valdarno Arezzo",43.5710833333,11.5336666667,,055-9122072,,https://www.pizzerialasvegas.it/
+7-135,24/11/2022,7-135,shop-convenience,Supermercato Coop,Alimentari cibi pronti,"Via Napoli, 21, San Giovanni Valdarno Arezzo",43.5681666667,11.52835,,,,
+7-137,24/11/2022,7-137,hotel,Residence San Giovanni,Residence,"Via Mannozzi, 26, San Giovanni Valdarno Arezzo",43.56495,11.5289833333,,055-9110056,,
+7-141,24/11/2022,7-141,history-and-culture,Centro storico di San Giovanni V.,"Una ""città nova"" fiorentina ",San Giovanni Valdarno Arezzo,43.5648166667,11.5306333333,,,,https://www.comunesgv.it/vivere-san-giovanni/il-territorio/cenni-storici/
+7-143,24/11/2022,7-143,history-and-culture,Museo delle Terre Nove,"Le ""Terre Nove"" spiegate a tutti","Palazzo d'Arnolfo di Cambio, San Giovanni Valdarno Arezzo",43.56475,11.5304166667,,,,http://www.museoterrenuove.it/
+7-142,24/11/2022,7-142,history-and-culture,Museo della Basilica,Importante pibacoteca,"Piazza Masaccio, San Giovanni Valdarno Arezzo",43.5644333333,11.5297,,,,https://www.museobasilica.it/
+8-144,24/11/2022,8-144,bar,Bar Alimentari Menchetti,Bar alimentari,"Via Maestri del Lavoro, 2, San Giovanni Valdarno Arezzo",43.5520166667,11.54315,,055-9122463,,
+8-145,24/11/2022,8-145,hotel,Hotel Michelangelo,Albergo con ristorante,"Via Poggilupi, 580/A, Terranuova B. Arezzo",43.5489666667,11.5642,,055-9738557,,https://www.hotelmichelangelovaldarno.com/
+8-146,24/11/2022,8-146,shop-convenience,Supermercato Coop,Alimentari cibi pronti,"Via Dell'Oleandro, 37, Montevarchi Arezzo",43.53535,11.5636333333,,055-91091,,
+7-140,24/11/2022,7-140,history-and-culture,Mura e centro storico di Figline,Diversi tratti di mura e bel centro storico,Figline Incisa Firenze,43.5345666667,11.4721,,,,https://it.wikipedia.org/wiki/Figline_Valdarno#
+8-149,24/11/2022,8-149,shop-convenience,Pasticceria F.lli Bonci,Pasticceria ,"Via A.Vespucci, 101, Montevarchi Arezzo",43.5256833333,11.5814166667,,055-981225,,https://www.pasticceriabonci.it/
+8-162,24/11/2022,8-162,history-and-culture,Museo della scultura del Cassero,Scultura dell'800,"Via Trieste, 1, Montevarchi Arezzo",43.5253166667,11.5664666667,,,,https://ilcasseroperlascultura.it/
+8-163,24/11/2022,8-163,history-and-culture,Museo Paleontologico,Una finestra nel Pliocene,"Via Poggio Bracciolini, 36, Montevarchi Arezzo",43.5242833333,11.5671666667,,,,https://www.museopaleontologicomontevarchi.it/
+8-148,24/11/2022,8-148,b-and-b,Palazzo Mari,,"Via Poggio Bracciolini, 55, Montevarchi Arezzo",43.5239666667,11.5673833333,,,,
+8-161,24/11/2022,8-161,history-and-culture,Chiesa e museo della Collegiata di San Lorenzo,Bellissime opere robbiane,"Piazza Varchi, Montevarchi Arezzo",43.5235833333,11.5678166667,,,,https://montevarchicultura.org/museo-di-arte-sacra-della-collegiata-di-san-lorenzo-2/
+8-160,24/11/2022,8-160,history-and-culture,Centro storico di Montevarchi,La forma a fuso è ancora quella medievale,Montevarchi Arezzo,43.5234833333,11.5676,,,,http://www.montevarchi.tuscany.it/
+8-153,24/11/2022,8-153,b-and-b,Tenuta I Lecci,,"Località Monticello, Levane Arezzo",43.5196333333,11.6437333333,,3385436977,,https://www.tenutailecci.com/
+8-164,24/11/2022,8-164,nature,Area Naturalistica di Bandella,Un miracolo ecologico in mezzo alla valle,Monticello Arezzo,43.5189166667,11.6455,,,,https://www.comune.terranuova-bracciolini.ar.it/contenuti/37832/valle-inferno-oasi-bandella
+8-154,24/11/2022,8-154,locanda,Lo Strettoio,Ristorante Oasi di Bandella,"Località Pian di Chena, Laterina Arezzo",43.5111833333,11.6683,,0575-89161,,
+9-166,24/11/2022,9-166,history-and-culture,Villa Monsoglio,Bellissima villa settecentesca,"Via Vecchia Aretina, Laterina Arezzo",43.5093,11.73875,,,,https://caivaldarnosuperiore.it/la-villa-di-monsoglio/
+8-159,24/11/2022,8-159,b-and-b,La Torretta,,"Via Porta Fredda, 11, Laterina Arezzo",43.5088833333,11.7098,,0575-89202,,
+8-158,24/11/2022,8-158,ostello,Caritas parrocchiale,Alloggio ,"Vicolo delle Campane, 24, Laterina Arezzo",43.5083833333,11.71065,,0575-89007,,
+8-155,24/11/2022,8-155,b-and-b,La finestra sul Borgo,,"Corso Italia, 56, Laterina Arezzo",43.50825,11.7099333333,,3498514475,,
+8-156,24/11/2022,8-156,locanda,Fiaschetteria Caffè Michelangelo,Bar alimentari ristorante,"Corso Italia, 34, Laterina Arezzo",43.50825,11.7102166667,,0575-89202,,
+8-165,24/11/2022,8-165,history-and-culture,Castello di Laterina,Ancora con le torri medievali,Laterina Arezzo,43.50825,11.7102166667,,,,https://caivaldarnosuperiore.it/il-castello-di-laterina/
+8-157,24/11/2022,8-157,shop-convenience,Antica Macelleria Municchi,,"Corso Italia, 52, Laterina Arezzo",43.5081666667,11.7097,,0575-894509,,
+9-167,24/11/2022,9-167,hotel,Rondine,Cittadella della Pace Una sosta in ambiente internazionale,"Strada provinciale Setteponti, Rondine Arezzo",43.5079833333,11.7643666667,,0575-299666,,https://rondine.org/
+9-168,24/11/2022,9-168,bar,Bar Tabacchi,Bar e piatti pronti,"Strada provinciale Setteponti, Rondine Arezzo",43.50555,11.7972166667,,,,
+9-171,24/11/2022,9-171,history-and-culture,Ponte Buriano,Ponte medievale ritratto da Leonardo,"Strada provinciale Setteponti, Rondine Arezzo",43.5050333333,11.7991333333,,,,https://it.wikipedia.org/wiki/Ponte_Buriano
+9-169,24/11/2022,9-169,b-and-b,Villa Tacco,,Quarata Arezzo,43.5046333333,11.8156666667,,3383547690,,
+8-151,24/11/2022,8-151,shop-convenience,Supermercato Coop,Alimentari cibi pronti,"Piazza Falcone e Borsellino, 3, Levane Arezzo",43.5011833333,11.6187666667,,055-9789514,,
+8-150,24/11/2022,8-150,shop-convenience,Panetteria Pasticceria Peri,Alimentari bar,"Via Enrico Berlinguer, 18, Levane Arezzo",43.5011666667,11.6130166667,,055-9789943,,
+9-172,24/11/2022,9-172,history-and-culture,Castello di Quarata,Piccolo ma ancora integro,"Strada provinciale Setteponti, Quarata Arezzo",43.5003166667,11.823,,,,
+8-152,24/11/2022,8-152,b-and-b,Al Frantoio residenza,,"Via 2 Giugno, 17, Levane Arezzo",43.4999,11.6156666667,,3358496963,,https://www.frantoiomaddii.it/
+9-170,24/11/2022,9-170,shop-convenience,Non solo pane,Gastronomia,"Strada provinciale Setteponti, 404, Quarata Arezzo",43.4969333333,11.83045,,0575-364765,,
+9-173,24/11/2022,9-173,history-and-culture,Arezzo,Una città da meditare,Arezzo,43.4669166667,11.882666666,,,,
+3-32,24/11/2022,3-32,natural-saddle,Piastreta,interessante geosito e displuViale tra Adriatico e Tirreno,, 44.039819, 10.915017,,,,
+3-29,24/11/2022,3-29,"museum,history-and-culture",Ecomuseo della Montagna Pistoiese Pontepetri,Museo del Ferro e Giardino dell'Energia Rinnovabile,"Via la Piana - SR 66, 62, 51028, Pontepetri, San Marcello Piteglio PT", 44.037997, 10.882123,,+39 800 974102,ecomuseopt@gmail.com,http://www.ecomuseopt.it/
+3-30,24/11/2022,3-30,history-and-culture,FerroVia Alto Pistoiese,stazione della FerroVia Alto Pistoiese - dismessa ,, 44.037942, 10.881721,,,,
+3-33,24/11/2022,3-33,history-and-culture,deviazione per percorso Linea Gotica,sentiero didattico storico con pannelli esplicativi delle fortificazioni presenti,, 44.031796, 10.928535,,,,
+3-31,24/11/2022,3-31,natural-saddle,Passo dell'Incisa,,, 44.030872, 10.888723,,,,
+3-34,24/11/2022,3-34,"locanda,bar",L'Antica Locanda,ristorante,"Via Bolognese, 241, 51100, Collina pistoiese, Pistoia PT", 44.029498, 10.931433,,+39 0573 470075,info@lanticalocanda.net,http://www.lanticalocanda.net/
+3-35,24/11/2022,3-35,natural-spring,sorgente,in uno giardinetto delimitato di fronte alla locanda ,, 44.029334, 10.931262,,,,
+3-36,24/11/2022,3-36,highway-bus-stop,fermata autobus,,, 44.029064, 10.931264,,,,https://www.at-bus.it/it/
+3-37,24/11/2022,3-37,information-panel,Albergo Collina,"primo albergo ormai in disuso del passo della collina, lapide commemorativa sulla facciata ",, 44.028708, 10.931533,,,,
+3-38,24/11/2022,3-38,history-and-culture,Castello di Santa Margherita,ruderi del castello medievale della prima metà del XIII sec.,, 44.016600, 10.927336,,,,
+3-39,24/11/2022,3-39,history-and-culture,Podere di Ricavo,probabile dogana del XIII sec. oggi casa residenziale,, 44.012473, 10.928105,,,,
+3-40,24/11/2022,3-40,"restaurant,bar",Il Signorino,ristorante,"Via Bolognese, 207, 51100, Signorino, Pistoia PT", 44.005022, 10.919469,,"+39 O573475293,+39 O573475028",ristorante@ilsignorino.it,http://www.ilsignorino.it/
+3-42,24/11/2022,3-42,"bar,restaurant",Il 44° Parallelo,,"Via Vecchia Bolognese, 13, 51100, Croce a Uzzo, Pistoia PT", 43.999594, 10.918312,,+39 0573 474006,,
+3-41,24/11/2022,3-41,train-station,Stazione Corbezzi,stazione ferroViaria,, 43.994076, 10.919963,,,,https://www.trenitalia.com/it.html
+3-43,24/11/2022,3-43,religion,Catterale di San Zeno,,, 43.933206, 10.917493,,,,
