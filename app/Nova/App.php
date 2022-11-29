@@ -450,6 +450,12 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
+            Toggle::make(__('download_track_enable'), 'download_track_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable download of ever app track in GPX, KML, GEOJSON')),
 
         ];
     }
@@ -513,10 +519,10 @@ class App extends Resource
                 return 'No Themes';
             })->onlyOnDetail(),
             Text::make('Download GeoJSON collection', function () {
-                $url = url('/api/v1/app/'.$this->id.'/pois.geojson');
+                $url = url('/api/v1/app/' . $this->id . '/pois.geojson');
                 return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>';
             })->asHtml()->onlyOnDetail(),
-        ]; 
+        ];
     }
 
     protected function auth_tab(): array
@@ -849,17 +855,17 @@ class App extends Resource
             (new elasticIndex())->canSee(function ($request) {
                 return true;
             })->canRun(function ($request, $zone) {
-                    return true;
+                return true;
             }),
             (new GenerateAppConfigAction())->canSee(function ($request) {
                 return true;
             })->canRun(function ($request, $zone) {
-                    return true;
+                return true;
             }),
             (new GenerateAppPoisAction())->canSee(function ($request) {
                 return true;
             })->canRun(function ($request, $zone) {
-                    return true;
+                return true;
             }),
         ];
     }

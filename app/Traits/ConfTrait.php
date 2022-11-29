@@ -336,6 +336,7 @@ trait ConfTrait
         $data['OPTIONS']['showEditLink'] = $this->show_edit_link;
         $data['OPTIONS']['skipRouteIndexDownload'] = $this->skip_route_index_download;
         $data['OPTIONS']['showTrackRefLabel'] = $this->show_track_ref_label;
+        $data['OPTIONS']['download_track_enable'] = $this->download_track_enable;
 
 
         return $data;
