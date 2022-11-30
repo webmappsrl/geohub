@@ -134,6 +134,17 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
             $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
         }
         $this->tags['name']['it'] = $trackname;
+        if (isset($track['properties']['url'])) {
+            $urlarray = explode(',',$track['properties']['url']);
+            foreach($urlarray as $url) {
+                $related_url_name = parse_url($url);
+                if (isset($related_url_name['host'])) {
+                    $this->tags['related_url'][$related_url_name['host']] = $url;
+                } else {
+                    $this->tags['related_url'][$related_url_name['path']] = $url;
+                }
+            }
+        }
     }
     
     /**
@@ -175,7 +186,11 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
                 $urlarray = explode(',',$poi['properties']['url']);
                 foreach($urlarray as $url) {
                     $related_url_name = parse_url($url);
-                    $this->tags['related_url'][$related_url_name['path']] = $url;
+                    if (isset($related_url_name['host'])) {
+                        $this->tags['related_url'][$related_url_name['host']] = $url;
+                    } else {
+                        $this->tags['related_url'][$related_url_name['path']] = $url;
+                    }
                 }
         }
         
