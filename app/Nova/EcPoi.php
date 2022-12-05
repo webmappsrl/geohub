@@ -665,13 +665,16 @@ HTML;
      * @return array
      */
     public function filters(Request $request) {
-        return [
-            new HasFeatureImage,
-            new HasImageGallery,
-            new SelectFromThemesPoi,
-            new SelectFromWheresPoi,
-            new SelectFromPoiTypesPoi
-        ];
+        if ($request->user()->hasRole('Editor')) {
+            return [
+                new HasFeatureImage,
+                new HasImageGallery,
+                new SelectFromThemesPoi,
+                new SelectFromWheresPoi,
+                new SelectFromPoiTypesPoi
+            ];
+        }
+        return [];
     }
 
     /**
