@@ -3,11 +3,12 @@
 namespace App\Nova\Filters;
 
 use App\Models\EcTrack;
-use App\Models\TaxonomyActivity;
+use App\Models\TaxonomyTheme;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
-class SelectFromActivities extends Filter
+class SelectFromThemesTrack extends Filter
 {
     /**
      * The filter's component.
@@ -27,7 +28,7 @@ class SelectFromActivities extends Filter
     public function apply(Request $request, $query, $value)
     {
         if ($value) {
-            return $query->whereHas('taxonomyActivities', function ($q) use ($value) {
+            return $query->whereHas('taxonomyThemes', function ($q) use ($value) {
                 $q->where('id', $value);
             });
         } else {
@@ -46,7 +47,7 @@ class SelectFromActivities extends Filter
         $tracks = EcTrack::where('user_id',$request->user()->id)->get();
         $array = [];
         foreach ($tracks as $t) {
-            $taxes = $t->taxonomyActivities;
+            $taxes = $t->taxonomyThemes;
             foreach ($taxes as $t) {
                 $array[$t->name] = $t->id;
             }

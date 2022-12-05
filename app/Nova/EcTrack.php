@@ -10,6 +10,8 @@ use App\Nova\Filters\HasDescription;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
 use App\Nova\Filters\SelectFromActivities;
+use App\Nova\Filters\SelectFromThemesTrack;
+use App\Nova\Filters\SelectFromWheresTrack;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -44,7 +46,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
-
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 
 class EcTrack extends Resource
 {
@@ -177,14 +179,36 @@ class EcTrack extends Resource
 
             Text::make('Activities', function(){
                 if ($this->taxonomyActivities()->count() > 0) {
-                    return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
+                    return implode('<br/>', $this->taxonomyActivities()->pluck('name')->toArray());
                 }
                 return 'No activities';
             })->canSee(function ($request) {
                 if ($request->user()->can('Admin', $this)) { return false; } else {
                     return true;
                 }
-            }),
+            })->asHtml(),
+            
+            Text::make('Themes', function(){
+                if ($this->taxonomyThemes()->count() > 0) {
+                    return implode('<br/>', $this->taxonomyThemes()->pluck('name')->toArray());
+                }
+                return 'No themes';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            })->asHtml(),
+
+            Text::make('Wheres', function(){
+                if ($this->taxonomyWheres()->count() > 0) {
+                    return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
+                }
+                return 'No wheres';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            })->asHtml(),
 
             BelongsTo::make('Author', 'author', User::class)->sortable()->canSee(function ($request) {
                 return $request->user()->can('Admin', $this);
@@ -485,7 +509,12 @@ class EcTrack extends Resource
         return [
             new HasFeatureImage,
             new HasImageGallery,
-            new SelectFromActivities
+            new SelectFromActivities,
+            // (new NovaSearchableBelongsToFilter('select from themes'))
+            //     ->fieldAttribute('taxonomyThemes')
+            //     ->filterBy('name')
+            new SelectFromThemesTrack,
+            new SelectFromWheresTrack,
         ];
     }
 

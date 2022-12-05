@@ -3,11 +3,10 @@
 namespace App\Nova\Filters;
 
 use App\Models\EcTrack;
-use App\Models\TaxonomyActivity;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
-class SelectFromActivities extends Filter
+class SelectFromWheresTrack extends Filter
 {
     /**
      * The filter's component.
@@ -27,7 +26,7 @@ class SelectFromActivities extends Filter
     public function apply(Request $request, $query, $value)
     {
         if ($value) {
-            return $query->whereHas('taxonomyActivities', function ($q) use ($value) {
+            return $query->whereHas('taxonomyWheres', function ($q) use ($value) {
                 $q->where('id', $value);
             });
         } else {
@@ -46,7 +45,7 @@ class SelectFromActivities extends Filter
         $tracks = EcTrack::where('user_id',$request->user()->id)->get();
         $array = [];
         foreach ($tracks as $t) {
-            $taxes = $t->taxonomyActivities;
+            $taxes = $t->taxonomyWheres;
             foreach ($taxes as $t) {
                 $array[$t->name] = $t->id;
             }
