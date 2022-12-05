@@ -10,6 +10,9 @@ use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\HasDescription;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
+use App\Nova\Filters\SelectFromPoiTypesPoi;
+use App\Nova\Filters\SelectFromThemesPoi;
+use App\Nova\Filters\SelectFromWheresPoi;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -179,14 +182,36 @@ class EcPoi extends Resource {
 
             Text::make('Poi Types', function(){
                 if($this->taxonomyPoiTypes()->count() >0) {
-                    return implode(',',$this->taxonomyPoiTypes()->pluck('name')->toArray());
+                    return implode('<br/>',$this->taxonomyPoiTypes()->pluck('name')->toArray());
                 }
                 return 'No Poi Types';
             })->canSee(function ($request) {
                 if ($request->user()->can('Admin', $this)) { return false; } else {
                     return true;
                 }
-            }),
+            })->asHtml(),
+
+            Text::make('Themes', function(){
+                if($this->taxonomyThemes()->count() >0) {
+                    return implode('<br/>',$this->taxonomyThemes()->pluck('name')->toArray());
+                }
+                return 'No Themes';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            })->asHtml(),
+
+            Text::make('Wheres', function(){
+                if($this->taxonomyWheres()->count() >0) {
+                    return implode('<br/>',$this->taxonomyWheres()->pluck('name')->toArray());
+                }
+                return 'No Wheres';
+            })->canSee(function ($request) {
+                if ($request->user()->can('Admin', $this)) { return false; } else {
+                    return true;
+                }
+            })->asHtml(),
 
             BelongsTo::make('Author', 'author', User::class)->sortable()->canSee(function ($request) {
                 return $request->user()->can('Admin', $this);
@@ -642,7 +667,10 @@ HTML;
     public function filters(Request $request) {
         return [
             new HasFeatureImage,
-            new HasImageGallery
+            new HasImageGallery,
+            new SelectFromThemesPoi,
+            new SelectFromWheresPoi,
+            new SelectFromPoiTypesPoi
         ];
     }
 
