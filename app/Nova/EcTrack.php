@@ -9,6 +9,7 @@ use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\HasDescription;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
+use App\Nova\Filters\SelectFromActivities;
 use App\Nova\Metrics\EcTracksMyValue;
 use App\Nova\Metrics\EcTracksNewValue;
 use App\Nova\Metrics\EcTracksTotalValue;
@@ -483,7 +484,8 @@ class EcTrack extends Resource
     {
         return [
             new HasFeatureImage,
-            new HasImageGallery
+            new HasImageGallery,
+            new SelectFromActivities
         ];
     }
 
