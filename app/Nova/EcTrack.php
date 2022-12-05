@@ -506,16 +506,16 @@ class EcTrack extends Resource
      */
     public function filters(Request $request): array
     {
-        return [
-            new HasFeatureImage,
-            new HasImageGallery,
-            new SelectFromActivities,
-            // (new NovaSearchableBelongsToFilter('select from themes'))
-            //     ->fieldAttribute('taxonomyThemes')
-            //     ->filterBy('name')
-            new SelectFromThemesTrack,
-            new SelectFromWheresTrack,
-        ];
+        if ($request->user()->hasRole('Editor')) {
+            return [
+                new HasFeatureImage,
+                new HasImageGallery,
+                new SelectFromActivities,
+                new SelectFromThemesTrack,
+                new SelectFromWheresTrack,
+            ];
+        }
+        return [];
     }
 
     /**
