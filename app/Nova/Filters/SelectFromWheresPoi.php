@@ -3,7 +3,9 @@
 namespace App\Nova\Filters;
 
 use App\Models\EcPoi;
+use App\Models\TaxonomyWhere;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Filters\Filter;
 
 class SelectFromWheresPoi extends Filter
@@ -42,15 +44,20 @@ class SelectFromWheresPoi extends Filter
      */
     public function options(Request $request)
     {
-        $tracks = EcPoi::where('user_id',$request->user()->id)->get();
-        $array = [];
-        foreach ($tracks as $t) {
-            $taxes = $t->taxonomyWheres;
-            foreach ($taxes as $t) {
-                $array[$t->name] = $t->id;
-            }
-        }
+        $current_user_id = $request->user()->id;
 
-        return $array;
+        $taxData = DB::select("
+        SELECT id,name 
+        FROM taxonomy_wheres WHERE id IN 
+        (SELECT DISTINCT w.id 
+        FROM taxonomy_whereables as txw 
+        INNER JOIN ec_pois as t on t.id=txw.taxonomy_whereable_id 
+        INNER JOIN taxonomy_wheres as w on w.id=taxonomy_where_id 
+        WHERE txw.taxonomy_whereable_type='App\Models\EcPoi' 
+        AND t.user_id=$current_user_id);");
+
+        $taxModels = TaxonomyWhere::hydrate($taxData)->pluck('id','name')->toArray();
+
+        return $taxModels;
     }
 }
