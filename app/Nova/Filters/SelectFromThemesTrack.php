@@ -5,6 +5,7 @@ namespace App\Nova\Filters;
 use App\Models\EcTrack;
 use App\Models\TaxonomyTheme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Filters\Filter;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -44,15 +45,20 @@ class SelectFromThemesTrack extends Filter
      */
     public function options(Request $request)
     {
-        $tracks = EcTrack::where('user_id',$request->user()->id)->get();
-        $array = [];
-        foreach ($tracks as $t) {
-            $taxes = $t->taxonomyThemes;
-            foreach ($taxes as $t) {
-                $array[$t->name] = $t->id;
-            }
-        }
+        $current_user_id = $request->user()->id;
 
-        return $array;
+        $taxData = DB::select("
+        SELECT id,name 
+        FROM taxonomy_themes WHERE id IN 
+        (SELECT DISTINCT w.id 
+        FROM taxonomy_themeables as txt 
+        INNER JOIN ec_tracks as t on t.id=txt.taxonomy_themeable_id 
+        INNER JOIN taxonomy_themes as w on w.id=taxonomy_theme_id 
+        WHERE txt.taxonomy_themeable_type='App\Models\EcTrack' 
+        AND t.user_id=$current_user_id);");
+
+        $taxModels = TaxonomyTheme::hydrate($taxData)->pluck('id','name')->toArray();
+
+        return $taxModels;
     }
 }
