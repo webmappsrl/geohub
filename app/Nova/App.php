@@ -319,10 +319,11 @@ class App extends Resource
             Multiselect::make(__('Tiles'), 'tiles')->options([
                 "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
                 "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
+                "{\"GOMBITELLI\":\"https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png\"}" => 'GOMBITELLI',
             ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
-                ->max(19)
+                ->max(25)
                 ->default(16)
                 ->onlyOnForms(),
             Number::make(__('Max Stroke width'), 'map_max_stroke_width')
