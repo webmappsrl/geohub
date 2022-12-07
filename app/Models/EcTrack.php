@@ -368,6 +368,7 @@ class EcTrack extends Model
                 'from',
                 'to',
                 'audio',
+                'related_url'
             ];
             foreach ($keys as $key) {
                 $array = $this->setOutSourceSingleValue($array, $key);
