@@ -885,7 +885,7 @@ class App extends Resource
         $mediageojson = $this->model()->getUGCMediaGeojson();
         $trackgeojson = $this->model()->getiUGCTrackGeojson();
         return [
-            MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
+            MapMultiPurposeNova3::make('All user created contents')->withMeta([
                 'center' => ["43", "10"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
