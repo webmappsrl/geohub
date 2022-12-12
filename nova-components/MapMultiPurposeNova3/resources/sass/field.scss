@@ -1,0 +1,15 @@
+// Nova Tool CSS
+.wm-map {
+    width:600px;
+    height: 400px;
+}
+.index-view .wm-map  {
+    height: 100px;
+    width: 300px;
+}
+.leaflet-pane {
+    z-index: 30 !important;
+}
+.leaflet-control-container > div {
+    z-index: 30 !important;
+}

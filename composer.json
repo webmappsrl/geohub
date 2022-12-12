@@ -1,139 +1,145 @@
 {
-  "name": "laravel/laravel",
-  "type": "project",
-  "description": "The Laravel Framework.",
-  "keywords": [
-    "framework",
-    "laravel"
-  ],
-  "license": "MIT",
-  "require": {
-    "php": "^7.4|^8.0",
-    "ext-curl": "*",
-    "ext-fileinfo": "*",
-    "ext-json": "*",
-    "ampeco/nova-date-range-filter": "^0.1.3",
-    "arku/nova-multiselect": "dev-master",
-    "bernhardh/nova-icon-select": "^1.0",
-    "blade-ui-kit/blade-icons": "^1.2",
-    "chaseconey/nova-external-image": "^0.3.0",
-    "chriskonnertz/open-graph": "^2.0",
-    "christiankuri/laravel-favorite": "^1.4",
-    "cloudcake/nova-fixed-bars": "^1.1",
-    "darkaonline/l5-swagger": "^8.3",
-    "davidpiesse/nova-toggle": "^0.0.8",
-    "digital-creative/nova-mega-filter": "^0.6.0",
-    "dillingham/nova-attach-many": "^1.3",
-    "elasticsearch/elasticsearch": "^7.15",
-    "eminiarts/nova-tabs": "^1.4",
-    "fideloper/proxy": "^4.4",
-    "fruitcake/laravel-cors": "^2.0",
-    "guzzlehttp/guzzle": "^7.0.1",
-    "jenssegers/agent": "^2.6",
-    "khalin/nova-link-field": "^1.2",
-    "kirschbaum-development/nova-inline-relationship": "^0.3.0",
-    "kongulov/nova-tab-translatable": "^1.0",
-    "kraftbit/nova-tinymce5-editor": "^1.0",
-    "laravel/framework": "^8.12",
-    "laravel/nova": "*",
-    "laravel/tinker": "^2.5",
-    "league/flysystem-aws-s3-v3": "~1.0",
-    "maatwebsite/laravel-nova-excel": "^1.2",
-    "ncus/inline-index": "^0.0.2",
-    "ndamiens/gisconverter": "^1.0",
-    "numaxlab/nova-ckeditor5-classic": "^1.1",
-    "pos-lifestyle/laravel-nova-date-range-filter": "^1.3",
-    "robertboes/nova-slider-field": "^0.1.1",
-    "spatie/db-dumper": "^2.21",
-    "spatie/laravel-translatable": "^4.6",
-    "spatie/nova-translatable": "^3.0",
-    "spatie/schema-org": "^3.9",
-    "titasgailius/search-relations": "^2.0",
-    "tsungsoft/error-message": "^0.0.3",
-    "tymon/jwt-auth": "^1.0",
-    "vyuldashev/nova-permission": "^2.11",
-    "waynestate/nova-ckeditor4-field": "^0.7.0",
-    "webmapp/ecmediapopup": "*",
-    "webmapp/ecpoipopup": "*",
-    "webmapp/featureimagepopup": "*",
-    "webmapp/import": "*",
-    "webmapp/wm-embedmaps-field": "*",
-    "ynacorp/nova-swatches": "^1.0"
-  },
-  "require-dev": {
-    "facade/ignition": "^2.5",
-    "fakerphp/faker": "^1.9.1",
-    "laravel/sail": "^1.0.1",
-    "mockery/mockery": "^1.4.2",
-    "nunomaduro/collision": "^5.0",
-    "phpunit/phpunit": "^9.3.3",
-    "theanik/laravel-more-command": "^1.2"
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "preferred-install": "dist",
-    "sort-packages": true
-  },
-  "extra": {
-    "laravel": {
-      "dont-discover": []
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "app/",
-      "Database\\Factories\\": "database/factories/",
-      "Database\\Seeders\\": "database/seeders/"
-    },
-    "files": [
-      "database/MigrationsHelpers.php",
-      "app/Providers/ResourceManager.php",
-      "app/View/Components/helpers.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "scripts": {
-    "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-      "@php artisan package:discover --ansi"
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": [
+        "framework",
+        "laravel"
     ],
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ],
-    "post-create-project-cmd": [
-      "@php artisan key:generate --ansi"
+    "license": "MIT",
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-json": "*",
+        "ampeco/nova-date-range-filter": "^0.1.3",
+        "arku/nova-multiselect": "dev-master",
+        "bernhardh/nova-icon-select": "^1.0",
+        "blade-ui-kit/blade-icons": "^1.2",
+        "chaseconey/nova-external-image": "^0.3.0",
+        "chriskonnertz/open-graph": "^2.0",
+        "christiankuri/laravel-favorite": "^1.4",
+        "cloudcake/nova-fixed-bars": "^1.1",
+        "darkaonline/l5-swagger": "^8.3",
+        "davidpiesse/nova-toggle": "^0.0.8",
+        "digital-creative/nova-mega-filter": "^0.6.0",
+        "dillingham/nova-attach-many": "^1.3",
+        "elasticsearch/elasticsearch": "^7.15",
+        "eminiarts/nova-tabs": "^1.4",
+        "fideloper/proxy": "^4.4",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "jenssegers/agent": "^2.6",
+        "khalin/nova-link-field": "^1.2",
+        "kirschbaum-development/nova-inline-relationship": "^0.3.0",
+        "kongulov/nova-tab-translatable": "^1.0",
+        "kraftbit/nova-tinymce5-editor": "^1.0",
+        "laravel/framework": "^8.12",
+        "laravel/nova": "*",
+        "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "maatwebsite/laravel-nova-excel": "^1.2",
+        "ncus/inline-index": "^0.0.2",
+        "ndamiens/gisconverter": "^1.0",
+        "numaxlab/nova-ckeditor5-classic": "^1.1",
+        "pos-lifestyle/laravel-nova-date-range-filter": "^1.3",
+        "robertboes/nova-slider-field": "^0.1.1",
+        "spatie/db-dumper": "^2.21",
+        "spatie/laravel-translatable": "^4.6",
+        "spatie/nova-translatable": "^3.0",
+        "spatie/schema-org": "^3.9",
+        "suenerds/nova-searchable-belongs-to-filter": "^1.0",
+        "titasgailius/search-relations": "^2.0",
+        "tsungsoft/error-message": "^0.0.3",
+        "tymon/jwt-auth": "^1.0",
+        "vyuldashev/nova-permission": "^2.11",
+        "waynestate/nova-ckeditor4-field": "^0.7.0",
+        "webmapp/ecmediapopup": "*",
+        "webmapp/ecpoipopup": "*",
+        "webmapp/featureimagepopup": "*",
+        "webmapp/import": "*",
+        "webmapp/wm-embedmaps-field": "*",
+        "ynacorp/nova-swatches": "^1.0",
+        "wm/map-multi-purpose-nova3": "*"
+    },
+    "require-dev": {
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.2",
+        "nunomaduro/collision": "^5.0",
+        "phpunit/phpunit": "^9.3.3",
+        "theanik/laravel-more-command": "^1.2"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "database/MigrationsHelpers.php",
+            "app/Providers/ResourceManager.php",
+            "app/View/Components/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./nova"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/WmEmbedmapsField"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Import"
+        },
+        {
+            "type": "path",
+            "url": "nova-components/EcMediaPopup"
+        },
+        {
+            "type": "path",
+            "url": "nova-components/FeatureImagePopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/Ecpoipopup"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/MapMultiPurposeNova3"
+        }
     ]
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "./nova"
-    },
-    {
-      "type": "path",
-      "url": "./nova-components/WmEmbedmapsField"
-    },
-    {
-      "type": "path",
-      "url": "./nova-components/Import"
-    },
-    {
-      "type": "path",
-      "url": "nova-components/EcMediaPopup"
-    },
-    {
-      "type": "path",
-      "url": "nova-components/FeatureImagePopup"
-    },
-    {
-      "type": "path",
-      "url": "./nova-components/Ecpoipopup"
-    }
-  ]
 }

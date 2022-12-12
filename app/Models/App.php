@@ -79,6 +79,91 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
+    
+    public function getMostViewedPoiGeojson()
+    {
+        $pois = EcPoi::where('user_id', $this->user_id)->limit(10)->get();
+
+        if (!is_null($pois)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($pois as $count => $poi) {
+                $feature = $poi->getEmptyGeojson();
+                if (isset($feature["properties"])) {
+                    $feature["properties"]["name"] = $poi->name;
+                     $feature["properties"]["visits"] = (11-$count)*10;
+                }
+
+                $features[] = $feature;
+            }
+            $geoJson["features"] = $features;
+
+            return json_encode($geoJson);
+        }
+    }
+
+    public function getUGCPoiGeojson()
+    {
+        $pois = UgcPoi::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+
+        if (!is_null($pois)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($pois as $count => $poi) {
+                $feature = $poi->getEmptyGeojson();
+                if (isset($feature["properties"])) {
+                    $feature["properties"]["view"] = '/resources/ugc-pois/'.$poi->id;
+                }
+
+                $features[] = $feature;
+            }
+            $geoJson["features"] = $features;
+
+            return json_encode($geoJson);
+        }
+    }
+    
+    public function getUGCMediaGeojson()
+    {
+        $medias = UgcMedia::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+
+        if (!is_null($medias)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($medias as $count => $media) {
+                $feature = $media->getEmptyGeojson();
+                if (isset($feature["properties"])) {
+                    $feature["properties"]["view"] = '/resources/ugc-medias/'.$media->id;
+                }
+
+                $features[] = $feature;
+            }
+            $geoJson["features"] = $features;
+
+            return json_encode($geoJson);
+        }
+    }
+    
+    public function getiUGCTrackGeojson()
+    {
+        $tracks = UgcTrack::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+
+        if (!is_null($tracks)) {
+            $geoJson = ["type" => "FeatureCollection"];
+            $features = [];
+            foreach ($tracks as $count => $track) {
+                $feature = $track->getEmptyGeojson();
+                if (isset($feature["properties"])) {
+                    $feature["properties"]["view"] = '/resources/ugc-tracks/'.$track->id;
+                }
+
+                $features[] = $feature;
+            }
+            $geoJson["features"] = $features;
+
+            return json_encode($geoJson);
+        }
+    }
 
     public function ecTracks(): HasMany
     {

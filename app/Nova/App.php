@@ -35,6 +35,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
+use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
@@ -156,9 +157,33 @@ class App extends Resource
 
     public function fieldsForDetail(Request $request)
     {
-        return [
-            (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
-        ];
+        if ($request->user()->can('Admin')) {
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
+            ];
+        } else {
+            
+            $tab_array = [
+                'APP' => $this->app_tab(),
+                'HOME' => $this->home_tab(),
+                'PROJECT' => $this->project_tab(),
+                'ICONS' => $this->icons_tab(),
+            ];
+            if ($request->user()->apps[0]->dashboard_show == true) {
+                $tab_array = [
+                    'APP' => $this->app_tab(),
+                    'HOME' => $this->home_tab(),
+                    'PROJECT' => $this->project_tab(),
+                    'ICONS' => $this->icons_tab(),
+                    // 'APP Analytics' => $this->app_analytics_tab(),
+                    // 'POI Analytics' => $this->poi_analytics_tab(),
+                    'MAP Analytics' => $this->map_analytics_tab(),
+                ];
+            }
+            return [
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array )),
+            ];
+        }
     }
 
     public function fieldsForCreate(Request $request)
@@ -277,6 +302,7 @@ class App extends Resource
             Textarea::make('social_track_text')
                 ->help(__('Add a description for meta tags of social share. You can customize the description with these keywords: {app.name} e {track.name}'))
                 ->placeholder('Add social Meta Tag for description'),
+            Boolean::make('dashboard_show'),
         ];
     }
 
@@ -804,6 +830,70 @@ class App extends Resource
                     return 'No Layers';
                 }
             })->asHtml(),
+        ];
+    }
+
+    protected function app_analytics_tab(): array
+    {
+        return [
+            Text::make('Impressions', function () {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>5.8K</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>The number of times the App\'s icon was viewed on the store.</i></p>';
+                return $html;
+            })->asHtml(),
+            Text::make('Product Page View', function () {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong style="width: 50%;">Android</strong></td></tr><tr><td>696</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>The number of times the App\'s product page was viewed on the store.</i></p>';
+                return $html;
+            })->asHtml(),
+            Text::make('Conversion rate', function () {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>11.4%</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>Calculated by dividing total downloads by unique device impressions.</i></p>';
+                return $html;
+            })->asHtml(),
+            Text::make('Total Download', function () {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>506</td><td>303</td></tr></tbody></table><p style="font-size:14px;"><i>The number of first-time downloads and redownloads.</i></p>';
+                return $html;
+            })->asHtml(),
+        ];
+    }
+
+    protected function poi_analytics_tab(): array
+    {
+        $mostviewedpois = $this->model()->getMostViewedPoiGeojson();
+        return [
+            MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
+                'center' => ["43", "10"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'defaultZoom' => 10,
+                'poigeojson' => $mostviewedpois
+            ]),
+            Text::make('Most Viewed POIs List', function () use ($mostviewedpois) {
+                $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody>';
+                $collection = json_decode($mostviewedpois);
+                foreach($collection->features as $count => $feature) {
+                    $count ++;
+                    $html .= '<tr><td style="width: 50%;">'. $count .' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
+                }
+                $html .= '</tbody></table>';
+                return $html;
+            })->asHtml(),
+        ];
+    }
+
+    protected function map_analytics_tab(): array
+    {
+        $poigeojson = $this->model()->getUGCPoiGeojson();
+        $mediageojson = $this->model()->getUGCMediaGeojson();
+        $trackgeojson = $this->model()->getiUGCTrackGeojson();
+        return [
+            MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
+                'center' => ["43", "10"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'defaultZoom' => 9,
+                'poigeojson' => $poigeojson,
+                'mediageojson' => $mediageojson,
+                'trackgeojson' => $trackgeojson
+            ]),
         ];
     }
 
