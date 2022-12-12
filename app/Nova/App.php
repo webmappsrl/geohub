@@ -174,8 +174,8 @@ class App extends Resource
                     'HOME' => $this->home_tab(),
                     'PROJECT' => $this->project_tab(),
                     'ICONS' => $this->icons_tab(),
-                    'APP Analytics' => $this->app_analytics_tab(),
-                    'POI Analytics' => $this->poi_analytics_tab(),
+                    // 'APP Analytics' => $this->app_analytics_tab(),
+                    // 'POI Analytics' => $this->poi_analytics_tab(),
                     'MAP Analytics' => $this->map_analytics_tab(),
                 ];
             }
@@ -877,7 +877,7 @@ class App extends Resource
                 'center' => ["43", "10"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'defaultZoom' => 10,
+                'defaultZoom' => 9,
                 'poigeojson' => $poigeojson,
                 'mediageojson' => $mediageojson,
                 'trackgeojson' => $trackgeojson
