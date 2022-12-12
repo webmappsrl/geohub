@@ -48,7 +48,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract {
 
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge('$track->geometry'))")[0]->st_astext;
+        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_Force2D(ST_LineMerge('$track->geometry')))")[0]->st_astext;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
         $this->params['raw_data'] = json_encode($track);
