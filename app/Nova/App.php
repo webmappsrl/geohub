@@ -483,6 +483,12 @@ class App extends Resource
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable download of ever app track in GPX, KML, GEOJSON')),
+            Toggle::make(__('print_track_enable'), 'print_track_enable')
+            ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable print of ever app track in PDF')),
 
         ];
     }
