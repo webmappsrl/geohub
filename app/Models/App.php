@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\ConfTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
@@ -79,7 +81,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getMostViewedPoiGeojson()
     {
         $pois = EcPoi::where('user_id', $this->user_id)->limit(10)->get();
@@ -122,7 +124,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getUGCMediaGeojson()
     {
         $medias = UgcMedia::where('app_id', Auth()->user()->apps[0]->app_id)->get();
@@ -143,7 +145,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getiUGCTrackGeojson()
     {
         $tracks = UgcTrack::where('app_id', Auth()->user()->apps[0]->app_id)->get();
@@ -312,7 +314,8 @@ class App extends Model
      */
     public function elasticIndex()
     {
-        $tracksFromLayer = $this->getTracksFromLayer();
+        $tracksFromLayer = $this->getTracksFromLayer( $this->indexed_at );
+        Log::info("CONTEGGIO TRACCE:" . count($tracksFromLayer));
         if (count($tracksFromLayer) > 0) {
             $index_name = 'app_' . $this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
@@ -327,7 +330,7 @@ class App extends Model
 
     public function elasticJidoIndex()
     {
-        $tracksFromLayer = $this->getTracksFromLayer();
+        $tracksFromLayer = $this->getTracksFromLayer( $this->indexed_at );
         if (count($tracksFromLayer) > 0) {
             $index_low_name = 'app_low_' . $this->id;
             $index_high_name = 'app_high_' . $this->id;
@@ -340,6 +343,16 @@ class App extends Model
         } else {
             Log::info('No tracks in APP ' . $this->id);
         }
+    }
+
+    /**
+     * Update app indexed_at field
+     *
+     * @return void
+     */
+    public function updateIndexedAt(){
+        $this->indexed_at = Carbon::now();
+        $this->save();
     }
 
     /**
@@ -380,7 +393,7 @@ class App extends Model
         curl_close($curl);
     }
     /**
-     * Delete APP INDEX
+     * Create an es index only if it doesn't exist
      */
     public function elasticIndexCreate($suffix = '')
     {
@@ -395,7 +408,7 @@ class App extends Model
                   "mappings": {
                     "properties": {
                       "id": {
-                          "type": "integer"  
+                          "type": "integer"
                       },
                       "geometry": {
                         "type": "shape"
@@ -404,38 +417,48 @@ class App extends Model
                   }
                }';
         try {
-            $this->_curlExec($url, 'PUT', $posts);
+            $test = Http::head($url)->status();
+            if ( $test != 200 )
+                $this->_curlExec($url, 'PUT', $posts);
         } catch (Exception $e) {
             Log::info("\n ERROR: " . $e);
         }
 
         // Settings
-        $urls = $url . '/_settings';
-        $posts = '{"max_result_window": 50000}';
-        $this->_curlExec($urls, 'PUT', $posts);
+        if ( $test != 200 )
+        {
+            $urls = $url . '/_settings';
+            $posts = '{"max_result_window": 50000}';
+            $this->_curlExec($urls, 'PUT', $posts);
+        }
+
     }
 
     public function elasticRoutine()
     {
+        Log::info('last index: ' . $this->indexed_at );
         $this->elasticInfoRoutine();
         $this->elasticJidoRoutine();
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
+        //$this->updateIndexedAt();
     }
     public function elasticInfoRoutine()
     {
-        $this->elasticIndexDelete();
+        // $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->elasticIndex();
+        //$this->updateIndexedAt();
     }
     public function elasticJidoRoutine()
     {
-        $this->elasticIndexDelete('low');
-        $this->elasticIndexDelete('high');
+        // $this->elasticIndexDelete('low');
+        // $this->elasticIndexDelete('high');
         $this->elasticIndexCreate('low');
         $this->elasticIndexCreate('high');
         $this->elasticJidoIndex();
         $this->config_update_jido_time();
+        //$this->updateIndexedAt();
     }
 
     public function GenerateAppConfig()
@@ -453,7 +476,11 @@ class App extends Model
         $confUri = $this->id . ".json";
         if (Storage::disk('conf')->exists($confUri)) {
             $json = json_decode(Storage::disk('conf')->get($confUri));
-            $json->JIDO_UPDATE_TIME = floor(microtime(true) * 1000);
+            //$json->JIDO_UPDATE_TIME = floor(microtime(true) * 1000);
+            if ( ! $this->indexed_at )
+                $json->JIDO_UPDATE_TIME = floor( microtime( true ) * 1000 );
+            else
+                $json->JIDO_UPDATE_TIME = floor( floatval( Carbon::create($this->indexed_at)->format('U.u') ) * 1000 );
             Storage::disk('conf')->put($confUri, json_encode($json));
         }
     }
@@ -508,22 +535,23 @@ class App extends Model
 
     /**
      * Returns array of all tracks'id in APP through layers deifinition
-     *  $tracks = [ 
+     *  $tracks = [
      *               t1_d => [l11_id,l12_id, ... , l1N_1_id],
      *               t2_d => [l21_id,l22_id, ... , l2N_2_id],
      *               ... ,
      *               tM_d => [lM1_id,lM2_id, ... , lMN_M_id],
      *            ]
      * where t*_id are tracks ids and l*_id are layers where tracks are found
-     * 
+     *
      * @return array
      */
-    public function getTracksFromLayer(): array
+    public function getTracksFromLayer( $date = false ): array
     {
         $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                $tracks = $layer->getTracks();
+                $date = $this->indexed_at ?? false;
+                $tracks = $layer->getTracks( $date );
                 $layer->computeBB($this->map_bbox);
                 if (count($tracks) > 0) {
                     foreach ($tracks as $track) {

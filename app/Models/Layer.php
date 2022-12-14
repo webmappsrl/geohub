@@ -58,7 +58,13 @@ class Layer extends Model
             ->withPivot(['duration_forward', 'duration_backward']);
     }
 
-    public function getTracks()
+    /**
+     * Undocumented function
+     *
+     * @param date|bool filter tracks greater than date provided
+     * @return collection
+     */
+    public function getTracks( $date = false )
     {
         $tracks = [];
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
@@ -68,7 +74,12 @@ class Layer extends Model
                 foreach ($this->$taxonomy as $term) {
 
                     $user_id = DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
-                    $ecTracks = $term->ecTracks()->where('user_id', $user_id)->get();
+                    $ecTracks = $term->ecTracks()->where('user_id', $user_id);
+                    if ( $date !== false )
+                    {
+                        $ecTracks = $ecTracks->where( 'updated_at', '>' , $date );
+                    }
+                    $ecTracks = $ecTracks->get();
                     if ($ecTracks->count() > 0) {
                         foreach ($ecTracks as $track) {
                             array_push($tracks, $track->id);
