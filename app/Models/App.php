@@ -441,14 +441,14 @@ class App extends Model
         $this->elasticJidoRoutine();
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
-        //$this->updateIndexedAt();
+        $this->updateIndexedAt();
     }
     public function elasticInfoRoutine()
     {
         // $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->elasticIndex();
-        //$this->updateIndexedAt();
+        $this->updateIndexedAt();
     }
     public function elasticJidoRoutine()
     {
@@ -458,7 +458,7 @@ class App extends Model
         $this->elasticIndexCreate('high');
         $this->elasticJidoIndex();
         $this->config_update_jido_time();
-        //$this->updateIndexedAt();
+        $this->updateIndexedAt();
     }
 
     public function GenerateAppConfig()
