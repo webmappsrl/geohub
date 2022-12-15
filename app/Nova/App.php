@@ -895,7 +895,7 @@ class App extends Resource
                 'center' => ["43", "10"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'defaultZoom' => 9,
+                'defaultZoom' => 8,
                 'poigeojson' => $poigeojson,
                 'mediageojson' => $mediageojson,
                 'trackgeojson' => $trackgeojson
