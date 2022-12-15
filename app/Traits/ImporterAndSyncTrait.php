@@ -25,17 +25,44 @@ trait ImporterAndSyncTrait {
      * @param string the complete url.
      * @return array The result of curl. 
      */
-    public function curlRequest($url)
+    public function curlRequest($url,$json=true)
     {
         $curl = app(CurlServiceProvider::class);
         Log::info('Excecuting CURL service provider with: '.$url);
         try{
             $obj = $curl->exec($url);
             Log::info('CURL executed with success.');
-            return json_decode($obj,true);
+            if($json) return json_decode($obj,true);
+            return $obj;
         } catch (Exception $e) {
             Log::info('Error Excecuting CURL: '.$e);
         }
+    }
+
+    /**
+     * It returns ARRAY ['id1'=>'YYYY-MM-AA HH:MM:SS','id2'=>'YYYY-MM-AA HH:MM:SS',...]
+     * from a CVS request OVERPASSTURBO with id,timestamp
+     *
+     * @param string $url The Overpass API URL (example: goto https://overpass-turbo.eu/s/1p6K and use export function to find the following url https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0A%20%20way%5B%22tourism%22%3D%22wilderness_hut%22%5D%2844.2659%2C9.3164%2C45.0981%2C10.5711%29%3B%0Aout%20meta%3B%0A)
+     * @param string $type Can be node, way or relation
+     * @return void
+     */
+    public function curlRequestOverpass(string $url, string $type): array
+    {
+        $ar = explode("\n",$this->curlRequest($url,false));
+        $first = true;
+        $ret = [];
+        foreach($ar as $item) {
+            if($first) {$first=false;}
+            else {
+                $parts=preg_split('/\s+/', $item);
+                if (!empty($parts[0])) {
+                    $ret[$type.'/'.$parts[0]]=date('Y-m-d H:i:s',strtotime($parts[1]));
+                }
+            }
+        }
+        return $ret;
+
     }
 
     /**
