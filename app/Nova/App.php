@@ -892,10 +892,10 @@ class App extends Resource
         $trackgeojson = $this->model()->getiUGCTrackGeojson();
         return [
             MapMultiPurposeNova3::make('All user created contents')->withMeta([
-                'center' => ["43", "10"],
+                'center' => ["43", "12"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'defaultZoom' => 8,
+                'defaultZoom' => 5,
                 'poigeojson' => $poigeojson,
                 'mediageojson' => $mediageojson,
                 'trackgeojson' => $trackgeojson
