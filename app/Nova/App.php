@@ -887,9 +887,9 @@ class App extends Resource
 
     protected function map_analytics_tab(): array
     {
-        $poigeojson = $this->model()->getUGCPoiGeojson();
-        $mediageojson = $this->model()->getUGCMediaGeojson();
-        $trackgeojson = $this->model()->getiUGCTrackGeojson();
+        $poigeojson = $this->model()->getUGCPoiGeojson($this->model()->app_id);
+        $mediageojson = $this->model()->getUGCMediaGeojson($this->model()->app_id);
+        $trackgeojson = $this->model()->getiUGCTrackGeojson($this->model()->app_id);
         return [
             MapMultiPurposeNova3::make('All user created contents')->withMeta([
                 'center' => ["43", "12"],
