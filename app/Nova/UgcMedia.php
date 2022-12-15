@@ -116,9 +116,9 @@ class UgcMedia extends Resource {
     public function filters(Request $request): array {
         return [
             // new DateRange('created_at'),
-            (new NovaSearchableBelongsToFilter('Author'))
-                ->fieldAttribute('user')
-                ->filterBy('user_id')
+            // (new NovaSearchableBelongsToFilter('Author'))
+            //     ->fieldAttribute('user')
+            //     ->filterBy('user_id')
         ];
     }
 

@@ -35,7 +35,7 @@ class UgcPoiPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+        if ($user->hasRole('Editor') && $user->hasDashboardShow()) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class UgcPoiPolicy
      */
     public function view(User $user, UgcPoi $ugcPoi)
     {
-        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+        if ($user->hasRole('Editor') && $user->hasDashboardShow()) {
             return true;
         }
     }
