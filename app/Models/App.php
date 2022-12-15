@@ -56,6 +56,21 @@ class App extends Model
     {
         return $this->hasMany(Layer::class);
     }
+    
+    public function ugc_medias()
+    {
+        return $this->hasMany(UgcMedia::class);
+    }
+    
+    public function ugc_pois()
+    {
+        return $this->hasMany(UgcPoi::class);
+    }
+    
+    public function ugc_tracks()
+    {
+        return $this->hasMany(UgcTrack::class);
+    }
 
     public function taxonomyThemes(): MorphToMany
     {
@@ -102,11 +117,11 @@ class App extends Model
         }
     }
 
-    public function getUGCPoiGeojson()
+    public function getUGCPoiGeojson($app_id)
     {
-        $pois = UgcPoi::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+        $pois = UgcPoi::where('app_id', $app_id)->get();
 
-        if (!is_null($pois)) {
+        if ($pois->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];
             $features = [];
             foreach ($pois as $count => $poi) {
@@ -123,11 +138,11 @@ class App extends Model
         }
     }
     
-    public function getUGCMediaGeojson()
+    public function getUGCMediaGeojson($app_id)
     {
-        $medias = UgcMedia::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+        $medias = UgcMedia::where('app_id', $app_id)->get();
 
-        if (!is_null($medias)) {
+        if ($medias->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];
             $features = [];
             foreach ($medias as $count => $media) {
@@ -144,11 +159,11 @@ class App extends Model
         }
     }
     
-    public function getiUGCTrackGeojson()
+    public function getiUGCTrackGeojson($app_id)
     {
-        $tracks = UgcTrack::where('app_id', Auth()->user()->apps[0]->app_id)->get();
+        $tracks = UgcTrack::where('app_id', $app_id)->get();
 
-        if (!is_null($tracks)) {
+        if ($tracks->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];
             $features = [];
             foreach ($tracks as $count => $track) {
