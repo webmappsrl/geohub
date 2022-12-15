@@ -52,7 +52,7 @@ class UgcPoi extends Resource {
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        return $query->where('app_id', $request->user()->apps[0]->app_id);
+        return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
 
     /**
