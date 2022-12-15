@@ -175,4 +175,31 @@ class User extends Authenticatable implements JWTSubject {
         }
         return false;
     }
+    
+    /**
+     * defines whether at least one app associated to the user has Dashboard show true or not
+     * @param User|null $user
+     */
+    public function hasDashboardShow($app_id = null) {
+        $apps = $this->apps;
+        $result = false;
+
+        if ($app_id) {
+            foreach ($apps as $app) {
+                if ($app->id == $app_id) {
+                    if ($app->dashboard_show == true) {
+                        $result = true;
+                    }
+                }
+            }
+            return $result;
+        }
+
+        foreach ($apps as $app) {
+            if ($app->dashboard_show == true) {
+                $result = true;
+            }
+        }
+        return $result;
+    }
 }

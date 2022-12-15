@@ -35,7 +35,7 @@ class UgcMediaPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+        if ($user->hasRole('Editor') && $user->hasDashboardShow()) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class UgcMediaPolicy
      */
     public function view(User $user, UgcMedia $ugcMedia)
     {
-        if ($user->hasRole('Editor') && $user->apps[0]->dashboard_show == true) {
+        if ($user->hasRole('Editor') && $user->hasDashboardShow()) {
             return true;
         }
     }
