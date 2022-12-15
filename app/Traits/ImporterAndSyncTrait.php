@@ -66,6 +66,24 @@ trait ImporterAndSyncTrait {
     }
 
     /**
+     * It uses Overpass API to build a single node/way/relation query an return geojson (array)
+     *
+     * @param string $osmid must be in the form type/id (Valid example: node/770561143, way/145096288, relation/10670083)
+     * @return string
+     */
+    public function getGeojsonFromOsm(string $osmid) {
+        $ar = explode('/',$osmid);
+        $type = $ar[0];
+        $id = $ar[1];
+        $url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%28{$type}%28{$id}%29%3B%29%3Bconvert%20item%20%3A%3A%3D%3A%3A%2C%3A%3Ageom%3Dgeom%28%29%2C_osm_type%3Dtype%28%29%3Bout%20geom%3B";
+        $osm = $this->curlRequest($url,true);
+        $geojson['type']='Feature';
+        $geojson['properties']=$osm['elements'][0]['tags'];
+        $geojson['geometry']=$osm['elements'][0]['geometry'];
+        return $geojson;
+    }
+
+    /**
      * It creates an OutSourceFeature record of a given media from wordpress.
      * 
      * @param array the media array.
