@@ -169,7 +169,7 @@ class App extends Resource
                 'PROJECT' => $this->project_tab(),
                 'ICONS' => $this->icons_tab(),
             ];
-            if ($request->user()->apps[0]->dashboard_show == true) {
+            if ($request->user()->hasDashboardShow($this->id)) {
                 $tab_array = [
                     'APP' => $this->app_tab(),
                     'HOME' => $this->home_tab(),
