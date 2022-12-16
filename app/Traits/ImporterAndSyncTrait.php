@@ -160,4 +160,61 @@ trait ImporterAndSyncTrait {
             Log::info('Error message: '. $e->getMessage());
         }
     }
+
+    /**
+     * It returns tags array with ec_poi fileds name mapped with osm standard poi (node and way) properties
+     * Mapping:
+     * 
+     * I18N:
+     * name -> name                                              | text                           |           | not null |
+     * description -> description                                       | text                           |           |          | 
+     * 
+     * Not translatable (flat)
+     * phone -> contact_phone                                     | text                           |           |          | 
+     * email -> contact_email                                     | text                           |           |          | 
+     * addr:street -> addr_street                                       | character varying(255)         |           |          | 
+     * addr:housenumber -> addr_housenumber                                  | character varying(255)         |           |          | 
+     * addr:postcode -> addr_postcode                                     | character varying(255)         |           |          | 
+     * addr:city ->  addr_locality                                     | character varying(255)         |           |          | 
+     * opening_hours -> opening_hours                                     | character varying(255)         |           |          | 
+     * capacity -> capacity                                          | character varying(255)         |           |          | 
+     * stars -> stars                                             | character varying(255)         |           |          | 
+     * ele -> ele                                               | double precision               |           |          | 
+     *
+     * TODO: better i18n with translatable fields like name:it, description:it adding default langauge
+     * 
+     * @param array $poi
+     * @return array
+     */
+    public function prepareTagsForPoiWithOsmMapping(array $poi):array {
+        $mapping_flat = [
+            'phone' => 'phone',
+            'email' => 'email',
+            'addr:street' => 'addr_street',
+            'addr:housenumber' => 'adrr_housenumber',
+            'addr:postcode' => 'adrr_postcode',
+            'addr:city' => 'addr_locality',
+            'capacity' => 'capacity',
+            'stars' => 'stars',
+            'ele' => 'ele',
+        ]; 
+        $mapping_i18n = [
+            'name' => 'name',
+            'description' => 'description'
+        ];
+        $tags = [];
+        if(array_key_exists('properties',$poi) && is_array($poi['properties']) && count($poi['properties'])>0) {
+            foreach($poi['properties'] as $key => $val) {
+                // FLAT (without translation)
+                if(array_key_exists($key,$mapping_flat)) {
+                    $tags[$mapping_flat[$key]]=$val;
+                }
+                // Translatable
+                if(array_key_exists($key,$mapping_i18n)) {
+                    $tags[$mapping_i18n[$key]]['it']=$val;
+                }
+            }
+        }
+        return $tags;
+    }
 }
