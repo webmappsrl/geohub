@@ -47,7 +47,7 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
         try{
-            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
+            $geometry_poi = DB::select("SELECT ST_AsText(ST_Centroid(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."'))) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
@@ -139,7 +139,6 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
                 }
         }
         
-
         // Processing the poi_type
         Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
         $this->tags['poi_type'][] = $this->poi_type;
