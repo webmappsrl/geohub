@@ -56,8 +56,7 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
             // prepare the value of tags data
             Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
-            // $this->preparePOITagsJson($poi);
-            $this->params['tags'] = $this->tags;
+            $this->params['tags'] = $this->prepareTagsForPoiWithOsmMapping($poi);
             Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
             Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
             return $this->create_or_update_feature($this->params);
