@@ -4,6 +4,7 @@ namespace App\Classes\OutSourceImporter;
 
 use App\Models\OutSourceFeature;
 use App\Providers\CurlServiceProvider;
+use App\Providers\OsmServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,8 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
     public function importPoi(){
         // TODO: need to manage poi_type ?
         $this->poi_type = '';
-        $poi = $this->getGeojsonFromOsm($this->source_id);
+        $osmp = app(OsmServiceProvider::class);
+        $poi = json_decode($osmp->getGeojson($this->source_id),true);
                 
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
@@ -66,12 +68,12 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
     }
 
     /**
-     * Not needed
+     * TODO: implement
      *
      * @return void
      */
     public function importMedia(){
-        return 'Not needed';
+        return 'Not implemented';
     }
 
     /**
@@ -89,57 +91,5 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
             ],
             $params);
         return $feature->id;
-    }
-
-    /**
-     * TODO: It populates the tags variable with the POI curl information so that it can be syncronized with EcPOI 
-     * 
-     * @param array $poi The OutSourceFeature parameters to be added or updated 
-     * 
-     */
-    protected function preparePOITagsJson($poi){
-        Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
-        if (isset($poi['properties']['official_name'])){
-            $poiname = html_entity_decode($poi['properties']['official_name']);
-        } elseif (isset($poi['properties']['second_official_name'])){
-            $poiname = $poi['properties']['second_official_name'];
-        } elseif (isset($poi['properties']['name'])){
-            $poiname = html_entity_decode($poi['properties']['name']);
-        } else {
-            $poiname = $poi['properties']['alternative_name'];
-        }
-        
-        $this->tags['name']['it'] = $poiname;
-
-        // Adding ACF of Itinera Romanica to description
-        if (isset($poi['properties']['description'])) {
-            $this->tags['description']['it'] = $poi['properties']['description'];
-        }
-
-        // Adding POI parameters of general info
-        Log::info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
-        if (isset($poi['properties']['elevation']))
-            $this->tags['ele'] = $poi['properties']['elevation'];
-        if (isset($poi['properties']['address']))
-            $this->tags['addr_complete'] = $poi['properties']['address'];
-        if (isset($poi['properties']['operating_phone']))
-            $this->tags['contact_phone'] = $poi['properties']['operating_phone'];
-        if (isset($poi['properties']['operating_email']))
-            $this->tags['contact_email'] = $poi['properties']['operating_email'];
-        if (isset($poi['properties']['url'])) {
-                $urlarray = explode(',',$poi['properties']['url']);
-                foreach($urlarray as $url) {
-                    $related_url_name = parse_url($url);
-                    if (isset($related_url_name['host'])) {
-                        $this->tags['related_url'][$related_url_name['host']] = $url;
-                    } else {
-                        $this->tags['related_url'][$related_url_name['path']] = $url;
-                    }
-                }
-        }
-        
-        // Processing the poi_type
-        Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
-        $this->tags['poi_type'][] = $this->poi_type;
     }
 }
