@@ -41,15 +41,17 @@ use Illuminate\Support\ServiceProvider;
  * JSON: https://api.openstreetmap.org/api/0.6/relation/12312405.json 
  * JSONFULL: https://api.openstreetmap.org/api/0.6/relation/12312405/full.json 
  * 
+ * TODO: implement node
+ * TODO: implement way
  * TODO: implement relation
  * TODO: manage internal Exception
  * 
  * TRY ON TINKER
  * $osmp = app(\App\Providers\OsmServiceProvider::class);
  * $string = $osmp->getGeojson('node/770561143');
- * $array = $osmp->getGeojson('node/770561143',true);
+ * $array = json_decode($osmp->getGeojson('node/770561143'),true);
  * $string = $osmp->getGeojson('way/145096288 ');
- * $array = $osmp->getGeojson('way/145096288 ',true);
+ * $array = json_decode($osmp->getGeojson('way/145096288 '),true);
  * 
  */
 class OsmServiceProvider extends ServiceProvider
@@ -82,7 +84,7 @@ class OsmServiceProvider extends ServiceProvider
      * @param string $osmid Osmid string with type: node/[id], way/[id], relation/[id]
      * @param boolean $retun_array set it as true if you want return value as array
      */
-    public function getGeojson(string $osmid, bool $retun_array=false) {
+    public function getGeojson(string $osmid):string {
         $geojson = [];
         $geojson['version'] = 0.6;
         $geojson['generator'] = 'Laravel OsmServiceProvider by WEBMAPP';
@@ -90,7 +92,8 @@ class OsmServiceProvider extends ServiceProvider
         $geojson['type']='Feature';
         $geojson['properties']=[];
         $geojson['geometry']=[];
-        if($retun_array) return $geojson;
         return json_encode($geojson);
     }
+
+
 }
