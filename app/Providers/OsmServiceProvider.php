@@ -49,9 +49,7 @@ use Illuminate\Support\ServiceProvider;
  * 
  * TRY ON TINKER
  * $osmp = app(\App\Providers\OsmServiceProvider::class);
- * $string = $osmp->getGeojson('node/770561143');
  * $array = json_decode($osmp->getGeojson('node/770561143'),true);
- * $string = $osmp->getGeojson('way/145096288 ');
  * $array = json_decode($osmp->getGeojson('way/145096288 '),true);
  * 
  */
@@ -99,8 +97,10 @@ class OsmServiceProvider extends ServiceProvider
 
         $geojson['_api_url'] = $this->getFullOsmApiUrlByOsmId($osmid);
 
-        $geojson['properties']=[];
-        $geojson['geometry']=[];
+        $props_and_geom = $this->getPropertiesAndGeometry($osmid);
+        $geojson['properties']=$props_and_geom[0];
+        $geojson['geometry']=$props_and_geom[1];
+  
         return json_encode($geojson);
     }
 
@@ -136,7 +136,7 @@ class OsmServiceProvider extends ServiceProvider
     }
 
     private function getPropertiesAndGeometry($osmid):array {
-        $json = $this->execCurl($this->getFullOsmApiUrlByOsmId($osmid));
+        $json = json_decode($this->execCurl($this->getFullOsmApiUrlByOsmId($osmid)),true);
         if(preg_match('/node/',$osmid)) {
             return $this->getPropertiesAndGeometryForNode($json);
         }
@@ -153,7 +153,8 @@ class OsmServiceProvider extends ServiceProvider
     }
 
     private function getPropertiesAndGeometryForNode($json):array {
-        $properties = [];
+        // TODO: manage exception with empty elements or no tags
+        $properties = $json['elements'][0]['tags'];
         $geometry = [];
         return [$properties,$geometry];
     }
