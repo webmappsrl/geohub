@@ -49,8 +49,8 @@ use Illuminate\Support\ServiceProvider;
  * 
  * TRY ON TINKER
  * $osmp = app(\App\Providers\OsmServiceProvider::class);
- * $array = json_decode($osmp->getGeojson('node/770561143'),true);
- * $array = json_decode($osmp->getGeojson('way/145096288 '),true);
+ * $s = $osmp->getGeojson('node/770561143');
+ * $s = $osmp->getGeojson('way/145096288 ');
  * 
  */
 class OsmServiceProvider extends ServiceProvider
@@ -168,8 +168,37 @@ class OsmServiceProvider extends ServiceProvider
 
     // TODO: test it!
     private function getPropertiesAndGeometryForWay($json):array {
+        // TODO: manage exception with empty elements or no tags
+        $nodes_full=[];
+        $nodes=[];
         $properties = [];
         $geometry = [];
+        $coordinates = [];
+
+        // Loop on elements
+        foreach ($json['elements'] as $element) {
+            if($element['type']=='node') {
+                $nodes_full[$element['id']]=[
+                    $element['lon'],
+                    $element['lat']
+                ];
+            }
+            else if ($element['type']=='way') {
+                $properties=$element['tags'];
+                $nodes=$element['nodes'];
+            }
+        }
+
+        // print_r($nodes);
+        // print_r($nodes_full);
+
+        // Build Geometry
+        foreach($nodes as $id) {
+            $coordinates[]=$nodes_full[$id];
+        }
+        $geometry['type']='LineString';
+        $geometry['coordinates']=$coordinates;
+
         return [$properties,$geometry];
     }
 
