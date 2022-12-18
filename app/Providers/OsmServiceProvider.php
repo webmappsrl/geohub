@@ -110,8 +110,7 @@ class OsmServiceProvider extends ServiceProvider
      * @param [type] $osmid
      * @return string
      */   
-     // TODO: test it!
-    private function getFullOsmApiUrlByOsmId($osmid): string {
+    public function getFullOsmApiUrlByOsmId($osmid): string {
         $url = 'https://api.openstreetmap.org/api/0.6/'.$osmid;
         if(preg_match('/node/',$osmid)){
             $url = $url . '.json';
