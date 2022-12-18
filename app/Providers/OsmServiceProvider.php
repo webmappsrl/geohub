@@ -153,10 +153,16 @@ class OsmServiceProvider extends ServiceProvider
     }
 
     // TODO: test it!
-    private function getPropertiesAndGeometryForNode($json):array {
+    private function getPropertiesAndGeometryForNode(array $json):array {
         // TODO: manage exception with empty elements or no tags
         $properties = $json['elements'][0]['tags'];
-        $geometry = [];
+        $geometry = [
+            'type' => 'Point',
+            'coordinates' => [
+                $json['elements'][0]['lon'],
+                $json['elements'][0]['lat']
+            ]
+        ];
         return [$properties,$geometry];
     }
 
