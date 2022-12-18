@@ -129,7 +129,6 @@ class OsmServiceProvider extends ServiceProvider
      * @param string $osmid
      * @return boolean true if is valid false otherwise
      */
-    // TODO: test it!
     public function checkOsmId(string $osmid):bool {
         if (preg_match('#^node/\d+$#',$osmid)==1) return true;
         if (preg_match('#^way/\d+$#',$osmid)==1) return true;
