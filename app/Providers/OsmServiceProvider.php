@@ -109,7 +109,8 @@ class OsmServiceProvider extends ServiceProvider
      *
      * @param [type] $osmid
      * @return string
-     */
+     */   
+     // TODO: test it!
     private function getFullOsmApiUrlByOsmId($osmid): string {
         $url = 'https://api.openstreetmap.org/api/0.6/'.$osmid;
         if(preg_match('/node/',$osmid)){
@@ -128,7 +129,8 @@ class OsmServiceProvider extends ServiceProvider
      * @param string $osmid
      * @return boolean true if is valid false otherwise
      */
-    private function checkOsmId(string $osmid):bool {
+    // TODO: test it!
+    public function checkOsmId(string $osmid):bool {
         if (preg_match('#^node/\d+$#',$osmid)==1) return true;
         if (preg_match('#^way/\d+$#',$osmid)==1) return true;
         if (preg_match('#^relation/\d+$#',$osmid)==1) return true;
@@ -152,6 +154,7 @@ class OsmServiceProvider extends ServiceProvider
         return [];
     }
 
+    // TODO: test it!
     private function getPropertiesAndGeometryForNode($json):array {
         // TODO: manage exception with empty elements or no tags
         $properties = $json['elements'][0]['tags'];
@@ -159,12 +162,14 @@ class OsmServiceProvider extends ServiceProvider
         return [$properties,$geometry];
     }
 
+    // TODO: test it!
     private function getPropertiesAndGeometryForWay($json):array {
         $properties = [];
         $geometry = [];
         return [$properties,$geometry];
     }
 
+    // TODO: test it!
     private function getPropertiesAndGeometryForRelation($json):array {
         $properties = [];
         $geometry = [];
