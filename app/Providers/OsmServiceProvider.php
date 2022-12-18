@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Exception;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -85,15 +86,114 @@ class OsmServiceProvider extends ServiceProvider
      * @param boolean $retun_array set it as true if you want return value as array
      */
     public function getGeojson(string $osmid):string {
+
+        if(!$this->checkOsmId($osmid)) {
+            throw new Exception('Invalid osmid '.$osmid);
+        }
+
         $geojson = [];
         $geojson['version'] = 0.6;
         $geojson['generator'] = 'Laravel OsmServiceProvider by WEBMAPP';
         $geojson['_osmid'] = $osmid;
         $geojson['type']='Feature';
+
+        $geojson['_api_url'] = $this->getFullOsmApiUrlByOsmId($osmid);
+
         $geojson['properties']=[];
         $geojson['geometry']=[];
         return json_encode($geojson);
     }
 
+    /**
+     * Returns the URL OSM v06 JSON API string (full form way and relation)
+     *
+     * @param [type] $osmid
+     * @return string
+     */
+    private function getFullOsmApiUrlByOsmId($osmid): string {
+        $url = 'https://api.openstreetmap.org/api/0.6/'.$osmid;
+        if(preg_match('/node/',$osmid)){
+            $url = $url . '.json';
+        } 
+        else {
+            // way and relation directly call full.json
+            $url = $url . '/full.json';
+        }
+        return $url;
+    }
 
+    /**
+     * Return true if osmid is valid: node/[id], way/[id], relation/[id]
+     *
+     * @param string $osmid
+     * @return boolean true if is valid false otherwise
+     */
+    private function checkOsmId(string $osmid):bool {
+        if (preg_match('#^node/\d+$#',$osmid)==1) return true;
+        if (preg_match('#^way/\d+$#',$osmid)==1) return true;
+        if (preg_match('#^relation/\d+$#',$osmid)==1) return true;
+        return false;
+    }
+
+    private function getPropertiesAndGeometry($osmid):array {
+        $json = $this->execCurl($this->getFullOsmApiUrlByOsmId($osmid));
+        if(preg_match('/node/',$osmid)) {
+            return $this->getPropertiesAndGeometryForNode($json);
+        }
+        else if(preg_match('/way/',$osmid)) {
+            return $this->getPropertiesAndGeometryForWay($json);
+        }
+        else if(preg_match('/relation/',$osmid)) {
+            return $this->getPropertiesAndGeometryForRelation($json);
+        }
+        else {
+            throw new Exception('OSMID has not vali type (node,way,relation) '.$osmid);
+        }
+        return [];
+    }
+
+    private function getPropertiesAndGeometryForNode($json):array {
+        $properties = [];
+        $geometry = [];
+        return [$properties,$geometry];
+    }
+
+    private function getPropertiesAndGeometryForWay($json):array {
+        $properties = [];
+        $geometry = [];
+        return [$properties,$geometry];
+    }
+
+    private function getPropertiesAndGeometryForRelation($json):array {
+        $properties = [];
+        $geometry = [];
+        return [$properties,$geometry];
+    }
+
+    private function execCurl($url):string {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET'
+        ));
+
+        $response = curl_exec($curl);
+
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($httpcode == 200) {
+            return $response;
+        }
+        throw new Exception('Invalid CURL request exit with code '.$httpcode);
+    }
 }
