@@ -54,4 +54,16 @@ abstract class OutSourceImporterFeatureAbstract
                 break;
         }
     }
+
+    /**
+     * TODO:
+     * 1. If OSF does not exist return true
+     *
+     * @param string $date 'YYYY-MM-DD HH:MM:SS'
+     * @return boolean
+     */
+    public function needToBeUdated(string $date): bool {
+        return true;
+    }
+
 }
