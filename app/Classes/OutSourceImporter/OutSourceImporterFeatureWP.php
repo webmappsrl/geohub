@@ -400,6 +400,10 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         if (isset($poi['zindex']))
             $this->tags['zindex'] = $poi['zindex'];
         
+        // Adding POI custom parameters from caiparma
+        if (isset($poi['color']))
+            $this->tags['color'] = $poi['color'];
+        
         // Processing the feature image of POI
         if (isset($poi['featured_media']) && $poi['featured_media']) {
             Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
