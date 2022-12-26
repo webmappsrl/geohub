@@ -209,6 +209,19 @@ class OsmServiceProvider extends ServiceProvider
         return [$properties,$geometry];
     }
 
+
+    /**
+     * It returns the REAL updated_at time for a OSM feature. Where real means the most recent element
+     * that builds up the feature. For example if a relation has timestamp value 01-01-2000 and one of
+     * way member has timestamp 01-01-2001 the return value will be 01-01-2001 and NOT 01-01-2000
+     *
+     * @param array $json Json array response from node/way/relation full API (v06)
+     * @return string
+     */
+    public function getUpdatedAt(array $json) : string {
+        return '';
+    }
+
     private function execCurl($url):string {
         $curl = curl_init();
 
