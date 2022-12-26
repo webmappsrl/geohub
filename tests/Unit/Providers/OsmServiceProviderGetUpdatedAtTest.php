@@ -98,14 +98,65 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
     // RELATION
     /** @test */
     public function with_relation_with_relation_more_recent_it_returns_relation_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'way',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'relation',
+                    'timestamp' => '2001-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2001-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
     /** @test */
     public function with_relation_with_way_more_recent_it_returns_way_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'way',
+                    'timestamp' => '2001-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'relation',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2001-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
     /** @test */
     public function with_relation_with_node_more_recent_it_returns_node_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2001-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'way',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'relation',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2001-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
 }
