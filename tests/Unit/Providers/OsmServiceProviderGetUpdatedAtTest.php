@@ -61,12 +61,38 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
     // WAY
     /** @test */
     public function with_way_with_older_node_it_returns_way_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'way',
+                    'timestamp' => '2001-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2001-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
 
     /** @test */
     public function with_way_with_older_way_it_returns_node_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2001-01-01T12:30:40Z',
+                ],
+                [
+                    'type' => 'way',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2001-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
 
     // RELATION
