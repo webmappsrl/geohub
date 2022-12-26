@@ -210,6 +210,7 @@ return [
         App\Providers\OutSourceSentieroItaliaProvider::class,
         App\Providers\OutSourceOSMProvider::class,
         App\Providers\CurlServiceProvider::class,
+        App\Providers\OsmServiceProvider::class,
 
         /**
          * A PHP desktop/mobile user agent parser
