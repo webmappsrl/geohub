@@ -42,8 +42,6 @@ use Illuminate\Support\ServiceProvider;
  * JSON: https://api.openstreetmap.org/api/0.6/relation/12312405.json 
  * JSONFULL: https://api.openstreetmap.org/api/0.6/relation/12312405/full.json 
  * 
- * TODO: implement node
- * TODO: implement way
  * TODO: implement relation
  * TODO: manage internal Exception
  * 
@@ -135,8 +133,13 @@ class OsmServiceProvider extends ServiceProvider
         return false;
     }
 
-    private function getPropertiesAndGeometry($osmid):array {
-        $json = json_decode($this->execCurl($this->getFullOsmApiUrlByOsmId($osmid)),true);
+    public function getPropertiesAndGeometry($osmid):array {
+        $curl = app(CurlServiceProvider::class);
+        $url = $this->getFullOsmApiUrlByOsmId($osmid);
+        $json = json_decode($curl->exec($url),true);
+        if(!array_key_exists('elements',$json) ) {
+            throw new Exception("Response from OSM has something wrong: check it out with $url.", 1);
+        }
         if(preg_match('/node/',$osmid)) {
             return $this->getPropertiesAndGeometryForNode($json);
         }
@@ -152,9 +155,19 @@ class OsmServiceProvider extends ServiceProvider
         return [];
     }
 
-    // TODO: test it!
     private function getPropertiesAndGeometryForNode(array $json):array {
-        // TODO: manage exception with empty elements or no tags
+        if(!isset($json['elements'][0]['tags'])) {
+            throw new Exception("JSON from OSM has no tags", 1);
+            
+        }
+        if(!isset($json['elements'][0]['lat'])) {
+            throw new Exception("JSON from OSM has no lat", 1);
+            
+        }
+        if(!isset($json['elements'][0]['lon'])) {
+            throw new Exception("JSON from OSM has no lon", 1);
+            
+        }
         $properties = $json['elements'][0]['tags'];
         $geometry = [
             'type' => 'Point',
@@ -163,12 +176,12 @@ class OsmServiceProvider extends ServiceProvider
                 $json['elements'][0]['lat']
             ]
         ];
+        $properties['_updated_at']=$this->getUpdatedAt($json);
         return [$properties,$geometry];
     }
 
     // TODO: test it!
     private function getPropertiesAndGeometryForWay($json):array {
-        // TODO: manage exception with empty elements or no tags
         $nodes_full=[];
         $nodes=[];
         $properties = [];
@@ -189,9 +202,6 @@ class OsmServiceProvider extends ServiceProvider
             }
         }
 
-        // print_r($nodes);
-        // print_r($nodes_full);
-
         // Build Geometry
         foreach($nodes as $id) {
             $coordinates[]=$nodes_full[$id];
@@ -202,7 +212,7 @@ class OsmServiceProvider extends ServiceProvider
         return [$properties,$geometry];
     }
 
-    // TODO: test it!
+    // TODO: implement and test it!
     private function getPropertiesAndGeometryForRelation($json):array {
         $properties = [];
         $geometry = [];
@@ -230,32 +240,5 @@ class OsmServiceProvider extends ServiceProvider
             $updated_at[]=strtotime($element['timestamp']);
         }
         return date('Y-m-d H:i:s',max($updated_at));
-    }
-
-    private function execCurl($url):string {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        ));
-
-        $response = curl_exec($curl);
-
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpcode == 200) {
-            return $response;
-        }
-        throw new Exception('Invalid CURL request exit with code '.$httpcode);
     }
 }
