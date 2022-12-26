@@ -35,7 +35,7 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
                 ],
                 [
                     'type' => 'node',
-                    'timestamp' => '2000-01-01T12:30:30Z',
+                    'timestamp' => '2000-01-01T12:30:40Z',
                 ],
             ]
         ];
@@ -46,7 +46,16 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
     // NODE
     /** @test */
     public function with_node_it_returns_timestamp() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                    'timestamp' => '2000-01-01T12:30:40Z',
+                ],
+            ]
+        ];
+        $this->assertEquals('2000-01-01 12:30:40',$osmp->getUpdatedAt($json));
     }  
 
     // WAY

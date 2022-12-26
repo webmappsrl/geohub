@@ -222,12 +222,14 @@ class OsmServiceProvider extends ServiceProvider
         if(!array_key_exists('elements',$json)) {
             throw new Exception("Json ARRAY has not elements key, something is wrong.", 1);
         }
+        $updated_at = [];
         foreach ($json['elements'] as $element) {
             if(!array_key_exists('timestamp',$element)) {
                 throw new Exception("An element has no TIMESTAMP key", 1);
             }
+            $updated_at[]=strtotime($element['timestamp']);
         }
-        return '';
+        return date('Y-m-d H:i:s',max($updated_at));
     }
 
     private function execCurl($url):string {
