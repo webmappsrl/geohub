@@ -219,6 +219,9 @@ class OsmServiceProvider extends ServiceProvider
      * @return string
      */
     public function getUpdatedAt(array $json) : string {
+        if(!array_key_exists('elements',$json)) {
+            throw new Exception("Json ARRAY has not elements key, something is wrong.", 1);
+        }
         return '';
     }
 

@@ -1,7 +1,8 @@
 <?php
 
 namespace Tests\Unit\Providers;
-
+use App\Providers\OsmServiceProvider;
+use Exception;
 use Tests\TestCase;
 
 class OsmServiceProviderGetUpdatedAtTest extends TestCase
@@ -9,7 +10,10 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
     // Exceptions
     /** @test */
     public function no_elements_throw_Exception() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [];
+        $this->expectException(Exception::class);
+        $osmp->getUpdatedAt($json);
     } 
     /** @test */
     public function no_timestamp_throw_Exception() {
