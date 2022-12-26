@@ -222,6 +222,11 @@ class OsmServiceProvider extends ServiceProvider
         if(!array_key_exists('elements',$json)) {
             throw new Exception("Json ARRAY has not elements key, something is wrong.", 1);
         }
+        foreach ($json['elements'] as $element) {
+            if(!array_key_exists('timestamp',$element)) {
+                throw new Exception("An element has no TIMESTAMP key", 1);
+            }
+        }
         return '';
     }
 

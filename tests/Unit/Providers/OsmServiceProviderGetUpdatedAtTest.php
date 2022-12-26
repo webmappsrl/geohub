@@ -17,7 +17,30 @@ class OsmServiceProviderGetUpdatedAtTest extends TestCase
     } 
     /** @test */
     public function no_timestamp_throw_Exception() {
-        $this->assertTrue(false);
+        $osmp = app(OsmServiceProvider::class);
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                ]
+            ]
+        ];
+        $this->expectException(Exception::class);
+        $osmp->getUpdatedAt($json);
+
+        $json = [
+            'elements' => [
+                [
+                    'type' => 'node',
+                ],
+                [
+                    'type' => 'node',
+                    'timestamp' => '2000-01-01T12:30:30Z',
+                ],
+            ]
+        ];
+        $this->expectException(Exception::class);
+        $osmp->getUpdatedAt($json);
     }  
 
     // NODE
