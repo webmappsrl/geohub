@@ -43,7 +43,8 @@ use Illuminate\Support\ServiceProvider;
  * JSONFULL: https://api.openstreetmap.org/api/0.6/relation/12312405/full.json 
  * 
  * TODO: implement relation
- * TODO: manage internal Exception
+ * TODO: Exception remove all generic relation (throw new Exception) with specific Exception and 
+ *       update test with specific Exception
  * 
  * TRY ON TINKER
  * $osmp = app(\App\Providers\OsmServiceProvider::class);
@@ -180,8 +181,7 @@ class OsmServiceProvider extends ServiceProvider
         return [$properties,$geometry];
     }
 
-    // TODO: test it!
-    private function getPropertiesAndGeometryForWay($json):array {
+    private function getPropertiesAndGeometryForWay(array $json):array {
         $nodes_full=[];
         $nodes=[];
         $properties = [];
@@ -191,13 +191,25 @@ class OsmServiceProvider extends ServiceProvider
         // Loop on elements
         foreach ($json['elements'] as $element) {
             if($element['type']=='node') {
-                $nodes_full[$element['id']]=[
+                if(!array_key_exists('lon',$element)) {
+                    throw new OsmServiceProviderExceptionNodeHasNoLon("No lon (longitude) found", 1);   
+                }
+                if(!array_key_exists('lat',$element)) {
+                    throw new OsmServiceProviderExceptionNodeHasNoLat("No lat (latitude) found", 1);   
+                }
+                $nodes_full[$element['id']]=[                    
                     $element['lon'],
                     $element['lat']
                 ];
             }
             else if ($element['type']=='way') {
+                if(!array_key_exists('tags',$element)) {
+                    throw new OsmServiceProviderExceptionNoTags("No tags found in way", 1);   
+                }
                 $properties=$element['tags'];
+                if(!array_key_exists('nodes',$element)) {
+                    throw new OsmServiceProviderExceptionWayHasNoNodes("No nodes found in way", 1);   
+                }
                 $nodes=$element['nodes'];
             }
         }
@@ -208,7 +220,7 @@ class OsmServiceProvider extends ServiceProvider
         }
         $geometry['type']='LineString';
         $geometry['coordinates']=$coordinates;
-
+        $properties['_updated_at']=$this->getUpdatedAt($json);
         return [$properties,$geometry];
     }
 
@@ -242,3 +254,10 @@ class OsmServiceProvider extends ServiceProvider
         return date('Y-m-d H:i:s',max($updated_at));
     }
 }
+
+class OsmServiceProviderException extends Exception {}
+class OsmServiceProviderExceptionNoElements extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNoTags extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionWayHasNoNodes extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNodeHasNoLat extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNodeHasNoLon extends OsmServiceProviderException {}
