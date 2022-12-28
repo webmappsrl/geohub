@@ -42,10 +42,9 @@ use Illuminate\Support\ServiceProvider;
  * JSON: https://api.openstreetmap.org/api/0.6/relation/12312405.json 
  * JSONFULL: https://api.openstreetmap.org/api/0.6/relation/12312405/full.json 
  * 
- * TODO: implement node
- * TODO: implement way
  * TODO: implement relation
- * TODO: manage internal Exception
+ * TODO: Exception remove all generic relation (throw new Exception) with specific Exception and 
+ *       update test with specific Exception
  * 
  * TRY ON TINKER
  * $osmp = app(\App\Providers\OsmServiceProvider::class);
@@ -135,8 +134,13 @@ class OsmServiceProvider extends ServiceProvider
         return false;
     }
 
-    private function getPropertiesAndGeometry($osmid):array {
-        $json = json_decode($this->execCurl($this->getFullOsmApiUrlByOsmId($osmid)),true);
+    public function getPropertiesAndGeometry($osmid):array {
+        $curl = app(CurlServiceProvider::class);
+        $url = $this->getFullOsmApiUrlByOsmId($osmid);
+        $json = json_decode($curl->exec($url),true);
+        if(!array_key_exists('elements',$json) ) {
+            throw new Exception("Response from OSM has something wrong: check it out with $url.", 1);
+        }
         if(preg_match('/node/',$osmid)) {
             return $this->getPropertiesAndGeometryForNode($json);
         }
@@ -152,9 +156,19 @@ class OsmServiceProvider extends ServiceProvider
         return [];
     }
 
-    // TODO: test it!
     private function getPropertiesAndGeometryForNode(array $json):array {
-        // TODO: manage exception with empty elements or no tags
+        if(!isset($json['elements'][0]['tags'])) {
+            throw new Exception("JSON from OSM has no tags", 1);
+            
+        }
+        if(!isset($json['elements'][0]['lat'])) {
+            throw new Exception("JSON from OSM has no lat", 1);
+            
+        }
+        if(!isset($json['elements'][0]['lon'])) {
+            throw new Exception("JSON from OSM has no lon", 1);
+            
+        }
         $properties = $json['elements'][0]['tags'];
         $geometry = [
             'type' => 'Point',
@@ -163,12 +177,11 @@ class OsmServiceProvider extends ServiceProvider
                 $json['elements'][0]['lat']
             ]
         ];
+        $properties['_updated_at']=$this->getUpdatedAt($json);
         return [$properties,$geometry];
     }
 
-    // TODO: test it!
-    private function getPropertiesAndGeometryForWay($json):array {
-        // TODO: manage exception with empty elements or no tags
+    private function getPropertiesAndGeometryForWay(array $json):array {
         $nodes_full=[];
         $nodes=[];
         $properties = [];
@@ -178,19 +191,28 @@ class OsmServiceProvider extends ServiceProvider
         // Loop on elements
         foreach ($json['elements'] as $element) {
             if($element['type']=='node') {
-                $nodes_full[$element['id']]=[
+                if(!array_key_exists('lon',$element)) {
+                    throw new OsmServiceProviderExceptionNodeHasNoLon("No lon (longitude) found", 1);   
+                }
+                if(!array_key_exists('lat',$element)) {
+                    throw new OsmServiceProviderExceptionNodeHasNoLat("No lat (latitude) found", 1);   
+                }
+                $nodes_full[$element['id']]=[                    
                     $element['lon'],
                     $element['lat']
                 ];
             }
             else if ($element['type']=='way') {
+                if(!array_key_exists('tags',$element)) {
+                    throw new OsmServiceProviderExceptionNoTags("No tags found in way", 1);   
+                }
                 $properties=$element['tags'];
+                if(!array_key_exists('nodes',$element)) {
+                    throw new OsmServiceProviderExceptionWayHasNoNodes("No nodes found in way", 1);   
+                }
                 $nodes=$element['nodes'];
             }
         }
-
-        // print_r($nodes);
-        // print_r($nodes_full);
 
         // Build Geometry
         foreach($nodes as $id) {
@@ -198,41 +220,44 @@ class OsmServiceProvider extends ServiceProvider
         }
         $geometry['type']='LineString';
         $geometry['coordinates']=$coordinates;
-
+        $properties['_updated_at']=$this->getUpdatedAt($json);
         return [$properties,$geometry];
     }
 
-    // TODO: test it!
+    // TODO: implement and test it!
     private function getPropertiesAndGeometryForRelation($json):array {
         $properties = [];
         $geometry = [];
         return [$properties,$geometry];
     }
 
-    private function execCurl($url):string {
-        $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        ));
-
-        $response = curl_exec($curl);
-
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpcode == 200) {
-            return $response;
+    /**
+     * It returns the REAL updated_at time for a OSM feature. Where real means the most recent element
+     * that builds up the feature. For example if a relation has timestamp value 01-01-2000 and one of
+     * way member has timestamp 01-01-2001 the return value will be 01-01-2001 and NOT 01-01-2000
+     *
+     * @param array $json Json array response from node/way/relation full API (v06)
+     * @return string
+     */
+    public function getUpdatedAt(array $json) : string {
+        if(!array_key_exists('elements',$json)) {
+            throw new Exception("Json ARRAY has not elements key, something is wrong.", 1);
         }
-        throw new Exception('Invalid CURL request exit with code '.$httpcode);
+        $updated_at = [];
+        foreach ($json['elements'] as $element) {
+            if(!array_key_exists('timestamp',$element)) {
+                throw new Exception("An element has no TIMESTAMP key", 1);
+            }
+            $updated_at[]=strtotime($element['timestamp']);
+        }
+        return date('Y-m-d H:i:s',max($updated_at));
     }
 }
+
+class OsmServiceProviderException extends Exception {}
+class OsmServiceProviderExceptionNoElements extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNoTags extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionWayHasNoNodes extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNodeHasNoLat extends OsmServiceProviderException {}
+class OsmServiceProviderExceptionNodeHasNoLon extends OsmServiceProviderException {}
