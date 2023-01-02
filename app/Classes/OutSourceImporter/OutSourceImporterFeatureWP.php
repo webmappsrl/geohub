@@ -401,8 +401,48 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             $this->tags['zindex'] = $poi['zindex'];
         
         // Adding POI custom parameters from caiparma
-        if (isset($poi['color']))
-            $this->tags['color'] = $poi['color'];
+        if (isset($poi['acf'])) {
+            if (isset($poi['acf']['caipr_poi_localita']))
+                $this->tags['caipr_poi_localita'] = $poi['acf']['caipr_poi_localita'];
+            if (isset($poi['acf']['caipr_poi_title_alt']))
+                $this->tags['caipr_poi_title_alt'] = $poi['acf']['caipr_poi_title_alt'];
+            if (isset($poi['acf']['caipr_poi_collegamenti']))
+                $this->tags['caipr_poi_collegamenti'] = $poi['acf']['caipr_poi_collegamenti'];
+            if (isset($poi['acf']['caipr_poi_data_opera']))
+                $this->tags['caipr_poi_data_opera'] = $poi['acf']['caipr_poi_data_opera'];
+            if (isset($poi['acf']['caipr_poi_data_manutenzione']))
+                $this->tags['caipr_poi_data_manutenzione'] = $poi['acf']['caipr_poi_data_manutenzione'];
+            if (isset($poi['acf']['caipr_poi_data_sopraluogo']))
+                $this->tags['caipr_poi_data_sopraluogo'] = $poi['acf']['caipr_poi_data_sopraluogo'];
+            if (isset($poi['acf']['caipr_poi_uso_attuale']))
+                $this->tags['caipr_poi_uso_attuale'] = $poi['acf']['caipr_poi_uso_attuale'];
+            if (isset($poi['acf']['caipr_poi_uso_storico']))
+                $this->tags['caipr_poi_uso_storico'] = $poi['acf']['caipr_poi_uso_storico'];
+            if (isset($poi['acf']['caipr_poi_epoca']))
+                $this->tags['caipr_poi_epoca'] = $poi['acf']['caipr_poi_epoca'];
+            if (isset($poi['acf']['caipr_poi_iconografia']))
+                $this->tags['caipr_poi_iconografia'] = $poi['acf']['caipr_poi_iconografia'];
+            if (isset($poi['acf']['caipr_poi_igm_1']))
+                $this->tags['caipr_poi_igm_1'] = $poi['acf']['caipr_poi_igm_1'];
+            if (isset($poi['acf']['caipr_poi_igm_2']))
+                $this->tags['caipr_poi_igm_2'] = $poi['acf']['caipr_poi_igm_2'];
+            if (isset($poi['acf']['caipr_poi_proposta_restauro']))
+                $this->tags['caipr_poi_proposta_restauro'] = $poi['acf']['caipr_poi_proposta_restauro'];
+            if (isset($poi['acf']['caipr_poi_proprieta']))
+                $this->tags['caipr_poi_proprieta'] = $poi['acf']['caipr_poi_proprieta'];
+            if (isset($poi['acf']['caipr_poi_restauratore']))
+                $this->tags['caipr_poi_restauratore'] = $poi['acf']['caipr_poi_restauratore'];
+            if (isset($poi['acf']['caipr_poi_rilevatore']))
+                $this->tags['caipr_poi_rilevatore'] = $poi['acf']['caipr_poi_rilevatore'];
+            if (isset($poi['acf']['caipr_poi_segnalato_da']))
+                $this->tags['caipr_poi_segnalato_da'] = $poi['acf']['caipr_poi_segnalato_da'];
+            if (isset($poi['acf']['caipr_poi_gis_er']))
+                $this->tags['caipr_poi_gis_er'] = $poi['acf']['caipr_poi_gis_er'];
+            if (isset($poi['acf']['caipr_poi_stato_conservazione']))
+                $this->tags['caipr_poi_stato_conservazione'] = $poi['acf']['caipr_poi_stato_conservazione'];
+            if (isset($poi['acf']['scheda_elenco']))
+                $this->tags['scheda_elenco'] = $poi['acf']['scheda_elenco'];
+        }
         
         // Processing the feature image of POI
         if (isset($poi['featured_media']) && $poi['featured_media']) {
