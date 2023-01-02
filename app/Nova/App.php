@@ -181,7 +181,7 @@ class App extends Resource
                 ];
             }
             return [
-                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array )),
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array ))->withToolbar(),
             ];
         }
     }
@@ -963,7 +963,7 @@ class App extends Resource
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
-            }),
+            })
         ];
     }
 }

@@ -454,104 +454,103 @@ class SyncEcFromOutSource
                     }
 
                     if (!$this->only_related_url) { // start sync if only related url is not true
-                    // Attach poi_type to poi
-                    if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
-                        if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
-                            foreach ($out_source->tags['poi_type'] as $cat) { 
-                                $geohub_w = TaxonomyPoiType::where('identifier',$cat)->first();
-                                if ($geohub_w && !is_null($geohub_w)) { 
-                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                        // Attach poi_type to poi
+                        if ( !empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial' ) {
+                            if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
+                                foreach ($out_source->tags['poi_type'] as $cat) { 
+                                    $geohub_w = TaxonomyPoiType::where('identifier',$cat)->first();
+                                    if ($geohub_w && !is_null($geohub_w)) { 
+                                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                    }
                                 }
-                            }
-                        } else if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
-                            $geohub_w = TaxonomyPoiType::where('identifier',$out_source->tags['poi_type'])->first();
-                            if ($geohub_w && !is_null($geohub_w)) { 
-                                $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
-                            }
-                        } else {
-                            $path = parse_url($this->endpoint);
-                            $file_name = str_replace('.','-',$path['host']);
-                            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
-                            
-                            foreach ($out_source->tags['poi_type'] as $cat) {
-                                foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
-                                    if ($w['geohub_identifier'] == $cat) {
-                                        Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
-                                        $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
-                                        if ($geohub_w && !is_null($geohub_w)) { 
-                                            $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
-                                        } else {
-                                            $new_poi_type = TaxonomyPoiType::create(
-                                                [
-                                                    'identifier' => $w['geohub_identifier'],
-                                                    'name' => $w['source_title'],
-                                                    'description' => $w['source_description'],
-                                                ]
-                                                );
-                                            $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                            } else if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                                $geohub_w = TaxonomyPoiType::where('identifier',$out_source->tags['poi_type'])->first();
+                                if ($geohub_w && !is_null($geohub_w)) { 
+                                    $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
+                                }
+                            } else {
+                                $path = parse_url($this->endpoint);
+                                $file_name = str_replace('.','-',$path['host']);
+                                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                                
+                                foreach ($out_source->tags['poi_type'] as $cat) {
+                                    foreach (json_decode($taxonomy_map,true)['poi_type'] as $w ) {
+                                        if ($w['geohub_identifier'] == $cat) {
+                                            Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
+                                            $geohub_w = TaxonomyPoiType::where('identifier',$w['geohub_identifier'])->first();
+                                            if ($geohub_w && !is_null($geohub_w)) { 
+                                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                            } else {
+                                                $new_poi_type = TaxonomyPoiType::create(
+                                                    [
+                                                        'identifier' => $w['geohub_identifier'],
+                                                        'name' => $w['source_title']
+                                                    ]
+                                                    );
+                                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    } elseif (!empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint == 'sicai_pt_accoglienza_unofficial') {
-                        foreach ($out_source->tags['poi_type'] as $cat) {
-                            $cat = trim($cat);
-                            $cat_identifier = strtolower($cat);
-                            $cat_identifier = str_replace(' ','-',$cat_identifier);
-                            if ($cat_identifier == 'b&b') {
-                                $cat_identifier = 'b-and-b';
+                        } elseif (!empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint == 'sicai_pt_accoglienza_unofficial') {
+                            foreach ($out_source->tags['poi_type'] as $cat) {
+                                $cat = trim($cat);
+                                $cat_identifier = strtolower($cat);
+                                $cat_identifier = str_replace(' ','-',$cat_identifier);
+                                if ($cat_identifier == 'b&b') {
+                                    $cat_identifier = 'b-and-b';
+                                }
+                                $cat_name = ucwords($cat);
+                                Log::info('Attaching EC POI taxonomyPoiTypes: '.$cat_identifier);
+                                $geohub_w = TaxonomyPoiType::where('identifier',$cat_identifier)->first();
+                                if ($geohub_w && !is_null($geohub_w)) { 
+                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
+                                } else {
+                                    $new_poi_type = TaxonomyPoiType::create(
+                                        [
+                                            'identifier' => $cat_identifier,
+                                            'name' => $cat_name,
+                                        ]
+                                        );
+                                    $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                                }
                             }
-                            $cat_name = ucwords($cat);
-                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$cat_identifier);
-                            $geohub_w = TaxonomyPoiType::where('identifier',$cat_identifier)->first();
-                            if ($geohub_w && !is_null($geohub_w)) { 
-                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
-                            } else {
-                                $new_poi_type = TaxonomyPoiType::create(
-                                    [
-                                        'identifier' => $cat_identifier,
-                                        'name' => $cat_name,
-                                    ]
-                                    );
-                                $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
+                        } else {
+                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
+                            $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
+                        }
+
+                        // Attach Themes to poi
+                        if ($this->theme) {
+                            Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
+                            $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier',$this->theme)->first());
+                        }
+
+                        // Attach feature image to poi
+                        if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                            Log::info('Attaching EC POI FEATURE_IMAGE.');
+                            $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
+                                            ->where('user_id',$this->author_webmapp)
+                                            ->first();
+                            
+                            if ($EcMedia && !is_null($EcMedia)) {
+                                $ec_poi->featureImage()->associate($EcMedia);
                             }
                         }
-                    } else {
-                        Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
-                        $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier',$this->poi_type)->first());
-                    }
-
-                    // Attach Themes to poi
-                    if ($this->theme) {
-                        Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
-                        $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier',$this->theme)->first());
-                    }
-
-                    // Attach feature image to poi
-                    if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
-                        Log::info('Attaching EC POI FEATURE_IMAGE.');
-                        $EcMedia = EcMedia::where('out_source_feature_id',$out_source->tags['feature_image'])
-                                        ->where('user_id',$this->author_webmapp)
-                                        ->first();
                         
-                        if ($EcMedia && !is_null($EcMedia)) {
-                            $ec_poi->featureImage()->associate($EcMedia);
-                        }
-                    }
-                    
-                    // Add OSF tags properties to ECPOI
-                    Log::info('Attaching EC POI infos.');
-                    if (isset($out_source->tags['address_complete']))
-                        $ec_poi->addr_complete = $out_source->tags['address_complete'];
-                    if (isset($out_source->tags['contact_phone']))
-                        $ec_poi->contact_phone = $out_source->tags['contact_phone'];
-                    if (isset($out_source->tags['contact_email']))
-                        $ec_poi->contact_email = $out_source->tags['contact_email'];
-                    if (isset($out_source->tags['capacity']))
-                        $ec_poi->capacity = $out_source->tags['capacity'];
-                    if (isset($out_source->tags['stars']))
-                        $ec_poi->stars = $out_source->tags['stars'];
+                        // Add OSF tags properties to ECPOI
+                        Log::info('Attaching EC POI infos.');
+                        if (isset($out_source->tags['address_complete']))
+                            $ec_poi->addr_complete = $out_source->tags['address_complete'];
+                        if (isset($out_source->tags['contact_phone']))
+                            $ec_poi->contact_phone = $out_source->tags['contact_phone'];
+                        if (isset($out_source->tags['contact_email']))
+                            $ec_poi->contact_email = $out_source->tags['contact_email'];
+                        if (isset($out_source->tags['capacity']))
+                            $ec_poi->capacity = $out_source->tags['capacity'];
+                        if (isset($out_source->tags['stars']))
+                            $ec_poi->stars = $out_source->tags['stars'];
 
                     } // end sync if only related url is not true
 
@@ -559,22 +558,22 @@ class SyncEcFromOutSource
                         $ec_poi->related_url = $out_source->tags['related_url'];
                     
                     if (!$this->only_related_url) { // start sync if only related url is not true
-                    if (isset($out_source->tags['code']))
-                        $ec_poi->code = $out_source->tags['code'];
+                        if (isset($out_source->tags['code']))
+                            $ec_poi->code = $out_source->tags['code'];
 
-                    // Attach EcMedia Gallery to poi
-                    if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
-                        Log::info('Attaching EC POI IMAGE_GALLERY.');
-                        foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
-                            $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
-                                            ->where('user_id',$this->author_webmapp)
-                                            ->first();
-                            
-                            if ($EcMedia && !is_null($EcMedia)) {
-                                $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
+                        // Attach EcMedia Gallery to poi
+                        if ( !empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                            Log::info('Attaching EC POI IMAGE_GALLERY.');
+                            foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
+                                $EcMedia = EcMedia::where('out_source_feature_id',$OSD_media_id)
+                                                ->where('user_id',$this->author_webmapp)
+                                                ->first();
+                                
+                                if ($EcMedia && !is_null($EcMedia)) {
+                                    $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
+                                }
                             }
                         }
-                    }
                     }// end sync if only related url is not true
                     $ec_poi->save();
                     array_push($new_ec_features,$ec_poi->id);
