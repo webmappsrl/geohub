@@ -484,8 +484,7 @@ class SyncEcFromOutSource
                                                 $new_poi_type = TaxonomyPoiType::create(
                                                     [
                                                         'identifier' => $w['geohub_identifier'],
-                                                        'name' => $w['source_title'],
-                                                        'description' => $w['source_description'],
+                                                        'name' => $w['source_title']
                                                     ]
                                                     );
                                                 $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
