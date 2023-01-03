@@ -2,6 +2,7 @@
 
 namespace App\Classes\OutSourceImporter;
 
+use App\Http\Facades\OsmClient;
 use App\Models\OutSourceFeature;
 use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
@@ -9,6 +10,8 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Providers\OsmServiceProvider;
+use Symm\Gisconverter\Gisconverter;
 
 class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract { 
     use ImporterAndSyncTrait;
@@ -32,8 +35,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
-            $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
+            if (isset($track['osmid']) && !empty($track['osmid'])) {
+                $osmid = $track['osmid'];
+                $this->tags['osmid'] = $track['osmid'];
+
+                $osmClient = new OsmClient;
+                $geojson_content = $osmClient::getGeojson('relation/'.$osmid);
+                $geojson_content = json_decode($geojson_content);
+                $geojson_content = json_encode($geojson_content->geometry);
+                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_content."'))) As wkt")[0]->wkt;
+                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_content."')))) As wkt")[0]->wkt;
+            } else {
+                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
+                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
+            }
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['raw_data'] = json_encode($track);
