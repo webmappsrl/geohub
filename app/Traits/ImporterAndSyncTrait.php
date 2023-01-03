@@ -91,17 +91,27 @@ trait ImporterAndSyncTrait {
      */
     public function createOSFMediaFromWP($media)
     {
-        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$media['id']);
+        $media_id = '';
+        if (isset($media['id'])) {
+            $media_id = $media['id'];
+        } elseif (isset($media['query'])) {
+            foreach($media['query']['pages'] as $pageid => $array) {
+                $media_id = $pageid;
+            }
+        } else {
+            $media_id = random_int(900000000, 999999999);
+        }
+        Log::info('Preparing OSF MEDIA TAGS with external ID: '.$media_id);
         $params['tags'] = $this->prepareMediaTagsJson($media);
         $params['type'] = 'media';
         $params['provider'] = get_class($this);
         $params['geometry'] = $this->mediaGeom;
         $params['raw_data'] = json_encode($media);
-        Log::info('Finished preparing OSF MEDIA with external ID: '.$media['id']);
-        Log::info('Starting creating OSF MEDIA with external ID: '.$media['id']);
+        Log::info('Finished preparing OSF MEDIA with external ID: '.$media_id);
+        Log::info('Starting creating OSF MEDIA with external ID: '.$media_id);
         $feature = OutSourceFeature::updateOrCreate(
             [
-                'source_id' => $media['id'],
+                'source_id' => $media_id,
                 'endpoint' => $this->endpoint
             ],$params);
         return $feature->id;
@@ -197,6 +207,7 @@ trait ImporterAndSyncTrait {
             'capacity' => 'capacity',
             'stars' => 'stars',
             'ele' => 'ele',
+            'ref' => 'ref'
         ]; 
         $mapping_i18n = [
             'name' => 'name',
@@ -213,8 +224,24 @@ trait ImporterAndSyncTrait {
                 if(array_key_exists($key,$mapping_i18n)) {
                     $tags[$mapping_i18n[$key]]['it']=$val;
                 }
+                if ($key == 'wikimedia_commons') {
+                    $url = "https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=timestamp|user|userid|comment|canonicaltitle|url|size|dimensions|sha1|mime|thumbmime|mediatype|bitdepth&format=json&titles=$val";
+                    $media = $this->curlRequest($url);
+                    if ($media) {
+                        $tags['feature_image'] = $this->createOSFMediaFromWP($media);
+                    } else {
+                        Log::info('ERROR reaching media: '.$url);
+                    }
+                }
+            }
+            // Add "Punto acqua" to Fountains without name.
+            if (!isset($poi['properties']['name']) && isset($poi['properties']['amenity']) && ($poi['properties']['amenity'] == 'drinking_water')) {
+                $tags['name']['it'] = 'Punto acqua';
             }
         }
+
+        // TODO: 
+        // 
         return $tags;
     }
 }

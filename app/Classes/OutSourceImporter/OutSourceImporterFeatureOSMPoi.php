@@ -51,6 +51,7 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
         try{
             $geometry_poi = DB::select("SELECT ST_AsText(ST_Centroid(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."'))) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
+            $this->mediaGeom = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['raw_data'] = json_encode($poi);
@@ -91,5 +92,47 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract {
             ],
             $params);
         return $feature->id;
+    }
+
+    /**
+     * It populates the tags variable of media so that it can be syncronized with EcMedia
+     * 
+     * @param array $media The OutSourceFeature parameters to be added or updated 
+     * 
+     */
+    public function prepareMediaTagsJson($media){ 
+        foreach($media['query']['pages'] as $pageid => $array) {
+            $media_id = $pageid;
+            $media = $array;
+            break;
+        }
+        Log::info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media_id);
+        $tags = [];
+        $tags['name']['it'] = $media['title'];
+
+        try{
+            // Saving the Media in to the s3-osfmedia storage (.env in production)
+            $storage_name = config('geohub.osf_media_storage_name');
+            Log::info('Saving OSF MEDIA on storage '.$storage_name);
+            Log::info(" ");
+            if (isset($media['imageinfo']) && isset($media['imageinfo'][0])) {
+                $url_encoded = $media['imageinfo'][0]['url'];
+            } 
+            $options  = array('http' => array('user_agent' => 'custom user agent string'));
+            $context  = stream_context_create($options);
+            $contents = file_get_contents($url_encoded, false, $context);
+            $basename = explode('.',basename($url_encoded));
+            $s3_osfmedia = Storage::disk($storage_name);
+            $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
+            $s3_osfmedia->put($osf_name_tmp, $contents);
+
+            Log::info('Saved OSF Media with name: '.$osf_name_tmp);
+            $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp))?$osf_name_tmp:'';
+        } catch(Exception $e) {
+            echo $e;
+            Log::info('Saving media in s3-osfmedia error:' . $e);
+        }
+
+        return $tags;
     }
 }
