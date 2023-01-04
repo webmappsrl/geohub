@@ -215,6 +215,7 @@ trait ImporterAndSyncTrait {
         ];
         $tags = [];
         if(array_key_exists('properties',$poi) && is_array($poi['properties']) && count($poi['properties'])>0) {
+            $tags['ref'] = '';
             foreach($poi['properties'] as $key => $val) {
                 // FLAT (without translation)
                 if(array_key_exists($key,$mapping_flat)) {
