@@ -140,90 +140,69 @@ class EcPoi extends Resource {
 
 
     public function fieldsForIndex(Request $request) {
+
+        if ($request->user()->can('Admin')) { 
+            return [
+                Text::make('Name')->sortable(),
+                BelongsTo::make('Author', 'author', User::class)->sortable(),
+    
+                DateTime::make(__('Created At'), 'created_at')->sortable(),
+    
+                DateTime::make(__('Updated At'), 'updated_at')->sortable(),
+            ];
+        } else {
+            return [
+                Text::make('Name')->sortable(),
+                Boolean::make('Description', function(){
+                    if ($this->description) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }),
+                Boolean::make('Feature Image', function(){
+                    if ($this->featureImage) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }),
+                Boolean::make('Image Gallery', function(){
+                    if (count($this->ecMedia) > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }),
+                Text::make('Poi Types', function(){
+                    if($this->taxonomyPoiTypes()->count() >0) {
+                        return implode('<br/>',$this->taxonomyPoiTypes()->pluck('name')->toArray());
+                    }
+                    return 'No Poi Types';
+                })->asHtml(),
+    
+                Text::make('Themes', function(){
+                    if($this->taxonomyThemes()->count() >0) {
+                        return implode('<br/>',$this->taxonomyThemes()->pluck('name')->toArray());
+                    }
+                    return 'No Themes';
+                })->asHtml(),
+    
+                Text::make('Wheres', function(){
+                    if($this->taxonomyWheres()->count() >0) {
+                        return implode('<br/>',$this->taxonomyWheres()->pluck('name')->toArray());
+                    }
+                    return 'No Wheres';
+                })->asHtml(),
+            ];
+        }
+
         return [
 
-            Text::make('Name')->sortable(),
 
-            Boolean::make('Description', function(){
-                if ($this->description) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            }),
             
-            Boolean::make('Feature Image', function(){
-                if ($this->featureImage) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            }),
+
             
-            Boolean::make('Image Gallery', function(){
-                if (count($this->ecMedia) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            }),
-
-            Text::make('Poi Types', function(){
-                if($this->taxonomyPoiTypes()->count() >0) {
-                    return implode('<br/>',$this->taxonomyPoiTypes()->pluck('name')->toArray());
-                }
-                return 'No Poi Types';
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            })->asHtml(),
-
-            Text::make('Themes', function(){
-                if($this->taxonomyThemes()->count() >0) {
-                    return implode('<br/>',$this->taxonomyThemes()->pluck('name')->toArray());
-                }
-                return 'No Themes';
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            })->asHtml(),
-
-            Text::make('Wheres', function(){
-                if($this->taxonomyWheres()->count() >0) {
-                    return implode('<br/>',$this->taxonomyWheres()->pluck('name')->toArray());
-                }
-                return 'No Wheres';
-            })->canSee(function ($request) {
-                if ($request->user()->can('Admin', $this)) { return false; } else {
-                    return true;
-                }
-            })->asHtml(),
-
-            BelongsTo::make('Author', 'author', User::class)->sortable()->canSee(function ($request) {
-                return $request->user()->can('Admin', $this);
-            }),
-
-            DateTime::make(__('Created At'), 'created_at')->sortable()->canSee(function ($request) {
-                return $request->user()->can('Admin', $this);
-            }),
-
-            DateTime::make(__('Updated At'), 'updated_at')->sortable()->canSee(function ($request) {
-                return $request->user()->can('Admin', $this);
-            }),
 
             Text::make('API',function () {
                 return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
