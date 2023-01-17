@@ -144,11 +144,19 @@ class EcPoi extends Resource {
         if ($request->user()->can('Admin')) { 
             return [
                 Text::make('Name')->sortable(),
+
                 BelongsTo::make('Author', 'author', User::class)->sortable(),
     
                 DateTime::make(__('Created At'), 'created_at')->sortable(),
     
                 DateTime::make(__('Updated At'), 'updated_at')->sortable(),
+
+                // Text::make('API',function () {
+                //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
+                // })->asHtml(),
+                Text::make('API', function () {
+                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                })->asHtml(),
             ];
         } else {
             return [
@@ -194,6 +202,10 @@ class EcPoi extends Resource {
                     }
                     return 'No Wheres';
                 })->asHtml(),
+
+                Text::make('API', function () {
+                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                })->asHtml(),
             ];
         }
 
@@ -204,9 +216,7 @@ class EcPoi extends Resource {
 
             
 
-            Text::make('API',function () {
-                return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
-            })->asHtml(),
+            
         ];
 
     }
