@@ -81,7 +81,7 @@ class TaxonomyTheme extends Resource {
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
 
-            // new Panel('UX/UI', $this->ux_ui_panel()),
+            new Panel('UX/UI', $this->ux_ui_panel()),
         ];
     }
 

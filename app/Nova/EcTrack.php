@@ -146,8 +146,11 @@ class EcTrack extends Resource
     
                 DateTime::make(__('Updated At'), 'updated_at')->sortable(),
     
+                // Text::make('API', function () {
+                //     return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
+                // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -202,7 +205,7 @@ class EcTrack extends Resource
                 })->asHtml(),
     
                 Text::make('API', function () {
-                    return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         }
