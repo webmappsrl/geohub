@@ -203,22 +203,11 @@ class EcPoi extends Resource {
                     return 'No Wheres';
                 })->asHtml(),
 
-                Text::make('API', function () {
-                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
-                })->asHtml(),
+                // Text::make('API', function () {
+                //     return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                // })->asHtml(),
             ];
         }
-
-        return [
-
-
-            
-
-            
-
-            
-        ];
-
     }
 
     public function fieldsForDetail(Request $request) {
