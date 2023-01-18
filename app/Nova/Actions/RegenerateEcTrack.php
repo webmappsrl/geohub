@@ -18,7 +18,7 @@ class RegenerateEcTrack extends Action
     use InteractsWithQueue, Queueable, SerializesModels;
 
     public $showOnDetail = true;
-    public $showOnTableRow = true;
+    public $showOnTableRow = false;
 
     public $name='GEOMIXER';
 
