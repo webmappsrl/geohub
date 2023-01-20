@@ -162,7 +162,7 @@ class App extends Resource
                 (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
             ];
         } else {
-            
+
             $tab_array = [
                 'APP' => $this->app_tab(),
                 'HOME' => $this->home_tab(),
@@ -181,7 +181,7 @@ class App extends Resource
                 ];
             }
             return [
-                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array ))->withToolbar(),
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array))->withToolbar(),
             ];
         }
     }
@@ -343,6 +343,7 @@ class App extends Resource
         $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         return [
             Multiselect::make(__('Tiles'), 'tiles')->options([
+                "{\"notile\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'no tile',
                 "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
                 "{\"mute\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'mute',
                 "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
@@ -485,7 +486,7 @@ class App extends Resource
                 ->hideFromIndex()
                 ->help(__('Enable download of ever app track in GPX, KML, GEOJSON')),
             Toggle::make(__('print_track_enable'), 'print_track_enable')
-            ->trueValue('On')
+                ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
@@ -876,9 +877,9 @@ class App extends Resource
             Text::make('Most Viewed POIs List', function () use ($mostviewedpois) {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody>';
                 $collection = json_decode($mostviewedpois);
-                foreach($collection->features as $count => $feature) {
-                    $count ++;
-                    $html .= '<tr><td style="width: 50%;">'. $count .' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
+                foreach ($collection->features as $count => $feature) {
+                    $count++;
+                    $html .= '<tr><td style="width: 50%;">' . $count . ' - ' . $feature->properties->name . '</td><td style="width: 50%;"><strong>' . $feature->properties->visits . '</strong> visits</td></tr>';
                 }
                 $html .= '</tbody></table>';
                 return $html;
