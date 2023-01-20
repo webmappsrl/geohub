@@ -1,0 +1,816 @@
+{
+    "poi_type": {
+        "403": {
+            "source_title": {
+                "it": "Acquidoccio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "watery"
+        },
+        "100": {
+            "source_title": {
+                "it": "Annesso rustico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "rustic-annex"
+        },
+        "387": {
+            "source_title": {
+                "it": "Architrave"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "architrave"
+        },
+        "68": {
+            "source_title": {
+                "it": "Battistero"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "baptistery"
+        },
+        "76": {
+            "source_title": {
+                "it": "Borgo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "borgo"
+        },
+        "157": {
+            "source_title": {
+                "it": "Bottega\/negozio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "shop"
+        },
+        "82": {
+            "source_title": {
+                "it": "Campanile"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bell-tower"
+        },
+        "404": {
+            "source_title": {
+                "it": "Canale di drenaggio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "drainage-channel"
+        },
+        "231": {
+            "source_title": {
+                "it": "Canonica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "clergy-house"
+        },
+        "419": {
+            "source_title": {
+                "it": "Capanne"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hut"
+        },
+        "196": {
+            "source_title": {
+                "it": "Cappella"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "chapel"
+        },
+        "39": {
+            "source_title": {
+                "it": "Casa",
+                "en": "house"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "house"
+        },
+        "79": {
+            "source_title": {
+                "it": "Casa con balchio",
+                "en": "House with balcony"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "house-with-balcony"
+        },
+        "71": {
+            "source_title": {
+                "it": "Casa forte",
+                "en": "Strong house"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "strong-house"
+        },
+        "90": {
+            "source_title": {
+                "it": "Casa rurale",
+                "en": "Rural house"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "rural-house"
+        },
+        "40": {
+            "source_title": {
+                "it": "Casa torre",
+                "en": "Tower house"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tower-house"
+        },
+        "43": {
+            "source_title": {
+                "it": "Castello"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "castle"
+        },
+        "53": {
+            "source_title": {
+                "it": "Chiesa",
+                "en": "Church"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "church"
+        },
+        "206": {
+            "source_title": {
+                "it": "Cinta muraria",
+                "en": "Defensive wall"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "defensive-wall"
+        },
+        "142": {
+            "source_title": {
+                "it": "Cippo di confine",
+                "en": "Boundary marker"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "boundary-marker"
+        },
+        "84": {
+            "source_title": {
+                "it": "Concio",
+                "en": "Ashlar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "ashlar"
+        },
+        "257": {
+            "source_title": {
+                "it": "Convento"
+            },
+            "source_description": {
+                "it": "Convent"
+            },
+            "geohub_identifier": "convent"
+        },
+        "57": {
+            "source_title": {
+                "it": "Corte",
+                "en": "Courtyard"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "courtyard"
+        },
+        "452": {
+            "source_title": {
+                "it": "Edifici religiosi",
+                "en": "Religious buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "religious-building"
+        },
+        "194": {
+            "source_title": {
+                "it": "Edifici rurali",
+                "en": "Rural buildings"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "rural-building"
+        },
+        "448": {
+            "source_title": {
+                "it": "Elementi architettonici puntuali",
+                "en": "Punctual architectural elements"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "punctual-architectural-element"
+        },
+        "242": {
+            "source_title": {
+                "it": "Elemento decorativo",
+                "en": "Decorative element"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "decorative-element"
+        },
+        "349": {
+            "source_title": {
+                "it": "Epigrafe",
+                "en": "Epigraphy"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "epigraphy"
+        },
+        "373": {
+            "source_title": {
+                "it": "Essiccatoio \/ Metato",
+                "en": "Dryer \/ Metato"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "dryer-metato"
+        },
+        "117": {
+            "source_title": {
+                "it": "Fienile",
+                "en": "Barn"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "barn"
+        },
+        "128": {
+            "source_title": {
+                "it": "Fogliaia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fogliaia"
+        },
+        "20": {
+            "source_title": {
+                "it": "Fontana"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fountain"
+        },
+        "372": {
+            "source_title": {
+                "it": "Fonte Battesimale",
+                "en": "Baptismal font"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "baptismal-font"
+        },
+        "101": {
+            "source_title": {
+                "it": "Forno"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "forno"
+        },
+        "449": {
+            "source_title": {
+                "it": "Fortificazioni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fortification"
+        },
+        "427": {
+            "source_title": {
+                "it": "Ghiacciaia",
+                "en": "Icebox"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "icebox"
+        },
+        "450": {
+            "source_title": {
+                "it": "Infrastrutture viarie",
+                "en": "Road infrastructure"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "road-infrastructure"
+        },
+        "45": {
+            "source_title": {
+                "it": "Insediamento",
+                "en": "Settlement"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "settlement"
+        },
+        "248": {
+            "source_title": {
+                "it": "Lapide commemorativa",
+                "en": "Memorial stone"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "memorial-stone"
+        },
+        "129": {
+            "source_title": {
+                "it": "Lavatoio",
+                "en": "Washhouse"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "washhouse"
+        },
+        "58": {
+            "source_title": {
+                "it": "Loggiato",
+                "en": "Loggia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "loggia"
+        },
+        "25": {
+            "source_title": {
+                "it": "Maest\u00e0",
+                "en": "Majesty"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty"
+        },
+        "382": {
+            "source_title": {
+                "it": "Maest\u00e0 dei Ponti",
+                "en": "Majesty of the bridges"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-bridges"
+        },
+        "26": {
+            "source_title": {
+                "it": "Maest\u00e0 delle abitazioni",
+                "en": "Majesty of housing"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-housing"
+        },
+        "326": {
+            "source_title": {
+                "it": "Maest\u00e0 delle chiese",
+                "en": "Majesty of churches"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-churches"
+        },
+        "251": {
+            "source_title": {
+                "it": "Maest\u00e0 delle Fonti",
+                "en": "Majesty of fountains"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-fountains"
+        },
+        "32": {
+            "source_title": {
+                "it": "Maest\u00e0 delle strade",
+                "en": "Majesty of the streets"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-streets"
+        },
+        "359": {
+            "source_title": {
+                "it": "Maest\u00e0 delle Vigne",
+                "en": "Majesty of the vineyards"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-vineyards"
+        },
+        "396": {
+            "source_title": {
+                "it": "Maest\u00e0 delocalizzata",
+                "en": "Relocated majesty"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "relocated-majesty"
+        },
+        "243": {
+            "source_title": {
+                "it": "Mascherone",
+                "en": "Mascaron"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mascaron"
+        },
+        "355": {
+            "source_title": {
+                "it": "Mest\u00e0 delle stalle",
+                "en": "Majesty of the stables"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "majesty-of-stables"
+        },
+        "29": {
+            "source_title": {
+                "it": "Mulino",
+                "en": "Mill"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mill"
+        },
+        "316": {
+            "source_title": {
+                "it": "Municipio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "amenity-townhall"
+        },
+        "50": {
+            "source_title": {
+                "it": "Muro a secco",
+                "en": "Dry stone"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "dry-stone"
+        },
+        "324": {
+            "source_title": {
+                "it": "Muro con arco",
+                "en": "Wall with arch"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "wall-with-arch"
+        },
+        "319": {
+            "source_title": {
+                "it": "Nicchia",
+                "en": "Niche"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "niche"
+        },
+        "282": {
+            "source_title": {
+                "it": "Nucleo storico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-core"
+        },
+        "59": {
+            "source_title": {
+                "it": "Oratorio",
+                "en": "Oratory"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "oratory"
+        },
+        "258": {
+            "source_title": {
+                "it": "Ospizio",
+                "en": "Hospice"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hospice"
+        },
+        "295": {
+            "source_title": {
+                "it": "Ostello"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "ostello"
+        },
+        "63": {
+            "source_title": {
+                "it": "Palazzo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "palace"
+        },
+        "86": {
+            "source_title": {
+                "it": "Pieve"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pieve"
+        },
+        "83": {
+            "source_title": {
+                "it": "Pilastro",
+                "en": "Pillar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "Pillar"
+        },
+        "52": {
+            "source_title": {
+                "it": "Ponte"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highway-bridge"
+        },
+        "61": {
+            "source_title": {
+                "it": "Portale",
+                "en": "Portal"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "portal"
+        },
+        "98": {
+            "source_title": {
+                "it": "Portico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "portico"
+        },
+        "167": {
+            "source_title": {
+                "it": "Proposta di restauro",
+                "en": "Restoration proposal"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restoration-proposal"
+        },
+        "30": {
+            "source_title": {
+                "it": "Ruota Orizzontale",
+                "en": "Horizontal wheel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "horizontal-wheel"
+        },
+        "114": {
+            "source_title": {
+                "it": "Ruota Verticale",
+                "en": "Vertical wheel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "Vertical-wheel"
+        },
+        "412": {
+            "source_title": {
+                "it": "Sacello",
+                "en": "Sacellum"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "sacellum"
+        },
+        "297": {
+            "source_title": {
+                "it": "Santuario",
+                "en": "Sanctuary"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "sanctuary"
+        },
+        "150": {
+            "source_title": {
+                "it": "Selciato storico",
+                "en": "Historical pavement"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-pavement"
+        },
+        "126": {
+            "source_title": {
+                "it": "Sentiero storico",
+                "en": "Historic trail"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historic-trail"
+        },
+        "135": {
+            "source_title": {
+                "it": "Sito archeologico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "archaeological-site"
+        },
+        "451": {
+            "source_title": {
+                "it": "Spazi aperti e infrastrutture viarie",
+                "en": "Open spaces and road infrastructures"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "open-spaces-and-road-infrastructures"
+        },
+        "314": {
+            "source_title": {
+                "it": "Statua Votiva",
+                "en": "Votive statue"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "votive-statue"
+        },
+        "171": {
+            "source_title": {
+                "it": "Stemma gentilizio",
+                "en": "Coat of arms"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "coat-of-arms"
+        },
+        "88": {
+            "source_title": {
+                "it": "Strutture civili",
+                "en": "Civil structures"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "civil-structure"
+        },
+        "365": {
+            "source_title": {
+                "it": "Targa con Iscrizione",
+                "en": "Plate with Inscription"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "plate-with-inscription"
+        },
+        "153": {
+            "source_title": {
+                "it": "Torre"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tower"
+        },
+        "111": {
+            "source_title": {
+                "it": "Villa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        },
+        "338": {
+            "source_title": {
+                "it": "Villaggio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "village"
+        }
+    },
+    "activity": {
+        "9": {
+            "source_title": {
+                "it": "Escursionismo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "10": {
+            "source_title": {
+                "it": "MTB"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mtb"
+        }
+    }
+}

@@ -162,14 +162,14 @@ class App extends Resource
                 (new Tabs("APP Details: {$this->name} ({$this->id})", $this->sections()))->withToolbar(),
             ];
         } else {
-            
+
             $tab_array = [
                 'APP' => $this->app_tab(),
                 'HOME' => $this->home_tab(),
                 'PROJECT' => $this->project_tab(),
                 'ICONS' => $this->icons_tab(),
             ];
-            if ($request->user()->apps[0]->dashboard_show == true) {
+            if ($request->user()->hasDashboardShow($this->id)) {
                 $tab_array = [
                     'APP' => $this->app_tab(),
                     'HOME' => $this->home_tab(),
@@ -181,7 +181,7 @@ class App extends Resource
                 ];
             }
             return [
-                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array )),
+                (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array))->withToolbar(),
             ];
         }
     }
@@ -343,7 +343,9 @@ class App extends Resource
         $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         return [
             Multiselect::make(__('Tiles'), 'tiles')->options([
+                "{\"notile\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'no tile',
                 "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
+                "{\"mute\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'mute',
                 "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
                 "{\"GOMBITELLI\":\"https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png\"}" => 'GOMBITELLI',
             ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
@@ -484,7 +486,7 @@ class App extends Resource
                 ->hideFromIndex()
                 ->help(__('Enable download of ever app track in GPX, KML, GEOJSON')),
             Toggle::make(__('print_track_enable'), 'print_track_enable')
-            ->trueValue('On')
+                ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
@@ -875,9 +877,9 @@ class App extends Resource
             Text::make('Most Viewed POIs List', function () use ($mostviewedpois) {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody>';
                 $collection = json_decode($mostviewedpois);
-                foreach($collection->features as $count => $feature) {
-                    $count ++;
-                    $html .= '<tr><td style="width: 50%;">'. $count .' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
+                foreach ($collection->features as $count => $feature) {
+                    $count++;
+                    $html .= '<tr><td style="width: 50%;">' . $count . ' - ' . $feature->properties->name . '</td><td style="width: 50%;"><strong>' . $feature->properties->visits . '</strong> visits</td></tr>';
                 }
                 $html .= '</tbody></table>';
                 return $html;
@@ -887,15 +889,15 @@ class App extends Resource
 
     protected function map_analytics_tab(): array
     {
-        $poigeojson = $this->model()->getUGCPoiGeojson();
-        $mediageojson = $this->model()->getUGCMediaGeojson();
-        $trackgeojson = $this->model()->getiUGCTrackGeojson();
+        $poigeojson = $this->model()->getUGCPoiGeojson($this->model()->app_id);
+        $mediageojson = $this->model()->getUGCMediaGeojson($this->model()->app_id);
+        $trackgeojson = $this->model()->getiUGCTrackGeojson($this->model()->app_id);
         return [
             MapMultiPurposeNova3::make('All user created contents')->withMeta([
-                'center' => ["43", "10"],
+                'center' => ["43", "12"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'defaultZoom' => 9,
+                'defaultZoom' => 5,
                 'poigeojson' => $poigeojson,
                 'mediageojson' => $mediageojson,
                 'trackgeojson' => $trackgeojson
@@ -963,7 +965,7 @@ class App extends Resource
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
-            }),
+            })
         ];
     }
 }

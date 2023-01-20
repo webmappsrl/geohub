@@ -228,9 +228,9 @@ class Layer extends Resource
     public function filters(Request $request)
     {
         return [
-            (new NovaSearchableBelongsToFilter('App'))
-            ->fieldAttribute('app')
-            ->filterBy('app_id'),
+            // (new NovaSearchableBelongsToFilter('App'))
+            // ->fieldAttribute('app')
+            // ->filterBy('app_id'),
         ];
     }
 

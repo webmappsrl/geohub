@@ -52,7 +52,7 @@ class UgcPoi extends Resource {
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        return $query->where('app_id', $request->user()->apps[0]->app_id);
+        return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
 
     /**
@@ -122,9 +122,9 @@ class UgcPoi extends Resource {
     public function filters(Request $request): array {
         return [
             //new DateRange('created_at'),
-            (new NovaSearchableBelongsToFilter('Author'))
-                ->fieldAttribute('user')
-                ->filterBy('user_id')
+            // (new NovaSearchableBelongsToFilter('Author'))
+            //     ->fieldAttribute('user')
+            //     ->filterBy('user_id')
 
         ];
     }

@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'version' => 'geohub.223.3.4',
+    'version' => 'geohub.231.1.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -210,6 +210,7 @@ return [
         App\Providers\OutSourceSentieroItaliaProvider::class,
         App\Providers\OutSourceOSMProvider::class,
         App\Providers\CurlServiceProvider::class,
+        App\Providers\OsmServiceProvider::class,
 
         /**
          * A PHP desktop/mobile user agent parser

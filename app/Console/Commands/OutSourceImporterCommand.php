@@ -4,15 +4,18 @@ namespace App\Console\Commands;
 
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSMPoi;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListEUMA;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
+use App\Classes\OutSourceImporter\OutSourceImporterListOSMPoi;
 use App\Classes\OutSourceImporter\OutSourceImporterListSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterCommand extends Command
@@ -22,7 +25,12 @@ class OutSourceImporterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_importer {type : track, poi, media} {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} {provider : WP, StorageCSV, OSM2Cai, sicai} {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)} {--only_related_url : Only imports the related urls to the OSF}';
+    protected $signature = 'geohub:out_source_importer 
+                              {type : track, poi, media} 
+                              {endpoint : url to the resource (e.g. local;importer/parco_maremma/esercizi.csv)} 
+                              {provider : WP, StorageCSV, OSM2Cai, sicai} 
+                              {--single_feature= : ID of a single feature to import instead of a list (e.g. 1889)} 
+                              {--only_related_url : Only imports the related urls to the OSF}';
 
     /**
      * The console command description.
@@ -81,7 +89,11 @@ class OutSourceImporterCommand extends Command
                 return $this->importerEUMA();
                 break;
                     
-            default:
+            case 'osmpoi':
+                return $this->importerOSMPoi();
+                break;
+    
+                default:
                 return [];
                 break;
         }       
@@ -201,6 +213,30 @@ class OutSourceImporterCommand extends Command
                     Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
                     $count++;
                 }
+            }
+        } else {
+            Log::info('Importer EUMA get List is empty.');
+        }
+    }
+
+    private function importerOSMPoi(){
+        if($this->type != 'poi') {
+            throw new Exception('Only POI type supported by importerOSMPoi');
+        }
+        if ($this->single_feature) {
+            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+        } else {
+            $features = new OutSourceImporterListOSMPoi('poi',$this->endpoint);
+            $features_list = $features->getList();
+        }
+        if ($features_list) {
+            $count = 1;
+            foreach ($features_list as $id => $updated_at) {
+                Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                $OSF = new OutSourceImporterFeatureOSMPoi($this->type,$this->endpoint,$id);
+                $OSF_id = $OSF->importFeature();
+                Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
+                $count++;
             }
         } else {
             Log::info('Importer EUMA get List is empty.');
