@@ -237,6 +237,12 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         $this->tags['name'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
         $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
 
+        // Adding the name from Sardinian to Italian for Campos project
+        if ($this->endpoint == 'https://cordinamentu-campos.org') {
+            $this->tags['name']['it'] = html_entity_decode($poi['title']['rendered']);
+            $this->tags['description']['it'] = html_entity_decode($poi['content']['rendered']);
+        } 
+
         // Adding ACF of Itinera Romanica to description
         if (isset($poi['acf'])){
             if (isset($poi['acf']['titolo_alternativo']) && $poi['acf']['titolo_alternativo']) {
