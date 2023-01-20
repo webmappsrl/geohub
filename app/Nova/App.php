@@ -343,7 +343,7 @@ class App extends Resource
         $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         return [
             Multiselect::make(__('Tiles'), 'tiles')->options([
-                "{\"notile\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'no tile',
+                "{\"notile\":\"\"}" => 'no tile',
                 "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
                 "{\"mute\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'mute',
                 "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
