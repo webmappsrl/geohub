@@ -11,17 +11,6 @@
             },
             "geohub_identifier": "arrepentina"
         },
-        "39": {
-            "source_title": {
-                "sc": "Arti",
-                "it": "Arti"
-            },
-            "source_description": {
-                "sc": "",
-                "it": ""
-            },
-            "geohub_identifier": "arts"
-        },
         "46": {
             "source_title": {
                 "sc": "C\u00e0ntigos de cr\u00e8sia",
@@ -31,7 +20,7 @@
                 "sc": "",
                 "it": "Canti polivocali \"a cuncordu\" liturgici e paraliturgici di tradizione orale"
             },
-            "geohub_identifier": "càntigos-de-crèsia"
+            "geohub_identifier": "cantigos-de-cresia"
         },
         "40": {
             "source_title": {
@@ -75,7 +64,7 @@
                 "sc": "",
                 "it": ""
             },
-            "geohub_identifier": "organitos-e-fisarmònicas"
+            "geohub_identifier": "organitos-e-fisarmonicas"
         },
         "62": {
             "source_title": {
