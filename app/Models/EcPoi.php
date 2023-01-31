@@ -236,6 +236,10 @@ class EcPoi extends Model
                 $array['image_gallery'] = $gallery;
         }
 
+        if (isset($this->outSourcePoi->source_id) && strpos($this->outSourcePoi->source_id,'/')) {
+            $array['osm_url'] = 'https://www.openstreetmap.org/'.$this->outSourcePoi->source_id;
+        }
+
         $fileTypes = ['geojson', 'gpx', 'kml'];
         foreach ($fileTypes as $fileType) {
             $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);

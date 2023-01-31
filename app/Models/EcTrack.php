@@ -275,6 +275,10 @@ class EcTrack extends Model
                 $array['image_gallery'] = $gallery;
         }
 
+        if (isset($this->outSourceTrack->tags['osmid'])) {
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/'.$this->outSourceTrack->tags['osmid'];
+        }
+
         $fileTypes = ['geojson', 'gpx', 'kml'];
         foreach ($fileTypes as $fileType) {
             $array[$fileType . '_url'] = route('api.ec.track.download.' . $fileType, ['id' => $this->id]);

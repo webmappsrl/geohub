@@ -812,5 +812,79 @@
             },
             "geohub_identifier": "mtb"
         }
+    },
+    "theme": {
+        "18": {
+            "source_title": {
+                "it": "Cammini Storici"
+            },
+            "source_description": {
+                "it": "Cammini di particolare valenza storica nell'appennino parmense"
+            },
+            "geohub_identifier": "cammini-storici"
+        },
+        "454": {
+            "source_title": {
+                "it": "Ciaspole"
+            },
+            "source_description": {
+                "it": "Percorsi invernali con le ciaspole"
+            },
+            "geohub_identifier": "ciaspole"
+        },
+        "16": {
+            "source_title": {
+                "it": "Itinerari a tappe"
+            },
+            "source_description": {
+                "it": "Itinerari a tappe in provincia di Parma censiti nel catasto della regione Emilia Romagna "
+            },
+            "geohub_identifier": "itinerari-a-tappa"
+        },
+        "455": {
+            "source_title": {
+                "it": "Itinerari consigliati"
+            },
+            "source_description": {
+                "it": "Itinerari consigliati dal CAI Parma. Possono svolgersi al di fuori della rete sentieristica ufficiale e segnalata. Possono svolgersi in parte su propriet\u00e0 private, restate sul percorso. Percorrerli seguendo la traccia GPS."
+            },
+            "geohub_identifier": "itinerari-consigliati"
+        },
+        "17": {
+            "source_title": {
+                "it": "Itinerari naturalistici"
+            },
+            "source_description": {
+                "it": "Itinerari consigliati per la particolare valenza naturalistica nell'appennino parmense"
+            },
+            "geohub_identifier": "itinerari-naturalistici"
+        },
+        "11": {
+            "source_title": {
+                "it": "Sentieri gestiti dal CAI Parma"
+            },
+            "source_description": {
+                "it": "Sentieri ufficiali di cui il CAI di Parma \u00e8 incaricato della manutenzione per effetto di convenzioni con gli enti proprietari (Comuni, Parchi)"
+            },
+            "geohub_identifier": "sentieri-gestiti-dal-cai-parma"
+        },
+        "15": {
+            "source_title": {
+                "it": "Sentieri numerati"
+            },
+            "source_description": {
+                "it": "Sentieri ufficiali presenti nel catasto regionale della regione Emilia Romagna."
+            },
+            "geohub_identifier": "sentieri-numerati"
+        },
+        "457": {
+            "source_title": {
+                "it": "Sentiero Italia CAI"
+            },
+            "source_description": {
+                "it": "Tappe del Sentiero Italia in provincia di Parma"
+            },
+            "geohub_identifier": "sentiero-italia-cai"
+        }
     }
 }
