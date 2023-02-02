@@ -188,7 +188,7 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function getJson(): array
+    public function  getJson($allData = true): array
     {
         $array = $this->setOutSourceValue();
         if ($this->out_source_feature_id) {
@@ -224,20 +224,20 @@ class EcPoi extends Model
         }
 
         if ($this->featureImage)
-            $array['feature_image'] = $this->featureImage->getJson();
+            $array['feature_image'] = $this->featureImage->getJson($allData);
 
         if ($this->ecMedia) {
             $gallery = [];
             $ecMedia = $this->ecMedia;
             foreach ($ecMedia as $media) {
-                $gallery[] = $media->getJson();
+                $gallery[] = $media->getJson($allData);
             }
             if (count($gallery))
                 $array['image_gallery'] = $gallery;
         }
 
-        if (isset($this->outSourcePoi->source_id) && strpos($this->outSourcePoi->source_id,'/')) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/'.$this->outSourcePoi->source_id;
+        if (isset($this->outSourcePoi->source_id) && strpos($this->outSourcePoi->source_id, '/')) {
+            $array['osm_url'] = 'https://www.openstreetmap.org/' . $this->outSourcePoi->source_id;
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
@@ -388,11 +388,11 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function getGeojson(): ?array
+    public function getGeojson($allData = true): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+            $feature["properties"] = $this->getJson($allData);
 
             return $feature;
         } else return null;
