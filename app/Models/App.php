@@ -56,17 +56,17 @@ class App extends Model
     {
         return $this->hasMany(Layer::class);
     }
-    
+
     public function ugc_medias()
     {
         return $this->hasMany(UgcMedia::class);
     }
-    
+
     public function ugc_pois()
     {
         return $this->hasMany(UgcPoi::class);
     }
-    
+
     public function ugc_tracks()
     {
         return $this->hasMany(UgcTrack::class);
@@ -94,7 +94,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getMostViewedPoiGeojson()
     {
         $pois = EcPoi::where('user_id', $this->user_id)->limit(10)->get();
@@ -106,7 +106,7 @@ class App extends Model
                 $feature = $poi->getEmptyGeojson();
                 if (isset($feature["properties"])) {
                     $feature["properties"]["name"] = $poi->name;
-                     $feature["properties"]["visits"] = (11-$count)*10;
+                    $feature["properties"]["visits"] = (11 - $count) * 10;
                 }
 
                 $features[] = $feature;
@@ -127,7 +127,7 @@ class App extends Model
             foreach ($pois as $count => $poi) {
                 $feature = $poi->getEmptyGeojson();
                 if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-pois/'.$poi->id;
+                    $feature["properties"]["view"] = '/resources/ugc-pois/' . $poi->id;
                 }
 
                 $features[] = $feature;
@@ -137,7 +137,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getUGCMediaGeojson($app_id)
     {
         $medias = UgcMedia::where('app_id', $app_id)->get();
@@ -148,7 +148,7 @@ class App extends Model
             foreach ($medias as $count => $media) {
                 $feature = $media->getEmptyGeojson();
                 if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-medias/'.$media->id;
+                    $feature["properties"]["view"] = '/resources/ugc-medias/' . $media->id;
                 }
 
                 $features[] = $feature;
@@ -158,7 +158,7 @@ class App extends Model
             return json_encode($geoJson);
         }
     }
-    
+
     public function getiUGCTrackGeojson($app_id)
     {
         $tracks = UgcTrack::where('app_id', $app_id)->get();
@@ -169,7 +169,7 @@ class App extends Model
             foreach ($tracks as $count => $track) {
                 $feature = $track->getEmptyGeojson();
                 if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-tracks/'.$track->id;
+                    $feature["properties"]["view"] = '/resources/ugc-tracks/' . $track->id;
                 }
 
                 $features[] = $feature;
@@ -192,9 +192,10 @@ class App extends Model
         $pois = [];
         foreach ($themes as $theme) {
             foreach ($theme->ecPois()->get() as $poi) {
-                $item = $poi->getGeojson();
+                $item = $poi->getGeojson(false);
                 $item['properties']['related'] = false;
                 unset($item['properties']['pivot']);
+
                 array_push($pois, $item);
             }
         }

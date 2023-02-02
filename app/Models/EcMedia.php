@@ -127,7 +127,7 @@ class EcMedia extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson($allData = true): array {
         $array = $this->toArray();
         $toSave = ['id', 'name', 'url', 'description'];
 
@@ -142,7 +142,9 @@ class EcMedia extends Model {
         unset ($array['description']);
 
         $array['api_url'] = route('api.ec.media.geojson', ['id' => $this->id], true);
-        $array['sizes'] = json_decode($this->thumbnails, true);
+        if($allData) {
+            $array['sizes'] = json_decode($this->thumbnails, true);
+        }
 
         return $array;
     }
