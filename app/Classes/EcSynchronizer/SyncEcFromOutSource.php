@@ -362,6 +362,35 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track taxonomyThemes: '.$this->theme);
                         $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier',$this->theme)->first());
                     }
+                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP') {
+                        if ( !empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
+                            $path = parse_url($this->endpoint);
+                            $file_name = str_replace('.','-',$path['host']);
+                            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                            if (is_array(json_decode($taxonomy_map,true)['theme'])) {
+                                foreach ($out_source->tags['theme'] as $cat) {
+                                    foreach (json_decode($taxonomy_map,true)['theme'] as $w ) {
+                                        Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
+                                        if ($w['geohub_identifier'] == $cat) {
+                                            $geohub_w = TaxonomyActivity::where('identifier',$w['geohub_identifier'])->first();
+                                            if ($geohub_w && !is_null($geohub_w)) { 
+                                                $ec_track->taxonomyActivities()->syncWithoutDetaching($geohub_w);
+                                            } else {
+                                                $new_theme = TaxonomyActivity::create(
+                                                    [
+                                                        'identifier' => $w['geohub_identifier'],
+                                                        'name' => $w['source_title'],
+                                                        'description' => $w['source_description'],
+                                                    ]
+                                                    );
+                                                $ec_track->taxonomyActivities()->syncWithoutDetaching($new_theme);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
                         if (isset($out_source->tags['sda'])){
                             $sda = $out_source->tags['sda'];
@@ -391,6 +420,11 @@ class SyncEcFromOutSource
                                 $ec_track->ecPois()->syncWithoutDetaching($EcPoi);
                             }
                         }
+                    }
+
+                    // Adding related url to the track
+                    if (!empty($out_source->tags['related_url']) && isset($out_source->tags['related_url'])){
+                        $ec_track->related_url = $out_source->tags['related_url'];
                     }
 
                     // Adding cai_scale to Ec Track

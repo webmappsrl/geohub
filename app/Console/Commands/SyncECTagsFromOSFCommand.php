@@ -20,7 +20,8 @@ class SyncECTagsFromOSFCommand extends Command
     protected $signature = 'geohub:sync-ec-tags-from-osf
                             {type : Set the Ec type (track, poi)}
                             {author : Set the author that must be assigned to EcFeature crested, use email or ID}
-                            {--tag= : Set the name of the input that should be syncronized (es. description)}';
+                            {--tag= : Set the name of the input that should be syncronized (es. description)}
+                            {--force : Forces the update process even if the destination is not empty}';
 
     /**
      * The console command description.
@@ -34,6 +35,7 @@ class SyncECTagsFromOSFCommand extends Command
     protected $author;
     protected $author_id;
     protected $tag;
+    protected $force;
 
     /**
      * Create a new command instance.
@@ -56,6 +58,9 @@ class SyncECTagsFromOSFCommand extends Command
         $this->author = $this->argument('author');
         if ($this->option('tag'))
             $this->tag = $this->option('tag');
+        
+        if ($this->option('force'))
+            $this->force = true;
 
         $this->checkParameters();
         
@@ -67,7 +72,7 @@ class SyncECTagsFromOSFCommand extends Command
         if ($this->tag != 'all') {
             if ($out_source) {
                 $thistag = $this->tag;
-                if (empty($feature->$thistag)) {
+                if (empty($feature->$thistag) || $this->force == true) {
                     if (isset($out_source->tags[$thistag])) {
                         $feature->$thistag = $out_source->tags[$this->tag];
                         $feature->save();

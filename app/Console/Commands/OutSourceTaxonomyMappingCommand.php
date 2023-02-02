@@ -15,7 +15,7 @@ class OutSourceTaxonomyMappingCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_taxonomy_mapping {endpoint : url to the resource (e.g. https://stelvio.wp.webmapp.it)} {provider : WP, StorageCSV} {--activity : add this flag to map activity taxonomy} {--poi_type : add this flag to map webmapp_category/poi_type taxonomy}';
+    protected $signature = 'geohub:out_source_taxonomy_mapping {endpoint : url to the resource (e.g. https://stelvio.wp.webmapp.it)} {provider : WP, StorageCSV} {--activity : add this flag to map activity taxonomy} {--theme : add this flag to map theme taxonomy} {--poi_type : add this flag to map webmapp_category/poi_type taxonomy}';
 
     /**
      * The console command description.
@@ -27,6 +27,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $type;
     protected $endpoint;
     protected $activity;
+    protected $theme;
     protected $poi_type;
     protected $content;
 
@@ -54,6 +55,7 @@ class OutSourceTaxonomyMappingCommand extends Command
 
         $this->endpoint = $this->argument('endpoint');
         $this->activity = $this->option('activity');
+        $this->theme = $this->option('theme');
         $this->poi_type = $this->option('poi_type');
         $provider = $this->argument('provider');
 
@@ -80,9 +82,13 @@ class OutSourceTaxonomyMappingCommand extends Command
         if ($this->activity) {
             $this->importerWPActivity();
         }
-        if ($this->activity == false && $this->poi_type == false) {
+        if ($this->theme) {
+            $this->importerWPTheme();
+        }
+        if ($this->activity == false && $this->poi_type == false && $this->theme == false) {
             $this->importerWPPoiType();
             $this->importerWPActivity();
+            $this->importerWPTheme();
         }
 
         $this->createMappingFile();
@@ -183,6 +189,54 @@ class OutSourceTaxonomyMappingCommand extends Command
             }
         }
         $this->content["activity"] = $input;
+    }
+
+    private function importerWPTheme(){
+        $url = $this->endpoint.'/wp-json/wp/v2/theme?per_page=99';
+        $WC = $this->curlRequest($url);
+        $input = [];
+        if ($WC) {
+            foreach ($WC as $c) {
+                if ($c['count'] > 0) {
+                    Log::info('Start creating input theme '.$c['name'].' with external id: '.$c['id']);
+                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                        $title = [];
+                        $title = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['name'],
+                        ];
+                        $description = [
+                            explode('_',$c['wpml_current_locale'])[0] => $c['description'],
+                        ];
+                        if(!empty($c['wpml_translations'])) {
+                            foreach($c['wpml_translations'] as $lang){
+                                $locale = explode('_',$lang['locale']);
+                                $title[$locale[0]] = $lang['name']; 
+                                $cat_decode = $this->curlRequest($lang['source']);
+                                $description[$locale[0]] = $cat_decode['description']; 
+                            }
+                        }
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
+                    } else {
+                        $title = [
+                            'it' => $c['name'],
+                        ];
+                        $description = [
+                            'it' => $c['description'],
+                        ];
+                        $input[$c['id']] = [
+                            'source_title' => $title,
+                            'source_description' => $description,
+                            'geohub_identifier' => '',
+                        ];
+                    }
+                }
+            }
+        }
+        $this->content["theme"] = $input;
     }
     
     private function createMappingFile(){

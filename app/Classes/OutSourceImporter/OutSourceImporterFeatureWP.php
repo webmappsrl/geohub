@@ -182,6 +182,30 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             }
         }
 
+        // Adds related url to the track
+        if (isset($track['n7webmap_rpt_related_url'])) {
+            if (is_array($track['n7webmap_rpt_related_url'])) {
+                foreach($track['n7webmap_rpt_related_url'] as $url) {
+                    if (is_array($url)) {
+                        $related_url_name = parse_url($url['net7webmap_related_url']);
+                        $link = $url['net7webmap_related_url'];
+                    } else {
+                        $related_url_name = parse_url($url);
+                        $link = $url;
+                    }
+                    $host = $related_url_name;
+                    if (isset($related_url_name['host']) && $related_url_name['host']) {
+                        $host = $related_url_name['host'];
+                    }
+                    if (!empty($link) && !empty($host)) {
+                        $this->tags['related_url'][$host] = $link;
+                    }
+                }
+            } else {
+                $this->tags['related_url'] = $track['n7webmap_rpt_related_url'];
+            }
+        }
+
         // Processing the feature image of Track
         if (isset($track['featured_media']) && $track['featured_media']) {
             Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
@@ -220,6 +244,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             if (!empty(json_decode($taxonomy_map,true)['activity']) && $track['activity']) {
                 foreach ($track['activity'] as $tax) {
                     $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$tax]['geohub_identifier'];
+                }
+            }
+        }
+
+        // Processing the theme
+        $path = parse_url($this->endpoint);
+        $file_name = str_replace('.','-',$path['host']);
+        Log::info('Preparing OSF Track THEME MAPPING with external ID: '.$this->source_id);
+        if (Storage::disk('mapping')->exists($file_name.'.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+            if (!empty(json_decode($taxonomy_map,true)['theme']) && $track['theme']) {
+                foreach ($track['theme'] as $tax) {
+                    $this->tags['theme'][] = json_decode($taxonomy_map,true)['theme'][$tax]['geohub_identifier'];
                 }
             }
         }
@@ -269,84 +307,83 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
                     $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<h3 style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Informazioni aggiuntive:</h3><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
                     if (isset($poi['acf']['caipr_poi_localita']) && !empty($poi['acf']['caipr_poi_localita'])) {
                         $this->tags['caipr_poi_localita'] = $poi['acf']['caipr_poi_localita'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Località:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_localita'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Località:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_localita'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_title_alt']) && !empty($poi['acf']['caipr_poi_title_alt'])) {
                         $this->tags['caipr_poi_title_alt'] = $poi['acf']['caipr_poi_title_alt'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Nome alternativo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_title_alt'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Nome alternativo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_title_alt'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_collegamenti']) && !empty($poi['acf']['caipr_poi_collegamenti'])) {
                         $this->tags['caipr_poi_collegamenti'] = $poi['acf']['caipr_poi_collegamenti'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Collegamenti:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_collegamenti'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Collegamenti:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_collegamenti'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_data_opera']) && !empty($poi['acf']['caipr_poi_data_opera'])) {
                         $this->tags['caipr_poi_data_opera'] = $poi['acf']['caipr_poi_data_opera'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Data opera:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_opera'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data opera:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_opera'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_data_manutenzione']) && !empty($poi['acf']['caipr_poi_data_manutenzione'])) {
                         $this->tags['caipr_poi_data_manutenzione'] = $poi['acf']['caipr_poi_data_manutenzione'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Data manutenzione:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_manutenzione'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data manutenzione:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_manutenzione'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_data_sopraluogo']) && !empty($poi['acf']['caipr_poi_data_sopraluogo'])) {
                         $this->tags['caipr_poi_data_sopraluogo'] = $poi['acf']['caipr_poi_data_sopraluogo'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Data sopralluogo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_sopraluogo'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data sopralluogo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_sopraluogo'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_uso_attuale']) && !empty($poi['acf']['caipr_poi_uso_attuale'])) {
                         $this->tags['caipr_poi_uso_attuale'] = $poi['acf']['caipr_poi_uso_attuale'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Uso attuale:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_attuale'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso attuale:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_attuale'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_uso_storico']) && !empty($poi['acf']['caipr_poi_uso_storico'])) {
                         $this->tags['caipr_poi_uso_storico'] = $poi['acf']['caipr_poi_uso_storico'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Uso storico:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_storico'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso storico:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_storico'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_epoca']) && !empty($poi['acf']['caipr_poi_epoca'])) {
                         $this->tags['caipr_poi_epoca'] = $poi['acf']['caipr_poi_epoca'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Epoca:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_epoca'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Epoca:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_epoca'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_iconografia']) && !empty($poi['acf']['caipr_poi_iconografia'])) {
                         $this->tags['caipr_poi_iconografia'] = $poi['acf']['caipr_poi_iconografia'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Iconografia:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_iconografia'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Iconografia:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_iconografia'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_igm_1']) && !empty($poi['acf']['caipr_poi_igm_1'])) {
                         $this->tags['caipr_poi_igm_1'] = $poi['acf']['caipr_poi_igm_1'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>IGM 1° impianto (18811893):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_1'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 1° impianto (18811893):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_1'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_igm_2']) && !empty($poi['acf']['caipr_poi_igm_2'])) {
                         $this->tags['caipr_poi_igm_2'] = $poi['acf']['caipr_poi_igm_2'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>IGM 2° impianto (1936):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_2'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 2° impianto (1936):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_2'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_proposta_restauro']) && !empty($poi['acf']['caipr_poi_proposta_restauro'])) {
                         $this->tags['caipr_poi_proposta_restauro'] = $poi['acf']['caipr_poi_proposta_restauro'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Proposta di restauro:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proposta_restauro'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proposta di restauro:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proposta_restauro'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_proprieta']) && !empty($poi['acf']['caipr_poi_proprieta'])) {
                         $this->tags['caipr_poi_proprieta'] = $poi['acf']['caipr_poi_proprieta'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Proprietà:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proprieta'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proprietà:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proprieta'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_restauratore']) && !empty($poi['acf']['caipr_poi_restauratore'])) {
                         $this->tags['caipr_poi_restauratore'] = $poi['acf']['caipr_poi_restauratore'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Restauratore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_restauratore'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Restauratore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_restauratore'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_rilevatore']) && !empty($poi['acf']['caipr_poi_rilevatore'])) {
                         $this->tags['caipr_poi_rilevatore'] = $poi['acf']['caipr_poi_rilevatore'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Rivelatore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_rilevatore'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Rivelatore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_rilevatore'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_segnalato_da']) && !empty($poi['acf']['caipr_poi_segnalato_da'])) {
                         $this->tags['caipr_poi_segnalato_da'] = $poi['acf']['caipr_poi_segnalato_da'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Segnalato da:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_segnalato_da'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato da:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_segnalato_da'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_gis_er']) && !empty($poi['acf']['caipr_poi_gis_er'])) {
                         $this->tags['caipr_poi_gis_er'] = $poi['acf']['caipr_poi_gis_er'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Segnalato nel WebGis E.R.:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_gis_er'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato nel WebGis E.R.:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_gis_er'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['caipr_poi_stato_conservazione']) && !empty($poi['acf']['caipr_poi_stato_conservazione'])) {
                         $this->tags['caipr_poi_stato_conservazione'] = $poi['acf']['caipr_poi_stato_conservazione'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Stato conservazione
-                        :</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_stato_conservazione'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Stato conservazione:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_stato_conservazione'].'</strong></td></tr>';
                     }
                     if (isset($poi['acf']['scheda_elenco']) && !empty($poi['acf']['scheda_elenco'])) {
                         $this->tags['scheda_elenco'] = $poi['acf']['scheda_elenco'];
-                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;>Tipo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['scheda_elenco'].'</strong></td></tr>';
+                        $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Tipo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['scheda_elenco'].'</strong></td></tr>';
                     }
                     
                     $this->tags['description'][explode('_',$poi['wpml_current_locale'])[0]] .= '</tbody></table>';
