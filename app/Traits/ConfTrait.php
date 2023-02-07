@@ -269,6 +269,7 @@ trait ConfTrait
         $data['MAP']['pois']['poiMinZoom'] = $this->poi_min_zoom;
         $data['MAP']['pois']['poiLabelMinZoom'] = $this->poi_label_min_zoom;
         $data['MAP']['pois']['taxonomies'] = $this->getAllPoiTaxonomies();
+        $data['MAP']['pois']['poi_interaction'] = $this->poi_interaction;
 
         // Other Options
         $data['MAP']['start_end_icons_show'] = $this->start_end_icons_show;

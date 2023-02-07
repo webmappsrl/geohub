@@ -108,6 +108,13 @@ class App extends Resource
         'es' => 'español'
     ];
 
+    private $poi_interactions = [
+        'no_interaction' => 'Nessuna interazione sul POI',
+        'tooltip' => 'Apre un tooltip con informazioni minime',
+        'popup' => ' Apre il popup',
+        'tooltip_popup' => 'apre Tooltip con X per chiudere Tooltip oppure un bottone che apre il popup'
+    ];
+
     public static function group()
     {
         return __('Editorial Content');
@@ -546,6 +553,7 @@ class App extends Resource
             Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
             Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
             Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
+            Select::make(__('Poi Interaction'), 'poi_interaction')->hideFromIndex()->options($this->poi_interactions)->displayUsingLabels()->required(),
             AttachMany::make('TaxonomyThemes'),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
