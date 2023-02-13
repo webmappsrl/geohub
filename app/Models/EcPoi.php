@@ -191,37 +191,46 @@ class EcPoi extends Model
     public function  getJson($allData = true): array
     {
         $array = $this->setOutSourceValue();
-        if ($this->out_source_feature_id) {
-            $out_source_id = $this->out_source_feature_id;
-            $out_source_feature = OutSourcePoi::find($out_source_id);
-            if ($out_source_feature) {
-                $locales = config('tab-translatable.locales');
-                foreach ($array as $key => $val) {
-                    if (in_array($key, ['name', 'description', 'excerpt'])) {
-                        foreach ($locales as $lang) {
-                            if ($val) {
-                                if (!array_key_exists($lang, $val) || empty($val[$lang])) {
-                                    if (array_key_exists($key, $out_source_feature->tags) && array_key_exists($lang, $out_source_feature->tags[$key])) {
-                                        $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (empty($val) || $val == false) {
-                        if (array_key_exists($key, $out_source_feature->tags)) {
-                            $array[$key] = $out_source_feature->tags[$key];
-                        }
-                    }
-                }
+
+        if ($array['name']) {
+            foreach($array['name'] as $lang => $val) {
+                if (empty($val) || !$val) {
+                    unset($array['name'][$lang]);
+                } 
             }
         }
 
-        if ($array['excerpt']) {
-            foreach ($array['excerpt'] as $lang => $val) {
-                $array['excerpt'][$lang] = strip_tags($val);
-            }
-        }
+        // if ($this->out_source_feature_id) {
+        //     $out_source_id = $this->out_source_feature_id;
+        //     $out_source_feature = OutSourcePoi::find($out_source_id);
+        //     if ($out_source_feature) {
+        //         $locales = config('tab-translatable.locales');
+        //         foreach ($array as $key => $val) {
+        //             if (in_array($key, ['name', 'description', 'excerpt'])) {
+        //                 foreach ($locales as $lang) {
+        //                     if ($val) {
+        //                         if (!array_key_exists($lang, $val) || empty($val[$lang])) {
+        //                             if (array_key_exists($key, $out_source_feature->tags) && array_key_exists($lang, $out_source_feature->tags[$key])) {
+        //                                 $array[$key][$lang] = $out_source_feature->tags[$key][$lang];
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             if (empty($val) || $val == false) {
+        //                 if (array_key_exists($key, $out_source_feature->tags)) {
+        //                     $array[$key] = $out_source_feature->tags[$key];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // if ($array['excerpt']) {
+        //     foreach ($array['excerpt'] as $lang => $val) {
+        //         $array['excerpt'][$lang] = strip_tags($val);
+        //     }
+        // }
 
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson($allData);
