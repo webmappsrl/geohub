@@ -85,8 +85,23 @@ class TaxonomyPoiType extends Model {
         $data = [];
 
         $data['id'] = $json['id'];
+
         $data['name'] = $json['name'];
-        $data['description'] = $json['description'];
+        if ($data['name']) {
+            foreach($data['name'] as $lang => $val) {
+                if (empty($val) || !$val) {
+                    unset($data['name'][$lang]);
+                } 
+            }
+        }
+        if ($json['description']) {
+            foreach($json['description'] as $lang => $val) {
+                if (!empty($val) || $val) {
+                    $data['description'][$lang] = $val;
+                } 
+            }
+        }
+
         $data['color'] = $json['color'];
 
         return $data;
