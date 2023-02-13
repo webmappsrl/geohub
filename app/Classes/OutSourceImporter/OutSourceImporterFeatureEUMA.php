@@ -161,6 +161,10 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
             $poiname = $poi['properties']['second_official_name'];
         } elseif (isset($poi['properties']['name'])){
             $poiname = html_entity_decode($poi['properties']['name']);
+        } elseif (isset($poi['properties']['original_name'])){
+            $poiname = html_entity_decode($poi['properties']['original_name']);
+        } elseif (isset($poi['properties']['english_name'])){
+            $poiname = html_entity_decode($poi['properties']['english_name']);
         } else {
             $poiname = $poi['properties']['alternative_name'];
         }
