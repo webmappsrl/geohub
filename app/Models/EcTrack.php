@@ -276,7 +276,7 @@ class EcTrack extends Model
         }
 
         if (isset($this->outSourceTrack->tags['osmid'])) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/relation/'.$this->outSourceTrack->tags['osmid'];
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->outSourceTrack->tags['osmid'];
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
@@ -697,6 +697,7 @@ class EcTrack extends Model
 
 
         $postfields = '{
+                "properties": "' . json_encode($this->getGeojson()['properties']) . '",
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
