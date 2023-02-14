@@ -695,14 +695,17 @@ class EcTrack extends Model
             $end = '[]';
         }
         try {
-            $properties = json_encode($this->getGeojson()['properties']);
+            $p = $this->getGeojson()['properties'];
+            unset($p['geometry']);
+            $properties = json_encode($p);
         } catch (Exception $e) {
-            $properties = '{}';
+            $properties = null;
         }
 
 
         $postfields = '{
                 "properties": "' . $properties . '",
+                "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
                 "start": ' . $start . ',
