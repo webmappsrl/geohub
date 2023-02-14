@@ -698,6 +698,7 @@ class EcTrack extends Model
             $json = $this->getJson();
             unset($json['taxonomy_wheres']);
             unset($json['sizes']);
+            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
