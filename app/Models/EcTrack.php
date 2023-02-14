@@ -695,14 +695,17 @@ class EcTrack extends Model
             $end = '[]';
         }
         try {
-            $properties = json_encode($this->getJson());
+            $json = $this->getJson();
+            unset($json['taxonomy_wheres']);
+            unset($json['sizes']);
+            $properties = $json;
         } catch (Exception $e) {
             $properties = null;
         }
 
 
         $postfields = '{
-                "properties": "' . $properties . '",
+                "properties": ' . json_encode($properties) . ',
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
