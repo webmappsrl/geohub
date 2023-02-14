@@ -696,7 +696,7 @@ class EcTrack extends Model
         }
         try {
             $p = $this->getGeojson()['properties'];
-            unset($p["taxonomy_wheres"]["geometry"]);
+            unset($p["taxonomy_wheres"]);
             Log::info('PROPERTIES');
             $properties = json_encode($p);
             Log::info($properties);
