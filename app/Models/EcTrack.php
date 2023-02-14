@@ -697,13 +697,12 @@ class EcTrack extends Model
         try {
             $properties = json_encode($this->getGeojson()['properties']);
         } catch (Exception $e) {
-            $properties = null;
+            $properties = '{}';
         }
 
 
         $postfields = '{
                 "properties": "' . $properties . '",
-                "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
                 "start": ' . $start . ',
