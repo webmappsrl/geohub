@@ -696,8 +696,11 @@ class EcTrack extends Model
         }
         try {
             $p = $this->getGeojson()['properties'];
-            unset($p['geometry']);
+            unset($p["geometry"]);
+            Log::info('PROPERTIES');
             $properties = json_encode($p);
+            Log::info($properties);
+            Log::info('END PROPERTIES');
         } catch (Exception $e) {
             $properties = null;
         }
