@@ -276,7 +276,7 @@ class EcTrack extends Model
         }
 
         if (isset($this->outSourceTrack->tags['osmid'])) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/relation/'.$this->outSourceTrack->tags['osmid'];
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->outSourceTrack->tags['osmid'];
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
@@ -694,9 +694,19 @@ class EcTrack extends Model
             $start = '[]';
             $end = '[]';
         }
+        try {
+            $json = $this->getJson();
+            unset($json['taxonomy_wheres']);
+            unset($json['sizes']);
+            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
+            $properties = $json;
+        } catch (Exception $e) {
+            $properties = null;
+        }
 
 
         $postfields = '{
+                "properties": ' . json_encode($properties) . ',
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
