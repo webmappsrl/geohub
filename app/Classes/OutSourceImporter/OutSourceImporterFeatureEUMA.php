@@ -225,7 +225,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
             }
             
             if (isset($poi['properties']['types'])) {
-                $poidescription .= '<tr><td style="width: 100%;"><h3>Styles:</h3></td><td></td></tr>';
+                $poidescription .= '<tr><td style="width: 100%;"><h3>Types:</h3></td><td></td></tr>';
                 $this->tags['types'] = $poi['properties']['types'];
                 foreach ($poi['properties']['types'] as $type) {
                     $poidescription .= '<tr><td style="width: 48.6%;"><strong>'.$type['name'].'</strong></td><td style="width: 48.6%;"><strong>'.$type['description'].'</strong></td></tr>';
