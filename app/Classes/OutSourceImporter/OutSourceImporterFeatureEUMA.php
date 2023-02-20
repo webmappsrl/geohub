@@ -134,6 +134,11 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
             $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
         }
         $this->tags['name']['it'] = $trackname;
+
+        if (isset($track['properties']['ref'])) {
+            $this->tags['ref'] = $track['properties']['ref'];
+        }
+        
         if (isset($track['properties']['url'])) {
             $urlarray = explode(',',$track['properties']['url']);
             foreach($urlarray as $url) {
