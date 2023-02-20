@@ -190,7 +190,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
 
         if ($this->poi_type == 'climbing-crag') {
 
-            $poidescription .= '<h3 style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Informazioni aggiuntive:</h3><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
+            $poidescription .= '<h3 style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Additional Information:</h3><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
             if (isset($poi['properties']['local_rules_url'])) {
                 $this->tags['local_rules_url'] = $poi['properties']['local_rules_url'];
                 $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><a href="'.$poi['properties']['local_rules_url'].'"><strong>'.$poi['properties']['local_rules_url'].'</strong></a></td></tr>';
