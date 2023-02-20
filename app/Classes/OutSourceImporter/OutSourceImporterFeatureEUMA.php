@@ -33,7 +33,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract {
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."')) As wkt")[0]->wkt;
+            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."'))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             // $this->params['raw_data'] = json_encode($track);
