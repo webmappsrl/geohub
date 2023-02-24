@@ -163,18 +163,20 @@ class EcTrackController extends Controller
         if (isset($request->elevation_chart_image) && is_string($request->elevation_chart_image))
             $ecTrack->elevation_chart_image = $request->elevation_chart_image;
 
-        $fields = [
-            'distance_comp',
-            'distance',
-            'ele_min',
-            'ele_max',
-            'ele_from',
-            'ele_to',
-            'ascent',
-            'descent',
-            'duration_forward',
-            'duration_backward',
-        ];
+        if (!$ecTrack->skip_geomixer_tech) {
+            $fields = [
+                'distance_comp',
+                'distance',
+                'ele_min',
+                'ele_max',
+                'ele_from',
+                'ele_to',
+                'ascent',
+                'descent',
+                'duration_forward',
+                'duration_backward',
+            ];
+        }
 
         foreach ($fields as $field) {
             if (isset($request->$field)) {
