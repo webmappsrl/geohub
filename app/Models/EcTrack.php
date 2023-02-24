@@ -24,7 +24,25 @@ class EcTrack extends Model
 {
     use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
 
-    protected $fillable = ['name', 'geometry', 'distance_comp', 'feature_image', 'out_source_feature_id', 'user_id'];
+    protected $fillable = [
+        'name',
+        'geometry', 
+        'distance_comp', 
+        'feature_image', 
+        'out_source_feature_id', 
+        'user_id',
+        'distance_comp',
+        'distance',
+        'ele_min',
+        'ele_max',
+        'ele_from',
+        'ele_to',
+        'ascent',
+        'descent',
+        'duration_forward',
+        'duration_backward',
+        'skip_geomixer_tech'
+    ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
 
     /**
