@@ -275,6 +275,7 @@ class EcTrack extends Resource
                     }),
                 ],
                 'Info' => [
+                    Boolean::make('Skip Geomixer Tech'),
                     Text::make('Ref'),
                     Text::make('From'),
                     Text::make('To'),
@@ -433,11 +434,21 @@ class EcTrack extends Resource
                         ->feature($geojson ?? []),
                 ],
                 'Info' => [
+                    Boolean::make('Skip Geomixer Tech'),
                     Text::make('Ref'),
                     Text::make('From'),
                     Text::make('To'),
                     Boolean::make('Not Accessible'),
                     Textarea::make('Not Accessible Message')->alwaysShow(),
+                    Text::make('Distance'),
+                    Text::make('Duration Forward'),
+                    Text::make('Duration Backward'),
+                    Text::make('Ascent'),
+                    Text::make('Descent'),
+                    Text::make('Elevation (From)'),
+                    Text::make('Elevation (To)'),
+                    Text::make('Elevation (Min)'),
+                    Text::make('Elevation (Max)'),
 
                 ],
                 'Scale' => [
