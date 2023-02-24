@@ -57,6 +57,18 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract {
                     'share' => 'https://overpass-turbo.eu/s/1p6m'
                 ]
                 ],
+            'rifugi_di_italia' => [
+                [
+                    'url' => "https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0Aarea%283600365331%29-%3E.searchArea%3B%0A%20%20node%5B%22tourism%22%3D%22alpine_hut%22%5D%28area.searchArea%29%3B%0Aout%20meta%3B%0A",
+                    'type' => 'node',
+                    'share' => 'https://overpass-turbo.eu/s/1rJB'
+                ],
+                [
+                    'url' => "https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0Aarea%283600365331%29-%3E.searchArea%3B%0A%20%20way%5B%22tourism%22%3D%22alpine_hut%22%5D%28area.searchArea%29%3B%0Aout%20meta%3B%0A",
+                    'type' => 'way',
+                    'share' => 'https://overpass-turbo.eu/s/1rJD'
+                ]
+                ],
             'caiparma_bivacchi' => [
                 [
                     'url' => "https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0A%20%20node%5B%22tourism%22%3D%22wilderness_hut%22%5D%2844.2659%2C9.3164%2C45.0981%2C10.5711%29%3B%0Aout%20meta%3B%0A",
