@@ -27,6 +27,7 @@ use App\Http\Resources\UgcTrackCollection;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,8 +71,14 @@ Route::name('api.')->group(function () {
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
-                Route::get("index", function () {
-                    return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
+                Route::get("index", function (Request $request) {
+                    $user = auth('api')->user();
+                    if (isset($user)) {
+                        $tracks = UgcTrack::where('user_id', $user->id);
+                        return response()->json($tracks);
+                    } else {
+                        return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
+                    }
                 })->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
