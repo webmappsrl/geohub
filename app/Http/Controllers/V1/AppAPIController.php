@@ -101,4 +101,12 @@ class AppAPIController extends Controller
             return response()->json($json);
         }
     }
+    
+    
+    public function all()
+    {
+        return App::all()->toArray();
+    }
+
+
 }
