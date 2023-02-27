@@ -27,6 +27,7 @@ use App\Http\Resources\UgcTrackCollection;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
+use Elasticsearch\Endpoints\AsyncSearch\Get;
 use Illuminate\Http\Request;
 
 /*
@@ -71,10 +72,10 @@ Route::name('api.')->group(function () {
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
-                Route::get("index", function (Request $request) {
+                Route::get("index", function () {
                     $user = auth('api')->user();
                     if (isset($user)) {
-                        $tracks = UgcTrack::where('user_id', $user->id);
+                        $tracks = UgcTrack::where('user_id', $user->id)->get();
                         return response()->json($tracks);
                     } else {
                         return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
