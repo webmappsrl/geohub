@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Providers\HoquServiceProvider;
 use App\Traits\ConfTrait;
 use Exception;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +31,15 @@ class App extends Model
 
     protected $fillable = ['welcome'];
     public array $translatable = ['welcome'];
+
+     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['user_email'];
+
+
     protected static function booted()
     {
         parent::booted();
@@ -549,5 +559,18 @@ class App extends Model
             }
         }
         return $res;
+    }
+
+
+    /**
+     * Determine if the user is an administrator.
+     *
+     * @return bool
+     */
+    public function getUserEmailAttribute()
+    {
+        $user = User::find($this->user_id);
+
+        return $this->attributes['user_email'] = $user->email;
     }
 }
