@@ -11,15 +11,25 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\UgcTrackCollection;
 
-class UgcTrackController extends Controller {
+
+class UgcTrackController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index() {
-        //
+    public function index()
+    {
+        $user = auth('api')->user();
+        if (isset($user)) {
+            $tracks = UgcTrack::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+            return response()->json($tracks);
+        } else {
+            return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
+        }
     }
 
     /**
@@ -27,7 +37,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
@@ -38,7 +49,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function store(Request $request): Response {
+    public function store(Request $request): Response
+    {
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -103,7 +115,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function show(UgcTrack $ugcTrack) {
+    public function show(UgcTrack $ugcTrack)
+    {
         //
     }
 
@@ -114,7 +127,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function edit(UgcTrack $ugcTrack) {
+    public function edit(UgcTrack $ugcTrack)
+    {
         //
     }
 
@@ -126,7 +140,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function update(Request $request, UgcTrack $ugcTrack) {
+    public function update(Request $request, UgcTrack $ugcTrack)
+    {
         //
     }
 
@@ -137,7 +152,8 @@ class UgcTrackController extends Controller {
      *
      * @return Response
      */
-    public function destroy(UgcTrack $ugcTrack) {
+    public function destroy(UgcTrack $ugcTrack)
+    {
         //
     }
 }
