@@ -62,7 +62,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             array_push($error_not_created,$url);
-            Log::info('Error creating EcPoi from OSF with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
+            Log::info('Error creating Track OSF from external link with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
         }
         if ($error_not_created) {
             Log::info('Ec features not created from Source with URL: ');
