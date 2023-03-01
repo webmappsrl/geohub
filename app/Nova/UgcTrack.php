@@ -14,7 +14,8 @@ use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class UgcTrack extends Resource {
+class UgcTrack extends Resource
+{
     use SearchesRelations;
 
     /**
@@ -41,7 +42,8 @@ class UgcTrack extends Resource {
         'taxonomy_wheres' => ['name']
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('User Generated Content');
     }
 
@@ -67,7 +69,8 @@ class UgcTrack extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             Text::make(__('Name'), 'name')->sortable(),
@@ -76,7 +79,7 @@ class UgcTrack extends Resource {
             Text::make(__('App ID'), 'app_id')->sortable(),
             BelongsToMany::make(__('Taxonomy wheres')),
             Boolean::make(__('Has content'), function ($model) {
-                return isset($model->raw_data);
+                return isset($model->raw_data) && $model->raw_data != '[]';
             })->onlyOnIndex(),
             Boolean::make(__('Has gallery'), function ($model) {
                 $gallery = $model->ugc_media;
@@ -113,7 +116,8 @@ class UgcTrack extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -124,7 +128,8 @@ class UgcTrack extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [
             // new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
@@ -141,7 +146,8 @@ class UgcTrack extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -152,7 +158,8 @@ class UgcTrack extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [];
     }
 }

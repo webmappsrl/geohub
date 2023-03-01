@@ -85,9 +85,6 @@ class UgcTrackController extends Controller
                 $track->app_id = $data['properties']['app_id'];
         }
 
-        unset($data['properties']['name']);
-        unset($data['properties']['description']);
-        unset($data['properties']['app_id']);
         $track->raw_data = json_encode($data['properties']);
         $track->save();
 
@@ -103,7 +100,10 @@ class UgcTrackController extends Controller
         $track->save();
 
         $hoquService = app(HoquServiceProvider::class);
-        $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
+        try {
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
+        } catch (\Exception $e) {
+        }
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
     }
