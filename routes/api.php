@@ -245,6 +245,7 @@ Route::name('api.')->group(function () {
     Route::prefix('v1')->name('v1.')->group(function () {
         Route::prefix('app')->name('v1.app.')->group(function () {
             Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
+            Route::get("/all", [AppAPIController::class,'all'])->name('apps_json');
         });
     });
 });
