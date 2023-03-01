@@ -21,7 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string description
  * @property string raw_data
  */
-class UgcTrack extends Model {
+class UgcTrack extends Model
+{
     use HasFactory, GeometryFeatureTrait;
 
     protected $fillable = [
@@ -39,19 +40,23 @@ class UgcTrack extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeCurrentUser($query) {
+    public function scopeCurrentUser($query)
+    {
         return $query->where('user_id', Auth()->user()->id);
     }
 
-    public function ugc_media(): BelongsToMany {
+    public function ugc_media(): BelongsToMany
+    {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
+    public function taxonomy_wheres(): BelongsToMany
+    {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 
@@ -61,7 +66,8 @@ class UgcTrack extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $array = $this->toArray();
 
         $propertiesToClear = ['geometry'];
@@ -78,9 +84,10 @@ class UgcTrack extends Model {
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
+        if (isset($feature["properties"]) && $feature["properties"] != []) {
             $feature["properties"] = $this->getJson();
 
             return $feature;
