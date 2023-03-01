@@ -74,7 +74,7 @@ Route::name('api.')->group(function () {
                 Route::get("index", [UgcTrackController::class, 'index'])->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
-                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                // Route::post("store", [UgcMediaController::class, 'store'])->name('store'); TODO: riabilitare quando fixato il bug
                 Route::get("index", function () {
                     return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
                 })->name('index');
@@ -245,7 +245,7 @@ Route::name('api.')->group(function () {
     Route::prefix('v1')->name('v1.')->group(function () {
         Route::prefix('app')->name('v1.app.')->group(function () {
             Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
-            Route::get("/all", [AppAPIController::class,'all'])->name('apps_json');
+            Route::get("/all", [AppAPIController::class, 'all'])->name('apps_json');
         });
     });
 });
