@@ -59,6 +59,13 @@ class User extends Authenticatable implements JWTSubject {
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['geopass'];
+
     public function apps(): HasMany {
         return $this->hasMany(App::class);
     }
@@ -201,5 +208,16 @@ class User extends Authenticatable implements JWTSubject {
             }
         }
         return $result;
+    }
+
+     /**
+     * Determine if the user is an administrator.
+     *
+     * @return bool
+     */
+    public function getGeoPassAttribute()
+    {
+        $pass = $this->attributes['geopass'] = $this->password;
+        return $pass;
     }
 }
