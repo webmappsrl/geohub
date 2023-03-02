@@ -124,17 +124,17 @@ class Layer extends Model
         $query_string = '';
 
         if ($this->taxonomyThemes->count() > 0) {
-            $query_string .= 'taxonomyThemes='; 
+            $query_string .= '&taxonomyThemes='; 
             $identifiers = $this->taxonomyThemes->pluck('identifier')->toArray();
             $query_string .= implode(',',$identifiers);
         }      
         if ($this->taxonomyWheres->count() > 0) {
-            $query_string .= 'taxonomyWheres='; 
+            $query_string .= '&taxonomyWheres='; 
             $identifiers = $this->taxonomyWheres->pluck('identifier')->toArray();
             $query_string .= implode(',',$identifiers);
         }      
         if ($this->taxonomyActivities->count() > 0) {
-            $query_string .= 'taxonomyActivities='; 
+            $query_string .= '&taxonomyActivities='; 
             $identifiers = $this->taxonomyActivities->pluck('identifier')->toArray();
             $query_string .= implode(',',$identifiers);
         }      
