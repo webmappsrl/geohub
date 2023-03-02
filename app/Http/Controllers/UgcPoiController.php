@@ -11,7 +11,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class UgcPoiController extends Controller {
+class UgcPoiController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +38,8 @@ class UgcPoiController extends Controller {
      *
      * @return Response
      */
-    public function store(Request $request): Response {
+    public function store(Request $request): Response
+    {
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -90,8 +92,10 @@ class UgcPoiController extends Controller {
         $poi->save();
 
         $hoquService = app(HoquServiceProvider::class);
-        $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
-
+        try {
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
+        } catch (\Exception $e) {
+        }
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 

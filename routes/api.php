@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppElbrusEditorialContentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EcTrackController;
+use App\Http\Controllers\LayerAPIController;
 use App\Http\Controllers\EditorialContentController;
 use App\Http\Controllers\TaxonomyActivityController;
 use App\Http\Controllers\TaxonomyPoiTypeController;
@@ -26,6 +27,7 @@ use App\Http\Resources\UgcPoiCollection;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
+use App\Models\User;
 use Elasticsearch\Endpoints\AsyncSearch\Get;
 use Illuminate\Http\Request;
 
@@ -247,5 +249,16 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
             Route::get("/all", [AppAPIController::class, 'all'])->name('apps_json');
         });
+    });
+
+    // Export API 
+    Route::prefix('export')->name('v1.app.')->group(function () {
+        Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
+        Route::get("/editors", function(){
+            return User::whereHas('roles', function($q){
+                $q->where('role_id', 2);
+             })->get()->toArray();
+        })->name('export_editors');
+        Route::get("/tracks/{email?}", [EcTrackController::class, 'exportByAuthorEmail'])->name('exportByAuthorEmail');
     });
 });
