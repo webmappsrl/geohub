@@ -21,7 +21,12 @@ class Layer extends Model
         });
     }
 
-
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['query_string'];
 
     public function app()
     {
@@ -107,5 +112,33 @@ class Layer extends Model
         } catch (Exception $e) {
             Log::error("computeBB of layer with id: " . $this->id);
         }
+    }
+
+    /**
+     * Determine if the user is an administrator.
+     *
+     * @return bool
+     */
+    public function getQueryStringAttribute()
+    {
+        $query_string = '';
+
+        if ($this->taxonomyThemes->count() > 0) {
+            $query_string .= 'taxonomyThemes='; 
+            $identifiers = $this->taxonomyThemes->pluck('identifier')->toArray();
+            $query_string .= implode(',',$identifiers);
+        }      
+        if ($this->taxonomyWheres->count() > 0) {
+            $query_string .= 'taxonomyWheres='; 
+            $identifiers = $this->taxonomyWheres->pluck('identifier')->toArray();
+            $query_string .= implode(',',$identifiers);
+        }      
+        if ($this->taxonomyActivities->count() > 0) {
+            $query_string .= 'taxonomyActivities='; 
+            $identifiers = $this->taxonomyActivities->pluck('identifier')->toArray();
+            $query_string .= implode(',',$identifiers);
+        }      
+
+        return $this->attributes['query_string'] = $query_string;
     }
 }
