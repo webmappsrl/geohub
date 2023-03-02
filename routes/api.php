@@ -76,7 +76,7 @@ Route::name('api.')->group(function () {
                 Route::get("index", [UgcTrackController::class, 'index'])->name('index');
             });
             Route::prefix('media')->name('media.')->group(function () {
-                // Route::post("store", [UgcMediaController::class, 'store'])->name('store'); TODO: riabilitare quando fixato il bug
+                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
                 Route::get("index", function () {
                     return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
                 })->name('index');
