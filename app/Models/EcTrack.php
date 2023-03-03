@@ -280,6 +280,11 @@ class EcTrack extends Model
             }
         }
 
+        if ($this->user_id) {
+            $user = User::find($this->user_id);
+            $array['author_email'] = $user->email; 
+        }
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson();
 
