@@ -259,6 +259,12 @@ Route::name('api.')->group(function () {
                 $q->where('role_id', 2);
              })->get()->toArray();
         })->name('export_editors');
-        Route::get("/tracks/{email?}", [EcTrackController::class, 'exportByAuthorEmail'])->name('exportByAuthorEmail');
+        Route::get("/admins", function(){
+            return User::whereHas('roles', function($q){
+                $q->where('role_id', 1);
+             })->get()->toArray();
+        })->name('export_admins');
+        Route::get("/tracks/{email?}", [EcTrackController::class, 'exportTracksByAuthorEmail'])->name('exportTracksByAuthorEmail');
+        Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
     });
 });
