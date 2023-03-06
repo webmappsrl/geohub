@@ -450,7 +450,7 @@ class EcTrackController extends Controller
      * 
      * @return JsonResponse with the current
      */
-    public function exportByAuthorEmail($email = ''): JsonResponse
+    public function exportTracksByAuthorEmail($email = ''): JsonResponse
     {
         if (empty($email)) {
             $ids = DB::select('select id, updated_at from ec_tracks where user_id != 20548 and user_id != 17482');
