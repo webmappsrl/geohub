@@ -166,9 +166,18 @@ class UgcMediaController extends Controller
      *
      * @return Response
      */
-    public function destroy(UgcMedia $ugcMedia)
+    public function destroy($id)
     {
-        //
+        try {
+            $media = UgcMedia::find($id);
+            $media->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => "this media can't be deleted by api",
+                'code' => 400
+            ], 400);
+        }
+        return response()->json(['success' => 'media deleted']);
     }
 
     public function downloadUserGeojson($user_id)

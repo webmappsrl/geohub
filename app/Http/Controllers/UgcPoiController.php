@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class UgcPoiController extends Controller
 {
@@ -137,6 +138,17 @@ class UgcPoiController extends Controller
      *
      * @return Response
      */
-    //    public function destroy(UgcPoi $ugcPoi) {
-    //    }
+    public function destroy($id)
+    {
+        try {
+            $poi = UgcPoi::find($id);
+            $poi->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => "this waypoint can't be deleted by api",
+                'code' => 400
+            ], 400);
+        }
+        return response()->json(['success' => 'waypoint deleted']);
+    }
 }
