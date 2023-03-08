@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\UgcTrackCollection;
-
+use Exception;
 
 class UgcTrackController extends Controller
 {
@@ -152,8 +152,17 @@ class UgcTrackController extends Controller
      *
      * @return Response
      */
-    public function destroy(UgcTrack $ugcTrack)
+    public function destroy($id)
     {
-        //
+        try {
+            $track = UgcTrack::find($id);
+            $track->delete();
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => "this track can't be deleted by api",
+                'code' => 400
+            ], 400);
+        }
+        return response()->json(['success' => 'track deleted']);
     }
 }
