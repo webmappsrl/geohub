@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Providers\HoquServiceProvider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
