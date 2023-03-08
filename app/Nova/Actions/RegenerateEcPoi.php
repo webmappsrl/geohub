@@ -33,7 +33,7 @@ class RegenerateEcPoi extends Action
         foreach ($models as $model) {
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('update_poi', ['id' => $model->id]);
+                $hoquServiceProvider->store('enrich_ec_poi', ['id' => $model->id]);
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
