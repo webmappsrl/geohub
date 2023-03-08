@@ -5,7 +5,7 @@ namespace App\Nova;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\ExportEcpoi;
-use App\Nova\Actions\RegenerateEcTrack;
+use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\HasDescription;
 use App\Nova\Filters\HasFeatureImage;
@@ -675,6 +675,7 @@ HTML;
      */
     public function actions(Request $request) {
         return [
+            new RegenerateEcPoi(),
             (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
         ];
     }
