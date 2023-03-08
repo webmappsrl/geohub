@@ -70,16 +70,19 @@ Route::name('api.')->group(function () {
                 Route::get("index", function () {
                     return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
                 })->name('index');
+                Route::get("delete/{id}", [UgcPoiController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
                 Route::get("index", [UgcTrackController::class, 'index'])->name('index');
+                Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('media')->name('media.')->group(function () {
                 Route::post("store", [UgcMediaController::class, 'store'])->name('store');
                 Route::get("index", function () {
                     return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
                 })->name('index');
+                Route::get("delete/{id}", [UgcMediaController::class, 'destroy'])->name('destroy');
             });
         });
         Route::post('/userGeneratedData/store', [UserGeneratedDataController::class, 'store']);
@@ -254,15 +257,15 @@ Route::name('api.')->group(function () {
     // Export API 
     Route::prefix('export')->name('v1.app.')->group(function () {
         Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
-        Route::get("/editors", function(){
-            return User::whereHas('roles', function($q){
+        Route::get("/editors", function () {
+            return User::whereHas('roles', function ($q) {
                 $q->where('role_id', 2);
-             })->get()->toArray();
+            })->get()->toArray();
         })->name('export_editors');
-        Route::get("/admins", function(){
-            return User::whereHas('roles', function($q){
+        Route::get("/admins", function () {
+            return User::whereHas('roles', function ($q) {
                 $q->where('role_id', 1);
-             })->get()->toArray();
+            })->get()->toArray();
         })->name('export_admins');
         Route::get("/tracks/{email?}", [EcTrackController::class, 'exportTracksByAuthorEmail'])->name('exportTracksByAuthorEmail');
         Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
