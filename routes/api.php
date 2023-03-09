@@ -269,5 +269,8 @@ Route::name('api.')->group(function () {
         })->name('export_admins');
         Route::get("/tracks/{email?}", [EcTrackController::class, 'exportTracksByAuthorEmail'])->name('exportTracksByAuthorEmail');
         Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
+        Route::prefix('taxonomy')->name('taxonomy.')->group(function () { 
+            Route::get("/themes", [TaxonomyThemeController::class, 'exportAllThemes'])->name('export_themes');
+        });
     });
 });
