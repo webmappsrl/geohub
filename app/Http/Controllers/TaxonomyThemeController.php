@@ -45,4 +45,20 @@ class TaxonomyThemeController extends Controller
 
         return response()->json($taxonomyTheme, 200);
     }
+    
+    /**
+     * Get All TaxonomyThemes
+     *
+     * @return JsonResponse return all TaxonomyThemes
+     *
+     */
+    public function exportAllThemes(): JsonResponse
+    {
+        $taxonomyThemes = TaxonomyTheme::select('id','name','identifier')->get();
+        if (is_null($taxonomyThemes)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($taxonomyThemes, 200);
+    }
 }
