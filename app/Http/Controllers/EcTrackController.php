@@ -177,13 +177,14 @@ class EcTrackController extends Controller
                 'duration_forward',
                 'duration_backward',
             ];
+            
+            foreach ($fields as $field) {
+                if (isset($request->$field)) {
+                    $ecTrack->$field = $request->$field;
+                } else $ecTrack->$field = null;
+            }
         }
 
-        foreach ($fields as $field) {
-            if (isset($request->$field)) {
-                $ecTrack->$field = $request->$field;
-            } else $ecTrack->$field = null;
-        }
 
         // Related POI Order
         if (isset($request->related_pois_order)) {
