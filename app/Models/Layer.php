@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Translatable\HasTranslations;
 use Exception;
 
 class Layer extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
     // protected $fillable = ['rank'];
 
     protected static function booted()
@@ -20,6 +21,8 @@ class Layer extends Model
             $l->rank = DB::select(DB::raw('SELECT max(rank) from layers'))[0]->max + 1;
         });
     }
+
+    public array $translatable = ['title', 'subtitle', 'description'];
 
     /**
      * The accessors to append to the model's array form.
@@ -124,20 +127,20 @@ class Layer extends Model
         $query_string = '';
 
         if ($this->taxonomyThemes->count() > 0) {
-            $query_string .= '&taxonomyThemes='; 
+            $query_string .= '&taxonomyThemes=';
             $identifiers = $this->taxonomyThemes->pluck('identifier')->toArray();
-            $query_string .= implode(',',$identifiers);
-        }      
+            $query_string .= implode(',', $identifiers);
+        }
         if ($this->taxonomyWheres->count() > 0) {
-            $query_string .= '&taxonomyWheres='; 
+            $query_string .= '&taxonomyWheres=';
             $identifiers = $this->taxonomyWheres->pluck('identifier')->toArray();
-            $query_string .= implode(',',$identifiers);
-        }      
+            $query_string .= implode(',', $identifiers);
+        }
         if ($this->taxonomyActivities->count() > 0) {
-            $query_string .= '&taxonomyActivities='; 
+            $query_string .= '&taxonomyActivities=';
             $identifiers = $this->taxonomyActivities->pluck('identifier')->toArray();
-            $query_string .= implode(',',$identifiers);
-        }      
+            $query_string .= implode(',', $identifiers);
+        }
 
         return $this->attributes['query_string'] = $query_string;
     }

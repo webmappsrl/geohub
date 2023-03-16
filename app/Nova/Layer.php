@@ -7,19 +7,16 @@ use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use NovaAttachMany\AttachMany;
-use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Yna\NovaSwatches\Swatches;
 use Ncus\InlineIndex\InlineIndex;
+
 
 
 class Layer extends Resource
@@ -76,7 +73,8 @@ class Layer extends Resource
         ];
     }
 
-    public function fieldsForIndex(Request $request) {
+    public function fieldsForIndex(Request $request)
+    {
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('App'),
@@ -87,125 +85,131 @@ class Layer extends Resource
         ];
     }
 
-    public function fieldsForDetail(Request $request) {
-        return [ (new Tabs("LAYER Details: {$this->name} (GeohubId: {$this->id})",[
-            'MAIN' => [
-                BelongsTo::make('App'),
-                Text::make('Name')->required(),
-                Text::make('Title'),
-                Text::make('Subtitle'),
-                Textarea::make('Description')->alwaysShow()
-            ],
-            'BEHAVIOUR' => [
-                Boolean::make('No Details','noDetails'),
-                Boolean::make('No Interaction','noInteraction'),
-                Number::make('Zoom Min','minZoom'),
-                Number::make('Zoom Max','maxZoom'),
-                Boolean::make('Prevent Filter','preventFilter'),
-                Boolean::make('Invert Polygons','invertPolygons'),
-                Boolean::make('Alert','alert'),
-                Boolean::make('Show Label','show_label'),
-            ],
-            'STYLE' => [
-                Swatches::make('Color', 'color')->default('#de1b0d'),
-                Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
-                Number::make('Fill Opacity','fill_opacity'),
-                Number::make('Stroke Width','stroke_width'),
-                Number::make('Stroke Opacity','stroke_opacity'),
-                Number::make('Zindex','zindex'),
-                Text::make('Line Dash','line_dash')
-            ],
-            'DATA' => [
-                Heading::make('Here are shown rules used to assign data to this layer'),
-                Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
-                Boolean::make('Use features only created by myself','data_use_only_my_data'),
-                Text::make('Activities',function(){
-                    if($this->taxonomyActivities()->count() >0) {
-                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
-                    }
-                    return 'No activities';
-                }),
-                Text::make('Wheres',function(){
-                    if($this->taxonomyWheres()->count() >0) {
-                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
-                    }
-                    return 'No Wheres';
-                }),
-                Text::make('Themes',function(){
-                    if($this->taxonomyThemes()->count() >0) {
-                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
-                    }
-                    return 'No Themes';
-                }),
-                Text::make('Targets',function(){
-                    if($this->taxonomyTargets()->count() >0) {
-                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
-                    }
-                    return 'No Targets';
-                }),
-                Text::make('Whens',function(){
-                    if($this->taxonomyWhens()->count() >0) {
-                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
-                    }
-                    return 'No Whens';
-                }),
-            ]
+    public function fieldsForDetail(Request $request)
+    {
+        return [
+            (new Tabs("LAYER Details: {$this->name} (GeohubId: {$this->id})", [
+                'MAIN' => [
+                    BelongsTo::make('App'),
+                    Text::make('Name')->required(),
+                    Text::make('Title'),
+                    Text::make('Subtitle'),
+                    Textarea::make('Description')->alwaysShow()
+                ],
+                'BEHAVIOUR' => [
+                    Boolean::make('No Details', 'noDetails'),
+                    Boolean::make('No Interaction', 'noInteraction'),
+                    Number::make('Zoom Min', 'minZoom'),
+                    Number::make('Zoom Max', 'maxZoom'),
+                    Boolean::make('Prevent Filter', 'preventFilter'),
+                    Boolean::make('Invert Polygons', 'invertPolygons'),
+                    Boolean::make('Alert', 'alert'),
+                    Boolean::make('Show Label', 'show_label'),
+                ],
+                'STYLE' => [
+                    Swatches::make('Color', 'color')->default('#de1b0d'),
+                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
+                    Number::make('Fill Opacity', 'fill_opacity'),
+                    Number::make('Stroke Width', 'stroke_width'),
+                    Number::make('Stroke Opacity', 'stroke_opacity'),
+                    Number::make('Zindex', 'zindex'),
+                    Text::make('Line Dash', 'line_dash')
+                ],
+                'DATA' => [
+                    Heading::make('Here are shown rules used to assign data to this layer'),
+                    Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
+                    Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+                    Text::make('Activities', function () {
+                        if ($this->taxonomyActivities()->count() > 0) {
+                            return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
+                        }
+                        return 'No activities';
+                    }),
+                    Text::make('Wheres', function () {
+                        if ($this->taxonomyWheres()->count() > 0) {
+                            return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
+                        }
+                        return 'No Wheres';
+                    }),
+                    Text::make('Themes', function () {
+                        if ($this->taxonomyThemes()->count() > 0) {
+                            return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
+                        }
+                        return 'No Themes';
+                    }),
+                    Text::make('Targets', function () {
+                        if ($this->taxonomyTargets()->count() > 0) {
+                            return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
+                        }
+                        return 'No Targets';
+                    }),
+                    Text::make('Whens', function () {
+                        if ($this->taxonomyWhens()->count() > 0) {
+                            return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
+                        }
+                        return 'No Whens';
+                    }),
+                ]
 
-        ]))->withToolbar(),
-        // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
-    ];
+            ]))->withToolbar(),
+            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
+        ];
     }
-    public function fieldsForCreate(Request $request) {
+    public function fieldsForCreate(Request $request)
+    {
         return [
             Text::make('Name')->required(),
             BelongsTo::make('App')->searchable()->showCreateRelationButton(),
         ];
     }
-    public function fieldsForUpdate(Request $request) {
+    public function fieldsForUpdate(Request $request)
+    {
 
         $title = "EDIT LAYER: {$this->name} (LAYER GeohubId: {$this->id})";
-        if($this->app) {
+        if ($this->app) {
             $title = "EDIT LAYER: '{$this->name}' belongs to APP '{$this->app->name} '(LAYER GeohubId: {$this->id})";
         }
-        return [ (new Tabs($title,[
-            'MAIN' => [
-                Text::make('Name')->required(),
-                Text::make('Title'),
-                Text::make('Subtitle'),
-                Textarea::make('Description')->alwaysShow()
-            ],
-            'BEHAVIOUR' => [
-                Boolean::make('No Details','noDetails'),
-                Boolean::make('No Interaction','noInteraction'),
-                Number::make('Zoom Min','minZoom'),
-                Number::make('Zoom Max','maxZoom'),
-                Boolean::make('Prevent Filter','preventFilter'),
-                Boolean::make('Invert Polygons','invertPolygons'),
-                Boolean::make('Alert','alert'),
-                Boolean::make('Show Label','show_label'),
-            ],
-            'STYLE' => [
-                Swatches::make('Color', 'color')->default('#de1b0d'),
-                Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
-                Number::make('Fill Opacity','fill_opacity'),
-                Number::make('Stroke Width','stroke_width'),
-                Number::make('Stroke Opacity','stroke_opacity'),
-                Number::make('Zindex','zindex'),
-                Text::make('Line Dash','line_dash')
-            ],
-            'DATA' => [
-                Heading::make('Use this interface to define rules to assign data to this layer'),
-                Boolean::make('Use APP bounding box to limit data','data_use_bbox'),
-                Boolean::make('Use features only created by myself','data_use_only_my_data'),
-                AttachMany::make('taxonomyActivities'),
-                AttachMany::make('TaxonomyThemes'),
-                AttachMany::make('TaxonomyTargets'),
-                AttachMany::make('TaxonomyWhens'),
-            ]
-        ]))->withToolbar(),
-        // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
-    ];
-
+        return [
+            (new Tabs($title, [
+                'MAIN' => [
+                    Text::make('Name')->required(),
+                    NovaTabTranslatable::make([
+                        Text::make('Title'),
+                        Text::make('Subtitle'),
+                        Textarea::make('Description')->alwaysShow()
+                    ]),
+                ],
+                'BEHAVIOUR' => [
+                    Boolean::make('No Details', 'noDetails'),
+                    Boolean::make('No Interaction', 'noInteraction'),
+                    Number::make('Zoom Min', 'minZoom'),
+                    Number::make('Zoom Max', 'maxZoom'),
+                    Boolean::make('Prevent Filter', 'preventFilter'),
+                    Boolean::make('Invert Polygons', 'invertPolygons'),
+                    Boolean::make('Alert', 'alert'),
+                    Boolean::make('Show Label', 'show_label'),
+                ],
+                'STYLE' => [
+                    Swatches::make('Color', 'color')->default('#de1b0d'),
+                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
+                    Number::make('Fill Opacity', 'fill_opacity'),
+                    Number::make('Stroke Width', 'stroke_width'),
+                    Number::make('Stroke Opacity', 'stroke_opacity'),
+                    Number::make('Zindex', 'zindex'),
+                    Text::make('Line Dash', 'line_dash')
+                ],
+                'DATA' => [
+                    Heading::make('Use this interface to define rules to assign data to this layer'),
+                    Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
+                    Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+                    AttachMany::make('taxonomyActivities'),
+                    AttachMany::make('TaxonomyThemes'),
+                    AttachMany::make('TaxonomyTargets'),
+                    AttachMany::make('TaxonomyWhens'),
+                ]
+            ]))->withToolbar(),
+            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
+        ];
     }
 
     /**
