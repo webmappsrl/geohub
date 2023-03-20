@@ -2,20 +2,17 @@
 
 namespace App\Models;
 
-use App\Providers\HoquServiceProvider;
 use App\Traits\ConfTrait;
-use Exception;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use Exception;
 
 /**
  * Class App
@@ -32,7 +29,7 @@ class App extends Model
     protected $fillable = ['welcome'];
     public array $translatable = ['welcome'];
 
-     /**
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
@@ -483,6 +480,7 @@ class App extends Model
             Storage::disk('conf')->put($confUri, json_encode($json));
         }
     }
+
     public function config_get_jido_time()
     {
         $confUri = $this->id . ".json";
@@ -560,7 +558,6 @@ class App extends Model
         }
         return $res;
     }
-
 
     /**
      * Determine if the user is an administrator.
