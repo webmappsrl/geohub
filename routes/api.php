@@ -24,6 +24,7 @@ use App\Http\Controllers\UserGeneratedDataController;
 use App\Http\Controllers\V1\AppAPIController;
 use App\Http\Resources\UgcMediaCollection;
 use App\Http\Resources\UgcPoiCollection;
+use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
@@ -271,6 +272,9 @@ Route::name('api.')->group(function () {
         Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
         Route::prefix('taxonomy')->name('taxonomy.')->group(function () { 
             Route::get("/themes", [TaxonomyThemeController::class, 'exportAllThemes'])->name('export_themes');
+            Route::get("/wheres", function() {
+                return TaxonomyWhere::all()->pluck('updated_at','id')->toArray();
+            })->name('export_wheres_list');
         });
     });
 });
