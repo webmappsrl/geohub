@@ -259,10 +259,11 @@ class OutSourceImporterCommand extends Command
         }
         if ($features_list) {
             if ($this->type == 'track') {
-                foreach ($features_list as $count => $feature) {
+                $count = 1;
+                foreach ($features_list as $id => $feature) {
                     $count++;
                     Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$feature['id'],$this->only_related_url);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$id);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                 }

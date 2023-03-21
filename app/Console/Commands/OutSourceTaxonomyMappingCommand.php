@@ -273,7 +273,7 @@ class OutSourceTaxonomyMappingCommand extends Command
         if ($response) {
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
-                    $identifier = 'sentieris:'.$type.':'.str_replace(' ','-',$tax['name']['it']);
+                    $identifier = 'sardegnas:'.$type.':'.str_replace(' ','-',$tax['name']['it']);
                     $input[$id] = [
                         'source_title' => $tax['name'],
                         'source_description' => $tax['description'] ?? '',
@@ -287,16 +287,22 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerSSTheme(){
         $response = [];
-        $response['accessibilit_'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
+        $response['tipologia_sentieri'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_sentieri?_format=json')->json();
+        $response['categorie_fruibilita_sentieri'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+        $response['tipo_ente_istituzione_societa'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_ente_istituzione_societa?_format=json')->json();
+        $response['stato_di_validazione'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/stato_di_validazione?_format=json')->json();
+        $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
+        $response['zona_geografica'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
 
         $input = [];
         if ($response) {
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
+                    $identifier = 'sardegnas:'.$type.':'.str_replace(' ','-',$tax['name']['it']);
                     $input[$id] = [
                         'source_title' => $tax['name'],
                         'source_description' => $tax['description'] ?? '',
-                        'geohub_identifier' => 'sentieris:'.$type.':'.str_replace(' ','-',strtolower($tax['name']['it'])),
+                        'geohub_identifier' => $identifier
                     ];
                 }
             }

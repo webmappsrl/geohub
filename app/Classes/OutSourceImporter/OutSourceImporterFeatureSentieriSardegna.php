@@ -29,8 +29,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
-            $url = 'https://prod.eumadb.webmapp.it/api/v1/trail/geojson/'.$this->source_id;
-            $track = $this->curlRequest($url);
+            $url = 'https://sentieri.netseven.work/ss/sentiero/'.$this->source_id.'?_format=json';
+            $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url);
+            $track = $response->json();
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
@@ -123,24 +124,57 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
     protected function prepareTrackTagsJson($track){
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track['properties']['name'])){
-            $trackname = html_entity_decode($track['properties']['name']);
-        } else {
-            $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
+            $this->tags['name'] = $track['properties']['name'];
+        } 
+        if (isset($track['properties']['description'])){
+            $this->tags['description'] = html_entity_decode($track['properties']['description']);
         }
-        $this->tags['name']['it'] = $trackname;
 
-        if (isset($track['properties']['ref'])) {
-            $this->tags['ref'] = $track['properties']['ref'];
+        if (isset($track['properties']['codice_cai'])) {
+            $this->tags['ref'] = $track['properties']['codice_cai'];
         }
-        
-        if (isset($track['properties']['url'])) {
-            $urlarray = explode(',',$track['properties']['url']);
-            foreach($urlarray as $url) {
-                $related_url_name = parse_url($url);
-                if (isset($related_url_name['host'])) {
-                    $this->tags['related_url'][$related_url_name['host']] = $url;
-                } else {
-                    $this->tags['related_url'][$related_url_name['path']] = $url;
+
+        // Processing the theme
+        if (isset($track['properties']['taxonomies'])) {
+            Log::info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
+            
+            $path = parse_url($this->endpoint);
+            $file_name = str_replace('.','-',$path['host']);
+            if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+                if (!empty(json_decode($taxonomy_map,true)['theme'])) {
+                    foreach ($track['properties']['taxonomies'] as $tax => $idList) {
+                        foreach ($idList as $id) {
+                            $this->tags['theme'][] = json_decode($taxonomy_map,true)['theme'][$id]['geohub_identifier'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Processing the feature image of Track
+        if (isset($track['properties']['immagine_principale']) && $track['properties']['immagine_principale']) {
+            Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
+            $media = Http::get($track['properties']['immagine_principale']);
+            if ($media) {
+                $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            } else {
+                Log::info('ERROR reaching media: '.$track['properties']['immagine_principale']);
+            }
+        }
+
+        // Processing the image Gallery of Track
+        if (isset($track['properties']['immagine_principale']) && $track['properties']['immagine_principale']) {
+            if (is_array($track['properties']['immagine_principale'])){
+                Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
+                foreach($track['properties']['immagine_principale'] as $img) {
+                    $media = Http::get($img);
+                    if ($media) {
+                        $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
+                    } else {
+                        Log::info('ERROR reaching media: '.$img);
+                    }
                 }
             }
         }
@@ -165,7 +199,34 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->tags['code'] = $poi['properties']['codice'];
 
         // Processing the poi_type
-        Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
-        $this->tags['poi_type'][] = $this->poi_type;
+        if (isset($poi['properties']['taxonomies'])) {
+            Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
+            
+            $path = parse_url($this->endpoint);
+            $file_name = str_replace('.','-',$path['host']);
+            if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+                if (!empty(json_decode($taxonomy_map,true)['poi_type'])) {
+                    foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
+                        foreach ($idList as $id) {
+                            $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Processing the feature image of POI
+        if (isset($poi['properties']['immagine_principale']) && $poi['properties']['immagine_principale']) {
+            Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
+            $media = Http::get($poi['properties']['immagine_principale']);
+            if ($media) {
+                $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
+            } else {
+                Log::info('ERROR reaching media: '.$poi['properties']['immagine_principale']);
+            }
+        }
     }
 }
