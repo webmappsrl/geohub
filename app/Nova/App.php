@@ -670,7 +670,9 @@ class App extends Resource
                         ] 
                     }
                 ]`)
-                ->help('form di acquisizione poi')
+                ->help(
+                    view('poi-forms')->render()
+                )
         ];
     }
 
