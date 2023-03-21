@@ -5,17 +5,20 @@ namespace App\Console\Commands;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSMPoi;
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListEUMA;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSMPoi;
+use App\Classes\OutSourceImporter\OutSourceImporterListSentieriSardegna;
 use App\Classes\OutSourceImporter\OutSourceImporterListSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterCommand extends Command
@@ -91,6 +94,10 @@ class OutSourceImporterCommand extends Command
                     
             case 'osmpoi':
                 return $this->importerOSMPoi();
+                break;
+            
+            case 'sentierisardegna':
+                return $this->importerSentieriSardegna();
                 break;
     
                 default:
@@ -240,6 +247,38 @@ class OutSourceImporterCommand extends Command
             }
         } else {
             Log::info('Importer EUMA get List is empty.');
+        }
+    }
+
+    private function importerSentieriSardegna(){
+        if ($this->single_feature) {
+            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+        } else {
+            $features = new OutSourceImporterListSentieriSardegna($this->type,$this->endpoint);
+            $features_list = $features->getList();
+        }
+        if ($features_list) {
+            if ($this->type == 'track') {
+                foreach ($features_list as $count => $feature) {
+                    $count++;
+                    Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$feature['id'],$this->only_related_url);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
+                }
+            }
+            if ($this->type == 'poi') {
+                $count = 1;
+                foreach ($features_list as $id => $updated_at) {
+                    Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$id);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
+                    $count++;
+                }
+            }
+        } else {
+            Log::info('Importer SentieriSardegna get List is empty.');
         }
     }
 }

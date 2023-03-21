@@ -1,0 +1,1450 @@
+{
+    "poi_type": {
+        "4039": {
+            "source_title": {
+                "it": "A piedi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:A-piedi"
+        },
+        "4040": {
+            "source_title": {
+                "it": "Automobile"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Automobile"
+        },
+        "4043": {
+            "source_title": {
+                "it": "Disabili"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Disabili"
+        },
+        "4042": {
+            "source_title": {
+                "it": "Fuoristrada"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Fuoristrada"
+        },
+        "4046": {
+            "source_title": {
+                "it": "Moto"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Moto"
+        },
+        "4041": {
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Mountain-Bike"
+        },
+        "4044": {
+            "source_title": {
+                "it": "Pulman"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Pulman"
+        },
+        "4045": {
+            "source_title": {
+                "it": "Pulmino"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Pulmino"
+        },
+        "4047": {
+            "source_title": {
+                "it": "Trasporto Pubblico"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:accessibilit\u00e0:Trasporto-Pubblico"
+        },
+        "4166": {
+            "source_title": {
+                "it": "Accessibilit\u00e0"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Accessibilit\u00e0"
+        },
+        "4147": {
+            "source_title": {
+                "it": "Accesso disabili"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Accesso-disabili"
+        },
+        "4157": {
+            "source_title": {
+                "it": "Accompagnamento disabili"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Accompagnamento-disabili"
+        },
+        "4183": {
+            "source_title": {
+                "it": "Alimentari"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Alimentari"
+        },
+        "4167": {
+            "source_title": {
+                "it": "Altri Servizi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Altri-Servizi"
+        },
+        "4178": {
+            "source_title": {
+                "it": "Area attrezzata picnic"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Area-attrezzata-picnic"
+        },
+        "4152": {
+            "source_title": {
+                "it": "Area camper"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Area-camper"
+        },
+        "4161": {
+            "source_title": {
+                "it": "Area di sosta"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Area-di-sosta"
+        },
+        "4176": {
+            "source_title": {
+                "it": "Arrampicata sportiva"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Arrampicata-sportiva"
+        },
+        "4156": {
+            "source_title": {
+                "it": "Attivit\u00e0"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Attivit\u00e0"
+        },
+        "4185": {
+            "source_title": {
+                "it": "Bar"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Bar"
+        },
+        "4169": {
+            "source_title": {
+                "it": "Bus"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Bus"
+        },
+        "4153": {
+            "source_title": {
+                "it": "Campeggio libero"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Campeggio-libero"
+        },
+        "4154": {
+            "source_title": {
+                "it": "Campeggio organizzato"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Campeggio-organizzato"
+        },
+        "4162": {
+            "source_title": {
+                "it": "Camping"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Camping"
+        },
+        "4151": {
+            "source_title": {
+                "it": "Custodia animali"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Custodia-animali"
+        },
+        "4173": {
+            "source_title": {
+                "it": "Escursioni a cavallo"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Escursioni-a-cavallo"
+        },
+        "4172": {
+            "source_title": {
+                "it": "Escursioni guidate"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Escursioni-guidate"
+        },
+        "4148": {
+            "source_title": {
+                "it": "Fasciatoi (Baby pit-stop)"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Fasciatoi-(Baby-pit-stop)"
+        },
+        "4149": {
+            "source_title": {
+                "it": "Fonti"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Fonti"
+        },
+        "4177": {
+            "source_title": {
+                "it": "Immersioni assistite"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Immersioni-assistite"
+        },
+        "4163": {
+            "source_title": {
+                "it": "Info point"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Info-point"
+        },
+        "4182": {
+            "source_title": {
+                "it": "Mercatini"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Mercatini"
+        },
+        "4168": {
+            "source_title": {
+                "it": "Negozi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Negozi"
+        },
+        "4175": {
+            "source_title": {
+                "it": "Noleggio bici"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Noleggio-bici"
+        },
+        "4145": {
+            "source_title": {
+                "it": "Panchine"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Panchine"
+        },
+        "4142": {
+            "source_title": {
+                "it": "Parcheggi auto"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Parcheggi-auto"
+        },
+        "4144": {
+            "source_title": {
+                "it": "Parcheggi custoditi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Parcheggi-custoditi"
+        },
+        "4143": {
+            "source_title": {
+                "it": "Parcheggi pullman"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Parcheggi-pullman"
+        },
+        "4158": {
+            "source_title": {
+                "it": "Parcheggio"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Parcheggio"
+        },
+        "4155": {
+            "source_title": {
+                "it": "Pernottamento"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Pernottamento"
+        },
+        "4165": {
+            "source_title": {
+                "it": "Primo soccorso"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Primo-soccorso"
+        },
+        "4160": {
+            "source_title": {
+                "it": "Punto raccolta rifiuti"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Punto-raccolta-rifiuti"
+        },
+        "4159": {
+            "source_title": {
+                "it": "Punto ristoro"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Punto-ristoro"
+        },
+        "4179": {
+            "source_title": {
+                "it": "Rete cellulare"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Rete-cellulare"
+        },
+        "4180": {
+            "source_title": {
+                "it": "Rete WIFI"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Rete-WIFI"
+        },
+        "4141": {
+            "source_title": {
+                "it": "Servizi Igienici"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Servizi-Igienici"
+        },
+        "4184": {
+            "source_title": {
+                "it": "Shopping"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Shopping"
+        },
+        "4150": {
+            "source_title": {
+                "it": "Sorgenti"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Sorgenti"
+        },
+        "4181": {
+            "source_title": {
+                "it": "Supermercato"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Supermercato"
+        },
+        "4186": {
+            "source_title": {
+                "it": "Tabacchi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Tabacchi"
+        },
+        "4170": {
+            "source_title": {
+                "it": "Taxi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Taxi"
+        },
+        "4171": {
+            "source_title": {
+                "it": "Tiro con l'arco"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Tiro-con-l'arco"
+        },
+        "4146": {
+            "source_title": {
+                "it": "Trasporti pubblici"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Trasporti-pubblici"
+        },
+        "4164": {
+            "source_title": {
+                "it": "Visibilit\u00e0 TLC"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Visibilit\u00e0-TLC"
+        },
+        "4174": {
+            "source_title": {
+                "it": "Windsurf\/vela"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:servizi:Windsurf\/vela"
+        },
+        "4759": {
+            "source_title": {
+                "it": "Alberi monumentali"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Alberi-monumentali"
+        },
+        "4763": {
+            "source_title": {
+                "it": "Altri monumenti naturali"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Altri-monumenti-naturali"
+        },
+        "4779": {
+            "source_title": {
+                "it": "Altri POI"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Altri-POI"
+        },
+        "4780": {
+            "source_title": {
+                "it": "Archeologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Archeologia"
+        },
+        "4812": {
+            "source_title": {
+                "it": "Area campeggio"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Area-campeggio"
+        },
+        "4767": {
+            "source_title": {
+                "it": "Area Costiera"
+            },
+            "source_description": {
+                "it": "<p>Scogliera sul mare, caletta senza spiaggia o altre evidenze naturalistiche marine&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Area-Costiera"
+        },
+        "4801": {
+            "source_title": {
+                "it": "Area parcheggi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Area-parcheggi"
+        },
+        "4745": {
+            "source_title": {
+                "it": "Borgata"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Borgata"
+        },
+        "4770": {
+            "source_title": {
+                "it": "Boschi ed aree forestali"
+            },
+            "source_description": {
+                "it": "<p>Le foreste demaniali sono un bene collettivo di straordinario valore naturalistica, ambientale, storica. La quasi totalit\u00e0 delle foreste demaniali rientra nella rete ecologica regionale (Parchi Naturali Regionali, Oasi di protezione faunistica, Siti di Interesse Comunitario): molti dei sentieri che ti proponiamo in questo sito attraversano questi&nbsp;perimetri forestali. Sono <em>Punti di Interesse<\/em>&nbsp;anche gli ingressi ai parchi o le aree di sosta&nbsp;al loro interno.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Boschi-ed-aree-forestali"
+        },
+        "4781": {
+            "source_title": {
+                "it": "Botanica"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Botanica"
+        },
+        "4762": {
+            "source_title": {
+                "it": "Cantiere forestale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Cantiere-forestale"
+        },
+        "4736": {
+            "source_title": {
+                "it": "Caratterizzazione del territorio"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Caratterizzazione-del-territorio"
+        },
+        "4769": {
+            "source_title": {
+                "it": "Cascata"
+            },
+            "source_description": {
+                "it": "<p>tipologia di punto di interesse connotato dalla presenza di una cascata<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Cascata"
+        },
+        "4811": {
+            "source_title": {
+                "it": "Caserma"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Caserma"
+        },
+        "4743": {
+            "source_title": {
+                "it": "Castello"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Castello"
+        },
+        "4814": {
+            "source_title": {
+                "it": "Centro abitato"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Centro-abitato"
+        },
+        "4744": {
+            "source_title": {
+                "it": "Chiesa"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Chiesa"
+        },
+        "4761": {
+            "source_title": {
+                "it": "Cima di montagna"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Cima-di-montagna"
+        },
+        "4786": {
+            "source_title": {
+                "it": "Crostacei e aracnidi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Crostacei-e-aracnidi"
+        },
+        "4802": {
+            "source_title": {
+                "it": "Dimora"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Dimora"
+        },
+        "4735": {
+            "source_title": {
+                "it": "Discipline e argomenti"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Discipline-e-argomenti"
+        },
+        "4757": {
+            "source_title": {
+                "it": "Edificio storico - artistico"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Edificio-storico---artistico"
+        },
+        "4755": {
+            "source_title": {
+                "it": "Edificio storico-minerario"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Edificio-storico-minerario"
+        },
+        "4799": {
+            "source_title": {
+                "it": "Enogastronomia e tradizioni culinarie"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Enogastronomia-e-tradizioni-culinarie"
+        },
+        "4787": {
+            "source_title": {
+                "it": "Entomologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Entomologia"
+        },
+        "4788": {
+            "source_title": {
+                "it": "Erpetologia (rettili e anfibi)"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Erpetologia-(rettili-e-anfibi)"
+        },
+        "4752": {
+            "source_title": {
+                "it": "Evidenza archeologica"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Evidenza-archeologica"
+        },
+        "4756": {
+            "source_title": {
+                "it": "Evidenza culturale-religiosa"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Evidenza-culturale-religiosa"
+        },
+        "4753": {
+            "source_title": {
+                "it": "Evidenza geologica"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Evidenza-geologica"
+        },
+        "4750": {
+            "source_title": {
+                "it": "Evidenza naturalistica"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Evidenza-naturalistica"
+        },
+        "4754": {
+            "source_title": {
+                "it": "Fabbricati\/case forestali"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Fabbricati\/case-forestali"
+        },
+        "4782": {
+            "source_title": {
+                "it": "Fauna"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Fauna"
+        },
+        "4803": {
+            "source_title": {
+                "it": "Fermata bus, mezzi trasporto pubblici"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Fermata-bus,-mezzi-trasporto-pubblici"
+        },
+        "4746": {
+            "source_title": {
+                "it": "Foresta demaniale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Foresta-demaniale"
+        },
+        "4810": {
+            "source_title": {
+                "it": "Foresteria e posti letto"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Foresteria-e-posti-letto"
+        },
+        "4798": {
+            "source_title": {
+                "it": "Fotografia e TV naturalistica"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Fotografia-e-TV-naturalistica"
+        },
+        "4783": {
+            "source_title": {
+                "it": "Geologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Geologia"
+        },
+        "4760": {
+            "source_title": {
+                "it": "Grotte"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Grotte"
+        },
+        "4784": {
+            "source_title": {
+                "it": "Idrografia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Idrografia"
+        },
+        "4806": {
+            "source_title": {
+                "it": "Incrocio Stradale"
+            },
+            "source_description": {
+                "it": "<p>crocevia fra pi\u00f9 strade...<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Incrocio-Stradale"
+        },
+        "4808": {
+            "source_title": {
+                "it": "Info Point"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Info-Point"
+        },
+        "4785": {
+            "source_title": {
+                "it": "Ittiologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Ittiologia"
+        },
+        "4776": {
+            "source_title": {
+                "it": "Laghi e Corsi d'acqua"
+            },
+            "source_description": {
+                "it": "<p>Attraverso i sentieri scoprirai che l'Isola, specie nella stagione delle pioggie, offre al turista attivo che visita i suoi luoghi naturali una moltitudine di piccoli, meravigliosi corsi d'acqua: torrenti, laghetti, fiumi, piccole e grandi cascate animano i boschi e le montagne, cos\u00ec come le vallate e le pianure: troverai qui tutti i punti di interesse&nbsp;in qualche modo associabili allo scorrere dell'acqua!<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Laghi-e-Corsi-d'acqua"
+        },
+        "4748": {
+            "source_title": {
+                "it": "Lago"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Lago"
+        },
+        "4809": {
+            "source_title": {
+                "it": "Locali demaniali in locazione gratuita\/convenzionata"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Locali-demaniali-in-locazione-gratuita\/convenzionata"
+        },
+        "4771": {
+            "source_title": {
+                "it": "Luoghi della transumanza"
+            },
+            "source_description": {
+                "it": "<p>Lungo i nostri sentieri potrai imbatterti in straordinari manufatti quali Pinnettos, Cuiles ed altre meraviglie della cultura pastorale sarda: potrai cos\u00ec ammirare quanto e come, nel tempo e nella storia, essi si siano integrati nel paesaggio naturale...diventandone parte integrante!<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Luoghi-della-transumanza"
+        },
+        "4774": {
+            "source_title": {
+                "it": "Luoghi di memoria e di fede"
+            },
+            "source_description": {
+                "it": "<p>Chiese, piazze o luoghi di alto significato sociale o religioso per le comunit\u00e0...scoprirai che l'Isola, percorrendone i sentieri, offre ai suoi visitatori luoghi dove il tempo sembra essersi fermato!<\/p>\r\n\r\n<p>Soffermati un po', raggiunti questi spazi, ad immaginare quante storie e quante emozioni hanno accolto nei tempi. Se ne troverai uno tra i tanti ormai abbandonati ed isolati potrai scoprire in questa sezione il racconto che ne descrive meglio l'essenza storica e religiosa...<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Luoghi-di-memoria-e-di-fede"
+        },
+        "4789": {
+            "source_title": {
+                "it": "Malacologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Malacologia"
+        },
+        "4790": {
+            "source_title": {
+                "it": "Mammiferi"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Mammiferi"
+        },
+        "4764": {
+            "source_title": {
+                "it": "Meraviglie della natura"
+            },
+            "source_description": {
+                "it": "<p>Insieme di voci rappresentative di bei identitari-paesaggistici.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Meraviglie-della-natura"
+        },
+        "4777": {
+            "source_title": {
+                "it": "Meraviglie della Natura"
+            },
+            "source_description": {
+                "it": "<p>Monumenti naturali, alberi secolari, particolari endemismi che solo la Sardegna pu\u00f2 offrire: al visitatore che sapr\u00e0 osservare, la Natura offrir\u00e0 straordinarie specie botaniche dai colori e dai profumi intensi, cos\u00ec come una vasta gamma di panorami e di habitat per anfibi, rettili, uccelli e mammiferi attraverso i Sentieri: esplora questa sezione, per farti un'idea delle tante meraviglie che hai a disposizione!<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Meraviglie-della-Natura"
+        },
+        "4791": {
+            "source_title": {
+                "it": "Micologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Micologia"
+        },
+        "4792": {
+            "source_title": {
+                "it": "Mineralogia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Mineralogia"
+        },
+        "4797": {
+            "source_title": {
+                "it": "Miniere e archeologia mineraria"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Miniere-e-archeologia-mineraria"
+        },
+        "4740": {
+            "source_title": {
+                "it": "Monti"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Monti"
+        },
+        "4742": {
+            "source_title": {
+                "it": "Museo"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Museo"
+        },
+        "4773": {
+            "source_title": {
+                "it": "Nuraghi ed altri misteri"
+            },
+            "source_description": {
+                "it": "<p>L'Archeologia del paesaggio in Sardegna \u00e8 dominata dai Nuraghi: anctiche e maestose fortezze tanto misteriose e&nbsp;straordinarie da assurgere a simbolo di un intero popolo...come disse bene Giovanni Lilliu, insigne studioso sardo: \"significano...oltre la natura vergine e sconfinata, oltre il mare...\".<\/p>\r\n\r\n<p>Altri manufatti lasciati dall'uomo ed antiche eredit\u00e0 del territorio, potrai incontrare lungo i sentieri: grotte, tombe, segni megalitici, sculture, domus de janas, ma anche antiche carbonaie, cave e miniere.<\/p>\r\n\r\n<p>Emblemi della storia dell'Isola che scoprirai cammin facendo...<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Nuraghi-ed-altri-misteri"
+        },
+        "4793": {
+            "source_title": {
+                "it": "Ornitologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Ornitologia"
+        },
+        "4741": {
+            "source_title": {
+                "it": "Ovili, fabbricati tradizionali, Pinnettos"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Ovili,-fabbricati-tradizionali,-Pinnettos"
+        },
+        "4794": {
+            "source_title": {
+                "it": "Paleontologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Paleontologia"
+        },
+        "4795": {
+            "source_title": {
+                "it": "Paletnologia e Paleoantropologia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Paletnologia-e-Paleoantropologia"
+        },
+        "4749": {
+            "source_title": {
+                "it": "Parco naturale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Parco-naturale"
+        },
+        "4738": {
+            "source_title": {
+                "it": "Percorsi religiosi e fede"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Percorsi-religiosi-e-fede"
+        },
+        "4807": {
+            "source_title": {
+                "it": "Pernottamento in pinnettos"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Pernottamento-in-pinnettos"
+        },
+        "4804": {
+            "source_title": {
+                "it": "Produzioni ecologiche"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Produzioni-ecologiche"
+        },
+        "4800": {
+            "source_title": {
+                "it": "Produzioni tipiche, artigianali, artistiche"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Produzioni-tipiche,-artigianali,-artistiche"
+        },
+        "4739": {
+            "source_title": {
+                "it": "Punto panoramico"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Punto-panoramico"
+        },
+        "4815": {
+            "source_title": {
+                "it": "Punto ristoro"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Punto-ristoro"
+        },
+        "4813": {
+            "source_title": {
+                "it": "Rifugio montano incustodito"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Rifugio-montano-incustodito"
+        },
+        "4737": {
+            "source_title": {
+                "it": "Rifugio, presidi antropologici"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Rifugio,-presidi-antropologici"
+        },
+        "4775": {
+            "source_title": {
+                "it": "Scoprire e imparare"
+            },
+            "source_description": {
+                "it": "<p>Ci sono luoghi e strutture, realizzati negli anni recenti per promuovere i valori naturalistici, storici e culturali del patrimonio regionale: per una cultura pi\u00f9 attenta alla tutela dell'ambiente. Sono spazi dedicati alle scuole ed alle iniziative di sensibilizzazione verso l'ambiente, secondo l'orientamento della cosiddetta \"Intelligenza ecologica\" &nbsp;e&nbsp;predisposti per realizzare percorsi di Educazione Ambientale in natura.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Scoprire-e-imparare"
+        },
+        "4765": {
+            "source_title": {
+                "it": "Sentieristica"
+            },
+            "source_description": {
+                "it": "<p>Punto di riferimento durante un sentiero, itinerario, od altro correlato ad un percorso escursionistico di qualunque tipologia.<\/p>\r\n\r\n<p>Esempio tipico:&nbsp; appartiene a questa voce di tassonomia un Punto inserito nel sito per individuare<em><strong> il punto di partenza o di arrivo di un Sentiero (od Itinerario)<\/strong><\/em><\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Sentieristica"
+        },
+        "4772": {
+            "source_title": {
+                "it": "Sguardi dall'alto"
+            },
+            "source_description": {
+                "it": "<p>Nulla \u00e8 pi\u00f9 emozionante della sensazione mozzafiato di aver raggiunto la cima di una montagna, di poter osservare tutto dall'alto! La Sardegna, grazie alla sua conformazione&nbsp;prevalentemente montuosa, caratterizzata da massicci altopiani e gruppi collinari disposti in maniera irregolare, moltiplica queste emozioni all'infinito: vallate ed aree costiere potranno essere ammirate da una moltitudine di punti panoramici, mentre percorrerai il tuo sentiero...<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Sguardi-dall'alto"
+        },
+        "4747": {
+            "source_title": {
+                "it": "Sorgente - fonte naturale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Sorgente---fonte-naturale"
+        },
+        "4796": {
+            "source_title": {
+                "it": "Speleologia e carsismo"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Speleologia-e-carsismo"
+        },
+        "4766": {
+            "source_title": {
+                "it": "Spiaggia"
+            },
+            "source_description": {
+                "it": "<p>Area costiera con suolo sabbioso ed accesso diretto al mare<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Spiaggia"
+        },
+        "4805": {
+            "source_title": {
+                "it": "Strada - viabilit\u00e0 automobilistica"
+            },
+            "source_description": {
+                "it": "<p>Elemento di viabilit\u00e0 urbana, extraurbana (statale e provinciale) per automobili.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Strada---viabilit\u00e0-automobilistica"
+        },
+        "4768": {
+            "source_title": {
+                "it": "trekking - waypoint"
+            },
+            "source_description": {
+                "it": "<p>questo termine di tassonomina \u00e8 da usarsi per indicare un waypoint o quando ad un POI non si sappia associare una delle altre&nbsp; (tantissime) catergorie presenti<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:trekking---waypoint"
+        },
+        "4751": {
+            "source_title": {
+                "it": "Vedette"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Vedette"
+        },
+        "4778": {
+            "source_title": {
+                "it": "Vicino al mare..."
+            },
+            "source_description": {
+                "it": "<p>La Sardegna, con la sua forma simile ad un sinuoso rettangolo ed una superficie pari a 24.083 kmq offre uno sviluppo costiero complessivo di circa 2.400 km di spiaggie, scogliere e litorali frastagliati: lungo i nostri sentieri percorrerai anche tutto l'azzurro che c'\u00e8 intorno!<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:tipologia_poi:Vicino-al-mare..."
+        },
+        "4758": {
+            "source_title": {
+                "it": "Vivai"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipologia_poi:Vivai"
+        },
+        "4848": {
+            "source_title": {
+                "it": "Anglona"
+            },
+            "source_description": {
+                "it": "<p><u><strong>DEPRECATO! SE VEDI QUESTA DESCRIZIONE SIGNIFICA CHE C'E' ancora un campo che va tolto.<\/strong><\/u><\/p>\r\n\r\n<p><u><strong>Descrizione \u00e8 stato sostituito da body, long text con summary.<\/strong><\/u><\/p>\r\n\r\n<p>L'Anglona&nbsp;\u00e8 una regione storica nel nord della&nbsp;Sardegna&nbsp;che si affaccia sul&nbsp;Golfo dell'Asinara.&nbsp;Il territorio \u00e8 caratterizzato da una morfologia prevalentemente collinare, composta da piccoli altipiani di natura&nbsp;vulcanica&nbsp;o&nbsp;calcarea, adagiati su una base&nbsp;tufacea. La costa presenta una alternanza di spiagge e costoni rocciosi.&nbsp;<\/p>\r\n\r\n<p>La regione dell'Anglona presenta numerosi siti di interesse cultural come il castello dei Doria a&nbsp;Castelsardo, all'interno del quale si trova il Museo dell'Intreccio, dedicato all'attivit\u00e0 di produzione di cestini in&nbsp;vimini, la concattedrale gotica di&nbsp;Sant'Antonio abate&nbsp;a&nbsp;Castelsardo, il castello dei&nbsp;Malaspina&nbsp;ad&nbsp;Osilo&nbsp;e molti&nbsp;esempi della&nbsp;civilt\u00e0 nuragica come&nbsp;il&nbsp;pozzo sacro di Predio Canopoli&nbsp;a&nbsp;Perfugas e pi\u00f9 di 100 nuraghi sparsi nella regione.<\/p>\r\n\r\n<p>All'interno della regione ricade anche il&nbsp;&nbsp;Complesso Forestale dell\u2019Anglona Meilogu gestito dall'Ente Foreste che&nbsp;\u00e8 costituito da numerosi corpi afferenti a cinque unit\u00e0 gestionali ricadenti nei comuni Castelsardo, Sedini, Tergu, Nulvi, Giave, Cossoine, Mara, Banari, Osilo, Sennori. Ha una superficie complessiva di circa 2156 ha.<\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Anglona"
+        },
+        "4860": {
+            "source_title": {
+                "it": "Arci Grighine"
+            },
+            "source_description": {
+                "it": "<p>Il Monte Arci \u00e8 un massiccio isolato di natura vulcanica che ricade nel territorio di numerosi comuni dell'oristanese, nella piana di Uras: Marrubiu, Santa Giusta, Villaurbana, Palmas Arborea, Usellus, Villaverde, Pau, Ales, Morgongiori, Masullas e Siris. Raggiunge un'altitudine massima di 812 con la punta Trebina Longa, a cui si affiancano la Trebina Lada ( 703 ) e Corongiu de Sizoa ( 463 ). Le tre vette richiamano alla mente l'idea di un treppiede e da qui \u00e8 venuto il nome sardo delle due punte principali (trebina). Su un'ossatura di trachite si stende il mantello del Monte Arci, costituito da colate di lava basaltica, che si ergono nei due \"\" (le trebine appunto), gli antichi centri di emissione della lava dell'era plioquaternaria. Dal punto di vista storico il Monte Arci ha sempre rivestito un'importanza enorme per i ricchissimi giacimenti di ossidiana. Questo minerale vetroso, infatti, estremamente utile per la produzione dell'utensileria e delle armi preistoriche, \u00e8 raro nel Mediterraneo (oltre alla Sardegna, si trova nell'Arcipelago Ponziano, a Lipari, a Pantelleria e nelle isole dell'Egeo) e fu dunque un polo di attrazione molto forte sin dal Neolitico antico per le popolazioni mediterranee che giungevano in Sardegna ad approvvigionarsi del prezioso materiale. Questa situazione privilegiata determin\u00f2 i pi\u00f9 antichi contatti della Sardegna con i popoli delle terre che si affacciano sul Mediterraneo, che contribuirono cos\u00ec al formarsi delle civilt\u00e0 della Sardegna. Sono ancora visibili sulle pendici del monte i giacimenti di ossidiana sfruttati nel corso dei millenni (Perdas Urias, S'Ennixeddu, Roja Cannas, Tzipaneas), ma anche i centri di raccolta e le officine di lavorazione. Naturalmente questa attivit\u00e0 determin\u00f2 un grande concentramento umano in quest'area, del quale rimangono ancor oggi numerose tracce sul territorio. A Pau \u00e8 possibile visitare il sito neolitico di Su forru de is sintzurreddus, a Villaverde il complesso nuragico di Brunk' 'e s'omu e a Morgongiori il santuario in grotta di Sa domu de is coambus. A Pau \u00e8 stato aperto un museo unico nel suo genere, dedicato interamente all'ossidiana e alle storie millenarie che ha contribuito a far nascere. Sono inoltre esposte nella sede principale e in tutto il paese sculture contemporanee in ossidiana, ricavate da blocchi di dimensioni colossali. La visita al museo, infine, comprende anche la possibilit\u00e0 di compiere delle escursioni sul monte alla ricerca degli antichi punti di cava. Il percorso \u00e8 molto interessante tanto per i valori naturalistici, quanto per il gran numero di scaglie di ossidiana disseminate sul cammino: il generale La Marmora, quando a fine '800 visit\u00f2 la Sardegna, afferm\u00f2 di non aver visto in alcun altro luogo una tale quantit\u00e0 della pietra nera e lucente. La maggior parte della superficie del Monte Arci \u00e8 ricoperta da leccete, ma non mancano sughere, roverelle e ampi tratti di macchia mediterranea. Una delle leccete pi\u00f9 ampie e belle \u00e8 quella di Acqua Frida nel territorio di Ales, al cui interno si trovano numerose sorgenti. La fauna di quest'area \u00e8 molto ricca e di recente sono stati reintrodotti cervi e daini, che erano scomparsi, mentre tra gli uccelli nidificano qui il falco pellegrino, lo sparviero, l'astore, il gheppio ed il falco grillaio.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Arci-Grighine"
+        },
+        "4845": {
+            "source_title": {
+                "it": "Baratz-Porto Conte"
+            },
+            "source_description": {
+                "it": "<p>Il <em>Lago di Baratz<\/em>, <strong>unico bacino naturale della Sardegna<\/strong>, \u00e8 situato nella parte nord-occidentale del comune di Sassari, nella regione della <em>Nurra<\/em>. Sorge sul fondo di una conca circondato da un bosco di conifere ed \u00e8 separato dal mare da un <strong>sistema dunale<\/strong> inserito nel contesto della <em>baia di Porto Ferro<\/em>. Il lago si \u00e8 formato nel corso dell'ultima glaciazione, conclusasi circa 10.000 anni fa, durante la quale il progressivo aumento dei ghiacciai caus\u00f2 un notevole abbassamento del livello del mare con conseguente spostamento verso il basso della linea di costa. Questo evento determin\u00f2 l\u2019affioramento di ampie superfici sabbiose che, sotto l\u2019azione dei venti dominanti, formarono un\u2019imponente duna ed il successivo sbarramento del corso del<em> Rio dei Giunchi <\/em>e del <em>Rio Cuile Puddighinu<\/em>, originando il lago di Baratz. Il nuovo lago si trov\u00f2 cos\u00ec alimentato da immissari e privo di veri emissari e l\u2019unico collegamento attuale con il mare \u00e8 dato dalle infiltrazioni d\u2019acqua che, passando attraverso le dune, sboccano all\u2019estremit\u00e0 sud della <strong>spiaggia di Porto Ferro<\/strong>, dando luogo alla sorgente d\u2019acqua dolce <em>\u201cS\u2019ebbi dolzi\u201d<\/em>. Il lago di Baratz, unitamente al sistema dunale e alla baia di Porto Ferro, costituiscono un unicum ambientale di rilevante interesse naturalistico. La vegetazione del lago \u00e8 costituita da una bordura di canne palustri e di tifa, da una serie di anelli concentrici di tamerici di altezze diverse, che testimoniano la variazione del livello dell\u2019acqua del lago nel corso degli anni. L\u2019area circostante il lago \u00e8 ricoperta da una folta pineta risalente ai primi anni \u201850, che a tratti lascia spazio ad essenze tipiche della macchia mediterranea come il corbezzolo, l\u2019erica, il mirto, il ginepro e il lentisco.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Baratz-Porto-Conte"
+        },
+        "4840": {
+            "source_title": {
+                "it": "Barbagia"
+            },
+            "source_description": {
+                "it": "<p>Il territorio della Barbagia rappresenta il nucleo pi\u00f9 selvaggio della Sardegna. Quest\u2019area deve il suo nome ai romani che la chiamarono <em>Barbaria <\/em>perch\u00e9 inconquistabile.<\/p>\r\n\r\n<p>Il territorio si estende tra Nuorese e Goceano a nord e tra Gennargentu e Mandrolisai a sud,comprese le zone di <em>Ollolai, Belv\u00ec, Bitti e Se\u00f9lo<\/em>. L\u2019area della Barbagia, dal punto di vista naturalistico, \u00e8 caratterizzata dalla presenza di <em><strong>massicci montuosi imponenti<\/strong><\/em>, mentre dal punto di vista culturale si distingue per le remote tradizioni che ancora oggi persistono ed affascinano turisti e visitatori.<\/p>\r\n\r\n<p>L\u2019arte gastronomica barbaricina \u00e8 riconosciuta ovunque grazie ai cibi caratteristici come i formaggi, carni, salumi, dolci e vini.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Barbagia"
+        },
+        "4842": {
+            "source_title": {
+                "it": "Barbagia di Seulo"
+            },
+            "source_description": {
+                "it": "<p>Il nome Barbagia, derivante dall'antico uso romano di definire Barbari coloro che non parlavano la lingua latina, \u00e8 un ampio territorio della Sardegna Centrale caratterizzato da una scarsa presenza umana e dall'effetto scenografico dato dalle gole e delle alte pareti calcaree presenti. L'economia pastorale e la produzione di vino rappresentano alcune fra le pi\u00f9 importanti risorse della zona, mentre il paesaggio appare caratterizzato dalla Macchia mediterranea, un'area climatica fortemente contraddistinta dalla presenza di svariati tipi di di alberi e di arbusti come il cisto femmina, un piccolo arbusto appartenente alla famiglia delle Cistacee. La zona ospita anche una eterogenea colonia di specie animali selvatiche. La presenza del fiume Flumendosa, che segna il confine fra Monte Perdedu e la catena montuosa del Gennargentu, ha creato un territorio ricco di cavit\u00e0 e gole come su Stampu 'e su turrunu,e la sorgente di Piscina 'e Licona. Il paese di Seulo, adagiato fra una catena di rilievi e colline alle pendici del monte Perdedu, offre al visitatore numerose attrattive naturalistiche e culturali, nelle sue vicinanze sono infatti presenti le \u201cDomus de Janas\u201d (Case delle fate) di Addoli, camere funerarie risalenti al periodo compreso fra il Neolitico recente e l'Eneolitico.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Barbagia-di-Seulo"
+        },
+        "4856": {
+            "source_title": {
+                "it": "Barbagia Nuorese"
+            },
+            "source_description": {
+                "it": "<p>La Barbagia di Nuoro o Nuorese (<em>Su Nugor\u00e8su<\/em> in nuorese, <em>Su Nuor\u00e8su<\/em> in logudorese) \u00e8 una regione storica della Sardegna nord-orientale. Nel Medioevo il territorio apparteneva per lo pi\u00f9 alla curatoria di Dore-Orotelli del Giudicato di Torres. In realt\u00e0 oggi per \"Nuorese\" si intende un territorio pi\u00f9 ampio che comprende anche parte dei territori che nel periodo giudicale appartenevano alle curatore di Bitti e di Orosei-Galtell\u00ec del Giudicato di Gallura <em>(fonte: Wikipedia)<\/em>.<\/p>\r\n\r\n<p>Questa regione congina con i Territori del <em><strong>Goceano<\/strong><\/em>, il<em><strong> Monte Acuto<\/strong><\/em> e le <em><strong>Baronie<\/strong><\/em> a nord, con il <em><strong>Marghine <\/strong><\/em>ad ovest, con il Supramonte ed il Gennargentu Ogliastrino e con la Barbagia (<em>Barbagia di Ollolai<\/em>, storicamente detta ) a Sud e con le Baronie sul versante verso il mare della costa orientale dell'Isola.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Barbagia-Nuorese"
+        },
+        "4835": {
+            "source_title": {
+                "it": "Baronie e Montalbo"
+            },
+            "source_description": {
+                "it": "<p>Il territorio delle Baronie spazia dalla catena calcarea del Montalbo sino al massiccio del Tuttavista, in un'area caratterizzata da corsi d\u2019acqua come l'Isalle e il Cedrino e vaste pianure alluvionali. In questo contesto il Montalbo riveste un ruolo di fondamentale importanza dal punto di vista naturalistico. Per le sue caratteristiche ambientali e per il suo buono stato di conservazione ospita numerose specie di flora e fauna rare, endemiche o di interesse biogeografico. Tra queste ricordiamo: la Santolina corsica, la Lactuca longidentata, il geotritone del Montalbo, il gracchio corallino, l\u2019aquila reale, il muflone. Lungo i sentieri \u00e8 possibile inoltre imbattersi in piccole colonie di mufloni, osservare i segni della presenza dei carbonai e sostare presso gli antichi ovili (pinnettos).<\/p>\r\n\r\n<h1>COME ARRIVARE<\/h1>\r\n\r\n<p><strong>Da Nuoro<\/strong> si prende la <em>Strada Statale 131 d.c.n.<\/em>&nbsp; verso Olbia. Raggiunto il bivio di <strong>Lula<\/strong>, se si prosegue verso il paese, si percorre la <em>S.P. n.3<\/em> e si trovano gli ingressi per i sentieri dal versante di <strong>Lod\u00e8<\/strong>;&nbsp;&nbsp; se invece dal bivio si procede lungo la <em>S.P. n. 45<\/em> si trova l\u2019ingresso ai sentieri dal versante di Lula.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Baronie-e-Montalbo"
+        },
+        "4864": {
+            "source_title": {
+                "it": "Campidano di Cagliari"
+            },
+            "source_description": {
+                "it": "<p>Nelle vicinanze di Cagliari, a circa 10 km, si trova&nbsp;la Foresta Demaniale Campidano. E\u2019 costituita da un unico corpo esteso circa 1600 ettari, di cui 489 ricadenti nella zona denominata Santu Barzolu di propriet\u00e0 del comune di Sinnai e gestiti dall\u2019Ente Foreste. Il complesso confina a sud con il centro abitato di Sinnai e Settimo S. Pietro, ad ovest con quello di Soleminis mentre a nord-ovest si trova il comune di Dolianova.&nbsp;<br \/>\r\n<br \/>\r\nIl corpo storico della foresta demaniale fu acquisito dall\u2019amministrazione forestale intorno al 1900 per l\u2019avvio dei lavori di rimboschimento che sono proseguiti nei decenni successivi. Di particolare interesse la pineta adulta di pino d\u2019Aleppo ubicata a Sa Pira, per la cui realizzazione fu impiegata manodopera costituita da prigionieri austriaci della I guerra mondiale. In localit\u00e0 \u201cis Landireddus\u201d si segnala inoltre un\u2019area impiantata a sughera nel 1906.&nbsp;<br \/>\r\n<br \/>\r\nPassando da Sinnai, dall\u2019accesso ubicato a sud della foresta, in localit\u00e0 Sa Pira, si arriva alla localit\u00e0 \u201cBruncu Mogumu\u201d, un colle panoramico che ospita un sito archeologico di notevole interesse. Nei pressi si incontrano ancora i resti di un fabbricato distrutto dall\u2019incendio del 1997 che ha attraversato la foresta devastandone una vasta area.&nbsp;<br \/>\r\nL\u2019accesso da Soleminis, a nord della foresta, porta in localit\u00e0 Mont\u2019Arrubiu dove troviamo un vivaio e la ex-caserma forestale ristrutturata e destinata alle attivit\u00e0 di educazione ambientale (C.E.E.A.). Sono inoltre presenti i resti di una miniera di argento.<br \/>\r\nIl corpo di Santu Barzolu, individuato come Sito di Interesse Comunitario, si unisce alla foresta demaniale nella zona di Bruncu Cirronis e Cuccuru sa Cruxitta e si estende ad est a comprendere il bacino imbrifero del Rio Santu Barzolu, nell\u2019area del lago artificiale che alimenta l\u2019acquedotto.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Campidano-di-Cagliari"
+        },
+        "4859": {
+            "source_title": {
+                "it": "Campidano di Oristano"
+            },
+            "source_description": {
+                "it": "<p>Il Campidano di Oristano \u00e8 una sub-regione della Sardegna occidentale, il cui territrio apparteneva anticamente al <em><strong>Giudicato di Arborea<\/strong><\/em>, e corrisponde a quello delle curatorie: Campidano di Milis, Campidano Maggiore (o di Cabras), Campidano di Simaxis, Usellus, Montis, Bonorzuli&nbsp; <em>(fonte: Wikipedia)<\/em>.<\/p>\r\n\r\n<p>La struttura ambientale di questo territorio si fonda sul sistema delle zone umide costiere che si estendono dal centro del <em><strong>Golfo di Oristano<\/strong><\/em> alla <em><strong>penisola del Sinis<\/strong><\/em>, fino a comprendere il compendio sabbioso di <em><strong>Is Arenas<\/strong><\/em>.<br \/>\r\nL\u2019Ambito comprende il Golfo di Oristano dal promontorio di Capo San Marco a Capo Frasca, ed \u00e8 delimitato a nord dalla <em><strong>regione del Montiferru<\/strong><\/em> e verso est dal sistema orografico del <em><strong>Monte Arci-Grighine<\/strong><\/em>. Si estende all\u2019interno verso i <em>Campidani centrali<\/em> ed \u00e8 definito a sud dall\u2019arco costiero del<em><strong> sistema dell\u2019Arcuentu<\/strong><\/em> e dal <em><strong>Capo Frasca<\/strong><\/em>, promontorio vulcanitico che rappresenta la sponda meridionale del Golfo, costituito da un tavolato basaltico, rilevato di circa 80 metri sul<br \/>\r\nlivello del mare e delimitato da ripide scarpate scolpite dagli agenti meteo-marni, il cui territorio \u00e8 attualmente soggetto ad esclusivi usi militari.<\/p>\r\n\r\n<p>Questo territorio \u00e8 articolato sui tre <em>Campidani di Oristano<\/em> e sul <em><strong>sistema idrografico del Tirso<\/strong><\/em>: il Campidano di Milis a nord, il Tirso come spartiacque fra il Campidano di Milis e il Campidano Maggiore, e il Campidano di Simaxis, che si estende dall\u2019arco costiero alle pendici del <em><strong>Monte Arci<\/strong><\/em>.<\/p>\r\n\r\n<p>Gli <em><strong>ambienti lagunari e stagnali<\/strong><\/em> che si sviluppano lungo la fascia costiera compresa tra <em>Capo Mannu e Capo Frasca (Is Benas, Mistras, Cabras, Santa Giusta, Pauli Maiori, S\u2019Ena Arrubia, Corru s\u2019Ittiri e Corru Mannu San Giovanni e Marcedd\u00ec)<\/em>, oltre a costituire il naturale sistema di espansione idraulica dei corsi d\u2019acqua ed avere rilevanza paesaggistica ed ecologica, sono sede di importanti attivit\u00e0 economiche quale l\u2019allevamento ittico. Questi sono ambienti<br \/>\r\nproduttivi che periodicamente vengono compromessi dallo stato in cui vertono questi ecosistemi, che richiedono un coordinamento nella gestione ambientale dei bacini di alimentazione.<br \/>\r\nLa struttura dell\u2019insediamento costiero presenta situazioni ibride (stagionali e permanenti) intorno ai principali centri: Oristano (borgata marina di <em><strong>Torre Grande<\/strong><\/em>), Arborea (<em>Colonie Marine<\/em>), Cabras (<em>localit\u00e0 marine di San Giovanni di Sinis e Funtana Meiga<\/em>), San Vero Milis (<em>S\u2019Arena Scoada, Putzu Idu, Mandriola, Su Pallosu, Sa Rocca Tunda<\/em>), Terralba (<em>villaggio di pescatori di Marcedd\u00ec<\/em>).<br \/>\r\nIl Golfo \u00e8 stato caratterizzato, a causa della concentrazione di risorse, dalla fondazione di tre distinti <em><strong>centri urbani di epoca fenicia<\/strong><\/em>,<strong> Neapolis, Othoca e Tharros<\/strong>. La citt\u00e0 di Oristano rappresenta dal medioevo la sostituzione di un unico centro urbano, con sistema portuale sul golfo (Lo Barchanir alle foci del Tirso e Portus Cuchusius a Torre Grande), al posto del policentrismo dell'antichit\u00e0 e dell'alto medioevo <em>(fonte: Piano Paesaggistico Regionale, scheda ambito n.9)<\/em><\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Campidano-di-Oristano"
+        },
+        "4849": {
+            "source_title": {
+                "it": "Gallura"
+            },
+            "source_description": {
+                "it": "<p>La&nbsp;Gallura &nbsp;\u00e8 una regione storica e geografica della&nbsp;Sardegna. Comprende la parte nord-orientale dell'isola, dal fiume&nbsp;Coghinas&nbsp;che la delimita a ovest, passando poi per il massiccio del&nbsp;Limbara, che ne delimita la parte meridionale, fino al massiccio del Monte Nieddu a sud-est, nel comune di&nbsp;San Teodoro.&nbsp;<\/p>\r\n\r\n<p>Il territorio \u00e8 oggi compreso nella nuova&nbsp;provincia di Olbia-Tempio &nbsp;e in parte limitata in&nbsp;provincia di Sassari.&nbsp;Ricca di roccia&nbsp;granitica&nbsp;levigata dal vento, dalla pioggia e dal mare, specie sulle coste, sculture naturali di forme bizzarre come quella dell'Orso nei pressi di Palau, conferiscono alla Gallura un aspetto assai originale, molto simile a quello del&nbsp;sud della Corsica&nbsp;e che lascia spazio solo verso nord a fertili pianure. La vegetazione spontanea della costa \u00e8 formata da macchia mediterranea (lentischio, cisto, corbezzolo, mirto ecc.). L'interno invece ha un aspetto differente, pi\u00f9 riparato dai venti \u00e8 caratterizzato da imponenti affioramenti granitici e boschi di&nbsp;querce&nbsp;e&nbsp;sughere&nbsp;la cui lavorazione costituisce una delle principali attivit\u00e0 produttive.<\/p>\r\n\r\n<p>Il territorio gallurese include anche la Costa Smeralda&nbsp;in comune di Arzachena, sulla costa orientale. I centri principali sono Olbia,&nbsp;Tempio Pausania,&nbsp;Arzachena e&nbsp;La Maddalena.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Gallura"
+        },
+        "4838": {
+            "source_title": {
+                "it": "Gennargentu"
+            },
+            "source_description": {
+                "it": "<p>Il Gennargentu \u00e8 un massiccio montuoso che ospita le vette pi\u00f9 elevate dell\u2019Isola (Punta La Marmora 1834 m e Bruncu Spina 1828 m). Da qui si gode di un panorama che spazia su tutta l\u2019Isola. L\u2019area \u00e8 di grande pregio per la presenza di habitat e specie endemiche e rare. Qui \u00e8 possibile vedere l\u2019aquila reale o imbattersi in gruppi di mufloni. La vegetazione \u00e8 costituita da prati, garighe e macchie, presenti anche fitti ontaneti e roverelle monumentali. Chi percorre i sentieri potr\u00e0 dissetarsi presso le freschissime sorgenti, ammirare fioriture di rara bellezza e un sorprendente numero di insetti. Nei fondovalle si trovano gli antichi ovili, a volte ancora in uso. Nei paesi \u00e8 possibile visitare musei, degustare i prodotti locali e acquistare i manufatti dell\u2019artigianato.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Gennargentu"
+        },
+        "4839": {
+            "source_title": {
+                "it": "Gennargentu Ogliastrino"
+            },
+            "source_description": {
+                "it": "<p>Sull'origine del nome Ogliastra esistono due diverse teorie. La prima lo ritiene diretta conseguenza della diffusa presenza sul territorio dell'Olivastro. La seconda, considerata pi\u00f9 credibile, fa discendere il nome del territorio da quello dell\u2019imponente guglia di Pedra Longa, chiamata Agugliastra che domina il mare a nord di Santa Maria Navarrese. L'Ogliastra \u00e8 un territorio perlopi\u00f9 montuoso compreso tra le coste del mar Tirreno e le vette del Gennargentu, che fanno assomigliare questa regione ad una sorta di immenso anfiteatro rivolto al mare. L'Ogliastra offre al visitatore un sistema costiero variegato che va dalla costa alta e le cale di Baunei, Cala Luna, Cala Sisine, Cala Mariolu (Ispuligiden\u00ece) e Cala Goloritz\u00e8, alle spiaggie di Tortoli, Barisardo e Cardedu (Orr\u00ec, Cea e Museddu), fino a quelle pi\u00f9 a sud di Gairo (Coccorrocci) e Tertenia (Sarrala). Al visitatore pi\u00f9 attento baster\u00e0 poi spingersi per qualche chilometro all'interno per poter ammirare territori montani di impressionante bellezza quali il Supramonte di Baunei ed Urzulei, i boschi e le montagne di Talana, Villagrande, Seui e Ussassai, il Gennargentu di Arzana, i tacchi e le valli monumentali di Gairo, Jerzu, Osini e Ulassai. La particolare conformazione del territorio ed il secolare isolamento hanno contribuito a creare un particolare insieme di valenze naturali, paesaggistiche, culturali e sociologiche che meritano uno sguardo attento, curioso e profondo.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Gennargentu-Ogliastrino"
+        },
+        "4844": {
+            "source_title": {
+                "it": "Gerrei"
+            },
+            "source_description": {
+                "it": "<p>L'area del Gerrei, e in particolare l\u2019altopiano di Villasalto, ha rappresentato per secoli un importante crocevia di raccordo fra le zone a valle del Flumendosa e quelle montane pi\u00f9 interne, nel quale avveniva il transito del bestiame nel corso dei trasferimenti stagionali. Gli abituali percorsi rurali sono cos\u00ec contraddistinti da segni permanenti come muretti a secco, selciati residui, \"cottis\" per ricoverare temporaneamente il bestiame, sorgenti e abbeveratoi. Inoltre, l\u2019attivit\u00e0 agropastorale da tempi remoti si \u00e8 intersecata con l\u2019attivit\u00e0 mineraria e lo sviluppo dell\u2019insediamento urbano, caratterizzando permanentemente il paesaggio. Infatti, addentrandosi nelle limitate aree pianeggianti di Su Pardu sono visibili gli appezzamenti squadrati delimitati da muretti a secco, testimonianza della evidente passata attivit\u00e0 agricola che viene mantenuta in vita, in forma marginale, in alcuni appezzamenti dove viene ricoverato il bestiame. Il paesaggio del territorio di Villasalto si contraddistingue perci\u00f2 per la sua unicit\u00e0, con le molteplici peculiarit\u00e0 e possibilit\u00e0 di valorizzazione. I sentieri individuati sono caratterizzati da breve e media percorrenza ma propongono tematismi diversi e si distinguono per la presenza di emergenze di tipo ambientale, storico o paesaggistico. Nel territorio si intersecano numerose piste sterrate anche di lunga percorrenza che collegano aree distanti e che, a tutt\u2019oggi, non sono state rimpiazzate da collegamenti stradali bitumati e rappresentano ancora le uniche vie di comunicazione.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Gerrei"
+        },
+        "4836": {
+            "source_title": {
+                "it": "Goceano"
+            },
+            "source_description": {
+                "it": "<p>Il territorio del Goceano \u00e8 un'area di media montagna situata fra il Monte Acuto e i monti della Barbagia e del Marghine. Gli elementi che caratterizzano il territorio sono il rilievo del Monte Rasu,e il fiume Tirso con i suoi molti affluenti; questi habitat fluviali arricchiscono e diversificano l\u2019ambiente boschivo ed hanno un particolare interesse per le comunit\u00e0 faunistiche legate alle acque dolci delle zone interne dell'Isola. Il paesaggio \u00e8 caratterizzato da formazioni boscate e pascoli arborati di querce mediterranee quali il leccio, la roverella e la sughera, e da formazioni arbustive della macchia mediterranea.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Goceano"
+        },
+        "4858": {
+            "source_title": {
+                "it": "Guilcer-Barigadu-Mandrolisai"
+            },
+            "source_description": {
+                "it": "<p>Il <em><strong>Guilcer <\/strong><\/em>\u00e8 un\u2019area geografica situata in una posizione centrale dell'isola e, da secoli, \u00e8 crocevia di attivit\u00e0 e commerci. Comprende un altopiano basaltico e la sottostante pianura dove scorre il fiume Tirso e si trova l\u2019invaso artificiale del Lago Omodeo. Il Guilcer raccoglie numerosi tesori archeologici, tra i quali ricordiamo per importanza <strong>il nuraghe Losa di Abbasanta<\/strong>. L'antico territorio del <em><strong>Barigadu <\/strong><\/em>\u00e8 ubicato invece a sud del <em>Lago Omodeo<\/em>. Il paesaggio \u00e8 caratterizzato dalla presenza della macchia mediterranea e da sugherete, che crescono rigogliose grazie alle favorevoli condizioni pedoclimatiche. Nell\u2019<strong>Oasi Naturalistica di Assai<\/strong>, fra i paesi di <em>Neoneli <\/em>e<em> Nughedu Santa Vittoria<\/em> \u00e8 possibile osservare da vicino specie animali come il cervo sardo, il daino, il cinghiale e diverse specie di uccelli selvatici. Nei pressi dei paesi di <em>Busachi<\/em> e <em>Allai<\/em>, che conservano ancora gli antichi edifici rurali, si trova un ponte romano che conduce a <em>Fordongianus<\/em>, l'antica citt\u00e0 denominata<em> Forum Traiani<\/em>, dove vi sono le antiche rovine delle terme romane. Il <em><strong>Mandrolisai <\/strong><\/em>\u00e8 invece caratterizzato dagli ampi pascoli, dai boschi di castagno, da sugherete e dalla presenza di numerosi vigneti che rappresentano le pi\u00f9 importanti risorse economiche del territorio.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Guilcer-Barigadu-Mandrolisai"
+        },
+        "4867": {
+            "source_title": {
+                "it": "Gutturu Mannu"
+            },
+            "source_description": {
+                "it": "<p>Questo <em>Ambito territoriale&nbsp;<\/em>si estende nei territori di <strong>Assemini, Pula, Santadi, Sarroch, Siliqua, Uta e Villa San Pietro<\/strong>, nella <u><em>Zona di Protezione Speciale<\/em><\/u> ITB044009 e nel <em><u>Sito di Interesse Comunitario<\/u><\/em> ITB001106 (<em>Foresta di Monte Arcosu<\/em>).<\/p>\r\n\r\n<p>L'area del costituendo parco regionale del Guttur Mannu \u00e8 un territorio di elevato interesse naturalistico e comprende al suo interno la omonima Foresta Demaniale, situata nella parte sud della provincia di Cagliari.&nbsp;<br \/>\r\nL'intera foresta \u00e8 compresa nella proposta di Parco naturale del Sulcis ai sensi della L.R. 31\/89 in quanto&nbsp;\u2018Esteso areale occidentale del cervo sardo. Massicci granitici del Paleozoico dalla tormentata morfologia con valloni alternati a pianori. Vette elevate oltre i mille metri. Ricchissimo di boschi di lecci con frequenza di tassi e agrifogli negli anfratti pi\u00f9 remoti; sughere, corbezzoli, filliree arborescenti e lentischi. Macchia mediterranea con erica e corbezzolo arborescente.<\/p>\r\n\r\n<p>Importante sotto l\u2019aspetto faunistico per le migrazioni stagionali del cervo sardo e del cinghiale. Presenti anche la volpe, il gatto selvatico sardo, la martora, la beccaccia, il colombaccio e picchi rossi. &nbsp;Insediamenti minerari (Pantaleo) e insediamenti archeologici e di antica cultura contadina\u2019. &nbsp; &nbsp; &nbsp;Inoltre ricade nell\u2019area S.I.C. I.T.B. 001105 \u2013\u2018Foresta di Monte Arcosu\u2019 per circa il 70% della sua superficie e per gran parte della sua superficie nell\u2019 Oasi permanente di protezione faunistica \u2018Gutturu Mannu - Monte Arcosu\u2019 come da decreti n\u00b0102 del 20.07.78 e n\u00b01240 del 15.11.88. &nbsp; &nbsp; &nbsp;In localit\u00e0 <em>Is Fenebbas<\/em> si pu\u00f2 usufruire delle aree pic-nic messe a disposizione del visitatore.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Gutturu-Mannu"
+        },
+        "4843": {
+            "source_title": {
+                "it": "Iglesiente"
+            },
+            "source_description": {
+                "it": "<p>La zona dell'Iglesiente \u00e8 dotata di un notevole patrimonio naturalistico che unisce il mare al paesaggio costiero. L\u2019intera area \u00e8 particolarmente ricca di una rete di sentieri e di un tessuto viario rurale, testimonianza sia dell\u2019attivit\u00e0 mineraria che di quella dei boscaioli toscani nell\u2019800. La viabilit\u00e0 rurale \u00e8 in parte utilizzata dai residenti che svolgono attivit\u00e0 zootecnica, dagli appassionati di escursioni e dai numerosi praticanti degli sport a contatto con la natura, tra i quali il free climbing, il parapendio, il deltaplano, il down hill e anche la tradizionale mountain bike e l'equitazione. Alcune di queste strade sono in condizioni di buona fruibilit\u00e0 mentre altre, come le vecchie mulattiere, sono ormai in disuso e vengono utilizzate principalmente dai cacciatori e dai cercatori di funghi. I sei sentieri proposti costituiscono una rete escursionistica in grado di valorizzare il territorio del Comune di Buggerru offrendo scorci culturali e di paesaggio che vanno dagli insediamenti paleolitici al periodo punico e alla colonizzazione pisana, fino ai giorni nostri. In modo particolare vengono valorizzate le miniere, elemento distintivo dell'attivit\u00e0 passata del territorio di Buggerru ma anche le numerose aree naturalistiche e geologiche presenti, come ad esempio i boschi di Pino domestico e di Quercia spinosa, i canyon di Gutturu Cardaxius e le conformazioni rocciose a strapiombo che caratterizzano la costa.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Iglesiente"
+        },
+        "4861": {
+            "source_title": {
+                "it": "Linas - Monreale"
+            },
+            "source_description": {
+                "it": "<p>L'area montuosa del Monte Linas si erge nel cuore dell'Iglesiente, nella Sardegna sud orientale. \u00c8 compresa nei comuni di Cagliari, Domusnovas, Fluminimaggiore, Gonnosfanadiga, Iglesias e Villacidro. La morfologia geologica del monte, con prevalenza granitica e calcarea, risale al Paleozoico. Non molto elevato (la Perda de Sa Mesa raggiunge 1236 m), si estende dal monte Arcuentu fino alla zona mineraria di Oridda e alla piana del Cixerri. Il monte \u00e8 costituito essenzialmente da due aree geomorfologicamente distinte: quella del Monte Linas, in cui predomina il granito, e quella di Marganai, formata da scisti e calcari su cui svetta la Punta Campu Spina. Le due zone sono congiunte dall'altopiano di Oridda, che raggiunge un'altitudine di 600 metri sul livello del mare. Dove \u00e8 preminente il granito il paesaggio \u00e8 caratterizzato da profonde gole interrotte da cascate; seguendo il corso del rio Oridda, infatti, \u00e8 possibile raggiungere la cascata di Sa Spendula, di Riu Mannu e di Piscina Irgas. L'area \u00e8 interessante sotto il profilo botanico: sono presenti alcune piante officinali come la camomilla, la belladonna e la calendula. Il rigoglioso bosco di leccio \u00e8 popolato da una fauna variegata comprendente anche il cervo sardo, il cinghiale, il muflone, il daino e l'aquila reale. Lungo il corso del rio Linas si trova il corbezzolo gigante. Nelle aree calcaree del monte corrono fiumi sotterranei che nel tempo hanno fatto sviluppare grotte suggestive, fra cui quella di San Giovanni, a pochi chilometri da Dosmusnovas. Questa cavit\u00e0 fora il Monte Aqua: fino alla fine del XX secolo era utilizzata come galleria transitabile.&nbsp;Lunga 800 metri, pu\u00f2 essere esplorata da visitatori muniti di torcia, con cui \u00e8 possibile fendere l'oscurit\u00e0 e ammirare le concrezioni quali stalattiti e stalagmiti sopravvissute a millenni e il torrente che vi scorre all'interno. Nell'area di Oridda sono presenti i ruderi dello stabilimento minerario costruito nell'Ottocento per lo sfruttamento delle riserve minerarie di cui \u00e8 ricca la zona. Una parte del Monte Linas ospita il Parco Culturale Giuseppe Dess\u00ec, scrittore sardo che nel 1972 vinse il prestigioso Premio Strega con il romanzo \"Paese d'ombre\" uno dei capolavori della letteratura sarda. Il Parco, istituito di recente, \u00e8 compreso nei comuni di Villacidro, Buggerru, Arbus, Guspini, Fluminimaggiore e San Gavino Monreale.<\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Linas---Monreale"
+        },
+        "4855": {
+            "source_title": {
+                "it": "Marghine"
+            },
+            "source_description": {
+                "it": "<p>Il M\u00e0rghine \u00e8 una subregione della Sardegna centro-occidentale con una popolazione di circa 23.000 abitanti, il cui centro principale \u00e8 <em><strong>Macomer<\/strong><\/em>.<\/p>\r\n\r\n<p>Si estende a nord dall'<em><strong>altopiano di Abbasanta<\/strong><\/em> e ricade per intero nella provincia di Nuoro; <em>\u00e8 attraversato in senso longitudinale dalla catena montuosa omonima<\/em>.<\/p>\r\n\r\n<p>Tra le cime pi\u00f9 alte si distinguono il <em><strong>Monte Santu Padre<\/strong><\/em> (1.030 metri), <em><strong>Punta Lammeddari<\/strong><\/em> (1.118 metri) e infine la pi\u00f9 alta <em><strong>Punta Palai<\/strong><\/em>, che si eleva a quota 1.200 metri s.l.m.<\/p>\r\n\r\n<p>I centri urbani che ne fanno parte sono: Birori, Bolotana, Borore, Bortigali, Dualchi, Lei, Macomer, Noragugume e Silanus. Lungo le pendici meridionali della catena montuosa corre la Strada statale 129 Trasversale Sarda, che unisce tra loro i centri abitati di Bortigali, Silanus e Lei; poco distante dall'asse viario si trova Bolotana.<br \/>\r\nVerso nord-ovest si estende l'<em><strong>altopiano di Campeda<\/strong><\/em>, posto ad un'altitudine media di 650 metri, ed attraversato dalla <em>Strada statale 131 Carlo Felice<\/em>. In questa zona si trova <em><strong>Mulargia<\/strong><\/em>, piccolo centro frazione di Bortigali, la cui attivit\u00e0 economica prevalente ha carattere agro-pastorale. \u00c8 inoltre il paese pi\u00f9 alto del Marghine, posto ad un'altitudine di 700 metri.<\/p>\r\n\r\n<p>Nella parte nord-orientale si estende <em><strong>Foresta Burgos<\/strong><\/em>, gestita dall'Ente Foreste della Sardegna.<\/p>\r\n\r\n<p>Nella zona si trovano, inoltre, numerosi nuraghi, alcuni dei quali sono nuraghe Orolo, nuraghe Ponte, <em><strong>nuraghe Santa Barbara<\/strong><\/em>, nuraghe Santa Sabina, nuraghe Orolio e nuraghe Corbos.<\/p>\r\n\r\n<p><em>(Fonte: Wikipedia)<\/em><\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Marghine"
+        },
+        "4865": {
+            "source_title": {
+                "it": "Marmilla"
+            },
+            "source_description": {
+                "it": "<p>La Marmilla \u00e8 una subregione della Sardegna posta nella parte <em><strong>centro-meridionale<\/strong><\/em> della regione.<\/p>\r\n\r\n<p>\u00c8 delimitata ad est e a sud dal <em><strong>Campidano<\/strong><\/em>, a nord-ovest dal <em><strong>Monte Arci<\/strong><\/em>, a nord dalla <em><strong>Giara di Gesturi <\/strong><\/em>e<em><strong> dalla Giara di Serri<\/strong><\/em>, a est dal <em><strong>Flumini Mannu<\/strong><\/em>.<\/p>\r\n\r\n<p>Il paesaggio \u00e8 prevalentemente collinare e comprende la Giara, l'altopiano di Genoni ed il <em><strong>bacino del Rio Mannu<\/strong><\/em>. Le attivit\u00e0 principali della zona sono l'agricoltura ed il turismo. Le coltivazioni sono prevalentemente di cereali, ma \u00e8 diffusa anche la coltivazione delle fave.<\/p>\r\n\r\n<p>Il turismo nella Marmilla pu\u00f2 contare su vari beni ambientali, numerosi centri nuragici, opere architettoniche. Si segnalano in particolare:<\/p>\r\n\r\n<ul>\r\n\t<li>la <em><strong>Giara di Gesturi<\/strong><\/em> ed il<em><strong> Parco Naturale Monte Arci<\/strong><\/em>, il Villaggio nuragico di <em><strong>Su Nuraxi a Barumini<\/strong><\/em>,<\/li>\r\n\t<li>il <strong>nuraghe Cuccurada<\/strong> a Mogoro, il complesso di Genna Maria a Villanovaforru, la fortezza di Su Mulinu a Villanovafranca, il santuario nuragico di Santa Vittoria a Serri.<\/li>\r\n\t<li>Opere architettoniche quali le chiese romaniche di&nbsp; San Michele Arcangelo a Siddi, San Pietro a Villamar e San Giovanni Battista a Barumini<\/li>\r\n\t<li>chiese parrocchiali gotiche di San Vito di Gergei, Santa Barbara a Genoni e Beata Vergine Immacolata a Barumini,<\/li>\r\n\t<li>il <em><strong>Castello giudicale di Las Plassas<\/strong><\/em>, la <em><strong>casa cinquecentesca Zapata<\/strong><\/em> di Barumini, i portali delle dimore storiche di Simala, il <em><strong>museo 'sa corona arrubia'<\/strong><\/em> in territorio di Lunamatrona<\/li>\r\n<\/ul>\r\n\r\n<p><em>(fonte: Wikipedia)<\/em>.<\/p>\r\n\r\n<p><strong>Fanno parte di questo territorio i comuni<\/strong>:&nbsp;Albagiara, Ales, Baressa, Barumini, Collinas, Curcuris, Furtei, Genuri, Gesturi, Gonnoscodina, Gonnostramatza, Las Plassas, Lunamatrona, Masullas, Mogoro, Morgongiori, Nureci, Pau, Pauli Arbarei, Pompu, Sanluri, Sardara, Segariu, Senis, Setzu, Siddi, Simala, Sini, Siris, Tuili, Turri, Ussaramanna, Villamar, Villanovaforru, Villanovafranca.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Marmilla"
+        },
+        "4852": {
+            "source_title": {
+                "it": "Meilogu"
+            },
+            "source_description": {
+                "it": "<p>Il territorio del Meilogu \u00e8 prevalentemente vulcanico e <em><strong>i colli conici ne rendono l'aspetto singolare <\/strong><\/em>nel contesto di terra geologicamente antica, tanto che gli viene attribuito l'appellativo di Alvernia sarda. I suoi suoli sono per questo tra i pi\u00f9 fertili dell'isola. Le principali vette sono il <em><strong>monte Santu<\/strong><\/em>, il <em><strong>monte Pelau<\/strong><\/em> e il <em><strong>monte Traessu<\/strong><\/em>, tutti vulcani spenti di altezza poco superiore ai 700 metri <em>(fonte: Wikipedia)<\/em>.<\/p>\r\n\r\n<p>Rientrano in questo territorio i comuni:&nbsp; Ardara, Banari, Bessude, Bonnanaro, Bonorva, Borutta, Cheremule, Cossoine, Giave, Ittireddu, Mara, Mores, Padria, Pozzomaggiore, Romana, Semestene, Siligo, Thiesi, Torralba.<\/p>\r\n\r\n<p>Crateri vulcanici del Meilogu sono <em><strong>monumenti naturali: l'area di&nbsp;Monte Annaru (Giave)<\/strong><\/em> ricade nella regione del Meilogu-Logudoro,&nbsp; di particolare interesse per la morfologia e le sequenze geologiche: \u00e8 caratterizzata da una copertura di vulcaniti oligo-mioceniche poggianti sul basamento cristallino paleozoico. Al di sopra sedimenti, lave e depositi. Monte Annaru, situato poco pi\u00f9 a nord di Giave, a 491 m s.l.m., \u00e8 un bell\u2019esempio di cono vulcanico, riportabile all\u2019attivit\u00e0 eruttiva post-miocenica. La sua posizione isolata lo rende facilmente riconoscibile. Presenta ancora ben conservate le pendici interne ed esterne e l\u2019ampia bocca eruttiva a forma di cald\u00e8ra da cui effuse la lava che origin\u00f2 il tavolato basaltico situato a N-NE del colle di Giave. All\u2019interno del cratere, durante il periodo invernale, si forma un piccolo lago.<\/p>\r\n\r\n<p>Per approfondimenti <a href=\"http:\/\/www.sardegnaambiente.it\/j\/v\/152?s=7126&amp;v=2&amp;c=7191&amp;t=1\">consulta SardegnaForeste.it a questo link.<\/a><\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Meilogu"
+        },
+        "4853": {
+            "source_title": {
+                "it": "Monte Minerva"
+            },
+            "source_description": {
+                "it": "<p>Un'area forestale caratterizzata da una ricca vegetazione ove domina la roverella con maestosi esemplari e dove \u00e8 possibile ammirare alcune rare specie come l'aquila reale e il grifone.<\/p>\r\n\r\n<p>Il Monte Minerva, si estende su circa 2,5km di lunghezza per 500m di larghezza media, raggiungendo un\u2019<strong>altezza massima di 644 m.s.l.m<\/strong>.: <strong>\u00e8 l\u2019altopiano (giara) pi\u00f9 alto ed esteso della zona<\/strong>. Si estende su oltre 400 ha di terreno, di cui 80 ha di propriet\u00e0 demaniale (Ente Foreste) ed i restanti in occupazione temporanea. L'Ente Foreste vi svolge attivit\u00e0 silvicolturali per la conservazione e valorizzazione del patrimonio naturalistico-ambientale.&nbsp;&nbsp;<\/p>\r\n\r\n<p><em>\"Questa contrada che ne\u2019 primi del mondo era parte di un grandissimo terrazzo trachitico, come appare dalla sommit\u00e0 piana di tutte le eminenze che sono nella medesima e nelle regioni circostanti, poi per la violenza dei fuochi sotterranei e per lo scoppiamento della crosta si apr\u00ec in molte valli, e cominci\u00f2 a prendere quella sembianza, nella quale appare ora la sua superficie\". <\/em><\/p>\r\n\r\n<p>Cos\u00ec il Casalis descriveva<strong> la regione del Monteleone<\/strong>, antico dipartimento del <em>Logudoro<\/em>: queste terre risalgono infatti al \"vulcanismo antico\", ossia al grande ciclo eruttivo che ha interessato la Sardegna milioni di anni fa.<\/p>\r\n\r\n<p><strong>Un'area caratteristica nel nord-ovest della Sardegna<\/strong>: per paesaggio, per pregio naturalistico, archeologia (le <em>domus de janas<\/em> ai piedi del monte Minerva) e per la rete di sentieri ed ippovie che attraversano il monte a met\u00e0 pendio, garantendo al visitatore numerosi punti di osservazione panoramici.<br \/>\r\nSull'altopiano sono presenti habitat particolari, tra cui: <em><strong>le aree umide temporanee<\/strong><\/em> caratterizzate da una flora endemica esclusiva. La presenza delle alte falesie risulta un habitat idoneo per la nidificazione di numerosi rapaci: \u00e8 Sito di Interesse Comunitario e Zona di Protezione Speciale grazie alla presenza di particolari specie floro-faunistiche.<br \/>\r\n<strong>Dall\u2019altopiano di Monte Minerva \u00e8 possibile ammirare uno splendido paesaggio sin verso il mare di Bosa e sul lago Temo<\/strong>, con la splendida <strong><em>rocca di Monteleone.<\/em><\/strong><br \/>\r\nUna interessante strada panoramica si pu\u00f2 inoltre ammirare passando dalla \"costera\", la strada che da Montresta sale sulle cime dei colli di Villanova e si affaccia sul mare di Sardegna.<br \/>\r\nAll\u2019uscita del paese di Villanova Monteleone si pu\u00f2 visitare una torre saracena che guarda il mare.<\/p>\r\n\r\n<p><em>\"Vi s\u2019innalza verso occidente una torre da lunga pezza abbandonata, la quale serviva per ricevere i segnali dal Capo di Marragio e trasmetterli ad altre torri\"<\/em> (Casalis, 1839).<br \/>\r\n&nbsp;<\/p>\r\n\r\n<p><em><strong>Pottu Codinu<\/strong><\/em> (\"pozzo di roccia\") \u00e8 una localit\u00e0 archeologica a circa 6 km da Villanova Monteleone, sulla statale 292, tra Villanova e <strong>Monteleone Rocca Doria<\/strong>, in prossimit\u00e0 della strada.<\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Monte-Minerva"
+        },
+        "4851": {
+            "source_title": {
+                "it": "Monteacuto"
+            },
+            "source_description": {
+                "it": "<p>Il Monteacuto \u00e8 una regione storica della Sardegna dai confini non ben delineati, gravitante intorno alla cittadina di <em><strong>Ozieri<\/strong><\/em> . Deve il suo appellattivo all'omonima collina, sita in territorio di Berchidda, che ne Medioevo fu sede di un importante castello.<\/p>\r\n\r\n<p>Il suo territorio corrisponde in massima parte ai territori pianeggianti che a partire dal Monte Santo, che segna il confine col Meilogu, arrivano fin quasi ad Olbia, comprendendo la vallata a sud del Limbara. L'unica zona realmente montuosa \u00e8 quella a Sud-Est, corrispondente pressappoco al territorio di Pattada e all'<em><strong>altopiano di Buddus\u00f2<\/strong><\/em> (che per\u00f2 anticamente era compresa nell'ambito del Nuorese).<\/p>\r\n\r\n<p>Oggi il Monteacuto si trova economicamente e amministrativamente diviso in due zone il cui confine \u00e8 segnato dal <em><strong>fiume Coghinas<\/strong><\/em>: l'una gravitante verso Sassari e l'altra verso Olbia-Tempio. In realt\u00e0 anche storicamente la regione si trovava divisa tra <em><strong>Logudoro <\/strong><\/em>e <em><strong>Gallura<\/strong><\/em>.&nbsp; Appartengono a questa regionestorica i comuni: Berchidda (OT), Monti (OT), Nughedu San Nicol\u00f2 (SS), Tula (SS), Oschiri (OT), Ozieri (SS), Pattada (SS), Al\u00e0 dei Sardi (OT), Buddus\u00f2 (OT).<\/p>\r\n\r\n<p><em>(Fonte: Wikipedia)<\/em><\/p>\r\n\r\n<p>Il <em><strong>Complesso Forestale del Monte Acuto<\/strong><\/em> \u00e8 costituito da diversi corpi di notevole valenza naturalistica ricadenti nei comuni di Tula, Pattada, Buddus\u00f2, Oschiri e Berchidda. La sede del complesso, situata presso Monte Lerno, \u00e8 Foresta Demaniale dal 1904. Caraterizzata da lecci, sugherete, pino, cedro dell'Atlante e castagno. Afferiscono inoltre a questo Complesso forestale le unit\u00e0 gestionali di Sa Conchedda e di Filigosu che pur non ricadendo nel distretto forestale n.5 costituiscono un unico corpo con le unit\u00e0 di Monte Lerno e Sa Linna Sicca.&nbsp;<\/p>\r\n\r\n<p>MAGGIORI DETTAGLI<\/p>\r\n\r\n<p>Visualizza <a href=\"http:\/\/www.sardegnaambiente.it\/j\/v\/1189?v=2&amp;c=7251&amp;s=98847\">la scheda dei territori forestali su SardegnaForeste.it<\/a><\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Monteacuto"
+        },
+        "4857": {
+            "source_title": {
+                "it": "Montiferru"
+            },
+            "source_description": {
+                "it": "<p>Si tratta di un territorio ricco di ambienti ed ecosistemi che variano da quello marino (Cuglieri, Tresnuraghes) a quello montano (Santu Lussurgiu, Scano di Montiferru etc).&nbsp;<\/p>\r\n\r\n<p>Territorio ricco di paesaggi e di risorse naturali spesso ancora intatti: \u00e8 qui che si allevano ancora con metodi tradizionali le mandrie della razza Sardo-Modicana, meglio nota come <em>Bue Rosso<\/em>; qui troviamo ancora boschi e sorgenti naturali che hanno potuto conservare le caratteristiche del passato.&nbsp; Dal punto di vista vegetale la pianta simbolo della subregione \u00e8 il leccio, da quello animale \u00e8 senza dubbio il cinghiale ed <em><strong>il muflone<\/strong><\/em>, presente in misura molto esigua (a causa soprattutto di caccia e incendi boschivi) e reintrodotto da qualche decennio nella zona di <em><strong>Pabarile<\/strong><\/em>, in territorio di Santu Lussurgiu, che \u00e8 gestito dall'Ente Foreste della Sardegna.<\/p>\r\n\r\n<p>&nbsp;Il complesso forestale del Montiferru prende il nome dal massiccio di natura vulcanica che si eleva culminando con il<strong> Monte Urtigu<\/strong> in agro di Santulussurgiu, ad <em><strong>un\u2019altezza pari a 1050<\/strong><\/em> metri sul livello del mare.&nbsp; Sulla sommit\u00e0 di questo monte, <em>Alberto La Marmora<\/em> piazz\u00f2 un segnale trigonometrico. Da questa cima riusciva a scorgere l'isola dell'Asinara (a 110 chilometri di distanza in linea retta) e la Sella del Diavolo e la Torre di San Pancrazio di Cagliari (a 120 chilometri di distanza).<\/p>\r\n\r\n<p><em>\"questa cima si chiama Monte Urticu, e siccome da l\u00ec avrei potuto scorgere molti altri miei segnali piazzati sulle differenti vette della parte centrale dell\u2019Isola e visto che sul Monte Entu sarebbero restati invece nascosti, fu proprio in quel punto che sistemai un grande segnale, di cui rimangono probabilmente ancora dei resti. \u00c8 sufficiente dire che da qui distinsi verso nordovest l\u2019isola dell\u2019Asinara e verso sudest la torre di San Pancrazio di Cagliari e la penisola di Sant\u2019Elia; tra questo luogo e l\u2019Asinara c\u2019\u00e8 una distanza che supera i 108 chilometri in linea retta, mentre la torre di San Pancrazio ne dista 120\".&nbsp; <\/em>(Alberto La Marmora, Voyage en Sardaigne - fonte Wikipedia)<\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Montiferru"
+        },
+        "4846": {
+            "source_title": {
+                "it": "Nurra"
+            },
+            "source_description": {
+                "it": "<p>La Nurra (nome forse derivato da <em>Nure<\/em>, antica citt\u00e0 della Sardegna di epoca romana situata nelle vicinanze del <em>lago di Baratz<\/em> e di <em>porto Ferro<\/em>) \u00e8 una sub-regione storica nonch\u00e9 area agricola pianeggiante del nord-ovest della Sardegna, situata nel quadrilatero compreso fra Alghero, Sassari, Porto Torres e Stintino, tra il Golfo dell'Asinara a nord-est, il Mar di Sardegna ad ovest, dal Riu Mannu a est e dai rilievi del Logudoro a sud-est.<\/p>\r\n\r\n<p>\u00c8 interamente inclusa nella Provincia di Sassari.&nbsp;&nbsp; Il paesaggio della Nurra oggi appare, generalmente, spoglio, costituito in gran parte da estesi pascoli, da macchia mediterranea e gariga; delle grandi foreste che la ricoprivano, sino all'Ottocento, rimangono solo sparuti residui di foreste a galleria, lungo le valli. Nella Nurra sono presenti importanti testimonianze dell'antica industria mineraria sarda, i villaggi e le miniere dell'<em><strong>Argentiera <\/strong><\/em>e <em><strong>Canaglia<\/strong><\/em>.<\/p>\r\n\r\n<p><em>(fonte: Wikipedia)<\/em><\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Nurra"
+        },
+        "4850": {
+            "source_title": {
+                "it": "Pedra Bianca-Tepilora"
+            },
+            "source_description": {
+                "it": "<p>Questo territorio comprende, tra l'altro:<\/p>\r\n\r\n<ol>\r\n\t<li>Il Complesso forestale <em><strong>Oasi Tepilora<\/strong><\/em> che \u00e8 composto da tre Foreste Demaniali ricadenti nei comuni di Torp\u00e8 e Bitti, per una superficie totale&nbsp; di circa 5719 ettari gestiti dall'Ente Foreste della Sardegna<\/li>\r\n\t<li>Il Complesso forestale di <em><strong>Padru<\/strong><\/em>, costituito da quattro unit\u00e0 gestionali ricadenti per gran parte nel territorio comunale di Padru e parzialmente in quello di San Teodoro (4115 ettari circa).<\/li>\r\n\t<li>Le aree forestali di <em><strong>Pedra Bianca<\/strong><\/em> e <em><strong>Monte Nieddu<\/strong><\/em>, ricche di suggestioni paesaggistiche e di beni naturali (flora e fauna) inserite in una rete di viabilit\u00e0 forestale che favorisce l'escursionismo: per raggiungere le frazioni di Padru (OT) e Torp\u00e8 (NU) oltre che la foresta demaniale di Monte Nieddu.<\/li>\r\n\t<li>&nbsp;Il <em><strong>Parco Naturale Regionale di Tepilora, Sant'Anna e Rio Posada<\/strong><\/em> (in via di istituzione): denominato inizialmente \u201c<a href=\"http:\/\/www.sardegnaambiente.it\/j\/v\/152?s=43370&amp;v=2&amp;c=7190&amp;t=1\">Parco naturale regionale dell\u2019Oasi di Tepilora<\/a>\u201d il parco deve la sua attuale denominazione alla decisione di estendere l\u2019originaria delimitazione anche ai territori che si affacciano sul <em>Rio Posada<\/em>. Il parco di Tepilora, Sant\u2019Anna e rio Posada ha una superficie di 6.656 ettari su cui insistono oasi di protezione faunistica e dove \u00e8 in vigore il divieto di caccia. In questi territori opera l\u2019Ente Foreste della Sardegna che gestisce direttamente, a vario titolo, la quasi totalit\u00e0 del territorio forestale. Le aree demaniali del corso del rio Posada che attraversano territori, non ricompresi nella prima perimetrazione, costituiscono elemento di continuit\u00e0 territoriale.<\/li>\r\n<\/ol>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Pedra-Bianca-Tepilora"
+        },
+        "4854": {
+            "source_title": {
+                "it": "Planargia"
+            },
+            "source_description": {
+                "it": "<p>La Planargia \u00e8 una sub-regione della <em><strong>Sardegna nord-centro-occidentale<\/strong><\/em> compresa tra la bassa valle del<em><strong> fiume Temo<\/strong><\/em> e il versante settentrionale del <em><strong>Montiferru<\/strong><\/em>, attualmente tutta all'interno della Provincia di Oristano.<\/p>\r\n\r\n<p>La Planargia, che deve il suo nome all'<em>andamento principalmente alto-pianeggiante del territorio<\/em>, offre al visitatore ed all'escursionista la possibilit\u00e0 di spaziare dalla collina verdeggiante alla costa&nbsp; dal mare blu della <strong><em>R<\/em><\/strong><em><strong>iviera del corallo<\/strong><\/em> (particolarmente intatto e selvaggio&nbsp; il tratto da Bosa verso Alghero, raggiungibile lungo la tortuosa Strada Statale 129 bis \"Trasversale Sarda\" e&nbsp; la Provinciale 105 Bosa-Alghero)<\/p>\r\n\r\n<p>Trovandosi a nord-ovest del massiccio del Montiferru, pu\u00f2 considerarsi a sua volta una sub-regione del Logudoro: tuttavia, trovandosi geograficamente pi\u00f9 vicina ad Oristano che a Sassari, \u00e8 amministrativamente separata dalle altre sub-regioni del Logudoro. Il centro abitato principale \u00e8 <em><strong>Bosa, una delle sette citt\u00e0 regie della Sardegna<\/strong><\/em>.<\/p>\r\n\r\n<p>La Planargia \u00e8 caratterizzata da un clima caldo e secco in estate mentre in inverno prevalgono temperature fresche e una notevole umidit\u00e0, dovuta alla sua esposizione ai venti di Libeccio: questo particolare microclima rende i suoi colli ideali per la coltivazione del <em><strong>vino Malvasia<\/strong><\/em> soprattutto nel territori vicini a <em><strong>Montresta<\/strong><\/em>, <em><strong>Modolo Tresnuraghes <\/strong><\/em>e <em><strong>Magomadas<\/strong><\/em>.<\/p>\r\n\r\n<p>&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Planargia"
+        },
+        "4834": {
+            "source_title": {
+                "it": "Sarcidano"
+            },
+            "source_description": {
+                "it": "<p>La regione del Sarcidano si estende tra il Campidanese e la Barbagia. Il territorio offre una sequenza di ambienti e paesaggi d'altopiano vivacemente colorati. Nelle sue campagne si estendono foreste di querce e castagni ma anche i due laghi artificiali del Mulargia e del Flumendosa, utili per l'agricoltura e spesso teatro di manifestazioni sportive, fra cui gare di canottaggio e di pesca. Oltre alla vocazione agropastorale, \u00e8 molto sviluppata l\u2019attivit\u00e0 tessile e orafa: Isili \u00e8 famosa per i suoi manufatti in rame, mentre a Nurri e Orroli si producono macine da mulino in basalto locale, attivit\u00e0 questa, ormai quasi scomparsa nel resto della Sardegna. Nel territorio sono presenti numerose testimonianze archeologiche come i nuraghi Is Paras ad Isili, dove tra l\u2019altro, si trova anche un interessante museo dedicato alla lavorazione del rame. Qui si possono ascoltare i suoni dell'officina del fabbro.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Sarcidano"
+        },
+        "4866": {
+            "source_title": {
+                "it": "Sarrabus-Sette Fratelli"
+            },
+            "source_description": {
+                "it": "<p>Il territorio si trova nel<strong> settore sud-orientale della Sardegna<\/strong>, tra le <strong>regioni&nbsp;storiche del Sarrabus e del Campidano<\/strong>, ed \u00e8 compreso, amministrativamente, nei territori dei Comuni di Burcei, Sinnai, San Vito, Dolianova, Settimo San Pietro, Soleminis, Castiadas e Muravera.&nbsp;<br \/>\r\nIl&nbsp;<strong>clima&nbsp;\u00e8 tipicamente mediterraneo, caratteristico delle zone meridionali sarde<\/strong>, con estati calde, lunghe ed asciutte che si protraggono per circa quattro mesi, mentre l\u2019inverno \u00e8 mite e moderatamente piovoso.&nbsp;<br \/>\r\nLa&nbsp;vegetazione&nbsp;del complesso forestale di Settefratelli \u00e8 piuttosto varia presentandosi sulla fascia litoranea con la tipica&nbsp;macchia a lentischio&nbsp;(<em>Pistacia lentiscus L.<\/em>), col&nbsp;ginepro fenicio&nbsp;(<em>Juniperus phoenicea L.<\/em>) con l\u2019euforbia arborea&nbsp;(<em>Euphorbia dendroides L.<\/em>), con sporadici esemplari diolivastro&nbsp;(<em>Olea europea L. var. sylvestris Brot.<\/em>) e con la&nbsp;fillirea angustifolia&nbsp;(<em>Phyllirea angustifolia L.<\/em>), mentre nelle aree interne la formazione forestale maggiormente diffusa \u00e8 la lecceta&nbsp;associata a seconda delle situazioni al&nbsp;corbezzolo, alla fillirea latifoglia, all\u2019erica e al viburno. A quote medio basse si trova anche la&nbsp;sughera. Sui crinali pi\u00f9 alti si trova una vegetazione a pulvino con&nbsp;ginestra corsa, timo, lavanda, mente lungo gli alvei dei torrenti la vegetazione riparia a&nbsp;oleandro, salici e ontano. &nbsp;Il territorio costituisce, soprattutto nelle <em><strong>Foreste Demaniali dei Settefratelli e di Castiadas<\/strong><\/em>, uno degli <strong>areali di eccellenza del&nbsp;cervo sardo<\/strong>&nbsp;che qui ha trovato rifugio ed \u00e8 protetto e conservato grazie all\u2019azione dell\u2019Ente Foreste.&nbsp;<br \/>\r\nOltre al cervo, le foreste ospitano numerose <em><strong>altre&nbsp;specie animali come&nbsp;l\u2019aquila, la martora, la lepre sarda, il cinghiale, la pernice e la volpe<\/strong><\/em>.&nbsp;<br \/>\r\n&nbsp;<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Sarrabus-Sette-Fratelli"
+        },
+        "4847": {
+            "source_title": {
+                "it": "Sassarese"
+            },
+            "source_description": {
+                "it": "<p>Il Sassarese (<em>lu Sassaresu<\/em> in sassarese <em>su Tatharesu<\/em> -per via dell'importanza che ha assunto l'omonima citt\u00e0 odiernamente- in sardo) \u00e8 una sub-regione della Sardegna nord-occidentale nota in passato anche come \"territorio Turritano\". Comprende la citt\u00e0 di Sassari - capoluogo di provincia e seconda citt\u00e0 per importanza in tutta l'isola dopo Cagliari - ed i comuni di Cargeghe, Codrongianos, Florinas, Ittiri, Muros, Osilo, Ossi, Ploaghe, Porto Torres, Putifigari, Tissi, Uri, Usini.<\/p>\r\n\r\n<p>Gran parte di questo territorio appartiene al comune di Sassari, i cui confini spaziano dalla costa nord alla parte ovest (<em>Lago di Baratz<\/em>, <em>Porto Ferro<\/em>).<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Sassarese"
+        },
+        "4863": {
+            "source_title": {
+                "it": "Sulcis"
+            },
+            "source_description": {
+                "it": "<p>Il Sulcis (<em>Maurredd\u00eca<\/em> in sardo) \u00e8 un territorio che si estende nella porzione sud-occidentale dell'Isola, parte integrante della regione storico-geografica del <em>Sulcis-Iglesiente<\/em>. Prende il nome dall'antica citt\u00e0 punica di <em>Sulki<\/em> o <em>Sulci<\/em>&nbsp; (oggi Sant'Antioco).&nbsp; La delimitazione del Sulcis non \u00e8 ben definita in quanto si tende talvolta ad estenderla <em>in senso lato<\/em> comprendendo anche parte del territorio dell'Iglesiente oppure anche i territori di<em> Pula, Villa San Pietro e Sarroch<\/em>, la cui collocazione geografica \u00e8 incerta e controversa: il Sulcis propriamente detto corrisponde al versante sud-occidentale dei Monti del Sulcis e alla piana sottostante fino alla costa sudoccidentale che si affaccia sul Canale di Sardegna, da capo Altano, o capo Giordano, fino al Golfo di Palmas e da qui continua verso il <strong><em>Capo Teulada<\/em><\/strong>. Per affinit\u00e0 politiche-geografiche \u00e8 considerato parte del territorio sulcitano <em><strong>l'arcipelago del Sulcis<\/strong><\/em>, con le isole di <strong><em>San Pietro<\/em><\/strong> e di <em><strong>Sant'Antioco<\/strong><\/em>.&nbsp; Pi\u00f9 incerta \u00e8 la collocazione di Pula, Villa San Pietro e Sarroch, che fanno parte della Provincia di Cagliari e sono situati lungo la costa del <strong><em>Golfo degli Angeli<\/em><\/strong>, ai piedi del versante sud-orientale dei monti del Sulcis, nella parte esterna del territorio sulcitano. L'entroterra montano di questi comuni ha infatti un'affinit\u00e0 e un'omogeneit\u00e0 ambientale con il Sulcis, tuttavia i centri abitati giacciono su una piana costiera geograficamente isolata e distinta dal territorio sulcitano e che ha invece una naturale continuit\u00e0 con la <em><strong>piana di Capoterra<\/strong><\/em>, a tutti gli effetti considerata parte del <em><strong>Campidano di Cagliari<\/strong><\/em>.<\/p>\r\n\r\n<p>Pur presentando caratteristiche ricorrenti in molte subregioni della Sardegna, il Sulcis mostra una sostanziale peculiarit\u00e0 quando si prendono in considerazione, nel complesso, la geografia, la geologia, il clima, la vegetazione: dal punto di vista geografico e geomorfologico, il Sulcis ha una forte caratterizzazione in quanto quasi completamente delimitato dal mare e dall'omonimo massiccio montuoso, che lo isolano dal resto della regione. L'unica via naturale di collegamento \u00e8 dislocata nella parte orientale del confine settentrionale: il confine \u00e8 definito fisicamente da uno spartiacque di media altitudine, ma dalla morfologia aspra, che separa il Sulcis dall'Iglesiente ed \u00e8 interrotto da una stretta fascia di depositi alluvionali che collega il territorio di <em><strong>Carbonia<\/strong><\/em> a quello di <em><strong>Villamassargia<\/strong><\/em>. Ad ovest, la morfologia del territorio \u00e8 caratterizzata da piane alluvionali che si estendono lungo tutta la fascia costiera, da <em><strong>Porto Pino<\/strong><\/em> (Sant'Anna Arresi) fino a Carbonia e Portoscuso, e si alternano a dolci rilievi collinari. Questo sistema di pianure costiere si inoltra a est, nei territori di Tratalias, Giba e <em><strong>Santadi<\/strong><\/em>, e a nordest, nei territori di <em><strong>Perdaxius e Narcao<\/strong><\/em>, alternandosi con rilievi collinari di bassa o media altitudine, pi\u00f9 o meno impervi, e con i depositi alluvionali della formazione del <em><strong>Cixerri<\/strong><\/em>. A nord e a est, la morfologia \u00e8 definita dai rilievi che trasformano bruscamente il paesaggio da pianeggiante-collinare a impervio e montuoso <em>(fonte: Wikipedia).<\/em><\/p>\r\n\r\n<p>DA SEGNALARE<\/p>\r\n\r\n<p>Soprattutto per la ricchezza di sentieri per la bellezza del territorio forestale e montano, il Complesso Forestale di Pantaleo: 8.050 ettari di superficie, \u00e8 costituito quattro unit\u00e0 gestionali, tra cui tre foreste demaniali di <em><strong>Pantaleo <\/strong><\/em>(Santadi), <em><strong>Tamara Tiriccu<\/strong><\/em> (Nuxis) e <em><strong>Rosas \u2013 Monte Ettoi - Monte Orri <\/strong><\/em>(Narcao).<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Sulcis"
+        },
+        "4837": {
+            "source_title": {
+                "it": "Supramontes"
+            },
+            "source_description": {
+                "it": "<p>Il Supramonte si inserisce nel quadro delle strutture montane della costa centro orientale sarda, la superficie ricade nei territori di Oliena, Orgosolo, Dorgali, Baunei e Urzulei. L\u2019altezza media dei suoi monti \u00e8 di circa 900 m, mentre la vetta pi\u00f9 elevata \u00e8 di 1.463 m (Monte Corrasi). Qui il territorio \u00e8 costituito da un altopiano tagliato da valli profonde, intensamente frastagliate dette codule, che sfociano a mare interrompendo le pareti calcaree costiere in un paesaggio caratterizzato da rupi, falesie, profonde gole, doline e inghiottitoi. Poco conosciuto \u00e8 il Supramonte di Urzulei che comprende la parte pi\u00f9 selvaggia dell\u2019intero territorio. La sua stratigrafia \u00e8 costituita da un basamento paleozoico su cui poggia il complesso calcareo costituito da conglomerati basali, visibile in alcune localit\u00e0 come nella valle del Flumineddu. Sopra i conglomerati basali troviamo poi la dolomia e i calcari ben stratificati di colore biancastro. L\u2019intero territorio \u00e8 scarsamente antropizzato. Le vie di comunicazione sono poco numerose e percorribili con difficolt\u00e0. Il tutto \u00e8 testimoniato dal fatto che gli unici edifici preservati nel territorio siano le antiche capanne dei pastori sardi, chiamate cuiles, edifici isolati fatti di pietra e legno che per secoli sono stati i rifugi dei pastori, dove venivano allevati capre, pecore e maiali. La flora \u00e8 particolarmente ricca e varia. Le specie arboree pi\u00f9 comuni sono il leccio, il tasso, il ginepro e la fillirea. La fauna \u00e8 costituita prevalentemente da mufloni, cinghiali, volpi, aquile, poiane e varie altre specie di uccelli e mammiferi comuni nelle zone montane. Da ricordare la presenza del raro euprotto e del geotritone del Supramonte.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Supramontes"
+        },
+        "4841": {
+            "source_title": {
+                "it": "Tacchi d'Ogliastra"
+            },
+            "source_description": {
+                "it": "<p>I Tacchi d'Ogliastra occupano una porzione importante del territorio ogliastrino. Sono monti calcareo-dolomitici il cui nome deriva dalla tipica conformazione simile ad un tacco di scarpa. Tra questi il Perda Liana (Gairo) \u00e8 il pi\u00f9 famoso rappresentante. Si ricordano inoltre il Tacco di Monte Tisiddu, il Tacco Arba di Ussassai, il Monte Lumburau, il Monte Arquer\u00ec, il Taccu Anguil'e Ferru e Punta Corongiu di Jerzu. Altri siti di notevole bellezza sono rappresentati dal passo di San Giorgio, vicino a Osini, e dalle grotte di Su Marmuri (Ulassai). La geomorfologia di questo territorio \u00e8 caratterizzata da vasti affioramenti di rocce paleozoiche, rappresentate da scisti del Siluriano, che costituiscono il basamento cristallino sul quale poggiano le formazioni calcaree del mesozoico. Sui Tacchi si possono visitare luoghi selvaggi ed habitat unici in Sardegna. Spettacolare \u00e8 la variet\u00e0 di specie animali e vegetali di particolare pregio naturalistico, con una presenza di specie endemiche di tutto rilievo. Nell\u2019area dei Tacchi insistono numerosi ed interessanti insediamenti nuragici, tra cui si ricordano quello di Serbissi, Sanu, Urceni, Mela, Is Cocorronis, Pranu e Su Samuccu. L\u2019area dei Tacchi preserva le antiche attivit\u00e0 agropastorali come l'allevamento, la viticoltura (Cannonau di Jerzu) e l'artigianato.<\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Tacchi-d'Ogliastra"
+        },
+        "4862": {
+            "source_title": {
+                "it": "Trexenta"
+            },
+            "source_description": {
+                "it": "<p>La <em>Trexenta<\/em> \u00e8 una regione storica della Sardegna, situata nella parte settentrionale della provincia di Cagliari e comprendente 13 comuni (Barrali, Gesico, Guamaggiore, Guasila, Mandas, Ortacesus, Pimentel, Sant'Andrea Frius, San Basilio, Selegas, Senorb\u00ec, Siurgus Donigala, Suelli).&nbsp; Territorio prevalentemente collinare e pi\u00f9 pianeggiante verso Ovest.&nbsp; I primi insediamenti nella regione risalgono alla preistoria (ne \u00e8 testimonianza il nuraghe <em>Piscu di Suelli<\/em>).<br \/>\r\nNel medioevo il <em>distretto di Trexenta<\/em> faceva parte del <em>regno di Calari<\/em>, uno dei giudicati della Sardegna.<\/p>\r\n\r\n<p>Il toponimo <em>Trexenta <\/em>deriva probabilmente dal plurale neutro latino \"trecenta\", ad indicare forse qualche misura agricola (per esempio trecenta iugera, equivalente a circa 75 ettari, o a qualche altra misura maggiore) o l'esistenza di trecento entit\u00e0 (per esempio granai, aziende agricole, fortezze o altro). Il nome Trexenta ricorda i trenta o trecento villaggi che la leggenda dice la popolassero nei tempi antichi e della maggior parte dei quali si \u00e8 perso anche il nome (ma di alcuni restano testimonianze, fino alla grande crisi demografica del 1300, quando diversi centri furono effettivamente abbandonati). I centri abitati attuali presentano il tipico aspetto dei centri agricoli del Sud della Sardegna. Le attivit\u00e0 agricole prevalenti sono la coltivazione dei cereali, dei vigneti e delle olive.<\/p>\r\n\r\n<p><em>(fonte: Wiipedia)<\/em><\/p>\r\n"
+            },
+            "geohub_identifier": "sentieris:zona_geografica:Trexenta"
+        },
+        "4701": {
+            "source_title": {
+                "it": "Altre Pubbliche Istituzioni"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Altre-Pubbliche-Istituzioni"
+        },
+        "4699": {
+            "source_title": {
+                "it": "Complesso forestale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Complesso-forestale"
+        },
+        "4703": {
+            "source_title": {
+                "it": "Comune"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Comune"
+        },
+        "4700": {
+            "source_title": {
+                "it": "Ente partner"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Ente-partner"
+        },
+        "4702": {
+            "source_title": {
+                "it": "Privato\/associazione"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Privato\/associazione"
+        },
+        "4704": {
+            "source_title": {
+                "it": "Provincia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_ente_istituzione_societa:Provincia"
+        },
+        "4685": {
+            "source_title": {
+                "it": "Carrereccia\/Mulattiera"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Carrereccia\/Mulattiera"
+        },
+        "4698": {
+            "source_title": {
+                "it": "Ferrovia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Ferrovia"
+        },
+        "4687": {
+            "source_title": {
+                "it": "Fuoripista"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Fuoripista"
+        },
+        "4689": {
+            "source_title": {
+                "it": "Pav\u00e8"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Pav\u00e8"
+        },
+        "4697": {
+            "source_title": {
+                "it": "Pista ciclabile"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Pista-ciclabile"
+        },
+        "4696": {
+            "source_title": {
+                "it": "Pista pedonale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Pista-pedonale"
+        },
+        "4688": {
+            "source_title": {
+                "it": "Sabbia"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Sabbia"
+        },
+        "4686": {
+            "source_title": {
+                "it": "Sentiero"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Sentiero"
+        },
+        "4683": {
+            "source_title": {
+                "it": "Strada asfaltata"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-asfaltata"
+        },
+        "4690": {
+            "source_title": {
+                "it": "Strada comunale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-comunale"
+        },
+        "4694": {
+            "source_title": {
+                "it": "Strada privata"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-privata"
+        },
+        "4691": {
+            "source_title": {
+                "it": "Strada provinciale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-provinciale"
+        },
+        "4692": {
+            "source_title": {
+                "it": "Strada statale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-statale"
+        },
+        "4684": {
+            "source_title": {
+                "it": "Strada sterrata"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-sterrata"
+        },
+        "4693": {
+            "source_title": {
+                "it": "Strada vicinale"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Strada-vicinale"
+        },
+        "4695": {
+            "source_title": {
+                "it": "Tratturo"
+            },
+            "source_description": "",
+            "geohub_identifier": "sentieris:tipo_di_fondo:Tratturo"
+        }
+    }
+}

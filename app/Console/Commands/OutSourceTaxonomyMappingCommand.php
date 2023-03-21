@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +16,12 @@ class OutSourceTaxonomyMappingCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:out_source_taxonomy_mapping {endpoint : url to the resource (e.g. https://stelvio.wp.webmapp.it)} {provider : WP, StorageCSV} {--activity : add this flag to map activity taxonomy} {--theme : add this flag to map theme taxonomy} {--poi_type : add this flag to map webmapp_category/poi_type taxonomy}';
+    protected $signature = 'geohub:out_source_taxonomy_mapping 
+                            {endpoint : url to the resource (e.g. https://stelvio.wp.webmapp.it)} 
+                            {provider : WP, StorageCSV, sentierisardegna} 
+                            {--activity : add this flag to map activity taxonomy} 
+                            {--theme : add this flag to map theme taxonomy} 
+                            {--poi_type : add this flag to map webmapp_category/poi_type taxonomy}';
 
     /**
      * The console command description.
@@ -67,6 +73,10 @@ class OutSourceTaxonomyMappingCommand extends Command
             case 'storagecsv':
                 return $this->importerStorageCSV();
                 break;
+            
+            case 'sentierisardegna':
+                return $this->importerSentieriSardegna();
+                break;
                     
             default:
                 return [];
@@ -92,7 +102,18 @@ class OutSourceTaxonomyMappingCommand extends Command
         }
 
         $this->createMappingFile();
-        
+    }
+
+
+    private function importerSentieriSardegna(){
+        if ($this->poi_type) {
+            $this->importerSSPoiType();
+        }
+        if ($this->theme) {
+            $this->importerSSTheme();
+        }
+
+        $this->createMappingFile();
     }
 
     private function importerWPPoiType(){
@@ -239,11 +260,55 @@ class OutSourceTaxonomyMappingCommand extends Command
         $this->content["theme"] = $input;
     }
     
+    private function importerSSPoiType(){
+        $response = [];
+        $response['accessibilità'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
+        $response['servizi'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/servizi?_format=json')->json();
+        $response['tipologia_poi'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_poi?_format=json')->json();
+        $response['zona_geografica'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
+        $response['tipo_ente_istituzione_societa'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_ente_istituzione_societa?_format=json')->json();
+        $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
+
+        $input = [];
+        if ($response) {
+            foreach ($response as $type => $taxonomies) {
+                foreach ($taxonomies as $id => $tax) {
+                    $identifier = 'sentieris:'.$type.':'.str_replace(' ','-',$tax['name']['it']);
+                    $input[$id] = [
+                        'source_title' => $tax['name'],
+                        'source_description' => $tax['description'] ?? '',
+                        'geohub_identifier' => $identifier
+                    ];
+                }
+            }
+        }
+        $this->content["poi_type"] = $input;
+    }
+
+    private function importerSSTheme(){
+        $response = [];
+        $response['accessibilit_'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
+
+        $input = [];
+        if ($response) {
+            foreach ($response as $type => $taxonomies) {
+                foreach ($taxonomies as $id => $tax) {
+                    $input[$id] = [
+                        'source_title' => $tax['name'],
+                        'source_description' => $tax['description'] ?? '',
+                        'geohub_identifier' => 'sentieris:'.$type.':'.str_replace(' ','-',strtolower($tax['name']['it'])),
+                    ];
+                }
+            }
+        }
+        $this->content["theme"] = $input;
+    }
+
     private function createMappingFile(){
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.','-',$path['host']);
         Log::info('Creating mapping file: '.$file_name);
-        Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content,JSON_PRETTY_PRINT));
+        $p = Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content,JSON_PRETTY_PRINT));
         Log::info('Finished creating file: '.$file_name);
     }
 }
