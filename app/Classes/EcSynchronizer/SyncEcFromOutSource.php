@@ -521,7 +521,6 @@ class SyncEcFromOutSource
                                                         'identifier' => $w['geohub_identifier'],
                                                         'name' => $w['source_title'],
                                                         'description' => $w['source_description'],
-                                                        'icon' => 'maki_star'
                                                     ]
                                                     );
                                                 $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($new_poi_type);
