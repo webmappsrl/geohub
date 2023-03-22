@@ -36,6 +36,22 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $theme;
     protected $poi_type;
     protected $content;
+    protected $trns = array(
+        'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 
+        'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A',
+        'ß'=>'B', 'ç'=>'c', 'Ç'=>'C',
+        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e',
+        'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E',
+        'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
+        'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I',
+        'ñ'=>'n', 'Ñ'=>'N',
+        'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o',
+        'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O',
+        'š'=>'s', 'Š'=>'S', 
+        'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u',
+        'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U',
+        'ý'=>'y', 'Ý'=>'Y', 'ž'=>'z', 'Ž'=>'Z'
+        );
 
     /**
      * Create a new command instance.
@@ -262,18 +278,20 @@ class OutSourceTaxonomyMappingCommand extends Command
     
     private function importerSSPoiType(){
         $response = [];
-        $response['accessibilità'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
+        $response['accessibilita'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
         $response['servizi'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/servizi?_format=json')->json();
         $response['tipologia_poi'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_poi?_format=json')->json();
         $response['zona_geografica'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
-        $response['tipo_ente_istituzione_societa'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_ente_istituzione_societa?_format=json')->json();
         $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
 
         $input = [];
         if ($response) {
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
-                    $identifier = 'sentieris:'.$type.':'.str_replace(' ','-',$tax['name']['it']);
+                    $taxname = strtr($tax['name']['it'], $this->trns);
+                    $taxname = str_replace( array( '- ','/','\'', '"',',' , ';', '<', '>', '(', ')' ), '', $taxname);
+                    $taxname = strtolower($taxname);
+                    $identifier = 'sardegnas-'.str_replace('_','-',$type).'-'.str_replace(' ','-',$taxname);
                     $input[$id] = [
                         'source_title' => $tax['name'],
                         'source_description' => $tax['description'] ?? '',
@@ -287,16 +305,24 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerSSTheme(){
         $response = [];
-        $response['accessibilit_'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
+        $response['tipologia_sentieri'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_sentieri?_format=json')->json();
+        $response['categorie_fruibilita_sentieri'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+        $response['stato_di_validazione'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/stato_di_validazione?_format=json')->json();
+        $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
+        $response['zona_geografica'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
 
         $input = [];
         if ($response) {
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
+                    $taxname = strtr($tax['name']['it'], $this->trns);
+                    $taxname = str_replace( array( '- ','/','\'', '"',',' , ';', '<', '>', '(', ')' ), '', $taxname);
+                    $taxname = strtolower($taxname);
+                    $identifier = 'sardegnas-'.str_replace('_','-',$type).'-'.str_replace(' ','-',$taxname);
                     $input[$id] = [
                         'source_title' => $tax['name'],
                         'source_description' => $tax['description'] ?? '',
-                        'geohub_identifier' => 'sentieris:'.$type.':'.str_replace(' ','-',strtolower($tax['name']['it'])),
+                        'geohub_identifier' => $identifier
                     ];
                 }
             }
