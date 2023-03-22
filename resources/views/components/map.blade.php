@@ -40,6 +40,10 @@
         $pois_collection[$poi->id]['geometry'] = $geometry_poi;
         $pois_collection[$poi->id]['image'] = $featured_image;
     }
+
+    if (empty($appSocialText)) {
+        $appSocialText = '';
+    }
 @endphp
 <x-schemaOrg :track="$track" :startPoint="$startPoint_geometry" :appSocialText="$appSocialText"/>
 <div id="map" class="h-full v-full poiLeafletMap">
