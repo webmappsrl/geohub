@@ -129,7 +129,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->tags['name'] = $track['properties']['name'];
         } 
         if (isset($track['properties']['description'])){
-            $this->tags['description'] = html_entity_decode(json_encode($track['properties']['description']));
+            $this->tags['description'] = $track['properties']['description'];
         }
 
         if (isset($track['properties']['codice_cai'])) {
@@ -196,7 +196,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->tags['name'] = $poi['properties']['name'];
         } 
         if (isset($poi['properties']['description'])){
-            $this->tags['description'] = html_entity_decode(json_encode($poi['properties']['description']));
+            $this->tags['description'] = $poi['properties']['description'];
         } 
 
         if (isset($poi['properties']['codice']))

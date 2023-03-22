@@ -399,8 +399,8 @@ class SyncEcFromOutSource
                             if (is_array(json_decode($taxonomy_map,true)['theme'])) {
                                 foreach ($out_source->tags['theme'] as $cat) {
                                     foreach (json_decode($taxonomy_map,true)['theme'] as $w ) {
-                                        Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
                                         if ($w['geohub_identifier'] == $cat) {
+                                            Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
                                             $geohub_w = TaxonomyTheme::where('identifier',$w['geohub_identifier'])->first();
                                             if ($geohub_w && !is_null($geohub_w)) { 
                                                 $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
