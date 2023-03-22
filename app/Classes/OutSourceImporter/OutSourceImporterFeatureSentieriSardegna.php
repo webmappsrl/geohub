@@ -247,11 +247,11 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
                 return urlencode($match[0]);
             }, $image_url);
-            $contents = Http::get($url_encoded);
+            $contents = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url_encoded);
             $basename = explode('.',basename($image_url));
             $s3_osfmedia = Storage::disk($storage_name);
             $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
-            $s3_osfmedia->put($osf_name_tmp, $contents);
+            $s3_osfmedia->put($osf_name_tmp, $contents->body());
 
             Log::info('Saved OSF Media with name: '.$osf_name_tmp);
             $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp))?$osf_name_tmp:'';
