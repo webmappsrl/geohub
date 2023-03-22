@@ -391,6 +391,35 @@ class SyncEcFromOutSource
                             }
                         }
                     }
+                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna') {
+                        if ( !empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
+                            $path = parse_url($this->endpoint);
+                            $file_name = str_replace('.','-',$path['host']);
+                            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                            if (is_array(json_decode($taxonomy_map,true)['theme'])) {
+                                foreach ($out_source->tags['theme'] as $cat) {
+                                    foreach (json_decode($taxonomy_map,true)['theme'] as $w ) {
+                                        Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
+                                        if ($w['geohub_identifier'] == $cat) {
+                                            $geohub_w = TaxonomyTheme::where('identifier',$w['geohub_identifier'])->first();
+                                            if ($geohub_w && !is_null($geohub_w)) { 
+                                                $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
+                                            } else {
+                                                $new_theme = TaxonomyTheme::create(
+                                                    [
+                                                        'identifier' => $w['geohub_identifier'],
+                                                        'name' => $w['source_title'],
+                                                        'description' => $w['source_description'],
+                                                    ]
+                                                    );
+                                                $ec_track->taxonomyThemes()->syncWithoutDetaching($new_theme);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
                         if (isset($out_source->tags['sda'])){
                             $sda = $out_source->tags['sda'];
