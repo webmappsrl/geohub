@@ -313,11 +313,22 @@ class EcTrack extends Model
             $activities[] = $activity->getJson();
         }
 
+        $wheres = [];
+        
+        $wheres = $this->taxonomyWheres()->pluck('id')->toArray();
+
+        if ($this->taxonomy_wheres_show_first) {
+            $re = $this->taxonomy_wheres_show_first;
+            $wheres = array_diff($wheres,[$re]);
+            array_push($wheres,$this->taxonomy_wheres_show_first);
+            $wheres = array_values($wheres);
+        }
+
         $taxonomies = [
             'activity' => $activities,
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
-            'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
+            'where' => $wheres,
             'who' => $this->taxonomyTargets()->pluck('id')->toArray()
         ];
 

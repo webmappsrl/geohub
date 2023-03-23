@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Models\TaxonomyWhere;
 use App\Nova\Actions\DownloadExcelEcTrackAction;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\EcTracksCaiScaleFilter;
@@ -308,6 +309,12 @@ class EcTrack extends Resource
                         }
                         return 'No Wheres';
                     }),
+                    Text::make('First where to show', function () {
+                        if ($this->taxonomy_wheres_show_first) {
+                            return TaxonomyWhere::find($this->taxonomy_wheres_show_first)->name;
+                        }
+                        return 'Nothing selected';
+                    }),
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
@@ -460,6 +467,9 @@ class EcTrack extends Resource
                     ]),
                 ],
                 'Taxonomies' => [
+                    Select::make('First taxonomy where to show','taxonomy_wheres_show_first')->options( function (){
+                        return $this->taxonomyWheres->pluck('name','id')->toArray();
+                    })->nullable(),
                     // AttachMany::make('TaxonomyWheres'),
                     AttachMany::make('TaxonomyActivities'),
                     AttachMany::make('TaxonomyTargets'),
