@@ -702,8 +702,19 @@ class EcTrack extends Model
         }
         $taxonomy_wheres = '[]';
         if ($this->taxonomyWheres->count() > 0) {
-            $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+            // add tax where first show to the end of taxonomy_wheres array
+            if ($this->taxonomy_wheres_show_first) {
+                $taxonomy_wheres = $this->taxonomyWheres->pluck('name','id')->toArray();
+                $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
+                unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
+                $taxonomy_wheres = array_values($taxonomy_wheres);
+                array_push($taxonomy_wheres,$first_show_name);
+                $taxonomy_wheres = json_encode($taxonomy_wheres);
+            } else {
+                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+            }
         }
+        
         $taxonomy_themes = '[]';
         if ($this->taxonomyThemes->count() > 0) {
             $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
