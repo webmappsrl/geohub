@@ -373,6 +373,11 @@ class EcMedia extends Resource
      */
     public function lenses(Request $request)
     {
+        if ($request->user()->hasRole('Editor')) {
+            return [
+                new Lenses\MyEcMediasLens(),
+            ];
+        }
         return [];
     }
 
