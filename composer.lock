@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4dc102ea25197fa2edfab15347dd23fd",
+    "content-hash": "e7dc75c253bff3be07264ada9f3f9368",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -10070,6 +10070,51 @@
             }
         },
         {
+            "name": "wm/map-point-nova3",
+            "version": "v0.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmappsrl/map-point-nova3.git",
+                "reference": "658e0b555ff53eda21d5dd2b1dee3a7b98236f24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmappsrl/map-point-nova3/zipball/658e0b555ff53eda21d5dd2b1dee3a7b98236f24",
+                "reference": "658e0b555ff53eda21d5dd2b1dee3a7b98236f24",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wm\\MapPointNova3\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wm\\MapPointNova3\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/webmappsrl/map-point-nova3/issues",
+                "source": "https://github.com/webmappsrl/map-point-nova3/tree/v0.0.9"
+            },
+            "time": "2023-03-31T12:42:44+00:00"
+        },
+        {
             "name": "ynacorp/nova-swatches",
             "version": "v1.0.0",
             "source": {
@@ -12535,5 +12580,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.0.0"
 }

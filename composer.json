@@ -59,8 +59,9 @@
         "webmapp/featureimagepopup": "*",
         "webmapp/import": "*",
         "webmapp/wm-embedmaps-field": "*",
-        "ynacorp/nova-swatches": "^1.0",
-        "wm/map-multi-purpose-nova3": "*"
+        "wm/map-multi-purpose-nova3": "*",
+        "wm/map-point-nova3": "0.0.9",
+        "ynacorp/nova-swatches": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
