@@ -21,7 +21,9 @@
         "build-ecpoipopup": "cd nova-components/Ecpoipopup && npm run dev",
         "build-ecpoipopup-prod": "cd nova-components/Ecpoipopup && npm run prod",
         "build-map-multi-purpose-nova3": "cd nova-components/MapMultiPurposeNova3 && npm run dev",
-        "build-map-multi-purpose-nova3-prod": "cd nova-components/MapMultiPurposeNova3 && npm run prod"
+        "build-map-multi-purpose-nova3-prod": "cd nova-components/MapMultiPurposeNova3 && npm run prod",
+        "build-map-multi-linestring-nova3": "cd nova-components/MapMultiLinestringNova3 && npm run dev",
+        "build-map-multi-linestring-nova3-prod": "cd nova-components/MapMultiLinestringNova3 && npm run prod"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.4",

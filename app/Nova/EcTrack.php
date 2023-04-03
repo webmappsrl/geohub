@@ -48,6 +48,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
+use Wm\MapMultiLinestringNova3\MapMultiLinestringNova3;
 
 class EcTrack extends Resource
 {
@@ -135,23 +136,23 @@ class EcTrack extends Resource
 
     public function fieldsForIndex(Request $request)
     {
-        if ($request->user()->can('Admin')) { 
+        if ($request->user()->can('Admin')) {
             return [
                 Text::make('Name', function () {
                     $name = implode('<br />', explode("\n", wordwrap($this->name), 50));
                     return $name . '<br />CAI scale: ' . $this->cai_scale;
                 })->asHtml(),
                 BelongsTo::make('Author', 'author', User::class)->sortable(),
-    
+
                 DateTime::make(__('Created At'), 'created_at')->sortable(),
-    
+
                 DateTime::make(__('Updated At'), 'updated_at')->sortable(),
-    
+
                 // Text::make('API', function () {
                 //     return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/track/' . $this->id . '" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -160,51 +161,51 @@ class EcTrack extends Resource
                     $name = implode('<br />', explode("\n", wordwrap($this->name), 50));
                     return $name . '<br />CAI scale: ' . $this->cai_scale;
                 })->asHtml(),
-                Boolean::make('Description', function(){
+                Boolean::make('Description', function () {
                     if ($this->description) {
                         return true;
                     } else {
                         return false;
                     }
                 }),
-                
-                Boolean::make('Feature Image', function(){
+
+                Boolean::make('Feature Image', function () {
                     if ($this->featureImage) {
                         return true;
                     } else {
                         return false;
                     }
                 }),
-                
-                Boolean::make('Image Gallery', function(){
+
+                Boolean::make('Image Gallery', function () {
                     if (count($this->ecMedia) > 0) {
                         return true;
                     } else {
                         return false;
                     }
                 }),
-    
-                Text::make('Activities', function(){
+
+                Text::make('Activities', function () {
                     if ($this->taxonomyActivities()->count() > 0) {
                         return implode('<br/>', $this->taxonomyActivities()->pluck('name')->toArray());
                     }
                     return 'No activities';
                 })->asHtml(),
-                
-                Text::make('Themes', function(){
+
+                Text::make('Themes', function () {
                     if ($this->taxonomyThemes()->count() > 0) {
                         return implode('<br/>', $this->taxonomyThemes()->pluck('name')->toArray());
                     }
                     return 'No themes';
                 })->asHtml(),
-    
-                Text::make('Wheres', function(){
+
+                Text::make('Wheres', function () {
                     if ($this->taxonomyWheres()->count() > 0) {
                         return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
                     }
                     return 'No wheres';
                 })->asHtml(),
-    
+
                 // Text::make('API', function () {
                 //     return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
                 // })->asHtml(),
@@ -269,11 +270,13 @@ class EcTrack extends Resource
                     // })->asHtml()
                 ],
                 'Map' => [
-                    WmEmbedmapsField::make(__('Map'), 'geometry', function () {
-                        return [
-                            'feature' => $this->getGeojson(),
-                        ];
-                    }),
+                    MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
+                        'center' => ["51", "4"],
+                        'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                        'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                        'minZoom' => 7,
+                        'maxZoom' => 16,
+                    ]),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -282,15 +285,15 @@ class EcTrack extends Resource
                     Text::make('To'),
                     Boolean::make('Not Accessible'),
                     Textarea::make('Not Accessible Message')->alwaysShow(),
-                    Text::make('Distance','distance'),
-                    Text::make('Duration Forward','duration_forward'),
-                    Text::make('Duration Backward','duration_backward'),
-                    Text::make('Ascent','ascent'),
-                    Text::make('Descent','descent'),
-                    Text::make('Elevation (From)','ele_from'),
-                    Text::make('Elevation (To)','ele_to'),
-                    Text::make('Elevation (Min)','ele_min'),
-                    Text::make('Elevation (Max)','ele_max'),
+                    Text::make('Distance', 'distance'),
+                    Text::make('Duration Forward', 'duration_forward'),
+                    Text::make('Duration Backward', 'duration_backward'),
+                    Text::make('Ascent', 'ascent'),
+                    Text::make('Descent', 'descent'),
+                    Text::make('Elevation (From)', 'ele_from'),
+                    Text::make('Elevation (To)', 'ele_to'),
+                    Text::make('Elevation (Min)', 'ele_min'),
+                    Text::make('Elevation (Max)', 'ele_max'),
                 ],
                 'Scale' => [
                     Text::make('Difficulty'),
@@ -439,6 +442,13 @@ class EcTrack extends Resource
                         ->nullable()
                         ->onlyOnForms()
                         ->feature($geojson ?? []),
+                    MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
+                        'center' => ["51", "4"],
+                        'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                        'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                        'minZoom' => 7,
+                        'maxZoom' => 16,
+                    ]),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -447,15 +457,15 @@ class EcTrack extends Resource
                     Text::make('To'),
                     Boolean::make('Not Accessible'),
                     Textarea::make('Not Accessible Message')->alwaysShow(),
-                    Text::make('Distance','distance'),
-                    Text::make('Duration Forward','duration_forward'),
-                    Text::make('Duration Backward','duration_backward'),
-                    Text::make('Ascent','ascent'),
-                    Text::make('Descent','descent'),
-                    Text::make('Elevation (From)','ele_from'),
-                    Text::make('Elevation (To)','ele_to'),
-                    Text::make('Elevation (Min)','ele_min'),
-                    Text::make('Elevation (Max)','ele_max'),
+                    Text::make('Distance', 'distance'),
+                    Text::make('Duration Forward', 'duration_forward'),
+                    Text::make('Duration Backward', 'duration_backward'),
+                    Text::make('Ascent', 'ascent'),
+                    Text::make('Descent', 'descent'),
+                    Text::make('Elevation (From)', 'ele_from'),
+                    Text::make('Elevation (To)', 'ele_to'),
+                    Text::make('Elevation (Min)', 'ele_min'),
+                    Text::make('Elevation (Max)', 'ele_max'),
                 ],
                 'Scale' => [
                     Text::make('Difficulty'),
@@ -467,8 +477,8 @@ class EcTrack extends Resource
                     ]),
                 ],
                 'Taxonomies' => [
-                    Select::make('First taxonomy where to show','taxonomy_wheres_show_first')->options( function (){
-                        return $this->taxonomyWheres->pluck('name','id')->toArray();
+                    Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
+                        return $this->taxonomyWheres->pluck('name', 'id')->toArray();
                     })->nullable(),
                     // AttachMany::make('TaxonomyWheres'),
                     AttachMany::make('TaxonomyActivities'),
