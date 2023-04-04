@@ -26,10 +26,10 @@ class EcTrack extends Model
 
     protected $fillable = [
         'name',
-        'geometry', 
-        'distance_comp', 
-        'feature_image', 
-        'out_source_feature_id', 
+        'geometry',
+        'distance_comp',
+        'feature_image',
+        'out_source_feature_id',
         'user_id',
         'distance_comp',
         'distance',
@@ -282,7 +282,7 @@ class EcTrack extends Model
 
         if ($this->user_id) {
             $user = User::find($this->user_id);
-            $array['author_email'] = $user->email; 
+            $array['author_email'] = $user->email;
         }
 
         if ($this->featureImage)
@@ -314,13 +314,13 @@ class EcTrack extends Model
         }
 
         $wheres = [];
-        
+
         $wheres = $this->taxonomyWheres()->pluck('id')->toArray();
 
         if ($this->taxonomy_wheres_show_first) {
             $re = $this->taxonomy_wheres_show_first;
-            $wheres = array_diff($wheres,[$re]);
-            array_push($wheres,$this->taxonomy_wheres_show_first);
+            $wheres = array_diff($wheres, [$re]);
+            array_push($wheres, $this->taxonomy_wheres_show_first);
             $wheres = array_values($wheres);
         }
 
@@ -421,6 +421,9 @@ class EcTrack extends Model
             if (isset($this->outSourceTrack->tags[$varname])) {
                 $array[$varname] = $this->outSourceTrack->tags[$varname];
             }
+            if (count(array_keys($array[$varname])) === 1 && isset(array_values($array[$varname])[0]) === false) {
+                $array[$varname] = null;
+            }
         }
         return $array;
     }
@@ -451,6 +454,7 @@ class EcTrack extends Model
             if (count($val) == 0) {
                 return true;
             }
+
             foreach ($val as $lang => $cont) {
                 if (!empty($cont)) {
                     return false;
@@ -704,17 +708,17 @@ class EcTrack extends Model
         if ($this->taxonomyWheres->count() > 0) {
             // add tax where first show to the end of taxonomy_wheres array
             if ($this->taxonomy_wheres_show_first) {
-                $taxonomy_wheres = $this->taxonomyWheres->pluck('name','id')->toArray();
+                $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
                 $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
                 unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
                 $taxonomy_wheres = array_values($taxonomy_wheres);
-                array_push($taxonomy_wheres,$first_show_name);
+                array_push($taxonomy_wheres, $first_show_name);
                 $taxonomy_wheres = json_encode($taxonomy_wheres);
             } else {
                 $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
             }
         }
-        
+
         $taxonomy_themes = '[]';
         if ($this->taxonomyThemes->count() > 0) {
             $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
