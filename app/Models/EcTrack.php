@@ -421,9 +421,9 @@ class EcTrack extends Model
             if (isset($this->outSourceTrack->tags[$varname])) {
                 $array[$varname] = $this->outSourceTrack->tags[$varname];
             }
-            if (count(array_keys($array[$varname])) === 1 && isset(array_values($array[$varname])[0]) === false) {
-                $array[$varname] = null;
-            }
+        }
+        if (is_null($array[$varname]) === false && count(array_keys($array[$varname])) === 1 && isset(array_values($array[$varname])[0]) === false) {
+            $array[$varname] = null;
         }
         return $array;
     }
