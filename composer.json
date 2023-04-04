@@ -62,7 +62,7 @@
         "wm/map-multi-purpose-nova3": "*",
         "wm/map-point-nova3": "0.0.9",
         "ynacorp/nova-swatches": "^1.0",
-        "wm/map-multi-linestring-nova3": "0.0.7"
+        "wm/map-multi-linestring-nova3": "0.0.8"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
