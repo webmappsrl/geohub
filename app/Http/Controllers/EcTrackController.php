@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\App;
 use App\Models\EcTrack;
+use App\Models\OutSourceFeature;
 use App\Models\User;
 use App\Providers\EcTrackServiceProvider;
 use Exception;
@@ -469,5 +470,26 @@ class EcTrackController extends Controller
             }
             return response()->json($list);
         }
+    }
+
+    /**
+     * Returns the EcTrack GeoJson associated to an external feature
+     *
+     * @param string $endpoint_slug
+     * @param integer $source_id
+     * @return JsonResponse
+     */
+    public function getEcTrackFromSourceID($endpoint_slug, $source_id) {
+        $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
+
+        $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
+
+        $track = EcTrack::find($ectrack_id[0]);
+        $headers = [];
+
+        if (is_null($track))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($track->getGeojson(), 200, $headers);
     }
 }
