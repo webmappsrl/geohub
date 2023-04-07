@@ -381,6 +381,10 @@ class EcTrack extends Model
         $user = auth('api')->user();
         $array['user_can_download'] = isset($user) && Gate::forUser($user)->allows('downloadOffline', $this);
 
+        if (is_array($array['difficulty']) && is_null($array['difficulty']) === false && count(array_keys($array['difficulty'])) === 1 && isset(array_values($array['difficulty'])[0]) === false) {
+            $array['difficulty'] = null;
+        }
+
         return $array;
     }
 
