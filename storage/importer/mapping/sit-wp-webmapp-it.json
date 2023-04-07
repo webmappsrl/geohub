@@ -1,0 +1,37 @@
+{
+    "poi_type": {
+        "13": {
+            "source_title": {
+                "it": "Paesi",
+                "en": "Town"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "village"
+        },
+        "16": {
+            "source_title": {
+                "it": "Punti di Interesse",
+                "en": "Points of Interest"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "poi"
+        },
+        "19": {
+            "source_title": {
+                "it": "Punto di partenza",
+                "en": "Starting point"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "start"
+        }
+    }
+}
