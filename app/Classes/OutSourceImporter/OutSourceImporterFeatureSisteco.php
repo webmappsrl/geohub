@@ -42,7 +42,7 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract {
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
         try{
-            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['data']['geometry'])."')) As wkt")[0]->wkt;
+            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
