@@ -99,16 +99,16 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract {
      * 
      */
     protected function preparePOITagsJson($poi){
-        if (isset($poi['data']['name'])){
-            $this->tags['name'] = $poi['data']['name'];
+        if (isset($poi['name'])){
+            $this->tags['name'] = $poi['name'];
         }
         
-        if (isset($poi['data']['description'])) {
-                $this->tags['description'] = $poi['data']['description'];
+        if (isset($poi['description'])) {
+                $this->tags['description'] = $poi['description'];
         }
 
-        if (isset($poi['data']['related_url'])) {
-                $urlarray = explode(',',$poi['data']['related_url'][0]);
+        if (isset($poi['related_url'])) {
+                $urlarray = explode(',',$poi['related_url'][0]);
                 foreach($urlarray as $url) {
                     $related_url_name = parse_url($url);
                     if (isset($related_url_name['host'])) {
