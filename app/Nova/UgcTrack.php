@@ -13,6 +13,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Laravel\Nova\Fields\Code;
 
 class UgcTrack extends Resource
 {
@@ -89,6 +90,16 @@ class UgcTrack extends Resource
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })->onlyOnIndex(),
+            WmEmbedmapsField::make(__('Map'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson()
+                ];
+            })->onlyOnDetail(),
+            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
+            Code::Make(__('metadata'), 'metadata')->language('json')->rules('nullable', 'json')->help(
+                'metadata of track'
+            )->onlyOnDetail(),
             Text::make(__('Raw data'), function ($model) {
                 $rawData = json_decode($model->raw_data, true);
                 $result = [];
@@ -99,13 +110,6 @@ class UgcTrack extends Resource
 
                 return join('<br>', $result);
             })->onlyOnDetail()->asHtml(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
-                ];
-            })->onlyOnDetail(),
-            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
         ];
     }
 
