@@ -277,4 +277,13 @@ Route::name('api.')->group(function () {
             })->name('export_wheres_list');
         });
     });
+
+    /**
+     * OSF API
+     */
+    Route::prefix('osf')->name('osf.')->group(function () {
+        Route::prefix('track')->name('track.')->group(function () {
+            Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getEcTrackFromSourceID'])->name('get_ectrack_from_source_id');
+        });
+    });
 });

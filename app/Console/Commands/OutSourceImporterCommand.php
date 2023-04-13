@@ -7,6 +7,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureOSMPoi;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureSICAI;
+use App\Classes\OutSourceImporter\OutSourceImporterFeatureSisteco;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Classes\OutSourceImporter\OutSourceImporterListEUMA;
@@ -14,6 +15,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListOSMPoi;
 use App\Classes\OutSourceImporter\OutSourceImporterListSentieriSardegna;
 use App\Classes\OutSourceImporter\OutSourceImporterListSICAI;
+use App\Classes\OutSourceImporter\OutSourceImporterListSisteco;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
@@ -100,9 +102,13 @@ class OutSourceImporterCommand extends Command
                 return $this->importerSentieriSardegna();
                 break;
     
-                default:
-                return [];
+            case 'sisteco':
+                return $this->importerSisteco();
                 break;
+    
+            default:
+            return [];
+            break;
         }       
     }
 
@@ -280,6 +286,29 @@ class OutSourceImporterCommand extends Command
             }
         } else {
             Log::info('Importer SentieriSardegna get List is empty.');
+        }
+    }
+
+    private function importerSisteco(){
+        if ($this->single_feature) {
+            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+        } else {
+            $features = new OutSourceImporterListSisteco($this->type,$this->endpoint);
+            $features_list = $features->getList();
+        }
+        if ($features_list) {
+            if ($this->type == 'poi') {
+                $count = 1;
+                foreach ($features_list as $id => $updated_at) {
+                    Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
+                    $OSF = new OutSourceImporterFeatureSisteco($this->type,$this->endpoint,$id,$this->only_related_url);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureSisteco::importFeature() returns $OSF_id");
+                    $count++;
+                }
+            }
+        } else {
+            Log::info('Importer Sisteco get List is empty.');
         }
     }
 }

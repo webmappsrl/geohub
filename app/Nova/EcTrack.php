@@ -338,13 +338,64 @@ class EcTrack extends Resource
                     }),
                 ],
                 'Out Source' => [
-                    Text::make('Out Source Feature', function () {
+                    Text::make('Out Source Feature ID', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             return $this->out_source_feature_id;
                         } else {
-                            return 'No Out Source associated';
+                            return 'No Out Source Feature associated';
                         }
                     })->onlyOnDetail(),
+                    Text::make('External Source ID', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            return $t->source_id;
+                        } else {
+                            return 'No External Source associated';
+                        }
+                    })->onlyOnDetail(),
+                    Text::make('Endpoint', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            return $t->endpoint;
+                        } else {
+                            return 'No endpoint associated';
+                        }
+                    })->onlyOnDetail(),
+                    Text::make('Endpoint slug','endpoint_slug', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            return $t->endpoint_slug;
+                        } else {
+                            return 'No endpoint slug associated';
+                        }
+                    })->onlyOnDetail(),
+                    Text::make('Public Page', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug .'/'. $t->source_id;
+                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                        } else {
+                            return "No Out Source Feature.";
+                        }
+                    })->asHtml(),
+                    Text::make('Base API', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug .'/'. $t->source_id;
+                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                        } else {
+                            return "No Out Source Feature.";
+                        }
+                    })->asHtml(),
+                    Text::make('Widget: Simple', function () {
+                        if (!is_null($this->out_source_feature_id)) {
+                            $t = $this->outSourceTrack;
+                            $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug .'/'. $t->source_id;
+                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                        } else {
+                            return "No Out Source Feature.";
+                        }
+                    })->asHtml(),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
