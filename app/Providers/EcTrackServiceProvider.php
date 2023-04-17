@@ -170,7 +170,7 @@ GROUP BY
 
         if ($app->app_id !== 'it.webmapp.webmapp') {
             $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
-            $query = $query->whereIn($validTrackIds);
+            $query = $query->whereIn('id',$validTrackIds);
         }
 
         $tracks = $query->orderByRaw("ST_Distance(
@@ -209,7 +209,7 @@ GROUP BY
 
         $tracks = is_null($validTrackIds)
             ? EcTrack::limit($limit)->get()
-            : EcTrack::whereIn($validTrackIds)->limit($limit)->get();
+            : EcTrack::whereIn('id',$validTrackIds)->limit($limit)->get();
 
         foreach ($tracks as $track) {
             $featureCollection['features'][] = $track->getGeojson();

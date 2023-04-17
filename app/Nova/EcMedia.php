@@ -21,14 +21,13 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
-use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
-
+use Wm\MapPointNova3\MapPointNova3;
 
 class EcMedia extends Resource
 {
@@ -105,11 +104,13 @@ class EcMedia extends Resource
             })->withMeta(['width' => 500]),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                ];
-            })->onlyOnDetail(),
+            MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                'center' => ["51", "4"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'minZoom' => 7,
+                'maxZoom' => 16,
+            ])->onlyOnDetail(),
 
             Link::make('geojson', 'id')->hideWhenUpdating()->hideWhenCreating()
                 ->url(function () {
@@ -187,11 +188,13 @@ class EcMedia extends Resource
             ],
             'Images' => $this->getImages(),
             'Map' => [
-                WmEmbedmapsField::make(__('Map'), function ($model) {
-                    return [
-                        'feature' => $model->getGeojson(),
-                    ];
-                }),    
+                MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                    'center' => ["51", "4"],
+                    'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                    'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                    'minZoom' => 7,
+                    'maxZoom' => 16,
+                ])    
             ],
             'Taxonomies' => [
                 Text::make('Activities',function(){
@@ -272,11 +275,13 @@ class EcMedia extends Resource
         ]
         ))->withToolbar(),
         new Panel('Map / Geographical info', [
-            WmEmbedmapsField::make(__('Map'), 'geometry', function () use ($geojson) {
-                return [
-                    'feature' => $geojson,
-                ];
-            }),    
+            MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                'center' => ["51", "4"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'minZoom' => 7,
+                'maxZoom' => 16,
+            ])   
         ]),
 
     ];

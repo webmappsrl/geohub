@@ -456,11 +456,11 @@ class EcTrack extends Resource
                 ],
                 'Media' => [
 
-                    File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
-                        $file = $request->file('audio');
+                    // File::make(__('Audio'), 'audio')->store(function (Request $request, $model) {
+                    //     $file = $request->file('audio');
 
-                        return $model->uploadAudio($file);
-                    })->acceptedTypes('audio/*')->onlyOnForms(),
+                    //     return $model->uploadAudio($file);
+                    // })->acceptedTypes('audio/*')->onlyOnForms(),
 
                     FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
                         ->onlyOnForms()
@@ -479,16 +479,6 @@ class EcTrack extends Resource
                         ->rules('json'),
                 ],
                 'Map' => [
-                    File::make('Geojson')->store(function (Request $request, $model) {
-                        $content = file_get_contents($request->geojson);
-                        $geometry = $model->fileToGeometry($content);
-
-                        return $geometry ? [
-                            'geometry' => $geometry,
-                        ] : function () {
-                            throw new Exception(__("The uploaded file is not valid"));
-                        };
-                    })->onlyOnForms(),
                     Ecpoipopup::make(__('ecPoi'))
                         ->nullable()
                         ->onlyOnForms()

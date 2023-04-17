@@ -84,6 +84,10 @@ class UgcTrackController extends Controller
             else
                 $track->app_id = $data['properties']['app_id'];
         }
+        if (isset($data['properties']['metadata'])) {
+            $track->metadata = json_encode(json_decode(json_encode($data['properties']['metadata'])), JSON_PRETTY_PRINT);
+            unset($data['properties']['metadata']);
+        }
 
         $track->raw_data = json_encode($data['properties']);
         $track->save();
