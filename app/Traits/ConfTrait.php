@@ -198,9 +198,6 @@ trait ConfTrait
                         if (isset($term->feature_image) && !empty($term->feature_image)) {
                             $feature_image = $term->feature_image;
                         }
-                        if (isset($term->geometry)) {
-                            unset($term->geometry);
-                        }
                     }
                 }
                 if ($feature_image == null && $layer->taxonomyThemes->count() > 0) {
@@ -243,8 +240,6 @@ trait ConfTrait
                     }
                 }
 
-
-
                 if ($feature_image != null) {
                     // Retrieve proper image
                     $image = EcMedia::find($feature_image);
@@ -252,7 +247,15 @@ trait ConfTrait
                         $item['feature_image'] = $image->thumbnail('400x200');
                     }
                 }
-
+                // remove useless attribute geometry from taxonomy where of layer
+                if ($item['taxonomy_wheres']) {
+                    $unsetAttr = ['geometry', 'query_string'];
+                    for ($i = 0; $i < count($item['taxonomy_wheres']); ++$i) {
+                        foreach($unsetAttr as $attr) {
+                            unset($item['taxonomy_wheres'][$i][$attr]);
+                        }
+                    }
+                }
                 $layers[] = $item;
             }
 
