@@ -1,0 +1,11 @@
+.map {
+  background-color: red;
+  width: 100%;
+  height: 1080px;
+  display: block;
+  position: relative;
+  margin-top: 40px;
+}
+@page {
+  margin: 0mm;
+}
