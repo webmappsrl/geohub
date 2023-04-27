@@ -31,6 +31,8 @@ use App\Models\UgcTrack;
 use App\Models\User;
 use Elasticsearch\Endpoints\AsyncSearch\Get;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -275,6 +277,9 @@ Route::name('api.')->group(function () {
             Route::get("/wheres", function() {
                 return TaxonomyWhere::all()->pluck('updated_at','id')->toArray();
             })->name('export_wheres_list');
+            Route::get("/{app}/{name}", function($app,$name) {
+                return Storage::disk('importer')->get("geojson/$app/$name");
+            })->name('sardegnasentieriaree');
         });
     });
 
