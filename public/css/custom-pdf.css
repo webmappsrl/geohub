@@ -1,11 +1,135 @@
-.map {
-  background-color: red;
-  width: 100%;
-  height: 1080px;
-  display: block;
-  position: relative;
-  margin-top: 40px;
+/* Styles go here */
+
+.page-header,
+.page-header-space {
+  height: 100px;
 }
+
+.page-footer,
+.page-footer-space {
+  height: 50px;
+}
+
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: darkolivegreen;
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+.page-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: darkolivegreen;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.page {
+  page-break-after: always;
+}
+
+.map-page {
+  width: 100%;
+  margin: auto;
+}
+.map {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  height: calc(100% - 100px);
+  width: 50%;
+}
+
+.track-feature-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  text-align: center;
+}
+.poi-feature-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+feature-collection-widget-map {
+  object-fit: cover;
+  object-position: 25% 25%;
+}
+
+.poi-grid {
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+  grid-row-gap: 2rem;
+}
+
+.poi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+  align-items: center;
+}
+.poi-header {
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.poi-name {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
 @page {
-  margin: 0mm;
+  margin: 15mm;
+}
+
+@media print {
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+  }
+
+  body {
+    margin: 0;
+  }
+  /* map should cover all the page */
+  .map-page {
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 99;
+    border: 1px solid red;
+    object-fit: cover;
+  }
+
+  .map {
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+    border: 1px solid black;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .page-header,
+  .page-footer {
+    font-size: 10px;
+  }
+
+  .map {
+    top: 50px;
+    height: calc(100% - 100px);
+  }
 }

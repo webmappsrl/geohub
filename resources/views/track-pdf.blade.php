@@ -1,4 +1,4 @@
-@php
+{{-- @php
     use App\Models\App;
     
     $gallery = $track->ecMedia;
@@ -34,30 +34,127 @@
         }
         $appIcon = asset('storage/' . $app->icon_small);
     }
-@endphp
+@endphp --}}
 
 
 <!DOCTYPE html>
 
 <head>
     <meta charset="utf-8" />
-    <title>{{$track->title}}</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet"
         href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/styles.css">
-        <link rel="stylesheet" href="{{ asset('css/custom-pdf.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-pdf.css') }}">
 </head>
 
 <body>
-    <header>{{$track->title}}</header>
-    <div class="map">
-        <feature-collection-widget-map geojsonurl="https://geohub.webmapp.it/api/ec/track/{{$track->id}}">
-        </feature-collection-widget-map>
-     
-
+    <div class="page-header">{{ $track->name }}</div>
+    <div class="page-footer">
+        <tr>
+            @if ($track->related_url)
+                @foreach ($track->related_url as $key => $value)
+                    <td><a href="{{ $value }}" target="_blank">Visualizza la mappa interattiva</a></td>
+                @endforeach
+            @endif
+            <td>Map data: © OpenStreetMap Contributors</td>
+            <td>Made By Webmapp</td>
+            <td>www.webmapp.it</td>
+        </tr>
     </div>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position header-->
+                    <div class="page-header-space"></div>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <div class="page map-page">
+                        <div class="map">
+                            <feature-collection-widget-map padding="200"
+                                geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
+                            </feature-collection-widget-map>
+                        </div>
+                    </div>
+                    <div class="page">
+                        @if ($track->featureImage)
+                            <div class="track-feature-image">
+                                <img src="{{ $track->featureImage->url }}" alt="">
+                            </div>
+                        @endif
+                        <div class="details">
+                            @if ($track->distance)
+                                <span>Distanza: <strong>{{ $track->distance }} km</strong></span>
+                            @endif
+                            @if ($track->taxonomyActivities->count() > 0)
+                                <span>Attività:
+                                    @foreach ($track->taxonomyActivities as $activity)
+                                        <strong>{{ $activity->name }}</strong>
+                                    @endforeach
+                                </span>
+                            @endif
+                            @if ($track->ascent)
+                                <span>Salita: <strong>{{ $track->ascent }} m</strong></span>
+                            @endif
+                            @if ($track->descent)
+                                <span>Discesa: <strong>{{ $track->descent }} m</strong></span>
+                            @endif
+                        </div>
+                        <x-track.trackContentSection :track="$track" />
+
+
+                    </div>
+                    <div class="page">
+                        @if ($track->ecPois->count() > 0)
+                            <h2 class="poi-header">Punti di interesse</h2>
+                            <div class="poi-grid">
+                                @foreach ($track->ecPois as $poi)
+                                    <div class="poi">
+                                        <div class="poi-details">
+                                            <h3 class="poi-name">{{ $poi->name }}</h3>
+                                            <x-track.trackContentSection :track="$poi" />
+                                        </div>
+                                        <div class="poi-feature-image">
+                                            @if ($poi->featureImage && $poi->featureImage->thumbnails)
+                                                @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                                    @if ($key == '150x150')
+                                                        <img src="{{ $value }}" alt="">
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position footer-->
+                    <div class="page-footer-space"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+
+
+
+
+
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/runtime.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/polyfills.js" defer>
