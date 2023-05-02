@@ -73,7 +73,7 @@ class EcTrack extends Resource
      * @var array
      */
     public static $search = [
-        'name',
+        'name','ref'
     ];
 
     /**
