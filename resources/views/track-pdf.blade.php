@@ -1,5 +1,7 @@
-{{-- @php
+@php
+    use Jenssegers\Agent\Agent;
     use App\Models\App;
+    $agent = new Agent();
     
     $gallery = $track->ecMedia;
     
@@ -34,7 +36,7 @@
         }
         $appIcon = asset('storage/' . $app->icon_small);
     }
-@endphp --}}
+@endphp
 
 
 <!DOCTYPE html>
@@ -52,15 +54,14 @@
 <body>
     <div class="page-header">{{ $track->name }}</div>
     <div class="map">
-        <feature-collection-widget-map
-            geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
+        <feature-collection-widget-map geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
     <div class="page-footer">
         <tr>
             @if ($track->related_url)
                 @foreach ($track->related_url as $key => $value)
-                    <td><a href="{{ $value }}" target="_blank">Visualizza la mappa interattiva</a></td>
+                    <span>Website: <strong>{{ $value }}</strong></span>
                 @endforeach
             @endif
             <td>Map data: © OpenStreetMap Contributors</td>
@@ -81,36 +82,49 @@
         <tbody>
             <tr>
                 <td>
-                    <div class="page">
-                        @if ($track->featureImage)
-                            <div class="track-feature-image">
-                                <img src="{{ $track->featureImage->url }}" alt="">
-                            </div>
-                        @endif
-                        <div class="details">
-                            @if ($track->distance)
-                                <span>Distanza: <strong>{{ $track->distance }} km</strong></span>
+                    @if ($track->featureImage || $track->description)
+                        <div class="page">
+                            @if ($track->featureImage)
+                                <div class="track-feature-image">
+                                    <img src="{{ $track->featureImage->url }}" alt="">
+                                </div>
+                                <div class="details">
+                                    @if($track->from && $track->to)
+                                        <span>Da: <strong>{{ $track->from }}</strong></span>
+                                        <span>A: <strong>{{ $track->to }}</strong></span>
+                                    @endif
+                                    @if ($track->distance)
+                                        <span>Distanza: <strong>{{ $track->distance }} km</strong></span>
+                                    @endif
+                                    @if ($track->taxonomyActivities->count() > 0)
+                                        <span>Attività:
+                                            @foreach ($track->taxonomyActivities as $activity)
+                                                <strong>{{ $activity->name }}</strong>
+                                            @endforeach
+                                        </span>
+                                    @endif
+                                    @if ($track->ascent)
+                                        <span>Salita: <strong>{{ $track->ascent }} m</strong></span>
+                                    @endif
+                                    @if ($track->descent)
+                                        <span>Discesa: <strong>{{ $track->descent }} m</strong></span>
+                                    @endif
+                                </div>
                             @endif
-                            @if ($track->taxonomyActivities->count() > 0)
-                                <span>Attività:
-                                    @foreach ($track->taxonomyActivities as $activity)
-                                        <strong>{{ $activity->name }}</strong>
-                                    @endforeach
-                                </span>
-                            @endif
-                            @if ($track->ascent)
-                                <span>Salita: <strong>{{ $track->ascent }} m</strong></span>
-                            @endif
-                            @if ($track->descent)
-                                <span>Discesa: <strong>{{ $track->descent }} m</strong></span>
+                            @if ($track->description)
+                                <div class="description">
+                                    <x-track.trackContentSection :track="$track" />
+                                </div>
                             @endif
                         </div>
-                        <x-track.trackContentSection :track="$track" />
-
-
-                    </div>
-                    <div class="page">
-                        @if ($track->ecPois->count() > 0)
+                    @endif
+                    {{-- If track has pois and pois have images then show the related pois page --}}
+                    @if (
+                        $track->ecPois->count() > 0 &&
+                            $track->ecPois->every(function ($item, $key) {
+                                return $item->featureImage != null && $item->featureImage->thumbnails != null;
+                            }))
+                        <div class="page">
                             <h2 class="poi-header">Punti di interesse</h2>
                             <div class="poi-grid">
                                 @foreach ($track->ecPois as $poi)
@@ -120,19 +134,18 @@
                                             <x-track.trackContentSection :track="$poi" />
                                         </div>
                                         <div class="poi-feature-image">
-                                            @if ($poi->featureImage && $poi->featureImage->thumbnails)
-                                                @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
-                                                    @if ($key == '150x150')
-                                                        <img src="{{ $value }}" alt="">
-                                                    @endif
-                                                @endforeach
-                                            @endif
+                                            @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                                @if ($key == '150x150')
+                                                    <img src="{{ $value }}" alt="">
+                                                @endif
+                                            @endforeach
                                         </div>
+
                                     </div>
                                 @endforeach
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 </td>
             </tr>
         </tbody>
