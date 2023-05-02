@@ -1,5 +1,8 @@
 /* Styles go here */
 
+body {
+  margin: 0;
+}
 .page-header,
 .page-header-space {
   height: 100px;
@@ -31,17 +34,14 @@
 .page {
   page-break-after: always;
 }
-
-.map-page {
-  width: 100%;
-  margin: auto;
-}
 .map {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  height: calc(100% - 100px);
+  top: 0px;
+  height: 1140px;
   width: 50%;
+  position: relative;
+  margin: auto;
+  display: block;
+  z-index: 99;
 }
 
 .track-feature-image {
@@ -91,7 +91,7 @@ feature-collection-widget-map {
 }
 
 @page {
-  margin: 15mm;
+  margin: 0mm;
 }
 
 @media print {
@@ -101,25 +101,11 @@ feature-collection-widget-map {
   tfoot {
     display: table-footer-group;
   }
-
+  .map {
+    width: 100%;
+  }
   body {
     margin: 0;
-  }
-  /* map should cover all the page */
-  .map-page {
-    top: 0;
-    height: 100vh;
-    width: 100vw;
-    z-index: 99;
-    border: 1px solid red;
-    object-fit: cover;
-  }
-
-  .map {
-    height: 100vh;
-    width: 100vw;
-    text-align: center;
-    border: 1px solid black;
   }
 }
 @media only screen and (max-width: 767px) {

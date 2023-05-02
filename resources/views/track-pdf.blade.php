@@ -41,7 +41,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <base href="/" />
+    <base href="/track/pdf/{{ $track->id }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet"
@@ -51,6 +51,11 @@
 
 <body>
     <div class="page-header">{{ $track->name }}</div>
+    <div class="map">
+        <feature-collection-widget-map
+            geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
+        </feature-collection-widget-map>
+    </div>
     <div class="page-footer">
         <tr>
             @if ($track->related_url)
@@ -76,13 +81,6 @@
         <tbody>
             <tr>
                 <td>
-                    <div class="page map-page">
-                        <div class="map">
-                            <feature-collection-widget-map padding="200"
-                                geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
-                            </feature-collection-widget-map>
-                        </div>
-                    </div>
                     <div class="page">
                         @if ($track->featureImage)
                             <div class="track-feature-image">
