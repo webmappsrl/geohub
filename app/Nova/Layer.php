@@ -160,6 +160,7 @@ class Layer extends Resource
         return [
             Text::make('Name')->required(),
             BelongsTo::make('App')->searchable()->showCreateRelationButton(),
+            Text::make('Title'),
         ];
     }
     public function fieldsForUpdate(Request $request)
