@@ -413,7 +413,15 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' href='{$url_widget_simple}'>{$url_widget_simple}</a>";
                     })->asHtml(),
+                    //show a link to the track-pdf.blade.php
+                    Text::make('PDF')
+                        ->resolveUsing(function ($value, $resource, $attribute) {
+                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">View PDF</a>';
+                        })
+                        ->asHtml()
+                        ->onlyOnDetail()
                 ],
+
                 'Data' => [
                     Heading::make($this->getData())->asHtml(),
                 ],
