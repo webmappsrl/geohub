@@ -3,19 +3,20 @@
 namespace App\Nova;
 
 use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\TabsOnEdit;
-use Illuminate\Http\Request;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Eminiarts\Tabs\TabsOnEdit;
 use NovaAttachMany\AttachMany;
 use Yna\NovaSwatches\Swatches;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\Textarea;
 use Ncus\InlineIndex\InlineIndex;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\MorphToMany;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 
 
 
@@ -206,9 +207,10 @@ class Layer extends Resource
                     AttachMany::make('TaxonomyThemes'),
                     AttachMany::make('TaxonomyTargets'),
                     AttachMany::make('TaxonomyWhens'),
+                    AttachMany::make('TaxonomyWheres')
                 ]
             ]))->withToolbar(),
-            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
+
         ];
     }
 
