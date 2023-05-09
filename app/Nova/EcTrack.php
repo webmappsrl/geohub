@@ -73,7 +73,7 @@ class EcTrack extends Resource
      * @var array
      */
     public static $search = [
-        'name','ref'
+        'name', 'ref'
     ];
 
     /**
@@ -361,7 +361,7 @@ class EcTrack extends Resource
                             return 'No endpoint associated';
                         }
                     })->onlyOnDetail(),
-                    Text::make('Endpoint slug','endpoint_slug', function () {
+                    Text::make('Endpoint slug', 'endpoint_slug', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
                             return $t->endpoint_slug;
@@ -372,7 +372,7 @@ class EcTrack extends Resource
                     Text::make('Public Page', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug .'/'. $t->source_id;
+                            $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug . '/' . $t->source_id;
                             return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
                         } else {
                             return "No Out Source Feature.";
@@ -381,7 +381,7 @@ class EcTrack extends Resource
                     Text::make('Base API', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug .'/'. $t->source_id;
+                            $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug . '/' . $t->source_id;
                             return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
                         } else {
                             return "No Out Source Feature.";
@@ -390,7 +390,7 @@ class EcTrack extends Resource
                     Text::make('Widget: Simple', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug .'/'. $t->source_id;
+                            $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug . '/' . $t->source_id;
                             return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
                         } else {
                             return "No Out Source Feature.";
@@ -440,7 +440,7 @@ class EcTrack extends Resource
         }
 
         return [
-            (new Tabs($tab_title, [
+            Tabs::make($tab_title, [
                 'Main' => [
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
@@ -483,13 +483,6 @@ class EcTrack extends Resource
                         ->nullable()
                         ->onlyOnForms()
                         ->feature($geojson ?? []),
-                    MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                        'center' => ["51", "4"],
-                        'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
-                        'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                        'minZoom' => 7,
-                        'maxZoom' => 16,
-                    ]),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -528,9 +521,18 @@ class EcTrack extends Resource
                     AttachMany::make('TaxonomyThemes'),
                 ],
 
-            ])),
+            ]),
+            MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
+                'center' => ["51", "4"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'minZoom' => 7,
+                'maxZoom' => 16,
+            ]),
             // Do not remove below code, necessary for Edit mode  
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
+
+
         ];
     }
 
