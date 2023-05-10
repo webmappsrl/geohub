@@ -11,8 +11,12 @@ if (!function_exists('icon_mapping')) {
             'skitouring' => 'cyc_trekking2',
             'walking' => 'cyc_trekking1',
             'running' => 'hiking-15',
+            'pin' => 'cyc_localita',
         ];
-        return $mapping[$slug];
+        if (array_key_exists($slug,$mapping)) {
+            return $mapping[$slug];
+        } 
+        return $mapping['pin'];
     }
 }
 
