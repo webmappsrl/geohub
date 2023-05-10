@@ -39,6 +39,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."')))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
+            $this->params['endpoint_slug'] = 'sardegna-sentieri-poi';
             // $this->params['raw_data'] = json_encode($track);
     
             // prepare the value of tags data
@@ -81,6 +82,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->mediaGeom = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
+            $this->params['endpoint_slug'] = 'sardegna-sentieri-poi';
             $this->params['raw_data'] = json_encode($poi);
             
             // prepare the value of tags data
@@ -134,6 +136,18 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         if (isset($track['properties']['codice_cai'])) {
             $this->tags['ref'] = $track['properties']['codice_cai'];
+        }
+
+        // Related Poi of vicinity
+        if ($this->params['geometry']) {
+            $geometry = $this->params['geometry'];
+            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='https://sentieri.netseven.work/ss/listpoi/?_format=json' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
+            
+            if (is_array($related_pois) && !empty($related_pois)) {
+                foreach ($related_pois as $poi) {
+                    $this->tags['related_poi'][] = $poi->id;
+                }
+            }
         }
 
         // Processing the theme

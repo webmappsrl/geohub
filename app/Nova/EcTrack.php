@@ -45,6 +45,7 @@ use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
@@ -269,15 +270,6 @@ class EcTrack extends Resource
                     //     return $gallery;
                     // })->asHtml()
                 ],
-                'Map' => [
-                    MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                        'center' => ["51", "4"],
-                        'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
-                        'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                        'minZoom' => 7,
-                        'maxZoom' => 16,
-                    ]),
-                ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
                     Text::make('Ref'),
@@ -425,9 +417,16 @@ class EcTrack extends Resource
                 'Data' => [
                     Heading::make($this->getData())->asHtml(),
                 ],
-
-
             ]))->withToolbar(),
+            new Panel('Map', [
+                MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
+                    'center' => ["51", "4"],
+                    'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                    'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                    'minZoom' => 7,
+                    'maxZoom' => 16,
+                ])
+            ]),
             // Necessary for view
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
@@ -486,11 +485,11 @@ class EcTrack extends Resource
                         ->actionText('Add new related url')
                         ->rules('json'),
                 ],
-                'Map' => [
+                'Related POIs' => [
                     Ecpoipopup::make(__('ecPoi'))
-                        ->nullable()
-                        ->onlyOnForms()
-                        ->feature($geojson ?? []),
+                    ->nullable()
+                    ->onlyOnForms()
+                    ->feature($geojson ?? []),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -528,15 +527,17 @@ class EcTrack extends Resource
                     // AttachMany::make('TaxonomyWhens'),
                     AttachMany::make('TaxonomyThemes'),
                 ],
-
             ]),
-            MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                'center' => ["51", "4"],
-                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
-                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'minZoom' => 7,
-                'maxZoom' => 16,
+            new Panel('Map', [
+                MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
+                    'center' => ["51", "4"],
+                    'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                    'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                    'minZoom' => 7,
+                    'maxZoom' => 16,
+                ])
             ]),
+            
             // Do not remove below code, necessary for Edit mode  
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
 

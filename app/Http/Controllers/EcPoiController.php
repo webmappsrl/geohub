@@ -64,4 +64,25 @@ class EcPoiController extends Controller {
             return response()->json($list);
         }
     }
+
+    /**
+     * Returns the EcPoi GeoJson associated to an external feature
+     *
+     * @param string $endpoint_slug
+     * @param integer $source_id
+     * @return JsonResponse
+     */
+    public function getEcPoiFromSourceID($endpoint_slug, $source_id) {
+        $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
+
+        $ectrack_id = collect(DB::select("select id from ec_pois where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
+
+        $track = EcPoi::find($ectrack_id[0]);
+        $headers = [];
+
+        if (is_null($track))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
 }
