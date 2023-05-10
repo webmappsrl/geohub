@@ -3,6 +3,7 @@
 
 namespace Laravel\Nova\Tools;
 
+use App\Nova\OverlayLayer;
 use App\Nova\App;
 use App\Nova\EcMedia;
 use App\Nova\EcPoi;
@@ -63,7 +64,8 @@ class ResourceManager extends Tool
             EcMedia::class,
             EcTrack::class,
             EcPoi::class,
-            Layer::class
+            Layer::class,
+            OverlayLayer::class
         ];
 
         $UgcArray = [];
@@ -85,25 +87,25 @@ class ResourceManager extends Tool
 
         foreach ($adminResources as $resource) {
             if ($resource::authorizedToViewAny($request)) {
-                $adminArray [] = $resource;
+                $adminArray[] = $resource;
             }
         }
 
         foreach ($editorialContentResources as $resource) {
             if ($resource::authorizedToViewAny($request)) {
-                $editorialContentArray [] = $resource;
+                $editorialContentArray[] = $resource;
             }
         }
 
         foreach ($UgcResources as $resource) {
             if ($resource::authorizedToViewAny($request)) {
-                $UgcArray [] = $resource;
+                $UgcArray[] = $resource;
             }
         }
 
         foreach ($TaxonomiesResources as $resource) {
             if ($resource::authorizedToViewAny($request)) {
-                $TaxonomiesArray [] = $resource;
+                $TaxonomiesArray[] = $resource;
             }
         }
 
@@ -140,7 +142,4 @@ class ResourceManager extends Tool
      * 'groups' => $groups,
      * ]);
      * } **/
-
-
 }
-
