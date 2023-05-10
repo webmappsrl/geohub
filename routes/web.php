@@ -51,7 +51,7 @@ Route::get('/track/pdf/{id}', function ($id) {
     return view('track-pdf', [
         'track' => $track
     ]);
-});
+})->name('track.pdf');
 
 Route::get('/osf/{endpoint_slug}/{source_id}', function ($endpoint_slug, $source_id) {
     $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
