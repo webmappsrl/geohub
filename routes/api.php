@@ -290,5 +290,8 @@ Route::name('api.')->group(function () {
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getEcTrackFromSourceID'])->name('get_ectrack_from_source_id');
         });
+        Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{endpoint_slug}/{source_id}", [EcPoiController::class, 'getEcPoiFromSourceID'])->name('get_ecpoi_from_source_id');
+        });
     });
 });
