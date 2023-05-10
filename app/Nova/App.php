@@ -954,6 +954,7 @@ class App extends Resource
                     return 'No Layers';
                 }
             })->asHtml(),
+            BelongsTo::make('Overlay Layer', 'overlayLayer', \App\Nova\Layer::class)->nullable(),
         ];
     }
 
