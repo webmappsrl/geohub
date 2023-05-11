@@ -1,41 +1,8 @@
 body {
   margin: 0;
-}
-.page-header,
-.page-header-space {
-  height: 30px;
+  box-sizing: border-box;
 }
 
-.page-footer,
-.page-footer-space {
-  height: 30px;
-}
-
-.page-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: right;
-  font-size: 0.7rem;
-}
-
-.page-header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  font-size: 2rem;
-  text-align: center;
-  font-size: 18pt;
-  font-weight: bold;
-  text-align: center;
-  color: #333333a3;
-  font-style: italic;
-}
-
-.page {
-  page-break-after: always;
-  break-inside: auto;
-}
 .map {
   top: 0px;
   height: 1140px;
@@ -44,21 +11,6 @@ body {
   margin: auto;
   display: block;
   z-index: 9;
-}
-
-.details {
-  font-size: 12px;
-}
-
-.track-feature-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  text-align: center;
-}
-
-.description {
-  line-height: 1.2rem;
 }
 
 .poi-grid {
@@ -89,12 +41,103 @@ body {
   height: auto;
   display: block;
 }
-
 @page {
   margin: 0mm;
 }
 
 @media print {
+  .map-header {
+    text-align: left;
+    width: 60%;
+    height: 100px;
+    background-color: white;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    z-index: 99;
+  }
+
+  .app-name {
+    padding-left: 15px;
+    height: 10px;
+    font-weight: bold;
+  }
+
+  .track-name {
+    padding-left: 15px;
+    padding-top: 0;
+    margin-top: 0;
+    height: 10px;
+  }
+
+  .qr-code-container {
+    height: 60%;
+    width: 20%;
+    background-color: lightgray;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .pdf-header,
+  .page-header-space,
+  .pdf-footer,
+  .page-footer-space {
+    height: 100px;
+    width: 100%;
+  }
+
+  .pdf-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: right;
+    font-size: 0.7rem;
+  }
+
+  .pdf-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    font-size: 2rem;
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    color: #333333a3;
+    font-style: italic;
+  }
+
+  .main-content {
+    page-break-after: always;
+  }
+  .feature-image-page {
+    page-break-after: always;
+  }
+
+  .track-details {
+    font-size: 18px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+  .track-details span {
+    margin: 5px 10px;
+  }
+
+  .track-description {
+    line-height: 1.2rem;
+    margin: 10px 25px 0;
+    text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
+    text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
+    padding: 15px;
+    background-color: #efefef;
+  }
+
   thead {
     display: table-header-group;
   }
@@ -107,9 +150,15 @@ body {
   }
   .track-feature-image {
     width: 100%;
-    height: auto;
-    display: block;
     text-align: center;
+    height: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .track-feature-image img {
+    width: 75%;
+    height: 350px;
   }
 
   .poi-feature-image {
@@ -132,8 +181,8 @@ body {
 }
 
 @media only screen and (max-width: 767px) {
-  .page-header,
-  .page-footer {
+  .pdf-header,
+  .pdf-footer {
     font-size: 15px;
     background-color: #333333;
     color: #ffffff;
