@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Enums\AppTiles;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
@@ -348,7 +349,10 @@ class App extends Resource
     {
         $selectedTileLayers = is_null($this->model()->tiles) ? [] : json_decode($this->model()->tiles, true);
         $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
+        $appTiles = new AppTiles();
+        $t = $appTiles->all();
         return [
+            Multiselect::make(__('Tiles'), 'tiles')->options(collect($appTiles->getConstants())->pluck('name','url')->toArray(), $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
             Multiselect::make(__('Tiles'), 'tiles')->options([
                 "{\"notile\":\"\"}" => 'no tile',
                 "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
