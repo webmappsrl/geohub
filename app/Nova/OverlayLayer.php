@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\BelongsTo;
 
 class OverlayLayer extends Resource
 {
@@ -54,13 +55,12 @@ class OverlayLayer extends Resource
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->name . '.geojson';
-                })
-
-
-
-
-
-
+                }),
+            BelongsTo::make('App', 'app', App::class)
+                ->searchable()
+                ->nullable()
+                ->hideFromIndex()
+                ->showCreateRelationButton()
         ];
     }
 

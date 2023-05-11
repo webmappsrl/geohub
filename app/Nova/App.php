@@ -246,6 +246,7 @@ class App extends Resource
             'TABLE' => $this->table_tab(),
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
+            'OVERLAYS' => $this->overlayLayers_tab(),
         ];
     }
 
@@ -954,7 +955,23 @@ class App extends Resource
                     return 'No Layers';
                 }
             })->asHtml(),
-            BelongsTo::make('Overlay Layer', 'overlayLayer', \App\Nova\Layer::class)->nullable(),
+        ];
+    }
+
+    protected function overlayLayers_tab(): array
+    {
+        return [
+            Text::make('Overlay Layer', function () {
+                if ($this->overlayLayers->count() > 0) {
+                    $out = '';
+                    foreach ($this->overlayLayers as $l) {
+                        $out .= '<a href="/resources/overlay-layers/' . $l->id . '">' . $l->name . '</a></br>';
+                    }
+                    return $out;
+                } else {
+                    return 'No Overlay Layers';
+                }
+            })->asHtml(),
         ];
     }
 
