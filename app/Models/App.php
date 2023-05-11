@@ -64,9 +64,9 @@ class App extends Model
         return $this->hasMany(Layer::class);
     }
 
-    public function overlayLayer()
+    public function overlayLayers()
     {
-        return $this->belongsTo(OverlayLayer::class);
+        return $this->hasMany(OverlayLayer::class);
     }
 
     public function ugc_medias()

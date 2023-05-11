@@ -17,9 +17,10 @@ class CreateOverlayLayersTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->string('label');
-            $table->string('icon')->nullable();
-            $table->json('file_upload')->nullable();
+            $table->string('label')->nullable();
+            $table->text('icon')->nullable();
+            $table->text('feature_collection')->nullable();
+            $table->foreignId('app_id')->constrained('apps')->onDelete('cascade');
         });
     }
 

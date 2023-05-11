@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class OverlayLayer extends Model
 {
@@ -34,8 +36,8 @@ class OverlayLayer extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      * 
      */
-    public function apps(): BelongsToMany
+    public function app(): BelongsTo
     {
-        return $this->belongsToMany(App::class);
+        return $this->belongsTo(App::class);
     }
 }
