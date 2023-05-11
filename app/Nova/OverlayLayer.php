@@ -48,9 +48,16 @@ class OverlayLayer extends Resource
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
             ]),
-            File::make('File Upload', 'file_upload')
+            File::make('File', 'feature_collection')
                 ->disk('public')
                 ->acceptedTypes(['.json', '.geojson'])
+                //rename the file taking the name property from the request
+                ->storeAs(function (Request $request) {
+                    return $request->name . '.geojson';
+                })
+
+
+
 
 
 
