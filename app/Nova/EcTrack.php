@@ -365,16 +365,18 @@ class EcTrack extends Resource
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
                             $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Public Page</a>";
                         } else {
                             return "No Out Source Feature.";
                         }
-                    })->asHtml(),
+                    })
+                        ->asHtml(),
+
                     Text::make('Base API', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
                             $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base Api</a>";
                         } else {
                             return "No Out Source Feature.";
                         }
@@ -383,7 +385,7 @@ class EcTrack extends Resource
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
                             $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Widget Simple</a>";
                         } else {
                             return "No Out Source Feature.";
                         }
@@ -393,17 +395,17 @@ class EcTrack extends Resource
                     Text::make('Public Page', function () {
                         $url_pubblic = request()->root() . '/track/' . $this->id;
 
-                        return "<a target='_blank' href='{$url_pubblic}'>{$url_pubblic}</a>";
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_pubblic}'>View Public Page</a>";
                     })->asHtml(),
                     Text::make('Base API', function () {
                         $url_base_api = request()->root() . '/api/ec/track/' . $this->id;
 
-                        return "<a target='_blank' href='{$url_base_api}'>{$url_base_api}</a>";
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>";
                     })->asHtml(),
                     Text::make('Widget: Simple', function () {
                         $url_widget_simple = request()->root() . '/w/simple/' . $this->id;
 
-                        return "<a target='_blank' href='{$url_widget_simple}'>{$url_widget_simple}</a>";
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>";
                     })->asHtml(),
                     //show a link to the track-pdf.blade.php
                     Text::make('PDF')
@@ -487,9 +489,9 @@ class EcTrack extends Resource
                 ],
                 'Related POIs' => [
                     Ecpoipopup::make(__('ecPoi'))
-                    ->nullable()
-                    ->onlyOnForms()
-                    ->feature($geojson ?? []),
+                        ->nullable()
+                        ->onlyOnForms()
+                        ->feature($geojson ?? []),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -537,7 +539,7 @@ class EcTrack extends Resource
                     'maxZoom' => 16,
                 ])
             ]),
-            
+
             // Do not remove below code, necessary for Edit mode  
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
 
