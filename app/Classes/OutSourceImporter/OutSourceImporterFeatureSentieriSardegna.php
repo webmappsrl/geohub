@@ -172,6 +172,29 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                 }
             }
         }
+        
+        // Processing the Activity
+        if (isset($track['properties']['taxonomies'])) {
+            Log::info('Preparing OSF TRACK activity MAPPING with external ID: '.$this->source_id);
+            
+            $path = parse_url($this->endpoint);
+            $file_name = str_replace('.','-',$path['host']);
+            if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+
+                if (!empty(json_decode($taxonomy_map,true)['activity'])) {
+                    foreach ($track['properties']['taxonomies'] as $tax => $idList) {
+                        if (is_array($idList)) {
+                            foreach ($idList as $id) {
+                                $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$id]['geohub_identifier'];
+                            }
+                        } else {
+                            $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$idList]['geohub_identifier'];
+                        }
+                    }
+                }
+            }
+        }
 
         // Processing the feature image of Track
         if (isset($track['properties']['immagine_principale'])) {
@@ -231,8 +254,10 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                 if (!empty(json_decode($taxonomy_map,true)['poi_type'])) {
                     foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
                         foreach ($idList as $id) {
-                            Log::info('tax created : '.$id);
-                            $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                            if (!json_decode($taxonomy_map,true)['poi_type'][$id]['skip']) {
+                                Log::info('tax created : '.$id);
+                                $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                            }
                         }
                     }
                 }
