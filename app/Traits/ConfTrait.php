@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\AppTiles;
 use App\Models\App;
 use App\Models\EcMedia;
 use Illuminate\Support\Facades\Log;
@@ -26,6 +27,7 @@ trait ConfTrait
         $data = array_merge($data, $this->config_section_home());
         $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
+        $data = array_merge($data, $this->config_section_controls());
         $data = array_merge($data, $this->config_section_project());
         $data = array_merge($data, $this->config_section_theme());
         $data = array_merge($data, $this->config_section_options());
@@ -288,6 +290,29 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
 
+        return $data;
+    }
+
+    /**
+     * @param 
+     *
+     * @return array
+     */
+    private function config_section_controls(): array
+    {
+        $data = [];
+        // CONTROLS section
+        $appTiles = new AppTiles();
+
+        $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
+        $ta = array_map(function ($v) use ($appTiles) {
+            $v = json_decode($v,true);
+            $tile = $appTiles->getConstant(key($v));
+            $tile['type'] = 'button';
+            return $tile;
+        }, json_decode($this->tiles, true));
+        array_push($data['CONTROLS']['tiles'],...$ta);
+        
         return $data;
     }
 
