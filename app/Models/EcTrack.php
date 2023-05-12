@@ -811,10 +811,10 @@ class EcTrack extends Model
     {
         $filters = (object)[];
         if ($this->taxonomyActivities->count() > 0) {
-            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray(), true);
         }
         if ($this->taxonomyThemes()->count() > 0) {
-            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray());
+            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray(), true);
         }
         return $filters;
     }
