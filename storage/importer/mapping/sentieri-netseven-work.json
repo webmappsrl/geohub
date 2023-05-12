@@ -49,20 +49,21 @@
             "geohub_identifier": "picnic-area"
         },
         "4152": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Area camper"
+                "it": "Area camper",
+                "en": "Camper area"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-area-camper"
+            "geohub_identifier": "camper-area"
         },
         "4161": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Area di sosta"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-area-di-sosta"
+            "geohub_identifier": "parking"
         },
         "4176": {
             "skip": false,
@@ -97,20 +98,21 @@
             "geohub_identifier": "highway-bus-stop"
         },
         "4153": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Campeggio libero"
+                "it": "Campeggio libero",
+                "en": "Free camping"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-campeggio-libero"
+            "geohub_identifier": "free-camping"
         },
         "4154": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Campeggio organizzato"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-campeggio-organizzato"
+            "geohub_identifier": "camping"
         },
         "4162": {
             "skip": false,
@@ -161,12 +163,13 @@
             "geohub_identifier": "fountain"
         },
         "4177": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Immersioni assistite"
+                "it": "Immersioni",
+                "en": "Diving"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-immersioni-assistite"
+            "geohub_identifier": "diving"
         },
         "4163": {
             "skip": false,
@@ -177,12 +180,13 @@
             "geohub_identifier": "tourist-information"
         },
         "4182": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Mercatini"
+                "it": "Mercato",
+                "en": "Market"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-mercatini"
+            "geohub_identifier": "market"
         },
         "4168": {
             "skip": false,
@@ -193,12 +197,13 @@
             "geohub_identifier": "shop"
         },
         "4175": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Noleggio bici"
+                "it": "Noleggio bici",
+                "en": "Bike rent"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-noleggio-bici"
+            "geohub_identifier": "bike-rent"
         },
         "4145": {
             "skip": true,
@@ -217,20 +222,20 @@
             "geohub_identifier": "parking"
         },
         "4144": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Parcheggi custoditi"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-parcheggi-custoditi"
+            "geohub_identifier": "parking"
         },
         "4143": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Parcheggi pullman"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-parcheggi-pullman"
+            "geohub_identifier": "parking"
         },
         "4158": {
             "skip": false,
@@ -1093,34 +1098,35 @@
             "geohub_identifier": "mtb"
         },
         "4832": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Passeggiate e Nordic Walk"
+                "it": "Nordic Walking",
+                "en": "Nordic Walking"
             },
             "source_description": {
                 "it": "<p>La camminata nordica o camminata con bastoni&nbsp;(in inglese&nbsp;<em>nordic walking<\/em> o <em>pole walking<\/em>) \u00e8 un tipo di attivit\u00e0 fisica e sportiva che ben si coniuga con percorsi in bosco, in pianura o in vallate, lungo le scogliere o sulla spiaggia. La Rete escursionistica Regionale ti offrir\u00e0 tantissime occasioni per fare una passeggiata o cimentarti nella camminata nordica.&nbsp;<\/p>\r\n"
             },
-            "geohub_identifier": "hiking"
+            "geohub_identifier": "nordic-walking"
         },
         "4825": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Sentieri di montagna"
             },
             "source_description": {
                 "it": "<p>Pur senza cime particolarmente elevate, la Sardegna offre all'escursionista tanti suggestivi itinerari oltre quota 1000 metri: si tratta di sentieri impegnativi, lungo crinali suggestivi, attraverso le aree pi\u00f9 selvagge dell'Isola, dove apprezzare quanto varia un panorama sui due versanti di una montagna.&nbsp;<span style=\"font-size:13px; line-height:1.6\">Caratteristiche geologiche ed isolamento rendono queste vette assai suggestive: con un po\u2019 di fortuna potrai osservare mufloni e rapaci, scoprendo lungo il percorso i ruderi di vecchi ovili e punti panoramici sorprendenti...<\/span><\/p>\r\n"
             },
-            "geohub_identifier": "sardegnas-tipologia-sentieri-sentieri-di-montagna"
+            "geohub_identifier": "hiking"
         },
         "4829": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Sentieri didattici"
             },
             "source_description": {
                 "it": "<p>Una rete di sentieri didattici dislocati all\u2019interno delle principali Foreste Demaniali o in parchi naturali, che affrontano tematiche orientate all'educazione ambientale: un modo efficace per unire <em>svago ed apprendimento<\/em>, all'insegna del contatto con la Natura!<\/p>\r\n"
             },
-            "geohub_identifier": "sardegnas-tipologia-sentieri-sentieri-didattici"
+            "geohub_identifier": "hiking"
         },
         "4827": {
             "skip": false,
@@ -1133,14 +1139,15 @@
             "geohub_identifier": "hiking"
         },
         "4830": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Turismo equestre"
+                "it": "Turismo equestre",
+                "en": "On Horse"
             },
             "source_description": {
                 "it": "<p><em>Ippovia<\/em> \u00e8 un itinerario percorribile a cavallo, raramente asfaltato, che attraversa riserve naturali, boschi, colline e vallate, talvolta costeggiando corsi d'acqua e spiagge, scoprendo evidenze storiche-culturali o borghi. L'ippovia consente la pratica dell'<em>equiturismo<\/em> ma pu\u00f2 anche&nbsp;essere percorsa a piedi o in mountain bike. Lungo il percorso si prevedono tappe, distanti non pi\u00f9 di 20 km, dove cavaliere e cavallo possano trovare assistenza, ristoro ed eventuale pernottamento...<\/p>\r\n"
             },
-            "geohub_identifier": "sardegnas-tipologia-sentieri-turismo-equestre"
+            "geohub_identifier": "horse"
         }
     }
 }
