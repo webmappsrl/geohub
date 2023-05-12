@@ -57,7 +57,7 @@ body {
 
   .header,
   .header-space {
-    height: 50px;
+    height: 90px;
   }
 
   .footer,
@@ -166,14 +166,12 @@ body {
     display: flex;
     flex-direction: column;
     grid-template-columns: 1fr 1fr;
-    grid-column-gap: 1rem;
-    grid-row-gap: 2rem;
+    grid-row-gap: 1rem;
   }
 
   .poi {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
     align-items: center;
     background-color: #ffffff;
     print-color-adjust: exact;
@@ -182,7 +180,7 @@ body {
 
   .poi-details {
     padding: 15px;
-    width: 60%;
+    width: 90%;
     text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
     text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
     line-height: 1.1rem;
@@ -205,11 +203,9 @@ body {
   }
 
   .poi-feature-image {
-    width: 40%;
-    height: 300px;
-    padding: 0 10px;
+    width: 100%;
+    height: 100%;
     display: block;
-    border: px solid black;
   }
 
   .poi-feature-image img {
@@ -222,6 +218,7 @@ body {
 
   @page {
     margin: 0mm;
+    break-inside: auto;
   }
 }
 
