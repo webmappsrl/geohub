@@ -107,10 +107,7 @@ body {
 
   .track-feature-image-page {
     page-break-after: always;
-    width: 100%;
-    height: auto;
-    display: block;
-    text-align: center;
+    break-inside: auto;
   }
 
   .track-details {
@@ -152,8 +149,9 @@ body {
 
   .pois-page {
     page-break-after: always;
+    page-break-after: always;
+    break-inside: auto;
     padding: 0 25px;
-    display: block;
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
