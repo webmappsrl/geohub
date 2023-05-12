@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ConfTrait;
+use App\Traits\HasTranslationsFixed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,10 +25,10 @@ use Exception;
  */
 class App extends Model
 {
-    use HasFactory, ConfTrait, HasTranslations;
+    use HasFactory, ConfTrait, HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome'];
+    public array $translatable = ['welcome','tiles_label'];
 
     /**
      * The accessors to append to the model's array form.
