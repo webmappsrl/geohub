@@ -889,7 +889,7 @@ class EcTrack extends Model
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
                 "layers": ' . json_encode($layers) . ',
-                "filters":' . json_encode($filters) . '"
+                "filters":' . json_encode($filters) . '
               }';
 
         Log::info($postfields);
