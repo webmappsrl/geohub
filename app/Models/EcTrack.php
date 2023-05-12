@@ -809,12 +809,12 @@ class EcTrack extends Model
     }
     function buildFilters()
     {
-        $filters = (object)[];
+        $filters = [];
         if ($this->taxonomyActivities->count() > 0) {
-            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray(), true);
+            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
         }
         if ($this->taxonomyThemes()->count() > 0) {
-            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray(), true);
+            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray());
         }
         return $filters;
     }
