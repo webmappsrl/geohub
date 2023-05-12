@@ -33,17 +33,27 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-Route::get('/track/{id}',function($id){
+Route::get('/track/{id}', function ($id) {
     $track = EcTrack::find($id);
     if ($track == null) {
         abort(404);
     }
-    return view('track',[
+    return view('track', [
         'track' => $track
     ]);
 });
 
-Route::get('/osf/{endpoint_slug}/{source_id}',function($endpoint_slug, $source_id){
+Route::get('/track/pdf/{id}', function ($id) {
+    $track = EcTrack::find($id);
+    if ($track == null) {
+        abort(404);
+    }
+    return view('track-pdf', [
+        'track' => $track
+    ]);
+})->name('track.pdf');
+
+Route::get('/osf/{endpoint_slug}/{source_id}', function ($endpoint_slug, $source_id) {
     $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
 
     $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
@@ -53,23 +63,23 @@ Route::get('/osf/{endpoint_slug}/{source_id}',function($endpoint_slug, $source_i
     if ($track == null) {
         abort(404);
     }
-    return view('track',[
+    return view('track', [
         'track' => $track
     ]);
 });
 
-Route::get('/w/{type}/{id}',function($type,$id){
+Route::get('/w/{type}/{id}', function ($type, $id) {
     $track = EcTrack::find($id);
     if ($track == null) {
         abort(404);
     }
-    return view('widget',[
+    return view('widget', [
         'track' => $track,
         'type' => $type
     ]);
 });
 
-Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}',function($type,$endpoint_slug, $source_id){
+Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoint_slug, $source_id) {
     $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
 
     $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
@@ -78,7 +88,7 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}',function($type,$endpoint_
     if ($track == null) {
         abort(404);
     }
-    return view('widget',[
+    return view('widget', [
         'track' => $track,
         'type' => $type
     ]);

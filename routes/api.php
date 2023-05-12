@@ -31,6 +31,8 @@ use App\Models\UgcTrack;
 use App\Models\User;
 use Elasticsearch\Endpoints\AsyncSearch\Get;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +81,7 @@ Route::name('api.')->group(function () {
                 Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('media')->name('media.')->group(function () {
-                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                // Route::post("store", [UgcMediaController::class, 'store'])->name('store'); TODO: riabilitare quando fixato il bug
                 Route::get("index", function () {
                     return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
                 })->name('index');
@@ -275,6 +277,9 @@ Route::name('api.')->group(function () {
             Route::get("/wheres", function() {
                 return TaxonomyWhere::all()->pluck('updated_at','id')->toArray();
             })->name('export_wheres_list');
+            Route::get("/{app}/{name}", function($app,$name) {
+                return Storage::disk('importer')->get("geojson/$app/$name");
+            })->name('sardegnasentieriaree');
         });
     });
 
@@ -284,6 +289,9 @@ Route::name('api.')->group(function () {
     Route::prefix('osf')->name('osf.')->group(function () {
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getEcTrackFromSourceID'])->name('get_ectrack_from_source_id');
+        });
+        Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{endpoint_slug}/{source_id}", [EcPoiController::class, 'getEcPoiFromSourceID'])->name('get_ecpoi_from_source_id');
         });
     });
 });
