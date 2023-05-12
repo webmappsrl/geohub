@@ -193,10 +193,10 @@ class EcPoi extends Model
         $array = $this->setOutSourceValue();
 
         if ($array['name']) {
-            foreach($array['name'] as $lang => $val) {
+            foreach ($array['name'] as $lang => $val) {
                 if (empty($val) || !$val) {
                     unset($array['name'][$lang]);
-                } 
+                }
             }
         }
 
@@ -234,9 +234,9 @@ class EcPoi extends Model
 
         if ($this->user_id) {
             $user = User::find($this->user_id);
-            $array['author_email'] = $user->email; 
+            $array['author_email'] = $user->email;
         }
-        
+
         if ($this->featureImage)
             $array['feature_image'] = $this->featureImage->getJson($allData);
 
@@ -477,10 +477,14 @@ class EcPoi extends Model
         if (isset($geojson['properties']['taxonomy'])) {
             foreach ($geojson['properties']['taxonomy'] as $taxonomy => $values) {
                 $name = $taxonomy === 'poi_type' ? 'webmapp_category' : $taxonomy;
+                try {
 
-                $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                    return $name . '_' . $item;
-                }, $values);
+                    $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
+                        return $name . '_' . $item;
+                    }, $values);
+                } catch (Exception $e) {
+                    // TODO: viene generato durante indicizzazione capire perchè
+                }
             }
         }
 
