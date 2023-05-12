@@ -331,7 +331,6 @@ class App extends Resource
     {
         return [
             NovaTinymce5Editor::make('Page Project', 'page_project'),
-
         ];
     }
     protected function languages_tab(): array
@@ -348,18 +347,21 @@ class App extends Resource
     protected function map_tab(): array
     {
         $selectedTileLayers = is_null($this->model()->tiles) ? [] : json_decode($this->model()->tiles, true);
-        $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
+        // $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         $appTiles = new AppTiles();
-        $t = $appTiles->all();
+        $t = $appTiles->oldval();
         return [
-            Multiselect::make(__('Tiles'), 'tiles')->options(collect($appTiles->getConstants())->pluck('name','url')->toArray(), $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
-            Multiselect::make(__('Tiles'), 'tiles')->options([
-                "{\"notile\":\"\"}" => 'no tile',
-                "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
-                "{\"mute\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'mute',
-                "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
-                "{\"GOMBITELLI\":\"https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png\"}" => 'GOMBITELLI',
-            ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
+            NovaTabTranslatable::make([
+                Text::make('Tiles Label')
+            ]),
+            Multiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
+            // Multiselect::make(__('Tiles'), 'tiles')->options([
+            //     "{\"notile\":\"\"}" => 'no tile',
+            //     "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
+            //     "{\"mute\":\"http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png\"}" => 'mute',
+            //     "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
+            //     "{\"GOMBITELLI\":\"https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png\"}" => 'GOMBITELLI',
+            // ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(25)
