@@ -832,13 +832,11 @@ class EcTrack extends Model
             ->first()
             ->geom;
 
-        $filters = $this->buildFilters();
         $postfields = '{
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . ',
-                "filters":' . json_encode($filters) . '"
+                "layers": ' . json_encode($layers) . '
               }';
 
         Log::info($postfields);
@@ -883,13 +881,11 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
-        $filters = $this->buildFilters();
         $postfields = '{
                 "geometry" : ' . $geom . ',
                 "id": ' . $this->id . ',
                 "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . ',
-                "filters":' . json_encode($filters) . '
+                "layers": ' . json_encode($layers) . '
               }';
 
         Log::info($postfields);
