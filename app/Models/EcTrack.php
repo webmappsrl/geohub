@@ -807,17 +807,6 @@ class EcTrack extends Model
 
         curl_close($curl);
     }
-    function buildFilters()
-    {
-        $filters = [];
-        if ($this->taxonomyActivities->count() > 0) {
-            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
-        }
-        if ($this->taxonomyThemes()->count() > 0) {
-            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray());
-        }
-        return $filters;
-    }
 
     public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.006)
     {
@@ -833,12 +822,16 @@ class EcTrack extends Model
             ->geom;
 
         $postfields = '{
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . '
-              }';
-
+            "geometry" : ' . $geom . ',
+            "id": ' . $this->id . ',
+            "ref": "' . $this->ref . '",
+            "layers": ' . json_encode($layers) . ',
+            "distance": ' . $this->distance . ',
+            "duration_forward": ' . $this->duration_forward . ',
+            "ascent": ' . $this->ascent . ',
+            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+          }';
         Log::info($postfields);
 
         $curl = curl_init();
@@ -882,12 +875,16 @@ class EcTrack extends Model
             ->first()
             ->geom;
         $postfields = '{
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . '
-              }';
-
+            "geometry" : ' . $geom . ',
+            "id": ' . $this->id . ',
+            "ref": "' . $this->ref . '",
+            "layers": ' . json_encode($layers) . ',
+            "distance": ' . $this->distance . ',
+            "duration_forward": ' . $this->duration_forward . ',
+            "ascent": ' . $this->ascent . ',
+            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+          }';
         Log::info($postfields);
 
         $curl = curl_init();
