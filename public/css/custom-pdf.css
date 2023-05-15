@@ -216,9 +216,16 @@ body {
     align-self: first baseline;
   }
 
-  .poi-feature-image img {
+  .poi-feature-image .poi-image {
     width: 100%;
     height: 100%;
+  }
+
+  .poi-feature-image .app-logo {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: 30px;
   }
   body {
     margin: 0;

@@ -154,12 +154,13 @@
                                             @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
                                                 @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
                                                     @if ($key == '150x150')
-                                                        <img src="{{ $value }}" alt="">
+                                                        <img class="poi-image" src="{{ $value }}"
+                                                            alt="">
                                                     @endif
                                                 @endforeach
                                                 {{-- if not show app icon as image --}}
                                             @else
-                                                <img src="{{ $appIcon }}" alt="">
+                                                <img class="app-logo"src="{{ $appIcon }}" alt="">
                                             @endif
 
                                         </div>
