@@ -35,7 +35,7 @@
                 <p>{{ $track->name }}</p>
             </div>
         </div>
-        <div class="qr-code-container"> QR CODE</div>
+        <div class="qr-code-container"> Qr</div>
     </div>
     <div class="map">
         <feature-collection-widget-map geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
@@ -128,7 +128,7 @@
                             @endif
                             @if ($track->description)
                                 <div class="track-description">
-                                    <x-track.trackContentSection :track="$track" />
+                                    <x-track.pdfTrackContentSection :track="$track" />
 
                                 </div>
                             @endif
@@ -145,7 +145,7 @@
                                         {{-- create poi description --}}
                                         <div class="poi-details">
                                             <h3 class="poi-name">{{ $poi->name }}</h3>
-                                            <x-track.trackContentSection :track="$poi" />
+                                            <x-track.pdfTrackContentSection :track="$poi" />
                                             <hr class="poi-horizontal-rule">
                                         </div>
                                         {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
@@ -193,8 +193,7 @@
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/polyfills.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/main.js" defer>
-    </script>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
 </body>
 
 </html>
