@@ -28,7 +28,7 @@ class App extends Model
     use HasFactory, ConfTrait, HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome','tiles_label'];
+    public array $translatable = ['welcome', 'tiles_label'];
 
     /**
      * The accessors to append to the model's array form.
@@ -393,7 +393,7 @@ class App extends Model
                 'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+        if (str_contains(config('services.elastic.host'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
         $response = curl_exec($curl);
@@ -521,7 +521,7 @@ class App extends Model
                 'Authorization: Basic ' . config('services.elastic.key')
             ),
         ));
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
+        if (str_contains(config('services.elastic.host'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
         $response = curl_exec($curl);
