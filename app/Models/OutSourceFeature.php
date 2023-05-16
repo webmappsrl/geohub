@@ -11,7 +11,7 @@ class OutSourceFeature extends Model
     protected $table = 'out_source_features';
 
     protected $fillable = [
-        'provider','source_id','type','endpoint','raw_data','geometry','tags'
+        'provider','source_id','type','endpoint','raw_data','geometry','tags','endpoint_slug'
     ];
     
     protected $casts = [
