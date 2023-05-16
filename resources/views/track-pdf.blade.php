@@ -38,7 +38,7 @@
         <div class="qr-code-container"> Qr</div>
     </div>
     <div class="map">
-        <feature-collection-widget-map padding="40" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
+        <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
             geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
@@ -196,6 +196,12 @@
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
+    <script>
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+
 </body>
 
 </html>
