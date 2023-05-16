@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\EcTrack;
 use App\Http\Facades\OsmClient;
+use Exception;
 use Illuminate\Console\Command;
 
 class UpdateTrackFromOsm extends Command
@@ -57,8 +58,12 @@ class UpdateTrackFromOsm extends Command
         foreach ($tracks as $track) {
             if ($track->osmid != null) {
                 $this->info('Updating track ' . $track->name . ' (' . $track->osmid . ')' . '...');
-                //get the geojson data from OSM
-                $data = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
+                try {
+                    //get the geojson data from OSM
+                    $data = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
+                } catch (Exception $e) {
+                    $this->info('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
+                }
                 //update the $track name to the $data name coming from OSM
                 $names = json_decode($track->name, true);
                 if (key_exists('name',$data['properties']) && $data['properties']['name']) {
