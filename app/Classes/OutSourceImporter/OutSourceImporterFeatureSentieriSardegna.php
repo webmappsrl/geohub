@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symm\Gisconverter\Gisconverter;
 
 class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureAbstract { 
     use ImporterAndSyncTrait;
@@ -29,17 +30,28 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
-            $url = 'https://sentieri.netseven.work/ss/sentiero/'.$this->source_id.'?_format=json';
+            $url = 'https://sentieri.netseven.work/ss/track/'.$this->source_id.'?_format=json';
             $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url);
             $track = $response->json();
     
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."'))) As wkt")[0]->wkt;
-            $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."')))) As wkt")[0]->wkt;
+            $geometry = '';
+            
+            if (key_exists('geometry',$track)) {
+                $geometry = json_encode($track['geometry']);
+            } elseif (key_exists('gpx',$track)) {
+                $gpx_content = Http::get($track['gpx']);
+                $geometry = Gisconverter::gpxToGeojson($gpx_content);
+            } else {
+                throw new Exception('No Geometry found');
+            }
+            
+            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."'))) As wkt")[0]->wkt;
+            $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."')))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
-            $this->params['endpoint_slug'] = 'sardegna-sentieri-poi';
+            $this->params['endpoint_slug'] = 'sardegna-sentieri-track';
             // $this->params['raw_data'] = json_encode($track);
     
             // prepare the value of tags data
@@ -151,22 +163,36 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
 
         // Processing the theme
+        if ($track['type'] == 'itinerario') {
+            $this->tags['theme'][] = 'sardegnas-itinerario';
+        } else {
+            $this->tags['theme'][] = 'sardegnas-sentiero';
+        }
+
+        
+        // Processing the Activity
         if (isset($track['properties']['taxonomies'])) {
-            Log::info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
+            Log::info('Preparing OSF TRACK activity MAPPING with external ID: '.$this->source_id);
             
             $path = parse_url($this->endpoint);
             $file_name = str_replace('.','-',$path['host']);
             if (Storage::disk('mapping')->exists($file_name.'.json')) {
                 $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
 
-                if (!empty(json_decode($taxonomy_map,true)['theme'])) {
+                if (!empty(json_decode($taxonomy_map,true)['activity'])) {
                     foreach ($track['properties']['taxonomies'] as $tax => $idList) {
-                        if (is_array($idList)) {
-                            foreach ($idList as $id) {
-                                $this->tags['theme'][] = json_decode($taxonomy_map,true)['theme'][$id]['geohub_identifier'];
+                        if ($tax == 'tipologia_sentieri') {
+                            if (is_array($idList)) {
+                                foreach ($idList as $id) {
+                                    if (key_exists($id, json_decode($taxonomy_map,true)['activity'])) {
+                                        $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$id]['geohub_identifier'];
+                                    }
+                                }
+                            } else {
+                                if (key_exists($idList, json_decode($taxonomy_map,true)['activity'])) {
+                                    $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$idList]['geohub_identifier'];
+                                }
                             }
-                        } else {
-                            $this->tags['theme'][] = json_decode($taxonomy_map,true)['theme'][$idList]['geohub_identifier'];
                         }
                     }
                 }
@@ -230,9 +256,15 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
                 if (!empty(json_decode($taxonomy_map,true)['poi_type'])) {
                     foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
-                        foreach ($idList as $id) {
-                            Log::info('tax created : '.$id);
-                            $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                        if (in_array($tax,['servizi','tipologia_poi'])) {
+                            foreach ($idList as $id) {
+                                if (key_exists($id, json_decode($taxonomy_map,true)['poi_type'])) {
+                                    if (!json_decode($taxonomy_map,true)['poi_type'][$id]['skip']) {
+                                        Log::info('tax created : '.$id);
+                                        $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                                    }
+                                }
+                            }
                         }
                     }
                 }

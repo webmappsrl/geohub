@@ -774,8 +774,13 @@ class EcTrack extends Model
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
+                "duration_forward": ' . $this->duration_forward . ',
+                "ascent": ' . $this->ascent . ',
+                "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
                 "layers": ' . json_encode($layers) . '
               }';
+
 
         Log::info($postfields);
 
@@ -807,17 +812,6 @@ class EcTrack extends Model
 
         curl_close($curl);
     }
-    function buildFilters()
-    {
-        $filters = [];
-        if ($this->taxonomyActivities->count() > 0) {
-            $filters['activities'] = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
-        }
-        if ($this->taxonomyThemes()->count() > 0) {
-            $filters['themes'] = json_encode($this->taxonomyThemes->pluck('identifier')->toArray());
-        }
-        return $filters;
-    }
 
     public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.006)
     {
@@ -832,15 +826,17 @@ class EcTrack extends Model
             ->first()
             ->geom;
 
-        $filters = $this->buildFilters();
         $postfields = '{
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . ',
-                "filters":' . json_encode($filters) . '"
-              }';
-
+            "geometry" : ' . $geom . ',
+            "id": ' . $this->id . ',
+            "ref": "' . $this->ref . '",
+            "layers": ' . json_encode($layers) . ',
+            "distance": ' . $this->distance . ',
+            "duration_forward": ' . $this->duration_forward . ',
+            "ascent": ' . $this->ascent . ',
+            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+          }';
         Log::info($postfields);
 
         $curl = curl_init();
@@ -883,15 +879,17 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
-        $filters = $this->buildFilters();
         $postfields = '{
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "layers": ' . json_encode($layers) . ',
-                "filters":' . json_encode($filters) . '
-              }';
-
+            "geometry" : ' . $geom . ',
+            "id": ' . $this->id . ',
+            "ref": "' . $this->ref . '",
+            "layers": ' . json_encode($layers) . ',
+            "distance": ' . $this->distance . ',
+            "duration_forward": ' . $this->duration_forward . ',
+            "ascent": ' . $this->ascent . ',
+            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+          }';
         Log::info($postfields);
 
         $curl = curl_init();

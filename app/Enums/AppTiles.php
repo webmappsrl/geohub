@@ -18,7 +18,7 @@ class AppTiles
         'label' => [
             'it' => 'No Tiles'
         ],
-        'icon' => 'https://geohub.webmapp.it/storage/layers/notile.png',
+        'icon' => '',
         'url' => ""
     ];
     const webmapp = [
@@ -26,7 +26,7 @@ class AppTiles
         'label' => [
             'it' => 'Webmapp'
         ],
-        'icon' => 'https://geohub.webmapp.it/storage/layers/webmapp.png',
+        'icon' => 'https://geohub.webmapp.it/images/layers/webmapp.png',
         'url' => "https://api.webmapp.it/tiles/{z}/{x}/{y}.png"
     ];
     const mute = [
@@ -34,7 +34,7 @@ class AppTiles
         'label' => [
             'it' => 'Mute'
         ],
-        'icon' => 'https://geohub.webmapp.it/storage/layers/mute.png',
+        'icon' => 'https://geohub.webmapp.it/images/layers/mute.png',
         'url' => "http://tiles.webmapp.it/blankmap/{z}/{x}/{y}.png"
     ];
     const satellite = [
@@ -42,7 +42,7 @@ class AppTiles
         'label' => [
             'it' => 'Satellite'
         ],
-        'icon' => 'https://geohub.webmapp.it/storage/layers/satellite.png',
+        'icon' => 'https://geohub.webmapp.it/images/layers/satellite.png',
         'url' => "https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=0Z7ou7nfFFXipdDXHChf"
     ];
     const GOMBITELLI = [
@@ -50,7 +50,7 @@ class AppTiles
         'label' => [
             'it' => 'Gombitelli'
         ],
-        'icon' => 'https://geohub.webmapp.it/storage/layers/gombitelli.png',
+        'icon' => '',
         'url' => "https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png"
     ];
     
