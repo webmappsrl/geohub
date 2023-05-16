@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7c184e7eb7cdf0496371cd7de2a3f0f",
+    "content-hash": "311614cbac70df279cfd24ff267214ab",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -9897,7 +9897,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -9933,7 +9933,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -9969,7 +9969,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10005,7 +10005,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10041,7 +10041,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10180,7 +10180,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-hotfix/update_composer_lock",
+            "version": "dev-hotfix/caiparma_import_fix",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",
