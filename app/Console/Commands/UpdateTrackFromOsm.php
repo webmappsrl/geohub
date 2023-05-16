@@ -61,21 +61,26 @@ class UpdateTrackFromOsm extends Command
                 $data = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
                 //update the $track name to the $data name coming from OSM
                 $names = json_decode($track->name, true);
-                $names['it'] = $data['properties']['name'];
+                if (key_exists('name',$data['properties']) && $data['properties']['name']) {
+                    $names = [];
+                    $names['it'] = $data['properties']['name'];
+                }
                 $track->name = $names;
 
                 //check if ascent, descent, distance duration_forward and duration_backward are not null in the geojson data and if so, update the $track
-                $track->ascent = $data['properties']['ascent'] ? $data['properties']['ascent'] : $track->ascent;
-                $track->descent = $data['properties']['descent'] ? $data['properties']['descent'] : $track->descent;
-                $track->distance = $data['properties']['distance'] ? $data['properties']['distance'] : $track->distance;
+                $track->ascent = (key_exists('ascent',$data['properties']) && $data['properties']['ascent'] ) ? $data['properties']['ascent'] : $track->ascent;
+                $track->descent = (key_exists('descent',$data['properties']) && $data['properties']['descent'] ) ? $data['properties']['descent'] : $track->descent;
+                $track->distance = (key_exists('distance',$data['properties']) && $data['properties']['distance'] ) ?str_replace(',','.',$data['properties']['distance']) : $track->distance;
                 //duration forward must be converted to minutes
-                if ($data['properties']['duration:forward'] != null) {
-                    $duration_forward = explode(':', $data['properties']['duration:forward']);
+                if (key_exists('duration:forward',$data['properties']) && $data['properties']['duration:forward'] != null) {
+                    $duration_forward = str_replace('.',':',$data['properties']['duration:forward']);
+                    $duration_forward = explode(':', $duration_forward);
                     $track->duration_forward = ($duration_forward[0] * 60) + $duration_forward[1];
                 }
                 //same for duration_backward
-                if ($data['properties']['duration:backward'] != null) {
-                    $duration_backward = explode(':', $data['properties']['duration:backward']);
+                if (key_exists('duration:backward',$data['properties']) && $data['properties']['duration:backward'] != null) {
+                    $duration_backward = str_replace('.',':',$data['properties']['duration:forward']);
+                    $duration_backward = explode(':', $duration_backward);
                     $track->duration_backward = ($duration_backward[0] * 60) + $duration_backward[1];
                 }
                 $track->save();
