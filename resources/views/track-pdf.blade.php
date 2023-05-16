@@ -38,7 +38,7 @@
         <div class="qr-code-container"> Qr</div>
     </div>
     <div class="map">
-        <feature-collection-widget-map strokeColor="rgba(255, 92, 0, 1)"
+        <feature-collection-widget-map padding="40" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
             geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
