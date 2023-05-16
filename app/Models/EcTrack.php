@@ -774,7 +774,6 @@ class EcTrack extends Model
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
-                "distance": ' . $this->distance . ',
                 "duration_forward": ' . $this->duration_forward . ',
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
