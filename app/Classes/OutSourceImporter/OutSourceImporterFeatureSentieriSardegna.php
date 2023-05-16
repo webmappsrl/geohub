@@ -51,7 +51,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."')))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
-            $this->params['endpoint_slug'] = 'sardegna-sentieri-poi';
+            $this->params['endpoint_slug'] = 'sardegna-sentieri-track';
             // $this->params['raw_data'] = json_encode($track);
     
             // prepare the value of tags data
