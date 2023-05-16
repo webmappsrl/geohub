@@ -1,40 +1,14 @@
 @php
-    use Jenssegers\Agent\Agent;
+    
     use App\Models\App;
-    $agent = new Agent();
-    
-    $gallery = $track->ecMedia;
-    
-    $iosStore = '#';
-    $androidStore = '#';
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
     if (request('app_id')) {
         $app = App::find(request('app_id'));
-        $iosStore = $app->ios_store_link;
-        $androidStore = $app->android_store_link;
         $appName = $app->name;
-        if ($app->social_track_text) {
-            $format = $app->social_track_text;
-            preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
-            if (is_array($matches[0])) {
-                foreach ($matches[0] as $m) {
-                    $field = str_replace('{', '', $m);
-                    $field = str_replace('}', '', $field);
-                    $obj = explode('.', $field);
-                    if ($obj[0] == 'app') {
-                        $val = $app->name;
-                    }
-                    if ($obj[0] == 'track') {
-                        $val = $track->name;
-                    }
-                    $format = str_replace($m, $val, $format);
-                }
-            }
-            $appSocialText = $format;
-        }
         $appIcon = asset('storage/' . $app->icon_small);
+        $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
 @endphp
 
@@ -52,100 +26,150 @@
 </head>
 
 <body>
-    <div class="page-header">{{ $track->name }}</div>
+    <div class="map-header">
+        <div class="names">
+            <div class="app-name">
+                <p>{{ $appName }}</p>
+            </div>
+            <div class="track-name">
+                <p>{{ $track->name }}</p>
+            </div>
+        </div>
+        <div class="qr-code-container"> Qr</div>
+    </div>
     <div class="map">
-        <feature-collection-widget-map geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
+        <feature-collection-widget-map padding="40" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
+            geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
-    <div class="page-footer">
-        <tr>
-            @if ($track->related_url)
-                @foreach ($track->related_url as $key => $value)
-                    <span>Website: <strong>{{ $value }}</strong></span>
-                @endforeach
-            @endif
-            <td>Map data: © OpenStreetMap Contributors</td>
-            <td>Made By Webmapp</td>
-            <td>www.webmapp.it</td>
-        </tr>
-    </div>
+    <header class="pdf-header">
+        {{ $track->name }}
+    </header>
+    <footer class="pdf-footer">
+        <table>
+            <tr>
+                @if (isset($appUrl))
+                    <th>Visualizza la mappa interattiva:</th>
+                @endif
+                <th>Map Data: </th>
+                <th>Made By</th>
+            </tr>
+            <tr>
+                @if (isset($appUrl))
+                    <td>{{ $appUrl }}</td>
+                @endif
+                <td>© OpenStreetMap Contributors</td>
+                <td>Webmapp</td>
+            </tr>
+        </table>
+    </footer>
     <table>
         <thead>
             <tr>
                 <td>
-                    <!--place holder for the fixed-position header-->
-                    <div class="page-header-space"></div>
+                    <div class="header-space"></div>
                 </td>
             </tr>
         </thead>
-
         <tbody>
             <tr>
                 <td>
+                    {{-- If track has feature image or description then create the track page --}}
                     @if ($track->featureImage || $track->description)
-                        <div class="page">
+                        <div class="track-feature-image-page">
+                            <div class="track-details">
+                                @if ($track->taxonomyActivities->count() > 0)
+                                    <span><strong> Attività: </strong>
+                                        @foreach ($track->taxonomyActivities as $activity)
+                                            {{ $activity->name }}
+                                        @endforeach
+                                    </span>
+                                @endif
+                                @if (isset($track->ascent) && !empty($track->ascent))
+                                    <span> <strong> d+: </strong>
+                                        {{ $track->ascent . ' m' }}
+                                    </span>
+                                @endif
+                                @if (isset($track->descent) && !empty($track->descent))
+                                    <span> <strong> d-: </strong>
+                                        {{ $track->descent . ' m' }}
+                                    </span>
+                                @endif
+                                @if (isset($track->distance) && !empty($track->distance))
+                                    <span> <strong> Distanza: </strong>
+                                        {{ str_replace('.', ',', $track->distance) . ' km' }}
+                                    </span>
+                                @endif
+                                @if (isset($track->difficulty) && !empty($track->difficulty))
+                                    @php
+                                        $difficulty = json_decode(json_encode($track->difficulty), true);
+                                    @endphp
+                                    <span> <strong> Difficoltà: </strong>
+                                        {{ $difficulty }}
+                                    </span>
+                                @endif
+                                @if (isset($track->from) && !empty($track->from))
+                                    <span>
+                                        <strong>Da:
+                                        </strong> {{ $track->from }}
+                                    </span>
+                                @endif
+                                @if (isset($track->to) && !empty($track->to))
+                                    <span>
+                                        <strong>A: </strong>
+                                        {{ $track->to }}
+                                    </span>
+                                @endif
+                            </div>
+
                             @if ($track->featureImage)
                                 <div class="track-feature-image">
                                     <img src="{{ $track->featureImage->url }}" alt="">
                                 </div>
-                                <div class="details">
-                                    @if($track->from && $track->to)
-                                        <span>Da: <strong>{{ $track->from }}</strong></span>
-                                        <span>A: <strong>{{ $track->to }}</strong></span>
-                                    @endif
-                                    @if ($track->distance)
-                                        <span>Distanza: <strong>{{ $track->distance }} km</strong></span>
-                                    @endif
-                                    @if ($track->taxonomyActivities->count() > 0)
-                                        <span>Attività:
-                                            @foreach ($track->taxonomyActivities as $activity)
-                                                <strong>{{ $activity->name }}</strong>
-                                            @endforeach
-                                        </span>
-                                    @endif
-                                    @if ($track->ascent)
-                                        <span>Salita: <strong>{{ $track->ascent }} m</strong></span>
-                                    @endif
-                                    @if ($track->descent)
-                                        <span>Discesa: <strong>{{ $track->descent }} m</strong></span>
-                                    @endif
-                                </div>
                             @endif
                             @if ($track->description)
-                                <div class="description">
-                                    <x-track.trackContentSection :track="$track" />
+                                <div class="track-description">
+                                    <x-track.pdfTrackContentSection :track="$track" />
+
                                 </div>
                             @endif
                         </div>
                     @endif
-                    {{-- If track has pois and pois have images then show the related pois page --}}
-                    @if (
-                        $track->ecPois->count() > 0 &&
-                            $track->ecPois->every(function ($item, $key) {
-                                return $item->featureImage != null && $item->featureImage->thumbnails != null;
-                            }))
-                        <div class="page">
-                            <h2 class="poi-header">Punti di interesse</h2>
-                            <div class="poi-grid">
+                    {{-- If track has pois then create the pois page --}}
+                    @if ($track->ecPois->count() > 0)
+                        <div class="pois-page">
+                            <h2 class="pois-header">Punti di interesse</h2>
+                            <div class="pois-grid">
                                 @foreach ($track->ecPois as $poi)
+                                    {{-- create the poi container --}}
                                     <div class="poi">
+                                        {{-- create poi description --}}
                                         <div class="poi-details">
                                             <h3 class="poi-name">{{ $poi->name }}</h3>
-                                            <x-track.trackContentSection :track="$poi" />
+                                            <x-track.pdfTrackContentSection :track="$poi" />
+                                            <hr class="poi-horizontal-rule">
                                         </div>
+                                        {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
                                         <div class="poi-feature-image">
-                                            @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
-                                                @if ($key == '150x150')
-                                                    <img src="{{ $value }}" alt="">
-                                                @endif
-                                            @endforeach
-                                        </div>
+                                            @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
+                                                @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                                    @if ($key == '150x150')
+                                                        <img class="poi-image" src="{{ $value }}"
+                                                            alt="">
+                                                    @endif
+                                                @endforeach
+                                                {{-- if not show app icon as image --}}
+                                            @else
+                                                <img class="app-logo"src="{{ $appIcon }}" alt="">
+                                            @endif
 
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                     @endif
+
                 </td>
             </tr>
         </tbody>
@@ -153,7 +177,7 @@
             <tr>
                 <td>
                     <!--place holder for the fixed-position footer-->
-                    <div class="page-footer-space"></div>
+                    <div class="footer-space"></div>
                 </td>
             </tr>
         </tfoot>
@@ -166,12 +190,12 @@
 
 
 
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/runtime.js" defer>
+
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/polyfills.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/main.js" defer>
-    </script>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
 </body>
 
 </html>
