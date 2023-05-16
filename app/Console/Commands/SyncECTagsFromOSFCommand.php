@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
@@ -194,7 +195,7 @@ class SyncECTagsFromOSFCommand extends Command
         // Check the type
         Log::info('Checking paramtere TYPE');
         if (strtolower($this->type) == 'track' ||
-            strtolower($this->type) == 'poi'
+            strtolower($this->type) == 'poi' 
             ) {
                 $this->type = strtolower($this->type);
             } else {

@@ -451,6 +451,12 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track cai_scale.');                        
                         $ec_track->cai_scale = $out_source->tags['cai_scale'];
                     }
+                    
+                    // Adding osmid to Ec Track
+                    if ( !empty($out_source->tags['osmid']) && isset($out_source->tags['osmid'])) {
+                        Log::info('Attaching EC Track osmid.');                        
+                        $ec_track->osmid = $out_source->tags['osmid'];
+                    }
 
                     // Attach feature image to Track
                     if ( !empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
@@ -643,6 +649,10 @@ class SyncEcFromOutSource
                     $ec_storage_name = config('geohub.ec_media_storage_name');
                     $s3_osfmedia = Storage::disk($osf_storage_name);
                     Log::info('Creating EC Media.');
+                    $tag_description = '';
+                    if (key_exists('description',$out_source['tags'])) {
+                        $tag_description = $out_source['tags']['description'];
+                    }
                     $ec_media = EcMedia::updateOrCreate(
                         [
                             'out_source_feature_id' => $id,
@@ -652,6 +662,7 @@ class SyncEcFromOutSource
                             'name' => $this->generateName($out_source),
                             'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                             'url' => '',
+                            'description' => $tag_description
                         ]);
                     $new_media_name = $ec_media->id.'.'.explode('.',basename($out_source->tags['url']))[1];
                     Storage::disk($ec_storage_name)->put('ec_media/'.$new_media_name, $s3_osfmedia->get($out_source->tags['url']));
