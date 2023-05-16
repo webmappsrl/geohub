@@ -10,6 +10,7 @@ use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\HasDescription;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
+use App\Nova\Filters\SearchableFromOSMID;
 use App\Nova\Filters\SelectFromActivities;
 use App\Nova\Filters\SelectFromThemesTrack;
 use App\Nova\Filters\SelectFromWheresTrack;
@@ -44,6 +45,7 @@ use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
@@ -74,7 +76,7 @@ class EcTrack extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'ref'
+        'name', 'ref', 'osmid'
     ];
 
     /**
@@ -140,8 +142,7 @@ class EcTrack extends Resource
         if ($request->user()->can('Admin')) {
             return [
                 Text::make('Name', function () {
-                    $name = implode('<br />', explode("\n", wordwrap($this->name), 50));
-                    return $name . '<br />CAI scale: ' . $this->cai_scale;
+                    return implode('<br />', explode("\n", wordwrap($this->name), 50));
                 })->asHtml(),
                 BelongsTo::make('Author', 'author', User::class)->sortable(),
 
@@ -159,8 +160,7 @@ class EcTrack extends Resource
         } else {
             return [
                 Text::make('Name', function () {
-                    $name = implode('<br />', explode("\n", wordwrap($this->name), 50));
-                    return $name . '<br />CAI scale: ' . $this->cai_scale;
+                    return implode('<br />', explode("\n", wordwrap($this->name), 50));
                 })->asHtml(),
                 Boolean::make('Description', function () {
                     if ($this->description) {
@@ -227,6 +227,7 @@ class EcTrack extends Resource
                     }),
                     DateTime::make('Created At'),
                     DateTime::make('Updated At'),
+                    Number::make('OSM ID','osmid'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
@@ -461,7 +462,8 @@ class EcTrack extends Resource
                         ->nullable()
                         ->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
-                        })
+                        }),
+                    Number::make('OSM ID','osmid'),
                 ],
                 'Media' => [
 
@@ -575,6 +577,7 @@ class EcTrack extends Resource
     {
         if ($request->user()->hasRole('Editor')) {
             return [
+                new SearchableFromOSMID,
                 new HasFeatureImage,
                 new HasImageGallery,
                 new SelectFromActivities,
