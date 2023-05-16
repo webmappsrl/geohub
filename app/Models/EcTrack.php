@@ -778,7 +778,7 @@ class EcTrack extends Model
                 "duration_forward": ' . $this->duration_forward . ',
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
                 "layers": ' . json_encode($layers) . '
               }';
 
