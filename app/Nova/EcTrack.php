@@ -227,7 +227,7 @@ class EcTrack extends Resource
                     }),
                     DateTime::make('Created At'),
                     DateTime::make('Updated At'),
-                    Number::make('OSM ID','osmid'),
+                    Number::make('OSM ID', 'osmid'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
@@ -409,7 +409,7 @@ class EcTrack extends Resource
                     //show a link to the track-pdf.blade.php
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
-                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">View PDF</a>';
+                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">Generate PDF</a>';
                         })
                         ->asHtml()
                         ->onlyOnDetail()
@@ -461,7 +461,7 @@ class EcTrack extends Resource
                         ->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
                         }),
-                    Number::make('OSM ID','osmid'),
+                    Number::make('OSM ID', 'osmid'),
                 ],
                 'Media' => [
 
@@ -489,9 +489,9 @@ class EcTrack extends Resource
                 ],
                 'Related POIs' => [
                     Ecpoipopup::make(__('ecPoi'))
-                    ->nullable()
-                    ->onlyOnForms()
-                    ->feature($geojson ?? []),
+                        ->nullable()
+                        ->onlyOnForms()
+                        ->feature($geojson ?? []),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
@@ -539,7 +539,7 @@ class EcTrack extends Resource
                     'maxZoom' => 16,
                 ])
             ]),
-            
+
             // Do not remove below code, necessary for Edit mode  
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
 

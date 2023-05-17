@@ -11,6 +11,19 @@
         $appIcon = asset('storage/' . $app->icon_small);
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
+    
+    //function to cut long description at last period
+    // function truncateAtLastPeriod(string $text, int $maxLength = 2300): string
+    // {
+    //     if (strlen($text) > $maxLength) {
+    //         $lastPeriodPos = strrpos(substr($text, 0, $maxLength), '.');
+    //         $truncatedText = substr($text, 0, $lastPeriodPos + 1);
+    //         return $truncatedText;
+    //     }
+    
+    //     return $text;
+    // }
+    
 @endphp
 
 
@@ -27,16 +40,16 @@
 </head>
 
 <body>
-    <div class="print-layer">
+    {{-- <div class="print-layer">
         <button id="print-button" disabled>Generating PDF ...</button>
-    </div>
+    </div> --}}
     <div class="map-header">
         <div class="names">
             <div class="app-name">
-                <p>{{ Str::limit($appName, 25) }}</p>
+                <p>{{ Str::limit($appName, 23) }}</p>
             </div>
             <div class="track-name">
-                <p>{{ Str::limit($track->name, 30) }}</p>
+                <p>{{ Str::limit($track->name, 35) }}</p>
             </div>
         </div>
         <div class="qr-code-container"> Qr</div>
@@ -133,8 +146,8 @@
                             @endif
                             @if ($track->description)
                                 <div class="track-description">
-                                    <x-track.pdfTrackContentSection :track="$track" />
-
+                                    {{-- {!! truncateAtLastPeriod($track->description) !!} --}}
+                                    {!! $track->description !!}
                                 </div>
                             @endif
                         </div>
@@ -150,7 +163,11 @@
                                         {{-- create poi description --}}
                                         <div class="poi-details">
                                             <h3 class="poi-name">{{ $poi->name }}</h3>
-                                            <x-track.pdfTrackContentSection :track="$poi" />
+                                            <div class="poi-description">
+                                                {{-- {!! truncateAtLastPeriod($poi->description, 800) !!} --}}
+                                                {!! $poi->description !!}
+                                            </div>
+
                                             <hr class="poi-horizontal-rule">
                                         </div>
                                         {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
@@ -184,6 +201,7 @@
                     <div class="footer-space"></div>
                 </td>
             </tr>
+
         </tfoot>
     </table>
 
@@ -201,48 +219,22 @@
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
-    <script>
+    {{-- <script>
         //handling the loading of the map
-        document.addEventListener('DOMContentLoaded', function() {
-            let countdown = 6;
+        window.addEventListener('load', () => {
             let printButton = document.getElementById('print-button');
             let notReadyColor = '#be4d25'
-            let almostReadyColor = '#ffc300'
             let readyColor = '#49be25'
 
-            // Funzione per avviare la stampa
-            function startPrint() {
-                window.print();
-            }
 
-            // Funzione per avviare il countdown
-            function startCountdown() {
-                let timer = setInterval(function() {
-                    printButton.style.backgroundColor = notReadyColor;
+            window.print();
 
-                    countdown--;
-
-                    if (countdown <= 3) {
-                        document.getElementById('print-button').textContent = 'Almost ready ...';
-                        printButton.style.backgroundColor = almostReadyColor;
-                    }
-
-                    if (countdown <= 0) {
-                        clearInterval(timer);
-                        document.getElementById('print-button').removeAttribute('disabled');
-                        document.getElementById('print-button').textContent = 'Print';
-                        printButton.style.backgroundColor = readyColor;
-                    }
-                }, 1000);
-            }
-
-            startCountdown();
 
             printButton.addEventListener('click', function() {
-                startPrint();
+                window.print();
             });
-        });
-    </script>
+        })
+    </script> --}}
 
 </body>
 
