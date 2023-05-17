@@ -1,6 +1,7 @@
 @php
     
     use App\Models\App;
+    use Illuminate\Support\Str;
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
@@ -27,15 +28,15 @@
 
 <body>
     <div class="print-layer">
-        <button id="print-button" disabled>Generating PDF in ... <span id="countdown">3</span></button>
+        <button id="print-button" disabled>Generating PDF ...</button>
     </div>
     <div class="map-header">
         <div class="names">
             <div class="app-name">
-                <p>{{ $appName }}</p>
+                <p>{{ Str::limit($appName, 25) }}</p>
             </div>
             <div class="track-name">
-                <p>{{ $track->name }}</p>
+                <p>{{ Str::limit($track->name, 30) }}</p>
             </div>
         </div>
         <div class="qr-code-container"> Qr</div>
@@ -203,8 +204,11 @@
     <script>
         //handling the loading of the map
         document.addEventListener('DOMContentLoaded', function() {
-            let countdownElement = document.getElementById('countdown');
-            let countdown = 3;
+            let countdown = 6;
+            let printButton = document.getElementById('print-button');
+            let notReadyColor = '#be4d25'
+            let almostReadyColor = '#ffc300'
+            let readyColor = '#49be25'
 
             // Funzione per avviare la stampa
             function startPrint() {
@@ -214,21 +218,27 @@
             // Funzione per avviare il countdown
             function startCountdown() {
                 let timer = setInterval(function() {
+                    printButton.style.backgroundColor = notReadyColor;
+
                     countdown--;
-                    countdownElement.textContent = countdown;
+
+                    if (countdown <= 3) {
+                        document.getElementById('print-button').textContent = 'Almost ready ...';
+                        printButton.style.backgroundColor = almostReadyColor;
+                    }
 
                     if (countdown <= 0) {
                         clearInterval(timer);
-                        countdownElement.textContent = '';
                         document.getElementById('print-button').removeAttribute('disabled');
                         document.getElementById('print-button').textContent = 'Print';
+                        printButton.style.backgroundColor = readyColor;
                     }
                 }, 1000);
             }
 
             startCountdown();
 
-            document.getElementById('print-button').addEventListener('click', function() {
+            printButton.addEventListener('click', function() {
                 startPrint();
             });
         });

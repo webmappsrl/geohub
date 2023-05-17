@@ -33,16 +33,12 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px 30px;
-  background-color: #ff5c00;
+  background-color: #be4d25;
   color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 34px;
   cursor: pointer;
-}
-
-#print-button:hover {
-  background-color: #ff8f47;
 }
 
 @media print {
