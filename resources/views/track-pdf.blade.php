@@ -1,6 +1,7 @@
 @php
     
     use App\Models\App;
+    use Illuminate\Support\Str;
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
@@ -10,6 +11,19 @@
         $appIcon = asset('storage/' . $app->icon_small);
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
+    
+    //function to cut long description at last period
+    // function truncateAtLastPeriod(string $text, int $maxLength = 2300): string
+    // {
+    //     if (strlen($text) > $maxLength) {
+    //         $lastPeriodPos = strrpos(substr($text, 0, $maxLength), '.');
+    //         $truncatedText = substr($text, 0, $lastPeriodPos + 1);
+    //         return $truncatedText;
+    //     }
+    
+    //     return $text;
+    // }
+    
 @endphp
 
 
@@ -26,19 +40,22 @@
 </head>
 
 <body>
+    {{-- <div class="print-layer">
+        <button id="print-button" disabled>Generating PDF ...</button>
+    </div> --}}
     <div class="map-header">
         <div class="names">
             <div class="app-name">
-                <p>{{ $appName }}</p>
+                <p>{{ Str::limit($appName, 23) }}</p>
             </div>
             <div class="track-name">
-                <p>{{ $track->name }}</p>
+                <p>{{ Str::limit($track->name, 35) }}</p>
             </div>
         </div>
         <div class="qr-code-container"> Qr</div>
     </div>
     <div class="map">
-        <feature-collection-widget-map padding="40" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
+        <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
             geojsonurl="https://geohub.webmapp.it/api/ec/track/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
@@ -129,8 +146,8 @@
                             @endif
                             @if ($track->description)
                                 <div class="track-description">
-                                    <x-track.pdfTrackContentSection :track="$track" />
-
+                                    {{-- {!! truncateAtLastPeriod($track->description) !!} --}}
+                                    {!! $track->description !!}
                                 </div>
                             @endif
                         </div>
@@ -146,7 +163,11 @@
                                         {{-- create poi description --}}
                                         <div class="poi-details">
                                             <h3 class="poi-name">{{ $poi->name }}</h3>
-                                            <x-track.pdfTrackContentSection :track="$poi" />
+                                            <div class="poi-description">
+                                                {{-- {!! truncateAtLastPeriod($poi->description, 800) !!} --}}
+                                                {!! $poi->description !!}
+                                            </div>
+
                                             <hr class="poi-horizontal-rule">
                                         </div>
                                         {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
@@ -180,8 +201,10 @@
                     <div class="footer-space"></div>
                 </td>
             </tr>
+
         </tfoot>
     </table>
+
 
 
 
@@ -196,6 +219,23 @@
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
+    {{-- <script>
+        //handling the loading of the map
+        window.addEventListener('load', () => {
+            let printButton = document.getElementById('print-button');
+            let notReadyColor = '#be4d25'
+            let readyColor = '#49be25'
+
+
+            window.print();
+
+
+            printButton.addEventListener('click', function() {
+                window.print();
+            });
+        })
+    </script> --}}
+
 </body>
 
 </html>
