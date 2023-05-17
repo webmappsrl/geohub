@@ -764,7 +764,7 @@ class EcTrack extends Model
 
         $calculated_duration_forward = $this->duration_forward;
         if (empty($this->duration_forward)) {
-            $calculated_duration_forward = "";
+            $calculated_duration_forward = "1";
         }
 
         $postfields = '{
