@@ -298,8 +298,8 @@ class EcTrack extends Model
                 $array['image_gallery'] = $gallery;
         }
 
-        if (isset($this->outSourceTrack->tags['osmid'])) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->outSourceTrack->tags['osmid'];
+        if (isset($this->osmid)) {
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->osmid;
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
@@ -383,6 +383,11 @@ class EcTrack extends Model
 
         if (isset($array['difficulty']) && is_array($array['difficulty']) && is_null($array['difficulty']) === false && count(array_keys($array['difficulty'])) === 1 && isset(array_values($array['difficulty'])[0]) === false) {
             $array['difficulty'] = null;
+        }
+
+        if ($this->allow_print_pdf) {
+            $pdf_url = url('/track/pdf/'.$this->id);
+            $array['related_url']['Print PDF'] = $pdf_url;
         }
 
         return $array;

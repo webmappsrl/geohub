@@ -238,6 +238,7 @@ class EcTrack extends Resource
                     Text::make('Audio', function () {
                         $this->audio;
                     }),
+                    Boolean::make('Allow print PDF for this track','allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     Text::make('Related Url', function () {
                         $out = '';
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
@@ -480,7 +481,7 @@ class EcTrack extends Resource
                         ->onlyOnForms()
                         ->feature($geojson ?? [])
                         ->apiBaseUrl('/api/ec/track/'),
-
+                    Boolean::make('Allow print PDF for this track','allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     KeyValue::make('Related Url')
                         ->keyLabel('Label')
                         ->valueLabel('Url with https://')
@@ -494,7 +495,7 @@ class EcTrack extends Resource
                     ->feature($geojson ?? []),
                 ],
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech'),
+                    Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
                     Text::make('Ref'),
                     Text::make('From'),
                     Text::make('To'),
