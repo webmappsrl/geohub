@@ -762,6 +762,10 @@ class EcTrack extends Model
             $properties = null;
         }
 
+        $calculated_duration_forward = $this->duration_forward;
+        if (empty($this->duration_forward)) {
+            $calculated_duration_forward = "";
+        }
 
         $postfields = '{
                 "properties": ' . json_encode($properties) . ',
@@ -779,7 +783,7 @@ class EcTrack extends Model
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
-                "duration_forward": ' . $this->duration_forward . ',
+                "duration_forward": ' . $calculated_duration_forward . ',
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
