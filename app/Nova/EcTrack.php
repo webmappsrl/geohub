@@ -200,12 +200,12 @@ class EcTrack extends Resource
                     return 'No themes';
                 })->asHtml(),
 
-                Text::make('Wheres', function () {
-                    if ($this->taxonomyWheres()->count() > 0) {
-                        return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
-                    }
-                    return 'No wheres';
-                })->asHtml(),
+                // Text::make('Wheres', function () {
+                //     if ($this->taxonomyWheres()->count() > 0) {
+                //         return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
+                //     }
+                //     return 'No wheres';
+                // })->asHtml(),
 
                 // Text::make('API', function () {
                 //     return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
