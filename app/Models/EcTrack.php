@@ -764,7 +764,7 @@ class EcTrack extends Model
 
         $calculated_duration_forward = $this->duration_forward;
         if (empty($this->duration_forward)) {
-            $calculated_duration_forward = "1";
+            $calculated_duration_forward = "";
         }
 
         $postfields = '{
@@ -835,13 +835,18 @@ class EcTrack extends Model
             ->first()
             ->geom;
 
+        $calculated_duration_forward = $this->duration_forward;
+        if (empty($this->duration_forward)) {
+            $calculated_duration_forward = "";
+        }
+
         $postfields = '{
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $calculated_duration_forward . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
@@ -888,13 +893,19 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
+        
+        $calculated_duration_forward = $this->duration_forward;
+        if (empty($this->duration_forward)) {
+            $calculated_duration_forward = "";
+        }
+
         $postfields = '{
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $calculated_duration_forward . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
