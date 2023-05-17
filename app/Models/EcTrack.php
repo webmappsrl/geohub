@@ -930,7 +930,7 @@ class EcTrack extends Model
     public function setDurationForwardEmpty() {
         $duration = $this->duration_forward;
         if (empty($this->duration_forward)) {
-            $duration = "";
+            $duration = 0;
         }
         return $duration;
     }
