@@ -26,6 +26,9 @@
 </head>
 
 <body>
+    <div class="print-layer">
+        <button id="print-button" disabled>Generating PDF in ... <span id="countdown">3</span></button>
+    </div>
     <div class="map-header">
         <div class="names">
             <div class="app-name">
@@ -191,15 +194,44 @@
 
 
 
+
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
     <script>
-        window.onload = function() {
-            window.print();
-        };
+        //handling the loading of the map
+        document.addEventListener('DOMContentLoaded', function() {
+            let countdownElement = document.getElementById('countdown');
+            let countdown = 3;
+
+            // Funzione per avviare la stampa
+            function startPrint() {
+                window.print();
+            }
+
+            // Funzione per avviare il countdown
+            function startCountdown() {
+                let timer = setInterval(function() {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        countdownElement.textContent = '';
+                        document.getElementById('print-button').removeAttribute('disabled');
+                        document.getElementById('print-button').textContent = 'Print';
+                    }
+                }, 1000);
+            }
+
+            startCountdown();
+
+            document.getElementById('print-button').addEventListener('click', function() {
+                startPrint();
+            });
+        });
     </script>
 
 </body>
