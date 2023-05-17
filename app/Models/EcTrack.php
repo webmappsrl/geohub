@@ -762,11 +762,6 @@ class EcTrack extends Model
             $properties = null;
         }
 
-        $calculated_duration_forward = $this->duration_forward;
-        if (empty($this->duration_forward)) {
-            $calculated_duration_forward = "1";
-        }
-
         $postfields = '{
                 "properties": ' . json_encode($properties) . ',
                 "geometry" : ' . $geom . ',
@@ -783,7 +778,7 @@ class EcTrack extends Model
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
-                "duration_forward": ' . $calculated_duration_forward . ',
+                "duration_forward": ' . $this->setDurationForwardEmpty() . ',
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
@@ -841,7 +836,7 @@ class EcTrack extends Model
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
@@ -888,13 +883,15 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
+    
+
         $postfields = '{
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
@@ -928,5 +925,13 @@ class EcTrack extends Model
         Log::info($response);
 
         curl_close($curl);
+    }
+
+    public function setDurationForwardEmpty() {
+        $duration = $this->duration_forward;
+        if (empty($this->duration_forward)) {
+            $duration = "";
+        }
+        return $duration;
     }
 }
