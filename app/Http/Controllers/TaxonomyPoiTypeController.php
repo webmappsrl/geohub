@@ -46,17 +46,4 @@ class TaxonomyPoiTypeController extends Controller
 
         return response()->json($taxonomyPoiType, 200);
     }
-
-    /**
-     * Get all TaxonomyPoiType
-     * 
-     * 
-     */
-
-    public function index()
-    {
-        $taxonomyPoiTypes = TaxonomyPoiType::all();
-
-        return TaxonomyPoiTypeResource::collection($taxonomyPoiTypes);
-    }
 }

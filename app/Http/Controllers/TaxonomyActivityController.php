@@ -46,14 +46,4 @@ class TaxonomyActivityController extends Controller
 
         return response()->json($taxonomyActivity, 200);
     }
-    /**
-     * Get all TaxonomyActivity
-     * 
-     */
-    public function index()
-    {
-        $taxonomyActivities = TaxonomyActivity::all();
-
-        return TaxonomyActivityResource::collection($taxonomyActivities);
-    }
 }
