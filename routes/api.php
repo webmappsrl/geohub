@@ -281,6 +281,7 @@ Route::name('api.')->group(function () {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
             Route::get("/activities", [TaxonomyActivityController::class, 'index'])->name('export_activities');
+            Route::get("/poi_types", [TaxonomyPoiTypeController::class, 'index'])->name('export_poi_types');
         });
     });
 
