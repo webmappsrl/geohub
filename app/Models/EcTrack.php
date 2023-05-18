@@ -280,6 +280,10 @@ class EcTrack extends Model
             }
         }
 
+        if ($this->color) {
+            $array['track_color'] = $this->color;
+        }
+
         if ($this->user_id) {
             $user = User::find($this->user_id);
             $array['author_email'] = $user->email;
@@ -386,7 +390,7 @@ class EcTrack extends Model
         }
 
         if ($this->allow_print_pdf) {
-            $pdf_url = url('/track/pdf/'.$this->id);
+            $pdf_url = url('/track/pdf/' . $this->id);
             $array['related_url']['Print PDF'] = $pdf_url;
         }
 
@@ -883,7 +887,7 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
-    
+
 
         $postfields = '{
             "geometry" : ' . $geom . ',
@@ -927,7 +931,8 @@ class EcTrack extends Model
         curl_close($curl);
     }
 
-    public function setDurationForwardEmpty() {
+    public function setDurationForwardEmpty()
+    {
         $duration = $this->duration_forward;
         if (empty($this->duration_forward)) {
             $duration = 0;
