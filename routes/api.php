@@ -280,7 +280,7 @@ Route::name('api.')->group(function () {
             Route::get("/{app}/{name}", function ($app, $name) {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
-            Route::get("/activity", [TaxonomyActivityController::class, 'exportAllActivities'])->name('export_activities');
+            Route::get("/activities", [TaxonomyActivityController::class, 'index'])->name('export_activities');
         });
     });
 

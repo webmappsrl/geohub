@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaxonomyActivityResource;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Http\JsonResponse;
 use App\Models\TaxonomyActivity;
@@ -46,17 +47,13 @@ class TaxonomyActivityController extends Controller
         return response()->json($taxonomyActivity, 200);
     }
     /**
-     * Get All TaxonomyActivities
+     * Get all TaxonomyActivity
      * 
-     * @return JsonResponse return all TaxonomyActivities
      */
-    public function exportAllActivities(): JsonResponse
+    public function index()
     {
-        $taxonomyActivities = TaxonomyActivity::select('id', 'name', 'identifier')->get();
-        if (is_null($taxonomyActivities)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        }
+        $taxonomyActivities = TaxonomyActivity::all();
 
-        return response()->json($taxonomyActivities, 200);
+        return TaxonomyActivityResource::collection($taxonomyActivities);
     }
 }
