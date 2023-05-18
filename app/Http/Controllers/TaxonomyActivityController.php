@@ -45,4 +45,18 @@ class TaxonomyActivityController extends Controller
 
         return response()->json($taxonomyActivity, 200);
     }
+    /**
+     * Get All TaxonomyActivities
+     * 
+     * @return JsonResponse return all TaxonomyActivities
+     */
+    public function exportAllActivities(): JsonResponse
+    {
+        $taxonomyActivities = TaxonomyActivity::select('id', 'name', 'identifier')->get();
+        if (is_null($taxonomyActivities)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($taxonomyActivities, 200);
+    }
 }

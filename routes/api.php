@@ -272,14 +272,15 @@ Route::name('api.')->group(function () {
         })->name('export_admins');
         Route::get("/tracks/{email?}", [EcTrackController::class, 'exportTracksByAuthorEmail'])->name('exportTracksByAuthorEmail');
         Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
-        Route::prefix('taxonomy')->name('taxonomy.')->group(function () { 
+        Route::prefix('taxonomy')->name('taxonomy.')->group(function () {
             Route::get("/themes", [TaxonomyThemeController::class, 'exportAllThemes'])->name('export_themes');
-            Route::get("/wheres", function() {
-                return TaxonomyWhere::all()->pluck('updated_at','id')->toArray();
+            Route::get("/wheres", function () {
+                return TaxonomyWhere::all()->pluck('updated_at', 'id')->toArray();
             })->name('export_wheres_list');
-            Route::get("/{app}/{name}", function($app,$name) {
+            Route::get("/{app}/{name}", function ($app, $name) {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
+            Route::get("/activity", [TaxonomyActivityController::class, 'exportAllActivities'])->name('export_activities');
         });
     });
 
