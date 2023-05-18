@@ -786,7 +786,9 @@ class EcTrack extends Model
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . '
+                "layers": ' . json_encode($layers) . ',
+                "track_color": ' . $this->setColorEmpty() . '
+                
               }';
 
 
@@ -938,5 +940,14 @@ class EcTrack extends Model
             $duration = 0;
         }
         return $duration;
+    }
+
+    public function setColorEmpty()
+    {
+        $color = $this->color;
+        if (empty($this->color)) {
+            $color = '';
+        }
+        return $color;
     }
 }
