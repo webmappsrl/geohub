@@ -41,9 +41,9 @@ class EcTrack extends Model
         'descent',
         'duration_forward',
         'duration_backward',
-        'skip_geomixer_tech'
+        'skip_geomixer_tech',
     ];
-    public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
+    public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n'];
 
     /**
      * The attributes that should be cast.
@@ -386,7 +386,7 @@ class EcTrack extends Model
         }
 
         if ($this->allow_print_pdf) {
-            $pdf_url = url('/track/pdf/'.$this->id);
+            $pdf_url = url('/track/pdf/' . $this->id);
             $array['related_url']['Print PDF'] = $pdf_url;
         }
 
@@ -883,7 +883,7 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
-    
+
 
         $postfields = '{
             "geometry" : ' . $geom . ',
@@ -927,7 +927,8 @@ class EcTrack extends Model
         curl_close($curl);
     }
 
-    public function setDurationForwardEmpty() {
+    public function setDurationForwardEmpty()
+    {
         $duration = $this->duration_forward;
         if (empty($this->duration_forward)) {
             $duration = 0;
