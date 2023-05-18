@@ -122,7 +122,7 @@ body {
   }
 
   .pdf-footer table {
-    width: 90%;
+    width: 100%;
   }
 
   thead {
@@ -263,6 +263,9 @@ body {
   @page {
     margin: 0mm;
     break-inside: auto;
+  }
+  .track-feature-image-page:last-child {
+    page-break-after: auto;
   }
 }
 

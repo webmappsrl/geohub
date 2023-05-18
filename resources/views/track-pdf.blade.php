@@ -12,18 +12,6 @@
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
     
-    //function to cut long description at last period
-    // function truncateAtLastPeriod(string $text, int $maxLength = 2300): string
-    // {
-    //     if (strlen($text) > $maxLength) {
-    //         $lastPeriodPos = strrpos(substr($text, 0, $maxLength), '.');
-    //         $truncatedText = substr($text, 0, $lastPeriodPos + 1);
-    //         return $truncatedText;
-    //     }
-    
-    //     return $text;
-    // }
-    
 @endphp
 
 
@@ -41,7 +29,7 @@
 
 <body>
     {{-- <div class="print-layer">
-        <button id="print-button" disabled>Generating PDF ...</button>
+        <button id="print-button">Generating PDF ...</button>
     </div> --}}
     <div class="map-header">
         <div class="names">
@@ -205,36 +193,27 @@
         </tfoot>
     </table>
 
-
-
-
-
-
-
-
-
-
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
-    {{-- <script>
+    <script defer>
         //handling the loading of the map
-        window.addEventListener('load', () => {
-            let printButton = document.getElementById('print-button');
-            let notReadyColor = '#be4d25'
-            let readyColor = '#49be25'
-
-
+        window.onload = (event) => {
+            // let printButton = document.getElementById('print-button');
+            // let notReadyColor = '#be4d25'
+            // let readyColor = '#49be25'
+    
+            // printButton.innerHTML= 'Print';
+            // printButton.style.backgroundColor = readyColor;
             window.print();
-
-
+    
             printButton.addEventListener('click', function() {
                 window.print();
             });
-        })
-    </script> --}}
+        };
+        </script>
 
 </body>
 
