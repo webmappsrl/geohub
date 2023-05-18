@@ -200,12 +200,12 @@ class EcTrack extends Resource
                     return 'No themes';
                 })->asHtml(),
 
-                Text::make('Wheres', function () {
-                    if ($this->taxonomyWheres()->count() > 0) {
-                        return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
-                    }
-                    return 'No wheres';
-                })->asHtml(),
+                // Text::make('Wheres', function () {
+                //     if ($this->taxonomyWheres()->count() > 0) {
+                //         return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
+                //     }
+                //     return 'No wheres';
+                // })->asHtml(),
 
                 // Text::make('API', function () {
                 //     return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
@@ -227,7 +227,7 @@ class EcTrack extends Resource
                     }),
                     DateTime::make('Created At'),
                     DateTime::make('Updated At'),
-                    Number::make('OSM ID','osmid'),
+                    Number::make('OSM ID', 'osmid'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
@@ -238,6 +238,7 @@ class EcTrack extends Resource
                     Text::make('Audio', function () {
                         $this->audio;
                     }),
+                    Boolean::make('Allow print PDF for this track','allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     Text::make('Related Url', function () {
                         $out = '';
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
@@ -411,7 +412,7 @@ class EcTrack extends Resource
                     //show a link to the track-pdf.blade.php
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
-                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">View PDF</a>';
+                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">Generate PDF</a>';
                         })
                         ->asHtml()
                         ->onlyOnDetail()
@@ -463,7 +464,7 @@ class EcTrack extends Resource
                         ->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
                         }),
-                    Number::make('OSM ID','osmid'),
+                    Number::make('OSM ID', 'osmid'),
                 ],
                 'Media' => [
 
@@ -482,7 +483,7 @@ class EcTrack extends Resource
                         ->onlyOnForms()
                         ->feature($geojson ?? [])
                         ->apiBaseUrl('/api/ec/track/'),
-
+                    Boolean::make('Allow print PDF for this track','allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     KeyValue::make('Related Url')
                         ->keyLabel('Label')
                         ->valueLabel('Url with https://')
@@ -496,7 +497,7 @@ class EcTrack extends Resource
                         ->feature($geojson ?? []),
                 ],
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech'),
+                    Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
                     Text::make('Ref'),
                     Text::make('From'),
                     Text::make('To'),

@@ -298,8 +298,8 @@ class EcTrack extends Model
                 $array['image_gallery'] = $gallery;
         }
 
-        if (isset($this->outSourceTrack->tags['osmid'])) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->outSourceTrack->tags['osmid'];
+        if (isset($this->osmid)) {
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->osmid;
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
@@ -383,6 +383,11 @@ class EcTrack extends Model
 
         if (isset($array['difficulty']) && is_array($array['difficulty']) && is_null($array['difficulty']) === false && count(array_keys($array['difficulty'])) === 1 && isset(array_values($array['difficulty'])[0]) === false) {
             $array['difficulty'] = null;
+        }
+
+        if ($this->allow_print_pdf) {
+            $pdf_url = url('/track/pdf/'.$this->id);
+            $array['related_url']['Print PDF'] = $pdf_url;
         }
 
         return $array;
@@ -757,7 +762,6 @@ class EcTrack extends Model
             $properties = null;
         }
 
-
         $postfields = '{
                 "properties": ' . json_encode($properties) . ',
                 "geometry" : ' . $geom . ',
@@ -774,7 +778,7 @@ class EcTrack extends Model
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
-                "duration_forward": ' . $this->duration_forward . ',
+                "duration_forward": ' . $this->setDurationForwardEmpty() . ',
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
@@ -832,7 +836,7 @@ class EcTrack extends Model
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
@@ -879,13 +883,15 @@ class EcTrack extends Model
             )
             ->first()
             ->geom;
+    
+
         $postfields = '{
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->duration_forward . ',
+            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
@@ -919,5 +925,13 @@ class EcTrack extends Model
         Log::info($response);
 
         curl_close($curl);
+    }
+
+    public function setDurationForwardEmpty() {
+        $duration = $this->duration_forward;
+        if (empty($this->duration_forward)) {
+            $duration = 0;
+        }
+        return $duration;
     }
 }

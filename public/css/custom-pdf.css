@@ -16,7 +16,35 @@ body {
   z-index: 9;
 }
 
+.print-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 9999;
+  display: block;
+}
+
+#print-button {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 30px;
+  background-color: #be4d25;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 34px;
+  cursor: pointer;
+}
+
 @media print {
+  .print-layer {
+    display: none;
+  }
   .map-header {
     text-align: left;
     width: 55%;
@@ -63,7 +91,6 @@ body {
   .footer-space {
     height: 50px;
     padding-bottom: 15px;
-    background-color: rgba(0, 0, 0, 0);
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
@@ -71,7 +98,7 @@ body {
   .pdf-header {
     position: fixed;
     top: 0mm;
-    width: 65%;
+    width: 75%;
     font-weight: bold;
     font-size: 24px;
     text-align: left;
@@ -84,10 +111,10 @@ body {
     position: fixed;
     justify-content: space-between;
     bottom: 0;
-    width: 100%;
+    width: 90%;
     text-align: right;
     font-size: 0.7rem;
-    margin: 0 20px;
+    margin: 20px 20px 0 20px;
     padding: 0.5rem;
     background-color: transparent;
     print-color-adjust: exact;
@@ -95,7 +122,7 @@ body {
   }
 
   .pdf-footer table {
-    width: 90%;
+    width: 100%;
   }
 
   thead {
@@ -139,6 +166,8 @@ body {
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    page-break-before: auto;
+    page-break-inside: auto;
   }
 
   .track-feature-image {
@@ -234,6 +263,9 @@ body {
   @page {
     margin: 0mm;
     break-inside: auto;
+  }
+  .track-feature-image-page:last-child {
+    page-break-after: auto;
   }
 }
 
