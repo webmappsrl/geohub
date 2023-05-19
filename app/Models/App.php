@@ -28,7 +28,7 @@ class App extends Model
     use HasFactory, ConfTrait, HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label'];
+    public array $translatable = ['welcome', 'tiles_label','overlays_label'];
 
     /**
      * The accessors to append to the model's array form.
@@ -63,6 +63,11 @@ class App extends Model
     public function layers()
     {
         return $this->hasMany(Layer::class);
+    }
+
+    public function overlayLayers()
+    {
+        return $this->hasMany(OverlayLayer::class);
     }
 
     public function ugc_medias()

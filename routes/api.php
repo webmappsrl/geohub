@@ -263,7 +263,7 @@ Route::name('api.')->group(function () {
     });
 
     // Export API 
-    Route::prefix('export')->name('v1.app.')->group(function () {
+    Route::prefix('export')->name('export.')->group(function () {
         Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
         Route::get("/editors", function () {
             return User::whereHas('roles', function ($q) {
@@ -282,15 +282,18 @@ Route::name('api.')->group(function () {
             Route::get("/wheres", function () {
                 return TaxonomyWhere::all()->pluck('updated_at', 'id')->toArray();
             })->name('export_wheres_list');
-            Route::get("/{app}/{name}", function ($app, $name) {
-                return Storage::disk('importer')->get("geojson/$app/$name");
-            })->name('sardegnasentieriaree');
             Route::get("/activities", function () {
                 return TaxonomyActivityResource::collection(TaxonomyActivity::all());
             })->name('export_activities');
             Route::get("/poi_types", function () {
                 return TaxonomyPoiTypeResource::collection(TaxonomyPoiType::all());
             })->name('export_poi_types');
+            Route::get("/{app}/{name}", function ($app, $name) {
+                return Storage::disk('importer')->get("geojson/$app/$name");
+            })->name('sardegnasentieriaree');
+            Route::get("/{geojson}/{app}/{name}", function($geojson,$app,$name) {
+                return Storage::disk('public')->get("$geojson/$app/$name");
+            })->name('getOverlaysPath');
         });
     });
 

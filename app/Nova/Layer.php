@@ -191,8 +191,14 @@ class Layer extends Resource
                     Boolean::make('Show Label', 'show_label'),
                 ],
                 'STYLE' => [
-                    Swatches::make('Color', 'color')->default('#de1b0d'),
-                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
+                    Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                        'show-fallback' => true,
+                        'fallback-type' => 'input',
+                    ]),
+                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                        'show-fallback' => true,
+                        'fallback-type' => 'input',
+                    ]),
                     Number::make('Fill Opacity', 'fill_opacity'),
                     Number::make('Stroke Width', 'stroke_width'),
                     Number::make('Stroke Opacity', 'stroke_opacity'),

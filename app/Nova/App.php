@@ -247,6 +247,7 @@ class App extends Resource
             'TABLE' => $this->table_tab(),
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
+            'OVERLAYS' => $this->overlayLayers_tab(),
         ];
     }
 
@@ -354,7 +355,7 @@ class App extends Resource
             NovaTabTranslatable::make([
                 Text::make('Tiles Label')
             ]),
-            Multiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
+            Multiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('Select which tile layers will be used by the app, the order is the same as the insertion order, so the last one inserted will be the one visible first')),
             // Multiselect::make(__('Tiles'), 'tiles')->options([
             //     "{\"notile\":\"\"}" => 'no tile',
             //     "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
@@ -958,6 +959,26 @@ class App extends Resource
                     return $out;
                 } else {
                     return 'No Layers';
+                }
+            })->asHtml(),
+        ];
+    }
+
+    protected function overlayLayers_tab(): array
+    {
+        return [
+            NovaTabTranslatable::make([
+                Text::make('Overlays Label','overlays_label')
+            ]),
+            Text::make('Overlay Layer', function () {
+                if ($this->overlayLayers->count() > 0) {
+                    $out = '';
+                    foreach ($this->overlayLayers as $l) {
+                        $out .= '<a href="/resources/overlay-layers/' . $l->id . '">' . $l->name . '</a></br>';
+                    }
+                    return $out;
+                } else {
+                    return 'No Overlay Layers';
                 }
             })->asHtml(),
         ];
