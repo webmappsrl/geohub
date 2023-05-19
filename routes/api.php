@@ -258,7 +258,7 @@ Route::name('api.')->group(function () {
     });
 
     // Export API 
-    Route::prefix('export')->name('v1.app.')->group(function () {
+    Route::prefix('export')->name('export.')->group(function () {
         Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
         Route::get("/editors", function () {
             return User::whereHas('roles', function ($q) {
@@ -280,6 +280,9 @@ Route::name('api.')->group(function () {
             Route::get("/{app}/{name}", function($app,$name) {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
+            Route::get("/{geojson}/{app}/{name}", function($geojson,$app,$name) {
+                return Storage::disk('public')->get("$geojson/$app/$name");
+            })->name('getOverlaysPath');
         });
     });
 

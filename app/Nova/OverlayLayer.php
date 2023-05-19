@@ -24,7 +24,7 @@ class OverlayLayer extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -32,7 +32,7 @@ class OverlayLayer extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'id','name'
     ];
 
     /**
@@ -43,24 +43,26 @@ class OverlayLayer extends Resource
      */
     public function fields(Request $request)
     {
+        // $app_name = str_replace(' ','-',strtolower($this->app->name));
+        $app_name = $this->app_id;
         return [
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('name'),
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
             ]),
+            BelongsTo::make('App', 'app', App::class)
+                ->searchable()
+                ->hideFromIndex(),
             File::make('File', 'feature_collection')
                 ->disk('public')
+                ->path('geojson/'.$app_name)
                 ->acceptedTypes(['.json', '.geojson'])
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
-                    return $request->name . '.geojson';
+                    return $request->feature_collection->getClientOriginalName();
                 }),
-            BelongsTo::make('App', 'app', App::class)
-                ->searchable()
-                ->nullable()
-                ->hideFromIndex()
-                ->showCreateRelationButton()
+            Text::make('Icon Name','icon'),
         ];
     }
 

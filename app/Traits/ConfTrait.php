@@ -5,8 +5,10 @@ namespace App\Traits;
 use App\Enums\AppTiles;
 use App\Models\App;
 use App\Models\EcMedia;
+use App\Models\OverlayLayer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 trait ConfTrait
 {
@@ -22,21 +24,21 @@ trait ConfTrait
 
         $data = [];
 
-        $data = array_merge($data, $this->config_section_app());
-        $data = array_merge($data, $this->config_section_webapp());
-        $data = array_merge($data, $this->config_section_home());
-        $data = array_merge($data, $this->config_section_languages());
-        $data = array_merge($data, $this->config_section_map());
+        // $data = array_merge($data, $this->config_section_app());
+        // $data = array_merge($data, $this->config_section_webapp());
+        // $data = array_merge($data, $this->config_section_home());
+        // $data = array_merge($data, $this->config_section_languages());
+        // $data = array_merge($data, $this->config_section_map());
         $data = array_merge($data, $this->config_section_controls());
-        $data = array_merge($data, $this->config_section_project());
-        $data = array_merge($data, $this->config_section_theme());
-        $data = array_merge($data, $this->config_section_options());
-        $data = array_merge($data, $this->config_section_tables());
-        $data = array_merge($data, $this->config_section_routing());
-        $data = array_merge($data, $this->config_section_report());
-        $data = array_merge($data, $this->config_section_geolocation());
-        $data = array_merge($data, $this->config_section_auth());
-        $data = array_merge($data, $this->config_section_offline());
+        // $data = array_merge($data, $this->config_section_project());
+        // $data = array_merge($data, $this->config_section_theme());
+        // $data = array_merge($data, $this->config_section_options());
+        // $data = array_merge($data, $this->config_section_tables());
+        // $data = array_merge($data, $this->config_section_routing());
+        // $data = array_merge($data, $this->config_section_report());
+        // $data = array_merge($data, $this->config_section_geolocation());
+        // $data = array_merge($data, $this->config_section_auth());
+        // $data = array_merge($data, $this->config_section_offline());
 
         return $data;
     }
@@ -302,8 +304,9 @@ trait ConfTrait
     {
         $data = [];
         // CONTROLS section
-        $appTiles = new AppTiles();
 
+        // Tiles 
+        $appTiles = new AppTiles();
         $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
         $ta = array_map(function ($v) use ($appTiles) {
             $v = json_decode($v,true);
@@ -313,6 +316,23 @@ trait ConfTrait
         }, json_decode($this->tiles, true));
         array_push($data['CONTROLS']['tiles'],...$ta);
         
+        // Overlays
+        if ($this->overlayLayers->count() > 0) {
+            $data['CONTROLS']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
+            $overlays = array_map(function ($overlay){
+                $array = [];
+                $array['label'] = OverlayLayer::find($overlay['id'])->getTranslations('label');
+                if (!empty($overlay['icon'])) {
+                    $array['icon'] = "https://geohub.webmapp.it/images/layers/".$overlay['icon'];
+                }
+                if (!empty($overlay['feature_collection'])) {
+                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/',$overlay['feature_collection']));
+                }
+                $array['type'] = 'button';
+                return $array;
+            }, json_decode($this->overlayLayers, true));
+            array_push($data['CONTROLS']['overlays'],...$overlays);
+        }
         return $data;
     }
 
