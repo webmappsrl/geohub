@@ -29,7 +29,6 @@ trait ConfTrait
         $data = array_merge($data, $this->config_section_home());
         $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
-        $data = array_merge($data, $this->config_section_controls());
         $data = array_merge($data, $this->config_section_project());
         $data = array_merge($data, $this->config_section_theme());
         $data = array_merge($data, $this->config_section_options());
@@ -292,19 +291,6 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
 
-        return $data;
-    }
-
-    /**
-     * @param 
-     *
-     * @return array
-     */
-    private function config_section_controls(): array
-    {
-        $data = [];
-        // CONTROLS section
-
         // Tiles 
         if ($this->tiles && !empty(json_decode($this->tiles, true)) ) {
             $appTiles = new AppTiles();
@@ -335,6 +321,7 @@ trait ConfTrait
             }, json_decode($this->overlayLayers, true));
             array_push($data['MAP']['controls']['overlays'],...$overlays);
         }
+
         return $data;
     }
 
