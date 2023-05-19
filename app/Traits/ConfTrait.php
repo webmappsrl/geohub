@@ -306,15 +306,17 @@ trait ConfTrait
         // CONTROLS section
 
         // Tiles 
-        $appTiles = new AppTiles();
-        $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
-        $ta = array_map(function ($v) use ($appTiles) {
-            $v = json_decode($v,true);
-            $tile = $appTiles->getConstant(key($v));
-            $tile['type'] = 'button';
-            return $tile;
-        }, json_decode($this->tiles, true));
-        array_push($data['CONTROLS']['tiles'],...$ta);
+        if ($this->tiles && !empty(json_decode($this->tiles, true)) ) {
+            $appTiles = new AppTiles();
+            $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
+            $ta = array_map(function ($v) use ($appTiles) {
+                $v = json_decode($v,true);
+                $tile = $appTiles->getConstant(key($v));
+                $tile['type'] = 'button';
+                return $tile;
+            }, json_decode($this->tiles, true));
+            array_push($data['CONTROLS']['tiles'],...$ta);
+        }
         
         // Overlays
         if ($this->overlayLayers->count() > 0) {
