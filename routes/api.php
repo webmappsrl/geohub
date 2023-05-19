@@ -1,38 +1,43 @@
 <?php
 
-use App\Http\Controllers\AppElbrusEditorialContentController;
+use App\Models\User;
+use App\Models\UgcPoi;
+use App\Models\UgcMedia;
+use App\Models\UgcTrack;
+use Illuminate\Http\Request;
+use App\Models\TaxonomyWhere;
+use App\Models\TaxonomyPoiType;
+use App\Models\TaxonomyActivity;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppController;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
+use App\Http\Resources\UgcPoiCollection;
+use App\Http\Controllers\EcPoiController;
+use App\Http\Controllers\UgcPoiController;
+use App\Http\Controllers\WalletController;
+use App\Http\Resources\UgcMediaCollection;
 use App\Http\Controllers\EcTrackController;
 use App\Http\Controllers\LayerAPIController;
+use App\Http\Controllers\UgcMediaController;
+use App\Http\Controllers\UgcTrackController;
+use Elasticsearch\Endpoints\AsyncSearch\Get;
+use App\Http\Controllers\V1\AppAPIController;
+use App\Http\Controllers\WebmappAppController;
+use App\Http\Resources\TaxonomyPoiTypeResource;
+use App\Http\Controllers\TaxonomyWhenController;
+use App\Http\Resources\TaxonomyActivityResource;
+use App\Http\Controllers\TaxonomyThemeController;
+use App\Http\Controllers\TaxonomyWhereController;
+use App\Http\Controllers\TaxonomyTargetController;
+use App\Http\Resources\TaxonomyActivityCollection;
+use App\Http\Controllers\TaxonomyPoiTypeController;
 use App\Http\Controllers\EditorialContentController;
 use App\Http\Controllers\TaxonomyActivityController;
-use App\Http\Controllers\TaxonomyPoiTypeController;
-use App\Http\Controllers\TaxonomyTargetController;
-use App\Http\Controllers\TaxonomyThemeController;
-use App\Http\Controllers\TaxonomyWhenController;
-use App\Http\Controllers\TaxonomyWhereController;
 use App\Http\Controllers\AppElbrusTaxonomyController;
-use App\Http\Controllers\AppController;
-use App\Http\Controllers\EcPoiController;
-use App\Http\Controllers\UgcMediaController;
-use App\Http\Controllers\UgcPoiController;
-use App\Http\Controllers\UgcTrackController;
-use App\Http\Controllers\WalletController;
-use App\Http\Controllers\WebmappAppController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGeneratedDataController;
-use App\Http\Controllers\V1\AppAPIController;
-use App\Http\Resources\UgcMediaCollection;
-use App\Http\Resources\UgcPoiCollection;
-use App\Models\TaxonomyWhere;
-use App\Models\UgcMedia;
-use App\Models\UgcPoi;
-use App\Models\UgcTrack;
-use App\Models\User;
-use Elasticsearch\Endpoints\AsyncSearch\Get;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AppElbrusEditorialContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -258,7 +263,7 @@ Route::name('api.')->group(function () {
     });
 
     // Export API 
-    Route::prefix('export')->name('v1.app.')->group(function () {
+    Route::prefix('export')->name('export.')->group(function () {
         Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
         Route::get("/editors", function () {
             return User::whereHas('roles', function ($q) {
@@ -272,14 +277,23 @@ Route::name('api.')->group(function () {
         })->name('export_admins');
         Route::get("/tracks/{email?}", [EcTrackController::class, 'exportTracksByAuthorEmail'])->name('exportTracksByAuthorEmail');
         Route::get("/pois/{email?}", [EcPoiController::class, 'exportPoisByAuthorEmail'])->name('exportPoisByAuthorEmail');
-        Route::prefix('taxonomy')->name('taxonomy.')->group(function () { 
+        Route::prefix('taxonomy')->name('taxonomy.')->group(function () {
             Route::get("/themes", [TaxonomyThemeController::class, 'exportAllThemes'])->name('export_themes');
-            Route::get("/wheres", function() {
-                return TaxonomyWhere::all()->pluck('updated_at','id')->toArray();
+            Route::get("/wheres", function () {
+                return TaxonomyWhere::all()->pluck('updated_at', 'id')->toArray();
             })->name('export_wheres_list');
-            Route::get("/{app}/{name}", function($app,$name) {
+            Route::get("/activities", function () {
+                return TaxonomyActivityResource::collection(TaxonomyActivity::all());
+            })->name('export_activities');
+            Route::get("/poi_types", function () {
+                return TaxonomyPoiTypeResource::collection(TaxonomyPoiType::all());
+            })->name('export_poi_types');
+            Route::get("/{app}/{name}", function ($app, $name) {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
+            Route::get("/{geojson}/{app}/{name}", function($geojson,$app,$name) {
+                return Storage::disk('public')->get("$geojson/$app/$name");
+            })->name('getOverlaysPath');
         });
     });
 

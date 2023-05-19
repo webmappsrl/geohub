@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaxonomyActivityResource;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Http\JsonResponse;
 use App\Models\TaxonomyActivity;

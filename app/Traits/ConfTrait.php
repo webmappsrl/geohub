@@ -5,8 +5,10 @@ namespace App\Traits;
 use App\Enums\AppTiles;
 use App\Models\App;
 use App\Models\EcMedia;
+use App\Models\OverlayLayer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 trait ConfTrait
 {
@@ -163,7 +165,7 @@ trait ConfTrait
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
             } catch (\Exception $e) {
-                Log::warning("The overlays in the app " . $this->$id . " are not correctly mapped. Error: " . $e->getMessage());
+                Log::warning("The overlays in the app " . $this->id . " are not correctly mapped. Error: " . $e->getMessage());
             }
         }
 
@@ -302,17 +304,37 @@ trait ConfTrait
     {
         $data = [];
         // CONTROLS section
-        $appTiles = new AppTiles();
 
-        $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
-        $ta = array_map(function ($v) use ($appTiles) {
-            $v = json_decode($v,true);
-            $tile = $appTiles->getConstant(key($v));
-            $tile['type'] = 'button';
-            return $tile;
-        }, json_decode($this->tiles, true));
-        array_push($data['CONTROLS']['tiles'],...$ta);
+        // Tiles 
+        if ($this->tiles && !empty(json_decode($this->tiles, true)) ) {
+            $appTiles = new AppTiles();
+            $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
+            $ta = array_map(function ($v) use ($appTiles) {
+                $v = json_decode($v,true);
+                $tile = $appTiles->getConstant(key($v));
+                $tile['type'] = 'button';
+                return $tile;
+            }, json_decode($this->tiles, true));
+            array_push($data['CONTROLS']['tiles'],...$ta);
+        }
         
+        // Overlays
+        if ($this->overlayLayers->count() > 0) {
+            $data['CONTROLS']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
+            $overlays = array_map(function ($overlay){
+                $array = [];
+                $array['label'] = OverlayLayer::find($overlay['id'])->getTranslations('label');
+                if (!empty($overlay['icon'])) {
+                    $array['icon'] = $overlay['icon'];
+                }
+                if (!empty($overlay['feature_collection'])) {
+                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/',$overlay['feature_collection']));
+                }
+                $array['type'] = 'button';
+                return $array;
+            }, json_decode($this->overlayLayers, true));
+            array_push($data['CONTROLS']['overlays'],...$overlays);
+        }
         return $data;
     }
 
