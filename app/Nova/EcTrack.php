@@ -279,8 +279,11 @@ class EcTrack extends Resource
                 ],
                 'Scale' => [
                     Text::make('Difficulty'),
-                    Text::make('Cai Scale')
-                ],
+                    Text::make('Cai Scale'),
+                    NovaTabTranslatable::make([
+                        Text::make('Difficulty I18n')
+                    ])
+                    ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
@@ -510,7 +513,9 @@ class EcTrack extends Resource
                         'EE' => 'Per escursionisti esperti (EE)',
                         'EEA' => 'Alpinistico (EEA)'
                     ]),
-                ],
+                    NovaTabTranslatable::make([
+                        Text::make('Difficulty I18n')
+                    ]),                ],
                 'Taxonomies' => [
                     Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();

@@ -12,14 +12,18 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
-class TaxonomyActivity extends Model {
+class TaxonomyActivity extends Model
+{
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['identifier','name']; 
-    
+    protected $fillable = ['identifier', 'name'];
+
+    protected $casts = ['name' => 'array'];
+
     public $translatable = ['name', 'description', 'excerpt'];
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         static::creating(function ($taxonomyActivity) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -37,7 +41,8 @@ class TaxonomyActivity extends Model {
         parent::save($options);
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
         static::creating(function ($taxonomyActivity) {
             if ($taxonomyActivity->identifier != null) {
@@ -49,28 +54,34 @@ class TaxonomyActivity extends Model {
         });
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ecMedia() {
+    public function ecMedia()
+    {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_activityable');
     }
 
-    public function ecTracks() {
+    public function ecTracks()
+    {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_activityable');
     }
 
-    public function layers(): MorphToMany {
+    public function layers(): MorphToMany
+    {
         return $this->morphedByMany(Layer::class, 'taxonomy_activityable');
     }
 
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message) {
+    private static function validationError($message)
+    {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
@@ -82,7 +93,8 @@ class TaxonomyActivity extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $json = $this->toArray();
 
         unset($json['pivot']);

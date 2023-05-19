@@ -41,9 +41,9 @@ class EcTrack extends Model
         'descent',
         'duration_forward',
         'duration_backward',
-        'skip_geomixer_tech'
+        'skip_geomixer_tech',
     ];
-    public $translatable = ['name', 'description', 'excerpt', 'difficulty'];
+    public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n'];
 
     /**
      * The attributes that should be cast.
