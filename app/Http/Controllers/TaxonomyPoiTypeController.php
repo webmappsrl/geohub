@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\GeometryFeatureTrait;
-use Illuminate\Http\JsonResponse;
 use App\Models\TaxonomyPoiType;
+use Illuminate\Http\JsonResponse;
+use App\Traits\GeometryFeatureTrait;
+use App\Http\Resources\TaxonomyPoiTypeResource;
 
 class TaxonomyPoiTypeController extends Controller
 {
