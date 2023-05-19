@@ -62,11 +62,12 @@ class OverlayLayer extends Resource
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
-                }),
+                })
+                ->hideWhenCreating(),
             Text::make('Icon','icon', function () {
                 return "<div style='width:64px;height:64px;'>".$this->icon."</div>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('Icon SVG','icon')->onlyOnForms(),
+            Textarea::make('Icon SVG','icon')->onlyOnForms()->hideWhenCreating(),
         ];
     }
 
