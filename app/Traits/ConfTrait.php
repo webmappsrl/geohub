@@ -308,19 +308,19 @@ trait ConfTrait
         // Tiles 
         if ($this->tiles && !empty(json_decode($this->tiles, true)) ) {
             $appTiles = new AppTiles();
-            $data['CONTROLS']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
+            $data['MAP']['controls']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
             $ta = array_map(function ($v) use ($appTiles) {
                 $v = json_decode($v,true);
                 $tile = $appTiles->getConstant(key($v));
                 $tile['type'] = 'button';
                 return $tile;
             }, json_decode($this->tiles, true));
-            array_push($data['CONTROLS']['tiles'],...$ta);
+            array_push($data['MAP']['controls']['tiles'],...$ta);
         }
         
         // Overlays
         if ($this->overlayLayers->count() > 0) {
-            $data['CONTROLS']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
+            $data['MAP']['controls']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
             $overlays = array_map(function ($overlay){
                 $array = [];
                 $array['label'] = OverlayLayer::find($overlay['id'])->getTranslations('label');
@@ -333,7 +333,7 @@ trait ConfTrait
                 $array['type'] = 'button';
                 return $array;
             }, json_decode($this->overlayLayers, true));
-            array_push($data['CONTROLS']['overlays'],...$overlays);
+            array_push($data['MAP']['controls']['overlays'],...$overlays);
         }
         return $data;
     }
