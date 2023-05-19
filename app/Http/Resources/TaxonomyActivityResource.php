@@ -14,10 +14,11 @@ class TaxonomyActivityResource extends JsonResource
      */
     public function toArray($request)
     {
-        //todo fix name, it only displays in default language (it).
+        $name = $this->attributes('name')->data['name'];
+
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $name,
             'identifier' => $this->identifier,
         ];
     }
