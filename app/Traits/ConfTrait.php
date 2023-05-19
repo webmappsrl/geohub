@@ -165,7 +165,7 @@ trait ConfTrait
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
             } catch (\Exception $e) {
-                Log::warning("The overlays in the app " . $this->$id . " are not correctly mapped. Error: " . $e->getMessage());
+                Log::warning("The overlays in the app " . $this->id . " are not correctly mapped. Error: " . $e->getMessage());
             }
         }
 
@@ -323,7 +323,7 @@ trait ConfTrait
                 $array = [];
                 $array['label'] = OverlayLayer::find($overlay['id'])->getTranslations('label');
                 if (!empty($overlay['icon'])) {
-                    $array['icon'] = "https://geohub.webmapp.it/images/layers/".$overlay['icon'];
+                    $array['icon'] = $overlay['icon'];
                 }
                 if (!empty($overlay['feature_collection'])) {
                     $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/',$overlay['feature_collection']));
