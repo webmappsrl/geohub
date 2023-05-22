@@ -28,9 +28,9 @@
 </head>
 
 <body>
-    {{-- <div class="print-layer">
-        <button id="print-button">Generating PDF ...</button>
-    </div> --}}
+    <div class="print-layer">
+        <button id="print-button" class="print-button" disabled>Generating PDF ...</button>
+    </div>
     <div class="map-header">
         <div class="names">
             <div class="app-name">
@@ -144,7 +144,6 @@
                     @if ($track->ecPois->count() > 0)
                         <div class="pois-page">
                             <h2 class="pois-header">Punti di interesse</h2>
-                            <div class="pois-grid">
                                 @foreach ($track->ecPois as $poi)
                                     {{-- create the poi container --}}
                                     <div class="poi">
@@ -175,7 +174,6 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            </div>
                         </div>
                     @endif
 
@@ -201,13 +199,18 @@
     <script defer>
         //handling the loading of the map
         window.onload = (event) => {
-            // let printButton = document.getElementById('print-button');
-            // let notReadyColor = '#be4d25'
-            // let readyColor = '#49be25'
+            let printButton = document.getElementById('print-button');
+            let notReadyColor = '#be4d25'
+            let readyColor = '#4da73a'
     
-            // printButton.innerHTML= 'Print';
-            // printButton.style.backgroundColor = readyColor;
-            window.print();
+            // https://stackoverflow.com/questions/62832750/print-page-once-the-page-is-completely-loaded
+
+            setTimeout(() => {
+                printButton.innerHTML= 'Print';
+                printButton.style.backgroundColor = readyColor;
+                printButton.disabled = false;
+                    window.print();
+            }, "6000");
     
             printButton.addEventListener('click', function() {
                 window.print();
