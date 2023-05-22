@@ -2,14 +2,18 @@
 
 namespace App\Nova;
 
+
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
+use NovaAttachMany\AttachMany;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Textarea;
+use Nova\Multiselect\Multiselect;
 
 class OverlayLayer extends Resource
 {
@@ -33,7 +37,7 @@ class OverlayLayer extends Resource
      * @var array
      */
     public static $search = [
-        'id','name'
+        'id', 'name'
     ];
 
     /**
@@ -57,17 +61,21 @@ class OverlayLayer extends Resource
                 ->hideFromIndex(),
             File::make('File', 'feature_collection')
                 ->disk('public')
-                ->path('geojson/'.$app_name)
+                ->path('geojson/' . $app_name)
                 ->acceptedTypes(['.json', '.geojson'])
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
                 ->hideWhenCreating(),
-            Text::make('Icon','icon', function () {
-                return "<div style='width:64px;height:64px;'>".$this->icon."</div>";
+            Text::make('Icon', 'icon', function () {
+                return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('Icon SVG','icon')->onlyOnForms()->hideWhenCreating(),
+            Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
+            AttachMany::make('Layers', 'layers', Layer::class)
+                ->hideFromIndex()
+                ->hideWhenCreating(),
+            //TODO add a method to filter the choices in the select field
         ];
     }
 

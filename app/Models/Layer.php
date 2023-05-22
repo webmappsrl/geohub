@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
+use App\Models\OverlayLayer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
-use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Layer extends Model
 {
@@ -64,6 +65,11 @@ class Layer extends Model
     {
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable')
             ->withPivot(['duration_forward', 'duration_backward']);
+    }
+
+    public function overlayLayer()
+    {
+        return $this->belongsTo(OverlayLayer::class);
     }
 
     public function getTracks()
