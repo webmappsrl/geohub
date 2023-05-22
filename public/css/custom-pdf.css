@@ -27,7 +27,7 @@ body {
   display: block;
 }
 
-#print-button {
+.print-button {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -39,6 +39,14 @@ body {
   border-radius: 5px;
   font-size: 34px;
   cursor: pointer;
+}
+
+.print-button:disabled {
+  cursor: not-allowed;
+  pointer-events: all !important;
+}
+.print-button:enabled:hover {
+  box-shadow: 3px 3px 9px #c3c1c1;
 }
 
 @media print {
@@ -98,7 +106,7 @@ body {
   .pdf-header {
     position: fixed;
     top: 0mm;
-    width: 75%;
+    width: 100%;
     font-weight: bold;
     font-size: 24px;
     text-align: left;
@@ -138,10 +146,10 @@ body {
     page-break-after: always;
   }
 
-  .track-feature-image-page {
+  /* .track-feature-image-page {
     page-break-after: always;
     break-inside: auto;
-  }
+  } */
 
   .track-details {
     font-size: 18px;
@@ -193,12 +201,12 @@ body {
     font-size: 2rem;
   }
 
-  .pois-grid {
+  /* .pois-grid {
     display: flex;
     flex-direction: column;
     grid-template-columns: 1fr 1fr;
     grid-row-gap: 1rem;
-  }
+  } */
 
   .poi {
     display: grid;
@@ -207,7 +215,9 @@ body {
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
-    break-inside: avoid;
+    /* break-inside: avoid; */
+    page-break-after: always;
+    break-inside: auto;
   }
 
   .poi-details {
@@ -235,6 +245,7 @@ body {
 
   .poi-name {
     font-size: 1.7rem;
+    line-height: 1.7rem;
     font-weight: bold;
   }
 
@@ -265,6 +276,9 @@ body {
     break-inside: auto;
   }
   .track-feature-image-page:last-child {
+    page-break-after: auto;
+  }
+  .poi:last-child {
     page-break-after: auto;
   }
 }
