@@ -72,7 +72,7 @@ class OverlayLayer extends Resource
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
-            AttachMany::make('Layers', 'layers', Layer::class)
+            HasMany::make('Layers', 'layers', Layer::class)
                 ->hideFromIndex()
                 ->hideWhenCreating(),
             //TODO add a method to filter the choices in the select field

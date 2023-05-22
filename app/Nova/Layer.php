@@ -213,6 +213,7 @@ class Layer extends Resource
                     AttachMany::make('TaxonomyThemes'),
                     AttachMany::make('TaxonomyTargets'),
                     AttachMany::make('TaxonomyWhens'),
+                    BelongsTo::make('OverlayLayer')->searchable()->showCreateRelationButton(),
                 ]
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
