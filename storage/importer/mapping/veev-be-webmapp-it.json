@@ -1,0 +1,148 @@
+{
+    "poi_type": {
+        "358": {
+            "source_title": {
+                "it": "Attrazioni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tourism"
+        },
+        "360": {
+            "source_title": {
+                "it": "Comuni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "amenity-townhall"
+        },
+        "359": {
+            "source_title": {
+                "it": "Edifici Storici"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "388": {
+            "source_title": {
+                "it": "Elementi naturalistici"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "elementi-naturalistici"
+        },
+        "374": {
+            "source_title": {
+                "it": "Frazioni, quartieri e piazze"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "370": {
+            "source_title": {
+                "it": "Luoghi della Fede"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-of-faith"
+        },
+        "369": {
+            "source_title": {
+                "it": "Mercati"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "marketplace"
+        },
+        "361": {
+            "source_title": {
+                "it": "Monumenti"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monument"
+        },
+        "362": {
+            "source_title": {
+                "it": "Musei"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "museum"
+        },
+        "363": {
+            "source_title": {
+                "it": "Opere d'Arte"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "culture"
+        },
+        "365": {
+            "source_title": {
+                "it": "Panorami"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "364": {
+            "source_title": {
+                "it": "Parchi artistici"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "art-park"
+        },
+        "389": {
+            "source_title": {
+                "it": "Relax e benessere"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "accomodation"
+        },
+        "375": {
+            "source_title": {
+                "it": "Ristorante"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "385": {
+            "source_title": {
+                "it": "Shopping"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "shop"
+        },
+        "366": {
+            "source_title": {
+                "it": "Siti archeologici"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "archaeological-site"
+        }
+    }
+}
