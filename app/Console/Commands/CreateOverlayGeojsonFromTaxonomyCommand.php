@@ -3,9 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Models\App;
+use App\Models\EcPoi;
+use App\Models\EcTrack;
 use App\Models\Layer;
 use App\Models\OverlayLayer;
 use App\Models\TaxonomyWhere;
+use App\Models\EcMedia;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +20,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:createOverlayGeojson
+    protected $signature = 'geohub:createOverlayGeojson
                             {app_id : ID of the App} 
                             {overlay_id : ID of the interactive overlay layer} 
                             {name : the name of the generated file} ';
@@ -46,13 +49,15 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
      */
     public function handle()
     {
+        //handle the case where the overlayLayer id provided is not valid
         try {
-            $overlay = OverlayLayer::findOrFail($this->argument('overlay_id'));
-            $layers = $overlay->layers;
+            $overlayLayer = OverlayLayer::findOrFail($this->argument('overlay_id'));
+            $layers = $overlayLayer->layers;
         } catch (ModelNotFoundException $e) {
             $this->error('OverlayLayer with id ' . $this->argument('overlay_id') . ' not found.');
             return 1;
         }
+        //handle the case where the app id provided is not valid
         try {
             $app = App::findOrFail($this->argument('app_id'));
             $appId = $app->id;
@@ -60,64 +65,76 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
             $this->error('App with id ' . $this->argument('app_id') . ' not found.');
             return 1;
         }
+        //get the file name from the command input
         $fileName = $this->argument('name');
-        $this->info('found ' . $layers->count() . ' layers for '  . $overlay->name . ' of app ' . $app->name);
-        $this->info('Creating geojson file for overlay layer ' . $overlay->name . ' of app ' . $app->name . ' with name ' . $fileName . '.');
+
+        //if no layers are found, abort
+        if ($layers->count() == 0) {
+            $this->error('No layers found for overlay layer ' . $overlayLayer->name);
+            return 1;
+        }
+
+        $this->info('found ' . $layers->count() . ' layers for '  . $overlayLayer->name);
 
         $featureCollection = [];
         $featureCollection['type'] = 'FeatureCollection';
 
         foreach ($layers as $layer) {
             $this->info('processing layer ' . $layer->name .  '...');
+
             $taxonomyWheres = $layer->taxonomyWheres;
-            $this->info('found ' . $taxonomyWheres->count() . ' taxonomies');
-            foreach ($taxonomyWheres as $taxonomyWhere) {
-                $this->info('processing taxonomyWhere ' . $taxonomyWhere->name);
-                $featureCollection['features'][] = $this->createFeature($taxonomyWhere, $layer);
+
+            $this->info('found ' . $taxonomyWheres->count() . ' taxonomies for layer ' . $layer->name . '...');
+
+            //handle the case where no taxonomyWheres are found
+            if ($taxonomyWheres->count() == 0) {
+                $featureCollection['features'][] = $this->createFeature(null, $layer);
+                $this->info('Feature created successfully.');
+            } else {
+                foreach ($taxonomyWheres as $taxonomyWhere) {
+                    $this->info('processing taxonomyWhere ' . $taxonomyWhere->name);
+                    $featureCollection['features'][] = $this->createFeature($taxonomyWhere, $layer);
+                    $this->info('taxonomyWhere ' . $taxonomyWhere->name . ' processed. Feature created successfully.');
+                }
             }
-            $this->info('saving geojson file for taxonomyWhere ' . $taxonomyWhere->name);
-            $this->saveFeatureCollectionFile($featureCollection, $fileName, $appId, $overlay);
-            $this->info('geojson file for taxonomyWhere ' . $taxonomyWhere->name . ' saved.');
         }
+        $this->saveFeatureCollectionFile($featureCollection, $fileName, $appId, $overlayLayer);
+        $this->info('The file has been created successfully and it is located at storage/app/public/' . $overlayLayer->feature_collection);
     }
 
-    private function createFeatureCollection(TaxonomyWhere $taxonomyWhere, Layer $layer)
-    {
-        $featureCollection = [];
-        $featureCollection['type'] = 'FeatureCollection';
-        $featureCollection['features'] = [];
-        $featureCollection['features'][] = $this->createFeature($taxonomyWhere, $layer);
-        return $featureCollection;
-    }
-
-    private function createFeature(TaxonomyWhere $taxonomyWhere, Layer $layer)
+    private function createFeature(TaxonomyWhere $taxonomyWhere = null, Layer $layer): array
     {
         $feature = [];
         $feature['type'] = 'Feature';
         $feature['geometry'] = [];
         $feature['geometry']['type'] = 'MultiPolygon';
-        $feature['geometry']['coordinates'] = [$taxonomyWhere->geometry];
-        $feature['properties'] = $this->createProperties($layer);
+        $feature['geometry']['coordinates'] = $taxonomyWhere->geometry ?? null;
+        $feature['properties'] = $this->createProperties($taxonomyWhere, $layer);
         return $feature;
     }
 
-    private function createProperties(Layer $layer)
+    private function createProperties(TaxonomyWhere $taxonomyWhere = null, Layer $layer): array
     {
+        $featureImageLink = EcMedia::where('id', $layer->feature_image)->first()->url ?? '';
+        $tracksCount = $taxonomyWhere ? EcTrack::where('user_id', $taxonomyWhere->user_id)->count() : '';
+        $totalTracksLength = $taxonomyWhere ? $this->getTotalTracksLength($taxonomyWhere->user_id) : '';
+        $poisCount = $taxonomyWhere ?  EcPoi::where('user_id', $taxonomyWhere->user_id)->count() : '';
+
         $properties = [];
         $properties['layer'] = [];
         $properties['layer']['id'] = $layer->id;
-        $properties['layer']['name'] = $layer->name;
-        $properties['layer']['title'] = $layer->title;
-        $properties['layer']['description'] = $layer->description;
-        $properties['layer']['feature_image'] = "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/400x200/13183_400x200.jpg";
+        $properties['layer']['name'] = $layer->name ?? '';
+        $properties['layer']['title'] = $layer->title ?? '';
+        $properties['layer']['description'] = $layer->description ?? $taxonomyWhere->description ?? '';
+        $properties['layer']['feature_image'] = $layer->icon ?? $featureImageLink ?? '';
         $properties['layer']['stats'] = [];
-        $properties['layer']['stats']['tracks_count'] = 17;
-        $properties['layer']['stats']['total_tracks_length'] = 123;
-        $properties['layer']['stats']['poi_count'] = 97;
+        $properties['layer']['stats']['tracks_count'] = $tracksCount;
+        $properties['layer']['stats']['total_tracks_length'] = $totalTracksLength;
+        $properties['layer']['stats']['poi_count'] = $poisCount;
         return $properties;
     }
 
-    private function saveFeatureCollectionFile(array $featureCollection, string $fileName, int $appId, OverlayLayer $overlayLayer)
+    private function saveFeatureCollectionFile(array $featureCollection, string $fileName, int $appId, OverlayLayer $overlayLayer): void
     {
         //create a directory named as the app id
         $path = storage_path('app/public/geojson/' . $appId);
@@ -128,7 +145,17 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $file = fopen($path . '/' . $fileName . '.geojson', 'w');
         fwrite($file, json_encode($featureCollection));
         fclose($file);
-        $overlayLayer->feature_collection = $path . '/' . $fileName . '.geojson';
+        $overlayLayer->feature_collection = 'geojson' . '/' . $appId . '/' . $fileName . '.geojson';
         $overlayLayer->save();
+    }
+
+    private function getTotalTracksLength(int $userId): float
+    {
+        $tracks = EcTrack::where('user_id', $userId)->get();
+        $totalLength = 0;
+        foreach ($tracks as $track) {
+            $totalLength += $track->distance;
+        }
+        return $totalLength;
     }
 }
