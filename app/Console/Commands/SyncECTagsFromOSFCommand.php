@@ -85,10 +85,10 @@ class SyncECTagsFromOSFCommand extends Command
             }
         } else {
             if ($out_source) {
-                if (empty($feature->description)) {
-                    if (isset($out_source->tags['description']))
-                        $feature->description['it'] = $out_source->tags['description'];
-                }
+                // if (empty($feature->description)) {
+                //     if (isset($out_source->tags['description']))
+                //         $feature->description['it'] = $out_source->tags['description'];
+                // }
                 // if (empty($feature->excerpt)) {
                 //     if (isset($out_source->tags['excerpt']))
                 //         $feature->excerpt = $out_source->tags['excerpt'];
