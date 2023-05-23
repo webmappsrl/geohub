@@ -11,6 +11,7 @@ use App\Nova\Actions\GenerateAppPoisAction;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
+use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
@@ -241,6 +242,7 @@ class App extends Resource
             'ICONS' => $this->icons_tab(),
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
+            'FILTERS' => $this->filters_tab(),
             'OPTIONS' => $this->options_tab(),
             'POIS' => $this->pois_tab(),
             'ROUTING' => $this->routing_tab(),
@@ -429,6 +431,28 @@ class App extends Resource
                 ->help('Activate this option if you want to color track by quote'),
             Number::make(__('flow_line_quote_orange'))->default(800)->help('defines the elevation by which the track turns orange'),
             Number::make(__('flow_line_quote_red'))->default(1500)->help('defines the elevation by which the track turns red'),
+            //create a tab for filters fields
+
+        ];
+    }
+
+    protected function filters_tab(): array
+    {
+
+        return [
+            Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to filter tracks by activity'),
+            Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
+            Boolean::make('Poi Type Filter', 'filter_poi_type')->help('Activate this option if you want to filter pois by type'),
+            Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')->help('Insert the poi types you want to exclude from the filter, separated by commas'),
+            Boolean::make('Track Duration Filter', 'filter_track_duration')->help('Activate this option if you want to filter tracks by duration'),
+            Boolean::make('Track Distance Filter', 'filter_track_distance')->help('Activate this option if you want to filter tracks by distance'),
+            Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')->help('Set the steps of the duration filter'),
+            Number::make('Track Min Duration Filter', 'filter_track_duration_min')->help('Set the minimum duration of the duration filter'),
+            Number::make('Track Max Duration Filter', 'filter_track_duration_max')->help('Set the maximum duration of the duration filter'),
+            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
+            Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
+            Number::make('Track Min Distance Filter', 'filter_track_distance_min')->help('Set the minimum distance of the distance filter'),
+            Number::make('Track Max Distance Filter', 'filter_track_distance_max')->help('Set the maximum distance of the distance filter'),
         ];
     }
 
@@ -968,7 +992,7 @@ class App extends Resource
     {
         return [
             NovaTabTranslatable::make([
-                Text::make('Overlays Label','overlays_label')
+                Text::make('Overlays Label', 'overlays_label')
             ]),
             Text::make('Overlay Layer', function () {
                 if ($this->overlayLayers->count() > 0) {
