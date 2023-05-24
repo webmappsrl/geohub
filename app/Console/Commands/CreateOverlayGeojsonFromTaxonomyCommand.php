@@ -102,7 +102,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $this->info('The file has been created successfully and it is located at storage/app/public/' . $overlayLayer->feature_collection);
     }
 
-    private function createFeature(TaxonomyWhere $taxonomyWhere = null, Layer $layer): array
+    private function createFeature(TaxonomyWhere $taxonomyWhere, Layer $layer): array
     {
         //get the geojson of the taxonomyWhere
         $query = "SELECT ST_AsGeoJSON(geometry) as geometry FROM taxonomy_wheres WHERE id = " . $taxonomyWhere->id;
@@ -117,19 +117,25 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         return $feature;
     }
 
-    private function createProperties(TaxonomyWhere $taxonomyWhere = null, Layer $layer): array
+    private function createProperties(TaxonomyWhere $taxonomyWhere, Layer $layer): array
     {
-        $featureImageLink = EcMedia::where('id', $layer->feature_image)->first()->url ?? '';
-        $tracksCount = $taxonomyWhere ? EcTrack::where('user_id', $taxonomyWhere->user_id)->count() : '';
-        $totalTracksLength = $taxonomyWhere && $taxonomyWhere->user_id ? $this->getTotalTracksLength($taxonomyWhere->user_id) : '';
-        $poisCount = $taxonomyWhere ?  EcPoi::where('user_id', $taxonomyWhere->user_id)->count() : '';
+        //thumbnail 400x200 
+        $ecMedia = EcMedia::find($taxonomyWhere->feature_image);
+        $featureImageLink = $ecMedia ? $ecMedia->thumbnail('400x200') : '';
+        $tracksCount = EcTrack::where('user_id', $taxonomyWhere->user_id)->count() ?? '';
+        $totalTracksLength = $taxonomyWhere->user_id ? $this->getTotalTracksLength($taxonomyWhere->user_id) : '';
+        $poisCount = EcPoi::where('user_id', $taxonomyWhere->user_id)->count() ?? '';
+        $title = $layer->getTranslations('title');
+        $taxonomyWhereDescription = $taxonomyWhere->getTranslations('description');
+        $layerDescription = $layer->getTranslations('description');
+
 
         $properties = [];
         $properties['layer'] = [];
         $properties['layer']['id'] = $layer->id;
         $properties['layer']['name'] = $layer->name ?? '';
-        $properties['layer']['title'] = $layer->title ?? '';
-        $properties['layer']['description'] = $layer->description ?? $taxonomyWhere->description ?? '';
+        $properties['layer']['title'] = $title ?? '';
+        $properties['layer']['description'] = $layerDescription ?? $taxonomyWhereDescription;
         $properties['layer']['feature_image'] = $layer->icon ?? $featureImageLink ?? '';
         $properties['layer']['stats'] = [];
         $properties['layer']['stats']['tracks_count'] = $tracksCount;

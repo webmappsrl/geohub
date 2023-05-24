@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Exception;
 use App\Models\OverlayLayer;
+use App\Traits\HasTranslationsFixed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Layer extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasTranslationsFixed;
     // protected $fillable = ['rank'];
 
     protected static function booted()
