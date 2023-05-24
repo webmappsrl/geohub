@@ -13,6 +13,8 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\MorphTo;
+use Laravel\Nova\Fields\MorphToMany;
 use Nova\Multiselect\Multiselect;
 
 class OverlayLayer extends Resource
@@ -72,10 +74,15 @@ class OverlayLayer extends Resource
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
-            HasMany::make('Layers', 'layers', Layer::class)
-                ->hideFromIndex()
-                ->hideWhenCreating(),
-            //TODO add a method to filter the choices in the select field
+            AttachMany::make('Layers', 'layers', Layer::class)
+                ->showPreview(),
+            Text::make('Layers', function () {
+                if (count($this->layers) > 0) {
+                    return $this->layers->pluck('name')->implode(', ');
+                } else {
+                    return 'No layers';
+                }
+            })->onlyOnDetail(),
         ];
     }
 
@@ -121,5 +128,19 @@ class OverlayLayer extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    public function relatableLayers(NovaRequest $request, $query)
+    {
+
+        $resourceId = $request->resourceId;
+
+        try {
+            $resource = \App\Models\OverlayLayer::find($resourceId);
+            $app_id = $resource->app_id;
+            return $query->where('app_id', $app_id);
+        } catch (\Throwable $th) {
+            return $query->where('id', $resourceId);
+        }
     }
 }

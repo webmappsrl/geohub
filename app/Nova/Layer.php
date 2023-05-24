@@ -34,7 +34,7 @@ class Layer extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name'; //* IMPORTANT this parameter affects also the attachmany field in OverlayLayer Nova Resource. If you change to ID, the attachmany field will show the ID instead of the name.
 
     /**
      * The columns that should be searched.
@@ -213,7 +213,6 @@ class Layer extends Resource
                     AttachMany::make('TaxonomyThemes'),
                     AttachMany::make('TaxonomyTargets'),
                     AttachMany::make('TaxonomyWhens'),
-                    BelongsTo::make('OverlayLayer')->searchable()->showCreateRelationButton(),
                 ]
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
