@@ -24,20 +24,20 @@ trait ConfTrait
 
         $data = [];
 
-        // $data = array_merge($data, $this->config_section_app());
-        // $data = array_merge($data, $this->config_section_webapp());
-        // $data = array_merge($data, $this->config_section_home());
-        // $data = array_merge($data, $this->config_section_languages());
+        $data = array_merge($data, $this->config_section_app());
+        $data = array_merge($data, $this->config_section_webapp());
+        $data = array_merge($data, $this->config_section_home());
+        $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
-        // $data = array_merge($data, $this->config_section_project());
-        // $data = array_merge($data, $this->config_section_theme());
-        // $data = array_merge($data, $this->config_section_options());
-        // $data = array_merge($data, $this->config_section_tables());
-        // $data = array_merge($data, $this->config_section_routing());
-        // $data = array_merge($data, $this->config_section_report());
-        // $data = array_merge($data, $this->config_section_geolocation());
-        // $data = array_merge($data, $this->config_section_auth());
-        // $data = array_merge($data, $this->config_section_offline());
+        $data = array_merge($data, $this->config_section_project());
+        $data = array_merge($data, $this->config_section_theme());
+        $data = array_merge($data, $this->config_section_options());
+        $data = array_merge($data, $this->config_section_tables());
+        $data = array_merge($data, $this->config_section_routing());
+        $data = array_merge($data, $this->config_section_report());
+        $data = array_merge($data, $this->config_section_geolocation());
+        $data = array_merge($data, $this->config_section_auth());
+        $data = array_merge($data, $this->config_section_offline());
 
         return $data;
     }
