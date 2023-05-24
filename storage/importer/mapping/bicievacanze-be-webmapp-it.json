@@ -1,0 +1,268 @@
+{
+    "poi_type": {
+        "279": {
+            "source_title": {
+                "it": "Agriturismo",
+                "en": "Farmhouse"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "144": {
+            "source_title": {
+                "it": "Bar"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bar"
+        },
+        "137": {
+            "source_title": {
+                "it": "Castello"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "castle"
+        },
+        "370": {
+            "source_title": {
+                "it": "Centrale Idroelettrica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "production-building"
+        },
+        "138": {
+            "source_title": {
+                "it": "Chiesa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "church"
+        },
+        "145": {
+            "source_title": {
+                "it": "Degustazione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tasting"
+        },
+        "362": {
+            "source_title": {
+                "it": "Design discrict"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "231": {
+            "source_title": {
+                "it": "Destinazione di percorso"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "destination"
+        },
+        "131": {
+            "source_title": {
+                "it": "Fai Attenzione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "attention"
+        },
+        "230": {
+            "source_title": {
+                "it": "Highlights della nostra guida"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highlight"
+        },
+        "142": {
+            "source_title": {
+                "it": "Hotel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "139": {
+            "source_title": {
+                "it": "Monumento"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monument"
+        },
+        "140": {
+            "source_title": {
+                "it": "Museo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "museum"
+        },
+        "133": {
+            "source_title": {
+                "it": "Natura e Ambiente"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature"
+        },
+        "154": {
+            "source_title": {
+                "it": "Parcheggio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "194": {
+            "source_title": {
+                "it": "Parco Naturale"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-park"
+        },
+        "360": {
+            "source_title": {
+                "it": "Piazza"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "282": {
+            "source_title": {
+                "it": "Pizzeria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pizzeria"
+        },
+        "141": {
+            "source_title": {
+                "it": "Punto Panoramico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "363": {
+            "source_title": {
+                "it": "Quartiere"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "neighborhood-and-square"
+        },
+        "147": {
+            "source_title": {
+                "it": "Ristorante"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "135": {
+            "source_title": {
+                "it": "Ristorazione"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "132": {
+            "source_title": {
+                "it": "Storia e Cultura"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "history-and-culture"
+        },
+        "361": {
+            "source_title": {
+                "it": "Teatro"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "theater"
+        },
+        "237": {
+            "source_title": {
+                "it": "Vendita e riparazione biciclette"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bike-service"
+        },
+        "192": {
+            "source_title": {
+                "it": "Villa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        }
+    },
+    "activity": {
+        "118": {
+            "source_title": {
+                "it": "Bicicletta"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cycling"
+        },
+        "364": {
+            "source_title": {
+                "it": "ebike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "e-bike"
+        },
+        "116": {
+            "source_title": {
+                "it": "Trekking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        }
+    }
+}
