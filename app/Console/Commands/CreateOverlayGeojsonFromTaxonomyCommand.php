@@ -84,13 +84,13 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
 
             $taxonomyWheres = $layer->taxonomyWheres;
 
-            $this->info('found ' . $taxonomyWheres->count() . ' taxonomies for layer ' . $layer->name . '...');
 
-            //handle the case where no taxonomyWheres are found
+            //if no taxonomyWheres are found,print error and skip to the next layer
             if ($taxonomyWheres->count() == 0) {
-                $featureCollection['features'][] = $this->createFeature(null, $layer);
-                $this->info('Feature created successfully.');
+                $this->error('No taxonomies found for layer ' . $layer->name);
+                continue;
             } else {
+                $this->info('FOUND ' . $taxonomyWheres->count() . ' TAXONOMIES FOR LAYER ' . $layer->name . '...');
                 foreach ($taxonomyWheres as $taxonomyWhere) {
                     $this->info('processing taxonomyWhere ' . $taxonomyWhere->name);
                     $featureCollection['features'][] = $this->createFeature($taxonomyWhere, $layer);
@@ -104,11 +104,15 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
 
     private function createFeature(TaxonomyWhere $taxonomyWhere = null, Layer $layer): array
     {
+        //get the geojson of the taxonomyWhere
+        $query = "SELECT ST_AsGeoJSON(geometry) as geometry FROM taxonomy_wheres WHERE id = " . $taxonomyWhere->id;
+        $geometry = DB::select($query)[0]->geometry;
+
+        //create the feature
         $feature = [];
         $feature['type'] = 'Feature';
         $feature['geometry'] = [];
-        $feature['geometry']['type'] = 'MultiPolygon';
-        $feature['geometry']['coordinates'] = $taxonomyWhere->geometry ?? null;
+        $feature['geometry'] = json_decode($geometry);
         $feature['properties'] = $this->createProperties($taxonomyWhere, $layer);
         return $feature;
     }
@@ -117,7 +121,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
     {
         $featureImageLink = EcMedia::where('id', $layer->feature_image)->first()->url ?? '';
         $tracksCount = $taxonomyWhere ? EcTrack::where('user_id', $taxonomyWhere->user_id)->count() : '';
-        $totalTracksLength = $taxonomyWhere ? $this->getTotalTracksLength($taxonomyWhere->user_id) : '';
+        $totalTracksLength = $taxonomyWhere && $taxonomyWhere->user_id ? $this->getTotalTracksLength($taxonomyWhere->user_id) : '';
         $poisCount = $taxonomyWhere ?  EcPoi::where('user_id', $taxonomyWhere->user_id)->count() : '';
 
         $properties = [];

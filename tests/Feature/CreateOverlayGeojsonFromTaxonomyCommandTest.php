@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Storage;
+use App\Models\App;
 use Tests\TestCase;
+use App\Models\Layer;
+use App\Models\OverlayLayer;
+use App\Models\TaxonomyWhere;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 {
@@ -17,29 +20,32 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     public function test_the_command_creates_a_geojson_file()
     {
         //create an app with id 1000
-        $app = \App\Models\App::factory()->create([
+        $app = App::factory()->create([
             'id' => 1000,
         ]);
         //create an overlayLayer with id 1000
-        $overlayLayer = \App\Models\OverlayLayer::factory()->create([
+        $overlayLayer = OverlayLayer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
         ]);
 
         //create a layer
-        $layer = \App\Models\Layer::factory()->create([
+        $layer = Layer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
             'overlay_layer_id' => 1000,
         ]);
 
         //create a taxonomyWhere
-        $taxonomyWhere = \App\Models\TaxonomyWhere::factory()->create([
+        $taxonomyWhere = TaxonomyWhere::factory()->create([
             'id' => 10000,
         ]);
 
         //associate the layer with the taxonomyWhere
         $layer->taxonomyWheres()->attach($taxonomyWhere);
+
+        //associate the layer to the overlayLayer
+        $overlayLayer->layers()->attach($layer);
 
         //call the command
         $this->artisan('geohub:createOverlayGeojson', [
@@ -48,8 +54,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'name' => 'test',
         ]);
 
-        //define the file path and the file extension
-        $filePath = storage_path('/app/public/geojson/1000/test.geojson');
+        //define the file path, directory path and the file extension
+        $directoryPath = storage_path('/app/public/geojson/1000');
+        $filePath = $directoryPath . '/test.geojson';
         $actualFileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 
         //define the expected extension of the file
@@ -63,6 +70,10 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
         //check if the file is a geojson
         $this->assertEquals($expectedFileExtension, $actualFileExtension);
+
+        //delete the folder and all the file inside
+        unlink($filePath);
+        rmdir($directoryPath);
     }
 
     /**
@@ -71,29 +82,32 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     public function test_the_content_is_a_feature_collection()
     {
         //create an app with id 1000
-        $app = \App\Models\App::factory()->create([
+        $app = App::factory()->create([
             'id' => 1000,
         ]);
         //create an overlayLayer with id 1000
-        $overlayLayer = \App\Models\OverlayLayer::factory()->create([
+        $overlayLayer = OverlayLayer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
         ]);
 
         //create a layer
-        $layer = \App\Models\Layer::factory()->create([
+        $layer = Layer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
             'overlay_layer_id' => 1000,
         ]);
 
         //create a taxonomyWhere
-        $taxonomyWhere = \App\Models\TaxonomyWhere::factory()->create([
+        $taxonomyWhere = TaxonomyWhere::factory()->create([
             'id' => 10000,
         ]);
 
         //associate the layer with the taxonomyWhere
         $layer->taxonomyWheres()->attach($taxonomyWhere);
+
+        //associate the layer to the overlayLayer
+        $overlayLayer->layers()->attach($layer);
 
         //call the command
         $this->artisan('geohub:createOverlayGeojson', [
@@ -102,8 +116,16 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'name' => 'test',
         ]);
 
+        //define the file path and directory path 
+        $directoryPath = storage_path('/app/public/geojson/1000');
+        $filePath = $directoryPath . '/test.geojson';
+
         //check if the content is a featureCollection
         $this->assertStringContainsString('FeatureCollection', Storage::get('public/geojson/1000/test.geojson'));
+
+        //delete the folder and all the file inside
+        unlink($filePath);
+        rmdir($directoryPath);
     }
 
     /**
@@ -112,29 +134,32 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     public function test_the_feature_collection_has_the_correct_structure()
     {
         //create an app with id 1000
-        $app = \App\Models\App::factory()->create([
+        $app = App::factory()->create([
             'id' => 1000,
         ]);
         //create an overlayLayer with id 1000
-        $overlayLayer = \App\Models\OverlayLayer::factory()->create([
+        $overlayLayer = OverlayLayer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
         ]);
 
         //create a layer
-        $layer = \App\Models\Layer::factory()->create([
+        $layer = Layer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
             'overlay_layer_id' => 1000,
         ]);
 
         //create a taxonomyWhere
-        $taxonomyWhere = \App\Models\TaxonomyWhere::factory()->create([
+        $taxonomyWhere = TaxonomyWhere::factory()->create([
             'id' => 10000,
         ]);
 
         //associate the layer with the taxonomyWhere
         $layer->taxonomyWheres()->attach($taxonomyWhere);
+
+        //associate the layer to the overlayLayer
+        $overlayLayer->layers()->attach($layer);
 
         //call the command
         $this->artisan('geohub:createOverlayGeojson', [
@@ -142,6 +167,11 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'overlay_id' => 1000,
             'name' => 'test',
         ]);
+
+        //define the file path and directory path 
+        $directoryPath = storage_path('/app/public/geojson/1000');
+        $filePath = $directoryPath . '/test.geojson';
+
 
         //check if the content is a featureCollection
         $this->assertStringContainsString('FeatureCollection', Storage::get('public/geojson/1000/test.geojson'));
@@ -157,6 +187,10 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             $this->assertArrayHasKey('coordinates', $feature['geometry']);
             $this->assertArrayHasKey('properties', $feature);
         }
+
+        //delete the folder and all the file inside
+        unlink($filePath);
+        rmdir($directoryPath);
     }
 
     /**
@@ -165,29 +199,36 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     public function test_the_property_field_has_the_correct_structure()
     {
         //create an app with id 1000
-        $app = \App\Models\App::factory()->create([
+        $app = App::factory()->create([
             'id' => 1000,
         ]);
         //create an overlayLayer with id 1000
-        $overlayLayer = \App\Models\OverlayLayer::factory()->create([
+        $overlayLayer = OverlayLayer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
         ]);
 
         //create a layer
-        $layer = \App\Models\Layer::factory()->create([
+        $layer = Layer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
             'overlay_layer_id' => 1000,
         ]);
 
+        //define the file path and directory path 
+        $directoryPath = storage_path('/app/public/geojson/1000');
+        $filePath = $directoryPath . '/test.geojson';
+
         //create a taxonomyWhere
-        $taxonomyWhere = \App\Models\TaxonomyWhere::factory()->create([
+        $taxonomyWhere = TaxonomyWhere::factory()->create([
             'id' => 10000,
         ]);
 
         //associate the layer with the taxonomyWhere
         $layer->taxonomyWheres()->attach($taxonomyWhere);
+
+        //associate the layer to the overlayLayer
+        $overlayLayer->layers()->attach($layer);
 
         //call the command
         $this->artisan('geohub:createOverlayGeojson', [
@@ -220,6 +261,10 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             $this->assertArrayHasKey('total_tracks_length', $feature['properties']['layer']['stats']);
             $this->assertArrayHasKey('poi_count', $feature['properties']['layer']['stats']);
         }
+
+        //delete the folder and all the file inside
+        unlink($filePath);
+        rmdir($directoryPath);
     }
 
     /**
@@ -228,29 +273,32 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     public function test_the_command_is_not_working_if_a_parameter_is_incorrect()
     {
         //create an app with id 1000
-        $app = \App\Models\App::factory()->create([
+        $app = App::factory()->create([
             'id' => 1000,
         ]);
         //create an overlayLayer with id 1000
-        $overlayLayer = \App\Models\OverlayLayer::factory()->create([
+        $overlayLayer = OverlayLayer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
         ]);
 
         //create a layer
-        $layer = \App\Models\Layer::factory()->create([
+        $layer = Layer::factory()->create([
             'id' => 1000,
             'app_id' => 1000,
             'overlay_layer_id' => 1000,
         ]);
 
         //create a taxonomyWhere
-        $taxonomyWhere = \App\Models\TaxonomyWhere::factory()->create([
+        $taxonomyWhere = TaxonomyWhere::factory()->create([
             'id' => 10000,
         ]);
 
         //associate the layer with the taxonomyWhere
         $layer->taxonomyWheres()->attach($taxonomyWhere);
+
+        //associate the layer to the overlayLayer
+        $overlayLayer->layers()->attach($layer);
 
         //check if the command is not working
         $this->assertNotEquals(0, $this->artisan('geohub:createOverlayGeojson', [
@@ -258,5 +306,15 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'overlay_id' => 1000000,
             'name' => 'test',
         ]));
+
+        //define the file path and directory path 
+        $directoryPath = storage_path('/app/public/geojson/1000');
+        $filePath = $directoryPath . '/test.geojson';
+
+        //check if there is no directory at the path
+        $this->assertDirectoryDoesNotExist($directoryPath);
+
+        //check if there is no file at the path
+        $this->assertFileDoesNotExist($filePath);
     }
 }
