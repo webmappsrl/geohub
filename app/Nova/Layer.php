@@ -209,10 +209,14 @@ class Layer extends Resource
                     Heading::make('Use this interface to define rules to assign data to this layer'),
                     Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
                     Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
-                    AttachMany::make('taxonomyActivities'),
-                    AttachMany::make('TaxonomyThemes'),
-                    AttachMany::make('TaxonomyTargets'),
-                    AttachMany::make('TaxonomyWhens'),
+                    AttachMany::make('taxonomyActivities')
+                    ->showPreview(),
+                    AttachMany::make('TaxonomyThemes')
+                    ->showPreview(),
+                    AttachMany::make('TaxonomyTargets')
+                    ->showPreview(),
+                    AttachMany::make('TaxonomyWhens')
+                    ->showPreview(),
                 ]
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
