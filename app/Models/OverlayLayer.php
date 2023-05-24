@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class OverlayLayer extends Model
 {
@@ -31,9 +32,8 @@ class OverlayLayer extends Model
     {
         return $this->belongsTo(App::class);
     }
-
-    public function layers(): HasMany
+    public function layers(): MorphToMany
     {
-        return $this->hasMany(Layer::class);
+        return $this->morphToMany(Layer::class, 'layerable');
     }
 }

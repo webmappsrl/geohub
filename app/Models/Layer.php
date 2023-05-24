@@ -67,10 +67,12 @@ class Layer extends Model
             ->withPivot(['duration_forward', 'duration_backward']);
     }
 
-    public function overlayLayer()
+    public function overlayLayers()
     {
-        return $this->belongsTo(OverlayLayer::class);
+        return $this->morphToMany(OverlayLayer::class, 'layerable');
     }
+
+
 
     public function getTracks()
     {
