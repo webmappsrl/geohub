@@ -20,13 +20,13 @@ class AddFilterFieldsToAppsTable extends Migration
             $table->string('filter_poi_type_exclude')->nullable();
             $table->boolean('filter_track_duration')->nullable();
             $table->boolean('filter_track_distance')->nullable();
-            $table->float('filter_track_duration_steps', 8, 2)->nullable();
-            $table->float('filter_track_duration_min', 8, 2)->nullable();
-            $table->float('filter_track_duration_max', 8, 2)->nullable();
+            $table->integer('filter_track_duration_steps')->nullable();
+            $table->integer('filter_track_duration_min')->nullable();
+            $table->integer('filter_track_duration_max')->nullable();
             $table->boolean('filter_track_difficulty')->nullable();
-            $table->float('filter_track_distance_steps', 8, 2)->nullable();
-            $table->float('filter_track_distance_min', 8, 2)->nullable();
-            $table->float('filter_track_distance_max', 8, 2)->nullable();
+            $table->integer('filter_track_distance_steps')->nullable();
+            $table->integer('filter_track_distance_min')->nullable();
+            $table->integer('filter_track_distance_max')->nullable();
         });
     }
 

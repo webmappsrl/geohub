@@ -24,20 +24,20 @@ trait ConfTrait
 
         $data = [];
 
-        $data = array_merge($data, $this->config_section_app());
-        $data = array_merge($data, $this->config_section_webapp());
-        $data = array_merge($data, $this->config_section_home());
-        $data = array_merge($data, $this->config_section_languages());
+        // $data = array_merge($data, $this->config_section_app());
+        // $data = array_merge($data, $this->config_section_webapp());
+        // $data = array_merge($data, $this->config_section_home());
+        // $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
-        $data = array_merge($data, $this->config_section_project());
-        $data = array_merge($data, $this->config_section_theme());
-        $data = array_merge($data, $this->config_section_options());
-        $data = array_merge($data, $this->config_section_tables());
-        $data = array_merge($data, $this->config_section_routing());
-        $data = array_merge($data, $this->config_section_report());
-        $data = array_merge($data, $this->config_section_geolocation());
-        $data = array_merge($data, $this->config_section_auth());
-        $data = array_merge($data, $this->config_section_offline());
+        // $data = array_merge($data, $this->config_section_project());
+        // $data = array_merge($data, $this->config_section_theme());
+        // $data = array_merge($data, $this->config_section_options());
+        // $data = array_merge($data, $this->config_section_tables());
+        // $data = array_merge($data, $this->config_section_routing());
+        // $data = array_merge($data, $this->config_section_report());
+        // $data = array_merge($data, $this->config_section_geolocation());
+        // $data = array_merge($data, $this->config_section_auth());
+        // $data = array_merge($data, $this->config_section_offline());
 
         return $data;
     }
@@ -322,6 +322,89 @@ trait ConfTrait
             array_push($data['MAP']['controls']['overlays'],...$overlays);
         }
 
+        //  Activity Filter 
+        if ($this->filter_activity) {
+            $app_user_id = $this->user_id;
+            $options = [];
+
+            $activities = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_activityables as txa inner join ec_tracks as t on t.id=txa.taxonomy_activityable_id inner join taxonomy_activities as a on a.id=taxonomy_activity_id where txa.taxonomy_activityable_type='App\Models\EcTrack' and t.user_id=$app_user_id;");
+            
+            foreach ($activities as $activity) {
+                $a = array(
+                    'identifier' => $activity->identifier,
+                    'name' => json_decode($activity->name,true),
+                    'id' => $activity->id,
+                    'color' => $activity->color,
+                );
+                array_push($options,$a);
+            }
+
+            $data['MAP']['filters']['activity'] = [
+                'type' => 'select',
+                'name' => [
+                    'it' => 'Attività',
+                    'en' => 'Activity',
+                ],
+                'options' => $options
+            ];
+        }
+
+        //  Poi type Filter 
+        if ($this->filter_poi_type) {
+            $app_user_id = $this->user_id;
+            $options = [];
+
+            $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id;");
+            
+            foreach ($poi_types as $poi_type) {
+                $a = array(
+                    'identifier' => $poi_type->identifier,
+                    'name' => json_decode($poi_type->name,true),
+                    'id' => $poi_type->id,
+                    'color' => $poi_type->color,
+                    'icon' => $poi_type->icon,
+                );
+                array_push($options,$a);
+            }
+
+            $data['MAP']['filters']['poi_type'] = [
+                'type' => 'select',
+                'name' => [
+                    'it' => 'Punti di interesse',
+                    'en' => 'Points of interest',
+                ],
+                'options' => $options
+            ];
+        }
+
+        //  Duration Filter 
+        if ($this->filter_track_duration) {
+            $data['MAP']['filters']['track_duration'] = [
+                'type' => 'slider',
+                'identifier' => 'duration_forward',
+                'name' => [
+                    'it' => 'Tempo di percorrenza',
+                    'en' => 'Travel time',
+                ],
+                'steps' => $this->filter_track_duration_steps ?? '',
+                'min' => $this->filter_track_duration_min ?? '',
+                'max' => $this->filter_track_duration_max ?? '',
+            ];
+        }
+        //  Distance Filter 
+        if ($this->filter_track_distance) {
+            $data['MAP']['filters']['track_distance'] = [
+                'type' => 'slider',
+                'identifier' => 'distance',
+                'name' => [
+                    'it' => 'Tempo di percorrenza',
+                    'en' => 'Travel time',
+                ],
+                'steps' => $this->filter_track_distance_steps ?? '',
+                'min' => $this->filter_track_distance_min ?? '',
+                'max' => $this->filter_track_distance_max ?? '',
+            ];
+        }
         return $data;
     }
 

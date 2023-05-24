@@ -440,19 +440,23 @@ class App extends Resource
     {
 
         return [
-            Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to filter tracks by activity'),
+            Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
-            Boolean::make('Poi Type Filter', 'filter_poi_type')->help('Activate this option if you want to filter pois by type'),
+
+            Boolean::make('Poi Type Filter', 'filter_poi_type')->help('Activate this option if you want to activate "Poi Type filter" for POIs'),
             Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')->help('Insert the poi types you want to exclude from the filter, separated by commas'),
-            Boolean::make('Track Duration Filter', 'filter_track_duration')->help('Activate this option if you want to filter tracks by duration'),
-            Boolean::make('Track Distance Filter', 'filter_track_distance')->help('Activate this option if you want to filter tracks by distance'),
-            Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')->help('Set the steps of the duration filter'),
+            
+            Boolean::make('Track Duration Filter', 'filter_track_duration')->help('Activate this option if you want to filter tracks by duration. Make sure that "Show Pois layer on APP" option is turend on under POIS tab!'),
             Number::make('Track Min Duration Filter', 'filter_track_duration_min')->help('Set the minimum duration of the duration filter'),
             Number::make('Track Max Duration Filter', 'filter_track_duration_max')->help('Set the maximum duration of the duration filter'),
-            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
-            Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
+            Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')->help('Set the steps of the duration filter'),
+            
+            Boolean::make('Track Distance Filter', 'filter_track_distance')->help('Activate this option if you want to filter tracks by distance'),
             Number::make('Track Min Distance Filter', 'filter_track_distance_min')->help('Set the minimum distance of the distance filter'),
             Number::make('Track Max Distance Filter', 'filter_track_distance_max')->help('Set the maximum distance of the distance filter'),
+            Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
+            
+            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
         ];
     }
 
