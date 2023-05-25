@@ -112,7 +112,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $feature = [];
         $feature['type'] = 'Feature';
         $feature['geometry'] = [];
-        $feature['geometry'] = json_decode($geometry);
+        // $feature['geometry'] = json_decode($geometry);
         $feature['properties'] = $this->createProperties($taxonomyWhere, $layer);
         return $feature;
     }
@@ -135,8 +135,8 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $properties['layer']['id'] = $layer->id;
         $properties['layer']['name'] = $layer->name ?? '';
         $properties['layer']['title'] = $title ?? '';
-        if ($layerDescription || $taxonomyWhereDescription) {
-            $properties['layer']['description'] = $layerDescription ?? $taxonomyWhereDescription;
+        if (!empty($layerDescription) || !empty($taxonomyWhereDescription)) {
+            $properties['layer']['description'] = !empty($layerDescription) ? $layerDescription : $taxonomyWhereDescription;
         }
         $properties['layer']['feature_image'] = $featureImageLink ?? '';
         if ($layer->taxonomyWheres->count() > 0) {
@@ -165,7 +165,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         }
         //create a file named as the name argument
         $file = fopen($path . '/' . $fileName . '.geojson', 'w');
-        fwrite($file, json_encode($featureCollection));
+        fwrite($file, json_encode($featureCollection,true));
         fclose($file);
         $overlayLayer->feature_collection = 'geojson' . '/' . $appId . '/' . $fileName . '.geojson';
         $overlayLayer->save();
