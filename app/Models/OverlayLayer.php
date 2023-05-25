@@ -8,7 +8,8 @@ use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class OverlayLayer extends Model
 {
@@ -22,15 +23,6 @@ class OverlayLayer extends Model
      */
     public $translatable = ['label'];
 
-    /** 
-     * The attributes that should be cast
-     * @var array
-     * 
-     */
-    protected $casts = [
-        'file_upload' => 'array',
-    ];
-
     /**
      * Define the relationship with the App model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -39,5 +31,9 @@ class OverlayLayer extends Model
     public function app(): BelongsTo
     {
         return $this->belongsTo(App::class);
+    }
+    public function layers(): MorphToMany
+    {
+        return $this->morphToMany(Layer::class, 'layerable');
     }
 }

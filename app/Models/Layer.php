@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
+use App\Models\OverlayLayer;
+use App\Traits\HasTranslationsFixed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Spatie\Translatable\HasTranslations;
-use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Layer extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasTranslationsFixed;
     // protected $fillable = ['rank'];
 
     protected static function booted()
@@ -65,6 +66,13 @@ class Layer extends Model
         return $this->morphToMany(TaxonomyActivity::class, 'taxonomy_activityable')
             ->withPivot(['duration_forward', 'duration_backward']);
     }
+
+    public function overlayLayers()
+    {
+        return $this->morphToMany(OverlayLayer::class, 'layerable');
+    }
+
+
 
     public function getTracks()
     {
