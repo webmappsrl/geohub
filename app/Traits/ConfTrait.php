@@ -358,7 +358,7 @@ trait ConfTrait
             
             foreach ($poi_types as $poi_type) {
                 $a = array(
-                    'identifier' => $poi_type->identifier,
+                    'identifier' => 'poi_type_'.$poi_type->identifier,
                     'name' => json_decode($poi_type->name,true),
                     'id' => $poi_type->id,
                     'color' => $poi_type->color,
