@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helpers\GeoJsonHelper;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use App\Traits\HasTranslationsFixed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,8 +28,9 @@ use Symm\Gisconverter\Gisconverter;
  * @property string import_method
  * @property int    id
  */
-class TaxonomyWhere extends Model {
-    use HasFactory, GeometryFeatureTrait, HasTranslations;
+class TaxonomyWhere extends Model
+{
+    use HasFactory, GeometryFeatureTrait, HasTranslationsFixed;
 
     public array $translatable = ['name', 'description', 'excerpt'];
     protected $table = 'taxonomy_wheres';
@@ -38,12 +40,14 @@ class TaxonomyWhere extends Model {
     ];
     private HoquServiceProvider $hoquServiceProvider;
 
-    public function __construct(array $attributes = []) {
+    public function __construct(array $attributes = [])
+    {
         parent::__construct($attributes);
         $this->hoquServiceProvider = app(HoquServiceProvider::class);
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
         static::creating(function ($taxonomyWhere) {
             if ($taxonomyWhere->identifier != null) {
@@ -55,7 +59,8 @@ class TaxonomyWhere extends Model {
         });
     }
 
-    public function table(): string {
+    public function table(): string
+    {
         return $this->table;
     }
 
@@ -64,7 +69,8 @@ class TaxonomyWhere extends Model {
      *
      * @return bool
      */
-    public function isEditableByUserInterface(): bool {
+    public function isEditableByUserInterface(): bool
+    {
         return !$this->isImportedByExternalData();
     }
 
@@ -73,11 +79,13 @@ class TaxonomyWhere extends Model {
      *
      * @return bool
      */
-    public function isImportedByExternalData(): bool {
+    public function isImportedByExternalData(): bool
+    {
         return !is_null($this->import_method);
     }
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         static::creating(function ($taxonomyWhere) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -100,39 +108,48 @@ class TaxonomyWhere extends Model {
         }
     }
 
-    public function author(): BelongsTo {
+    public function author(): BelongsTo
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ugc_pois(): BelongsToMany {
+    public function ugc_pois(): BelongsToMany
+    {
         return $this->belongsToMany(UgcPoi::class);
     }
 
-    public function ugc_tracks(): BelongsToMany {
+    public function ugc_tracks(): BelongsToMany
+    {
         return $this->belongsToMany(UgcTrack::class);
     }
 
-    public function ugc_media(): BelongsToMany {
+    public function ugc_media(): BelongsToMany
+    {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function ecMedia(): MorphToMany {
+    public function ecMedia(): MorphToMany
+    {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whereable');
     }
 
-    public function ecTracks(): MorphToMany {
+    public function ecTracks(): MorphToMany
+    {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whereable');
     }
 
-    public function ecPois(): MorphToMany {
+    public function ecPois(): MorphToMany
+    {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_whereable');
     }
 
-    public function layers(): MorphToMany {
+    public function layers(): MorphToMany
+    {
         return $this->morphedByMany(Layer::class, 'taxonomy_whereable');
     }
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
@@ -141,7 +158,8 @@ class TaxonomyWhere extends Model {
      *
      * @throws ValidationException
      */
-    private static function validationError($message) {
+    private static function validationError($message)
+    {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
@@ -153,14 +171,17 @@ class TaxonomyWhere extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $array = $this->toArray();
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
-            if (in_array($property, $propertiesToClear)
+            if (
+                in_array($property, $propertiesToClear)
                 || is_null($value)
-                || (is_array($value) && count($value) === 0))
+                || (is_array($value) && count($value) === 0)
+            )
                 unset($array[$property]);
         }
 
@@ -172,7 +193,8 @@ class TaxonomyWhere extends Model {
      *
      * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
@@ -186,7 +208,8 @@ class TaxonomyWhere extends Model {
      *
      * @return array
      */
-    public function bbox(): array {
+    public function bbox(): array
+    {
         $rawResult = TaxonomyWhere::where('id', $this->id)->selectRaw('ST_Extent(geometry::geometry) as bbox')->first();
         $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
 
@@ -197,7 +220,8 @@ class TaxonomyWhere extends Model {
     /**
      * @param string json encoded geometry.
      */
-    public function fileToGeometry($fileContent = '') {
+    public function fileToGeometry($fileContent = '')
+    {
         $geometry = $contentType = null;
         if ($fileContent) {
             if (substr($fileContent, 0, 5) == "<?xml") {
@@ -230,10 +254,8 @@ class TaxonomyWhere extends Model {
             }
             $contentGeometry = $content->geometry;
             $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "'))");
-
         }
 
         return $geometry;
     }
-
 }

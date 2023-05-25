@@ -2,14 +2,20 @@
 
 namespace App\Nova;
 
+
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
+use NovaAttachMany\AttachMany;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\MorphTo;
+use Laravel\Nova\Fields\MorphToMany;
+use Nova\Multiselect\Multiselect;
 
 class OverlayLayer extends Resource
 {
@@ -33,7 +39,7 @@ class OverlayLayer extends Resource
      * @var array
      */
     public static $search = [
-        'id','name'
+        'id', 'name'
     ];
 
     /**
@@ -57,17 +63,26 @@ class OverlayLayer extends Resource
                 ->hideFromIndex(),
             File::make('File', 'feature_collection')
                 ->disk('public')
-                ->path('geojson/'.$app_name)
+                ->path('geojson/' . $app_name)
                 ->acceptedTypes(['.json', '.geojson'])
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
                 ->hideWhenCreating(),
-            Text::make('Icon','icon', function () {
-                return "<div style='width:64px;height:64px;'>".$this->icon."</div>";
+            Text::make('Icon', 'icon', function () {
+                return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('Icon SVG','icon')->onlyOnForms()->hideWhenCreating(),
+            Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
+            AttachMany::make('Layers', 'layers', Layer::class)
+                ->showPreview(),
+            Text::make('Layers', function () {
+                if (count($this->layers) > 0) {
+                    return $this->layers->pluck('name')->implode(', ');
+                } else {
+                    return 'No layers';
+                }
+            })->onlyOnDetail(),
         ];
     }
 
@@ -113,5 +128,19 @@ class OverlayLayer extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    public function relatableLayers(NovaRequest $request, $query)
+    {
+
+        $resourceId = $request->resourceId;
+
+        try {
+            $resource = \App\Models\OverlayLayer::find($resourceId);
+            $app_id = $resource->app_id;
+            return $query->where('app_id', $app_id);
+        } catch (\Throwable $th) {
+            return $query->where('id', $resourceId);
+        }
     }
 }
