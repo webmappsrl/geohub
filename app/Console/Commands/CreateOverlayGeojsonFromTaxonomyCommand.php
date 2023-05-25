@@ -112,7 +112,7 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $feature = [];
         $feature['type'] = 'Feature';
         $feature['geometry'] = [];
-        // $feature['geometry'] = json_decode($geometry);
+        $feature['geometry'] = json_decode($geometry);
         $feature['properties'] = $this->createProperties($taxonomyWhere, $layer);
         return $feature;
     }
