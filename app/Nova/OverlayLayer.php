@@ -78,11 +78,11 @@ class OverlayLayer extends Resource
                 ->showPreview(),
             Text::make('Layers', function () {
                 if (count($this->layers) > 0) {
-                    return $this->layers->pluck('name')->implode(', ');
+                    return $this->layers->pluck('name')->implode("</br>");
                 } else {
                     return 'No layers';
                 }
-            })->onlyOnDetail(),
+            })->onlyOnDetail()->asHtml(),
         ];
     }
 
