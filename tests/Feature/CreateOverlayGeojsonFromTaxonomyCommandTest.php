@@ -15,7 +15,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * @test
+     * @test if the command creates a geojson file
+     * 
+     * @return void
      */
     public function test_the_command_creates_a_geojson_file()
     {
@@ -77,7 +79,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     }
 
     /**
-     * @test
+     * @test if the command creates a geojson file with the correct content
+     * 
+     * @return void
      */
     public function test_the_content_is_a_feature_collection()
     {
@@ -129,7 +133,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     }
 
     /**
-     * @test
+     * @test if the feature collection has the correct structure
+     * 
+     * @return void
      */
     public function test_the_feature_collection_has_the_correct_structure()
     {
@@ -194,7 +200,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
     }
 
     /**
-     * @test
+     * @test if the property field has the correct structure
+     * 
+     * @return void
      */
     public function test_the_property_field_has_the_correct_structure()
     {
@@ -267,10 +275,13 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         rmdir($directoryPath);
     }
 
+
     /**
-     * @test
+     * Test if the command can handle no layers found for the overlay layer.
+     *
+     * @return void
      */
-    public function test_the_command_is_not_working_if_a_parameter_is_incorrect()
+    public function test_command_handles_no_layers_found_for_overlay_layer()
     {
         //create an app with id 1000
         $app = App::factory()->create([
@@ -289,32 +300,66 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'overlay_layer_id' => 1000,
         ]);
 
-        //create a taxonomyWhere
-        $taxonomyWhere = TaxonomyWhere::factory()->create([
-            'id' => 10000,
-        ]);
+        //run the command with no layers attached to the overlay layer
+        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' ' . $overlayLayer->id . ' test_file_name')
+            ->expectsOutput('No layers found for overlay layer ' . $overlayLayer->name)
+            ->assertExitCode(1);
+    }
 
-        //associate the layer with the taxonomyWhere
-        $layer->taxonomyWheres()->attach($taxonomyWhere);
+    /**
+     * Test if the command can handle no taxonomies found for a layer.
+     *
+     * @return void
+     */
+    public function test_command_handles_no_taxonomies_found_for_layer()
+    {
+        //create an app
+        $app = App::factory()->create();
 
-        //associate the layer to the overlayLayer
+        //create an overlay layer
+        $overlayLayer = OverlayLayer::factory()->create();
+
+        //create a layer
+        $layer = Layer::factory()->create();
+
+        //add the layer to the overlay layer
         $overlayLayer->layers()->attach($layer);
 
-        //check if the command is not working
-        $this->assertNotEquals(0, $this->artisan('geohub:createOverlayGeojson', [
-            'app_id' => 1000000,
-            'overlay_id' => 1000000,
-            'name' => 'test',
-        ]));
+        //run the command with no taxonomies attached to the layer
+        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' ' . $overlayLayer->id . ' test_file_name')
+            ->expectsOutput('No taxonomies found for layer ' . $layer->name)
+            ->assertExitCode(0);
+    }
 
-        //define the file path and directory path 
-        $directoryPath = storage_path('/app/public/geojson/1000');
-        $filePath = $directoryPath . '/test.geojson';
+    /**
+     * Test if the command can handle invalid app id.
+     *
+     * @return void
+     */
+    public function test_command_handles_invalid_app_id()
+    {
+        //create an overlay layer
+        $overlayLayer = OverlayLayer::factory()->create();
 
-        //check if there is no directory at the path
-        $this->assertDirectoryDoesNotExist($directoryPath);
+        //run the command with an invalid app id
+        $this->artisan('geohub:createOverlayGeojson 9999 ' . $overlayLayer->id . ' test_file_name')
+            ->expectsOutput('App with id 9999 not found.')
+            ->assertExitCode(1);
+    }
 
-        //check if there is no file at the path
-        $this->assertFileDoesNotExist($filePath);
+    /**
+     * Test if the command can handle invalid overlayLayer id.
+     *
+     * @return void
+     */
+    public function test_command_handles_invalid_overlay_layer_id()
+    {
+        //create an app
+        $app = App::factory()->create();
+
+        //run the command with an invalid overlayLayer id
+        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' 9999 test_file_name')
+            ->expectsOutput('OverlayLayer with id 9999 not found.')
+            ->assertExitCode(1);
     }
 }
