@@ -135,8 +135,20 @@ class CreateOverlayGeojsonFromTaxonomyCommand extends Command
         $properties['layer']['id'] = $layer->id;
         $properties['layer']['name'] = $layer->name ?? '';
         $properties['layer']['title'] = $title ?? '';
-        $properties['layer']['description'] = $layerDescription ?? $taxonomyWhereDescription;
-        $properties['layer']['feature_image'] = $layer->icon ?? $featureImageLink ?? '';
+        if ($layerDescription || $taxonomyWhereDescription) {
+            $properties['layer']['description'] = $layerDescription ?? $taxonomyWhereDescription;
+        }
+        $properties['layer']['feature_image'] = $featureImageLink ?? '';
+        if ($layer->taxonomyWheres->count() > 0) {
+            $properties['layer']['taxonomy_wheres'] = [];
+            foreach($layer->taxonomyWheres as $tax) {
+                array_push($properties['layer']['taxonomy_wheres'],array(
+                    'id'=>$tax->id,
+                    'name'=>$tax->getTranslations('name'),
+                    'identifier'=>$tax->identifier
+                ));
+            }
+        }
         $properties['layer']['stats'] = [];
         $properties['layer']['stats']['tracks_count'] = $tracksCount;
         $properties['layer']['stats']['total_tracks_length'] = $totalTracksLength;
