@@ -102,9 +102,6 @@ body {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
-  .footer-space {
-    border: 5px solid red;
-  }
 
   .pdf-header {
     position: fixed;
@@ -148,11 +145,6 @@ body {
     height: 100vh;
     page-break-after: always;
   }
-
-  /* .track-feature-image-page {
-    page-break-after: always;
-    break-inside: auto;
-  } */
 
   .track-details {
     font-size: 18px;
@@ -203,13 +195,6 @@ body {
   .pois-header {
     font-size: 2rem;
   }
-
-  /* .pois-grid {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 1rem;
-  } */
 
   .poi {
     display: grid;
