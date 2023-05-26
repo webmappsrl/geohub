@@ -102,6 +102,9 @@ body {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+  .footer-space {
+    border: 5px solid red;
+  }
 
   .pdf-header {
     position: fixed;
@@ -215,8 +218,8 @@ body {
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
-    /* break-inside: avoid; */
-    page-break-after: always;
+    page-break-after: auto;
+    margin-bottom: 20px;
     break-inside: auto;
   }
 
@@ -278,7 +281,7 @@ body {
   .track-feature-image-page:last-child {
     page-break-after: auto;
   }
-  .poi:last-child {
+  .pois-page:last-child {
     page-break-after: auto;
   }
 }
