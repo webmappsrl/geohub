@@ -8,7 +8,7 @@
     if (request('app_id')) {
         $app = App::find(request('app_id'));
         $appName = $app->name;
-        $appIcon = asset('storage/' . $app->icon_small);
+        $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
     
