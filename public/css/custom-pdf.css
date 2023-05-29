@@ -101,7 +101,7 @@ body {
 
   .header-space,
   .footer-space {
-    height: 50px;
+    height: 70px;
     padding-bottom: 15px;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
@@ -110,7 +110,7 @@ body {
   .pdf-header {
     position: fixed;
     top: 0mm;
-    width: 100%;
+    width: 95%;
     font-weight: bold;
     font-size: 24px;
     text-align: left;
@@ -152,7 +152,8 @@ body {
 
   .track-details {
     font-size: 18px;
-    width: 100%;
+    width: 95%;
+    margin: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
