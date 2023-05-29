@@ -101,7 +101,7 @@ body {
 
   .header-space,
   .footer-space {
-    height: 70px;
+    height: 90px;
     padding-bottom: 15px;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
@@ -115,7 +115,8 @@ body {
     font-size: 24px;
     text-align: left;
     color: black;
-    padding-left: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     padding-top: 20px;
   }
 
@@ -219,10 +220,13 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 0;
+    break-inside: avoid;
+  }
+
+  .poi-description {
     text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
     text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
     line-height: 1.1rem;
-    break-inside: avoid;
   }
 
   .poi-horizontal-rule {
