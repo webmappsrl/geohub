@@ -54,11 +54,8 @@ body {
     display: none;
   }
   .map-header {
-    text-align: left;
     width: 55%;
-    height: 100px;
     background-color: white;
-    top: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -67,37 +64,44 @@ body {
     font-weight: 600;
   }
 
-  .app-name {
+  .names {
+    width: 70%;
+    height: 100%;
+    padding-right: 5px;
+    padding-top: 0px;
     padding-left: 15px;
-    height: 10px;
+    flex: 1;
+  }
+
+  .app-name {
     font-weight: bold;
-    font-size: 25px;
-    padding-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: -25px;
+    word-wrap: break-word;
   }
 
   .track-name {
-    padding-left: 15px;
     padding-top: 0;
-    margin-top: 0;
-    height: 10px;
     font-size: 14px;
+    word-wrap: break-word;
   }
 
   .qr-code-container {
-    height: 30%;
-    width: 10%;
+    height: 30px;
+    width: 30px;
     background-color: lightgray;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
     align-self: center;
     margin-right: 20px;
+    flex: 0 0 auto;
   }
 
   .header-space,
   .footer-space {
-    height: 50px;
+    height: 90px;
     padding-bottom: 15px;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
@@ -106,12 +110,13 @@ body {
   .pdf-header {
     position: fixed;
     top: 0mm;
-    width: 100%;
+    width: 95%;
     font-weight: bold;
     font-size: 24px;
     text-align: left;
     color: black;
-    padding-left: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     padding-top: 20px;
   }
 
@@ -146,14 +151,10 @@ body {
     page-break-after: always;
   }
 
-  /* .track-feature-image-page {
-    page-break-after: always;
-    break-inside: auto;
-  } */
-
   .track-details {
     font-size: 18px;
-    width: 100%;
+    width: 95%;
+    margin: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -193,20 +194,14 @@ body {
 
   .pois-page {
     page-break-after: always;
-    break-inside: avoid;
+    break-inside: auto;
+    page-break-before: always;
     padding: 0 25px;
   }
 
   .pois-header {
     font-size: 2rem;
   }
-
-  /* .pois-grid {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 1rem;
-  } */
 
   .poi {
     display: grid;
@@ -215,9 +210,9 @@ body {
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
-    /* break-inside: avoid; */
-    page-break-after: always;
-    break-inside: auto;
+    page-break-after: auto;
+    margin-bottom: 20px;
+    break-inside: avoid;
   }
 
   .poi-details {
@@ -225,10 +220,13 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 0;
+    break-inside: avoid;
+  }
+
+  .poi-description {
     text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
     text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
     line-height: 1.1rem;
-    break-inside: avoid;
   }
 
   .poi-horizontal-rule {
@@ -262,8 +260,8 @@ body {
   }
 
   .poi-feature-image .app-logo {
-    width: 100px;
-    height: 100px;
+    width: 250px;
+    height: 250px;
     position: absolute;
     right: 30px;
   }
@@ -278,7 +276,7 @@ body {
   .track-feature-image-page:last-child {
     page-break-after: auto;
   }
-  .poi:last-child {
+  .pois-page:last-child {
     page-break-after: auto;
   }
 }

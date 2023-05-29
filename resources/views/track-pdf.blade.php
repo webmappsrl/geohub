@@ -8,7 +8,7 @@
     if (request('app_id')) {
         $app = App::find(request('app_id'));
         $appName = $app->name;
-        $appIcon = asset('storage/' . $app->icon_small);
+        $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
     }
     
@@ -34,10 +34,11 @@
     <div class="map-header">
         <div class="names">
             <div class="app-name">
-                <p>{{ Str::limit($appName, 23) }}</p>
+                <p>{{ $appName }}</p>
             </div>
             <div class="track-name">
-                <p>{{ Str::limit($track->name, 35) }}</p>
+                <p>{{ $track->name }}
+                </p>
             </div>
         </div>
         <div class="qr-code-container"> Qr</div>
@@ -134,7 +135,6 @@
                             @endif
                             @if ($track->description)
                                 <div class="track-description">
-                                    {{-- {!! truncateAtLastPeriod($track->description) !!} --}}
                                     {!! $track->description !!}
                                 </div>
                             @endif
@@ -144,36 +144,34 @@
                     @if ($track->ecPois->count() > 0)
                         <div class="pois-page">
                             <h2 class="pois-header">Punti di interesse</h2>
-                                @foreach ($track->ecPois as $poi)
-                                    {{-- create the poi container --}}
-                                    <div class="poi">
-                                        {{-- create poi description --}}
-                                        <div class="poi-details">
-                                            <h3 class="poi-name">{{ $poi->name }}</h3>
-                                            <div class="poi-description">
-                                                {{-- {!! truncateAtLastPeriod($poi->description, 800) !!} --}}
-                                                {!! $poi->description !!}
-                                            </div>
-
-                                            <hr class="poi-horizontal-rule">
+                            @foreach ($track->ecPois as $poi)
+                                {{-- create the poi container --}}
+                                <div class="poi">
+                                    {{-- create poi description --}}
+                                    <div class="poi-details">
+                                        <h3 class="poi-name">{{ $poi->name }}</h3>
+                                        <div class="poi-description">
+                                            {!! $poi->description !!}
                                         </div>
-                                        {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
-                                        <div class="poi-feature-image">
-                                            @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
-                                                @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
-                                                    @if ($key == '150x150')
-                                                        <img class="poi-image" src="{{ $value }}"
-                                                            alt="">
-                                                    @endif
-                                                @endforeach
-                                                {{-- if not show app icon as image --}}
-                                            @else
-                                                <img class="app-logo"src="{{ $appIcon }}" alt="">
-                                            @endif
 
-                                        </div>
+                                        <hr class="poi-horizontal-rule">
                                     </div>
-                                @endforeach
+                                    {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
+                                    <div class="poi-feature-image">
+                                        @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
+                                            @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                                @if ($key == '150x150')
+                                                    <img class="poi-image" src="{{ $value }}" alt="">
+                                                @endif
+                                            @endforeach
+                                            {{-- if not show app icon as image --}}
+                                        @else
+                                            <img class="app-logo"src="{{ $appIcon }}" alt="">
+                                        @endif
+
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
 
@@ -202,21 +200,21 @@
             let printButton = document.getElementById('print-button');
             let notReadyColor = '#be4d25'
             let readyColor = '#4da73a'
-    
+
             // https://stackoverflow.com/questions/62832750/print-page-once-the-page-is-completely-loaded
 
             setTimeout(() => {
-                printButton.innerHTML= 'Print';
+                printButton.innerHTML = 'Print';
                 printButton.style.backgroundColor = readyColor;
                 printButton.disabled = false;
-                    window.print();
+                window.print();
             }, "6000");
-    
+
             printButton.addEventListener('click', function() {
                 window.print();
             });
         };
-        </script>
+    </script>
 
 </body>
 
