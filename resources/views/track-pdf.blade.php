@@ -34,10 +34,11 @@
     <div class="map-header">
         <div class="names">
             <div class="app-name">
-                <p>{{ Str::limit($appName, 23) }}</p>
+                <p>{{ $appName }}</p>
             </div>
             <div class="track-name">
-                <p>{{ Str::limit($track->name, 35) }}</p>
+                <p>{{ $track->name }}
+                </p>
             </div>
         </div>
         <div class="qr-code-container"> Qr</div>

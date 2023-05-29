@@ -54,11 +54,8 @@ body {
     display: none;
   }
   .map-header {
-    text-align: left;
     width: 55%;
-    height: 100px;
     background-color: white;
-    top: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -67,32 +64,39 @@ body {
     font-weight: 600;
   }
 
-  .app-name {
+  .names {
+    width: 70%;
+    height: 100%;
+    padding-right: 5px;
+    padding-top: 0px;
     padding-left: 15px;
-    height: 10px;
+    flex: 1;
+  }
+
+  .app-name {
     font-weight: bold;
-    font-size: 25px;
-    padding-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: -25px;
+    word-wrap: break-word;
   }
 
   .track-name {
-    padding-left: 15px;
     padding-top: 0;
-    margin-top: 0;
-    height: 10px;
     font-size: 14px;
+    word-wrap: break-word;
   }
 
   .qr-code-container {
-    height: 30%;
-    width: 10%;
+    height: 30px;
+    width: 30px;
     background-color: lightgray;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
     align-self: center;
     margin-right: 20px;
+    flex: 0 0 auto;
   }
 
   .header-space,
