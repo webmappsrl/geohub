@@ -72,18 +72,37 @@ class SyncECTagsFromOSFCommand extends Command
         $out_source = OutSourceFeature::find($feature->out_source_feature_id);
         if ($this->tag != 'all') {
             if ($out_source) {
-                $thistag = $this->tag;
-                if (empty($feature->$thistag) || $this->force == true) {
-                    if (isset($out_source->tags[$thistag])) {
-                        $feature->$thistag = $out_source->tags[$this->tag];
-                        $feature->save();
-                        return true;
+                if ($this->tag == 'caption') {
+                    $images = $feature->ecMedia;
+                    if ($images->count() > 0) {
+                        foreach ( $images as $image) {
+                            if ($image->out_source_feature_id) {
+                                $out_source_image = OutSourceFeature::find($image->out_source_feature_id);
+                                if ($out_source_image) {
+                                    if (array_key_exists('description',$out_source_image->tags)) {
+                                        $image->description = $out_source_image->tags['description'];
+                                        $image->save();
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $thistag = $this->tag;
+                    if (empty($feature->$thistag) || $this->force == true) {
+                        if (isset($out_source->tags[$thistag])) {
+                            $feature->$thistag = $out_source->tags[$this->tag];
+                            $feature->save();
+                            return true;
+                        }
+                        return false;
                     }
                     return false;
                 }
-                return false;
             }
-        } else {
+        } 
+        if ( $this->tag == 'all') {
             if ($out_source) {
                 // if (empty($feature->description)) {
                 //     if (isset($out_source->tags['description']))
@@ -207,7 +226,8 @@ class SyncECTagsFromOSFCommand extends Command
         Log::info('Checking paramtere TAG');
         if ($this->tag) {
             if (strtolower($this->tag) == 'description' ||
-                strtolower($this->tag) == 'excerpt'
+                strtolower($this->tag) == 'excerpt' ||
+                strtolower($this->tag) == 'caption' 
                 ) {
                     $this->tag = strtolower($this->tag);
                 } else {
