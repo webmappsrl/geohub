@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Exception;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
  * Class App
@@ -28,7 +29,7 @@ class App extends Model
     use HasFactory, ConfTrait, HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label','overlays_label'];
+    public array $translatable = ['welcome', 'tiles_label', 'overlays_label'];
 
     /**
      * The accessors to append to the model's array form.
@@ -575,5 +576,37 @@ class App extends Model
         $user = User::find($this->user_id);
 
         return $this->attributes['user_email'] = $user->email;
+    }
+
+    /**
+     * generate a QR code for the app
+     * @return string
+     */
+    public function generateQrCode(int $size = 100, string $customerWebsite = null)
+    {
+        //if the customer has his own domain use it, otherwise use the default one
+        if (isset($customerWebsite)) {
+            $url = $customerWebsite;
+        } else {
+            $url = 'https://' . $this->id . '.app.webmapp.it';
+        }
+        //create the svg code for the QR code
+        $svg = QrCode::size($size)->generate($url);
+
+        $this->qr_code = $svg;
+        $this->save();
+
+        //if not exists create the folder public/images/app-qr-codes
+        if (!file_exists(public_path('images/app-qr-codes'))) {
+            mkdir(public_path('images/app-qr-codes'), 0777, true);
+        }
+
+        $filename = $this->name . '.svg';
+
+        //save the file in public/images/app-qr-codes
+        $path = public_path('images/app-qr-codes/' . $filename);
+        file_put_contents($path, $svg);
+
+        return $svg;
     }
 }
