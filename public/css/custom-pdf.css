@@ -87,16 +87,26 @@ body {
   }
 
   .qr-code-container {
-    height: 30px;
-    width: 30px;
+    height: 100px;
+    width: 100px;
     background-color: lightgray;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    padding: 25px;
+    /* padding: 25px; */
     text-align: center;
     align-self: center;
     margin-right: 20px;
     flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qr-code {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .header-space,
