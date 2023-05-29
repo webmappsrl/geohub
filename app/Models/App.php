@@ -582,11 +582,11 @@ class App extends Model
      * generate a QR code for the app
      * @return string
      */
-    public function generateQrCode(int $size = 100, string $customerWebsite = null)
+    public function generateQrCode(int $size = 100, string $customUrl = null)
     {
-        //if the customer has his own domain use it, otherwise use the default one
-        if (isset($customerWebsite)) {
-            $url = $customerWebsite;
+        //if the customer has his own customUrl use it, otherwise use the default one
+        if (isset($customUrl)) {
+            $url = $customUrl;
         } else {
             $url = 'https://' . $this->id . '.app.webmapp.it';
         }

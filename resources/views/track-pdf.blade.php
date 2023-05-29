@@ -11,7 +11,7 @@
         $appName = $app->name;
         $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
-        $qrCode = $app->generateQrCode();
+        $qrCode = $app->qr_code;
     }
     
 @endphp
