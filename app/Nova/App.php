@@ -8,6 +8,7 @@ use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
+use App\Nova\Actions\generateQrCodeAction;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -927,8 +928,8 @@ class App extends Resource
                 ->help(__('Required svg image'))
                 ->hideFromIndex(),
             Text::make('Qr Code', 'qr_code', function () {
-                return "<div style='width:64px;height:64px;'>" . $this->qr_code . "</div>";
-            })->asHtml()->hideFromIndex(),
+                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
+            })->asHtml(),
             Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
                 'import icoonmoon selection.json file'
             )
@@ -1139,7 +1140,12 @@ class App extends Resource
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
-            })
+            }),
+            (new generateQrCodeAction())->canSee(function ($request) {
+                return true;
+            })->canRun(function ($request, $zone) {
+                return true;
+            }),
         ];
     }
 }
