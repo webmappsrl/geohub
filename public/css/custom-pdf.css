@@ -87,11 +87,8 @@ body {
   }
 
   .qr-code-container {
-    height: 100px;
-    width: 100px;
-    background-color: lightgray;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+    height: 80px;
+    width: 80px;
     /* padding: 25px; */
     text-align: center;
     align-self: center;
@@ -169,7 +166,7 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
   .track-details span {
     margin: 5px 10px;

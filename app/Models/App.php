@@ -582,7 +582,7 @@ class App extends Model
      * generate a QR code for the app
      * @return string
      */
-    public function generateQrCode(int $size = 100, string $customUrl = null)
+    public function generateQrCode(int $size = 80, string $customUrl = null)
     {
         //if the customer has his own customUrl use it, otherwise use the default one
         if (isset($customUrl)) {
