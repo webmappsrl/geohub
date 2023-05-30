@@ -927,7 +927,8 @@ class App extends Resource
                 })
                 ->help(__('Required svg image'))
                 ->hideFromIndex(),
-            Text::make('Qr Code', 'qr_code', function () {
+            Text::make('QR Code custom URL','qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
+            Text::make('QR Code', 'qr_code', function () {
                 return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
             })->asHtml(),
             Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
