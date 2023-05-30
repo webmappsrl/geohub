@@ -45,14 +45,14 @@ class GenerateAppsQrCode extends Command
                 $this->error('App with id ' . $this->argument('id') . ' not found!');
                 return;
             }
-            $app->generateQrCode();
+            $app->generateQrCode($app->qrcode_custom_url);
             $this->info('QR code generated for app with id:  ' . $app->id);
             return;
         }
         //if no app name is provided, generate QR code for all apps 
         $apps = App::all();
         foreach ($apps as $app) {
-            $app->generateQrCode();
+            $app->generateQrCode($app->qrcode_custom_url);
             $this->info('QR code generated for app: ' . $app->id);
         }
     }

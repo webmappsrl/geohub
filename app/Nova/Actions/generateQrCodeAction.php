@@ -26,7 +26,7 @@ class generateQrCodeAction extends Action
     {
         //for each model selected call the generateQrCode method
         foreach ($models as $model) {
-            $model->generateQrCode();
+            $model->generateQrCode($model->qrcode_custom_url);
         }
         //return a success message
         return Action::message('QR Code Generated Successfully!');

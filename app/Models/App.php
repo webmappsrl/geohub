@@ -582,16 +582,16 @@ class App extends Model
      * generate a QR code for the app
      * @return string
      */
-    public function generateQrCode(int $size = 80, string $customUrl = null)
+    public function generateQrCode(string $customUrl = null)
     {
         //if the customer has his own customUrl use it, otherwise use the default one
-        if (isset($customUrl)) {
+        if (isset($customUrl) && $customUrl != null) {
             $url = $customUrl;
         } else {
             $url = 'https://' . $this->id . '.app.webmapp.it';
         }
         //create the svg code for the QR code
-        $svg = QrCode::size($size)->generate($url);
+        $svg = QrCode::size(80)->generate($url);
 
         $this->qr_code = $svg;
         $this->save();
