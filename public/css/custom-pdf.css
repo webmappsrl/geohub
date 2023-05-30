@@ -9,7 +9,7 @@ body {
 .map {
   top: 0px;
   height: 1140px;
-  width: 48%;
+  width: 850px;
   position: relative;
   margin: auto;
   display: block;
@@ -24,20 +24,19 @@ body {
   height: 100%;
   background-color: #ffffff;
   z-index: 9999;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .print-button {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px 30px;
+  padding: 3vw;
   background-color: #be4d25;
   color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 34px;
+  font-size: 3vw;
   cursor: pointer;
 }
 
@@ -89,7 +88,6 @@ body {
   .qr-code-container {
     height: 80px;
     width: 80px;
-    /* padding: 25px; */
     text-align: center;
     align-self: center;
     margin-right: 20px;
@@ -108,10 +106,8 @@ body {
 
   .header-space,
   .footer-space {
-    height: 90px;
+    height: 75px;
     padding-bottom: 15px;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
   }
 
   .pdf-header {
@@ -125,6 +121,7 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 20px;
+    word-wrap: break-word;
   }
 
   .pdf-footer {
@@ -166,7 +163,8 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    margin-top: 20px;
   }
   .track-details span {
     margin: 5px 10px;
@@ -288,19 +286,9 @@ body {
   }
 }
 
-@media only screen and (max-width: 767px) {
-  .pdf-header,
-  .pdf-footer {
-    font-size: 15px;
-    background-color: #333333;
-    color: #ffffff;
-    z-index: 999;
-    height: 30px;
-    padding: 0.5rem;
-  }
-
-  .map {
-    height: 1300px;
-    width: 800px;
+@media (max-width: 767px) {
+  .print-button {
+    font-size: 6vw;
+    padding: 6vw;
   }
 }
