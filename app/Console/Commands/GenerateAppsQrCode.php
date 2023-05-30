@@ -12,7 +12,7 @@ class GenerateAppsQrCode extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:generate_qr_code_for_apps {name?}';
+    protected $signature = 'geohub:generate_qr_code_for_apps {id?}';
 
     /**
      * The console command description.
@@ -39,21 +39,21 @@ class GenerateAppsQrCode extends Command
     public function handle()
     {
         //if app name is provided, generate QR code for that app
-        if ($this->argument('name')) {
-            $app = App::where('name', $this->argument('name'))->first();
+        if ($this->argument('id')) {
+            $app = App::where('id', $this->argument('id'))->first();
             if (!$app) {
-                $this->error('App with name ' . $this->argument('name') . ' not found!');
+                $this->error('App with id ' . $this->argument('id') . ' not found!');
                 return;
             }
             $app->generateQrCode();
-            $this->info('QR code generated for app: ' . $app->name);
+            $this->info('QR code generated for app with id:  ' . $app->id);
             return;
         }
         //if no app name is provided, generate QR code for all apps 
         $apps = App::all();
         foreach ($apps as $app) {
             $app->generateQrCode();
-            $this->info('QR code generated for app: ' . $app->name);
+            $this->info('QR code generated for app: ' . $app->id);
         }
     }
 }
