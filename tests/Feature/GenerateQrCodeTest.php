@@ -27,8 +27,11 @@ class GenerateQrCodeTest extends TestCase
         $this->assertNotNull($app->qr_code);
         $this->assertNotEmpty($app->qr_code);
 
-        //delete the created file
-        unlink(public_path('images/app-qr-codes/' . $app->name . '.svg'));
+        //delete the qr code file
+        unlink(storage_path('app/public/qrcode/' . $app->id . '/webapp-qrcode.svg'));
+
+        //delete the qr code folder
+        rmdir(storage_path('app/public/qrcode/' . $app->id));
     }
 
 
@@ -49,9 +52,11 @@ class GenerateQrCodeTest extends TestCase
         $this->assertStringStartsWith('<?xml', $app->qr_code);
         $this->assertStringContainsString('<svg', $app->qr_code);
 
+        //delete the qr code file
+        unlink(storage_path('app/public/qrcode/' . $app->id . '/webapp-qrcode.svg'));
 
-        //delete the created file
-        unlink(public_path('images/app-qr-codes/' . $app->name . '.svg'));
+        //delete the qr code folder
+        rmdir(storage_path('app/public/qrcode/' . $app->id));
     }
 
     /**
@@ -68,12 +73,15 @@ class GenerateQrCodeTest extends TestCase
         $app->generateQrCode();
 
         //check if the directory is created
-        $this->assertDirectoryExists(public_path('images/app-qr-codes'));
+        $this->assertDirectoryExists(storage_path('app/public/qrcode/' . $app->id));
 
         //check if the svg file is correctly saved
-        $this->assertFileExists(public_path('images/app-qr-codes/' . $app->name . '.svg'));
+        $this->assertFileExists(storage_path('app/public/qrcode/' . $app->id . '/webapp-qrcode.svg'));
 
-        //delete the created file
-        unlink(public_path('images/app-qr-codes/' . $app->name . '.svg'));
+        //delete the qr code file
+        unlink(storage_path('app/public/qrcode/' . $app->id . '/webapp-qrcode.svg'));
+
+        //delete the qr code folder
+        rmdir(storage_path('app/public/qrcode/' . $app->id));
     }
 }

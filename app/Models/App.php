@@ -596,16 +596,9 @@ class App extends Model
         $this->qr_code = $svg;
         $this->save();
 
-        //if not exists create the folder public/images/app-qr-codes
-        if (!file_exists(public_path('images/app-qr-codes'))) {
-            mkdir(public_path('images/app-qr-codes'), 0777, true);
-        }
+        //save the file in storage/app/public/qrcode/app_id/
+        Storage::disk('public')->put('qrcode/' . $this->id . '/webapp-qrcode.svg', $svg);
 
-        $filename = $this->name . '.svg';
-
-        //save the file in public/images/app-qr-codes
-        $path = public_path('images/app-qr-codes/' . $filename);
-        file_put_contents($path, $svg);
 
         return $svg;
     }
