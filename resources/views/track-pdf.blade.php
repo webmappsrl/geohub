@@ -213,7 +213,7 @@
                 printButton.style.backgroundColor = readyColor;
                 printButton.disabled = false;
                 window.print();
-            }, "6000");
+            }, "000");
 
             printButton.addEventListener('click', function() {
                 window.print();

@@ -24,21 +24,22 @@ body {
   height: 100vh;
   background-color: #ffffff;
   z-index: 9999;
-  display: block;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 .print-button {
-  position: fixed;
-  padding: 3vw;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  display: block;
+  width: fit-content;
+  height: fit-content;
   background-color: #be4d25;
   color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 3vw;
   cursor: pointer;
+  padding: 10px 20px;
 }
 
 .print-button:disabled {
@@ -290,7 +291,6 @@ body {
 @media (max-width: 767px) {
   .print-button {
     font-size: 6vw;
-    padding: 6vw;
   }
 }
 
