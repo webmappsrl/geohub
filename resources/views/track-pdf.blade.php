@@ -2,6 +2,7 @@
     
     use App\Models\App;
     use Illuminate\Support\Str;
+    use SimpleSoftwareIO\QrCode\Facades\QrCode;
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
@@ -10,6 +11,7 @@
         $appName = $app->name;
         $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
+        $qrCode = $app->qr_code;
     }
     
 @endphp
@@ -41,7 +43,10 @@
                 </p>
             </div>
         </div>
-        <div class="qr-code-container"> Qr</div>
+        @if (isset($qrCode))
+            <div class="qr-code-container">
+                {!! $qrCode !!} </div>
+        @endif
     </div>
     <div class="map">
         <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"

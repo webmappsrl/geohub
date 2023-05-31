@@ -9,7 +9,7 @@ body {
 .map {
   top: 0px;
   height: 1140px;
-  width: 48%;
+  width: 850px;
   position: relative;
   margin: auto;
   display: block;
@@ -20,25 +20,26 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: #ffffff;
   z-index: 9999;
-  display: block;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 .print-button {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px 30px;
+  display: block;
+  width: fit-content;
+  height: fit-content;
   background-color: #be4d25;
   color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 34px;
+  font-size: 3vw;
   cursor: pointer;
+  padding: 10px 20px;
 }
 
 .print-button:disabled {
@@ -87,24 +88,28 @@ body {
   }
 
   .qr-code-container {
-    height: 30px;
-    width: 30px;
-    background-color: lightgray;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-    padding: 25px;
+    height: 80px;
+    width: 80px;
     text-align: center;
     align-self: center;
     margin-right: 20px;
     flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qr-code {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .header-space,
   .footer-space {
-    height: 90px;
+    height: 75px;
     padding-bottom: 15px;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
   }
 
   .pdf-header {
@@ -118,6 +123,7 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 20px;
+    word-wrap: break-word;
   }
 
   .pdf-footer {
@@ -160,6 +166,7 @@ body {
     flex-wrap: wrap;
     justify-content: flex-start;
     margin-bottom: 10px;
+    margin-top: 20px;
   }
   .track-details span {
     margin: 5px 10px;
@@ -194,7 +201,7 @@ body {
 
   .pois-page {
     page-break-after: always;
-    break-inside: auto;
+    page-break-inside: auto;
     page-break-before: always;
     padding: 0 25px;
   }
@@ -212,7 +219,7 @@ body {
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
     page-break-after: auto;
     margin-bottom: 20px;
-    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .poi-details {
@@ -220,7 +227,7 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 0;
-    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .poi-description {
@@ -281,19 +288,18 @@ body {
   }
 }
 
-@media only screen and (max-width: 767px) {
-  .pdf-header,
-  .pdf-footer {
-    font-size: 15px;
-    background-color: #333333;
-    color: #ffffff;
-    z-index: 999;
-    height: 30px;
-    padding: 0.5rem;
+@media (max-width: 767px) {
+  .print-button {
+    font-size: 6vw;
   }
+}
 
-  .map {
-    height: 100vh;
-    width: 100vw;
+@-moz-document url-prefix() {
+  @media print {
+    .map {
+      width: 100%;
+      height: 110vh;
+      page-break-after: always;
+    }
   }
 }

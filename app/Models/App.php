@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Exception;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
  * Class App
@@ -28,7 +29,7 @@ class App extends Model
     use HasFactory, ConfTrait, HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label','overlays_label'];
+    public array $translatable = ['welcome', 'tiles_label', 'overlays_label'];
 
     /**
      * The accessors to append to the model's array form.
@@ -575,5 +576,30 @@ class App extends Model
         $user = User::find($this->user_id);
 
         return $this->attributes['user_email'] = $user->email;
+    }
+
+    /**
+     * generate a QR code for the app
+     * @return string
+     */
+    public function generateQrCode(string $customUrl = null)
+    {
+        //if the customer has his own customUrl use it, otherwise use the default one
+        if (isset($customUrl) && $customUrl != null) {
+            $url = $customUrl;
+        } else {
+            $url = 'https://' . $this->id . '.app.webmapp.it';
+        }
+        //create the svg code for the QR code
+        $svg = QrCode::size(80)->generate($url);
+
+        $this->qr_code = $svg;
+        $this->save();
+
+        //save the file in storage/app/public/qrcode/app_id/
+        Storage::disk('public')->put('qrcode/' . $this->id . '/webapp-qrcode.svg', $svg);
+
+
+        return $svg;
     }
 }
