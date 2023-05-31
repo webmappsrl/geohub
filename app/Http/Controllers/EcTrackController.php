@@ -178,7 +178,7 @@ class EcTrackController extends Controller
                 'duration_forward',
                 'duration_backward',
             ];
-            
+
             foreach ($fields as $field) {
                 if (isset($request->$field)) {
                     $ecTrack->$field = $request->$field;
@@ -442,8 +442,8 @@ class EcTrackController extends Controller
 
         return response()->json(['favorites' => $ids]);
     }
-    
-    
+
+
     /**
      * Returns an array of ID and Updated_at based on the Author emails provided
      *
@@ -456,16 +456,16 @@ class EcTrackController extends Controller
     {
         if (empty($email)) {
             $ids = DB::select('select id, updated_at from ec_tracks where user_id != 20548 and user_id != 17482');
-            $ids = collect($ids)->pluck('updated_at','id'); 
+            $ids = collect($ids)->pluck('updated_at', 'id');
             return response()->json($ids);
         }
-        
+
         if ($email) {
             $list = [];
-            $emails = explode(',',$email);
+            $emails = explode(',', $email);
             foreach ($emails as $email) {
                 $user = User::where('email', '=', $email)->first();
-                $ids = EcTrack::where('user_id',$user->id)->pluck('updated_at','id')->toArray();
+                $ids = EcTrack::where('user_id', $user->id)->pluck('updated_at', 'id')->toArray();
                 $list = $list + $ids;
             }
             return response()->json($list);
@@ -479,7 +479,8 @@ class EcTrackController extends Controller
      * @param integer $source_id
      * @return JsonResponse
      */
-    public function getEcTrackFromSourceID($endpoint_slug, $source_id) {
+    public function getEcTrackFromSourceID($endpoint_slug, $source_id)
+    {
         $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
 
         $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
@@ -491,5 +492,68 @@ class EcTrackController extends Controller
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
 
         return response()->json($track->getGeojson(), 200, $headers);
+    }
+
+    /**
+     * Get the feature collection for the given track pdf
+     * 
+     * @param int $idTrack
+     * 
+     * @return JsonResponse
+     */
+    public static function getFeatureCollectionForTrackPdf(int $idTrack): JsonResponse
+    {
+        $track = EcTrack::find($idTrack);
+        if (is_null($track))
+            return response()->json(['error' => 'Track not found'], 404);
+        $trackGeometry = Db::select("select ST_AsGeoJSON(geometry) as geometry from ec_tracks where id = $idTrack");
+        $trackGeometry = json_decode($trackGeometry[0]->geometry);
+
+        //feature must have properties field as follow: {"type":"Feature","properties":{"id":1, "type":"track/poi", "strokeColor": "", "fillColor": ""},"geometry":{"type":"LineString","coordinates":[[11.123,45.123],[11.123,45.123]]}}
+
+        $features = [];
+
+        $trackFeature = [
+            "type" => "Feature",
+            "properties" => [
+                "id" => $track->id,
+                "type_sisteco" => "Track",
+                "strokeColor" => "",
+                "fillColor" => ""
+            ],
+            "geometry" => $trackGeometry
+        ];
+
+        $features[] = $trackFeature;
+
+
+
+        //if the track has related pois we add them to the feature collection, else we return the track feature only
+        if (count($track->ecPois) > 0) {
+            foreach ($track->ecPois as $poi) {
+                $poiGeometry = Db::select("select ST_AsGeoJSON(geometry) as geometry from ec_pois where id = $poi->id");
+                $poiGeometry = json_decode($poiGeometry[0]->geometry);
+                $poiFeature = [
+                    "type" => "Feature",
+                    "properties" => [
+                        "id" => $poi->id,
+                        "type_sisteco" => "Poi",
+                        "pointRadius" => "",
+                        "pointFillColor" => "",
+                        "pointStrokeColor" => "",
+                    ],
+                    "geometry" => $poiGeometry
+                ];
+                $features[] = $poiFeature;
+            }
+        }
+
+
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => $features
+        ];
+
+        return response()->json($featureCollection);
     }
 }
