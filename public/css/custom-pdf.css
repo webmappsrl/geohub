@@ -9,7 +9,7 @@ body {
 .map {
   top: 0px;
   height: 1140px;
-  width: 48%;
+  width: 850px;
   position: relative;
   margin: auto;
   display: block;
@@ -20,25 +20,26 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: #ffffff;
   z-index: 9999;
-  display: block;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 .print-button {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px 30px;
+  display: block;
+  width: fit-content;
+  height: fit-content;
   background-color: #be4d25;
   color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 34px;
+  font-size: 3vw;
   cursor: pointer;
+  padding: 10px 20px;
 }
 
 .print-button:disabled {
@@ -54,11 +55,8 @@ body {
     display: none;
   }
   .map-header {
-    text-align: left;
     width: 55%;
-    height: 100px;
     background-color: white;
-    top: 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -67,52 +65,65 @@ body {
     font-weight: 600;
   }
 
-  .app-name {
+  .names {
+    width: 70%;
+    height: 100%;
+    padding-right: 5px;
+    padding-top: 0px;
     padding-left: 15px;
-    height: 10px;
+    flex: 1;
+  }
+
+  .app-name {
     font-weight: bold;
-    font-size: 25px;
-    padding-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: -25px;
+    word-wrap: break-word;
   }
 
   .track-name {
-    padding-left: 15px;
     padding-top: 0;
-    margin-top: 0;
-    height: 10px;
     font-size: 14px;
+    word-wrap: break-word;
   }
 
   .qr-code-container {
-    height: 30%;
-    width: 10%;
-    background-color: lightgray;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-    padding: 20px;
+    height: 80px;
+    width: 80px;
     text-align: center;
     align-self: center;
     margin-right: 20px;
+    flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qr-code {
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .header-space,
   .footer-space {
-    height: 50px;
+    height: 75px;
     padding-bottom: 15px;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
   }
 
   .pdf-header {
     position: fixed;
     top: 0mm;
-    width: 100%;
+    width: 95%;
     font-weight: bold;
     font-size: 24px;
     text-align: left;
     color: black;
-    padding-left: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     padding-top: 20px;
+    word-wrap: break-word;
   }
 
   .pdf-footer {
@@ -146,19 +157,16 @@ body {
     page-break-after: always;
   }
 
-  /* .track-feature-image-page {
-    page-break-after: always;
-    break-inside: auto;
-  } */
-
   .track-details {
     font-size: 18px;
-    width: 100%;
+    width: 95%;
+    margin: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
     margin-bottom: 10px;
+    margin-top: 20px;
   }
   .track-details span {
     margin: 5px 10px;
@@ -193,20 +201,14 @@ body {
 
   .pois-page {
     page-break-after: always;
-    break-inside: avoid;
+    page-break-inside: auto;
+    page-break-before: always;
     padding: 0 25px;
   }
 
   .pois-header {
     font-size: 2rem;
   }
-
-  /* .pois-grid {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 1rem;
-  } */
 
   .poi {
     display: grid;
@@ -215,9 +217,9 @@ body {
     background-color: #efefef;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
-    /* break-inside: avoid; */
-    page-break-after: always;
-    break-inside: auto;
+    page-break-after: auto;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
   }
 
   .poi-details {
@@ -225,10 +227,13 @@ body {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 0;
+    page-break-inside: avoid;
+  }
+
+  .poi-description {
     text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
     text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
     line-height: 1.1rem;
-    break-inside: avoid;
   }
 
   .poi-horizontal-rule {
@@ -262,8 +267,8 @@ body {
   }
 
   .poi-feature-image .app-logo {
-    width: 100px;
-    height: 100px;
+    width: 250px;
+    height: 250px;
     position: absolute;
     right: 30px;
   }
@@ -278,24 +283,23 @@ body {
   .track-feature-image-page:last-child {
     page-break-after: auto;
   }
-  .poi:last-child {
+  .pois-page:last-child {
     page-break-after: auto;
   }
 }
 
-@media only screen and (max-width: 767px) {
-  .pdf-header,
-  .pdf-footer {
-    font-size: 15px;
-    background-color: #333333;
-    color: #ffffff;
-    z-index: 999;
-    height: 30px;
-    padding: 0.5rem;
+@media (max-width: 767px) {
+  .print-button {
+    font-size: 6vw;
   }
+}
 
-  .map {
-    height: 100vh;
-    width: 100vw;
+@-moz-document url-prefix() {
+  @media print {
+    .map {
+      width: 100%;
+      height: 110vh;
+      page-break-after: always;
+    }
   }
 }

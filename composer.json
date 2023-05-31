@@ -44,6 +44,7 @@
         "numaxlab/nova-ckeditor5-classic": "^1.1",
         "pos-lifestyle/laravel-nova-date-range-filter": "^1.3",
         "robertboes/nova-slider-field": "^0.1.1",
+        "simplesoftwareio/simple-qrcode": "~4",
         "spatie/db-dumper": "^2.21",
         "spatie/laravel-translatable": "^4.6",
         "spatie/nova-translatable": "^3.0",
