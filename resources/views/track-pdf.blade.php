@@ -50,7 +50,7 @@
     </div>
     <div class="map">
         <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
-            geojsonurl="https://geohub.webmapp.it/api/ec/track/pdf/{{ $track->id }}">
+            geojsonurl="/api/ec/track/pdf/{{ $track->id }}">
         </feature-collection-widget-map>
     </div>
     <header class="pdf-header">
