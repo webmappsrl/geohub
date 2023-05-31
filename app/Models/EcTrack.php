@@ -390,8 +390,14 @@ class EcTrack extends Model
         }
 
         if ($this->allow_print_pdf) {
-            $pdf_url = url('/track/pdf/' . $this->id);
-            $array['related_url']['Print PDF'] = $pdf_url;
+            $user = User::find($this->user_id);
+            if ($user->apps->count() > 0) {
+                $pdf_url = url('/track/pdf/' . $this->id . '?app_id=' .$user->apps[0]->id );
+                $array['related_url']['Print PDF'] = $pdf_url;
+            } else {
+                $pdf_url = url('/track/pdf/' . $this->id );
+                $array['related_url']['Print PDF'] = $pdf_url;
+            }
         }
 
         return $array;
