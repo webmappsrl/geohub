@@ -68,7 +68,7 @@ class UpdateTrackFromOsm extends Command
                 $names = json_decode($track->name, true);
                 if (key_exists('name',$data['properties']) && $data['properties']['name']) {
                     $names = [];
-                    $names['it'] = $data['properties']['name'];
+                    $names['it'] = str_replace('"', '', $data['properties']['name']);
                 }
                 $track->name = $names;
 
