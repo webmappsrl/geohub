@@ -68,7 +68,7 @@ class UpdateTrackFromOsm extends Command
                 $names = json_decode($track->name, true);
                 if (key_exists('name',$data['properties']) && $data['properties']['name']) {
                     $names = [];
-                    $names['it'] = $data['properties']['name'];
+                    $names['it'] = str_replace('"', '', $data['properties']['name']);
                 }
                 $track->name = $names;
 
@@ -79,12 +79,16 @@ class UpdateTrackFromOsm extends Command
                 //duration forward must be converted to minutes
                 if (key_exists('duration:forward',$data['properties']) && $data['properties']['duration:forward'] != null) {
                     $duration_forward = str_replace('.',':',$data['properties']['duration:forward']);
+                    $duration_forward = str_replace(',',':',$duration_forward);
+                    $duration_forward = str_replace(';',':',$duration_forward);
                     $duration_forward = explode(':', $duration_forward);
                     $track->duration_forward = ($duration_forward[0] * 60) + $duration_forward[1];
                 }
                 //same for duration_backward
                 if (key_exists('duration:backward',$data['properties']) && $data['properties']['duration:backward'] != null) {
-                    $duration_backward = str_replace('.',':',$data['properties']['duration:forward']);
+                    $duration_backward = str_replace('.',':',$data['properties']['duration:backward']);
+                    $duration_backward = str_replace(',',':',$duration_backward);
+                    $duration_backward = str_replace(';',':',$duration_backward);
                     $duration_backward = explode(':', $duration_backward);
                     $track->duration_backward = ($duration_backward[0] * 60) + $duration_backward[1];
                 }

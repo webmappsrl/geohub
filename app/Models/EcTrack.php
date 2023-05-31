@@ -390,8 +390,14 @@ class EcTrack extends Model
         }
 
         if ($this->allow_print_pdf) {
-            $pdf_url = url('/track/pdf/' . $this->id);
-            $array['related_url']['Print PDF'] = $pdf_url;
+            $user = User::find($this->user_id);
+            if ($user->apps->count() > 0) {
+                $pdf_url = url('/track/pdf/' . $this->id . '?app_id=' .$user->apps[0]->id );
+                $array['related_url']['Print PDF'] = $pdf_url;
+            } else {
+                $pdf_url = url('/track/pdf/' . $this->id );
+                $array['related_url']['Print PDF'] = $pdf_url;
+            }
         }
 
         return $array;
@@ -776,7 +782,7 @@ class EcTrack extends Model
                 "cai_scale": "' . $this->cai_scale . '",
                 "from": "' . $this->getActualOrOSFValue('from') . '",
                 "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->name . '",
+                "name": "' . $this->cleanTrackNameSpecialChar() . '",
                 "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
@@ -938,6 +944,14 @@ class EcTrack extends Model
             $duration = 0;
         }
         return $duration;
+    }
+
+    public function cleanTrackNameSpecialChar()
+    {
+        if (!empty($this->name)) {
+            $name = str_replace('"', '', $this->name);
+        }
+        return $name;
     }
 
     // TODO: ripristinare la indicizzazione del color
