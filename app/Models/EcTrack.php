@@ -782,7 +782,7 @@ class EcTrack extends Model
                 "cai_scale": "' . $this->cai_scale . '",
                 "from": "' . $this->getActualOrOSFValue('from') . '",
                 "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->name . '",
+                "name": "' . $this->cleanTrackNameSpecialChar() . '",
                 "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
@@ -944,6 +944,14 @@ class EcTrack extends Model
             $duration = 0;
         }
         return $duration;
+    }
+
+    public function cleanTrackNameSpecialChar()
+    {
+        if (!empty($this->name)) {
+            $name = str_replace('"', '', $this->name);
+        }
+        return $name;
     }
 
     // TODO: ripristinare la indicizzazione del color
