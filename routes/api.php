@@ -183,6 +183,7 @@ Route::name('api.')->group(function () {
             Route::get("/most_viewed", [EcTrackController::class, 'mostViewed'])->name('most_viewed');
             Route::get("/multiple", [EcTrackController::class, 'multiple'])->name('multiple');
             Route::put("/update/{id}", [EcTrackController::class, 'updateComputedData'])->name('update');
+            Route::get("/pdf/{id}", [EcTrackController::class, 'getFeatureCollectionForTrackPdf'])->name('feature_collection_for_pdf');
             Route::middleware('auth.jwt')
                 ->prefix('favorite')->name('favorite.')->group(function () {
                     Route::post("/add/{id}", [EcTrackController::class, 'addFavorite'])->name('add');
@@ -291,7 +292,7 @@ Route::name('api.')->group(function () {
             Route::get("/{app}/{name}", function ($app, $name) {
                 return Storage::disk('importer')->get("geojson/$app/$name");
             })->name('sardegnasentieriaree');
-            Route::get("/{geojson}/{app}/{name}", function($geojson,$app,$name) {
+            Route::get("/{geojson}/{app}/{name}", function ($geojson, $app, $name) {
                 return Storage::disk('public')->get("$geojson/$app/$name");
             })->name('getOverlaysPath');
         });
