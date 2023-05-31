@@ -193,12 +193,13 @@
 
         </tfoot>
     </table>
-
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
+    {{-- temporary CDNs || TODO: change when original CDNs are updated  --}}
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/runtime.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/polyfills.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/main.js" defer>
+    </script>
     <script defer>
         //handling the loading of the map
         window.onload = (event) => {

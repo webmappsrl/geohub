@@ -544,8 +544,8 @@ class EcTrackController extends Controller
                     ],
                     "geometry" => $poiGeometry
                 ];
+                $features[] = $poiFeature;
             }
-            $features[] = $poiFeature;
         }
 
 
