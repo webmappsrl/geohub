@@ -274,6 +274,8 @@ class EcTrack extends Model
 
         $array = $this->setOutSourceValue();
 
+        $array = $this->array_filter_recursive($array);
+
         if ($array['excerpt']) {
             foreach ($array['excerpt'] as $lang => $val) {
                 $array['excerpt'][$lang] = strip_tags($val);
@@ -994,5 +996,21 @@ class EcTrack extends Model
             $color = '';
         }
         return $color;
+    }
+
+    public function array_filter_recursive($array) {
+        $result = [];
+        foreach ($array as $key => $val) {
+            if (!is_array($val) && !empty($val) && $val ) {
+                $result[$key] = $val;
+            } else {
+                foreach ($val as $lan => $cont) {
+                    if (!is_array($cont) && !empty($cont) && $cont ) {
+                        $result[$key][$lan] = $cont;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 }
