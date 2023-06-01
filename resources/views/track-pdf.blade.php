@@ -3,9 +3,13 @@
     use App\Models\App;
     use Illuminate\Support\Str;
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
+    use Illuminate\Http\Request;
+    
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
+    $trackFeatureCollectionUrl = url('/api/ec/track/pdf/' . $track->id);
+    
     if (request('app_id')) {
         $app = App::find(request('app_id'));
         $appName = $app->name;
@@ -50,7 +54,7 @@
     </div>
     <div class="map">
         <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
-            geojsonurl="/api/ec/track/pdf/{{ $track->id }}">
+            geojsonurl={{ $trackFeatureCollectionUrl }}>
         </feature-collection-widget-map>
     </div>
     <header class="pdf-header">
@@ -193,13 +197,11 @@
 
         </tfoot>
     </table>
-    {{-- temporary CDNs || TODO: change when original CDNs are updated  --}}
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/runtime.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/polyfills.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/last-dist/main.js" defer>
-    </script>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
     <script defer>
         //handling the loading of the map
         window.onload = (event) => {
