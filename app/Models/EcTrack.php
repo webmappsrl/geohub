@@ -798,7 +798,9 @@ class EcTrack extends Model
                 "layers": ' . json_encode($layers) . '
               }';
 
-
+        Log::info('');
+        Log::info('INDEX');
+        Log::info('');
         Log::info($postfields);
 
         $curl = curl_init();
@@ -852,8 +854,11 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": "' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '"
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
           }';
+        Log::info('');
+        Log::info('LOW');
+        Log::info('');
         Log::info($postfields);
 
         $curl = curl_init();
@@ -909,6 +914,9 @@ class EcTrack extends Model
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
           }';
+        Log::info('');
+        Log::info('HIGH');
+        Log::info('');
         Log::info($postfields);
 
         $curl = curl_init();
