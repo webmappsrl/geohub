@@ -767,6 +767,7 @@ class EcTrack extends Model
             unset($json['taxonomy_wheres']);
             unset($json['sizes']);
             $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
+            $json["searchable"] = $this->getSearchableString();
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
@@ -782,7 +783,7 @@ class EcTrack extends Model
                 "cai_scale": "' . $this->cai_scale . '",
                 "from": "' . $this->getActualOrOSFValue('from') . '",
                 "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->cleanTrackNameSpecialChar() . '",
+                "name": "' . $this->name . '",
                 "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
@@ -792,7 +793,7 @@ class EcTrack extends Model
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . '                
+                "layers": ' . json_encode($layers) . '
               }';
 
 
@@ -849,7 +850,7 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+            "themes": "' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '"
           }';
         Log::info($postfields);
 
@@ -952,6 +953,37 @@ class EcTrack extends Model
             $name = str_replace('"', '', $this->name);
         }
         return $name;
+    }
+    
+    public function getSearchableString()
+    {
+        $string = '';
+        if (!empty($this->name)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
+        }
+        if (!empty($this->description)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+        }
+        if (!empty($this->excerpt)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+        }
+        if (!empty($this->ref)) {
+            $string .= $this->ref.' ';
+        }
+        if (!empty($this->osmid)) {
+            $string .= $this->osmid.' ';
+        }
+        if (!empty($this->taxonomyThemes)) {
+            foreach ($this->taxonomyThemes as $tax) {
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+            }
+        }
+        if (!empty($this->taxonomyActivities)) {
+            foreach ($this->taxonomyActivities as $tax) {
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+            }
+        }
+        return html_entity_decode($string);
     }
 
     // TODO: ripristinare la indicizzazione del color
