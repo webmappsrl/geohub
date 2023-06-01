@@ -483,6 +483,10 @@ class EcTrackController extends Controller
     {
         $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
 
+        if (empty($osf_id)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
         $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
 
         $track = EcTrack::find($ectrack_id[0]);
