@@ -276,7 +276,7 @@ class EcTrack extends Model
 
         $array = $this->array_filter_recursive($array);
 
-        if ($array['excerpt']) {
+        if (array_key_exists('excerpt',$array) && $array['excerpt']) {
             foreach ($array['excerpt'] as $lang => $val) {
                 $array['excerpt'][$lang] = strip_tags($val);
             }
@@ -1003,7 +1003,7 @@ class EcTrack extends Model
         foreach ($array as $key => $val) {
             if (!is_array($val) && !empty($val) && $val ) {
                 $result[$key] = $val;
-            } else {
+            } elseif (is_array($val)) {
                 foreach ($val as $lan => $cont) {
                     if (!is_array($cont) && !empty($cont) && $cont ) {
                         $result[$key][$lan] = $cont;
