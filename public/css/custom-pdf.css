@@ -41,7 +41,13 @@ body {
   cursor: pointer;
   padding: 10px 20px;
 }
-
+.loading {
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  column-gap: 10px;
+  align-items: center;
+  justify-items: center;
+}
 .print-button:disabled {
   cursor: not-allowed;
   pointer-events: all !important;
@@ -301,5 +307,45 @@ body {
       height: 110vh;
       page-break-after: always;
     }
+  }
+}
+/**
+ * ==============================================
+ * Dot Typing - https://codepen.io/nzbin/pen/GGrXbp
+ * ==============================================
+ */
+ .dot-typing {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #fbfbfb;
+  color: #fbfbfb;
+  box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  animation: dot-typing 1.5s infinite linear;
+}
+
+@keyframes dot-typing {
+  0% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  }
+  16.667% {
+    box-shadow: 9984px -10px 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  }
+  33.333% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  }
+  50% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px -10px 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  }
+  66.667% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+  }
+  83.333% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px -10px 0 0 #fbfbfb;
+  }
+  100% {
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
   }
 }

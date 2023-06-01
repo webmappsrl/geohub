@@ -35,7 +35,7 @@
 
 <body>
     <div class="print-layer">
-        <button id="print-button" class="print-button" disabled>Generating PDF ...</button>
+        <button id="print-button" class="print-button loading" disabled><div>Generating PDF </div><div class="dot-typing"></div></button>
     </div>
     <div class="map-header">
         <div class="names">
@@ -215,6 +215,7 @@
                 printButton.innerHTML = 'Print';
                 printButton.style.backgroundColor = readyColor;
                 printButton.disabled = false;
+                printButton.classList.remove("loading");
                 window.print();
             }, "6000");
 
