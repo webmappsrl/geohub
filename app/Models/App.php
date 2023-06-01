@@ -554,13 +554,11 @@ class App extends Model
         $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                if ($layer->id == 6) {
-                    $tracks = $layer->getTracks();
-                    $layer->computeBB($this->map_bbox);
-                    if (count($tracks) > 0) {
-                        foreach ($tracks as $track) {
-                            $res[$track][] = $layer->id;
-                        }
+                $tracks = $layer->getTracks();
+                $layer->computeBB($this->map_bbox);
+                if (count($tracks) > 0) {
+                    foreach ($tracks as $track) {
+                        $res[$track][] = $layer->id;
                     }
                 }
             }
