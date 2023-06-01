@@ -310,6 +310,8 @@ class EcPoi extends Model
                 unset($array[$property]);
         }
 
+        $array['searchable'] = $this->getSearchableString();
+
         return $array;
     }
     private function addPrefix($array, $prefix)
@@ -499,5 +501,28 @@ class EcPoi extends Model
         }
 
         return $geojson;
+    }
+
+    public function getSearchableString()
+    {
+        $string = '';
+        if (!empty($this->name)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
+        }
+        if (!empty($this->description)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+        }
+        if (!empty($this->excerpt)) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+        }
+        if (!empty($this->osmid)) {
+            $string .= $this->osmid.' ';
+        }
+        if (!empty($this->taxonomyPoiTypes)) {
+            foreach ($this->taxonomyPoiTypes as $tax) {
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+            }
+        }
+        return html_entity_decode($string);
     }
 }
