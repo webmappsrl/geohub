@@ -914,6 +914,7 @@ class EcTrack extends Model
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
           }';
+          
         Log::info('');
         Log::info('HIGH');
         Log::info('');
