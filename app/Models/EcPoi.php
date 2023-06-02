@@ -192,6 +192,8 @@ class EcPoi extends Model
     {
         $array = $this->setOutSourceValue();
 
+        $array = $this->array_filter_recursive($array);
+        
         if ($array['name']) {
             foreach ($array['name'] as $lang => $val) {
                 if (empty($val) || !$val) {
@@ -524,5 +526,21 @@ class EcPoi extends Model
             }
         }
         return html_entity_decode($string);
+    }
+
+    public function array_filter_recursive($array) {
+        $result = [];
+        foreach ($array as $key => $val) {
+            if (!is_array($val) && !empty($val) && $val ) {
+                $result[$key] = $val;
+            } elseif (is_array($val)) {
+                foreach ($val as $lan => $cont) {
+                    if (!is_array($cont) && !empty($cont) && $cont ) {
+                        $result[$key][$lan] = $cont;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 }
