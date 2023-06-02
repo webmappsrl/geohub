@@ -194,7 +194,7 @@ class EcPoi extends Model
 
         $array = $this->array_filter_recursive($array);
         
-        if ($array['name']) {
+        if (array_key_exists('name',$array) && $array['name']) {
             foreach ($array['name'] as $lang => $val) {
                 if (empty($val) || !$val) {
                     unset($array['name'][$lang]);
@@ -261,7 +261,7 @@ class EcPoi extends Model
             $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);
         }
 
-        if (!is_array($array['related_url']) && empty($array['related_url'])) {
+        if (array_key_exists('related_url',$array) && !is_array($array['related_url']) && empty($array['related_url'])) {
             unset($array['related_url']);
         }
 
