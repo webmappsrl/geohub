@@ -136,6 +136,17 @@
             },
             "geohub_identifier": "sacred-forests"
         },
+        "23": {
+            "source_title": {
+                "it": "In bici nel Parco",
+                "en": "By Bike"
+            },
+            "source_description": {
+                "it": "Il Parco Nazionale delle Foreste Casentinesi rappresenta indubbiamente un ambiente d'\u00e9lite per chi si vuole cimentare in meravigliose ed indimenticabili pedalate in un contesto naturale unico nel suo genere, con percorsi adatti a tutte le tipologie di bikers: che voi siate un agonista o un amatore, giovane o meno giovane, una famiglia con bambini, semplici curiosi delle due ruote, potrete trovare nel Parco Nazionale percorsi per tutti i gusti e per tutte le esigenze. Dagli emozionanti sentieri di crinale dove si pu\u00f2 ammirare un panorama mozzafiato, ai sentieri in mezzo al fresco di secolari faggete e abetine.\r\nPrima di intraprendere un'escursione consulta lo stato di <a href=\"https:\/\/www.parcoforestecasentinesi.it\/muoversi\/stato-dei-sentieri-del-parco\">percorribilit\u00e0 dei sentieri<\/a>.",
+                "en": "The Foreste Casentinesi National Parkl is a special environment for those who want to test themselves in wonderful and unforgettable rides in a unique natural environment,  that offers routes suitable for all types of bikers: whether you are an athlete or an amateur, young or old, a family with children, or simply curious about two-wheeled vehicles, in the National Park you can find routes for all tastes and for all needs. From the exciting ridge paths where you can admire a breath-taking panorama, to the paths in the middle of the cool secular beech and fir wood through one of the oldest forests in Europe."
+            },
+            "geohub_identifier": "by-bike-in-the-park"
+        },
         "19": {
             "source_title": {
                 "it": "Sentieri Natura",
