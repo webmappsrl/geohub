@@ -91,11 +91,16 @@ class SyncECTagsFromOSFCommand extends Command
                     }
                 }
                 //if the tag is 'osmid' only update if the feature is ecPoi
-                if ($this->tag == 'osmid') {
+                else if ($this->tag == 'osmid') {
                     if ($feature instanceof EcPoi) {
                         if (empty($feature->osmid) || $this->force == true) {
-                            if (isset($out_source->raw_data['_osmid'])) {
-                                $feature->osmid = $out_source->raw_data['osmid'];
+                            $rawData = json_decode($out_source->raw_data, true);
+                            if (array_key_exists('_osmid', $rawData)) {
+                                $this->info($rawData['_osmid']);
+                                $this->info('key exists');
+                                //take the _osmid and cut 'node/' at the beginning of the string
+                                $id =  substr($rawData['_osmid'], 5);
+                                $feature->osmid = $id;
                                 $feature->save();
                                 return true;
                             }
@@ -164,9 +169,6 @@ class SyncECTagsFromOSFCommand extends Command
                     if (isset($out_source->tags['stars']))
                         $feature->stars = $out_source->tags['stars'];
                 }
-                if ($feature instanceof EcPoi && empty($feature->osmid) && isset($out_source->raw_data['osmid'])) {
-                    $feature->osmid = $out_source->raw_data['_osmid'];
-                }
 
 
 
@@ -202,8 +204,10 @@ class SyncECTagsFromOSFCommand extends Command
                 $res = $this->sync($feature);
                 if ($res) {
                     Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
+                    $this->info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
                 } else {
                     Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
+                    $this->error($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
                 }
                 $count++;
             }
