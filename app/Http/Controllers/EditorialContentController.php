@@ -26,7 +26,8 @@ define('CONTENT_TYPE_IMAGE_MAPPING', [
     'webp' => 'image/webp'
 ]);
 
-class EditorialContentController extends Controller {
+class EditorialContentController extends Controller
+{
     /**
      * Calculate the model class name of a ugc from its type
      *
@@ -36,7 +37,8 @@ class EditorialContentController extends Controller {
      *
      * @throws Exception
      */
-    private function _getEcModelFromType(string $type): string {
+    private function _getEcModelFromType(string $type): string
+    {
         switch ($type) {
             case 'poi':
                 $model = "\App\Models\EcPoi";
@@ -61,7 +63,8 @@ class EditorialContentController extends Controller {
      *
      *
      */
-    public function getEcImage(int $id) {
+    public function getEcImage(int $id)
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -88,10 +91,9 @@ class EditorialContentController extends Controller {
             readfile($ec->url);
         } else {
             //Scaricare risorsa locale
-            if(isset($pathInfo['extension'])) {
+            if (isset($pathInfo['extension'])) {
                 return Storage::disk('public')->download($ec->url, 'name.' . $pathInfo['extension']);
-            }
-            else {
+            } else {
                 return Storage::disk('public')->download($ec->url, 'name');
             }
         }
@@ -102,7 +104,8 @@ class EditorialContentController extends Controller {
      * @param Request $request the request with data from geomixer POST
      * @param int     $id      the id of the EcMedia
      */
-    public function updateEcMedia(Request $request, $id) {
+    public function updateEcMedia(Request $request, $id)
+    {
         $ecMedia = EcMedia::find($id);
 
         if (is_null($ecMedia))
@@ -149,7 +152,8 @@ class EditorialContentController extends Controller {
      * @param Request $request the request with data from geomixer POST
      * @param int     $id      the id of the EcMedia
      */
-    public function updateEcPoi(Request $request, $id) {
+    public function updateEcPoi(Request $request, $id)
+    {
         $ecPoi = EcPoi::find($id);
 
         if (is_null($ecPoi)) {
@@ -164,24 +168,25 @@ class EditorialContentController extends Controller {
         ) {
             $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
-
-        $fields = [
-            'ele',
-        ];
-
-        foreach ($fields as $field) {
-            if (isset($request->$field)) {
-                $ecPoi->$field = $request->$field;
+        if ($ecPoi->skip_geomixer_tech == false) {
+            $fields = [
+                'ele',
+            ];
+            foreach ($fields as $field) {
+                if (isset($request->$field)) {
+                    $ecPoi->$field = $request->$field;
+                }
             }
-        }
 
-        if (!empty($request->where_ids)) {
-            $ecPoi->taxonomyWheres()->sync($request->where_ids);
-        }
+            if (!empty($request->where_ids)) {
+                $ecPoi->taxonomyWheres()->sync($request->where_ids);
+            }
 
-        $ecPoi->skip_update = true;
-        $ecPoi->save();
+            $ecPoi->skip_update = true;
+            $ecPoi->save();
+        }
     }
+
 
     /**
      * Return geometry formatted by $format.
@@ -192,7 +197,8 @@ class EditorialContentController extends Controller {
      *
      * @return mixed
      */
-    public function downloadEcPoi(Request $request, int $id, string $format = 'geojson') {
+    public function downloadEcPoi(Request $request, int $id, string $format = 'geojson')
+    {
         $ecPoi = EcPoi::find($id);
 
         if (is_null($ecPoi))
@@ -237,7 +243,8 @@ class EditorialContentController extends Controller {
      *
      * @return JsonResponse
      */
-    public function viewEcGeojson(Request $request, int $id, array $headers = []): JsonResponse {
+    public function viewEcGeojson(Request $request, int $id, array $headers = []): JsonResponse
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -259,7 +266,8 @@ class EditorialContentController extends Controller {
      *
      * @return mixed
      */
-    public function viewEcGpx(Request $request, int $id, array $headers = []) {
+    public function viewEcGpx(Request $request, int $id, array $headers = [])
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -283,7 +291,8 @@ class EditorialContentController extends Controller {
      *
      * @return mixed
      */
-    public function viewEcKml(Request $request, int $id, array $headers = []) {
+    public function viewEcKml(Request $request, int $id, array $headers = [])
+    {
         $apiUrl = explode("/", request()->path());
         try {
             $model = $this->_getEcModelFromType($apiUrl[2]);
@@ -306,7 +315,8 @@ class EditorialContentController extends Controller {
      *
      * @return JsonResponse
      */
-    public function downloadEcGeojson(Request $request, int $id): JsonResponse {
+    public function downloadEcGeojson(Request $request, int $id): JsonResponse
+    {
         $headers['Content-Type'] = 'application/vnd.api+json';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.geojson"';
 
@@ -319,7 +329,8 @@ class EditorialContentController extends Controller {
      *
      * @return mixed
      */
-    public function downloadEcGpx(Request $request, int $id) {
+    public function downloadEcGpx(Request $request, int $id)
+    {
         $headers['Content-Type'] = 'application/xml';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.gpx"';
 
@@ -332,7 +343,8 @@ class EditorialContentController extends Controller {
      *
      * @return mixed
      */
-    public function downloadEcKml(Request $request, int $id) {
+    public function downloadEcKml(Request $request, int $id)
+    {
         $headers['Content-Type'] = 'application/xml';
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
 
