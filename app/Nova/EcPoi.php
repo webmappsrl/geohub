@@ -225,6 +225,7 @@ class EcPoi extends Resource
                     }),
                     DateTime::make('Created At')->onlyOnDetail(),
                     DateTime::make('Updated At')->onlyOnDetail(),
+                    Number::make('OSM ID', 'osmid'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
