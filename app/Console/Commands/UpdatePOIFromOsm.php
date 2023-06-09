@@ -2,7 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
+use App\Models\EcPoi;
+use App\Http\Facades\OsmClient;
 use Illuminate\Console\Command;
+
 
 class UpdatePOIFromOsm extends Command
 {
