@@ -94,7 +94,7 @@ class SyncECTagsFromOSFCommand extends Command
                 if ($this->tag == 'osmid') {
                     if ($feature instanceof EcPoi) {
                         if (empty($feature->osmid) || $this->force == true) {
-                            if (isset($out_source->raw_data['osmid'])) {
+                            if (isset($out_source->raw_data['_osmid'])) {
                                 $feature->osmid = $out_source->raw_data['osmid'];
                                 $feature->save();
                                 return true;
@@ -165,7 +165,7 @@ class SyncECTagsFromOSFCommand extends Command
                         $feature->stars = $out_source->tags['stars'];
                 }
                 if ($feature instanceof EcPoi && empty($feature->osmid) && isset($out_source->raw_data['osmid'])) {
-                    $feature->osmid = $out_source->raw_data['osmid'];
+                    $feature->osmid = $out_source->raw_data['_osmid'];
                 }
 
 
