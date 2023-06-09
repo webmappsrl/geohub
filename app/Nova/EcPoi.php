@@ -284,6 +284,7 @@ class EcPoi extends Resource
                 'Style' => $this->style_tab(),
 
                 'Info' => [
+                    Boolean::make('Skip Geomixer Tech'),
                     Text::make('Contact Phone'),
                     Text::make('Contact Email'),
                     Text::make('Adress / complete', 'addr_complete'),
@@ -408,6 +409,7 @@ class EcPoi extends Resource
                     'Style' => $this->style_tab(),
 
                     'Info' => [
+                        Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
                         Text::make('Adress / complete', 'addr_complete'),
                         Text::make('Adress / street', 'addr_street'),
                         Text::make('Adress / housenumber', 'addr_housenumber'),
