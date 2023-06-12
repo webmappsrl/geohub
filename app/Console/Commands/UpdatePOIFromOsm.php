@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\EcPoi;
 use App\Http\Facades\OsmClient;
 use Illuminate\Console\Command;
-
+use Illuminate\Support\Facades\Http;
 
 class UpdatePOIFromOsm extends Command
 {
@@ -81,6 +81,11 @@ class UpdatePOIFromOsm extends Command
         try {
             // Retrieve the geojson data from OSM based on the poi's osmid
             $osmPoi = json_decode(OsmClient::getGeojson('node/' . $poi->osmid), true);
+            //if $osmPoi['_api_url'] is empty log error and skip the poi
+            if (empty($osmPoi['_api_url'])) {
+                $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (https://api.openstreetmap.org/api/0.6/node/' . $poi->osmid . '.json). Url not valid');
+                return;
+            }
         } catch (Exception $e) {
             $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (' . $poi->osmid . '). Error: ' . $e->getMessage());
             return;
@@ -96,11 +101,10 @@ class UpdatePOIFromOsm extends Command
         // Set the 'skip_geomixer_tech' field to true if the 'ele' attribute was updated
         if ($poi->isDirty('ele')) {
             $poi->skip_geomixer_tech = true;
+            $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') ele updated. Skip_geomixer_tech set to true.');
         }
-
         // Save the updated poi
         $poi->save();
-
         $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') updated.');
     }
 
@@ -108,15 +112,23 @@ class UpdatePOIFromOsm extends Command
     private function updatePoiAttribute(EcPoi $poi, array $osmPoi, string $poiAttributeKey, string $osmPropertyKey)
     {
         if (array_key_exists($osmPropertyKey, $osmPoi['properties']) && $osmPoi['properties'][$osmPropertyKey] != null) {
-            $poi->$poiAttributeKey = $osmPoi['properties'][$osmPropertyKey];
+            //update the 'code' attribute of the poi
+            if ($osmPropertyKey == 'REF') {
+                //update the 'code' attribute of the poi
+                $poi->code = $osmPoi['properties'][$osmPropertyKey];
+            } else {
+                $poi->$poiAttributeKey = $osmPoi['properties'][$osmPropertyKey];
+            }
         }
     }
 
     // Update the name of the poi if the 'name' key exists in the OSM data
     private function updatePoiName(EcPoi $poi, array $osmPoi)
     {
-        if (array_key_exists('name', $osmPoi['properties']) && $osmPoi['properties']['name'] != null) {
+        if ((array_key_exists('name', $osmPoi['properties']) && $osmPoi['properties']['name'] != null) && (array_key_exists('REF', $osmPoi['properties']) && $osmPoi['properties']['REF'] != null)) {
             $poi->name = $osmPoi['properties']['REF'] . ' - ' . $osmPoi['properties']['name'];
+        } else {
+            $poi->name = $poi->name;
         }
     }
 }
