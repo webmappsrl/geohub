@@ -66,7 +66,9 @@ class UpdatePOIFromOsm extends Command
             $this->updatePoiData($poi);
         }
 
-        $this->info('Pois for user ' . $user->name . ' (' . $user->email . ') updated.');
+        $this->info('Finished.');
+        //log the pois not updated
+        $this->logPoisNotUpdated($user);
     }
 
     // Update the data for a single poi
@@ -129,6 +131,17 @@ class UpdatePOIFromOsm extends Command
             $poi->name = $osmPoi['properties']['REF'] . ' - ' . $osmPoi['properties']['name'];
         } else {
             $poi->name = $poi->name;
+        }
+    }
+
+    private function logPoisNotUpdated($user)
+    {
+        $poisNotUpdated = EcPoi::where('user_id', $user->id)->where('osmid', '!=', null)->where('skip_geomixer_tech', false)->get();
+        if ($poisNotUpdated->count() > 0) {
+            $this->info('Pois not updated for user ' . $user->name . ' (' . $user->email . '):');
+            foreach ($poisNotUpdated as $poi) {
+                $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') not updated.');
+            }
         }
     }
 }

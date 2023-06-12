@@ -166,13 +166,24 @@ class OsmClient
             return [];
         }
         if (!isset($json['elements'][0]['tags'])) {
-            throw new Exception('JSON from OSM has no tags', 1);
+            $properties = [];
+            echo 'JSON from OSM has no tags: ' . PHP_EOL;
+        } else {
+            $properties = $json['elements'][0]['tags'];
         }
+
         if (!isset($json['elements'][0]['lat'])) {
-            throw new Exception('JSON from OSM has no lat', 1);
+            $geometry['coordinates'][] = '';
+            echo 'JSON from OSM has no lat: ' . PHP_EOL;
+        } else {
+            $geometry['coordinates'][] = $json['elements'][0]['lat'];
         }
+
         if (!isset($json['elements'][0]['lon'])) {
-            throw new Exception('JSON from OSM has no lon', 1);
+            $geometry['coordinates'][] = '';
+            echo 'JSON from OSM has no lon: ' . PHP_EOL;
+        } else {
+            $geometry['coordinates'][] = $json['elements'][0]['lon'];
         }
         $properties = $json['elements'][0]['tags'];
         $geometry = [
