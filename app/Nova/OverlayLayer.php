@@ -15,7 +15,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Fields\Number;
 use Nova\Multiselect\Multiselect;
+use Yna\NovaSwatches\Swatches;
 
 class OverlayLayer extends Resource
 {
@@ -73,16 +75,30 @@ class OverlayLayer extends Resource
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
+            Swatches::make('Fill Color')->default(function(){
+                    return $this->app->primary_color;
+                })->colors('text-advanced')->withProps([
+                'show-fallback' => true,
+                'fallback-type' => 'input',
+            ]),
+            Swatches::make('Stroke Color')->default(function(){
+                return $this->app->primary_color;
+                })->colors('text-advanced')->withProps([
+                'show-fallback' => true,
+                'fallback-type' => 'input',
+            ]),
+            Number::make('Stroke width'),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
             AttachMany::make('Layers', 'layers', Layer::class)
-                ->showPreview(),
+                ->showPreview()
+                ->hideWhenCreating(),
             Text::make('Layers', function () {
                 if (count($this->layers) > 0) {
                     return $this->layers->pluck('name')->implode("</br>");
                 } else {
                     return 'No layers';
                 }
-            })->onlyOnDetail()->asHtml(),
+            })->onlyOnDetail()->hideWhenCreating()->asHtml(),
         ];
     }
 
