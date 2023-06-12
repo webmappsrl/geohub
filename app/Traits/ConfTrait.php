@@ -6,6 +6,7 @@ use App\Enums\AppTiles;
 use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\OverlayLayer;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -309,9 +310,23 @@ trait ConfTrait
             $data['MAP']['controls']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
             $overlays = array_map(function ($overlay){
                 $array = [];
-                $array['label'] = OverlayLayer::find($overlay['id'])->getTranslations('label');
+                $overlay = OverlayLayer::find($overlay['id']);
+                $array['label'] = $overlay->getTranslations('label');
                 if (!empty($overlay['icon'])) {
                     $array['icon'] = $overlay['icon'];
+                }
+                if (!empty($overlay['fill_color'])) {
+                    $array['fillColor'] = $this->hexToRgba($overlay['fill_color']);
+                } else {
+                    $array['fillColor'] = $this->hexToRgba($overlay->app->primary_color);
+                }
+                if (!empty($overlay['stroke_color'])) {
+                    $array['strokeColor'] = $this->hexToRgba($overlay['stroke_color']);
+                } else {
+                    $array['strokeColor'] = $this->hexToRgba($overlay->app->primary_color);
+                }
+                if (!empty($overlay['stroke_width'])) {
+                    $array['strokeWidth'] = $overlay['stroke_width'];
                 }
                 if (!empty($overlay['feature_collection'])) {
                     $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/',$overlay['feature_collection']));
@@ -334,8 +349,10 @@ trait ConfTrait
                     'identifier' => $activity->identifier,
                     'name' => json_decode($activity->name,true),
                     'id' => $activity->id,
-                    'color' => $activity->color,
                 );
+                if ($activity->color) {
+                    $a['color'] = $activity->color;
+                }
                 array_push($options,$a);
             }
 
@@ -344,6 +361,35 @@ trait ConfTrait
                 'name' => [
                     'it' => 'Attività',
                     'en' => 'Activity',
+                ],
+                'options' => $options
+            ];
+        }
+
+        //  Theme Filter 
+        if ($this->filter_theme) {
+            $app_user_id = $this->user_id;
+            $options = [];
+
+            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id;");
+            
+            foreach ($themes as $theme) {
+                $a = array(
+                    'identifier' => $theme->identifier,
+                    'name' => json_decode($theme->name,true),
+                    'id' => $theme->id,
+                );
+                if ($theme->color) {
+                    $a['color'] = $theme->color;
+                }
+                array_push($options,$a);
+            }
+
+            $data['MAP']['filters']['theme'] = [
+                'type' => 'select',
+                'name' => [
+                    'it' => 'Tema',
+                    'en' => 'Theme',
                 ],
                 'options' => $options
             ];
@@ -361,9 +407,11 @@ trait ConfTrait
                     'identifier' => 'poi_type_'.$poi_type->identifier,
                     'name' => json_decode($poi_type->name,true),
                     'id' => $poi_type->id,
-                    'color' => $poi_type->color,
                     'icon' => $poi_type->icon,
                 );
+                if ($poi_type->color) {
+                    $a['color'] = $poi_type->color;
+                }
                 array_push($options,$a);
             }
 
@@ -680,4 +728,21 @@ EOT;
 
         return json_decode($json_string, true);
     }
+
+    function hexToRgba($hexColor, $opacity = 1.0) {
+        $hexColor = ltrim($hexColor, '#');
+    
+        if (strlen($hexColor) === 6) {
+            list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
+        } elseif (strlen($hexColor) === 8) {
+            list($r, $g, $b, $a) = sscanf($hexColor, "%02x%02x%02x%02x");
+            $opacity = round($a / 255, 2);
+        } else {
+            throw new Exception('Invalid hex color format.');
+        }
+    
+        $rgbaColor = "rgba($r, $g, $b, $opacity)";
+        return $rgbaColor;
+    }
+    
 }
