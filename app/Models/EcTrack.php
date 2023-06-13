@@ -43,7 +43,7 @@ class EcTrack extends Model
         'duration_backward',
         'skip_geomixer_tech',
     ];
-    public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n'];
+    public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
     /**
      * The attributes that should be cast.
@@ -276,7 +276,7 @@ class EcTrack extends Model
 
         $array = $this->array_filter_recursive($array);
 
-        if (array_key_exists('excerpt',$array) && $array['excerpt']) {
+        if (array_key_exists('excerpt', $array) && $array['excerpt']) {
             foreach ($array['excerpt'] as $lang => $val) {
                 $array['excerpt'][$lang] = strip_tags($val);
             }
@@ -394,10 +394,10 @@ class EcTrack extends Model
         if ($this->allow_print_pdf) {
             $user = User::find($this->user_id);
             if ($user->apps->count() > 0) {
-                $pdf_url = url('/track/pdf/' . $this->id . '?app_id=' .$user->apps[0]->id );
+                $pdf_url = url('/track/pdf/' . $this->id . '?app_id=' . $user->apps[0]->id);
                 $array['related_url']['Print PDF'] = $pdf_url;
             } else {
-                $pdf_url = url('/track/pdf/' . $this->id );
+                $pdf_url = url('/track/pdf/' . $this->id);
                 $array['related_url']['Print PDF'] = $pdf_url;
             }
         }
@@ -914,7 +914,7 @@ class EcTrack extends Model
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
           }';
-          
+
         Log::info('');
         Log::info('HIGH');
         Log::info('');
@@ -965,33 +965,33 @@ class EcTrack extends Model
         }
         return $name;
     }
-    
+
     public function getSearchableString()
     {
         $string = '';
         if (!empty($this->name)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
         }
         if (!empty($this->description)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))) . ' ';
         }
         if (!empty($this->excerpt)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))) . ' ';
         }
         if (!empty($this->ref)) {
-            $string .= $this->ref.' ';
+            $string .= $this->ref . ' ';
         }
         if (!empty($this->osmid)) {
-            $string .= $this->osmid.' ';
+            $string .= $this->osmid . ' ';
         }
         if (!empty($this->taxonomyThemes)) {
             foreach ($this->taxonomyThemes as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
         }
         if (!empty($this->taxonomyActivities)) {
             foreach ($this->taxonomyActivities as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
         }
         return html_entity_decode($string);
@@ -1007,14 +1007,15 @@ class EcTrack extends Model
         return $color;
     }
 
-    public function array_filter_recursive($array) {
+    public function array_filter_recursive($array)
+    {
         $result = [];
         foreach ($array as $key => $val) {
-            if (!is_array($val) && !empty($val) && $val ) {
+            if (!is_array($val) && !empty($val) && $val) {
                 $result[$key] = $val;
             } elseif (is_array($val)) {
                 foreach ($val as $lan => $cont) {
-                    if (!is_array($cont) && !empty($cont) && $cont ) {
+                    if (!is_array($cont) && !empty($cont) && $cont) {
                         $result[$key][$lan] = $cont;
                     }
                 }
