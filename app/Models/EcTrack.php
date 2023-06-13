@@ -769,7 +769,6 @@ class EcTrack extends Model
             unset($json['taxonomy_wheres']);
             unset($json['sizes']);
             $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
-            $json["searchable"] = $this->getSearchableString();
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
@@ -795,7 +794,8 @@ class EcTrack extends Model
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . '
+                "layers": ' . json_encode($layers) . ',
+                "searchable": "' . $this->getSearchableString() . '"
               }';
 
         Log::info('');
@@ -854,7 +854,8 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
+            "searchable": "' . $this->getSearchableString() . '"
           }';
         Log::info('');
         Log::info('LOW');
@@ -912,7 +913,8 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
+            "searchable": "' . $this->getSearchableString() . '"
           }';
           
         Log::info('');
