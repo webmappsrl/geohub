@@ -416,6 +416,10 @@ class EcTrack extends Resource
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
+                        ->colors('text-advanced')->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
                 ]
             ]))->withToolbar(),
             new Panel('Map', [
@@ -535,6 +539,10 @@ class EcTrack extends Resource
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
+                        ->colors('text-advanced')->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
                 ]
             ]),
             new Panel('Map', [

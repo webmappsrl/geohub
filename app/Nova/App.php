@@ -491,10 +491,17 @@ class App extends Resource
                 ->hideFromIndex(),
             Swatches::make(__('Default Feature Color'), 'default_feature_color')
                 ->default('#de1b0d')
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])
                 ->hideFromIndex(),
             Swatches::make(__('Primary color'), 'primary_color')
                 ->default('#de1b0d')
-                ->hideFromIndex(),
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])->hideFromIndex(),
         ];
     }
 
