@@ -975,10 +975,13 @@ class EcTrack extends Model
             $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
         }
         if (!empty($this->description)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+            $description = str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+            $string .= strip_tags($description).' ';
         }
         if (!empty($this->excerpt)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+            $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+            $string .= strip_tags($excerpt).' ';
+
         }
         if (!empty($this->ref)) {
             $string .= $this->ref.' ';
