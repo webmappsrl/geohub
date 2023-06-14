@@ -266,7 +266,9 @@ class EcTrack extends Resource
                     Text::make('From'),
                     Text::make('To'),
                     Boolean::make('Not Accessible'),
-                    Textarea::make('Not Accessible Message')->alwaysShow(),
+                    NovaTabTranslatable::make([
+                        Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
+                    ]),
                     Text::make('Distance', 'distance'),
                     Text::make('Duration Forward', 'duration_forward'),
                     Text::make('Duration Backward', 'duration_backward'),
@@ -283,7 +285,7 @@ class EcTrack extends Resource
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
                     ])
-                    ],
+                ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
@@ -414,6 +416,10 @@ class EcTrack extends Resource
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
+                        ->colors('text-advanced')->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
                 ]
             ]))->withToolbar(),
             new Panel('Map', [
@@ -496,7 +502,9 @@ class EcTrack extends Resource
                     Text::make('From'),
                     Text::make('To'),
                     Boolean::make('Not Accessible'),
-                    Textarea::make('Not Accessible Message')->alwaysShow(),
+                    NovaTabTranslatable::make([
+                        Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
+                    ]),
                     Text::make('Distance', 'distance'),
                     Text::make('Duration Forward', 'duration_forward'),
                     Text::make('Duration Backward', 'duration_backward'),
@@ -517,7 +525,8 @@ class EcTrack extends Resource
                     ]),
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
-                    ]),                ],
+                    ]),
+                ],
                 'Taxonomies' => [
                     Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();
@@ -530,6 +539,10 @@ class EcTrack extends Resource
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
+                        ->colors('text-advanced')->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
                 ]
             ]),
             new Panel('Map', [

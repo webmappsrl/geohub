@@ -26,7 +26,7 @@ class EcPoiPolicy
             return false;
         }
     }
-     
+
     /**
      * Determine whether the user can view any models.
      *
@@ -93,6 +93,9 @@ class EcPoiPolicy
      */
     public function delete(User $user, EcPoi $ecPoi)
     {
+        if ($user->hasRole('Editor') && $user->id === $ecPoi->user_id) {
+            return true;
+        }
         return false;
     }
 

@@ -107,7 +107,7 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
-        
+
         'out_source_sicai' => [
             'driver' => 'pgsql',
             'url' => env('OUT_SOURCE_SICAI_DB_URL'),
@@ -169,7 +169,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
@@ -189,5 +189,21 @@ return [
         ],
 
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Doctrine Settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure settings for DBAL/Doctrine, eg. for registering
+    | custom type mappings.
+    |
+    */
+    'dbal' => [
+        'types' => [
+            # See https://github.com/mstaack/laravel-postgis/issues/144
+            'geometry' => '\Doctrine\DBAL\Types\StringType',
+            'geography' => '\Doctrine\DBAL\Types\StringType',
+        ]
+    ]
 
 ];

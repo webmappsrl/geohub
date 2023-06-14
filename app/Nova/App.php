@@ -404,8 +404,8 @@ class App extends Resource
                 ]),
 
             Number::make(__('Max Zoom'), 'map_max_zoom')->onlyOnDetail(),
-            Number::make(__('Min Zoom'), 'minZoom')->onlyOnDetail(),
-            Number::make(__('Def Zoom'), 'defZoom')->onlyOnDetail(),
+            Number::make(__('Min Zoom'), 'map_min_zoom')->onlyOnDetail(),
+            Number::make(__('Def Zoom'), 'map_def_zoom')->onlyOnDetail(),
             Text::make(__('Bounding BOX'), 'bbox')->onlyOnDetail(),
             Number::make(__('start_end_icons_min_zoom'))->min(10)->max(20)
                 ->help('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)'),
@@ -494,10 +494,17 @@ class App extends Resource
                 ->hideFromIndex(),
             Swatches::make(__('Default Feature Color'), 'default_feature_color')
                 ->default('#de1b0d')
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])
                 ->hideFromIndex(),
             Swatches::make(__('Primary color'), 'primary_color')
                 ->default('#de1b0d')
-                ->hideFromIndex(),
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])->hideFromIndex(),
         ];
     }
 
@@ -930,7 +937,7 @@ class App extends Resource
                 })
                 ->help(__('Required svg image'))
                 ->hideFromIndex(),
-            Text::make('QR Code custom URL','qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
+            Text::make('QR Code custom URL', 'qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
             Text::make('QR Code', 'qr_code', function () {
                 return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
             })->asHtml(),

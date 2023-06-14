@@ -26,7 +26,7 @@ class EcMediaPolicy
         //     return false;
         // }
     }
-       
+
     /**
      * Determine whether the user can view any models.
      *
@@ -102,10 +102,10 @@ class EcMediaPolicy
      */
     public function delete(User $user, EcMedia $ecMedia)
     {
-        if ($user->hasRole('Admin')) {
+        if ($user->hasRole('Admin') || $user->hasRole('Editor')) {
             return true;
         }
-        if ($user->hasRole('Author') || $user->hasRole('Contributor') || $user->hasRole('Editor')) {
+        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
             return false;
         }
     }

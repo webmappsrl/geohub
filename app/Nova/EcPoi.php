@@ -2,55 +2,56 @@
 
 namespace App\Nova;
 
-use App\Helpers\NovaCurrentResourceActionHelper;
-use App\Nova\Actions\DownloadExcelEcPoiAction;
-use App\Nova\Actions\ExportEcpoi;
-use App\Nova\Actions\RegenerateEcPoi;
-use App\Nova\Filters\EcTracksCaiScaleFilter;
-use App\Nova\Filters\HasDescription;
-use App\Nova\Filters\HasFeatureImage;
-use App\Nova\Filters\HasImageGallery;
-use App\Nova\Filters\SelectFromPoiTypesPoi;
-use App\Nova\Filters\SelectFromThemesPoi;
-use App\Nova\Filters\SelectFromWheresPoi;
-use App\Nova\Metrics\EcTracksMyValue;
-use App\Nova\Metrics\EcTracksNewValue;
-use App\Nova\Metrics\EcTracksTotalValue;
-use Chaseconey\ExternalImage\ExternalImage;
-use Davidpiesse\NovaToggle\Toggle;
 use Exception;
+use Laravel\Nova\Panel;
+use Eminiarts\Tabs\Tabs;
+use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
-use NovaAttachMany\AttachMany;
-use Webmapp\EcMediaPopup\EcMediaPopup;
-use Webmapp\Ecpoipopup\Ecpoipopup;
-use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
-use Laravel\Nova\Fields\KeyValue;
+use NovaAttachMany\AttachMany;
+use Yna\NovaSwatches\Swatches;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
+use App\Nova\Actions\ExportEcpoi;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Textarea;
-use Titasgailius\SearchRelations\SearchesRelations;
-use DigitalCreative\MegaFilter\MegaFilter;
+use Davidpiesse\NovaToggle\Toggle;
+use Laravel\Nova\Fields\BelongsTo;
+use Webmapp\Ecpoipopup\Ecpoipopup;
+use Wm\MapPointNova3\MapPointNova3;
+use App\Nova\Filters\HasDescription;
+use App\Nova\Actions\RegenerateEcPoi;
+use App\Nova\Filters\HasFeatureImage;
+use App\Nova\Filters\HasImageGallery;
+use App\Nova\Metrics\EcTracksMyValue;
+use App\Nova\Metrics\EcTracksNewValue;
 use DigitalCreative\MegaFilter\Column;
+use Laravel\Nova\Fields\BelongsToMany;
+use Webmapp\EcMediaPopup\EcMediaPopup;
+use Illuminate\Support\Facades\Storage;
+use App\Nova\Metrics\EcTracksTotalValue;
+use App\Nova\Filters\SelectFromThemesPoi;
+use App\Nova\Filters\SelectFromWheresPoi;
+use DigitalCreative\MegaFilter\MegaFilter;
+use App\Nova\Filters\SelectFromPoiTypesPoi;
+use Chaseconey\ExternalImage\ExternalImage;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\EcTracksCaiScaleFilter;
+use App\Nova\Filters\PoiSearchableFromOSMID;
+use App\Nova\Actions\DownloadExcelEcPoiAction;
+use App\Helpers\NovaCurrentResourceActionHelper;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
+use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
-use Laravel\Nova\Panel;
+use Titasgailius\SearchRelations\SearchesRelations;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
-use Yna\NovaSwatches\Swatches;
-use Wm\MapPointNova3\MapPointNova3;
 
 class EcPoi extends Resource
 {
@@ -225,6 +226,7 @@ class EcPoi extends Resource
                     }),
                     DateTime::make('Created At')->onlyOnDetail(),
                     DateTime::make('Updated At')->onlyOnDetail(),
+                    Number::make('OSM ID', 'osmid'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
@@ -282,6 +284,7 @@ class EcPoi extends Resource
                 'Style' => $this->style_tab(),
 
                 'Info' => [
+                    Boolean::make('Skip Geomixer Tech'),
                     Text::make('Contact Phone'),
                     Text::make('Contact Email'),
                     Text::make('Adress / complete', 'addr_complete'),
@@ -372,6 +375,7 @@ class EcPoi extends Resource
                             Textarea::make(__('Excerpt'), 'excerpt'),
                             NovaTinymce5Editor::make('Description'),
                         ])->onlyOnForms(),
+                        Number::make('OSM ID', 'osmid'),
                         BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
                         }),
@@ -405,6 +409,7 @@ class EcPoi extends Resource
                     'Style' => $this->style_tab(),
 
                     'Info' => [
+                        Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
                         Text::make('Adress / complete', 'addr_complete'),
                         Text::make('Adress / street', 'addr_street'),
                         Text::make('Adress / housenumber', 'addr_housenumber'),
@@ -458,7 +463,10 @@ class EcPoi extends Resource
         return [
             Swatches::make(__('Color'), 'color')
                 ->default('#de1b0d')
-                ->hideFromIndex(),
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])->hideFromIndex(),
             Text::make(__('Z index'), 'zindex'),
             Toggle::make(__('No Interaction'), 'noInteraction')
                 ->trueValue('On')
@@ -664,6 +672,7 @@ HTML;
     {
         if ($request->user()->hasRole('Editor')) {
             return [
+                new PoiSearchableFromOSMID,
                 new HasFeatureImage,
                 new HasImageGallery,
                 new SelectFromThemesPoi,
