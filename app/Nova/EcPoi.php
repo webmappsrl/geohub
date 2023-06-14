@@ -458,7 +458,10 @@ class EcPoi extends Resource
         return [
             Swatches::make(__('Color'), 'color')
                 ->default('#de1b0d')
-                ->hideFromIndex(),
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])->hideFromIndex(),
             Text::make(__('Z index'), 'zindex'),
             Toggle::make(__('No Interaction'), 'noInteraction')
                 ->trueValue('On')

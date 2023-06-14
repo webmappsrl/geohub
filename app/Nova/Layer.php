@@ -107,8 +107,14 @@ class Layer extends Resource
                     Boolean::make('Show Label', 'show_label'),
                 ],
                 'STYLE' => [
-                    Swatches::make('Color', 'color')->default('#de1b0d'),
-                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d'),
+                    Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                        'show-fallback' => true,
+                        'fallback-type' => 'input',
+                    ]),
+                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                        'show-fallback' => true,
+                        'fallback-type' => 'input',
+                    ]),
                     Number::make('Fill Opacity', 'fill_opacity'),
                     Number::make('Stroke Width', 'stroke_width'),
                     Number::make('Stroke Opacity', 'stroke_opacity'),
@@ -210,13 +216,13 @@ class Layer extends Resource
                     Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
                     Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
                     AttachMany::make('taxonomyActivities')
-                    ->showPreview(),
+                        ->showPreview(),
                     AttachMany::make('TaxonomyThemes')
-                    ->showPreview(),
+                        ->showPreview(),
                     AttachMany::make('TaxonomyTargets')
-                    ->showPreview(),
+                        ->showPreview(),
                     AttachMany::make('TaxonomyWhens')
-                    ->showPreview(),
+                        ->showPreview(),
                 ]
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()

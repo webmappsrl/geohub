@@ -18,7 +18,8 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
 
-class TaxonomyActivity extends Resource {
+class TaxonomyActivity extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -41,7 +42,8 @@ class TaxonomyActivity extends Resource {
         'identifier'
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('Taxonomies');
     }
 
@@ -52,7 +54,8 @@ class TaxonomyActivity extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
 
             NovaTabTranslatable::make([
@@ -64,7 +67,11 @@ class TaxonomyActivity extends Resource {
             Text::make(__('Identifier'), 'identifier')
                 ->updateRules('unique:taxonomy_activities,identifier,{{resourceId}}'),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Swatches::make('Color'),
+            Swatches::make('Color')
+                ->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ]),
             Number::make('Zindex')->hideFromIndex(),
             NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
@@ -85,7 +92,8 @@ class TaxonomyActivity extends Resource {
         ];
     }
 
-    protected function ux_ui_panel() {
+    protected function ux_ui_panel()
+    {
         return [
             NovaSliderField::make(__('Stroke Width'), 'stroke_width')->min(0.5)->max(10)->default(2.5)->interval(0.5)->onlyOnForms(),
             NovaSliderField::make(__('Stroke Opacity'), 'stroke_opacity')->min(0)->max(1)->default(0)->interval(0.01)->onlyOnForms(),
@@ -115,7 +123,8 @@ class TaxonomyActivity extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request) {
+    public function cards(Request $request)
+    {
         return [];
     }
 
@@ -126,7 +135,8 @@ class TaxonomyActivity extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request) {
+    public function filters(Request $request)
+    {
         return [];
     }
 
@@ -137,7 +147,8 @@ class TaxonomyActivity extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request) {
+    public function lenses(Request $request)
+    {
         return [];
     }
 
@@ -148,7 +159,8 @@ class TaxonomyActivity extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         return [];
     }
 }
