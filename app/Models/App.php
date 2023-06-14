@@ -205,7 +205,7 @@ class App extends Model
 
         $pois = [];
         foreach ($themes as $theme) {
-            foreach ($theme->ecPois()->get() as $poi) {
+            foreach ($theme->ecPois()->orderBy('name')->get() as $poi) {
                 $item = $poi->getGeojson(false);
                 $item['properties']['related'] = false;
                 unset($item['properties']['pivot']);

@@ -443,6 +443,9 @@ class App extends Resource
         return [
             Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
+            
+            Boolean::make('Theme Filter', 'filter_theme')->help('Activate this option if you want to activate "Theme filter" for tracks'),
+            Text::make('Theme Exclude Filter', 'filter_theme_exclude')->help('Insert the themes you want to exclude from the filter, separated by commas'),
 
             Boolean::make('Poi Type Filter', 'filter_poi_type')->help('Activate this option if you want to activate "Poi Type filter" for POIs'),
             Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')->help('Insert the poi types you want to exclude from the filter, separated by commas'),

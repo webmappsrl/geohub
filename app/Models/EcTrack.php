@@ -769,7 +769,6 @@ class EcTrack extends Model
             unset($json['taxonomy_wheres']);
             unset($json['sizes']);
             $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
-            $json["searchable"] = $this->getSearchableString();
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
@@ -795,7 +794,8 @@ class EcTrack extends Model
                 "ascent": ' . $this->ascent . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . '
+                "layers": ' . json_encode($layers) . ',
+                "searchable": "' . $this->getSearchableString() . '"
               }';
 
         Log::info('');
@@ -854,7 +854,8 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
+            "searchable": "' . $this->getSearchableString() . '"
           }';
         Log::info('');
         Log::info('LOW');
@@ -912,7 +913,8 @@ class EcTrack extends Model
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . '
+            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
+            "searchable": "' . $this->getSearchableString() . '"
           }';
 
         Log::info('');
@@ -973,10 +975,12 @@ class EcTrack extends Model
             $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
         }
         if (!empty($this->description)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('description'))) . ' ';
+            $description = str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+            $string .= strip_tags($description).' ';
         }
         if (!empty($this->excerpt)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('excerpt'))) . ' ';
+            $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+            $string .= strip_tags($excerpt).' ';
         }
         if (!empty($this->ref)) {
             $string .= $this->ref . ' ';
