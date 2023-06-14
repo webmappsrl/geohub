@@ -66,7 +66,9 @@ class UpdatePOIFromOsm extends Command
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            $this->updatePoiData($poi);
+            if (!empty($poi->osmid)) {
+                $this->updatePoiData($poi);
+            }
         }
         //print to terminal all the pois not updated
         if (!empty($errorPois)) {
@@ -81,9 +83,6 @@ class UpdatePOIFromOsm extends Command
     // Update the data for a single poi
     private function updatePoiData(EcPoi $poi)
     {
-        if ($poi->osmid == null) {
-            return;
-        }
 
         $this->info('Updating poi ' . $poi->name . ' (' . $poi->osmid . ')...');
 
