@@ -8,6 +8,7 @@ use App\Http\Facades\OsmClient;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use PhpParser\Node\Stmt\Foreach_;
 
 class UpdatePOIFromOsm extends Command
 {
@@ -59,17 +60,20 @@ class UpdatePOIFromOsm extends Command
 
         // Retrieve all pois belonging to the user
         $pois = EcPoi::where('user_id', $user->id)->get();
+        $errorPois = array();
 
         $this->info('Updating pois for user ' . $user->name . ' (' . $user->email . ')...');
 
         foreach ($pois as $poi) {
-            // Update the data for each poi
+            // Update the data for each poi and save the pois that were not updated
             $this->updatePoiData($poi);
+        }
+        //print to terminal all the pois not updated
+        foreach ($errorPois as $poi) {
+            $this->error('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ' ) not updated.');
         }
 
         $this->info('Finished.');
-        //log the pois not updated
-        $this->logPoisNotUpdated($user);
     }
 
     // Update the data for a single poi
@@ -87,10 +91,12 @@ class UpdatePOIFromOsm extends Command
             //if $osmPoi['_api_url'] is empty log error and skip the poi
             if (empty($osmPoi['_api_url'])) {
                 $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (https://api.openstreetmap.org/api/0.6/node/' . $poi->osmid . '.json). Url not valid');
+                array_push($errorPois, $poi);
                 return;
             }
         } catch (Exception $e) {
             $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (' . $poi->osmid . '). Error: ' . $e->getMessage());
+            array_push($errorPois, $poi);
             return;
         }
 
@@ -129,26 +135,15 @@ class UpdatePOIFromOsm extends Command
     private function updatePoiName(EcPoi $poi, array $osmPoi)
     {
         $name_array = array();
-        
+
         if (array_key_exists('ref', $osmPoi['properties']) && !empty($osmPoi['properties']['ref'])) {
-            array_push($name_array,$osmPoi['properties']['ref']);
-        } 
+            array_push($name_array, $osmPoi['properties']['ref']);
+        }
         if (array_key_exists('name', $osmPoi['properties']) && !empty($osmPoi['properties']['name'])) {
-            array_push($name_array,$osmPoi['properties']['name']);
+            array_push($name_array, $osmPoi['properties']['name']);
         }
         if (!empty($name_array)) {
-            $poi->name = implode(' - ',$name_array);
-        }
-    }
-
-    private function logPoisNotUpdated($user)
-    {
-        $poisNotUpdated = EcPoi::where('user_id', $user->id)->where('osmid', '!=', null)->where('skip_geomixer_tech', false)->get();
-        if ($poisNotUpdated->count() > 0) {
-            $this->info('Pois not updated for user ' . $user->name . ' (' . $user->email . '):');
-            foreach ($poisNotUpdated as $poi) {
-                $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') not updated.');
-            }
+            $poi->name = implode(' - ', $name_array);
         }
     }
 }

@@ -39,7 +39,7 @@ class UpdatePOIFromOsmTest extends TestCase
 
         $this->artisan('geohub:update_pois_from_osm', [
             'user_email' => $user->email
-        ])->expectsOutput('Pois for user ' . $user->name . ' (' . $user->email . ') updated.');
+        ])->expectsOutput('Finished.');
     }
 
     /**
