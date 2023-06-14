@@ -26,6 +26,9 @@ class UpdatePOIFromOsm extends Command
      * @var string
      */
     protected $description =  'Loops through all the pois belonging to the user identified by user_email. If the parameter osmid is not null, it performs some sync operations from OSM to GEOHUB.';
+
+    protected $errorPois = array();
+        
     /**
      * Create a new command instance.
      *
@@ -60,19 +63,18 @@ class UpdatePOIFromOsm extends Command
 
         // Retrieve all pois belonging to the user
         $pois = EcPoi::where('user_id', $user->id)->get();
-        $errorPois = array();
 
         $this->info('Updating pois for user ' . $user->name . ' (' . $user->email . ')...');
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            if (!empty($poi->osmid)) {
+            if (!empty($poi->osmid) && $poi->osmid == 9187858597) {
                 $this->updatePoiData($poi);
             }
         }
         //print to terminal all the pois not updated
-        if (!empty($errorPois)) {
-            foreach ($errorPois as $poi) {
+        if (!empty($this->errorPois)) {
+            foreach ($this->errorPois as $poi) {
                 $this->error('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ' ) not updated.');
             }
         }
@@ -92,12 +94,12 @@ class UpdatePOIFromOsm extends Command
             //if $osmPoi['_api_url'] is empty log error and skip the poi
             if (empty($osmPoi['_api_url'])) {
                 $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (https://api.openstreetmap.org/api/0.6/node/' . $poi->osmid . '.json). Url not valid');
-                array_push($errorPois, $poi);
+                array_push($this->errorPois, $poi);
                 return;
             }
         } catch (Exception $e) {
             $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (' . $poi->osmid . '). Error: ' . $e->getMessage());
-            array_push($errorPois, $poi);
+            array_push($this->errorPois, $poi);
             return;
         }
 
