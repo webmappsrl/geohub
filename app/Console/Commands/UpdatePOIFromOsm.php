@@ -69,8 +69,10 @@ class UpdatePOIFromOsm extends Command
             $this->updatePoiData($poi);
         }
         //print to terminal all the pois not updated
-        foreach ($errorPois as $poi) {
-            $this->error('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ' ) not updated.');
+        if (!empty($errorPois)) {
+            foreach ($errorPois as $poi) {
+                $this->error('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ' ) not updated.');
+            }
         }
 
         $this->info('Finished.');
