@@ -59,27 +59,28 @@ class SyncECTagsFromOSFCommand extends Command
         $this->author = $this->argument('author');
         if ($this->option('tag'))
             $this->tag = $this->option('tag');
-        
+
         if ($this->option('force'))
             $this->force = true;
 
         $this->checkParameters();
-        
+
         $list = $this->getList();
     }
 
-    public function sync($feature){
+    public function sync($feature)
+    {
         $out_source = OutSourceFeature::find($feature->out_source_feature_id);
         if ($this->tag != 'all') {
             if ($out_source) {
                 if ($this->tag == 'caption') {
                     $images = $feature->ecMedia;
                     if ($images->count() > 0) {
-                        foreach ( $images as $image) {
+                        foreach ($images as $image) {
                             if ($image->out_source_feature_id) {
                                 $out_source_image = OutSourceFeature::find($image->out_source_feature_id);
                                 if ($out_source_image) {
-                                    if (array_key_exists('description',$out_source_image->tags)) {
+                                    if (array_key_exists('description', $out_source_image->tags)) {
                                         $image->description = $out_source_image->tags['description'];
                                         $image->save();
                                         return true;
@@ -87,6 +88,25 @@ class SyncECTagsFromOSFCommand extends Command
                                 }
                             }
                         }
+                    }
+                }
+                //if the tag is 'osmid' only update if the feature is ecPoi
+                else if ($this->tag == 'osmid') {
+                    if ($feature instanceof EcPoi) {
+                        if (empty($feature->osmid) || $this->force == true) {
+                            $rawData = json_decode($out_source->raw_data, true);
+                            if (array_key_exists('_osmid', $rawData)) {
+                                $this->info($rawData['_osmid']);
+                                $this->info('key exists');
+                                //take the _osmid and cut 'node/' at the beginning of the string
+                                $id =  substr($rawData['_osmid'], 5);
+                                $feature->osmid = $id;
+                                $feature->save();
+                                return true;
+                            }
+                            return false;
+                        }
+                        return false;
                     }
                 } else {
                     $thistag = $this->tag;
@@ -101,8 +121,8 @@ class SyncECTagsFromOSFCommand extends Command
                     return false;
                 }
             }
-        } 
-        if ( $this->tag == 'all') {
+        }
+        if ($this->tag == 'all') {
             if ($out_source) {
                 // if (empty($feature->description)) {
                 //     if (isset($out_source->tags['description']))
@@ -112,6 +132,7 @@ class SyncECTagsFromOSFCommand extends Command
                 //     if (isset($out_source->tags['excerpt']))
                 //         $feature->excerpt = $out_source->tags['excerpt'];
                 // }
+
                 if (empty($feature->addr_locality)) {
                     if (isset($out_source->tags['addr_city']))
                         $feature->addr_locality = $out_source->tags['addr_city'];
@@ -148,6 +169,9 @@ class SyncECTagsFromOSFCommand extends Command
                     if (isset($out_source->tags['stars']))
                         $feature->stars = $out_source->tags['stars'];
                 }
+
+
+
                 // if (empty($feature->related_url)) {
                 //     $urls = [];
                 //     foreach ($out_source->tags['related_url'] as $key => $val) {
@@ -163,7 +187,8 @@ class SyncECTagsFromOSFCommand extends Command
         }
     }
 
-    public function getList(){
+    public function getList()
+    {
         $features = '';
 
         if ($this->type == 'poi') {
@@ -173,16 +198,18 @@ class SyncECTagsFromOSFCommand extends Command
             $features = EcTrack::where('user_id', $this->author_id,)->get();
         }
 
-        if ($features){
+        if ($features) {
             $count = 1;
             foreach ($features as $feature) {
                 $res = $this->sync($feature);
                 if ($res) {
-                    Log::info($this->tag .' of Feature with ID: '. $feature->id . ' saved successfully - ' .$count. ' out of -> ' . count($features) );
+                    Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
+                    $this->info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
                 } else {
-                    Log::info($this->tag .' of Feature with ID: '. $feature->id . ' NOT saved - ' .$count. ' out of -> ' . count($features) );
+                    Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
+                    $this->error($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
                 }
-                $count ++;
+                $count++;
             }
             // return $features->pluck('id')->toArray();
         } else {
@@ -190,7 +217,8 @@ class SyncECTagsFromOSFCommand extends Command
         }
     }
 
-    public function checkParameters(){
+    public function checkParameters()
+    {
         // Check the author
         Log::info('Checking paramtere AUTHOR');
         if (is_numeric($this->author)) {
@@ -198,41 +226,43 @@ class SyncECTagsFromOSFCommand extends Command
                 $user = User::find(intval($this->author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID '. $this->author); 
+                throw new Exception('No User found with this ID ' . $this->author);
             }
         } else {
             try {
-                $user = User::where('email',strtolower($this->author))->first();
-                
+                $user = User::where('email', strtolower($this->author))->first();
+
                 $this->author_id = $user->id;
-                
             } catch (Exception $e) {
-                throw new Exception('No User found with this email '. $this->author); 
+                throw new Exception('No User found with this email ' . $this->author);
             }
         }
 
         // Check the type
         Log::info('Checking paramtere TYPE');
-        if (strtolower($this->type) == 'track' ||
-            strtolower($this->type) == 'poi' 
-            ) {
-                $this->type = strtolower($this->type);
-            } else {
-                throw new Exception('The value of parameter type: '.$this->type.' is not currect'); 
-            }
-        
-        
+        if (
+            strtolower($this->type) == 'track' ||
+            strtolower($this->type) == 'poi'
+        ) {
+            $this->type = strtolower($this->type);
+        } else {
+            throw new Exception('The value of parameter type: ' . $this->type . ' is not currect');
+        }
+
+
         // Check the type
         Log::info('Checking paramtere TAG');
         if ($this->tag) {
-            if (strtolower($this->tag) == 'description' ||
+            if (
+                strtolower($this->tag) == 'description' ||
                 strtolower($this->tag) == 'excerpt' ||
-                strtolower($this->tag) == 'caption' 
-                ) {
-                    $this->tag = strtolower($this->tag);
-                } else {
-                    throw new Exception('The value of parameter tag: '.$this->tag.' is not currect'); 
-                }
+                strtolower($this->tag) == 'caption' ||
+                strtolower($this->tag) == 'osmid'
+            ) {
+                $this->tag = strtolower($this->tag);
+            } else {
+                throw new Exception('The value of parameter tag: ' . $this->tag . ' is not currect');
+            }
         } else {
             $this->tag = 'all';
         }
