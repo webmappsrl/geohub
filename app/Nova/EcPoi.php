@@ -669,12 +669,12 @@ HTML;
     {
         if ($request->user()->hasRole('Editor')) {
             return [
+                new PoiSearchableFromOSMID,
                 new HasFeatureImage,
                 new HasImageGallery,
                 new SelectFromThemesPoi,
                 new SelectFromWheresPoi,
-                new SelectFromPoiTypesPoi,
-                new PoiSearchableFromOSMID
+                new SelectFromPoiTypesPoi
             ];
         }
         return [];

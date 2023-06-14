@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\EcPoi;
 use App\Http\Facades\OsmClient;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -96,7 +97,7 @@ class UpdatePOIFromOsm extends Command
         // Update the 'ele' attribute of the poi if it exists in the OSM data
         $this->updatePoiAttribute($poi, $osmPoi, 'ele', 'ele');
         // Update the 'ref' attribute of the poi if it exists in the OSM data
-        $this->updatePoiAttribute($poi, $osmPoi, 'ref', 'REF');
+        $this->updatePoiAttribute($poi, $osmPoi, 'ref', 'ref');
         // Update the name of the poi if the 'name' key exists in the OSM data
         $this->updatePoiName($poi, $osmPoi);
 
@@ -115,7 +116,7 @@ class UpdatePOIFromOsm extends Command
     {
         if (array_key_exists($osmPropertyKey, $osmPoi['properties']) && $osmPoi['properties'][$osmPropertyKey] != null) {
             //update the 'code' attribute of the poi
-            if ($osmPropertyKey == 'REF') {
+            if ($osmPropertyKey == 'ref') {
                 //update the 'code' attribute of the poi
                 $poi->code = $osmPoi['properties'][$osmPropertyKey];
             } else {
@@ -127,10 +128,16 @@ class UpdatePOIFromOsm extends Command
     // Update the name of the poi if the 'name' key exists in the OSM data
     private function updatePoiName(EcPoi $poi, array $osmPoi)
     {
-        if ((array_key_exists('name', $osmPoi['properties']) && $osmPoi['properties']['name'] != null) && (array_key_exists('REF', $osmPoi['properties']) && $osmPoi['properties']['REF'] != null)) {
-            $poi->name = $osmPoi['properties']['REF'] . ' - ' . $osmPoi['properties']['name'];
-        } else {
-            $poi->name = $poi->name;
+        $name_array = array();
+        
+        if (array_key_exists('ref', $osmPoi['properties']) && !empty($osmPoi['properties']['ref'])) {
+            array_push($name_array,$osmPoi['properties']['ref']);
+        } 
+        if (array_key_exists('name', $osmPoi['properties']) && !empty($osmPoi['properties']['name'])) {
+            array_push($name_array,$osmPoi['properties']['name']);
+        }
+        if (!empty($name_array)) {
+            $poi->name = implode(' - ',$name_array);
         }
     }
 

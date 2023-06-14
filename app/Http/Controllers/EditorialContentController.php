@@ -177,6 +177,7 @@ class EditorialContentController extends Controller
                     $ecPoi->$field = $request->$field;
                 }
             }
+        }
 
             if (!empty($request->where_ids)) {
                 $ecPoi->taxonomyWheres()->sync($request->where_ids);
@@ -184,7 +185,6 @@ class EditorialContentController extends Controller
 
             $ecPoi->skip_update = true;
             $ecPoi->save();
-        }
     }
 
 
