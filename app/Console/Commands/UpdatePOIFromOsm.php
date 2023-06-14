@@ -68,7 +68,7 @@ class UpdatePOIFromOsm extends Command
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            if (!empty($poi->osmid) && $poi->osmid == 9187858597) {
+            if (!empty($poi->osmid)) {
                 $this->updatePoiData($poi);
             }
         }
