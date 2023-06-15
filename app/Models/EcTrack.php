@@ -975,11 +975,13 @@ class EcTrack extends Model
             $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
         }
         if (!empty($this->description)) {
-            $description = str_replace('"', '', json_encode($this->getTranslations('description'))).' ';
+            $description = str_replace('"', '', json_encode($this->getTranslations('description')));
+            $description = str_replace('\\', '', $description);
             $string .= strip_tags($description).' ';
         }
         if (!empty($this->excerpt)) {
-            $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt'))).' ';
+            $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
+            $excerpt = str_replace('\\', '', $excerpt);
             $string .= strip_tags($excerpt).' ';
         }
         if (!empty($this->ref)) {
@@ -1026,5 +1028,15 @@ class EcTrack extends Model
             }
         }
         return $result;
+    }
+
+    /**
+     * Creates or Updates the EcTrack index on Elastic
+     *
+     * @return void
+     */
+    public function elasticUpdateIndex(): void
+    {
+        # code...
     }
 }
