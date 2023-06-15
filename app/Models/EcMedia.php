@@ -141,6 +141,9 @@ class EcMedia extends Model {
             $array['caption'] = $array['description'];
         unset ($array['description']);
 
+        if (!empty($this->thumbnail('400x200'))) {
+            $array['thumbnail'] = $this->thumbnail('400x200');
+        }
         $array['api_url'] = route('api.ec.media.geojson', ['id' => $this->id], true);
         if($allData) {
             $array['sizes'] = json_decode($this->thumbnails, true);
