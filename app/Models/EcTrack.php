@@ -1031,6 +1031,48 @@ class EcTrack extends Model
     }
 
     /**
+     * returns the apps associated to a EcTrack
+     *
+     * @return object|null
+     */
+    public function trackHasApps(): ?object
+    {
+        if (empty($this->user_id))
+            return null;
+        
+        $user = User::find($this->user_id);
+        if ($user->apps->count() == 0)
+            return null;
+
+        return $user->apps;
+    }
+
+    /**
+     * Returns an array of app_id => layer_id associated with the current EcTrack
+     *
+     * @param App $app
+     * @return array
+     */
+    public function getLayersByApp(App $app): array
+    {
+        $layers = [];
+        
+        $trackTaxonomies = [];
+
+        array_push($trackTaxonomies, $this->taxonomyActivities->pluck('identifier')->toArray());
+        array_push($trackTaxonomies, $this->taxonomywheres->pluck('identifier')->toArray());
+        array_push($trackTaxonomies, $this->taxonomythemes->pluck('identifier')->toArray());
+
+        if (is_null($this->trackHasApps()))
+            return $layers;
+
+        foreach ($this->trackHasApps as $app) {
+            $app->layers
+        }
+        return $layers;
+    }
+
+    /**
      * Creates or Updates the EcTrack index on Elastic
      *
      * @return void

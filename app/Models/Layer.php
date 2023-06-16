@@ -152,4 +152,30 @@ class Layer extends Model
 
         return $this->attributes['query_string'] = $query_string;
     }
+
+    /**
+     * Returns a list of taxonomy identifiers associated with the layer.
+     *
+     * @return array
+     */
+    public function getLayerTaxonomyIdentifiers()
+    {
+        $identifiers = [];
+
+        if ($this->taxonomyThemes->count() > 0) {
+            array_push($identifiers,)
+        }
+        if ($this->taxonomyWheres->count() > 0) {
+            $query_string .= '&taxonomyWheres=';
+            $identifiers = $this->taxonomyWheres->pluck('identifier')->toArray();
+            $query_string .= implode(',', $identifiers);
+        }
+        if ($this->taxonomyActivities->count() > 0) {
+            $query_string .= '&taxonomyActivities=';
+            $identifiers = $this->taxonomyActivities->pluck('identifier')->toArray();
+            $query_string .= implode(',', $identifiers);
+        }
+
+        return $this->attributes['query_string'] = $query_string;
+    }
 }
