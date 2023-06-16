@@ -356,7 +356,7 @@ trait ConfTrait
                 array_push($options,$a);
             }
 
-            $data['MAP']['filters']['activity'] = [
+            $data['MAP']['filters']['activities'] = [
                 'type' => 'select',
                 'name' => [
                     'it' => 'Attività',
@@ -385,7 +385,7 @@ trait ConfTrait
                 array_push($options,$a);
             }
 
-            $data['MAP']['filters']['theme'] = [
+            $data['MAP']['filters']['themes'] = [
                 'type' => 'select',
                 'name' => [
                     'it' => 'Tema',
@@ -415,7 +415,7 @@ trait ConfTrait
                 array_push($options,$a);
             }
 
-            $data['MAP']['filters']['poi_type'] = [
+            $data['MAP']['filters']['poi_types'] = [
                 'type' => 'select',
                 'name' => [
                     'it' => 'Punti di interesse',
