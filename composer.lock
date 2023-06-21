@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07a6158b3e002e3f323540a0fd2d4ad1",
+    "content-hash": "38bfbbd5646b0a75552a4ae4dd0086f0",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -712,6 +712,68 @@
                 }
             ],
             "time": "2021-08-10T01:44:12+00:00"
+        },
+        {
+            "name": "chelout/laravel-relationship-events",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chelout/laravel-relationship-events.git",
+                "reference": "fa47732c7e584655a4ae1331f378dcf5245da746"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chelout/laravel-relationship-events/zipball/fa47732c7e584655a4ae1331f378dcf5245da746",
+                "reference": "fa47732c7e584655a4ae1331f378dcf5245da746",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/database": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/events": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0|^5.0|^6.0|dev-remove-nice-to-have-deps",
+                "phpunit/phpunit": "^8.3|^9.0|^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Chelout\\RelationshipEvents\\RelationshipEventsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Chelout\\RelationshipEvents\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "chelout",
+                    "email": "chelout@gmail.com"
+                }
+            ],
+            "description": "Missing relationship events for Laravel",
+            "homepage": "https://github.com/chelout/laravel-relationship-events",
+            "keywords": [
+                "events",
+                "laravel",
+                "relations",
+                "relationship"
+            ],
+            "support": {
+                "issues": "https://github.com/chelout/laravel-relationship-events/issues",
+                "source": "https://github.com/chelout/laravel-relationship-events/tree/v1.5.0"
+            },
+            "time": "2022-02-11T17:35:13+00:00"
         },
         {
             "name": "chriskonnertz/open-graph",
@@ -10069,7 +10131,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -10105,7 +10167,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -10141,7 +10203,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10177,7 +10239,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10213,7 +10275,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10352,7 +10414,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-feature/track_pdf_2.2",
+            "version": "dev-feature/ectrack_elastic_index",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",

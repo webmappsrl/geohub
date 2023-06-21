@@ -35,62 +35,23 @@ class EcTrackElasticObserver
 
         //$hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
 
-        $host = env('ELASTIC_HTTP_HOST');
-        $hosts = [$host];
-        $client = ClientBuilder::create()->setHosts($hosts)->build();
+        // $host = env('ELASTIC_HTTP_HOST');
+        // $hosts = [$host];
+        // $client = ClientBuilder::create()->setHosts($hosts)->build();
 
-
-
-        return;
-
-
-
-        Log::info('Indexing track ' . $ecTrack->id);
-        $geom = $ecTrack::where('id', '=', $ecTrack->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(geometry) as geom")
-            )
-            ->first()
-            ->geom;
-
-        $curl = curl_init();
-        // https://elastic.sis-te.com/geohub
-        //             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
-        $CURLOPT_URL = env('ELASTIC_HOST');
-        curl_setopt_array($curl, array(
-            //    CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/' . $ecTrack->id,
-            CURLOPT_URL =>  $CURLOPT_URL . '/geohub/_doc/' . $ecTrack->id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-  "geometry" : ' . $geom . ',
-  "id": ' . $ecTrack->id . ',
-  "ref": "100",
-  "cai_scale": "E",
-   "piccioli": "fava"
-}',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . env('ELASTIC_KEY'),
-            ),
-        ));
-
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
+        $ecTrackLayers = $ecTrack->getLayersByApp();
+        if (!empty($ecTrackLayers)) {
+            foreach ($ecTrackLayers as $app_id => $layer_ids) {
+                if (!empty($layer_ids)) {
+                    // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
+                    $ecTrack->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+                } else {
+                    $ecTrack->elasticIndexDelete('app_' . $app_id);
+                }
+            }
         }
 
-
-        curl_close($curl);
-        Log::info('Index OK');
+        
     }
 
     /**

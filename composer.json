@@ -17,6 +17,7 @@
         "bernhardh/nova-icon-select": "^1.0",
         "blade-ui-kit/blade-icons": "^1.2",
         "chaseconey/nova-external-image": "^0.3.0",
+        "chelout/laravel-relationship-events": "^1.5",
         "chriskonnertz/open-graph": "^2.0",
         "christiankuri/laravel-favorite": "^1.4",
         "cloudcake/nova-fixed-bars": "^1.1",

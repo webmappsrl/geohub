@@ -6,6 +6,7 @@ use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use Chelout\RelationshipEvents\Concerns\HasMorphToManyEvents;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
 {
-    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
+    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable, HasMorphToManyEvents;
 
     protected $fillable = [
         'name',
@@ -75,7 +76,7 @@ class EcTrack extends Model
     protected static function booted()
     {
         parent::booted();
-        // EcTrack::observe(EcTrackElasticObserver::class);
+
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
             if (!is_null($user)) $ecTrack->author()->associate($user);
@@ -109,18 +110,48 @@ class EcTrack extends Model
                 $ecTrack->skip_update = false;
             }
         });
+
         /**
-         * static::updated(function ($ecTrack) {
-         * $changes = $ecTrack->getChanges();
-         * if (in_array('geometry', $changes)) {
-         * try {
-         * $hoquServiceProvider = app(HoquServiceProvider::class);
-         * $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-         * } catch (\Exception $e) {
-         * Log::error('An error occurred during a store operation: ' . $e->getMessage());
-         * }
-         * }
-         * }); **/
+         * Many To Many Polymorphic Relations Events.
+         */
+        static::morphToManyAttached(function ($relation, $parent, $ids, $attributes) {
+            $ecTrackLayers = $parent->getLayersByApp();
+            if (!empty($ecTrackLayers)) {
+                foreach ($ecTrackLayers as $app_id => $layer_ids) {
+                    // $parent->elasticIndex('app_' . $app_id, $layer_ids);
+                    if (!empty($layer_ids)) {
+                        // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
+                        $parent->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+                    } else {
+                        $parent->elasticIndexDelete('app_' . $app_id);
+                    }
+                }
+            }
+        });
+
+        static::morphToManyDetached(function ($relation, $parent, $ids) {
+            $ecTrackLayers = $parent->getLayersByApp();
+            if (!empty($ecTrackLayers)) {
+                foreach ($ecTrackLayers as $app_id => $layer_ids) {
+                    // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids);
+                }
+            }
+        });
+
+        // static::updated(function ($ecTrack) {
+            // $changes = $ecTrack->getChanges();
+            // if (in_array('geometry', $changes)) {
+            //     try {
+            //         $hoquServiceProvider = app(HoquServiceProvider::class);
+            //         $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+            //     } catch (\Exception $e) {
+            //         Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            //     }
+            // }
+        // });
+
+        // EcTrack::observe(EcTrackElasticObserver::class);
+
     }
 
     public function save(array $options = [])
@@ -703,7 +734,7 @@ class EcTrack extends Model
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
     }
 
-    public function elasticIndex($index = 'ectracks', $layers = [])
+    public function elasticIndex($index = 'ectracks', $layers = [], $requestType = 'POST')
     {
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
@@ -812,7 +843,7 @@ class EcTrack extends Model
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_CUSTOMREQUEST => $requestType,
             CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
@@ -977,12 +1008,12 @@ class EcTrack extends Model
         if (!empty($this->description)) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description).' ';
+            $string .= strip_tags($description) . ' ';
         }
         if (!empty($this->excerpt)) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt).' ';
+            $string .= strip_tags($excerpt) . ' ';
         }
         if (!empty($this->ref)) {
             $string .= $this->ref . ' ';
@@ -1033,13 +1064,13 @@ class EcTrack extends Model
     /**
      * returns the apps associated to a EcTrack
      *
-     * @return object|null
+     *
      */
-    public function trackHasApps(): ?object
+    public function trackHasApps()
     {
         if (empty($this->user_id))
             return null;
-        
+
         $user = User::find($this->user_id);
         if ($user->apps->count() == 0)
             return null;
@@ -1050,35 +1081,192 @@ class EcTrack extends Model
     /**
      * Returns an array of app_id => layer_id associated with the current EcTrack
      *
-     * @param App $app
      * @return array
      */
-    public function getLayersByApp(App $app): array
+    public function getLayersByApp(): array
     {
         $layers = [];
-        
+
         $trackTaxonomies = [];
 
-        array_push($trackTaxonomies, $this->taxonomyActivities->pluck('identifier')->toArray());
-        array_push($trackTaxonomies, $this->taxonomywheres->pluck('identifier')->toArray());
-        array_push($trackTaxonomies, $this->taxonomythemes->pluck('identifier')->toArray());
+        $taxonomyActivities = $this->taxonomyActivities->pluck('id')->toArray();
+        $taxonomywheres = $this->taxonomywheres->pluck('id')->toArray();
+        $taxonomythemes = $this->taxonomythemes->pluck('id')->toArray();
+        if (!empty($taxonomyActivities)) {
+            $trackTaxonomies['activities'] = $taxonomyActivities;
+        }
+        if (!empty($taxonomywheres)) {
+            $trackTaxonomies['wheres'] = $taxonomywheres;
+        }
+        if (!empty($taxonomythemes)) {
+            $trackTaxonomies['themes'] = $taxonomythemes;
+        }
 
         if (is_null($this->trackHasApps()))
             return $layers;
 
-        foreach ($this->trackHasApps as $app) {
-            $app->layers
+        foreach ($this->trackHasApps() as $app) {
+            foreach ($app->layers as $layer) {
+                $layers_ids = $layer->getLayerTaxonomyIDs();
+                foreach ($trackTaxonomies as $t_tax => $t_ids) {
+                    if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
+                        $layers[$app->id][] = $layers_ids[$t_tax][0];
+                    }
+                }
+            }
+            if (empty($layers)) {
+                $layers[$app->id] = [];
+            }
         }
+
+
         return $layers;
     }
 
     /**
      * Creates or Updates the EcTrack index on Elastic
      *
+     * @param String $index_name
+     * @param Array $layers
      * @return void
      */
-    public function elasticUpdateIndex(): void
+    public function elasticIndexUpsert($index_name, $layers): void
     {
-        # code...
+        $client = ClientBuilder::create()
+            ->setHosts([config('services.elastic.http')])
+            ->setSSLVerification(false)
+            ->build();
+            
+        Log::info('Update Elastic Indexing track ' . $this->id);
+
+        $geom = EcTrack::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+            )
+            ->first()
+            ->geom;
+
+        // TODO: converti into array for ELASTIC correct datatype
+        // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
+        $taxonomy_activities = '[]';
+        if ($this->taxonomyActivities->count() > 0) {
+            $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+        }
+        $taxonomy_wheres = '[]';
+        if ($this->taxonomyWheres->count() > 0) {
+            // add tax where first show to the end of taxonomy_wheres array
+            if ($this->taxonomy_wheres_show_first) {
+                $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
+                $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
+                unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
+                $taxonomy_wheres = array_values($taxonomy_wheres);
+                array_push($taxonomy_wheres, $first_show_name);
+                $taxonomy_wheres = json_encode($taxonomy_wheres);
+            } else {
+                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+            }
+        }
+
+        $taxonomy_themes = '[]';
+        if ($this->taxonomyThemes->count() > 0) {
+            $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
+        }
+        // FEATURE IMAGE
+        $feature_image = '';
+        if (isset($this->featureImage->thumbnails)) {
+            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            // TODO: use proper ecMedia function
+            if (isset($sizes['400x200'])) {
+                $feature_image = $sizes['400x200'];
+            } else if (isset($sizes['225x100'])) {
+                $feature_image = $sizes['225x100'];
+            }
+        }
+        try {
+            $coordinates = json_decode($geom)->coordinates;
+            $coordinatesCount = count($coordinates);
+            $start = json_encode($coordinates[0]);
+            $end = json_encode($coordinates[$coordinatesCount - 1]);
+        } catch (Exception $e) {
+            $start = '[]';
+            $end = '[]';
+        }
+        try {
+            $json = $this->getJson();
+            unset($json['taxonomy_wheres']);
+            unset($json['sizes']);
+            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
+            $properties = $json;
+        } catch (Exception $e) {
+            $properties = null;
+        }
+
+        $postfields = '{
+                "properties": ' . json_encode($properties) . ',
+                "geometry" : ' . $geom . ',
+                "id": ' . $this->id . ',
+                "ref": "' . $this->ref . '",
+                "start": ' . $start . ',
+                "end": ' . $end . ',
+                "cai_scale": "' . $this->cai_scale . '",
+                "from": "' . $this->getActualOrOSFValue('from') . '",
+                "to": "' . $this->getActualOrOSFValue('to') . '",
+                "name": "' . $this->name . '",
+                "distance": "' . $this->distance . '",
+                "taxonomyActivities": ' . $taxonomy_activities . ',
+                "taxonomyWheres": ' . $taxonomy_wheres . ',
+                "taxonomyThemes": ' . $taxonomy_themes . ',
+                "feature_image": "' . $feature_image . '",
+                "duration_forward": ' . $this->setDurationForwardEmpty() . ',
+                "ascent": ' . $this->ascent . ',
+                "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
+                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
+                "layers": ' . json_encode($layers) . ',
+                "searchable": "' . $this->getSearchableString() . '"
+              }';
+
+        $params = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => [
+                "id" => $this->id,
+                "ref" => $this->ref,
+                "name" => $this->name
+            ]
+        ];
+        
+        try {
+            $response = $client->index($params);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        Log::info($response);
+    }
+
+    /**
+     * Deletes the EcTrack index on Elastic
+     *
+     * @param String $index_name
+     * @return void
+     */
+    public function elasticIndexDelete($index_name): void
+    {
+        $client = ClientBuilder::create()
+            ->setHosts([config('services.elastic.http')])
+            ->setSSLVerification(false)
+            ->build();
+            
+        Log::info('DELETE Elastic Indexing track ' . $this->id);
+        $params = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id
+        ];
+        
+        try {
+            $response = $client->delete($params);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        Log::info($response);
     }
 }

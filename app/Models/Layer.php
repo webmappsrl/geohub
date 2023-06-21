@@ -154,28 +154,24 @@ class Layer extends Model
     }
 
     /**
-     * Returns a list of taxonomy identifiers associated with the layer.
+     * Returns a list of taxonomy IDs associated with the layer.
      *
      * @return array
      */
-    public function getLayerTaxonomyIdentifiers()
+    public function getLayerTaxonomyIDs()
     {
-        $identifiers = [];
+        $ids = [];
 
         if ($this->taxonomyThemes->count() > 0) {
-            array_push($identifiers,)
+            $ids['themes'] = $this->taxonomyThemes->pluck('id')->toArray();
         }
         if ($this->taxonomyWheres->count() > 0) {
-            $query_string .= '&taxonomyWheres=';
-            $identifiers = $this->taxonomyWheres->pluck('identifier')->toArray();
-            $query_string .= implode(',', $identifiers);
+            $ids['wheres'] = $this->taxonomyWheres->pluck('id')->toArray();
         }
         if ($this->taxonomyActivities->count() > 0) {
-            $query_string .= '&taxonomyActivities=';
-            $identifiers = $this->taxonomyActivities->pluck('identifier')->toArray();
-            $query_string .= implode(',', $identifiers);
+            $ids['activities'] = $this->taxonomyActivities->pluck('id')->toArray();
         }
 
-        return $this->attributes['query_string'] = $query_string;
+        return $ids;
     }
 }
