@@ -86,6 +86,9 @@ trait ConfTrait
 
         $data['WEBAPP']['draw_track_show'] = $this->draw_track_show;
         $data['WEBAPP']['editing_inline_show'] = $this->editing_inline_show;
+        if ($this->gu_id) {
+            $data['WEBAPP']['gu_id'] = $this->gu_id;
+        }
 
         return $data;
     }
@@ -416,6 +419,17 @@ trait ConfTrait
             }
 
             $data['MAP']['filters']['poi_types'] = [
+                'type' => 'select',
+                'name' => [
+                    'it' => 'Punti di interesse',
+                    'en' => 'Points of interest',
+                ],
+                'options' => $options
+            ];
+            
+            // For old Applications
+            // TODO: Remove it when all apps al > version .45
+            $data['MAP']['filters']['poi_type'] = [
                 'type' => 'select',
                 'name' => [
                     'it' => 'Punti di interesse',
