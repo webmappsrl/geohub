@@ -267,6 +267,7 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
+            Text::make(__('Google universal ID'),'gu_id')
         ];
     }
 
