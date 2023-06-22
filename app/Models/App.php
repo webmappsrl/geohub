@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
@@ -251,24 +252,66 @@ class App extends Model
             'poi_type' => []
         ];
         foreach ($themes as $theme) {
-            foreach ($theme->ecPois()->get() as $poi) {
-                $poiTaxonomies = $poi->getTaxonomies();
-                $res = [
-                    'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
-                    'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
-                    'poi_type' => array_unique(array_merge($res['poi_type'], [end($poiTaxonomies['poi_type'])]), SORT_REGULAR),
-                ];
+            $theme_id = $theme->id;
+            // NEW CODE
+            $where_ids = DB::select("select distinct taxonomy_where_id from taxonomy_whereables where taxonomy_whereable_type LIKE '%EcPoi%' AND taxonomy_whereable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
+            $where_ids_implode = implode(',',collect($where_ids)->pluck('taxonomy_where_id')->toArray());
+            $where_db = DB::select("select id, identifier, name, color, icon from taxonomy_wheres where id in ($where_ids_implode)");
+            $where_array = json_decode(json_encode($where_db), true);
+            $where_result = [];
+            foreach ($where_array as $akey => $aval) {
+                foreach ($aval as $key => $val) {
+                    if ($key == 'name') {
+                        $aval[$key] = json_decode($val);
+                    }
+                    if (empty($val)) {
+                        unset($aval[$key]);
+                    }
+                }
+                $where_result[] = $aval;
             }
-        }
-        $keys = array_keys((array)$res);
-        foreach ($keys as $key) {
-            if (count($res[$key]) === 0) {
-                unset($res[$key]);
+
+            $poi_type_ids = DB::select("select distinct taxonomy_poi_type_id from taxonomy_poi_typeables where taxonomy_poi_typeable_type LIKE '%EcPoi%' AND taxonomy_poi_typeable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
+            $poi_type_ids_implode = implode(',',collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
+            $poi_db = DB::select("select id, identifier, name, color, icon from taxonomy_poi_types where id in ($poi_type_ids_implode)");
+            $poi_array = json_decode(json_encode($poi_db), true);
+            $poi_result = [];
+            foreach ($poi_array as $akey => $aval) {
+                foreach ($aval as $key => $val) {
+                    if ($key == 'name') {
+                        $aval[$key] = json_decode($val);
+                    }
+                    if (empty($val)) {
+                        unset($aval[$key]);
+                    }
+                }
+                $poi_result[] = $aval;
             }
+        $res = [
+            'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),
+            'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'],$poi_result),'id'),
+        ];
         }
+
+            // OLD CODE
+            // foreach ($theme->ecPois()->get() as $poi) {
+            //     $poiTaxonomies = $poi->getTaxonomies();
+            //     $res = [
+            //         'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
+            //         //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
+            //         'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
+            //         'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
+            //         'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
+            //         'poi_type' => array_unique(array_merge($res['poi_type'], [end($poiTaxonomies['poi_type'])]), SORT_REGULAR),
+            //     ];
+            // }
+        // }
+        // $keys = array_keys((array)$res);
+        // foreach ($keys as $key) {
+        //     if (count($res[$key]) === 0) {
+        //         unset($res[$key]);
+        //     }
+        // }
 
         return $res;
     }
@@ -601,5 +644,19 @@ class App extends Model
 
 
         return $svg;
+    }
+
+    function unique_multidim_array($array, $key) {
+        $temp_array = array();
+        $i = 0;
+        $key_array = array();
+        foreach($array as $val) {
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[$i] = $val[$key];
+                $temp_array[$i] = $val;
+            }
+            $i++;
+        }
+        return $temp_array;
     }
 }
