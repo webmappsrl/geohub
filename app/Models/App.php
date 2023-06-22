@@ -287,11 +287,11 @@ class App extends Model
                 }
                 $poi_result[] = $aval;
             }
-                $res = [
-                    'where' => $where_result,
-                    'poi_type' => $poi_result,
-                ];
-            }
+        $res = [
+            'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),
+            'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'],$poi_result),'id'),
+        ];
+        }
 
             // OLD CODE
             // foreach ($theme->ecPois()->get() as $poi) {
@@ -644,5 +644,19 @@ class App extends Model
 
 
         return $svg;
+    }
+
+    function unique_multidim_array($array, $key) {
+        $temp_array = array();
+        $i = 0;
+        $key_array = array();
+        foreach($array as $val) {
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[$i] = $val[$key];
+                $temp_array[$i] = $val;
+            }
+            $i++;
+        }
+        return $temp_array;
     }
 }
