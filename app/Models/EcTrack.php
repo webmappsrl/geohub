@@ -880,6 +880,7 @@ class EcTrack extends Model
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
+            "strokeColor": "' . $this->hexToRgba($this->color) . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
@@ -939,6 +940,7 @@ class EcTrack extends Model
             "geometry" : ' . $geom . ',
             "id": ' . $this->id . ',
             "ref": "' . $this->ref . '",
+            "strokeColor": "' . $this->hexToRgba($this->color) . '",
             "layers": ' . json_encode($layers) . ',
             "distance": ' . $this->distance . ',
             "duration_forward": ' . $this->setDurationForwardEmpty() . ',
@@ -1059,6 +1061,25 @@ class EcTrack extends Model
             }
         }
         return $result;
+    }
+
+    function hexToRgba($hexColor, $opacity = 1.0) {
+        if (empty($hexColor))
+            return '';
+        
+        $hexColor = ltrim($hexColor, '#');
+    
+        if (strlen($hexColor) === 6) {
+            list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
+        } elseif (strlen($hexColor) === 8) {
+            list($r, $g, $b, $a) = sscanf($hexColor, "%02x%02x%02x%02x");
+            $opacity = round($a / 255, 2);
+        } else {
+            throw new Exception('Invalid hex color format.');
+        }
+    
+        $rgbaColor = "rgba($r, $g, $b, $opacity)";
+        return $rgbaColor;
     }
 
     /**
