@@ -429,14 +429,14 @@ trait ConfTrait
             
             // For old Applications
             // TODO: Remove it when all apps al > version .45
-            // $data['MAP']['filters']['poi_type'] = [
-            //     'type' => 'select',
-            //     'name' => [
-            //         'it' => 'Punti di interesse',
-            //         'en' => 'Points of interest',
-            //     ],
-            //     'options' => $options
-            // ];
+            $data['MAP']['filters']['poi_type'] = [
+                'type' => 'select',
+                'name' => [
+                    'it' => 'Punti di interesse',
+                    'en' => 'Points of interest',
+                ],
+                'options' => $options
+            ];
         }
 
         //  Duration Filter 
