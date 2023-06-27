@@ -2,26 +2,38 @@
 
 namespace App\Nova;
 
+use App\Models\User;
 use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\TabsOnEdit;
-use Illuminate\Http\Request;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Eminiarts\Tabs\TabsOnEdit;
 use NovaAttachMany\AttachMany;
 use Yna\NovaSwatches\Swatches;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\Textarea;
 use Ncus\InlineIndex\InlineIndex;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 
 
 
 class Layer extends Resource
 {
     use TabsOnEdit;
+
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->can('Admin')) {
+            return $query;
+        }
+        $userId = $request->user()->id;
+        $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+        return $query->whereIn('app_id', $userApps);
+    }
     /**
      * The model the resource corresponds to.
      *
@@ -44,6 +56,8 @@ class Layer extends Resource
     public static $search = [
         'id', 'name', 'title', 'subtitle'
     ];
+
+
 
     /**
      * Get the fields displayed by the resource.
@@ -176,54 +190,70 @@ class Layer extends Resource
         if ($this->app) {
             $title = "EDIT LAYER: '{$this->name}' belongs to APP '{$this->app->name} '(LAYER GeohubId: {$this->id})";
         }
+        $mainTab = [
+            Text::make('Name')->required(),
+            NovaTabTranslatable::make([
+                Text::make('Title'),
+                Text::make('Subtitle'),
+                Textarea::make('Description')->alwaysShow()
+            ]),
+        ];
+
+        $behaviourTab = [
+            Boolean::make('No Details', 'noDetails'),
+            Boolean::make('No Interaction', 'noInteraction'),
+            Number::make('Zoom Min', 'minZoom'),
+            Number::make('Zoom Max', 'maxZoom'),
+            Boolean::make('Prevent Filter', 'preventFilter'),
+            Boolean::make('Invert Polygons', 'invertPolygons'),
+            Boolean::make('Alert', 'alert'),
+            Boolean::make('Show Label', 'show_label'),
+        ];
+
+        $styleTab = [
+            Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                'show-fallback' => true,
+                'fallback-type' => 'input',
+            ]),
+            Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                'show-fallback' => true,
+                'fallback-type' => 'input',
+            ]),
+            Number::make('Fill Opacity', 'fill_opacity'),
+            Number::make('Stroke Width', 'stroke_width'),
+            Number::make('Stroke Opacity', 'stroke_opacity'),
+            Number::make('Zindex', 'zindex'),
+            Text::make('Line Dash', 'line_dash')
+        ];
+
+        $dataTab = [
+            Heading::make('Use this interface to define rules to assign data to this layer'),
+            Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
+            Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+            AttachMany::make('taxonomyActivities')
+                ->showPreview(),
+            AttachMany::make('TaxonomyThemes')
+                ->showPreview(),
+            AttachMany::make('TaxonomyTargets')
+                ->showPreview(),
+            AttachMany::make('TaxonomyWhens')
+                ->showPreview(),
+        ];
+
+        //if the logged user has role editor only show the main tab
+        if ($request->user()->hasRole('Editor')) {
+            return [
+                (new Tabs($title, [
+                    'MAIN' => $mainTab,
+                ]))->withToolbar(),
+            ];
+        }
         return [
             (new Tabs($title, [
-                'MAIN' => [
-                    Text::make('Name')->required(),
-                    NovaTabTranslatable::make([
-                        Text::make('Title'),
-                        Text::make('Subtitle'),
-                        Textarea::make('Description')->alwaysShow()
-                    ]),
-                ],
-                'BEHAVIOUR' => [
-                    Boolean::make('No Details', 'noDetails'),
-                    Boolean::make('No Interaction', 'noInteraction'),
-                    Number::make('Zoom Min', 'minZoom'),
-                    Number::make('Zoom Max', 'maxZoom'),
-                    Boolean::make('Prevent Filter', 'preventFilter'),
-                    Boolean::make('Invert Polygons', 'invertPolygons'),
-                    Boolean::make('Alert', 'alert'),
-                    Boolean::make('Show Label', 'show_label'),
-                ],
-                'STYLE' => [
-                    Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
-                        'show-fallback' => true,
-                        'fallback-type' => 'input',
-                    ]),
-                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
-                        'show-fallback' => true,
-                        'fallback-type' => 'input',
-                    ]),
-                    Number::make('Fill Opacity', 'fill_opacity'),
-                    Number::make('Stroke Width', 'stroke_width'),
-                    Number::make('Stroke Opacity', 'stroke_opacity'),
-                    Number::make('Zindex', 'zindex'),
-                    Text::make('Line Dash', 'line_dash')
-                ],
-                'DATA' => [
-                    Heading::make('Use this interface to define rules to assign data to this layer'),
-                    Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
-                    Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
-                    AttachMany::make('taxonomyActivities')
-                        ->showPreview(),
-                    AttachMany::make('TaxonomyThemes')
-                        ->showPreview(),
-                    AttachMany::make('TaxonomyTargets')
-                        ->showPreview(),
-                    AttachMany::make('TaxonomyWhens')
-                        ->showPreview(),
-                ]
+                'MAIN' => $mainTab,
+                'BEHAVIOUR' => $behaviourTab,
+                'STYLE' => $styleTab,
+                'DATA' => $dataTab
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
         ];
