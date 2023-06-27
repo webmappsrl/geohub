@@ -19,14 +19,9 @@ class LayerPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasRole('Admin')) {
-            return true;
-        }
-        if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
-            return false;
-        }
+        return true;
     }
-    
+
     /**
      * Determine whether the user can view any models.
      *
