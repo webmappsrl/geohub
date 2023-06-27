@@ -428,12 +428,12 @@ class EcPoi extends Resource
                     'Reachability' => $this->reachability_tab(),
 
                     'Taxonomies' => [
-                        AttachMany::make('TaxonomyPoiTypes'),
+                        AttachMany::make('TaxonomyPoiTypes')->showPreview(),
                         // AttachMany::make('TaxonomyWheres'),
-                        AttachMany::make('TaxonomyActivities'),
-                        AttachMany::make('TaxonomyTargets'),
+                        AttachMany::make('TaxonomyActivities')->showPreview(),
+                        AttachMany::make('TaxonomyTargets')->showPreview(),
                         // AttachMany::make('TaxonomyWhens'),
-                        AttachMany::make('TaxonomyThemes'),
+                        AttachMany::make('TaxonomyThemes')->showPreview(),
                     ],
                 ]
             )),
