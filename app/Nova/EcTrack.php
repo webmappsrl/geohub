@@ -532,10 +532,10 @@ class EcTrack extends Resource
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();
                     })->nullable(),
                     // AttachMany::make('TaxonomyWheres'),
-                    AttachMany::make('TaxonomyActivities'),
-                    AttachMany::make('TaxonomyTargets'),
+                    AttachMany::make('TaxonomyActivities')->showPreview(),
+                    AttachMany::make('TaxonomyTargets')->showPreview(),
                     // AttachMany::make('TaxonomyWhens'),
-                    AttachMany::make('TaxonomyThemes'),
+                    AttachMany::make('TaxonomyThemes')->showPreview(),
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')

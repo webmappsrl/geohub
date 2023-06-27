@@ -26,7 +26,7 @@ class UgcTrackController extends Controller
         $user = auth('api')->user();
         if (isset($user)) {
             $tracks = UgcTrack::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
-            return response()->json($tracks);
+            return $this->getUGCFeatureCollection($tracks);
         } else {
             return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
         }
@@ -168,5 +168,21 @@ class UgcTrackController extends Controller
             ], 400);
         }
         return response()->json(['success' => 'track deleted']);
+    }
+
+    public function getUGCFeatureCollection($tracks)
+    {
+        $featureCollection = [
+            "type" => "FeatureCollection",
+            "features" => []
+        ];
+
+        if ($tracks) {
+            foreach ($tracks as $track) {
+                $featureCollection["features"][] = $track->getGeojson();
+            }
+        }
+
+        return response()->json($featureCollection);
     }
 }
