@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\EcTrackSaved;
 use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
@@ -114,29 +115,29 @@ class EcTrack extends Model
         /**
          * Many To Many Polymorphic Relations Events.
          */
-        static::morphToManyAttached(function ($relation, $parent, $ids, $attributes) {
-            $ecTrackLayers = $parent->getLayersByApp();
-            if (!empty($ecTrackLayers)) {
-                foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                    // $parent->elasticIndex('app_' . $app_id, $layer_ids);
-                    if (!empty($layer_ids)) {
-                        // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
-                        $parent->elasticIndexUpsert('app_' . $app_id, $layer_ids);
-                    } else {
-                        $parent->elasticIndexDelete('app_' . $app_id);
-                    }
-                }
-            }
-        });
+        // static::morphToManyAttached(function ($relation, $parent, $ids, $attributes) {
+        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
+        //     if (!empty($ecTrackLayers)) {
+        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
+        //             // $parent->elasticIndex('app_' . $app_id, $layer_ids);
+        //             if (!empty($layer_ids)) {
+        //                 // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
+        //                 $parent->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+        //             } else {
+        //                 $parent->elasticIndexDelete('app_' . $app_id);
+        //             }
+        //         }
+        //     }
+        // });
 
-        static::morphToManyDetached(function ($relation, $parent, $ids) {
-            $ecTrackLayers = $parent->getLayersByApp();
-            if (!empty($ecTrackLayers)) {
-                foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                    // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids);
-                }
-            }
-        });
+        // static::morphToManyDetached(function ($relation, $parent, $ids) {
+        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
+        //     if (!empty($ecTrackLayers)) {
+        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
+        //             // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids);
+        //         }
+        //     }
+        // });
 
         // static::updated(function ($ecTrack) {
             // $changes = $ecTrack->getChanges();
@@ -150,7 +151,7 @@ class EcTrack extends Model
             // }
         // });
 
-        // EcTrack::observe(EcTrackElasticObserver::class);
+        EcTrack::observe(EcTrackElasticObserver::class);
 
     }
 
@@ -1113,11 +1114,12 @@ class EcTrack extends Model
         $taxonomyActivities = $this->taxonomyActivities->pluck('id')->toArray();
         $taxonomywheres = $this->taxonomywheres->pluck('id')->toArray();
         $taxonomythemes = $this->taxonomythemes->pluck('id')->toArray();
+
         if (!empty($taxonomyActivities)) {
             $trackTaxonomies['activities'] = $taxonomyActivities;
         }
         if (!empty($taxonomywheres)) {
-            $trackTaxonomies['wheres'] = $taxonomywheres;
+            $trackTaxonomies['wheres'] =  $taxonomywheres;
         }
         if (!empty($taxonomythemes)) {
             $trackTaxonomies['themes'] = $taxonomythemes;
@@ -1130,6 +1132,7 @@ class EcTrack extends Model
             foreach ($app->layers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
+                    // Here we assume that there is only one category in each taxonomy type is associated with the Layer 
                     if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
                         $layers[$app->id][] = $layers_ids[$t_tax][0];
                     }
@@ -1139,8 +1142,6 @@ class EcTrack extends Model
                 $layers[$app->id] = [];
             }
         }
-
-
         return $layers;
     }
 
@@ -1160,18 +1161,11 @@ class EcTrack extends Model
             
         Log::info('Update Elastic Indexing track ' . $this->id);
 
-        $geom = EcTrack::where('id', '=', $this->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-            )
-            ->first()
-            ->geom;
-
         // TODO: converti into array for ELASTIC correct datatype
         // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
         $taxonomy_activities = '[]';
         if ($this->taxonomyActivities->count() > 0) {
-            $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
+            $taxonomy_activities = $this->taxonomyActivities->pluck('identifier')->toArray();
         }
         $taxonomy_wheres = '[]';
         if ($this->taxonomyWheres->count() > 0) {
@@ -1182,27 +1176,17 @@ class EcTrack extends Model
                 unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
                 $taxonomy_wheres = array_values($taxonomy_wheres);
                 array_push($taxonomy_wheres, $first_show_name);
-                $taxonomy_wheres = json_encode($taxonomy_wheres);
+                $taxonomy_wheres = $taxonomy_wheres;
             } else {
-                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
+                $taxonomy_wheres = $this->taxonomyWheres->pluck('name')->toArray();
             }
         }
 
         $taxonomy_themes = '[]';
         if ($this->taxonomyThemes->count() > 0) {
-            $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
+            $taxonomy_themes = $this->taxonomyThemes->pluck('name')->toArray();
         }
-        // FEATURE IMAGE
-        $feature_image = '';
-        if (isset($this->featureImage->thumbnails)) {
-            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
-            // TODO: use proper ecMedia function
-            if (isset($sizes['400x200'])) {
-                $feature_image = $sizes['400x200'];
-            } else if (isset($sizes['225x100'])) {
-                $feature_image = $sizes['225x100'];
-            }
-        }
+        
         try {
             $coordinates = json_decode($geom)->coordinates;
             $coordinatesCount = count($coordinates);
@@ -1212,52 +1196,50 @@ class EcTrack extends Model
             $start = '[]';
             $end = '[]';
         }
+
         try {
             $json = $this->getJson();
-            unset($json['taxonomy_wheres']);
-            unset($json['sizes']);
-            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
         }
 
-        $postfields = '{
-                "properties": ' . json_encode($properties) . ',
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "start": ' . $start . ',
-                "end": ' . $end . ',
-                "cai_scale": "' . $this->cai_scale . '",
-                "from": "' . $this->getActualOrOSFValue('from') . '",
-                "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->name . '",
-                "distance": "' . $this->distance . '",
-                "taxonomyActivities": ' . $taxonomy_activities . ',
-                "taxonomyWheres": ' . $taxonomy_wheres . ',
-                "taxonomyThemes": ' . $taxonomy_themes . ',
-                "feature_image": "' . $feature_image . '",
-                "duration_forward": ' . $this->setDurationForwardEmpty() . ',
-                "ascent": ' . $this->ascent . ',
-                "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . ',
-                "searchable": "' . $this->getSearchableString() . '"
-              }';
-
         $params = [
+            'id' => $this->id,
+            'ref' =>  $this->ref ,
+            'cai_scale' =>  $this->cai_scale ,
+            'from' =>  $this->getActualOrOSFValue('from'),
+            'to' =>  $this->getActualOrOSFValue('to'),
+            'name' =>  $this->getTranslations('name'),
+            'taxonomyActivities' => $taxonomy_activities,
+            'taxonomyWheres' => $taxonomy_wheres,
+            'taxonomyThemes' => $taxonomy_themes,
+            'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
+            'themes' => $this->taxonomyThemes->pluck('identifier')->toArray()
+        ];
+
+        $params_update = [
             'index' => 'geohub_' . $index_name,
             'id'    => $this->id,
             'body'  => [
-                "id" => $this->id,
-                "ref" => $this->ref,
-                "name" => $this->name
+                'doc' => $params
             ]
         ];
+        $params_index = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => $params
+        ];
+        if (array_key_exists('taxonomy',$properties)) {
+            $params['body']['doc']['properties']['taxonomy'] = $properties['taxonomy'];
+        }
         
         try {
-            $response = $client->index($params);
+            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                $response = $client->update($params_update);
+            } else {
+                $response = $client->index($params_index);
+            }
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

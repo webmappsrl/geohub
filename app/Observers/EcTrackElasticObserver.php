@@ -12,12 +12,19 @@ use Exception;
 class EcTrackElasticObserver
 {
     /**
+     * Handle events after all transactions are committed.
+     *
+     * @var bool
+     */
+    public $afterCommit = true;
+
+    /**
      * Handle the EcTrack "created" event.
      *
      * @param  \App\Models\EcTrack  $ecTrack
      * @return void
      */
-    public function save(EcTrack $ecTrack)
+    public function created(EcTrack $ecTrack)
     {
     }
 
@@ -29,7 +36,6 @@ class EcTrackElasticObserver
      */
     public function updated(EcTrack $ecTrack)
     {
-
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
 
@@ -49,9 +55,7 @@ class EcTrackElasticObserver
                     $ecTrack->elasticIndexDelete('app_' . $app_id);
                 }
             }
-        }
-
-        
+        }      
     }
 
     /**
