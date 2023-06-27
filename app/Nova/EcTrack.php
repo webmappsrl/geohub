@@ -535,7 +535,7 @@ class EcTrack extends Resource
                     AttachMany::make('TaxonomyActivities'),
                     AttachMany::make('TaxonomyTargets'),
                     // AttachMany::make('TaxonomyWhens'),
-                    AttachMany::make('TaxonomyThemes')->showPreview(),
+                    AttachMany::make('TaxonomyThemes'),
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
