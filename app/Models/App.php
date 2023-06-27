@@ -253,7 +253,7 @@ class App extends Model
         ];
         foreach ($themes as $theme) {
             $theme_id = $theme->id;
-            // Add Taxonomy Wheres
+            // NEW CODE
             $where_ids = DB::select("select distinct taxonomy_where_id from taxonomy_whereables where taxonomy_whereable_type LIKE '%EcPoi%' AND taxonomy_whereable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
             $where_ids_implode = implode(',',collect($where_ids)->pluck('taxonomy_where_id')->toArray());
             $where_db = DB::select("select id, identifier, name, color, icon from taxonomy_wheres where id in ($where_ids_implode)");
@@ -264,9 +264,6 @@ class App extends Model
                     if ($key == 'name') {
                         $aval[$key] = json_decode($val);
                     }
-                    if ($key == 'identifier') {
-                        $aval[$key] = 'where_'.$val;
-                    }
                     if (empty($val)) {
                         unset($aval[$key]);
                     }
@@ -274,7 +271,6 @@ class App extends Model
                 $where_result[] = $aval;
             }
 
-            // Add poi types
             $poi_type_ids = DB::select("select distinct taxonomy_poi_type_id from taxonomy_poi_typeables where taxonomy_poi_typeable_type LIKE '%EcPoi%' AND taxonomy_poi_typeable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
             $poi_type_ids_implode = implode(',',collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
             $poi_db = DB::select("select id, identifier, name, color, icon from taxonomy_poi_types where id in ($poi_type_ids_implode)");
@@ -284,9 +280,6 @@ class App extends Model
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
                         $aval[$key] = json_decode($val);
-                    }
-                    if ($key == 'identifier') {
-                        $aval[$key] = 'poi_type_'.$val;
                     }
                     if (empty($val)) {
                         unset($aval[$key]);
