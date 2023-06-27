@@ -306,4 +306,12 @@ class Layer extends Resource
     {
         return [];
     }
+
+    public function authorizedTo(Request $request, $ability)
+    {
+        //can see only layers belonging to the app of the logged user. If the layer is not belonging to the app of the logged user, error 403 is thrown
+        $userId = $request->user()->id;
+        $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+        return $this->app_id && in_array($this->app_id, $userApps);
+    }
 }
