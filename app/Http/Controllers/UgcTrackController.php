@@ -28,7 +28,7 @@ class UgcTrackController extends Controller
             
             if (!empty($request->header('app-id'))) {
                 $app = App::find($request->header('app-id'));
-                $tracks = UgcTrack::where('user_id', $user->id)->where('app_id',$app->app_id)->orderByRaw('updated_at DESC')->get();
+                $tracks = UgcTrack::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($tracks);
             }
 
