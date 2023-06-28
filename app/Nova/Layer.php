@@ -11,15 +11,17 @@ use Eminiarts\Tabs\TabsOnEdit;
 use NovaAttachMany\AttachMany;
 use Yna\NovaSwatches\Swatches;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Textarea;
 use Ncus\InlineIndex\InlineIndex;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
+use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-
-
 
 class Layer extends Resource
 {
@@ -96,6 +98,8 @@ class Layer extends Resource
             // Number::make('Rank')->sortable(),
             InlineIndex::make('Rank')->sortable()->rules('required'),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
+
+
         ];
     }
 
@@ -108,7 +112,18 @@ class Layer extends Resource
                     Text::make('Name')->required(),
                     Text::make('Title'),
                     Text::make('Subtitle'),
-                    Textarea::make('Description')->alwaysShow()
+                    Textarea::make('Description')->alwaysShow(),
+
+                ],
+                'MEDIA' => [
+                    ExternalImage::make(__('Feature Image'), function () {
+                        $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                            $url = Storage::disk('public')->url($url);
+                        }
+
+                        return $url;
+                    })->withMeta(['width' => 400])->onlyOnDetail(),
                 ],
                 'BEHAVIOUR' => [
                     Boolean::make('No Details', 'noDetails'),
@@ -172,7 +187,6 @@ class Layer extends Resource
                 ]
 
             ]))->withToolbar(),
-            // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
         ];
     }
     public function fieldsForCreate(Request $request)
@@ -240,20 +254,29 @@ class Layer extends Resource
                 ->showPreview(),
         ];
 
+        $mediaTab =  [
+            BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
+                ->searchable()
+                ->nullable()
+        ];
+
         //if the logged user has role editor only show the main tab
         if ($request->user()->hasRole('Editor')) {
             return [
                 NovaTabTranslatable::make([
                     Text::make('Title'),
                     Text::make('Subtitle'),
-                    Textarea::make('Description')->alwaysShow()
+                    Textarea::make('Description')->alwaysShow(),
                 ]),
-
+                BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
+                    ->searchable()
+                    ->nullable()
             ];
         }
         return [
             (new Tabs($title, [
                 'MAIN' => $mainTab,
+                'MEDIA' => $mediaTab,
                 'BEHAVIOUR' => $behaviourTab,
                 'STYLE' => $styleTab,
                 'DATA' => $dataTab
@@ -312,7 +335,11 @@ class Layer extends Resource
 
     public function authorizedTo(Request $request, $ability)
     {
-        //can see only layers belonging to the app of the logged user. If the layer is not belonging to the app of the logged user, error 403 is thrown
+        //can see only layers belonging to the app of the logged user. If the layer is not belonging to the app of the logged user, error 403 is thrown. Admin can see all layers.
+        $user = $request->user();
+        if ($user->hasRole('Admin')) {
+            return true;
+        }
         $userId = $request->user()->id;
         $userApps = User::find($userId)->apps()->pluck('id')->toArray();
         return $this->app_id && in_array($this->app_id, $userApps);
