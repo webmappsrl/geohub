@@ -243,14 +243,12 @@ class Layer extends Resource
         //if the logged user has role editor only show the main tab
         if ($request->user()->hasRole('Editor')) {
             return [
-                (new Tabs($title, [
-                    'MAIN'
-                    =>     NovaTabTranslatable::make([
-                        Text::make('Title'),
-                        Text::make('Subtitle'),
-                        Textarea::make('Description')->alwaysShow()
-                    ]),
-                ]))->withToolbar(),
+                NovaTabTranslatable::make([
+                    Text::make('Title'),
+                    Text::make('Subtitle'),
+                    Textarea::make('Description')->alwaysShow()
+                ]),
+
             ];
         }
         return [
