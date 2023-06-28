@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\MorphedByMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
@@ -88,6 +90,8 @@ class TaxonomyActivity extends Resource
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
 
             new Panel('UX/UI', $this->ux_ui_panel()),
+            //show relation with ecTracks (morphedByMany)
+            MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class),
 
         ];
     }
