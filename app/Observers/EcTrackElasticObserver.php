@@ -36,23 +36,17 @@ class EcTrackElasticObserver
      */
     public function updated(EcTrack $ecTrack)
     {
-        #REF: https://github.com/elastic/elasticsearch-php/
-        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
-
-        //$hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
-
-        // $host = env('ELASTIC_HTTP_HOST');
-        // $hosts = [$host];
-        // $client = ClientBuilder::create()->setHosts($hosts)->build();
-
         $ecTrackLayers = $ecTrack->getLayersByApp();
         if (!empty($ecTrackLayers)) {
             foreach ($ecTrackLayers as $app_id => $layer_ids) {
                 if (!empty($layer_ids)) {
-                    // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
                     $ecTrack->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+                    $ecTrack->elasticIndexUpsertLow('app_low_' . $app_id, $layer_ids);
+                    $ecTrack->elasticIndexUpsertHigh('app_high_' . $app_id, $layer_ids);
                 } else {
                     $ecTrack->elasticIndexDelete('app_' . $app_id);
+                    $ecTrack->elasticIndexDelete('app_low_' . $app_id);
+                    $ecTrack->elasticIndexDelete('app_high_' . $app_id);
                 }
             }
         }      

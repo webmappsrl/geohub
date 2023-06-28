@@ -1161,6 +1161,25 @@ class EcTrack extends Model
             
         Log::info('Update Elastic Indexing track ' . $this->id);
 
+        $geom = EcTrack::where('id', '=', $this->id)
+        ->select(
+            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+        )
+        ->first()
+        ->geom;
+
+        // FEATURE IMAGE
+        $feature_image = '';
+        if (isset($this->featureImage->thumbnails)) {
+            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            // TODO: use proper ecMedia function
+            if (isset($sizes['400x200'])) {
+                $feature_image = $sizes['400x200'];
+            } else if (isset($sizes['225x100'])) {
+                $feature_image = $sizes['225x100'];
+            }
+        }
+
         // TODO: converti into array for ELASTIC correct datatype
         // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
         $taxonomy_activities = '[]';
@@ -1190,11 +1209,11 @@ class EcTrack extends Model
         try {
             $coordinates = json_decode($geom)->coordinates;
             $coordinatesCount = count($coordinates);
-            $start = json_encode($coordinates[0]);
-            $end = json_encode($coordinates[$coordinatesCount - 1]);
+            $start = $coordinates[0];
+            $end = $coordinates[$coordinatesCount - 1];
         } catch (Exception $e) {
-            $start = '[]';
-            $end = '[]';
+            $start = [];
+            $end = [];
         }
 
         try {
@@ -1205,17 +1224,27 @@ class EcTrack extends Model
         }
 
         $params = [
+            'properties' => $properties,
+            'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref ,
+            'ref' =>  $this->ref,
+            'start' =>  $start,
+            'end' =>  $end,
             'cai_scale' =>  $this->cai_scale ,
             'from' =>  $this->getActualOrOSFValue('from'),
             'to' =>  $this->getActualOrOSFValue('to'),
-            'name' =>  $this->getTranslations('name'),
+            'name' =>  json_encode($this->getTranslations('name')),
+            'distance' =>  $this->distance,
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
+            'feature_image' => $feature_image,
+            'duration_forward' => $this->setDurationForwardEmpty(),
+            'ascent' => $this->ascent,
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
-            'themes' => $this->taxonomyThemes->pluck('identifier')->toArray()
+            'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
+            'layers' => $layers,
+            'searchable' => $this->getSearchableString()
         ];
 
         $params_update = [
@@ -1230,10 +1259,135 @@ class EcTrack extends Model
             'id'    => $this->id,
             'body'  => $params
         ];
-        if (array_key_exists('taxonomy',$properties)) {
-            $params['body']['doc']['properties']['taxonomy'] = $properties['taxonomy'];
-        }
         
+        // NORMAL INDEX
+        try {
+            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                $response = $client->update($params_update);
+            } else {
+                $response = $client->index($params_index);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        Log::info($response);
+    }
+
+    /**
+     * Creates or Updates the EcTrack LOW index on Elastic
+     *
+     * @param String $index_name
+     * @param Array $layers
+     * @return void
+     */
+    public function elasticIndexUpsertLow($index_name, $layers): void
+    {
+        $tollerance = config('geohub.elastic_low_geom_tollerance');
+        $client = ClientBuilder::create()
+            ->setHosts([config('services.elastic.http')])
+            ->setSSLVerification(false)
+            ->build();
+            
+        Log::info('Update Elastic High Indexing track ' . $this->id);
+
+        $geom = EcTrack::where('id', '=', $this->id)
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(ST_SimplifyPreserveTopology(geometry,$tollerance))) as geom")
+            )
+            ->first()
+            ->geom;
+
+        $params = [
+            'geometry' => json_decode($geom),
+            'id' => $this->id,
+            'ref' =>  $this->ref ,
+            'strokeColor' =>  $this->hexToRgba($this->color),
+            'layers' =>  $layers,
+            'distance' =>  $this->distance,
+            'duration_forward' =>  $this->setDurationForwardEmpty(),
+            'ascent' => $this->ascent,
+            'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
+            'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
+            'searchable' => $this->getSearchableString()
+        ];
+
+        $params_update = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => [
+                'doc' => $params
+            ]
+        ];
+        $params_index = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => $params
+        ];
+        
+        // LOW INDEX
+        try {
+            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                $response = $client->update($params_update);
+            } else {
+                $response = $client->index($params_index);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        Log::info($response);
+    }
+
+    /**
+     * Creates or Updates the EcTrack HIGH index on Elastic
+     *
+     * @param String $index_name
+     * @param Array $layers
+     * @return void
+     */
+    public function elasticIndexUpsertHigh($index_name, $layers): void
+    {
+        $client = ClientBuilder::create()
+            ->setHosts([config('services.elastic.http')])
+            ->setSSLVerification(false)
+            ->build();
+            
+        Log::info('Update Elastic HIGH Indexing track ' . $this->id);
+        
+        $geom = EcTrack::where('id', '=', $this->id)
+        ->select(
+            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+        )
+        ->first()
+        ->geom;
+
+        $params = [
+            'geometry' => json_decode($geom),
+            'id' => $this->id,
+            'ref' =>  $this->ref ,
+            'strokeColor' =>  $this->hexToRgba($this->color),
+            'layers' =>  $layers,
+            'distance' =>  $this->distance,
+            'duration_forward' =>  $this->setDurationForwardEmpty(),
+            'ascent' => $this->ascent,
+            'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
+            'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
+            'searchable' => $this->getSearchableString()
+        ];
+
+        $params_update = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => [
+                'doc' => $params
+            ]
+        ];
+        $params_index = [
+            'index' => 'geohub_' . $index_name,
+            'id'    => $this->id,
+            'body'  => $params
+        ];
+        
+        // HIGH INDEX
         try {
             if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
                 $response = $client->update($params_update);
@@ -1260,10 +1414,8 @@ class EcTrack extends Model
             ->build();
             
         Log::info('DELETE Elastic Indexing track ' . $this->id);
-        $params = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id
-        ];
+        
+        $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
         
         try {
             $response = $client->delete($params);

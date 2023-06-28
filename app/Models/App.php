@@ -406,7 +406,7 @@ class App extends Model
             $index_high_name = 'app_high_' . $this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
-                $tollerance = 0.006;
+                $tollerance = config('geohub.elastic_low_geom_tollerance');
                 $t->elasticLowIndex($index_low_name, $layers, $tollerance);
                 $t->elasticHighIndex($index_high_name, $layers);
             }
