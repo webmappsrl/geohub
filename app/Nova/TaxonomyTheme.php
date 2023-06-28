@@ -91,7 +91,8 @@ class TaxonomyTheme extends Resource
 
             new Panel('UX/UI', $this->ux_ui_panel()),
 
-            MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class),
+            MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class)
+                ->searchable()
         ];
     }
 

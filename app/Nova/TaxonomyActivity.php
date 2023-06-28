@@ -91,7 +91,8 @@ class TaxonomyActivity extends Resource
 
             new Panel('UX/UI', $this->ux_ui_panel()),
             //show relation with ecTracks (morphedByMany)
-            MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class),
+            MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class)
+                ->searchable()
 
         ];
     }
