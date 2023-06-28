@@ -244,7 +244,12 @@ class Layer extends Resource
         if ($request->user()->hasRole('Editor')) {
             return [
                 (new Tabs($title, [
-                    'MAIN' => $mainTab,
+                    'MAIN'
+                    =>     NovaTabTranslatable::make([
+                        Text::make('Title'),
+                        Text::make('Subtitle'),
+                        Textarea::make('Description')->alwaysShow()
+                    ]),
                 ]))->withToolbar(),
             ];
         }
