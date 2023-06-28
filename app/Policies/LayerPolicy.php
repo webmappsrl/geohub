@@ -10,17 +10,6 @@ class LayerPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Perform pre-authorization checks.
-     *
-     * @param  \App\Models\User  $user
-     * @param  string  $ability
-     * @return void|bool
-     */
-    public function before(User $user, $ability)
-    {
-        return true;
-    }
 
     /**
      * Determine whether the user can view any models.
@@ -30,7 +19,7 @@ class LayerPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -42,7 +31,7 @@ class LayerPolicy
      */
     public function view(User $user, Layer $layer)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +42,11 @@ class LayerPolicy
      */
     public function create(User $user)
     {
-        //
+
+        if ($user->hasRole('Editor')) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -65,7 +58,7 @@ class LayerPolicy
      */
     public function update(User $user, Layer $layer)
     {
-        //
+        return true;
     }
 
     /**
@@ -77,7 +70,7 @@ class LayerPolicy
      */
     public function delete(User $user, Layer $layer)
     {
-        //
+        return true;
     }
 
     /**
@@ -89,7 +82,7 @@ class LayerPolicy
      */
     public function restore(User $user, Layer $layer)
     {
-        //
+        return true;
     }
 
     /**
@@ -101,6 +94,6 @@ class LayerPolicy
      */
     public function forceDelete(User $user, Layer $layer)
     {
-        //
+        return true;
     }
 }
