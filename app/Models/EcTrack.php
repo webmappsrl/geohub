@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\EcTrackSaved;
 use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
@@ -10,7 +9,6 @@ use App\Traits\GeometryFeatureTrait;
 use App\Traits\TrackElasticIndexTrait;
 use Chelout\RelationshipEvents\Concerns\HasMorphToManyEvents;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
-use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
