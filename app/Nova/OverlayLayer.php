@@ -80,14 +80,14 @@ class OverlayLayer extends Resource
                 })->colors('text-advanced')->withProps([
                 'show-fallback' => true,
                 'fallback-type' => 'input',
-            ]),
+            ])->hideWhenCreating(),
             Swatches::make('Stroke Color')->default(function(){
                 return $this->app->primary_color;
                 })->colors('text-advanced')->withProps([
                 'show-fallback' => true,
                 'fallback-type' => 'input',
-            ]),
-            Number::make('Stroke width'),
+            ])->hideWhenCreating(),
+            Number::make('Stroke width')->hideWhenCreating(),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
             AttachMany::make('Layers', 'layers', Layer::class)
                 ->showPreview()

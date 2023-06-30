@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UgcPoiCollection;
 use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Providers\HoquServiceProvider;
+use App\Traits\UGCFeatureCollectionTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,7 @@ use Exception;
 
 class UgcPoiController extends Controller
 {
+    use UGCFeatureCollectionTrait;
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +24,22 @@ class UgcPoiController extends Controller
      *
      * @return Response
      */
-    //    public function index(Request $request) {
-    //    }
+       public function index(Request $request) {
+        $user = auth('api')->user();
+        if (isset($user)) {
+            
+            if (!empty($request->header('app-id'))) {
+                $app = App::find($request->header('app-id'));
+                $pois = UgcPoi::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                return $this->getUGCFeatureCollection($pois);
+            }
+
+            $pois = UgcPoi::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+            return $this->getUGCFeatureCollection($pois);
+        } else {
+            return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
+        }
+       }
 
     /**
      * Show the form for creating a new resource.

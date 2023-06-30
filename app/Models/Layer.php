@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Exception;
 use App\Models\OverlayLayer;
-use App\Traits\HasTranslationsFixed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Traits\HasTranslationsFixed;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Layer extends Model
 {
@@ -72,7 +74,15 @@ class Layer extends Model
         return $this->morphToMany(OverlayLayer::class, 'layerable');
     }
 
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(EcMedia::class, 'feature_image');
+    }
 
+    public function ecMedia(): BelongsToMany
+    {
+        return $this->belongsToMany(EcMedia::class);
+    }
 
     public function getTracks()
     {

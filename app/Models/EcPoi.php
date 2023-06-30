@@ -286,7 +286,8 @@ class EcPoi extends Model
         ];
 
         $taxonomiesidentifiers = array_merge(
-            $this->addPrefix($this->taxonomyActivities()->pluck('identifier')->toArray(), 'activity'),
+            $this->taxonomyActivities()->pluck('identifier')->toArray(),
+            $this->taxonomyThemes()->pluck('identifier')->toArray(),
             $this->addPrefix($this->taxonomyWhens()->pluck('identifier')->toArray(), 'when'),
             $this->addPrefix($this->taxonomyWheres()->pluck('identifier')->toArray(), 'where'),
             $this->addPrefix($this->taxonomyTargets()->pluck('identifier')->toArray(), 'who'),

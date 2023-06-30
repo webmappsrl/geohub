@@ -12,10 +12,12 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\UgcTrackCollection;
+use App\Traits\UGCFeatureCollectionTrait;
 use Exception;
 
 class UgcTrackController extends Controller
 {
+    use UGCFeatureCollectionTrait;
     /**
      * Display a listing of the resource.
      *
@@ -175,21 +177,5 @@ class UgcTrackController extends Controller
             ], 400);
         }
         return response()->json(['success' => 'track deleted']);
-    }
-
-    public function getUGCFeatureCollection($tracks)
-    {
-        $featureCollection = [
-            "type" => "FeatureCollection",
-            "features" => []
-        ];
-
-        if ($tracks) {
-            foreach ($tracks as $track) {
-                $featureCollection["features"][] = $track->getGeojson();
-            }
-        }
-
-        return response()->json($featureCollection);
     }
 }

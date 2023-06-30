@@ -260,15 +260,16 @@ class App extends Model
             $where_array = json_decode(json_encode($where_db), true);
             $where_result = [];
             foreach ($where_array as $akey => $aval) {
+                $new_array = array();
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
-                        $aval[$key] = json_decode($val);
+                        $new_array[$key] = json_decode($val,true);
                     }
-                    if (empty($val)) {
-                        unset($aval[$key]);
+                    if (!empty($val) && $key != 'name') {
+                        $new_array[$key] = $val;
                     }
                 }
-                $where_result[] = $aval;
+                array_push($where_result,$new_array);
             }
 
             $poi_type_ids = DB::select("select distinct taxonomy_poi_type_id from taxonomy_poi_typeables where taxonomy_poi_typeable_type LIKE '%EcPoi%' AND taxonomy_poi_typeable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
@@ -277,15 +278,16 @@ class App extends Model
             $poi_array = json_decode(json_encode($poi_db), true);
             $poi_result = [];
             foreach ($poi_array as $akey => $aval) {
+                $new_array = array();
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
-                        $aval[$key] = json_decode($val);
+                        $new_array[$key] = json_decode($val,true);
                     }
-                    if (empty($val)) {
-                        unset($aval[$key]);
+                    if (!empty($val) && $key != 'name') {
+                        $new_array[$key] = $val;
                     }
                 }
-                $poi_result[] = $aval;
+                array_push($poi_result,$new_array);
             }
         $res = [
             'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),

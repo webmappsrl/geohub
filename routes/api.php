@@ -75,9 +75,7 @@ Route::name('api.')->group(function () {
         Route::prefix('ugc')->name('ugc.')->group(function () {
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post("store", [UgcPoiController::class, 'store'])->name('store');
-                Route::get("index", function () {
-                    return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
-                })->name('index');
+                Route::get("index", [UgcPoiController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcPoiController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('track')->name('track.')->group(function () {
@@ -86,10 +84,9 @@ Route::name('api.')->group(function () {
                 Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('media')->name('media.')->group(function () {
-                // Route::post("store", [UgcMediaController::class, 'store'])->name('store'); TODO: riabilitare quando fixato il bug
-                Route::get("index", function () {
-                    return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
-                })->name('index');
+                // TODO: riabilitare quando fixato il bug
+                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                Route::get("index", [UgcMediaController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcMediaController::class, 'destroy'])->name('destroy');
             });
         });
