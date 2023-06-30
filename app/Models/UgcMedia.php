@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class UgcMedia
@@ -110,6 +111,12 @@ class UgcMedia extends Model
         foreach ($array as $property => $value) {
             if (is_null($value) || in_array($property, $propertiesToClear))
                 unset($array[$property]);
+                
+                if ($property == 'relative_url') {
+                    if (Storage::disk('public')->exists($value))
+                    $array['url'] = Storage::disk('public')->url($value);
+                    unset($array[$property]);
+            }
         }
 
         return $array;
