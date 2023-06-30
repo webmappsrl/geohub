@@ -84,10 +84,9 @@ Route::name('api.')->group(function () {
                 Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('media')->name('media.')->group(function () {
-                // Route::post("store", [UgcMediaController::class, 'store'])->name('store'); TODO: riabilitare quando fixato il bug
-                Route::get("index", function () {
-                    return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
-                })->name('index');
+                // TODO: riabilitare quando fixato il bug
+                Route::post("store", [UgcMediaController::class, 'store'])->name('store');
+                Route::get("index", [UgcMediaController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcMediaController::class, 'destroy'])->name('destroy');
             });
         });
