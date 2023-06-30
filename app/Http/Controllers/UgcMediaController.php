@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UgcMediaCollection;
 use App\Models\App;
 use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\User;
+use App\Traits\UGCFeatureCollectionTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,14 +18,29 @@ use Illuminate\Support\Facades\Validator;
 
 class UgcMediaController extends Controller
 {
+    use UGCFeatureCollectionTrait;
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = auth('api')->user();
+        if (isset($user)) {
+            
+            if (!empty($request->header('app-id'))) {
+                $app = App::find($request->header('app-id'));
+                $medias = UgcMedia::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                return $this->getUGCFeatureCollection($medias);
+            }
+
+            $medias = UgcMedia::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+            return $this->getUGCFeatureCollection($medias);
+        } else {
+            return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
+        }
     }
 
     /**
