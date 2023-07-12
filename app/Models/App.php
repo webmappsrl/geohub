@@ -265,7 +265,10 @@ class App extends Model
                     if ($key == 'name') {
                         $new_array[$key] = json_decode($val,true);
                     }
-                    if (!empty($val) && $key != 'name') {
+                    if ($key == 'identifier') {
+                        $new_array[$key] = "poi_type_".$val;
+                    }
+                    if (!empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
@@ -283,16 +286,19 @@ class App extends Model
                     if ($key == 'name') {
                         $new_array[$key] = json_decode($val,true);
                     }
-                    if (!empty($val) && $key != 'name') {
+                    if ($key == 'identifier') {
+                        $new_array[$key] = "poi_type_".$val;
+                    }
+                    if (!empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
                 array_push($poi_result,$new_array);
             }
-        $res = [
-            'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),
-            'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'],$poi_result),'id'),
-        ];
+            $res = [
+                'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),
+                'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'],$poi_result),'id'),
+            ];
         }
 
             // OLD CODE
