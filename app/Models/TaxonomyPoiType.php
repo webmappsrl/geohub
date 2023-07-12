@@ -103,6 +103,7 @@ class TaxonomyPoiType extends Model {
         }
 
         $data['color'] = $json['color'];
+        $data['icon'] = $json['icon'];
 
         return $data;
     }
