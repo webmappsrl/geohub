@@ -3,8 +3,6 @@
 namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
-use App\Providers\WebmappAppIconProvider;
-use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;

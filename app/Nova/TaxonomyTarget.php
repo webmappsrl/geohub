@@ -72,7 +72,10 @@ class TaxonomyTarget extends Resource
                     'fallback-type' => 'input',
                 ]),
             Number::make('Zindex')->hideFromIndex(),
-            NovaIconSelect::make("Icon")->setIconProvider(WebmappAppIconProvider::class),
+            Text::make('Icon', function () {
+                return $this->icon;
+            })->asHtml()->onlyOnIndex(),
+            NovaIconSelect::make("Icon Label",'icon')->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->searchable()->onlyOnForms()->hideFromIndex(),
             ExternalImage::make(__('Feature Image'), function () {
