@@ -44,7 +44,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -62,21 +62,25 @@ trait ConfTrait
             $welcome = $this->toArray()['welcome'];
             $data['APP']['welcome'] = $welcome;
         }
-        if ($this->android_store_link)
+        if ($this->android_store_link) {
             $data['APP']['androidStore'] = $this->android_store_link;
+        }
 
-        if ($this->ios_store_link)
+        if ($this->ios_store_link) {
             $data['APP']['iosStore'] = $this->ios_store_link;
+        }
 
-        if ($this->social_track_text)
+        if ($this->social_track_text) {
             $data['APP']['socialTrackText'] = $this->social_track_text;
-        if ($this->poi_acquisition_form)
-            $data['APP']['poi_acquisition_form'] =  json_decode($this->poi_acquisition_form, TRUE);
+        }
+        if ($this->poi_acquisition_form) {
+            $data['APP']['poi_acquisition_form'] =  json_decode($this->poi_acquisition_form, true);
+        }
 
         return $data;
     }
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -93,7 +97,7 @@ trait ConfTrait
         return $data;
     }
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -107,8 +111,8 @@ trait ConfTrait
         ];
 
         if (!empty($this->config_home)) {
-            $data = json_decode($this->config_home, TRUE);
-        } else if ($this->layers->count() > 0) {
+            $data = json_decode($this->config_home, true);
+        } elseif ($this->layers->count() > 0) {
             foreach ($this->layers()->orderBy('rank')->get() as $layer) {
                 $data['HOME'][] = [
                     'view' => 'compact-horizontal',
@@ -122,20 +126,21 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
     private function config_section_languages(): array
     {
         $data['LANGUAGES']['default'] = $this->default_language;
-        if (isset($this->available_languages))
+        if (isset($this->available_languages)) {
             $data['LANGUAGES']['available'] = json_decode($this->available_languages, true);
+        }
         return $data;
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -221,7 +226,7 @@ trait ConfTrait
                             }
                         }
                     }
-    
+
                     if ($feature_image == null && $layer->taxonomyActivities->count() > 0) {
                         foreach ($layer->taxonomyActivities as $term) {
                             if (isset($term->feature_image) && !empty($term->feature_image)) {
@@ -229,7 +234,7 @@ trait ConfTrait
                             }
                         }
                     }
-    
+
                     if ($feature_image == null && $layer->taxonomyWhens->count() > 0) {
                         foreach ($layer->taxonomyWhens as $term) {
                             if (isset($term->feature_image) && !empty($term->feature_image)) {
@@ -237,7 +242,7 @@ trait ConfTrait
                             }
                         }
                     }
-    
+
                     if ($feature_image == null && $layer->taxonomyTargets->count() > 0) {
                         foreach ($layer->taxonomyTargets as $term) {
                             if (isset($term->feature_image) && !empty($term->feature_image)) {
@@ -245,7 +250,7 @@ trait ConfTrait
                             }
                         }
                     }
-    
+
                     if ($feature_image == null && $layer->taxonomyPoiTypes->count() > 0) {
                         foreach ($layer->taxonomyPoiTypes as $term) {
                             if (isset($term->feature_image) && !empty($term->feature_image)) {
@@ -253,7 +258,7 @@ trait ConfTrait
                             }
                         }
                     }
-    
+
                     if ($feature_image != null) {
                         // Retrieve proper image
                         $image = EcMedia::find($feature_image);
@@ -263,7 +268,7 @@ trait ConfTrait
                     }
                 }
 
-                
+
                 // remove useless attribute geometry from taxonomy where of layer
                 if ($item['taxonomy_wheres']) {
                     $unsetAttr = ['geometry', 'query_string'];
@@ -305,23 +310,23 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
 
-        // Tiles 
-        if ($this->tiles && !empty(json_decode($this->tiles, true)) ) {
+        // Tiles
+        if ($this->tiles && !empty(json_decode($this->tiles, true))) {
             $appTiles = new AppTiles();
             $data['MAP']['controls']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
             $ta = array_map(function ($v) use ($appTiles) {
-                $v = json_decode($v,true);
+                $v = json_decode($v, true);
                 $tile = $appTiles->getConstant(key($v));
                 $tile['type'] = 'button';
                 return $tile;
             }, json_decode($this->tiles, true));
-            array_push($data['MAP']['controls']['tiles'],...$ta);
+            array_push($data['MAP']['controls']['tiles'], ...$ta);
         }
-        
+
         // Overlays
         if ($this->overlayLayers->count() > 0) {
             $data['MAP']['controls']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
-            $overlays = array_map(function ($overlay){
+            $overlays = array_map(function ($overlay) {
                 $array = [];
                 $overlay = OverlayLayer::find($overlay['id']);
                 $array['label'] = $overlay->getTranslations('label');
@@ -342,31 +347,31 @@ trait ConfTrait
                     $array['strokeWidth'] = $overlay['stroke_width'];
                 }
                 if (!empty($overlay['feature_collection'])) {
-                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/',$overlay['feature_collection']));
+                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
                 }
                 $array['type'] = 'button';
                 return $array;
             }, json_decode($this->overlayLayers, true));
-            array_push($data['MAP']['controls']['overlays'],...$overlays);
+            array_push($data['MAP']['controls']['overlays'], ...$overlays);
         }
 
-        //  Activity Filter 
+        //  Activity Filter
         if ($this->filter_activity) {
             $app_user_id = $this->user_id;
             $options = [];
 
-            $activities = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_activityables as txa inner join ec_tracks as t on t.id=txa.taxonomy_activityable_id inner join taxonomy_activities as a on a.id=taxonomy_activity_id where txa.taxonomy_activityable_type='App\Models\EcTrack' and t.user_id=$app_user_id;");
-            
+            $activities = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_activityables as txa inner join ec_tracks as t on t.id=txa.taxonomy_activityable_id inner join taxonomy_activities as a on a.id=taxonomy_activity_id where txa.taxonomy_activityable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
+
             foreach ($activities as $activity) {
                 $a = array(
                     'identifier' => $activity->identifier,
-                    'name' => json_decode($activity->name,true),
+                    'name' => json_decode($activity->name, true),
                     'id' => $activity->id,
                 );
                 if ($activity->color) {
                     $a['color'] = $activity->color;
                 }
-                array_push($options,$a);
+                array_push($options, $a);
             }
 
             $data['MAP']['filters']['activities'] = [
@@ -379,23 +384,23 @@ trait ConfTrait
             ];
         }
 
-        //  Theme Filter 
+        //  Theme Filter
         if ($this->filter_theme) {
             $app_user_id = $this->user_id;
             $options = [];
 
-            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id;");
-            
+            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
+
             foreach ($themes as $theme) {
                 $a = array(
                     'identifier' => $theme->identifier,
-                    'name' => json_decode($theme->name,true),
+                    'name' => json_decode($theme->name, true),
                     'id' => $theme->id,
                 );
                 if ($theme->color) {
                     $a['color'] = $theme->color;
                 }
-                array_push($options,$a);
+                array_push($options, $a);
             }
 
             $data['MAP']['filters']['themes'] = [
@@ -408,24 +413,24 @@ trait ConfTrait
             ];
         }
 
-        //  Poi type Filter 
+        //  Poi type Filter
         if ($this->filter_poi_type) {
             $app_user_id = $this->user_id;
             $options = [];
 
-            $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id;");
-            
+            $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id ORDER BY a.name ASC;");
+
             foreach ($poi_types as $poi_type) {
                 $a = array(
                     'identifier' => 'poi_type_'.$poi_type->identifier,
-                    'name' => json_decode($poi_type->name,true),
+                    'name' => json_decode($poi_type->name, true),
                     'id' => $poi_type->id,
                     'icon' => $poi_type->icon,
                 );
                 if ($poi_type->color) {
                     $a['color'] = $poi_type->color;
                 }
-                array_push($options,$a);
+                array_push($options, $a);
             }
 
             $data['MAP']['filters']['poi_types'] = [
@@ -436,7 +441,7 @@ trait ConfTrait
                 ],
                 'options' => $options
             ];
-            
+
             // For old Applications
             // TODO: Remove it when all apps al > version .45
             $data['MAP']['filters']['poi_type'] = [
@@ -449,7 +454,7 @@ trait ConfTrait
             ];
         }
 
-        //  Duration Filter 
+        //  Duration Filter
         if ($this->filter_track_duration) {
             $data['MAP']['filters']['track_duration'] = [
                 'type' => 'slider',
@@ -464,7 +469,7 @@ trait ConfTrait
                 'max' => $this->filter_track_duration_max ?? '',
             ];
         }
-        //  Distance Filter 
+        //  Distance Filter
         if ($this->filter_track_distance) {
             $data['MAP']['filters']['track_distance'] = [
                 'type' => 'slider',
@@ -483,7 +488,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -501,7 +506,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -517,7 +522,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -541,7 +546,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -575,7 +580,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -591,7 +596,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -607,7 +612,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -620,15 +625,16 @@ trait ConfTrait
             $data['GEOLOCATION']['record']['export'] = true;
             $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
         } else {
-            if (!!$this->geolocation_record_enable)
+            if (!!$this->geolocation_record_enable) {
                 $data['GEOLOCATION']['record']['enable'] = !!$this->geolocation_record_enable;
+            }
         }
 
         return $data;
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -656,7 +662,7 @@ trait ConfTrait
     }
 
     /**
-     * @param 
+     * @param
      *
      * @return array
      */
@@ -755,9 +761,10 @@ EOT;
         return json_decode($json_string, true);
     }
 
-    function hexToRgba($hexColor, $opacity = 1.0) {
+    public function hexToRgba($hexColor, $opacity = 1.0)
+    {
         $hexColor = ltrim($hexColor, '#');
-    
+
         if (strlen($hexColor) === 6) {
             list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
         } elseif (strlen($hexColor) === 8) {
@@ -766,9 +773,9 @@ EOT;
         } else {
             throw new Exception('Invalid hex color format.');
         }
-    
+
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
         return $rgbaColor;
     }
-    
+
 }
