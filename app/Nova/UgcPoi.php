@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Nova\Filters\DateRange;
+use App\Nova\Filters\UgcCreationDateFilter;
 use App\Nova\Filters\UgcUserFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -130,6 +131,7 @@ class UgcPoi extends Resource
             (new NovaSearchableBelongsToFilter('User'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
+            (new UgcCreationDateFilter)
             //new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
             //     ->fieldAttribute('user')
