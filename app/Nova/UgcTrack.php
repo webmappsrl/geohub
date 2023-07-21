@@ -135,6 +135,9 @@ class UgcTrack extends Resource
     public function filters(Request $request): array
     {
         return [
+            (new NovaSearchableBelongsToFilter('User'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id'),
             // new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
             //     ->fieldAttribute('user')
