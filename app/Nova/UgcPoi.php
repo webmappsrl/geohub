@@ -2,7 +2,10 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
+use App\Nova\Filters\UgcCreationDateFilter;
+use App\Nova\Filters\UgcUserFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -14,7 +17,8 @@ use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class UgcPoi extends Resource {
+class UgcPoi extends Resource
+{
     use SearchesRelations;
 
     /**
@@ -36,7 +40,8 @@ class UgcPoi extends Resource {
         'taxonomy_wheres' => ['name']
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('User Generated Content');
     }
 
@@ -62,7 +67,8 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             Text::make(__('Name'), 'name')->sortable(),
@@ -108,7 +114,8 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -119,12 +126,14 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [
-            //new DateRange('created_at'),
-            // (new NovaSearchableBelongsToFilter('Author'))
-            //     ->fieldAttribute('user')
-            //     ->filterBy('user_id')
+            (new NovaSearchableBelongsToFilter('User'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id'),
+            (new UgcCreationDateFilter),
+            (new AppFilter),
 
         ];
     }
@@ -136,7 +145,8 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -147,7 +157,8 @@ class UgcPoi extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [];
     }
 }
