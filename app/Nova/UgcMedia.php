@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
+use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
 use Illuminate\Http\Request;
@@ -34,13 +35,14 @@ class UgcMedia extends Resource
      */
     public static $title = 'name';
     /**
-     * The columns that should be searched.
+     * The columns that should be searched. 
      *
      * @var array
      */
     public static $search = [
-        'name',
+        'name', 'app_id'
     ];
+
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
     ];
@@ -124,7 +126,8 @@ class UgcMedia extends Resource
             (new NovaSearchableBelongsToFilter('Creator'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
-            (new UgcCreationDateFilter)
+            (new UgcCreationDateFilter),
+            (new AppFilter),
 
             // new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
