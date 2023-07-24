@@ -194,9 +194,13 @@ body {
 
   .track-feature-image {
     width: 750px;
-    text-align: center;
-    height: auto;
+    height: 500px;
+    margin: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     display: flex;
+    align-items: center;
     justify-content: center;
   }
 
@@ -265,18 +269,25 @@ body {
     height: 250px;
     display: block;
     align-self: first baseline;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
-  .poi-feature-image .poi-image {
+  /* .poi-feature-image .poi-image {
     width: 100%;
     height: 100%;
-  }
+  } */
 
-  .poi-feature-image .app-logo {
-    width: 250px;
-    height: 250px;
-    position: absolute;
+  .app-logo {
+    width: 150px;
+    height: 150px;
+    display: block;
     right: 30px;
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   body {
     margin: 0;
@@ -314,7 +325,7 @@ body {
  * Dot Typing - https://codepen.io/nzbin/pen/GGrXbp
  * ==============================================
  */
- .dot-typing {
+.dot-typing {
   position: relative;
   left: -9999px;
   width: 10px;
@@ -328,24 +339,31 @@ body {
 
 @keyframes dot-typing {
   0% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
   16.667% {
-    box-shadow: 9984px -10px 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px -10px 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
   33.333% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
   50% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px -10px 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px -10px 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
   66.667% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
   83.333% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px -10px 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px -10px 0 0 #fbfbfb;
   }
   100% {
-    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb, 10014px 0 0 0 #fbfbfb;
+    box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
+      10014px 0 0 0 #fbfbfb;
   }
 }
