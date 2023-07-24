@@ -36,12 +36,12 @@
 </head>
 
 <body>
-    {{-- <div class="print-layer">
+    <div class="print-layer">
         <button id="print-button" class="print-button loading" disabled>
             <div>Generating PDF </div>
             <div class="dot-typing"></div>
         </button>
-    </div> --}}
+    </div>
     <div class="map-header">
         <div class="names">
             <div class="app-name">
@@ -208,7 +208,7 @@
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
     </script>
     <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
-    {{-- <script defer>
+    <script defer>
         //handling the loading of the map
         window.onload = (event) => {
             let printButton = document.getElementById('print-button');
@@ -229,7 +229,7 @@
                 window.print();
             });
         };
-    </script> --}}
+    </script>
 
 </body>
 
