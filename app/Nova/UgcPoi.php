@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
 use App\Nova\Filters\UgcUserFilter;
@@ -131,7 +132,8 @@ class UgcPoi extends Resource
             (new NovaSearchableBelongsToFilter('User'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
-            (new UgcCreationDateFilter)
+            (new UgcCreationDateFilter),
+            (new AppFilter),
             //new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
             //     ->fieldAttribute('user')
