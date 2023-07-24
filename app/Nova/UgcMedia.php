@@ -128,11 +128,6 @@ class UgcMedia extends Resource
                 ->filterBy('user_id'),
             (new UgcCreationDateFilter),
             (new AppFilter),
-
-            // new DateRange('created_at'),
-            // (new NovaSearchableBelongsToFilter('Author'))
-            //     ->fieldAttribute('user')
-            //     ->filterBy('user_id')
         ];
     }
 

@@ -22,6 +22,6 @@ class UgcCreationDateFilter extends DateFilter
     {
         $value = Carbon::parse($value);
 
-        return $query->where('created_at', '<=', $value->endOfDay());
+        return $query->where('created_at', '<=',  Carbon::parse($value)->endOfDay())->where('created_at', '>=', Carbon::parse($value)->startOfDay());
     }
 }
