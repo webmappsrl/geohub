@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\AppFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
@@ -139,7 +140,8 @@ class UgcTrack extends Resource
             (new NovaSearchableBelongsToFilter('User'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
-            (new UgcCreationDateFilter)
+            (new UgcCreationDateFilter),
+            (new AppFilter)
             // new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
             //     ->fieldAttribute('user')
