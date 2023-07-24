@@ -124,6 +124,7 @@ class UgcMedia extends Resource
             (new NovaSearchableBelongsToFilter('Creator'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
+            (new UgcCreationDateFilter)
 
             // new DateRange('created_at'),
             // (new NovaSearchableBelongsToFilter('Author'))
