@@ -4,6 +4,8 @@ namespace App\Nova;
 
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Models\TaxonomyWhere;
+use App\Nova\Actions\BulkEditThemesEcResourceAction;
+use App\Nova\Actions\CreateTracksWithOSMIDAction;
 use App\Nova\Actions\DownloadExcelEcTrackAction;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Filters\HasFeatureImage;
@@ -43,8 +45,8 @@ use Yna\NovaSwatches\Swatches;
 
 class EcTrack extends Resource
 {
-
-    use TabsOnEdit, SearchesRelations;
+    use TabsOnEdit;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -187,6 +189,8 @@ class EcTrack extends Resource
                     }
                     return 'No themes';
                 })->asHtml(),
+
+                Number::make('osmid')
 
                 // Text::make('Wheres', function () {
                 //     if ($this->taxonomyWheres()->count() > 0) {
@@ -555,7 +559,7 @@ class EcTrack extends Resource
                 ])
             ]),
 
-            // Do not remove below code, necessary for Edit mode  
+            // Do not remove below code, necessary for Edit mode
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
 
 
@@ -590,12 +594,12 @@ class EcTrack extends Resource
     {
         if ($request->user()->hasRole('Editor')) {
             return [
-                new SearchableFromOSMID,
-                new HasFeatureImage,
-                new HasImageGallery,
-                new SelectFromActivities,
-                new SelectFromThemesTrack,
-                new SelectFromWheresTrack,
+                new SearchableFromOSMID(),
+                new HasFeatureImage(),
+                new HasImageGallery(),
+                new SelectFromActivities(),
+                new SelectFromThemesTrack(),
+                new SelectFromWheresTrack(),
             ];
         }
         return [];
@@ -624,7 +628,9 @@ class EcTrack extends Resource
     {
         return [
             new RegenerateEcTrack(),
-            (new DownloadExcelEcTrackAction)->allFields()->except('geometry')->withHeadings(),
+            new BulkEditThemesEcResourceAction(),
+            (new DownloadExcelEcTrackAction())->allFields()->except('geometry')->withHeadings(),
+            (new CreateTracksWithOSMIDAction())->standalone(),
         ];
     }
 
