@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Layer extends Model
 {
-    use HasFactory, HasTranslationsFixed;
+    use HasFactory;
+    use HasTranslationsFixed;
     // protected $fillable = ['rank'];
 
     protected static function booted()
@@ -25,7 +26,7 @@ class Layer extends Model
         });
     }
 
-    public array $translatable = ['title', 'subtitle', 'description'];
+    public array $translatable = ['title', 'subtitle', 'description','track_type'];
 
     /**
      * The accessors to append to the model's array form.
