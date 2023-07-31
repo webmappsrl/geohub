@@ -270,7 +270,11 @@ class Layer extends Resource
                 ]),
                 BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
                     ->searchable()
-                    ->nullable()
+                    ->nullable(),
+                Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ]),
             ];
         }
         return [

@@ -45,6 +45,7 @@ use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\PoiSearchableFromOSMID;
 use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Helpers\NovaCurrentResourceActionHelper;
+use App\Nova\Actions\BulkEditThemesEcResourceAction;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
@@ -55,9 +56,8 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class EcPoi extends Resource
 {
-
-
-    use TabsOnEdit, SearchesRelations;
+    use TabsOnEdit;
+    use SearchesRelations;
 
     /**
      * The model the resource corresponds to.
@@ -447,7 +447,7 @@ class EcPoi extends Resource
                 ])
             ]),
 
-            // Do not remove below code, necessary for Edit mode  
+            // Do not remove below code, necessary for Edit mode
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
 
         ];
@@ -672,12 +672,12 @@ HTML;
     {
         if ($request->user()->hasRole('Editor')) {
             return [
-                new PoiSearchableFromOSMID,
-                new HasFeatureImage,
-                new HasImageGallery,
-                new SelectFromThemesPoi,
-                new SelectFromWheresPoi,
-                new SelectFromPoiTypesPoi
+                new PoiSearchableFromOSMID(),
+                new HasFeatureImage(),
+                new HasImageGallery(),
+                new SelectFromThemesPoi(),
+                new SelectFromWheresPoi(),
+                new SelectFromPoiTypesPoi()
             ];
         }
         return [];
@@ -706,7 +706,8 @@ HTML;
     {
         return [
             new RegenerateEcPoi(),
-            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
+            new BulkEditThemesEcResourceAction(),
+            (new DownloadExcelEcPoiAction())->allFields()->except('geometry')->withHeadings(),
         ];
     }
 }
