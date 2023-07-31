@@ -267,6 +267,8 @@ class SyncECTagsFromOSFCommand extends Command
                 strtolower($this->tag) == 'description' ||
                 strtolower($this->tag) == 'excerpt' ||
                 strtolower($this->tag) == 'caption' ||
+                strtolower($this->tag) == 'difficulty' ||
+                strtolower($this->tag) == 'cai_scale' ||
                 strtolower($this->tag) == 'osmid'
             ) {
                 $this->tag = strtolower($this->tag);
