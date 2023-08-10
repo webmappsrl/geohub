@@ -29,8 +29,9 @@ class EcTrackController extends Controller
     {
         $track = EcTrack::find($id);
 
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         return response()->json($track->getGeojson(), 200, $headers);
     }
@@ -45,10 +46,11 @@ class EcTrackController extends Controller
     public static function getNeighbourEcMedia(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
-        else
+        } else {
             return response()->json($track->getNeighbourEcMedia());
+        }
     }
 
     /**
@@ -61,10 +63,11 @@ class EcTrackController extends Controller
     public static function getNeighbourEcPoi(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
-        else
+        } else {
             return response()->json($track->getNeighbourEcPoi());
+        }
     }
 
     /**
@@ -77,8 +80,9 @@ class EcTrackController extends Controller
     public static function getAssociatedEcMedia(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
+        }
         $result = [
             'type' => 'FeatureCollection',
             'features' => []
@@ -100,8 +104,9 @@ class EcTrackController extends Controller
     public static function getAssociatedEcPois(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
+        }
 
         $result = [
             'type' => 'FeatureCollection',
@@ -117,10 +122,11 @@ class EcTrackController extends Controller
     public static function getFeatureImage(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
-        else
+        } else {
             return response()->json($track->featureImage()->get());
+        }
     }
 
     /**
@@ -156,14 +162,17 @@ class EcTrackController extends Controller
             $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
         }
 
-        if (isset($request->slope) && is_array($request->slope))
+        if (isset($request->slope) && is_array($request->slope)) {
             $ecTrack->slope = json_encode($request->slope);
+        }
 
-        if (isset($request->mbtiles) && is_array($request->mbtiles))
+        if (isset($request->mbtiles) && is_array($request->mbtiles)) {
             $ecTrack->mbtiles = json_encode($request->mbtiles);
+        }
 
-        if (isset($request->elevation_chart_image) && is_string($request->elevation_chart_image))
+        if (isset($request->elevation_chart_image) && is_string($request->elevation_chart_image)) {
             $ecTrack->elevation_chart_image = $request->elevation_chart_image;
+        }
 
         if (!$ecTrack->skip_geomixer_tech) {
             $fields = [
@@ -182,7 +191,9 @@ class EcTrackController extends Controller
             foreach ($fields as $field) {
                 if (isset($request->$field)) {
                     $ecTrack->$field = $request->$field;
-                } else $ecTrack->$field = null;
+                } else {
+                    $ecTrack->$field = null;
+                }
             }
         }
 
@@ -220,8 +231,9 @@ class EcTrackController extends Controller
             'app_id' => 'required|max:255'
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
+        }
 
         $featureCollection = [
             "type" => "FeatureCollection",
@@ -233,8 +245,9 @@ class EcTrackController extends Controller
 
         $app = App::where('app_id', '=', $appId)->first();
 
-        if (!isset($app->id))
+        if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
+        }
 
         if (isset($bboxParam)) {
             try {
@@ -246,8 +259,11 @@ class EcTrackController extends Controller
 
             if (isset($bbox) && is_array($bbox)) {
                 $trackRef = $data['reference_id'] ?? null;
-                if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) $trackRef = intval($trackRef);
-                else $trackRef = null;
+                if (isset($trackRef) && strval(intval($trackRef)) === $trackRef) {
+                    $trackRef = intval($trackRef);
+                } else {
+                    $trackRef = null;
+                }
 
                 $featureCollection = EcTrackServiceProvider::getSearchClustersInsideBBox($app, $bbox, $trackRef, null, 'en');
             }
@@ -273,15 +289,17 @@ class EcTrackController extends Controller
             'app_id' => 'required|max:255'
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
+        }
 
         $appId = $data['app_id'];
 
         $app = App::where('app_id', '=', $appId)->first();
 
-        if (!isset($app->id))
+        if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
+        }
 
         $featureCollection = [
             "type" => "FeatureCollection",
@@ -315,15 +333,17 @@ class EcTrackController extends Controller
             'app_id' => 'required|max:255'
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
+        }
 
         $appId = $data['app_id'];
 
         $app = App::where('app_id', '=', $appId)->first();
 
-        if (!isset($app->id))
+        if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
+        }
 
         $featureCollection = EcTrackServiceProvider::getMostViewed($app);
 
@@ -356,8 +376,9 @@ class EcTrackController extends Controller
             foreach ($ids as $id) {
                 if ($id === strval(intval($id))) {
                     $track = EcTrack::find($id);
-                    if (isset($track))
+                    if (isset($track)) {
                         $featureCollection["features"][] = $track->getGeojson();
+                    }
                 }
             }
         }
@@ -376,12 +397,14 @@ class EcTrackController extends Controller
     public function addFavorite(Request $request, int $id): JsonResponse
     {
         $track = EcTrack::find($id);
-        if (!isset($track))
+        if (!isset($track)) {
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
+        }
 
         $userId = auth('api')->id();
-        if (!$track->isFavorited($userId))
+        if (!$track->isFavorited($userId)) {
             $track->toggleFavorite($userId);
+        }
 
         return response()->json(['favorite' => $track->isFavorited($userId)]);
     }
@@ -397,12 +420,14 @@ class EcTrackController extends Controller
     public function removeFavorite(Request $request, int $id): JsonResponse
     {
         $track = EcTrack::find($id);
-        if (!isset($track))
+        if (!isset($track)) {
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
+        }
 
         $userId = auth('api')->id();
-        if ($track->isFavorited($userId))
+        if ($track->isFavorited($userId)) {
             $track->toggleFavorite($userId);
+        }
 
         return response()->json(['favorite' => $track->isFavorited($userId)]);
     }
@@ -418,8 +443,9 @@ class EcTrackController extends Controller
     public function toggleFavorite(Request $request, int $id): JsonResponse
     {
         $track = EcTrack::find($id);
-        if (!isset($track))
+        if (!isset($track)) {
             return response()->json(["error" => "Unknown ec track with id $id"], 404);
+        }
 
         $userId = auth('api')->id();
         $track->toggleFavorite($userId);
@@ -448,8 +474,8 @@ class EcTrackController extends Controller
      * Returns an array of ID and Updated_at based on the Author emails provided
      *
      * @param $email string
-     * 
-     * 
+     *
+     *
      * @return JsonResponse with the current
      */
     public function exportTracksByAuthorEmail($email = ''): JsonResponse
@@ -473,7 +499,7 @@ class EcTrackController extends Controller
     }
 
     /**
-     * Returns the EcTrack GeoJson associated to an external feature
+     * Returns the EcTrack ID associated to an external feature
      *
      * @param string $endpoint_slug
      * @param integer $source_id
@@ -489,27 +515,69 @@ class EcTrackController extends Controller
 
         $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
 
-        $track = EcTrack::find($ectrack_id[0]);
+        return $ectrack_id[0];
         $headers = [];
 
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
+
+    /**
+     * Returns the EcTrack GeoJson associated to an external feature
+     *
+     * @param string $endpoint_slug
+     * @param integer $source_id
+     * @return JsonResponse
+     */
+    public function getTrackGeojsonFromSourceID($endpoint_slug, $source_id)
+    {
+        $track_id = $this->getEcTrackFromSourceID($endpoint_slug, $source_id);
+        $track = EcTrack::find($track_id);
+        $headers = [];
+
+        if (is_null($track)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return response()->json($track->getGeojson(), 200, $headers);
+    }
+
+    /**
+     * Returns the EcTrack Webapp URL associated to an external feature
+     *
+     * @param string $endpoint_slug
+     * @param integer $source_id
+     * @return JsonResponse
+     */
+    public function getEcTrackWebappURLFromSourceID($endpoint_slug, $source_id)
+    {
+        $track_id = $this->getEcTrackFromSourceID($endpoint_slug, $source_id);
+        $track = EcTrack::find($track_id);
+        $headers = [];
+
+        if (is_null($track)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         return response()->json($track->getGeojson(), 200, $headers);
     }
 
     /**
      * Get the feature collection for the given track pdf
-     * 
+     *
      * @param int $idTrack
-     * 
+     *
      * @return JsonResponse
      */
     public static function getFeatureCollectionForTrackPdf(int $idTrack): JsonResponse
     {
         $track = EcTrack::find($idTrack);
-        if (is_null($track))
+        if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
+        }
         $trackGeometry = Db::select("select ST_AsGeoJSON(geometry) as geometry from ec_tracks where id = $idTrack");
         $trackGeometry = json_decode($trackGeometry[0]->geometry);
 
