@@ -556,13 +556,16 @@ class EcTrackController extends Controller
     {
         $track_id = $this->getEcTrackFromSourceID($endpoint_slug, $source_id);
         $track = EcTrack::find($track_id);
+        $app_id = $track->user->apps[0]->id;
+
+
         $headers = [];
 
-        if (is_null($track)) {
+        if (is_null($track) || empty($app_id)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
 
-        return response()->json($track->getGeojson(), 200, $headers);
+        return redirect('https://' . $app_id . '.app.webmapp.it/#/map?track='.$track_id);
     }
 
     /**

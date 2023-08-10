@@ -106,4 +106,27 @@ class EcPoiController extends Controller
 
         return response()->json($poi->getGeojson(), 200, $headers);
     }
+
+    /**
+     * Returns the EcPoi Webapp URL associated to an external feature
+     *
+     * @param string $endpoint_slug
+     * @param integer $source_id
+     * @return JsonResponse
+     */
+    public function getEcPoiWebappURLFromSourceID($endpoint_slug, $source_id)
+    {
+        $poi_id = $this->getEcPoiFromSourceID($endpoint_slug, $source_id);
+        $poi = EcPoi::find($poi_id);
+        $app_id = $poi->user->apps[0]->id;
+
+
+        $headers = [];
+
+        if (is_null($poi) || empty($app_id)) {
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
+
+        return redirect('https://' . $app_id . '.app.webmapp.it/#/map?poi='.$poi_id);
+    }
 }
