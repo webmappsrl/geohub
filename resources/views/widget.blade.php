@@ -5,8 +5,8 @@
     $componentname = 'widget.'.$type;
 @endphp
 
-<x-widget.widgetLayout :track="$track">
+<x-widget.widgetLayout>
     <main class="w-full h-full">
-        <x-dynamic-component :component="$componentname" :track="$track"/>
+        <x-dynamic-component :component="$componentname" :resource="$resource"/>
     </main>
 </x-trackLayout>

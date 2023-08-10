@@ -1,61 +1,28 @@
 {
     "poi_type": {
         "4166": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Accessibilit\u00e0"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-accessibilita"
+            "geohub_identifier": "disabled-access"
         },
         "4147": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Accesso disabili"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-accesso-disabili"
+            "geohub_identifier": "disabled-access"
         },
         "4157": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Accompagnamento disabili"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-accompagnamento-disabili"
-        },
-        "4183": {
-            "skip": false,
-            "source_title": {
-                "it": "Alimentari"
-            },
-            "source_description": "",
-            "geohub_identifier": "shop-convenience"
-        },
-        "4167": {
-            "skip": false,
-            "source_title": {
-                "it": "Altri Servizi"
-            },
-            "source_description": "",
-            "geohub_identifier": "service"
-        },
-        "4178": {
-            "skip": false,
-            "source_title": {
-                "it": "Area attrezzata picnic"
-            },
-            "source_description": "",
-            "geohub_identifier": "picnic-area"
-        },
-        "4152": {
-            "skip": false,
-            "source_title": {
-                "it": "Area camper",
-                "en": "Camper area"
-            },
-            "source_description": "",
-            "geohub_identifier": "camper-area"
+            "geohub_identifier": "disabled-access"
         },
         "4161": {
             "skip": false,
@@ -63,23 +30,7 @@
                 "it": "Area di sosta"
             },
             "source_description": "",
-            "geohub_identifier": "parking"
-        },
-        "4176": {
-            "skip": false,
-            "source_title": {
-                "it": "Arrampicata sportiva"
-            },
-            "source_description": "",
-            "geohub_identifier": "climbing-crag"
-        },
-        "4156": {
-            "skip": true,
-            "source_title": {
-                "it": "Attivit\u00e0"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-attivita"
+            "geohub_identifier": "picnic-area"
         },
         "4185": {
             "skip": false,
@@ -89,104 +40,13 @@
             "source_description": "",
             "geohub_identifier": "bar"
         },
-        "4169": {
-            "skip": false,
-            "source_title": {
-                "it": "Bus"
-            },
-            "source_description": "",
-            "geohub_identifier": "highway-bus-stop"
-        },
-        "4153": {
-            "skip": false,
-            "source_title": {
-                "it": "Campeggio libero",
-                "en": "Free camping"
-            },
-            "source_description": "",
-            "geohub_identifier": "free-camping"
-        },
-        "4154": {
-            "skip": false,
-            "source_title": {
-                "it": "Campeggio organizzato"
-            },
-            "source_description": "",
-            "geohub_identifier": "camping"
-        },
         "4162": {
             "skip": false,
             "source_title": {
-                "it": "Camping"
+                "it": "Camping o Camper"
             },
             "source_description": "",
             "geohub_identifier": "camping"
-        },
-        "4151": {
-            "skip": true,
-            "source_title": {
-                "it": "Custodia animali"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-custodia-animali"
-        },
-        "4173": {
-            "skip": false,
-            "source_title": {
-                "it": "Escursioni a cavallo"
-            },
-            "source_description": "",
-            "geohub_identifier": "paddock"
-        },
-        "4172": {
-            "skip": true,
-            "source_title": {
-                "it": "Escursioni guidate"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-escursioni-guidate"
-        },
-        "4148": {
-            "skip": true,
-            "source_title": {
-                "it": "Fasciatoi (Baby pit-stop)"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-fasciatoi-baby-pit-stop"
-        },
-        "4149": {
-            "skip": false,
-            "source_title": {
-                "it": "Fonti"
-            },
-            "source_description": "",
-            "geohub_identifier": "fountain"
-        },
-        "4177": {
-            "skip": false,
-            "source_title": {
-                "it": "Immersioni",
-                "en": "Diving"
-            },
-            "source_description": "",
-            "geohub_identifier": "diving"
-        },
-        "4163": {
-            "skip": false,
-            "source_title": {
-                "it": "Info point"
-            },
-            "source_description": "",
-            "geohub_identifier": "tourist-information"
-        },
-        "4182": {
-            "skip": false,
-            "source_title": {
-                "it": "Mercato",
-                "en": "Market"
-            },
-            "source_description": "",
-            "geohub_identifier": "market"
         },
         "4168": {
             "skip": false,
@@ -196,118 +56,13 @@
             "source_description": "",
             "geohub_identifier": "shop"
         },
-        "4175": {
-            "skip": false,
-            "source_title": {
-                "it": "Noleggio bici",
-                "en": "Bike rent"
-            },
-            "source_description": "",
-            "geohub_identifier": "bike-rent"
-        },
-        "4145": {
-            "skip": true,
-            "source_title": {
-                "it": "Panchine"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-panchine"
-        },
-        "4142": {
-            "skip": false,
-            "source_title": {
-                "it": "Parcheggi auto"
-            },
-            "source_description": "",
-            "geohub_identifier": "parking"
-        },
-        "4144": {
-            "skip": false,
-            "source_title": {
-                "it": "Parcheggi custoditi"
-            },
-            "source_description": "",
-            "geohub_identifier": "parking"
-        },
-        "4143": {
-            "skip": false,
-            "source_title": {
-                "it": "Parcheggi pullman"
-            },
-            "source_description": "",
-            "geohub_identifier": "parking"
-        },
         "4158": {
             "skip": false,
             "source_title": {
-                "it": "Parcheggio"
+                "it": "Parcheggi"
             },
             "source_description": "",
             "geohub_identifier": "parking"
-        },
-        "4155": {
-            "skip": true,
-            "source_title": {
-                "it": "Pernottamento"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-pernottamento"
-        },
-        "4165": {
-            "skip": true,
-            "source_title": {
-                "it": "Primo soccorso"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-primo-soccorso"
-        },
-        "4160": {
-            "skip": true,
-            "source_title": {
-                "it": "Punto raccolta rifiuti"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-punto-raccolta-rifiuti"
-        },
-        "4159": {
-            "skip": false,
-            "source_title": {
-                "it": "Punto ristoro"
-            },
-            "source_description": "",
-            "geohub_identifier": "restaurant"
-        },
-        "4179": {
-            "skip": true,
-            "source_title": {
-                "it": "Rete cellulare"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-rete-cellulare"
-        },
-        "4180": {
-            "skip": true,
-            "source_title": {
-                "it": "Rete WIFI"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-rete-wifi"
-        },
-        "4141": {
-            "skip": false,
-            "source_title": {
-                "it": "Servizi Igienici"
-            },
-            "source_description": "",
-            "geohub_identifier": "public-toilet"
-        },
-        "4184": {
-            "skip": false,
-            "source_title": {
-                "it": "Shopping"
-            },
-            "source_description": "",
-            "geohub_identifier": "shop"
         },
         "4150": {
             "skip": false,
@@ -316,38 +71,6 @@
             },
             "source_description": "",
             "geohub_identifier": "natural-spring"
-        },
-        "4181": {
-            "skip": false,
-            "source_title": {
-                "it": "Supermercato"
-            },
-            "source_description": "",
-            "geohub_identifier": "food-market"
-        },
-        "4186": {
-            "skip": false,
-            "source_title": {
-                "it": "Tabacchi"
-            },
-            "source_description": "",
-            "geohub_identifier": "shop-tobacco"
-        },
-        "4170": {
-            "skip": true,
-            "source_title": {
-                "it": "Taxi"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-taxi"
-        },
-        "4171": {
-            "skip": true,
-            "source_title": {
-                "it": "Tiro con l'arco"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-tiro-con-larco"
         },
         "4146": {
             "skip": false,
@@ -358,20 +81,12 @@
             "geohub_identifier": "public-transport"
         },
         "4164": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Visibilit\u00e0 TLC"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-visibilita-tlc"
-        },
-        "4174": {
-            "skip": true,
-            "source_title": {
-                "it": "Windsurf\/vela"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-servizi-windsurfvela"
+            "geohub_identifier": "tlc"
         },
         "4759": {
             "skip": false,
@@ -381,299 +96,37 @@
             "source_description": "",
             "geohub_identifier": "monumental-tree"
         },
-        "4763": {
-            "skip": false,
-            "source_title": {
-                "it": "Altri monumenti naturali"
-            },
-            "source_description": "",
-            "geohub_identifier": "elementi-naturalistici"
-        },
-        "4779": {
-            "skip": false,
-            "source_title": {
-                "it": "Altri POI"
-            },
-            "source_description": "",
-            "geohub_identifier": "poi"
-        },
-        "4780": {
-            "skip": false,
-            "source_title": {
-                "it": "Archeologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "archaeological-site"
-        },
         "4812": {
             "skip": false,
             "source_title": {
-                "it": "Area campeggio"
+                "it": "Area sosta attrezzata"
             },
             "source_description": "",
-            "geohub_identifier": "camping"
-        },
-        "4767": {
-            "skip": true,
-            "source_title": {
-                "it": "Area Costiera"
-            },
-            "source_description": {
-                "it": "<p>Scogliera sul mare, caletta senza spiaggia o altre evidenze naturalistiche marine&nbsp;<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-area-costiera"
-        },
-        "4801": {
-            "skip": false,
-            "source_title": {
-                "it": "Area parcheggi"
-            },
-            "source_description": "",
-            "geohub_identifier": "parking"
-        },
-        "4745": {
-            "skip": false,
-            "source_title": {
-                "it": "Borgata"
-            },
-            "source_description": "",
-            "geohub_identifier": "borgo"
+            "geohub_identifier": "equipped-rest-area"
         },
         "4770": {
             "skip": false,
             "source_title": {
-                "it": "Boschi ed aree forestali"
+                "it": "Boschi, Parchi o aree forestali"
             },
-            "source_description": {
-                "it": "<p>Le foreste demaniali sono un bene collettivo di straordinario valore naturalistica, ambientale, storica. La quasi totalit\u00e0 delle foreste demaniali rientra nella rete ecologica regionale (Parchi Naturali Regionali, Oasi di protezione faunistica, Siti di Interesse Comunitario): molti dei sentieri che ti proponiamo in questo sito attraversano questi&nbsp;perimetri forestali. Sono <em>Punti di Interesse<\/em>&nbsp;anche gli ingressi ai parchi o le aree di sosta&nbsp;al loro interno.<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "natural-wood"
-        },
-        "4781": {
-            "skip": true,
-            "source_title": {
-                "it": "Botanica"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-botanica"
-        },
-        "4762": {
-            "skip": true,
-            "source_title": {
-                "it": "Cantiere forestale"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-cantiere-forestale"
-        },
-        "4736": {
-            "skip": true,
-            "source_title": {
-                "it": "Caratterizzazione del territorio"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-caratterizzazione-del-territorio"
         },
         "4769": {
             "skip": false,
             "source_title": {
                 "it": "Cascata"
             },
-            "source_description": {
-                "it": "<p>tipologia di punto di interesse connotato dalla presenza di una cascata<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "waterway-waterfall"
         },
-        "4811": {
-            "skip": true,
-            "source_title": {
-                "it": "Caserma"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-caserma"
-        },
-        "4743": {
-            "skip": false,
-            "source_title": {
-                "it": "Castello"
-            },
-            "source_description": "",
-            "geohub_identifier": "castle"
-        },
-        "4814": {
-            "skip": false,
-            "source_title": {
-                "it": "Centro abitato"
-            },
-            "source_description": "",
-            "geohub_identifier": "village"
-        },
-        "4744": {
-            "skip": false,
-            "source_title": {
-                "it": "Chiesa"
-            },
-            "source_description": "",
-            "geohub_identifier": "church"
-        },
-        "4761": {
-            "skip": false,
-            "source_title": {
-                "it": "Cima di montagna"
-            },
-            "source_description": "",
-            "geohub_identifier": "natural-peak"
-        },
-        "4786": {
-            "skip": true,
-            "source_title": {
-                "it": "Crostacei e aracnidi"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-crostacei-e-aracnidi"
-        },
-        "4802": {
-            "skip": true,
-            "source_title": {
-                "it": "Dimora"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-dimora"
-        },
-        "4735": {
-            "skip": true,
-            "source_title": {
-                "it": "Discipline e argomenti"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-discipline-e-argomenti"
-        },
-        "4757": {
-            "skip": false,
-            "source_title": {
-                "it": "Edificio storico - artistico"
-            },
-            "source_description": "",
-            "geohub_identifier": "historical-building"
-        },
-        "4755": {
-            "skip": true,
-            "source_title": {
-                "it": "Edificio storico-minerario"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-edificio-storico-minerario"
-        },
-        "4799": {
-            "skip": true,
-            "source_title": {
-                "it": "Enogastronomia e tradizioni culinarie"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-enogastronomia-e-tradizioni-culinarie"
-        },
-        "4787": {
-            "skip": true,
-            "source_title": {
-                "it": "Entomologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-entomologia"
-        },
-        "4788": {
-            "skip": true,
-            "source_title": {
-                "it": "Erpetologia (rettili e anfibi)"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-erpetologia-rettili-e-anfibi"
-        },
-        "4752": {
-            "skip": true,
-            "source_title": {
-                "it": "Evidenza archeologica"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-evidenza-archeologica"
-        },
-        "4756": {
-            "skip": true,
-            "source_title": {
-                "it": "Evidenza culturale-religiosa"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-evidenza-culturale-religiosa"
-        },
-        "4753": {
-            "skip": true,
-            "source_title": {
-                "it": "Evidenza geologica"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-evidenza-geologica"
-        },
-        "4750": {
-            "skip": true,
-            "source_title": {
-                "it": "Evidenza naturalistica"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-evidenza-naturalistica"
-        },
         "4754": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Fabbricati\/case forestali"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-fabbricaticase-forestali"
-        },
-        "4782": {
-            "skip": true,
-            "source_title": {
-                "it": "Fauna"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-fauna"
-        },
-        "4803": {
-            "skip": false,
-            "source_title": {
-                "it": "Fermata bus, mezzi trasporto pubblici"
-            },
-            "source_description": "",
-            "geohub_identifier": "public-transport"
-        },
-        "4746": {
-            "skip": true,
-            "source_title": {
-                "it": "Foresta demaniale"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-foresta-demaniale"
-        },
-        "4810": {
-            "skip": false,
-            "source_title": {
-                "it": "Foresteria e posti letto"
-            },
-            "source_description": "",
             "geohub_identifier": "foresteria"
-        },
-        "4798": {
-            "skip": true,
-            "source_title": {
-                "it": "Fotografia e TV naturalistica"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-fotografia-e-tv-naturalistica"
-        },
-        "4783": {
-            "skip": true,
-            "source_title": {
-                "it": "Geologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-geologia"
         },
         "4760": {
             "skip": false,
@@ -683,305 +136,93 @@
             "source_description": "",
             "geohub_identifier": "natural-cave-entrance"
         },
-        "4784": {
-            "skip": true,
-            "source_title": {
-                "it": "Idrografia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-idrografia"
-        },
-        "4806": {
+        "4779": {
             "skip": false,
             "source_title": {
-                "it": "Incrocio Stradale"
+                "it": "Incroci - waypoint"
             },
-            "source_description": {
-                "it": "<p>crocevia fra pi\u00f9 strade...<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "crossroads"
         },
-        "4808": {
-            "skip": false,
-            "source_title": {
-                "it": "Info Point"
-            },
-            "source_description": "",
-            "geohub_identifier": "tourist-information"
-        },
-        "4785": {
-            "skip": true,
-            "source_title": {
-                "it": "Ittiologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-ittiologia"
-        },
         "4776": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Laghi e Corsi d'acqua"
-            },
-            "source_description": {
-                "it": "<p>Attraverso i sentieri scoprirai che l'Isola, specie nella stagione delle pioggie, offre al turista attivo che visita i suoi luoghi naturali una moltitudine di piccoli, meravigliosi corsi d'acqua: torrenti, laghetti, fiumi, piccole e grandi cascate animano i boschi e le montagne, cos\u00ec come le vallate e le pianure: troverai qui tutti i punti di interesse&nbsp;in qualche modo associabili allo scorrere dell'acqua!<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-laghi-e-corsi-dacqua"
-        },
-        "4748": {
-            "skip": false,
-            "source_title": {
-                "it": "Lago"
             },
             "source_description": "",
             "geohub_identifier": "water-lake"
         },
-        "4809": {
-            "skip": true,
+        "4771": {
+            "skip": false,
             "source_title": {
-                "it": "Locali demaniali in locazione gratuita\/convenzionata"
+                "it": "Luoghi della transumanza, ovili, pinnettos"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-locali-demaniali-in-locazione-gratuitaconvenzionata"
-        },
-        "4771": {
-            "skip": true,
-            "source_title": {
-                "it": "Luoghi della transumanza"
-            },
-            "source_description": {
-                "it": "<p>Lungo i nostri sentieri potrai imbatterti in straordinari manufatti quali Pinnettos, Cuiles ed altre meraviglie della cultura pastorale sarda: potrai cos\u00ec ammirare quanto e come, nel tempo e nella storia, essi si siano integrati nel paesaggio naturale...diventandone parte integrante!<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-luoghi-della-transumanza"
+            "geohub_identifier": "places-of-transhumance"
         },
         "4774": {
             "skip": false,
             "source_title": {
                 "it": "Luoghi di memoria e di fede"
             },
-            "source_description": {
-                "it": "<p>Chiese, piazze o luoghi di alto significato sociale o religioso per le comunit\u00e0...scoprirai che l'Isola, percorrendone i sentieri, offre ai suoi visitatori luoghi dove il tempo sembra essersi fermato!<\/p>\r\n\r\n<p>Soffermati un po', raggiunti questi spazi, ad immaginare quante storie e quante emozioni hanno accolto nei tempi. Se ne troverai uno tra i tanti ormai abbandonati ed isolati potrai scoprire in questa sezione il racconto che ne descrive meglio l'essenza storica e religiosa...<\/p>\r\n"
-            },
-            "geohub_identifier": "place-of-faith"
-        },
-        "4789": {
-            "skip": true,
-            "source_title": {
-                "it": "Malacologia"
-            },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-malacologia"
-        },
-        "4790": {
-            "skip": true,
-            "source_title": {
-                "it": "Mammiferi"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-mammiferi"
-        },
-        "4764": {
-            "skip": false,
-            "source_title": {
-                "it": "Meraviglie della natura"
-            },
-            "source_description": {
-                "it": "<p>Insieme di voci rappresentative di bei identitari-paesaggistici.<\/p>\r\n"
-            },
-            "geohub_identifier": "elementi-naturalistici"
+            "geohub_identifier": "place-of-worship"
         },
         "4777": {
             "skip": false,
             "source_title": {
-                "it": "Meraviglie della Natura"
-            },
-            "source_description": {
-                "it": "<p>Monumenti naturali, alberi secolari, particolari endemismi che solo la Sardegna pu\u00f2 offrire: al visitatore che sapr\u00e0 osservare, la Natura offrir\u00e0 straordinarie specie botaniche dai colori e dai profumi intensi, cos\u00ec come una vasta gamma di panorami e di habitat per anfibi, rettili, uccelli e mammiferi attraverso i Sentieri: esplora questa sezione, per farti un'idea delle tante meraviglie che hai a disposizione!<\/p>\r\n"
-            },
-            "geohub_identifier": "elementi-naturalistici"
-        },
-        "4791": {
-            "skip": true,
-            "source_title": {
-                "it": "Micologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-micologia"
-        },
-        "4792": {
-            "skip": true,
-            "source_title": {
-                "it": "Mineralogia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-mineralogia"
-        },
-        "4797": {
-            "skip": true,
-            "source_title": {
-                "it": "Miniere e archeologia mineraria"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-miniere-e-archeologia-mineraria"
-        },
-        "4740": {
-            "skip": true,
-            "source_title": {
-                "it": "Monti"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-monti"
-        },
-        "4742": {
-            "skip": false,
-            "source_title": {
-                "it": "Museo"
-            },
-            "source_description": "",
-            "geohub_identifier": "museum"
-        },
-        "4773": {
-            "skip": true,
-            "source_title": {
-                "it": "Nuraghi ed altri misteri"
-            },
-            "source_description": {
-                "it": "<p>L'Archeologia del paesaggio in Sardegna \u00e8 dominata dai Nuraghi: anctiche e maestose fortezze tanto misteriose e&nbsp;straordinarie da assurgere a simbolo di un intero popolo...come disse bene Giovanni Lilliu, insigne studioso sardo: \"significano...oltre la natura vergine e sconfinata, oltre il mare...\".<\/p>\r\n\r\n<p>Altri manufatti lasciati dall'uomo ed antiche eredit\u00e0 del territorio, potrai incontrare lungo i sentieri: grotte, tombe, segni megalitici, sculture, domus de janas, ma anche antiche carbonaie, cave e miniere.<\/p>\r\n\r\n<p>Emblemi della storia dell'Isola che scoprirai cammin facendo...<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-nuraghi-ed-altri-misteri"
-        },
-        "4793": {
-            "skip": true,
-            "source_title": {
-                "it": "Ornitologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-ornitologia"
-        },
-        "4741": {
-            "skip": true,
-            "source_title": {
-                "it": "Ovili, fabbricati tradizionali, Pinnettos"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-ovili-fabbricati-tradizionali-pinnettos"
-        },
-        "4794": {
-            "skip": true,
-            "source_title": {
-                "it": "Paleontologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-paleontologia"
-        },
-        "4795": {
-            "skip": true,
-            "source_title": {
-                "it": "Paletnologia e Paleoantropologia"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-paletnologia-e-paleoantropologia"
-        },
-        "4749": {
-            "skip": false,
-            "source_title": {
-                "it": "Parco naturale"
+                "it": "Meraviglie della Geologia e del Paesaggio"
             },
             "source_description": "",
             "geohub_identifier": "natural-park"
         },
-        "4738": {
-            "skip": true,
-            "source_title": {
-                "it": "Percorsi religiosi e fede"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-percorsi-religiosi-e-fede"
-        },
-        "4807": {
-            "skip": true,
-            "source_title": {
-                "it": "Pernottamento in pinnettos"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-pernottamento-in-pinnettos"
-        },
-        "4804": {
-            "skip": true,
-            "source_title": {
-                "it": "Produzioni ecologiche"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-produzioni-ecologiche"
-        },
-        "4800": {
-            "skip": true,
-            "source_title": {
-                "it": "Produzioni tipiche, artigianali, artistiche"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-produzioni-tipiche-artigianali-artistiche"
-        },
-        "4739": {
+        "4750": {
             "skip": false,
             "source_title": {
-                "it": "Punto panoramico"
+                "it": "Meraviglie della Natura..."
             },
             "source_description": "",
-            "geohub_identifier": "viewpoint"
+            "geohub_identifier": "nature"
         },
-        "4815": {
+        "4773": {
             "skip": false,
             "source_title": {
-                "it": "Punto ristoro"
+                "it": "Nuraghi e altri luoghi storico-archeologici"
             },
             "source_description": "",
-            "geohub_identifier": "ristorante"
-        },
-        "4813": {
-            "skip": false,
-            "source_title": {
-                "it": "Rifugio montano incustodito"
-            },
-            "source_description": "",
-            "geohub_identifier": "wilderness-hut"
+            "geohub_identifier": "archaeological-site"
         },
         "4737": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Rifugio, presidi antropologici"
+                "it": "Rifugio, presidi abitati"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-rifugio-presidi-antropologici"
+            "geohub_identifier": "rifugio"
         },
         "4775": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "Scoprire e imparare"
             },
-            "source_description": {
-                "it": "<p>Ci sono luoghi e strutture, realizzati negli anni recenti per promuovere i valori naturalistici, storici e culturali del patrimonio regionale: per una cultura pi\u00f9 attenta alla tutela dell'ambiente. Sono spazi dedicati alle scuole ed alle iniziative di sensibilizzazione verso l'ambiente, secondo l'orientamento della cosiddetta \"Intelligenza ecologica\" &nbsp;e&nbsp;predisposti per realizzare percorsi di Educazione Ambientale in natura.<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-scoprire-e-imparare"
+            "source_description": "",
+            "geohub_identifier": "environmental-education"
         },
         "4765": {
-            "skip": true,
+            "skip": false,
             "source_title": {
-                "it": "Sentieristica"
+                "it": "Sentieristica (punti di snodo)"
             },
-            "source_description": {
-                "it": "<p>Punto di riferimento durante un sentiero, itinerario, od altro correlato ad un percorso escursionistico di qualunque tipologia.<\/p>\r\n\r\n<p>Esempio tipico:&nbsp; appartiene a questa voce di tassonomia un Punto inserito nel sito per individuare<em><strong> il punto di partenza o di arrivo di un Sentiero (od Itinerario)<\/strong><\/em><\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-sentieristica"
+            "source_description": "",
+            "geohub_identifier": "crossroads"
         },
         "4772": {
             "skip": false,
             "source_title": {
                 "it": "Sguardi dall'alto"
             },
-            "source_description": {
-                "it": "<p>Nulla \u00e8 pi\u00f9 emozionante della sensazione mozzafiato di aver raggiunto la cima di una montagna, di poter osservare tutto dall'alto! La Sardegna, grazie alla sua conformazione&nbsp;prevalentemente montuosa, caratterizzata da massicci altopiani e gruppi collinari disposti in maniera irregolare, moltiplica queste emozioni all'infinito: vallate ed aree costiere potranno essere ammirate da una moltitudine di punti panoramici, mentre percorrerai il tuo sentiero...<\/p>\r\n"
-            },
-            "geohub_identifier": "natural-peak"
+            "source_description": "",
+            "geohub_identifier": "viewpoint"
         },
         "4747": {
             "skip": false,
@@ -989,102 +230,474 @@
                 "it": "Sorgente - fonte naturale"
             },
             "source_description": "",
-            "geohub_identifier": "natural-spring"
+            "geohub_identifier": "natural-sprin"
         },
-        "4796": {
-            "skip": true,
-            "source_title": {
-                "it": "Speleologia e carsismo"
-            },
-            "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-speleologia-e-carsismo"
-        },
-        "4766": {
+        "4914": {
             "skip": false,
             "source_title": {
-                "it": "Spiaggia"
+                "it": "Tappe del camminare..."
             },
-            "source_description": {
-                "it": "<p>Area costiera con suolo sabbioso ed accesso diretto al mare<\/p>\r\n"
-            },
-            "geohub_identifier": "beach"
-        },
-        "4805": {
-            "skip": true,
-            "source_title": {
-                "it": "Strada - viabilit\u00e0 automobilistica"
-            },
-            "source_description": {
-                "it": "<p>Elemento di viabilit\u00e0 urbana, extraurbana (statale e provinciale) per automobili.<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-strada-viabilita-automobilistica"
+            "source_description": "",
+            "geohub_identifier": "poi"
         },
         "4768": {
-            "skip": true,
+            "skip": false,
             "source_title": {
                 "it": "trekking - waypoint"
             },
-            "source_description": {
-                "it": "<p>questo termine di tassonomina \u00e8 da usarsi per indicare un waypoint o quando ad un POI non si sappia associare una delle altre&nbsp; (tantissime) catergorie presenti<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-trekking-waypoint"
-        },
-        "4751": {
-            "skip": true,
-            "source_title": {
-                "it": "Vedette"
-            },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-vedette"
+            "geohub_identifier": "crossroads"
         },
-        "4778": {
-            "skip": true,
+        "4913": {
+            "skip": false,
             "source_title": {
                 "it": "Vicino al mare..."
             },
-            "source_description": {
-                "it": "<p>La Sardegna, con la sua forma simile ad un sinuoso rettangolo ed una superficie pari a 24.083 kmq offre uno sviluppo costiero complessivo di circa 2.400 km di spiaggie, scogliere e litorali frastagliati: lungo i nostri sentieri percorrerai anche tutto l'azzurro che c'\u00e8 intorno!<\/p>\r\n"
-            },
-            "geohub_identifier": "sardegnas-tipologia-poi-vicino-al-mare..."
-        },
-        "4758": {
-            "skip": true,
+            "source_description": "",
+            "geohub_identifier": "coast-seaside"
+        }
+    },
+    "theme": {
+        "4894": {
+            "skip": false,
             "source_title": {
-                "it": "Vivai"
+                "it": "Accessibile dis. Sensoriali"
             },
             "source_description": "",
-            "geohub_identifier": "sardegnas-tipologia-poi-vivai"
+            "geohub_identifier": ""
+        },
+        "4895": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibile dis.Cognitiva"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4890": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibili dis. motorie"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4892": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4900": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4901": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4893": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4898": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4899": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4891": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4896": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4897": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4068": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionista Esperto"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4069": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionista Esperto Attrezzato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4067": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionistico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4065": {
+            "skip": false,
+            "source_title": {
+                "it": "Ippovia"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4904": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_DIFFICILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4902": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_FACILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4903": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_MEDIO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4060": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 dolce"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4916": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 1 (bassa)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4917": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 2 (media)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4918": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 3 (alta)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4064": {
+            "skip": false,
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4910": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_BC_trail_Grado3"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4912": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_EC_trail_Grado5-6"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4909": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_MC_trail_Grado2"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4911": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_OC_trail_Grado4"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4908": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_TC_trail_Grado0-1"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4062": {
+            "skip": false,
+            "source_title": {
+                "it": "Nordic Walking"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4905": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_FACILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4907": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_IMPEGNATIVO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4906": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_MEDIO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4059": {
+            "skip": false,
+            "source_title": {
+                "it": "Sentiero didattico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4061": {
+            "skip": false,
+            "source_title": {
+                "it": "Trekking"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4066": {
+            "skip": false,
+            "source_title": {
+                "it": "Turistico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4189": {
+            "skip": false,
+            "source_title": {
+                "it": "Certificato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4868": {
+            "skip": false,
+            "source_title": {
+                "it": "In pre-accatastamento o manutenzione"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4869": {
+            "skip": false,
+            "source_title": {
+                "it": "In revisione-validazione"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4870": {
+            "skip": false,
+            "source_title": {
+                "it": "Non percorribile"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4871": {
+            "skip": false,
+            "source_title": {
+                "it": "Non verificato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4187": {
+            "skip": false,
+            "source_title": {
+                "it": "Percorribile"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4188": {
+            "skip": false,
+            "source_title": {
+                "it": "Validato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4728": {
+            "skip": false,
+            "source_title": {
+                "it": "Cammini di Sardegna"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-cammini-sardegna"
+        },
+        "4726": {
+            "skip": false,
+            "source_title": {
+                "it": "Circuiti di Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-circuiti-mtb"
+        },
+        "4729": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari dello Spirito e altre Destinazioni"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-spirito"
+        },
+        "4725": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari escursionistici di lunga percorrenza a tappe"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-escursionistici"
+        },
+        "4727": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari tematici (proposta di visita dei territori)"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-tematici"
+        },
+        "4730": {
+            "skip": false,
+            "source_title": {
+                "it": "Orienteering ed altro \"outdoor\""
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-orienteering-outdoor"
+        },
+        "4732": {
+            "skip": false,
+            "source_title": {
+                "it": "Passeggiate Geo-Minerarie"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-geo-minerarie"
+        },
+        "4731": {
+            "skip": false,
+            "source_title": {
+                "it": "Vicino alle Citt\u00e0 o attorno ai Borghi"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-vicino-citta-borghi"
+        },
+        "4724": {
+            "skip": false,
+            "source_title": {
+                "it": "Vie della Transumanza"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssaredgna-via-delle-transumanza"
         }
     },
     "activity": {
-        "4826": {
+        "4825": {
             "skip": false,
             "source_title": {
-                "it": "Cicloturismo"
+                "it": "Alte vie"
             },
-            "source_description": {
-                "it": "<p>Il cicloturismo \u00e8 molto pi\u00f9 che \"viaggiare in bicicletta\u201d: \u00e8 un modo per incontrare luoghi e persone, sostituendo alla tradizionale <em>meta turistica<\/em> il <em>percorso<\/em>. &nbsp;Chi lo pratica, lo ama per la velocit\u00e0 di spostamento <em>a misura d'uomo<\/em> (lenta e sostenibile, in rapporto diretto con l'ambiente, nel tempo e nello spazio): &nbsp;perch\u00e9 <em>il viaggio coincide con lo spostamento<\/em>. &nbsp;Entrerai cos\u00ec in contatto profondo con l'ambiente e con i meravigliosi paesaggi attraversati...<\/p>\r\n"
-            },
-            "geohub_identifier": "cycling"
+            "source_description": "",
+            "geohub_identifier": "hiking"
         },
         "4831": {
             "skip": false,
             "source_title": {
-                "it": "Escursioni per esperti"
+                "it": "Dorsali escursionistiche a tappe (per esperti)"
             },
-            "source_description": {
-                "it": "<p>Ci sono percorsi, generalmente <em>segnalati <\/em>ma che richiedono una capacit\u00e0 di muoversi su terreno impervio e&nbsp;fondo impegnativo (roccie o pietrai), pendii ripidi, quote relativamente elevate, orientandosi talvolta con pochi punti di riferimento. Tratti rocciosi, anche esposti, con difficolt\u00e0 tecniche importanti, in territori <em>distanti<\/em> dell'Isola <em>selvaggia<\/em>. Percorrerli necessita di esperienza ed equipaggiamento specifico. Da afffrontare solo accompagnati da guide esperte!<\/p>\r\n"
-            },
-            "geohub_identifier": "hiking"
+            "source_description": "",
+            "geohub_identifier": "trekking"
         },
         "4833": {
             "skip": false,
             "source_title": {
                 "it": "Hiking"
             },
-            "source_description": {
-                "it": "<p>Hiking \u00e8 una camminata en plain air della durata massima di una giornata (dall\u2019inglese to hike: camminare). Un\u2019esperienza simile all\u2019escursionismo ( to trek: fare un lungo viaggio) che per\u00f2 ha una durata maggiore (anche pi\u00f9 giorni) ed enfatizza il gesto tecnico-sportivo della camminata stessa. Molti sentieri della R.E.S. sono particolarmente semplici e ben raggiungibili, quindi adatti per trascorrere qualche ora in Natura: lungo questi percorsi di breve o media lunghezza, anche i pi\u00f9 piccoli potranno scoprire l\u2019Isola dei sentieri...<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "hiking"
         },
         "4828": {
@@ -1092,61 +705,47 @@
             "source_title": {
                 "it": "Mountain Bike"
             },
-            "source_description": {
-                "it": "<p>Le molteplici categorie del <em>mountain biking &nbsp;<\/em>ne fanno un universo a s\u00e8 stante nel campo del turismo attivo: cross country,&nbsp;all mountain, enduro e&nbsp;freeride, downhill e bike orienteering...&nbsp;possono essere praticati quasi ovunque, ma la maggior parte dei biker pedalano fuoristrada, lungo sentieri di campagna, forestali o singletrack (creati e mantenuti principalmente dal <em>passaggio<\/em>). Gruppi sociali pi\u00f9 o meno formalizzati sono frequenti, specialmente nelle escursioni pi\u00f9 lunghe...<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "mtb"
         },
         "4832": {
             "skip": false,
             "source_title": {
-                "it": "Nordic Walking",
-                "en": "Nordic Walking"
+                "it": "Passeggiate e Nordic Walk"
             },
-            "source_description": {
-                "it": "<p>La camminata nordica o camminata con bastoni&nbsp;(in inglese&nbsp;<em>nordic walking<\/em> o <em>pole walking<\/em>) \u00e8 un tipo di attivit\u00e0 fisica e sportiva che ben si coniuga con percorsi in bosco, in pianura o in vallate, lungo le scogliere o sulla spiaggia. La Rete escursionistica Regionale ti offrir\u00e0 tantissime occasioni per fare una passeggiata o cimentarti nella camminata nordica.&nbsp;<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "nordic-walking"
         },
-        "4825": {
+        "4889": {
             "skip": false,
             "source_title": {
-                "it": "Sentieri di montagna"
+                "it": "Sentieri (accessibili) per tutti"
             },
-            "source_description": {
-                "it": "<p>Pur senza cime particolarmente elevate, la Sardegna offre all'escursionista tanti suggestivi itinerari oltre quota 1000 metri: si tratta di sentieri impegnativi, lungo crinali suggestivi, attraverso le aree pi\u00f9 selvagge dell'Isola, dove apprezzare quanto varia un panorama sui due versanti di una montagna.&nbsp;<span style=\"font-size:13px; line-height:1.6\">Caratteristiche geologiche ed isolamento rendono queste vette assai suggestive: con un po\u2019 di fortuna potrai osservare mufloni e rapaci, scoprendo lungo il percorso i ruderi di vecchi ovili e punti panoramici sorprendenti...<\/span><\/p>\r\n"
-            },
-            "geohub_identifier": "hiking"
+            "source_description": "",
+            "geohub_identifier": "accessible-trails"
         },
         "4829": {
             "skip": false,
             "source_title": {
                 "it": "Sentieri didattici"
             },
-            "source_description": {
-                "it": "<p>Una rete di sentieri didattici dislocati all\u2019interno delle principali Foreste Demaniali o in parchi naturali, che affrontano tematiche orientate all'educazione ambientale: un modo efficace per unire <em>svago ed apprendimento<\/em>, all'insegna del contatto con la Natura!<\/p>\r\n"
-            },
-            "geohub_identifier": "hiking"
+            "source_description": "",
+            "geohub_identifier": "educational-trails"
         },
         "4827": {
             "skip": false,
             "source_title": {
                 "it": "Trekking"
             },
-            "source_description": {
-                "it": "<p>Trekking \u00e8 universalmente definito come il <em>percorrere sentieri e itinerari immersi nella Natura<\/em>. Non dunque il camminare fine a s\u00e9 stesso n\u00e8 il mero traguardo verso una meta lontana: il trekker anzitutto <em>scopre il territorio<\/em> restando a diretto contatto la dimensione pi\u00f9 umana del viaggio. Il bello del trekking \u00e8 poi <em>respirare il silenzio<\/em>, mettersi alla prova, ma soprattutto riscoprire s\u00e9 stessi ed il piacere dell'avventura...<\/p>\r\n"
-            },
-            "geohub_identifier": "hiking"
+            "source_description": "",
+            "geohub_identifier": "trekking"
         },
         "4830": {
             "skip": false,
             "source_title": {
-                "it": "Turismo equestre",
-                "en": "On Horse"
+                "it": "Turismo equestre"
             },
-            "source_description": {
-                "it": "<p><em>Ippovia<\/em> \u00e8 un itinerario percorribile a cavallo, raramente asfaltato, che attraversa riserve naturali, boschi, colline e vallate, talvolta costeggiando corsi d'acqua e spiagge, scoprendo evidenze storiche-culturali o borghi. L'ippovia consente la pratica dell'<em>equiturismo<\/em> ma pu\u00f2 anche&nbsp;essere percorsa a piedi o in mountain bike. Lungo il percorso si prevedono tappe, distanti non pi\u00f9 di 20 km, dove cavaliere e cavallo possano trovare assistenza, ristoro ed eventuale pernottamento...<\/p>\r\n"
-            },
+            "source_description": "",
             "geohub_identifier": "horse"
         }
     }
