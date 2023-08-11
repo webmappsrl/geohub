@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symm\Gisconverter\Gisconverter;
 
-class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureAbstract { 
+class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureAbstract
+{
     use ImporterAndSyncTrait;
     // DATA array
     protected array $params;
@@ -22,38 +23,39 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
     /**
      * It imports each track of the given list to the out_source_features table.
-     * 
      *
-     * @return int The ID of OutSourceFeature created 
+     *
+     * @return int The ID of OutSourceFeature created
      */
-    public function importTrack(){
+    public function importTrack()
+    {
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
             $url = 'https://sentieri.netseven.work/ss/track/'.$this->source_id.'?_format=json';
-            $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url);
+            $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url);
             $track = $response->json();
-    
+
             // prepare feature parameters to pass to updateOrCreate function
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
             $geometry = '';
-            
-            if (key_exists('geometry',$track)) {
+
+            if (key_exists('geometry', $track)) {
                 $geometry = json_encode($track['geometry']);
-            } elseif (key_exists('gpx',$track)) {
+            } elseif (key_exists('gpx', $track)) {
                 $gpx_content = Http::get($track['gpx']);
                 $geometry = Gisconverter::gpxToGeojson($gpx_content);
             } else {
                 throw new Exception('No Geometry found');
             }
-            
+
             $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."'))) As wkt")[0]->wkt;
             $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."')))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['endpoint_slug'] = 'sardegna-sentieri-track';
             // $this->params['raw_data'] = json_encode($track);
-    
+
             // prepare the value of tags data
             Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
             $this->prepareTrackTagsJson($track);
@@ -62,7 +64,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            array_push($error_not_created,$url);
+            array_push($error_not_created, $url);
             Log::info('Error creating OSF from external with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
         }
         if ($error_not_created) {
@@ -75,20 +77,21 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
     /**
      * It imports each POI of the given list to the out_source_features table.
-     * 
      *
-     * @return int The ID of OutSourceFeature created 
+     *
+     * @return int The ID of OutSourceFeature created
      */
-    public function importPoi(){
+    public function importPoi()
+    {
 
         $url = 'https://sentieri.netseven.work/ss/poi/'.$this->source_id.'?_format=json';
-        $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url);
+        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url);
         $poi = $response->json();
-        
-        
+
+
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
-        try{
+        try {
             $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->mediaGeom = $geometry_poi;
@@ -96,7 +99,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->params['type'] = $this->type;
             $this->params['endpoint_slug'] = 'sardegna-sentieri-poi';
             $this->params['raw_data'] = json_encode($poi);
-            
+
             // prepare the value of tags data
             Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
@@ -110,40 +113,46 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
     }
 
-    public function importMedia(){
+    public function importMedia()
+    {
         return 'getMediaList result';
     }
 
     /**
      * It updateOrCreate method of the class OutSourceFeature
-     * 
-     * @param array $params The OutSourceFeature parameters to be added or updated 
-     * @return int The ID of OutSourceFeature created 
+     *
+     * @param array $params The OutSourceFeature parameters to be added or updated
+     * @return int The ID of OutSourceFeature created
      */
-    protected function create_or_update_feature(array $params) {
+    protected function create_or_update_feature(array $params)
+    {
 
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $this->source_id,
                 'endpoint' => $this->endpoint
             ],
-            $params);
+            $params
+        );
         return $feature->id;
     }
 
     /**
-     * It populates the tags variable with the track curl information so that it can be syncronized with EcTrack 
-     * 
-     * @param array $track The OutSourceFeature parameters to be added or updated 
-     * 
+     * It populates the tags variable with the track curl information so that it can be syncronized with EcTrack
+     *
+     * @param array $track The OutSourceFeature parameters to be added or updated
+     *
      */
-    protected function prepareTrackTagsJson($track){
+    protected function prepareTrackTagsJson($track)
+    {
         Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
-        if (isset($track['properties']['name'])){
+        if (isset($track['properties']['name'])) {
             $this->tags['name'] = $track['properties']['name'];
-        } 
-        if (isset($track['properties']['description'])){
-            $this->tags['description'] = $track['properties']['description'];
+        }
+
+        // Preparing the description for stato di validazione
+        if (isset($track['properties']['description'])) {
+            $this->tags['description'] = [];
         }
 
         if (isset($track['properties']['codice_cai'])) {
@@ -154,7 +163,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         if ($this->params['geometry']) {
             $geometry = $this->params['geometry'];
             $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='https://sentieri.netseven.work/ss/listpoi/?_format=json' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
-            
+
             if (is_array($related_pois) && !empty($related_pois)) {
                 foreach ($related_pois as $poi) {
                     $this->tags['related_poi'][] = $poi->id;
@@ -169,28 +178,95 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->tags['theme'][] = 'sardegnas-sentiero';
         }
 
-        
+        // Processing the Theme stato di validazione
+        if (isset($track['properties']['taxonomies'])) {
+            Log::info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
+
+            $path = parse_url($this->endpoint);
+            $file_name = str_replace('.', '-', $path['host']);
+            if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                $json_taxonomy_theme = json_decode($taxonomy_map, true)['theme'];
+
+                if (!empty($json_taxonomy_theme)) {
+                    foreach ($track['properties']['taxonomies'] as $tax => $idList) {
+                        if ($tax == 'stato_di_validazione') {
+                            if (is_array($idList)) {
+                                foreach ($idList as $id) {
+                                    if (key_exists($id, $json_taxonomy_theme)) {
+                                        $this->tags['description']['it'] = '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$id]['source_title']['it'].'</strong></p>';
+                                        $this->tags['description']['en'] = isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p>' : '';
+                                    }
+                                }
+                            } else {
+                                if (key_exists($idList, $json_taxonomy_theme)) {
+                                    $this->tags['description']['it'] = '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$idList]['source_title']['it'].'</strong></p>';
+                                    $this->tags['description']['en'] = isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p>' : '';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Adding the description after the Stato di validazione
+        if (isset($track['properties']['description'])) {
+            $this->tags['description']['it'] .= $track['properties']['description']['it'];
+            $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? $track['properties']['description']['en'] : '';
+        }
+
+        // Processing the Theme Tipologia Itinerari
+        if (isset($track['properties']['taxonomies'])) {
+            Log::info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
+
+            $path = parse_url($this->endpoint);
+            $file_name = str_replace('.', '-', $path['host']);
+            if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                $json_taxonomy_theme = json_decode($taxonomy_map, true)['theme'];
+
+                if (!empty($json_taxonomy_theme)) {
+                    foreach ($track['properties']['taxonomies'] as $tax => $idList) {
+                        if ($tax == 'tipologia_itinerari') {
+                            if (is_array($idList)) {
+                                foreach ($idList as $id) {
+                                    if (key_exists($id, $json_taxonomy_theme)) {
+                                        $this->tags['theme'][] = $json_taxonomy_theme[$id]['geohub_identifier'];
+                                    }
+                                }
+                            } else {
+                                if (key_exists($idList, $json_taxonomy_theme)) {
+                                    $this->tags['theme'][] = $json_taxonomy_theme[$idList]['geohub_identifier'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Processing the Activity
         if (isset($track['properties']['taxonomies'])) {
             Log::info('Preparing OSF TRACK activity MAPPING with external ID: '.$this->source_id);
-            
+
             $path = parse_url($this->endpoint);
-            $file_name = str_replace('.','-',$path['host']);
+            $file_name = str_replace('.', '-', $path['host']);
             if (Storage::disk('mapping')->exists($file_name.'.json')) {
                 $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
 
-                if (!empty(json_decode($taxonomy_map,true)['activity'])) {
+                if (!empty(json_decode($taxonomy_map, true)['activity'])) {
                     foreach ($track['properties']['taxonomies'] as $tax => $idList) {
                         if ($tax == 'tipologia_sentieri') {
                             if (is_array($idList)) {
                                 foreach ($idList as $id) {
-                                    if (key_exists($id, json_decode($taxonomy_map,true)['activity'])) {
-                                        $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$id]['geohub_identifier'];
+                                    if (key_exists($id, json_decode($taxonomy_map, true)['activity'])) {
+                                        $this->tags['activity'][] = json_decode($taxonomy_map, true)['activity'][$id]['geohub_identifier'];
                                     }
                                 }
                             } else {
-                                if (key_exists($idList, json_decode($taxonomy_map,true)['activity'])) {
-                                    $this->tags['activity'][] = json_decode($taxonomy_map,true)['activity'][$idList]['geohub_identifier'];
+                                if (key_exists($idList, json_decode($taxonomy_map, true)['activity'])) {
+                                    $this->tags['activity'][] = json_decode($taxonomy_map, true)['activity'][$idList]['geohub_identifier'];
                                 }
                             }
                         }
@@ -211,7 +287,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Processing the image Gallery of Track
         if (isset($track['properties']['galleria_immagini'])) {
-            if (is_array($track['properties']['galleria_immagini'])){
+            if (is_array($track['properties']['galleria_immagini'])) {
                 Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
                 foreach($track['properties']['galleria_immagini'] as $img) {
                     if ($img) {
@@ -223,45 +299,49 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             }
         }
     }
-    
+
     /**
-     * It populates the tags variable with the POI curl information so that it can be syncronized with EcPOI 
-     * 
-     * @param array $poi The OutSourceFeature parameters to be added or updated 
-     * 
+     * It populates the tags variable with the POI curl information so that it can be syncronized with EcPOI
+     *
+     * @param array $poi The OutSourceFeature parameters to be added or updated
+     *
      */
-    protected function preparePOITagsJson($poi){
+    protected function preparePOITagsJson($poi)
+    {
         Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
-        if (isset($poi['properties']['name'])){
+        if (isset($poi['properties']['name'])) {
             $this->tags['name'] = $poi['properties']['name'];
-        } 
-        if (isset($poi['properties']['description'])){
+        }
+        if (isset($poi['properties']['description'])) {
             $this->tags['description'] = $poi['properties']['description'];
-        } 
+        }
 
-        if (isset($poi['properties']['codice']))
+        if (isset($poi['properties']['codice'])) {
             $this->tags['code'] = $poi['properties']['codice'];
+        }
 
-        if (isset($poi['properties']['addr_locality']))
+        if (isset($poi['properties']['addr_locality'])) {
             $this->tags['addr_complete'] = $poi['properties']['addr_locality'];
+        }
 
         // Processing the poi_type
         if (isset($poi['properties']['taxonomies'])) {
             Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
-            
+
             $path = parse_url($this->endpoint);
-            $file_name = str_replace('.','-',$path['host']);
+            $file_name = str_replace('.', '-', $path['host']);
             if (Storage::disk('mapping')->exists($file_name.'.json')) {
                 $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                $json_poi_type = json_decode($taxonomy_map, true)['poi_type'];
 
-                if (!empty(json_decode($taxonomy_map,true)['poi_type'])) {
+                if (!empty($json_poi_type)) {
                     foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
-                        if (in_array($tax,['servizi','tipologia_poi'])) {
+                        if (in_array($tax, ['servizi','tipologia_poi'])) {
                             foreach ($idList as $id) {
-                                if (key_exists($id, json_decode($taxonomy_map,true)['poi_type'])) {
-                                    if (!json_decode($taxonomy_map,true)['poi_type'][$id]['skip']) {
-                                        Log::info('tax created : '.$id);
-                                        $this->tags['poi_type'][] = json_decode($taxonomy_map,true)['poi_type'][$id]['geohub_identifier'];
+                                if (key_exists($id, $json_poi_type)) {
+                                    if (!$json_poi_type[$id]['skip'] && !empty($json_poi_type[$id]['geohub_identifier'])) {
+                                        Log::info('tax added : '.$id);
+                                        $this->tags['poi_type'][] = $json_poi_type[$id]['geohub_identifier'];
                                     }
                                 }
                             }
@@ -275,7 +355,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         // Processing the feature image of POI
         if (isset($poi['properties']['immagine_principale'])) {
             Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
-            
+
             if ($poi['properties']['immagine_principale']) {
                 $this->tags['feature_image'] = $this->createOSFMediaFromLink($poi['properties']['immagine_principale']);
             } else {
@@ -284,23 +364,24 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
     }
 
-    protected function createOSFMediaFromLink($image_url) {
+    protected function createOSFMediaFromLink($image_url)
+    {
         $tags = [];
-        try{
+        try {
             // Saving the Media in to the s3-osfmedia storage (.env in production)
             $storage_name = config('geohub.osf_media_storage_name');
             Log::info('Geting image from url: '.$image_url);
-            $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function($match) {
+            $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function ($match) {
                 return urlencode($match[0]);
             }, $image_url);
-            $contents = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($url_encoded);
-            $basename = explode('.',basename($image_url));
+            $contents = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url_encoded);
+            $basename = explode('.', basename($image_url));
             $s3_osfmedia = Storage::disk($storage_name);
             $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
             $s3_osfmedia->put($osf_name_tmp, $contents->body());
 
             Log::info('Saved OSF Media with name: '.$osf_name_tmp);
-            $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp))?$osf_name_tmp:'';
+            $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp)) ? $osf_name_tmp : '';
             $tags['name']['it'] = $basename[0];
         } catch(Exception $e) {
             echo $e;
@@ -319,7 +400,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             [
                 'source_id' => $media_id,
                 'endpoint' => $this->endpoint
-            ],$params);
+            ],
+            $params
+        );
         return $feature->id;
     }
 }
