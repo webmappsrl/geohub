@@ -179,6 +179,11 @@ class SyncECTagsFromOSFCommand extends Command
                         $feature->stars = $out_source->tags['stars'];
                     }
                 }
+                if (empty($feature->color)) {
+                    if (isset($out_source->tags['color'])) {
+                        $feature->color = $out_source->tags['color'];
+                    }
+                }
 
 
 
