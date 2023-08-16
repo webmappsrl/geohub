@@ -40,10 +40,10 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Preparing OSF Track with external ID: '.$this->source_id);
             $geometry = '';
 
-            if (key_exists('geometry', $track)) {
-                $geometry = json_encode($track['geometry']);
-            } elseif (key_exists('gpx', $track)) {
-                $gpx_content = Http::get($track['gpx']);
+            if (key_exists('geometry', $track['properties'])) {
+                $geometry = json_encode($track['properties']['geometry']);
+            } elseif (key_exists('gpx', $track['properties']) && !empty($track['properties']['gpx'])) {
+                $gpx_content = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($track['properties']['gpx'][0]);
                 $geometry = Gisconverter::gpxToGeojson($gpx_content);
             } else {
                 throw new Exception('No Geometry found');
@@ -172,8 +172,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
 
         // Processing the theme
-        if ($track['type'] == 'itinerario') {
+        if ($track['properties']['type'] == 'itinerario') {
             $this->tags['theme'][] = 'sardegnas-itinerario';
+            $this->tags['color'] = '#608d0d';
         } else {
             $this->tags['theme'][] = 'sardegnas-sentiero';
         }
@@ -194,13 +195,13 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                             if (is_array($idList)) {
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $json_taxonomy_theme)) {
-                                        $this->tags['description']['it'] = '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$id]['source_title']['it'].'</strong></p>';
+                                        $this->tags['description']['it'] = isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$idList]['source_title']['it'].'</strong></p>' : '';
                                         $this->tags['description']['en'] = isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p>' : '';
                                     }
                                 }
                             } else {
                                 if (key_exists($idList, $json_taxonomy_theme)) {
-                                    $this->tags['description']['it'] = '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$idList]['source_title']['it'].'</strong></p>';
+                                    $this->tags['description']['it'] = isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>'.$json_taxonomy_theme[$idList]['source_title']['it'].'</strong></p>' : '';
                                     $this->tags['description']['en'] = isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p>' : '';
                                 }
                             }
@@ -212,6 +213,12 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding the description after the Stato di validazione
         if (isset($track['properties']['description'])) {
+            if (!array_key_exists('it', $this->tags['description'])) {
+                $this->tags['description']['it'] = '';
+            }
+            if (!array_key_exists('en', $this->tags['description'])) {
+                $this->tags['description']['en'] = '';
+            }
             $this->tags['description']['it'] .= $track['properties']['description']['it'];
             $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? $track['properties']['description']['en'] : '';
         }
