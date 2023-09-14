@@ -93,6 +93,9 @@ trait ConfTrait
         if ($this->gu_id) {
             $data['WEBAPP']['gu_id'] = $this->gu_id;
         }
+        if ($this->embed_code_body) {
+            $data['WEBAPP']['embed_code_body'] = $this->embed_code_body;
+        }
 
         return $data;
     }
