@@ -65,7 +65,6 @@ use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
  */
 class App extends Resource
 {
-
     use TabsOnEdit;
 
     public static function indexQuery(NovaRequest $request, $query)
@@ -267,7 +266,8 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
-            Text::make(__('Google universal ID'),'gu_id')
+            Text::make(__('Google universal ID'), 'gu_id'),
+            Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.')
         ];
     }
 
@@ -444,7 +444,7 @@ class App extends Resource
         return [
             Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
-            
+
             Boolean::make('Theme Filter', 'filter_theme')->help('Activate this option if you want to activate "Theme filter" for tracks'),
             Text::make('Theme Exclude Filter', 'filter_theme_exclude')->help('Insert the themes you want to exclude from the filter, separated by commas'),
 
