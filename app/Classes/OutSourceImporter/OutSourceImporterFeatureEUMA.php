@@ -198,7 +198,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 
         if ($this->poi_type == 'climbing-crag') {
 
-            $poidescription .= '<h3 style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Additional Information:</h3><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
+            $poidescription .= '<p style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Additional Information:</p><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
             if (isset($poi['properties']['local_rules_url'])) {
                 $this->tags['local_rules_url'] = $poi['properties']['local_rules_url'];
                 $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><a href="'.$poi['properties']['local_rules_url'].'"><strong>'.$poi['properties']['local_rules_url'].'</strong></a></td></tr>';
@@ -230,7 +230,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             }
 
             if (isset($poi['properties']['styles'])) {
-                $poidescription .= '<tr><td style="width: 100%;"><h3>Styles:</h3></td><td></td></tr>';
+                $poidescription .= '<tr><td style="width: 100%;"><p>Styles:</p></td><td></td></tr>';
                 $this->tags['styles'] = $poi['properties']['styles'];
                 foreach ($poi['properties']['styles'] as $style) {
                     $poidescription .= '<tr><td style="width: 48.6%;"><strong>'.$style['name'].'</strong></td><td style="width: 48.6%;"><strong>'.$style['description'].'</strong></td></tr>';
@@ -238,7 +238,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             }
 
             if (isset($poi['properties']['types'])) {
-                $poidescription .= '<tr><td style="width: 100%;"><h3>Types:</h3></td><td></td></tr>';
+                $poidescription .= '<tr><td style="width: 100%;"><p>Types:</p></td><td></td></tr>';
                 $this->tags['types'] = $poi['properties']['types'];
                 foreach ($poi['properties']['types'] as $type) {
                     $poidescription .= '<tr><td style="width: 48.6%;"><strong>'.$type['name'].'</strong></td><td style="width: 48.6%;"><strong>'.$type['description'].'</strong></td></tr>';
@@ -246,14 +246,14 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             }
 
             if (isset($poi['properties']['external_databases'])) {
-                $poidescription .= '<tr><td style="width: 100%;"><h3>External Databases:</h3></td><td></td></tr>';
+                $poidescription .= '<tr><td style="width: 100%;"><p>External Databases:</p></td><td></td></tr>';
                 $this->tags['external_databases'] = $poi['properties']['external_databases'];
                 foreach ($poi['properties']['external_databases'] as $db) {
                     if (isset($db['name'])) {
                         $poidescription .= '<tr><td style="width: 48.6%;">Name:</td><td style="width: 48.6%;"><strong>'.$db['name'].'</strong></td></tr>';
                     }
                     if (isset($db['url'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">URL:</td><td style="width: 48.6%;"><a href="'.$db['url'].'"><strong>'.$db['url'].'</strong></a></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">URL:</td><td style="width: 48.6%;"><a target="_blank" href="'.$db['url'].'"><strong>'.$db['url'].'</strong></a></td></tr>';
                     }
                     if (isset($db['mobile_app_name'])) {
                         $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.$db['mobile_app_name'].'</strong></td></tr>';
