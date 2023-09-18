@@ -704,8 +704,8 @@ class SyncEcFromOutSource
             } elseif ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
                 Log::channel('euma')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
-                    Log::channel('euma')->info('https://prod.eumadb.webmapp.it/resources/trails/'. $id);
-                    Log::info('https://prod.eumadb.webmapp.it/resources/trails/'. $id);
+                    Log::channel('euma')->info('https://database.european-mountaineers.eu/resources/trails/'. $id);
+                    Log::info('https://database.european-mountaineers.eu/resources/trails/'. $id);
                 }
             } else {
                 foreach ($error_not_created as $id) {
