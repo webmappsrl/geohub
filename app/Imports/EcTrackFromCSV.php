@@ -25,11 +25,12 @@ class EcTrackFromCSV implements ToModel
         //descent = dislivello totale DOWN
 
 
+        // $valid = ['id', 'da', 'Quota partenza', 'a', 'Quota arrivo', 'distanza', 'tempo di percorrenza andata', 'tempo di percorrenza ritorno', 'dislivello totale up', 'dislivello totale down', 'quota minima', 'quota massima'];
+
+
         foreach ($row as $key => $value) {
             if ($row[0] == 'id')
                 continue;
-            Log::debug($row[1]);
-            Log::debug($row[3]);
             EcTrack::updateOrCreate(['id' => $row[0]], [
                 'skip_geomixer_tech' => true,
                 'from' => $row[1],

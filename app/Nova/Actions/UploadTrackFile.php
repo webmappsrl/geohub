@@ -28,7 +28,15 @@ class UploadTrackFile extends Action
         //get the file from the request
         $file = $fields->file;
 
+        try {
+            //import the file
+            Excel::import(new \App\Imports\EcTrackFromCSV, $file);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return Action::danger('Error importing file');
+        }
         Excel::import(new \App\Imports\EcTrackFromCSV, $file);
+        return Action::message('File imported successfully');
     }
 
     /**
