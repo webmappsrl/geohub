@@ -42,6 +42,8 @@ class EcTrack extends Model
         'duration_forward',
         'duration_backward',
         'skip_geomixer_tech',
+        'from',
+        'to',
     ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
@@ -979,12 +981,12 @@ class EcTrack extends Model
         if (!empty($this->description)) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description).' ';
+            $string .= strip_tags($description) . ' ';
         }
         if (!empty($this->excerpt)) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt).' ';
+            $string .= strip_tags($excerpt) . ' ';
         }
         if (!empty($this->ref)) {
             $string .= $this->ref . ' ';
@@ -1032,12 +1034,13 @@ class EcTrack extends Model
         return $result;
     }
 
-    function hexToRgba($hexColor, $opacity = 1.0) {
+    function hexToRgba($hexColor, $opacity = 1.0)
+    {
         if (empty($hexColor))
             return '';
-        
+
         $hexColor = ltrim($hexColor, '#');
-    
+
         if (strlen($hexColor) === 6) {
             list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
         } elseif (strlen($hexColor) === 8) {
@@ -1046,7 +1049,7 @@ class EcTrack extends Model
         } else {
             throw new Exception('Invalid hex color format.');
         }
-    
+
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
         return $rgbaColor;
     }
