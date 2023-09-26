@@ -632,7 +632,7 @@ class EcTrack extends Resource
             new BulkEditThemesEcResourceAction(),
             (new DownloadExcelEcTrackAction())->allFields()->except('geometry')->withHeadings(),
             (new CreateTracksWithOSMIDAction())->standalone(),
-            (new UploadTrackFile())->standalone(),
+            // (new UploadTrackFile())->standalone(),
         ];
     }
 
