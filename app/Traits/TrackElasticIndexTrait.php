@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-
 trait TrackElasticIndexTrait
 {
-
     /**
      * Creates or Updates the EcTrack index on Elastic
      *
@@ -25,7 +23,7 @@ trait TrackElasticIndexTrait
             ->setHosts([config('services.elastic.http')])
             ->setSSLVerification(false)
             ->build();
-            
+
         Log::info('Update Elastic Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -38,11 +36,11 @@ trait TrackElasticIndexTrait
         // FEATURE IMAGE
         $feature_image = '';
         if (isset($this->featureImage->thumbnails)) {
-            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            $sizes = json_decode($this->featureImage->thumbnails, true);
             // TODO: use proper ecMedia function
             if (isset($sizes['400x200'])) {
                 $feature_image = $sizes['400x200'];
-            } else if (isset($sizes['225x100'])) {
+            } elseif (isset($sizes['225x100'])) {
                 $feature_image = $sizes['225x100'];
             }
         }
@@ -72,7 +70,7 @@ trait TrackElasticIndexTrait
         if ($this->taxonomyThemes->count() > 0) {
             $taxonomy_themes = $this->taxonomyThemes->pluck('name')->toArray();
         }
-        
+
         try {
             $coordinates = json_decode($geom)->coordinates;
             $coordinatesCount = count($coordinates);
@@ -101,13 +99,13 @@ trait TrackElasticIndexTrait
             'from' =>  $this->getActualOrOSFValue('from'),
             'to' =>  $this->getActualOrOSFValue('to'),
             'name' =>  json_encode($this->getTranslations('name')),
-            'distance' =>  $this->distance,
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
             'feature_image' => $feature_image,
-            'duration_forward' => $this->setDurationForwardEmpty(),
-            'ascent' => $this->ascent,
+            "distance" => $this->setEmptyValueToZero($this->distance),
+            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
+            "ascent" => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'layers' => $layers,
@@ -126,7 +124,7 @@ trait TrackElasticIndexTrait
             'id'    => $this->id,
             'body'  => $params
         ];
-        
+
         // NORMAL INDEX
         try {
             if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
@@ -154,7 +152,7 @@ trait TrackElasticIndexTrait
             ->setHosts([config('services.elastic.http')])
             ->setSSLVerification(false)
             ->build();
-            
+
         Log::info('Update Elastic High Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -170,9 +168,9 @@ trait TrackElasticIndexTrait
             'ref' =>  $this->ref ,
             'strokeColor' =>  $this->hexToRgba($this->color),
             'layers' =>  $layers,
-            'distance' =>  $this->distance,
-            'duration_forward' =>  $this->setDurationForwardEmpty(),
-            'ascent' => $this->ascent,
+            "distance" => $this->setEmptyValueToZero($this->distance),
+            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
+            "ascent" => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'searchable' => $this->getSearchableString()
@@ -190,7 +188,7 @@ trait TrackElasticIndexTrait
             'id'    => $this->id,
             'body'  => $params
         ];
-        
+
         // LOW INDEX
         try {
             if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
@@ -217,9 +215,9 @@ trait TrackElasticIndexTrait
             ->setHosts([config('services.elastic.http')])
             ->setSSLVerification(false)
             ->build();
-            
+
         Log::info('Update Elastic HIGH Indexing track ' . $this->id);
-        
+
         $geom = EcTrack::where('id', '=', $this->id)
         ->select(
             DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
@@ -233,9 +231,9 @@ trait TrackElasticIndexTrait
             'ref' =>  $this->ref ,
             'strokeColor' =>  $this->hexToRgba($this->color),
             'layers' =>  $layers,
-            'distance' =>  $this->distance,
-            'duration_forward' =>  $this->setDurationForwardEmpty(),
-            'ascent' => $this->ascent,
+            "distance" => $this->setEmptyValueToZero($this->distance),
+            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
+            "ascent" => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'searchable' => $this->getSearchableString()
@@ -253,7 +251,7 @@ trait TrackElasticIndexTrait
             'id'    => $this->id,
             'body'  => $params
         ];
-        
+
         // HIGH INDEX
         try {
             if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
@@ -279,11 +277,11 @@ trait TrackElasticIndexTrait
             ->setHosts([config('services.elastic.http')])
             ->setSSLVerification(false)
             ->build();
-            
+
         Log::info('DELETE Elastic Indexing track ' . $this->id);
-        
+
         $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
-        
+
         try {
             $response = $client->delete($params);
         } catch (Exception $e) {
