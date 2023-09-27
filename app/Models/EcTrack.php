@@ -803,13 +803,13 @@ class EcTrack extends Model
                 "from": "' . $this->getActualOrOSFValue('from') . '",
                 "to": "' . $this->getActualOrOSFValue('to') . '",
                 "name": "' . $this->name . '",
-                "distance": "' . $this->distance . '",
                 "taxonomyActivities": ' . $taxonomy_activities . ',
                 "taxonomyWheres": ' . $taxonomy_wheres . ',
                 "taxonomyThemes": ' . $taxonomy_themes . ',
                 "feature_image": "' . $feature_image . '",
-                "duration_forward": ' . $this->setDurationForwardEmpty() . ',
-                "ascent": ' . $this->ascent . ',
+                "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
+                "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
+                "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
                 "layers": ' . json_encode($layers) . ',
@@ -874,9 +874,9 @@ class EcTrack extends Model
             "ref": "' . $this->ref . '",
             "strokeColor": "' . $this->hexToRgba($this->color) . '",
             "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
-            "ascent": ' . $this->ascent . ',
+            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
+            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
+            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
             "searchable": "' . $this->getSearchableString($app_id) . '"
@@ -939,9 +939,9 @@ class EcTrack extends Model
             "ref": "' . $this->ref . '",
             "strokeColor": "' . $this->hexToRgba($this->color) . '",
             "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->distance . ',
-            "duration_forward": ' . $this->setDurationForwardEmpty() . ',
-            "ascent": ' . $this->ascent . ',
+            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
+            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
+            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
             "searchable": "' . $this->getSearchableString($app_id) . '"
@@ -981,13 +981,12 @@ class EcTrack extends Model
         curl_close($curl);
     }
 
-    public function setDurationForwardEmpty()
+    public function setEmptyValueToZero($value)
     {
-        $duration = $this->duration_forward;
-        if (empty($this->duration_forward)) {
-            $duration = 0;
+        if (empty($value)) {
+            $value = 0;
         }
-        return $duration;
+        return $value;
     }
 
     public function cleanTrackNameSpecialChar()
