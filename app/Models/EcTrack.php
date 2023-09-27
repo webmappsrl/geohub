@@ -1004,7 +1004,7 @@ class EcTrack extends Model
         $searchables = '';
         if ($app_id) {
             $app = App::find($app_id);
-            $searchables = json_decode($app->poi_searchables);
+            $searchables = json_decode($app->track_searchables);
         }
 
         if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
