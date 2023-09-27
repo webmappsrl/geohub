@@ -2,11 +2,13 @@
 
 namespace App\Imports;
 
+use Schema;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class EcTrackFromCSV implements ToModel
+class EcTrackFromCSV implements ToModel, WithHeadingRow
 {
     /**
      * @param array $row
@@ -14,7 +16,8 @@ class EcTrackFromCSV implements ToModel
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
-    { //ele_from = quota partenza
+    {
+        //ele_from = quota partenza
         //ele_to = quota arrivo
         //distance = km
         //duration_forward = tempo percorrenza a-p
@@ -24,27 +27,35 @@ class EcTrackFromCSV implements ToModel
         //ascent = dislivello totale UP
         //descent = dislivello totale DOWN
 
+        $validHeaders = ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max'];
+        $fileHeaders = array_keys($row);
+        $ecTrackData = [];
+        $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
-        // $valid = ['id', 'da', 'Quota partenza', 'a', 'Quota arrivo', 'distanza', 'tempo di percorrenza andata', 'tempo di percorrenza ritorno', 'dislivello totale up', 'dislivello totale down', 'quota minima', 'quota massima'];
-
+        if (!empty($invalidHeaders)) {
+            $errorMessage = '';
+            foreach ($invalidHeaders as $invalidHeader) {
+                //if the header is a number, skip it
+                if (is_numeric($invalidHeader)) {
+                    continue;
+                }
+                $errorMessage .= $invalidHeader . ', ';
+            }
+            // if error message is not empty throw an exception 
+            if (!empty($errorMessage)) {
+                $errorMessage = substr($errorMessage, 0, -2);
+                $errorMessage = "Invalid headers found: $errorMessage. Please check the file and try again.";
+                Log::error($errorMessage);
+                throw new \Exception($errorMessage);
+            }
+        }
 
         foreach ($row as $key => $value) {
-            if ($row[0] == 'id')
-                continue;
-            EcTrack::updateOrCreate(['id' => $row[0]], [
-                'skip_geomixer_tech' => true,
-                'from' => $row[1],
-                'ele_from' => $row[2],
-                'to' => $row[3],
-                'ele_to' => $row[4],
-                'distance' => $row[6],
-                'duration_forward' => $row[7],
-                'duration_backward' => $row[8],
-                'ascent' => $row[9],
-                'descent' => $row[10],
-                'ele_min' => $row[11],
-                'ele_max' => $row[12],
-            ])->save();
+            if (in_array($key, $validHeaders)) {
+                $ecTrackData[$key] = $value;
+            }
         }
+
+        EcTrack::updateOrCreate(['id' => $row['id']], $ecTrackData)->save();
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
@@ -33,10 +34,10 @@ class UploadTrackFile extends Action
             Excel::import(new \App\Imports\EcTrackFromCSV, $file);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return Action::danger('Error importing file');
+            return Action::danger($e->getMessage());
         }
         Excel::import(new \App\Imports\EcTrackFromCSV, $file);
-        return Action::message('File imported successfully');
+        return Action::message('Data imported successfully');
     }
 
     /**
@@ -46,6 +47,11 @@ class UploadTrackFile extends Action
      */
     public function fields()
     {
-        return [File::make('Upload File', 'file')];
+
+        $filePath = Storage::url('import-example.xlsx');
+        return [
+            File::make('Upload File', 'file')
+                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . '</strong>' . 'id, from, to, ele_from, ele_to, distance, duration_forward, duration_backward, ascent, descent, ele_min, ele_max' . '</br>' . '</br>' . 'Please follow this example: ' . '<a href="' . url($filePath) . '" target="_blank">Example</a>')
+        ];
     }
 }
