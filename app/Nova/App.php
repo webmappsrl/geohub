@@ -243,6 +243,7 @@ class App extends Resource
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
             'FILTERS' => $this->filters_tab(),
+            'SEARCHABLE' => $this->searchable_tab(),
             'OPTIONS' => $this->options_tab(),
             'POIS' => $this->pois_tab(),
             'ROUTING' => $this->routing_tab(),
@@ -292,7 +293,6 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
                 }),
-            AttachMany::make('TaxonomyThemes'),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
@@ -462,6 +462,30 @@ class App extends Resource
             Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
 
             Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
+        ];
+    }
+
+    protected function searchable_tab(): array
+    {
+        $track_selected = is_null($this->model()->track_searchables) ? [] : json_decode($this->model()->track_searchables, true);
+        $poi_selected = is_null($this->model()->poi_searchables) ? [] : json_decode($this->model()->poi_searchables, true);
+        return [
+            MultiSelect::make(__('Track Search In'), 'track_searchables')->options([
+                'name' => 'Name',
+                'description' => 'Description',
+                'excerpt' => 'Excerpt',
+                'ref' => 'REF',
+                'osmid' => 'OSMID',
+                'taxonomyThemes' => 'Themes',
+                'taxonomyActivities' => 'Activity',
+            ], $track_selected),
+            MultiSelect::make(__('POI Search In'), 'poi_searchables')->options([
+                'name' => 'Name',
+                'description' => 'Description',
+                'excerpt' => 'Excerpt',
+                'osmid' => 'OSMID',
+                'taxonomyPoiTypes' => 'POI Type',
+            ], $poi_selected),
         ];
     }
 

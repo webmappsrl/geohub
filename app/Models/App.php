@@ -27,7 +27,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
  */
 class App extends Model
 {
-    use HasFactory, ConfTrait, HasTranslationsFixed;
+    use HasFactory;
+    use ConfTrait;
+    use HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
     public array $translatable = ['welcome', 'tiles_label', 'overlays_label'];
@@ -46,7 +48,9 @@ class App extends Model
 
         static::creating(function ($app) {
             $user = User::getEmulatedUser();
-            if (is_null($user)) $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($user)) {
+                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            }
             $app->author()->associate($user);
         });
 
@@ -207,7 +211,7 @@ class App extends Model
         $pois = [];
         foreach ($themes as $theme) {
             foreach ($theme->ecPois()->orderBy('name')->get() as $poi) {
-                $item = $poi->getGeojson(false);
+                $item = $poi->getGeojson(false, $this->id);
                 $item['properties']['related'] = false;
                 unset($item['properties']['pivot']);
 
@@ -217,7 +221,7 @@ class App extends Model
         return $pois;
     }
 
-    function BuildPoisGeojson()
+    public function BuildPoisGeojson()
     {
         $poisUri = $this->id . ".geojson";
         $json = [
@@ -228,7 +232,7 @@ class App extends Model
         return $json;
     }
 
-    function BuildConfJson()
+    public function BuildConfJson()
     {
         $confUri = $this->id . ".json";
         $json = $this->config();
@@ -255,7 +259,7 @@ class App extends Model
             $theme_id = $theme->id;
             // NEW CODE
             $where_ids = DB::select("select distinct taxonomy_where_id from taxonomy_whereables where taxonomy_whereable_type LIKE '%EcPoi%' AND taxonomy_whereable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
-            $where_ids_implode = implode(',',collect($where_ids)->pluck('taxonomy_where_id')->toArray());
+            $where_ids_implode = implode(',', collect($where_ids)->pluck('taxonomy_where_id')->toArray());
             $where_db = DB::select("select id, identifier, name, color, icon from taxonomy_wheres where id in ($where_ids_implode)");
             $where_array = json_decode(json_encode($where_db), true);
             $where_result = [];
@@ -263,20 +267,20 @@ class App extends Model
                 $new_array = array();
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
-                        $new_array[$key] = json_decode($val,true);
+                        $new_array[$key] = json_decode($val, true);
                     }
                     if ($key == 'identifier') {
-                        $new_array[$key] = "poi_type_".$val;
+                        $new_array[$key] = "poi_type_" . $val;
                     }
                     if (!empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
-                array_push($where_result,$new_array);
+                array_push($where_result, $new_array);
             }
 
             $poi_type_ids = DB::select("select distinct taxonomy_poi_type_id from taxonomy_poi_typeables where taxonomy_poi_typeable_type LIKE '%EcPoi%' AND taxonomy_poi_typeable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
-            $poi_type_ids_implode = implode(',',collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
+            $poi_type_ids_implode = implode(',', collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
             $poi_db = DB::select("select id, identifier, name, color, icon from taxonomy_poi_types where id in ($poi_type_ids_implode)");
             $poi_array = json_decode(json_encode($poi_db), true);
             $poi_result = [];
@@ -284,35 +288,35 @@ class App extends Model
                 $new_array = array();
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
-                        $new_array[$key] = json_decode($val,true);
+                        $new_array[$key] = json_decode($val, true);
                     }
                     if ($key == 'identifier') {
-                        $new_array[$key] = "poi_type_".$val;
+                        $new_array[$key] = "poi_type_" . $val;
                     }
                     if (!empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
-                array_push($poi_result,$new_array);
+                array_push($poi_result, $new_array);
             }
             $res = [
-                'where' => $this->unique_multidim_array(array_merge($res['where'],$where_result),'id'),
-                'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'],$poi_result),'id'),
+                'where' => $this->unique_multidim_array(array_merge($res['where'], $where_result), 'id'),
+                'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'], $poi_result), 'id'),
             ];
         }
 
-            // OLD CODE
-            // foreach ($theme->ecPois()->get() as $poi) {
-            //     $poiTaxonomies = $poi->getTaxonomies();
-            //     $res = [
-            //         'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
-            //         //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
-            //         'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
-            //         'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
-            //         'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
-            //         'poi_type' => array_unique(array_merge($res['poi_type'], [end($poiTaxonomies['poi_type'])]), SORT_REGULAR),
-            //     ];
-            // }
+        // OLD CODE
+        // foreach ($theme->ecPois()->get() as $poi) {
+        //     $poiTaxonomies = $poi->getTaxonomies();
+        //     $res = [
+        //         'activity' => array_unique(array_merge($res['activity'], $poi->taxonomyActivities()->pluck('identifier')->toArray()), SORT_REGULAR),
+        //         //'theme' => array_unique(array_merge($res['theme'], $poi->taxonomyThemes()->pluck('identifier')->toArray()), SORT_REGULAR),
+        //         'when' => array_unique(array_merge($res['when'], $poi->taxonomyWhens()->pluck('identifier')->toArray()), SORT_REGULAR),
+        //         'where' => array_unique(array_merge($res['where'],  $poiTaxonomies['where']), SORT_REGULAR),
+        //         'who' => array_unique(array_merge($res['who'], $poi->taxonomyTargets()->pluck('identifier')->toArray()), SORT_REGULAR),
+        //         'poi_type' => array_unique(array_merge($res['poi_type'], [end($poiTaxonomies['poi_type'])]), SORT_REGULAR),
+        //     ];
+        // }
         // }
         // $keys = array_keys((array)$res);
         // foreach ($keys as $key) {
@@ -381,8 +385,9 @@ class App extends Model
         $tracks_array = [];
         foreach ($tracks as $track) {
             $geojson = $track->getElbrusGeojson();
-            if (isset($geojson['properties']))
+            if (isset($geojson['properties'])) {
                 $tracks_array[] = $geojson['properties'];
+            }
         }
 
         return $tracks_array;
@@ -470,7 +475,7 @@ class App extends Model
             $suffix = $suffix . '_';
         }
         // Create Index
-        $url = config('services.elastic.host') . '/geohub_app_' . $suffix .  $this->id;
+        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
         $posts = '
                {
                   "mappings": {
@@ -590,14 +595,14 @@ class App extends Model
 
     /**
      * Returns array of all tracks'id in APP through layers deifinition
-     *  $tracks = [ 
+     *  $tracks = [
      *               t1_d => [l11_id,l12_id, ... , l1N_1_id],
      *               t2_d => [l21_id,l22_id, ... , l2N_2_id],
      *               ... ,
      *               tM_d => [lM1_id,lM2_id, ... , lMN_M_id],
      *            ]
      * where t*_id are tracks ids and l*_id are layers where tracks are found
-     * 
+     *
      * @return array
      */
     public function getTracksFromLayer(): array
@@ -654,7 +659,8 @@ class App extends Model
         return $svg;
     }
 
-    function unique_multidim_array($array, $key) {
+    public function unique_multidim_array($array, $key)
+    {
         $temp_array = array();
         $i = 0;
         $key_array = array();

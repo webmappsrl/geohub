@@ -198,7 +198,7 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function getJson($allData = true): array
+    public function getJson($allData = true, $app_id = 0): array
     {
         $array = $this->setOutSourceValue();
 
@@ -327,7 +327,7 @@ class EcPoi extends Model
             }
         }
 
-        $array['searchable'] = $this->getSearchableString();
+        $array['searchable'] = $this->getSearchableString($app_id);
 
         return $array;
     }
@@ -421,11 +421,11 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function getGeojson($allData = true): ?array
+    public function getGeojson($allData = true, $app_id = 0): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson($allData);
+            $feature["properties"] = $this->getJson($allData, $app_id);
 
             return $feature;
         } else {
@@ -525,28 +525,35 @@ class EcPoi extends Model
         return $geojson;
     }
 
-    public function getSearchableString()
+    public function getSearchableString($app_id = 0)
     {
+
         $string = '';
-        if (!empty($this->name)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
+        $searchables = '';
+        if ($app_id) {
+            $app = App::find($app_id);
+            $searchables = json_decode($app->poi_searchables);
         }
-        if (!empty($this->description)) {
+
+        if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
+        }
+        if (empty($searchables) || (in_array('description', $searchables) && !empty($this->description))) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description).' ';
+            $string .= strip_tags($description) . ' ';
         }
-        if (!empty($this->excerpt)) {
+        if (empty($searchables) || (in_array('excerpt', $searchables) && !empty($this->excerpt))) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt).' ';
+            $string .= strip_tags($excerpt) . ' ';
         }
-        if (!empty($this->osmid)) {
-            $string .= $this->osmid.' ';
+        if (empty($searchables) || (in_array('osmid', $searchables) && !empty($this->osmid))) {
+            $string .= $this->osmid . ' ';
         }
-        if (!empty($this->taxonomyPoiTypes)) {
+        if (empty($searchables) || (in_array('taxonomyPoiTypes', $searchables) && !empty($this->taxonomyPoiTypes))) {
             foreach ($this->taxonomyPoiTypes as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
         }
         return html_entity_decode($string);
