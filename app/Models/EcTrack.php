@@ -22,7 +22,10 @@ use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
 {
-    use HasFactory, GeometryFeatureTrait, HasTranslations, Favoriteable;
+    use HasFactory;
+    use GeometryFeatureTrait;
+    use HasTranslations;
+    use Favoriteable;
 
     protected $fillable = [
         'name',
@@ -78,7 +81,9 @@ class EcTrack extends Model
         // EcTrack::observe(EcTrackElasticObserver::class);
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
-            if (!is_null($user)) $ecTrack->author()->associate($user);
+            if (!is_null($user)) {
+                $ecTrack->author()->associate($user);
+            }
         });
 
         static::created(function ($ecTrack) {
@@ -291,8 +296,9 @@ class EcTrack extends Model
             $array['author_email'] = $user->email;
         }
 
-        if ($this->featureImage)
+        if ($this->featureImage) {
             $array['feature_image'] = $this->featureImage->getJson();
+        }
 
         if ($this->ecMedia) {
             $gallery = [];
@@ -300,8 +306,9 @@ class EcTrack extends Model
             foreach ($ecMedia as $media) {
                 $gallery[] = $media->getJson();
             }
-            if (count($gallery))
+            if (count($gallery)) {
                 $array['image_gallery'] = $gallery;
+            }
         }
 
         if (isset($this->osmid)) {
@@ -339,8 +346,9 @@ class EcTrack extends Model
         ];
 
         foreach ($taxonomies as $key => $value) {
-            if (count($value) === 0)
+            if (count($value) === 0) {
                 unset($taxonomies[$key]);
+            }
         }
 
         $array['taxonomy'] = $taxonomies;
@@ -364,8 +372,9 @@ class EcTrack extends Model
                 in_array($property, $propertiesToClear)
                 || is_null($value)
                 || (is_array($value) && count($value) === 0)
-            )
+            ) {
                 unset($array[$property]);
+            }
         }
 
         $relatedPoi = $this->ecPois;
@@ -505,7 +514,9 @@ class EcTrack extends Model
             }
 
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -527,8 +538,9 @@ class EcTrack extends Model
                 $related['poi']['related'][] = $poi->id;
             }
 
-            if (count($related) > 0)
+            if (count($related) > 0) {
                 $geojson['properties']['related'] = $related;
+            }
         }
 
         return $geojson;
@@ -609,8 +621,8 @@ class EcTrack extends Model
     {
         $features = [];
         try {
-            // select id 
-            // from ec_media 
+            // select id
+            // from ec_media
             // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5) order by st_linelocatepoint(st_geomfromgeojson(st_asgeojson((select geometry from ec_tracks where id = 2029))),st_geomfromgeojson(st_asgeojson(geometry)));
             $result = DB::select(
                 'SELECT id FROM ec_media
@@ -625,8 +637,9 @@ class EcTrack extends Model
         }
         foreach ($result as $row) {
             $geojson = EcMedia::find($row->id)->getGeojson();
-            if (isset($geojson))
+            if (isset($geojson)) {
                 $features[] = $geojson;
+            }
         }
 
         return ([
@@ -638,9 +651,9 @@ class EcTrack extends Model
     public function getNeighbourEcPoi(): array
     {
         $features = [];
-        // select id 
+        // select id
         // from ec_pois
-        // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5) 
+        // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5)
         //order by st_linelocatepoint(st_geomfromgeojson(st_asgeojson((select geometry from ec_tracks where id = 2029))),st_geomfromgeojson(st_asgeojson(geometry)));
         try {
             $result = DB::select(
@@ -705,6 +718,11 @@ class EcTrack extends Model
 
     public function elasticIndex($index = 'ectracks', $layers = [])
     {
+        // APP ID for searchable function:
+        if (strpos($index, '_')) {
+            $app_id = explode('_', $index)[1];
+        }
+
         #REF: https://github.com/elastic/elasticsearch-php/
         #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
 
@@ -747,11 +765,11 @@ class EcTrack extends Model
         // FEATURE IMAGE
         $feature_image = '';
         if (isset($this->featureImage->thumbnails)) {
-            $sizes = json_decode($this->featureImage->thumbnails, TRUE);
+            $sizes = json_decode($this->featureImage->thumbnails, true);
             // TODO: use proper ecMedia function
             if (isset($sizes['400x200'])) {
                 $feature_image = $sizes['400x200'];
-            } else if (isset($sizes['225x100'])) {
+            } elseif (isset($sizes['225x100'])) {
                 $feature_image = $sizes['225x100'];
             }
         }
@@ -795,7 +813,7 @@ class EcTrack extends Model
                 "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
                 "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
                 "layers": ' . json_encode($layers) . ',
-                "searchable": "' . $this->getSearchableString() . '"
+                "searchable": "' . $this->getSearchableString($app_id) . '"
               }';
 
         Log::info('');
@@ -834,6 +852,11 @@ class EcTrack extends Model
 
     public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.006)
     {
+        // APP ID for searchable function:
+        if (strpos($index, '_')) {
+            $app_id = explode('_', $index)[2];
+        }
+
         Log::info('Elastic Indexing track ' . $this->id);
         $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
         Log::info($url);
@@ -856,7 +879,7 @@ class EcTrack extends Model
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString() . '"
+            "searchable": "' . $this->getSearchableString($app_id) . '"
           }';
         Log::info('');
         Log::info('LOW');
@@ -893,6 +916,11 @@ class EcTrack extends Model
     }
     public function elasticHighIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
     {
+        // APP ID for searchable function:
+        if (strpos($index, '_')) {
+            $app_id = explode('_', $index)[2];
+        }
+
         Log::info('Elastic Indexing track ' . $this->id);
         $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
         Log::info($url);
@@ -916,7 +944,7 @@ class EcTrack extends Model
             "ascent": ' . $this->ascent . ',
             "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
             "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString() . '"
+            "searchable": "' . $this->getSearchableString($app_id) . '"
           }';
 
         Log::info('');
@@ -970,34 +998,40 @@ class EcTrack extends Model
         return $name;
     }
 
-    public function getSearchableString()
+    public function getSearchableString($app_id = 0)
     {
         $string = '';
-        if (!empty($this->name)) {
+        $searchables = '';
+        if ($app_id) {
+            $app = App::find($app_id);
+            $searchables = json_decode($app->poi_searchables);
+        }
+
+        if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
             $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
         }
-        if (!empty($this->description)) {
+        if (empty($searchables) || (in_array('description', $searchables) && !empty($this->description))) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description).' ';
+            $string .= strip_tags($description) . ' ';
         }
-        if (!empty($this->excerpt)) {
+        if (empty($searchables) || (in_array('excerpt', $searchables) && !empty($this->excerpt))) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt).' ';
+            $string .= strip_tags($excerpt) . ' ';
         }
-        if (!empty($this->ref)) {
+        if (empty($searchables) || (in_array('ref', $searchables) && !empty($this->ref))) {
             $string .= $this->ref . ' ';
         }
-        if (!empty($this->osmid)) {
+        if (empty($searchables) || (in_array('osmid', $searchables) && !empty($this->osmid))) {
             $string .= $this->osmid . ' ';
         }
-        if (!empty($this->taxonomyThemes)) {
+        if (empty($searchables) || (in_array('taxonomyThemes', $searchables) && !empty($this->taxonomyThemes))) {
             foreach ($this->taxonomyThemes as $tax) {
                 $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
         }
-        if (!empty($this->taxonomyActivities)) {
+        if (empty($searchables) || (in_array('taxonomyActivities', $searchables) && !empty($this->taxonomyActivities))) {
             foreach ($this->taxonomyActivities as $tax) {
                 $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
@@ -1032,12 +1066,14 @@ class EcTrack extends Model
         return $result;
     }
 
-    function hexToRgba($hexColor, $opacity = 1.0) {
-        if (empty($hexColor))
+    public function hexToRgba($hexColor, $opacity = 1.0)
+    {
+        if (empty($hexColor)) {
             return '';
-        
+        }
+
         $hexColor = ltrim($hexColor, '#');
-    
+
         if (strlen($hexColor) === 6) {
             list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
         } elseif (strlen($hexColor) === 8) {
@@ -1046,7 +1082,7 @@ class EcTrack extends Model
         } else {
             throw new Exception('Invalid hex color format.');
         }
-    
+
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
         return $rgbaColor;
     }
