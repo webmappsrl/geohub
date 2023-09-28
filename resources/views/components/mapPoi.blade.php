@@ -3,7 +3,11 @@
     $res = DB::select("SELECT ST_AsGeojson('$poi->geometry')")[0]->st_asgeojson;
     $geometry = json_decode($res);
     $geometry = [$geometry->coordinates[1],$geometry->coordinates[0]];
-    $image = $poi->featureImage->thumbnail('400x200');
+    if (empty($poi->featureImage)){
+        $image = asset('images/start-point.png');
+    } else {
+        $image = $poi->featureImage->thumbnail('400x200');
+    }
 @endphp
 <div id="map" class="h-full v-full poiLeafletMap">
 </div>
