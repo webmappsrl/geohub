@@ -52,10 +52,19 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
 
         foreach ($row as $key => $value) {
             if (in_array($key, $validHeaders)) {
+                if ($key == 'distance') {
+                    $value = str_replace(',', '.', $value);
+                    //cut the 'km' from the distance value if present
+                    if (strpos($value, 'km') !== false) {
+                        $value = str_replace('km', '', $value);
+                    }
+                }
                 $ecTrackData[$key] = $value;
             }
         }
 
         EcTrack::updateOrCreate(['id' => $row['id']], $ecTrackData)->save();
+
+        return $updatedTracks;
     }
 }
