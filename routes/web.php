@@ -83,6 +83,10 @@ Route::get('/w/{type}/{id}', function ($type, $id) {
 Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoint_slug, $source_id) {
     $osf = collect(DB::select("SELECT * FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->toArray();
 
+    if (empty($osf)) {
+        abort(404);
+    }
+
     $osf_id = $osf[0]->id;
     $osf_type = $osf[0]->type;
 
@@ -101,6 +105,6 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoi
     }
     return view('widget', [
         'resource' => $resource,
-        'type' => $osf_type.'.'.$type,
+        'type' => $osf_type . '.' . $type,
     ]);
 });
