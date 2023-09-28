@@ -28,6 +28,9 @@ class UploadTrackFile extends Action
     {
         //get the file from the request
         $file = $fields->file;
+        if (!$file) {
+            return Action::danger('Please upload a valid file');
+        }
 
         try {
             //import the file

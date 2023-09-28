@@ -62,9 +62,7 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 $ecTrackData[$key] = $value;
             }
         }
-
-        EcTrack::updateOrCreate(['id' => $row['id']], $ecTrackData)->save();
-
-        return $updatedTracks;
+        $ecTrack = EcTrack::find($row['id']);
+        $ecTrack->update($ecTrackData);
     }
 }
