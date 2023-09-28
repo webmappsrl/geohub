@@ -41,6 +41,7 @@
 }
 .poiLeafletMap img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive:not(.endstart) {
     border: 2px solid white;
+    background-color: white;
 }
 .poiLeafletMap img.endstart {
     z-index: 1000!important;
