@@ -66,7 +66,10 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 $ecTrackData[$key] = $value;
             }
         }
-        // TODO: Controllare se il find veramente trova una traccia
+
+        // TODO: Provare un file con una p più righe vuote perché spesso mettono le righe vuote.
+        // TODO: Nel caso di una riga vuota mostrare il messaggio di errore adeguato.
+        // TODO: Controllare se il find() veramente trova una traccia
         $ecTrack = EcTrack::find($row['id']);
         // TODO: Cambiare il valore del campo skip_geomixer_tech
         // TODO: Controllare se l'ID dell utente della traccia trovata è uguale all'utente loggato.
