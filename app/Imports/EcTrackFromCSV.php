@@ -22,7 +22,7 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
         //distance = km
         //duration_forward = tempo percorrenza a-p
         //duration_backward = tempo percorrenza p-a
-        //ele_max = quota massima 
+        //ele_max = quota massima
         //ele_min = quota minima
         //ascent = dislivello totale UP
         //descent = dislivello totale DOWN
@@ -36,15 +36,19 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
             $errorMessage = '';
             foreach ($invalidHeaders as $invalidHeader) {
                 //if the header is a number, skip it
+
+                // TODO: Aggiungere un errore nel caso in cui esiste un numero nell'invalidHeaders
                 if (is_numeric($invalidHeader)) {
                     continue;
                 }
-                $errorMessage .= $invalidHeader . ', ';
+                // TODO: Aggiungere implode() invece che la riga sotto
+                // $errorMessage .= $invalidHeader . ', ';
             }
-            // if error message is not empty throw an exception 
+            // if error message is not empty throw an exception
             if (!empty($errorMessage)) {
-                $errorMessage = substr($errorMessage, 0, -2);
-                $errorMessage = "Invalid headers found: $errorMessage. Please check the file and try again.";
+                // TODO: Rimuovere la riga sotto
+                // $errorMessage = substr($errorMessage, 0, -2);
+                $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeader) . "Please check the file and try again.";
                 Log::error($errorMessage);
                 throw new \Exception($errorMessage);
             }
@@ -62,7 +66,10 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 $ecTrackData[$key] = $value;
             }
         }
+        // TODO: Controllare se il find veramente trova una traccia
         $ecTrack = EcTrack::find($row['id']);
+        // TODO: Cambiare il valore del campo skip_geomixer_tech
+        // TODO: Controllare se l'ID dell utente della traccia trovata è uguale all'utente loggato.
         $ecTrack->update($ecTrackData);
     }
 }
