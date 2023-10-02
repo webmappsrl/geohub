@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
+use function PHPUnit\Framework\isEmpty;
+
 class EcTrackFromCSV implements ToModel, WithHeadingRow
 {
     /**
@@ -27,34 +29,30 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
         //ascent = dislivello totale UP
         //descent = dislivello totale DOWN
 
+
+        $user = auth()->user();
+        $userTracks = $user->ecTracks()->get();
+        $ecTrackData = [];
         $validHeaders = ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max'];
         $fileHeaders = array_keys($row);
-        $ecTrackData = [];
         $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
-        if (!empty($invalidHeaders)) {
-            $errorMessage = '';
-            foreach ($invalidHeaders as $invalidHeader) {
-                //if the header is a number, skip it
+        $invalidHeaders = array_filter($invalidHeaders, function ($value) {
+            return !is_numeric($value);
+        });
 
-                // TODO: Aggiungere un errore nel caso in cui esiste un numero nell'invalidHeaders
-                if (is_numeric($invalidHeader)) {
-                    continue;
-                }
-                // TODO: Aggiungere implode() invece che la riga sotto
-                // $errorMessage .= $invalidHeader . ', ';
-            }
-            // if error message is not empty throw an exception
-            if (!empty($errorMessage)) {
-                // TODO: Rimuovere la riga sotto
-                // $errorMessage = substr($errorMessage, 0, -2);
-                $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeader) . "Please check the file and try again.";
-                Log::error($errorMessage);
-                throw new \Exception($errorMessage);
-            }
+        if (!empty($invalidHeaders)) {
+            $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeaders) . ". Please check the file and try again.";
+            Log::error($errorMessage);
+            throw new \Exception($errorMessage);
         }
 
+
         foreach ($row as $key => $value) {
+            if ($key === 'id' && $value === null) {
+                throw new \Exception('Invalid track ID found. Please check the file and try again.');
+                break;
+            }
             if (in_array($key, $validHeaders)) {
                 if ($key == 'distance') {
                     $value = str_replace(',', '.', $value);
@@ -66,13 +64,20 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 $ecTrackData[$key] = $value;
             }
         }
+        $ecTrackData['skip_geomixer_tech'] = true;
 
-        // TODO: Provare un file con una p più righe vuote perché spesso mettono le righe vuote.
-        // TODO: Nel caso di una riga vuota mostrare il messaggio di errore adeguato.
-        // TODO: Controllare se il find() veramente trova una traccia
-        $ecTrack = EcTrack::find($row['id']);
-        // TODO: Cambiare il valore del campo skip_geomixer_tech
-        // TODO: Controllare se l'ID dell utente della traccia trovata è uguale all'utente loggato.
-        $ecTrack->update($ecTrackData);
+        try {
+            $ecTrack = EcTrack::findOrFail($row['id']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('Track not found. Please check that the id field in your file match an existent track and try again. Id: ' . $row['id']);
+        }
+
+
+        if ($userTracks->contains($ecTrack)) {
+            $ecTrack->update($ecTrackData);
+        } else {
+            throw new \Exception('Track with id:' . $row['id'] . ' not found in your tracks. Please check that the id field in your file match an existent track and try again.');
+        }
     }
 }
