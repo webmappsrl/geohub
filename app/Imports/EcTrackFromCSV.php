@@ -64,7 +64,6 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 $ecTrackData[$key] = $value;
             }
         }
-        $ecTrackData['skip_geomixer_tech'] = true;
 
         try {
             $ecTrack = EcTrack::findOrFail($row['id']);
@@ -75,6 +74,7 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
 
 
         if ($userTracks->contains($ecTrack)) {
+            $ecTrack->skip_geomixer_tech = true;
             $ecTrack->update($ecTrackData);
         } else {
             throw new \Exception('Track with id:' . $row['id'] . ' not found in your tracks. Please check that the id field in your file match an existent track and try again.');
