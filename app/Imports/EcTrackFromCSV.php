@@ -31,9 +31,9 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
 
 
         $user = auth()->user();
-        $userTracks = $user->ecTracks()->get();
+        $user_id = $user->id;
         $ecTrackData = [];
-        $validHeaders = ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max'];
+        $validHeaders = ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max', 'difficulty'];
         $fileHeaders = array_keys($row);
         $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
@@ -46,7 +46,6 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
-
 
         foreach ($row as $key => $value) {
             if ($key === 'id' && $value === null) {
@@ -61,7 +60,9 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                         $value = str_replace('km', '', $value);
                     }
                 }
-                $ecTrackData[$key] = $value;
+                if (!empty($value)) {
+                    $ecTrackData[$key] = $value;
+                }
             }
         }
 
@@ -72,12 +73,11 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
             throw new \Exception('Track not found. Please check that the id field in your file match an existent track and try again. Id: ' . $row['id']);
         }
 
-
-        if ($userTracks->contains($ecTrack)) {
-            $ecTrack->skip_geomixer_tech = true;
+        if ($user_id == $ecTrack->user_id) {
+            $ecTrackData['skip_geomixer_tech'] = true;
             $ecTrack->update($ecTrackData);
         } else {
-            throw new \Exception('Track with id:' . $row['id'] . ' not found in your tracks. Please check that the id field in your file match an existent track and try again.');
+            throw new \Exception('Track with id:' . $row['id'] . ' not found in your tracks. Please check that the id field in your file matches an existent track and try again.');
         }
     }
 }
