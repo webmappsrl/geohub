@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "089aaf69d0165a9d59a0bf8f63a95e18",
+    "content-hash": "670a25f830cb377802bf61dee37d6326",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -10069,7 +10069,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -10105,7 +10105,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -10141,7 +10141,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10177,7 +10177,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10213,7 +10213,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10352,7 +10352,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-feature/cai_parma_osm",
+            "version": "dev-develop",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",

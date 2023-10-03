@@ -45,6 +45,8 @@ class EcTrack extends Model
         'duration_forward',
         'duration_backward',
         'skip_geomixer_tech',
+        'from',
+        'to',
     ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
@@ -1065,11 +1067,10 @@ class EcTrack extends Model
         return $result;
     }
 
-    public function hexToRgba($hexColor, $opacity = 1.0)
+    function hexToRgba($hexColor, $opacity = 1.0)
     {
-        if (empty($hexColor)) {
+        if (empty($hexColor))
             return '';
-        }
 
         $hexColor = ltrim($hexColor, '#');
 
