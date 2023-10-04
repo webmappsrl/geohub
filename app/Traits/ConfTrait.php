@@ -190,7 +190,7 @@ trait ConfTrait
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
                 } catch (\Exception  $e) {
-                    Log::warning("The bbox value " . $layer->id  . " are not correct. Error: " . $e->getMessage());
+                    Log::warning("The bbox value " . $layer->id . " are not correct. Error: " . $e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
@@ -205,6 +205,7 @@ trait ConfTrait
                 unset($item['created_at']);
                 unset($item['updated_at']);
                 unset($item['app_id']);
+                unset($item['generate_edges']);
 
 
                 // FEATURE IMAGE:
@@ -281,6 +282,11 @@ trait ConfTrait
                         }
                     }
                 }
+
+                if ($layer->generate_edges || $this->generate_layers_edges) {
+                    $item['edges'] = $layer->generateLayerEdges();
+                }
+
                 $layers[] = $item;
             }
 
@@ -425,7 +431,7 @@ trait ConfTrait
 
             foreach ($poi_types as $poi_type) {
                 $a = array(
-                    'identifier' => 'poi_type_'.$poi_type->identifier,
+                    'identifier' => 'poi_type_' . $poi_type->identifier,
                     'name' => json_decode($poi_type->name, true),
                     'id' => $poi_type->id,
                     'icon' => $poi_type->icon,
