@@ -85,7 +85,7 @@ class Layer extends Model
         return $this->belongsToMany(EcMedia::class);
     }
 
-    public function getTracks()
+    public function getTracks($collection = false)
     {
         $tracks = [];
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
@@ -94,9 +94,13 @@ class Layer extends Model
             if ($this->$taxonomy->count() > 0) {
                 foreach ($this->$taxonomy as $term) {
 
-                    $user_id = DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
+                    $user_id = $this->getLayerUserID();
                     $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
                     if ($ecTracks->count() > 0) {
+                        if ($collection) {
+                            return $ecTracks;
+                        }
+
                         foreach ($ecTracks as $track) {
                             array_push($tracks, $track->id);
                         }
@@ -105,6 +109,11 @@ class Layer extends Model
             }
         }
         return $tracks;
+    }
+
+    public function getLayerUserID()
+    {
+        return DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
     }
 
     public function computeBB($defaultBBOX)
@@ -162,5 +171,47 @@ class Layer extends Model
         }
 
         return $this->attributes['query_string'] = $query_string;
+    }
+
+    /**
+     * Determines next and previous stage of each track inside the layer
+     *
+     * @return JSON
+     */
+    public function generateLayerEdges()
+    {
+        $tracks = $this->getTracks(true);
+        $trackIds = $tracks->pluck('id')->toArray();
+
+        if (empty($tracks)) {
+            return null;
+        }
+
+        $edges = [];
+
+        foreach ($tracks as $track) {
+
+            $geometry = $track->geometry;
+
+            $start_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+            $end_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+
+            // Find the next tracks
+            $nextTrack = EcTrack::whereIn('id', $trackIds)
+            ->where('id', '<>', $track->id)
+            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$end_point}', 0.001)")
+            ->get();
+
+            // Find the previous tracks
+            $previousTrack = EcTrack::whereIn('id', $trackIds)
+            ->where('id', '<>', $track->id)
+            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$start_point}', 0.001)")
+            ->get();
+
+            $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
+            $edges[$track->id]['next'] = $nextTrack->pluck('id')->toArray();
+
+        }
+        return $edges;
     }
 }
