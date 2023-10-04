@@ -128,6 +128,7 @@ class Layer extends Resource
                     })->withMeta(['width' => 400])->onlyOnDetail(),
                 ],
                 'BEHAVIOUR' => [
+                    Boolean::make('Generate Edges', 'generate_edges'),
                     Boolean::make('No Details', 'noDetails'),
                     Boolean::make('No Interaction', 'noInteraction'),
                     Number::make('Zoom Min', 'minZoom'),
@@ -217,6 +218,7 @@ class Layer extends Resource
         ];
 
         $behaviourTab = [
+            Boolean::make('Generate Edges', 'generate_edges'),
             Boolean::make('No Details', 'noDetails'),
             Boolean::make('No Interaction', 'noInteraction'),
             Number::make('Zoom Min', 'minZoom'),

@@ -1017,6 +1017,7 @@ class App extends Resource
     protected function layers_tab(): array
     {
         return [
+            Boolean::make('Generate All Layers Edges', 'generate_layers_edges'),
             // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
             Text::make('Layers', function () {
                 if ($this->layers->count() > 0) {
