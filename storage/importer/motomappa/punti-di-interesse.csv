@@ -1,0 +1,547 @@
+id,last_modified,lon,lat,name,poi_type
+001,13/10/2023,8.579926,44.3835518,varazze dall'alto,poi
+002,13/10/2023,12.2686533244245,42.0920006579204,"Anguillara sabazia
+",poi
+003,13/10/2023,11.5124508,42.6455612,"Terme di Saturnia Cascate del Mulino
+",poi
+004,13/10/2023,10.2578647,44.0373308,"galleria del Cipollaio
+",poi
+005,13/10/2023,13.8251751,41.9559332,"valle del Sagittario
+",poi
+006,13/10/2023,11.5568398,43.7326037,Abbazia di Vallombrosa,poi
+007,13/10/2023,15.8172274,41.7578133,Parco nazionale del Gargano,poi
+008,13/10/2023,11.8169444,43.8102778,Eremo Di Camaldoli,poi
+009,13/10/2023,11.9321402,43.7073572,La Verna Santuario,poi
+010,13/10/2023,10.8159589,43.5872177,"Balconata di Toiano
+",poi
+011,13/10/2023,10.8146867,43.1440138,Soffoconi san Federigo,poi
+012,13/10/2023,11.3002218,43.0791331,"Terme di Petriolo
+",poi
+013,13/10/2023,10.7674940675497,44.0535098625727,Ponte sospeso S.Marcello P.se,poi
+014,13/10/2023,13.3706248,42.5252576,"Ponte sul Campotosto
+",poi
+015,13/10/2023,11.2475494667888,43.8424349652511,Panorama M.Morello,poi
+016,13/10/2023,11.3699012,43.9902376,Autodromo del Mugello,poi
+017,13/10/2023,11.1539251,43.1493211,Abbazia S.Galgano,poi
+018,13/10/2023,11.7736561,44.0468895,"vulcano Monte Busca
+",poi
+019,13/10/2023,13.1941706,42.8063611,"Piana di Castelluccio
+",poi
+020,13/10/2023,11.7168961465359,43.7748112401356,Pieve di Romena,poi
+021,13/10/2023,11.506290435791,44.2148210791302,Ponte degli Alidosi a Schiena D'Asino,poi
+022,13/10/2023,11.3851853460073,44.1977393396728,Sasso di s.Zanobi,poi
+023,13/10/2023,8.5825837,44.3786597,varazze dall'alto 2,poi
+024,13/10/2023,10.7862584665418,43.9891533527495,Macchia Antonini,poi
+025,13/10/2023,8.5814402,44.379849,beato jacopo,poi
+026,13/10/2023,10.5526829883456,43.9849955125182,Ponte del diavolo o della Maddalena,poi
+027,13/10/2023,10.6625818088651,44.0379353032916,bagno nella Lima,poi
+028,13/10/2023,12.7279905,43.6494165,"Gola del Furlo
+",poi
+029,13/10/2023,10.6665357202291,44.2868065112191,Piani di Mocogno,poi
+030,13/10/2023,10.6797034,44.1272744,Ponte della Sega,poi
+031,13/10/2023,11.938586756587,43.6952680824552,Fontana del Campari sp 54 verso Caprese Michelangelo,poi
+032,13/10/2023,11.5157338231802,43.000038667359,Abbazia di S Antimo,poi
+033,13/10/2023,11.6179715842009,43.0280602190528,Bagno Vignoni,poi
+034,13/10/2023,8.1911288,44.2985684,lago di osiglia punto sosta,poi
+035,13/10/2023,8.6708664,44.4666429,Pian del faiallo,poi
+036,13/10/2023,8.783941,44.5790697,Punto Panoramico,poi
+037,13/10/2023,8.4903927,44.4795499,Piazza di Sassello,poi
+038,13/10/2023,12.108533,42.6259398,"civita di Bagnoregio
+",poi
+039,13/10/2023,8.197653,44.2306719,Forte del Melogno,poi
+040,13/10/2023,12.8825395,42.5036581,Monumento a Lucio Battisti,poi
+041,13/10/2023,8.2016656,44.2907353,al Mazut,poi
+042,13/10/2023,8.1188857,44.1299604,Castelvecchio di Rocca Berbena,poi
+043,13/10/2023,12.9617794,43.4001396,Grotte di Frasassi,poi
+044,13/10/2023,14.102306,46.3631147,Bled,poi
+045,13/10/2023,16.0454911,40.5286268,Castelmezzano,poi
+046,13/10/2023,13.8858564,46.277977,Lago di Bohinj,poi
+047,13/10/2023,12.7328228,46.4494512,Lago di Sauris,poi
+048,13/10/2023,12.7148826,42.5511474,Cascata delle Marmore Belvedere Superiore,poi
+049,13/10/2023,12.5592842,46.1907178,Barcis,poi
+050,13/10/2023,12.2529049,46.5830979,Lago di Misurina,poi
+051,13/10/2023,11.0976825,46.9051019,Passo del Rombo,poi
+052,13/10/2023,13.6713652,46.473439,Laghi di Fusine in Valromana,poi
+053,13/10/2023,12.0845487,46.698953,Lago di Braies,poi
+054,13/10/2023,7.9837741,45.625145,Santuario Oropa,poi
+055,13/10/2023,14.3345523,37.3647239,Villa Romana del Casale,poi
+056,13/10/2023,12.5873511,38.0380892,Erice,poi
+057,13/10/2023,15.0651945,36.8924433,Noto,poi
+058,13/10/2023,14.7437072,36.9274298,Ragusa Ibla,poi
+059,13/10/2023,8.2048989,40.9689613,"La Pelosa
+",poi
+060,13/10/2023,6.6451224,44.4892621,tunnel du Parpaillon,poi
+061,13/10/2023,7.0113821,45.7479841,Passeggiata per Lago di Arpy,poi
+062,13/10/2023,6.6198045,45.6841332,Barrage de Roselend,poi
+063,13/10/2023,7.1495571,45.4925691,Strada militare,poi
+064,13/10/2023,6.4116438,45.0603396,tornantone da foto,poi
+065,13/10/2023,16.1940993,41.8277162,"vista sullArco di san Felice
+",poi
+066,13/10/2023,8.2723453,45.0941125,Riserva speciale del Sacro Monte di Crea,poi
+067,13/10/2023,13.470001,37.293436,Scala dei Turchi,poi
+068,13/10/2023,13.4715757,37.9305821,Terme arabe,poi
+069,13/10/2023,13.503175,37.627316,Teatro Andromeda,poi
+070,13/10/2023,15.103494,37.887879,Cuba di Santa Domenica,poi
+071,13/10/2023,15.0277871,37.6134149,Museo Vulcanologico dell'Etna,poi
+072,13/10/2023,16.174699,38.74123,Chiesetta di Piedigrotta,poi
+073,13/10/2023,10.7385488,43.4687867,Teatro del Silenzio | Presidente onorario Andrea Bocelli,poi
+074,13/10/2023,12.1923841,43.6979111,Cascata del Presalino,poi
+075,13/10/2023,12.894031,37.972882,Terme libere segestane,poi
+076,13/10/2023,13.107669,38.073253,Borgo Parrini - La Barcellona di Sicilia,poi
+077,13/10/2023,14.9689075,36.6932822,Punta Ciriga,poi
+078,13/10/2023,5.4995225,43.9201658,Colorado Provencal,poi
+079,13/10/2023,5.1870843,43.9290887,Abbye de Senque,poi
+080,13/10/2023,11.1310573,43.542138,"Semifonte: cupola di San Donnino
+",poi
+081,13/10/2023,12.7769432,43.6832842,Marmitte dei Giganti,poi
+082,13/10/2023,15.3649864,40.3896709,Gole del Sammaro (Ponte di Sacco),poi
+083,13/10/2023,19.4020334,40.5175628,Zvernec Monastry,poi
+084,13/10/2023,20.0188809,39.7436467,Traghetto a fune,poi
+085,13/10/2023,10.4136609,44.4214902,Pietra di Bismantova,poi
+086,13/10/2023,20.7454635,40.9152823,Monastero di Sveti Naum,poi
+087,13/10/2023,20.7412195,42.2091758,Kosovo - Moschea di Xhamia e Sinan Pashes,poi
+088,13/10/2023,8.455278,39.5417069,Dune di Piscinas,poi
+089,13/10/2023,8.5717022,39.5561932,Museo Mineralogico e Collezione Sanna Castoldi,poi
+090,13/10/2023,8.4019807,40.3651481,"Panorama della Alghero-Bosa
+",poi
+091,13/10/2023,12.7538879,43.8981927,TAVULLIA,poi
+092,13/10/2023,12.6024464,43.9653617,"CORIANO - Museo La Storia del SIC
+",poi
+093,13/10/2023,18.5167946,40.1083308,"PUNTA PALASCIA (o Palacìa) - il luogo più a EST d'Italia
+",poi
+094,13/10/2023,17.8410154,40.3205359,"CIRCUITO di NARDO'
+",poi
+095,13/10/2023,15.9548862,41.7084952,"Santuario di San Michele Arcangelo
+",poi
+096,13/10/2023,15.3791151,41.6872261,"Museo dell'Alto Tavoliere - San Severo
+",poi
+097,13/10/2023,14.6627625,36.7468413,"Spiaggia libera con vista moto - Lido di Spinasanta (RG)
+",poi
+098,13/10/2023,14.7385651,36.7208893,"Spiaggia attrezzata con vista moto - Sampieri (RG)
+",poi
+099,13/10/2023,14.7568019,36.712614,"La Mànnara 
+",poi
+100,13/10/2023,15.1158644,36.7389943,Marzamemi,poi
+101,13/10/2023,11.4323043823242,43.9486321606782,Casa di Giotto,poi
+102,13/10/2023,14.4931372,36.7880649,"La casa di Montalbano - Punta Secca (RG)
+",poi
+103,13/10/2023,14.7071281,36.7936536,SCICLI,poi
+104,13/10/2023,14.5642541,36.8815094,"Castello di Donnafugata
+",poi
+105,13/10/2023,13.1111107,37.6477137,Sambuca di Sicilia,poi
+106,13/10/2023,13.6001275,37.2898391,"Valle dei Templi - Agrigento
+",poi
+107,13/10/2023,15.0799028,36.6497836,"Il punto più a sud della Sicilia
+",poi
+108,13/10/2023,11.3172147,43.9175371,"Badia del Buonsollazzo - via della Tassaia
+",poi
+109,13/10/2023,14.7572715,36.8638945,Modica,poi
+110,13/10/2023,12.6030633,43.9663328,"MONUMENTO LA FIAMMA – Memorial Marco Simoncelli
+",poi
+111,13/10/2023,10.2726272,44.0577866,HENRAUX,poi
+112,13/10/2023,11.908881,43.3498016,Monumento Fabrizio Meoni,poi
+113,13/10/2023,16.2618428,39.2861902,"Museo del Fumetto - Cosenza
+",poi
+114,13/10/2023,14.4973372,42.2738488,"SS16 - La Costa dei Trabucchi
+",poi
+115,13/10/2023,10.2816409,44.1133179,"Lago di Vagli
+",poi
+116,13/10/2023,10.3111279,44.0661738,"Isola Santa
+",poi
+117,13/10/2023,11.4354327,43.3852455,"Il Leccione dell'Eroica
+",poi
+118,13/10/2023,13.2451185,38.1828744,Capaci,poi
+119,13/10/2023,11.2463694,43.5772537,"Badia a Passignano
+",poi
+120,13/10/2023,13.5596485,42.4995707,Prati di Tivo,poi
+121,13/10/2023,13.5591067,42.4430659,"Campo Imperatore
+",poi
+122,13/10/2023,11.2886582,43.8054433,"Panorama da Fiesole
+",poi
+123,13/10/2023,8.9234307,42.3994784,"Monte Cinto
+",poi
+124,13/10/2023,9.0310195,42.2290017,Restonica,poi
+125,13/10/2023,8.6538852,42.2454859,"Calanques de Piana
+",poi
+126,13/10/2023,9.401781,43.005826,Barcaggio,poi
+127,13/10/2023,9.3648778,42.974675,Moulin Mattei,poi
+128,13/10/2023,8.6959154,42.2696391,"Porto
+",poi
+129,13/10/2023,16.2525374,40.9148668,belvedere di Poggiorsini,poi
+130,13/10/2023,15.167333,41.376185,"Panchina Gigante di Biccari
+",poi
+131,13/10/2023,16.4419755,40.3767007,Craco città fantasma,poi
+132,13/10/2023,16.3997706,40.406966,"Calanchi lucani
+",poi
+133,13/10/2023,16.6176391,40.6640723,"Belvedere  Murgia Timone
+",poi
+134,13/10/2023,16.567853,40.889733,"Pulo di Altamura
+",poi
+135,13/10/2023,16.3055526,39.0190081,Cascate della Tiglia,poi
+136,13/10/2023,16.332395,38.824512,"Platano di Vrisi 
+",poi
+137,13/10/2023,16.422069,39.061553,Abbazia di Santa Maria di Corazzo,poi
+138,13/10/2023,11.3168004155159,43.5407729053065,gallo nero di Panzano,poi
+139,13/10/2023,11.2855064123869,43.4714198081526,gallo di Castellina,poi
+140,13/10/2023,15.886711,40.748861,"Palmenti di Pietragalla
+",poi
+141,13/10/2023,13.619211,41.648793,"Acropoli di Arpino
+",poi
+142,13/10/2023,12.247676,42.491769,"Parco dei Mostri
+",poi
+143,13/10/2023,10.8302112,45.5670463,Forte di Monte,poi
+144,13/10/2023,12.1436615583263,42.5629261865781,Borgo fantasma di Celleno,poi
+145,13/10/2023,11.673248,43.340216,Castello di Gargonza,poi
+146,13/10/2023,15.6008583,40.9336638,"Laghi  di Monticchio
+",poi
+147,13/10/2023,13.6888616,42.3288744,Rocca Calascio,poi
+148,13/10/2023,10.511662,43.448465,Lago di Santa Luce,poi
+149,13/10/2023,12.027338,45.940547,"Baita Mariech
+",poi
+150,13/10/2023,10.913635,44.480123,"Castelvetro di Modena, Via Bedine",poi
+151,13/10/2023,8.99326924891108,45.9678479308025,Sighignola - Balcone d'Italia,poi
+152,13/10/2023,14.13307,42.160797,Rifugio Bruno Pomilio - Blockhaus,poi
+153,13/10/2023,8.4437488,44.3734924,Valle di Ellera,poi
+154,13/10/2023,17.2181868,40.9962411,Lama Monachile,poi
+155,13/10/2023,12.861116,42.959099,"Borgo di Rasiglia
+",poi
+156,13/10/2023,11.7612675949931,43.9672193680655,giumella,poi
+157,13/10/2023,12.120449,42.31833,Convento di Sant'Angelo sulla SP80,poi
+158,13/10/2023,8.71789084521318,45.915154387508,CittÃ dei Pittori / Arcumeggia / Via Arcumeggia,poi
+159,13/10/2023,11.7235080001059,43.4172160106954,"ivitella in val di chiana
+",poi
+160,13/10/2023,8.1396392,44.3748839,La rotonda di Montezemolo,poi
+161,13/10/2023,8.1802111,44.359453,Dolmen,poi
+162,13/10/2023,8.3395902,44.2535045,Le rocche bianche,poi
+163,13/10/2023,14.278659,37.999742,Piramide 38° Parallelo - Fiumara d'Arte,poi
+164,13/10/2023,9.155801,45.910149,"orrido nesso
+",poi
+165,13/10/2023,13.1937424539462,41.8479430281189,"Altopiani di Arcinazzo
+",poi
+166,13/10/2023,15.7209371,39.987717,Statua del Cristo Redentore,poi
+167,13/10/2023,8.36536802351475,44.1801217486451,belvedere delle Manie,poi
+168,13/10/2023,10.1229217,44.1147304,"Rotonda di Campocecina
+",poi
+169,13/10/2023,12.154690653965,42.3285377692342,"Lago di Vico
+",poi
+170,13/10/2023,12.4211147595194,42.216545241359,"Calcata Vecchia
+",poi
+171,13/10/2023,13.530289525385,41.3897264872608,Campodimele,poi
+172,13/10/2023,12.5365917196412,42.1416065542967,Capena,poi
+173,13/10/2023,12.1524346363403,41.9938621238338,Ceri,poi
+174,13/10/2023,13.0194187417624,41.9579848636011,Rocca Canterano,poi
+175,13/10/2023,12.9807677092947,41.568414133603,Abbazia di Valvisciolo,poi
+176,13/10/2023,12.2296769900744,42.2387955714736,"Anfiteatro di Sutri
+",poi
+177,13/10/2023,12.627048,41.445912,Anzio,poi
+178,13/10/2023,13.031428229083,41.5507231425615,Bassiano,poi
+179,13/10/2023,12.9356493,41.9214806,Santuario della Mentorella,poi
+180,13/10/2023,14.292029,37.907602,Una Curva Gettata Alle Spalle Del Tempo,poi
+181,13/10/2023,14.308843,37.901086,Labirinto di Arianna,poi
+182,13/10/2023,14.336331,37.891361,"Il muro della vita
+",poi
+183,13/10/2023,14.300502,37.984514,"Energia mediterranea
+",poi
+184,13/10/2023,16.182244,40.987589,"Cava di Bauxite
+",poi
+185,13/10/2023,14.353207,37.765829,"Sperlinga castello
+",poi
+186,13/10/2023,11.5594951,43.0639288,"Il ciuffo di cipressi della Val d'Orcia
+",poi
+187,13/10/2023,11.2922222,44.0622222,Bunker Linea Gotica,poi
+188,13/10/2023,9.7899714,46.4552519,Lago di Silvaplana,poi
+189,13/10/2023,22.868314,37.889814,Acrocorinto / Antica Corinto,poi
+190,13/10/2023,21.900837,37.429065,Tempio di Apollo Epicuro / Basse / EO Andritsenas Epikouriou Apollona,poi
+191,13/10/2023,11.5455619596359,45.5358749770901,Santuario della Madonna di Monte Berico,poi
+192,13/10/2023,11.5402209190902,45.4703928712245,Lago di Fimon,poi
+193,13/10/2023,8.622007,38.944974,Dune Is Arenas Biancas (Sabbie Biache) nella spiaggia di Portopino,poi
+194,13/10/2023,8.598665,38.962592,1^ Spiagga di Portopino,poi
+195,13/10/2023,8.572249,38.991,Spiaggia su Portu de su Trigu (Porto del Grano),poi
+196,13/10/2023,8.576096,39.020068,Spiaggia Sa Salina,poi
+197,13/10/2023,12.346794,46.040473,Monte Pizzoc,poi
+198,13/10/2023,7.7940223,44.2591025,Baita Malanotte,poi
+199,13/10/2023,14.33231,38.014619,La finestra sul mare (monumento per un poeta morto),poi
+200,13/10/2023,14.27116,37.9988,La materia poteva non esserci,poi
+201,13/10/2023,11.0363136,43.6237417,"Chiesa di S. Ilario a Lugagnana
+",poi
+202,13/10/2023,11.6594734,46.0311297,Osservatorio astronomico,poi
+203,13/10/2023,11.6892741,45.9996198,Forte Leone (Cima Campo),poi
+204,13/10/2023,11.1361508005047,43.8724497079871,Croce di Poggio Castiglioni,poi
+205,13/10/2023,9.7070754,40.0277253,Pedra Longa,poi
+206,13/10/2023,9.1469688,41.242793,"Belvedere Cala Spinosa
+",poi
+207,13/10/2023,14.751728,37.1645613,La Cunziria,poi
+208,13/10/2023,15.9925707,41.0980372,Diga Di Locone,poi
+209,13/10/2023,16.2463492,40.8434501,Diga Serra del Corvo,poi
+210,13/10/2023,11.414162,45.930632,Forte Verena,poi
+211,13/10/2023,11.663466,45.945447,Forte Lisser,poi
+212,13/10/2023,10.3930278,42.8082268,Elba sp 32 Volterraio,poi
+213,13/10/2023,14.1550969,37.8595062,Salto dei Ventimiglia,poi
+214,13/10/2023,14.3047947,37.5203528,Autodromo di Pergusa,poi
+215,13/10/2023,14.4288769,37.2792408,"Murale dedicato a Giovanni Spampinato
+",poi
+216,13/10/2023,14.3163252,41.1006282,Belvedere di San Leucio,poi
+217,13/10/2023,12.8739467,38.0312407,"Balvedere su Castellammare del Golfo
+",poi
+218,13/10/2023,15.919085,39.608735,"Cascata Il Vuglio, Sentiero dei Sogni",poi
+219,13/10/2023,15.652969,40.998651,"Castello di melfi
+",poi
+220,13/10/2023,15.52836,40.815011,Cascate di San Felè,poi
+221,13/10/2023,16.538704,39.376682,"Panorama cecita
+",poi
+222,13/10/2023,15.929342988616,39.9125718413992,Grotta del Romito,poi
+223,13/10/2023,9.391236,45.787365,Città fantasma di Consonno,poi
+224,13/10/2023,15.429403,40.362135,cappella monte vivo,poi
+225,13/10/2023,9.801403,45.883371,Curva del Fungaiolo,poi
+226,13/10/2023,15.106226,40.400409,terrazza del cilento,poi
+227,13/10/2023,14.498554,40.657999,vetta del faito,poi
+228,13/10/2023,13.204435,42.37634,Croce Monte Calvo,poi
+229,13/10/2023,16.3243032132536,40.8537859719243,Big Bench 126 - Dolcecanto,poi
+230,13/10/2023,12.8519560902875,42.5020813050429,sorgente di santa susanna,poi
+231,13/10/2023,13.5959767621898,42.1768779624246,Cratere meteoritico,poi
+232,13/10/2023,13.822984,42.161039,Sorgenti del Pescara,poi
+233,13/10/2023,13.4131930094588,41.8509209979285,cascata dello schioppo,poi
+234,13/10/2023,13.961456,42.183081,Ponte di Salle,poi
+235,13/10/2023,11.230527,45.915272,Forte Cherle,poi
+236,13/10/2023,11.200284,45.892147,Forte Sommo Alto,poi
+237,13/10/2023,11.227912,45.870397,Base Tuono,poi
+238,13/10/2023,7.4906868,45.8993889,Diga di Place Moulin,poi
+239,13/10/2023,9.0632107,45.9459278,Panchina Gigante Centro Valle Intelvi Nr. 166 - Big Bench Community Project,poi
+240,13/10/2023,7.940249,44.6495078,Panchina Gigante Rossa - La panca della serenità - NO BIG BENCH,poi
+241,13/10/2023,7.9698988,44.5847695,Panchina Gigante Viola | Monforte d'Alba Nr. 12,poi
+242,13/10/2023,10.2576159,44.120972,Campocatino,poi
+243,13/10/2023,11.633182,42.430135,Castello della Badia VT,poi
+244,13/10/2023,12.349121,43.905015,San Leo,poi
+245,13/10/2023,15.8227219539283,40.5559844617441,Panorama a sud-est verso Abriola (PZ),poi
+246,13/10/2023,15.8045726765375,40.5202560660571,Santuario di Monteforte,poi
+247,13/10/2023,15.6708843560857,40.6655240304023,Piano della Nevena,poi
+248,13/10/2023,15.6971578547398,40.5866199183656,Chiesa della Madonna del Monte - Tito (Pz),poi
+249,13/10/2023,15.6368788186641,40.5719811770039,Torre di Satriano (Pz),poi
+250,13/10/2023,15.7250711194222,40.7620600283387,Ex Osservatorio di Monte Carmine - Avigliano (Pz),poi
+251,13/10/2023,22.853458,38.028767,Heraion di Perachora,poi
+252,13/10/2023,18.8375341,42.3998986,Mausoleum of Petar II Petrovic-Njegos,poi
+253,13/10/2023,14.0889916,42.1707052,Eremo di Santo Spirito a Majella,poi
+254,13/10/2023,10.7248124,43.5440748,I Giganti di Peccioli,poi
+255,13/10/2023,11.7776491,43.0236357,"la Foce 
+",poi
+256,13/10/2023,10.125521,44.321939,Ex base nato monte Giogo,poi
+257,13/10/2023,12.5083086,42.2365963,"Bunker Soratte
+",poi
+258,13/10/2023,10.4814586,44.4356846,Big Bench Panchina Gigante Rossa - Monte Fosola Nr.58,poi
+259,13/10/2023,13.5834459484597,46.2473742303492,Sacrario Italiano di Caporetto,poi
+260,13/10/2023,13.5891350587371,46.362950987062,Fortezza di Kluze,poi
+261,13/10/2023,13.5885424838658,46.4208556465377,Sbarramento Predil,poi
+262,13/10/2023,13.5735364947298,46.4196045332248,Batteria Sella Predil,poi
+263,13/10/2023,13.5705287644275,46.4423121085794,Miniere e Museo di Cave del Predil,poi
+264,13/10/2023,11.4976732,43.3880905,Statua di Luca Cava,poi
+265,13/10/2023,11.7213999,43.023579,Quercia delle Checche,poi
+266,13/10/2023,11.722855,43.061901,Punto panoramico Cipressi di Monticchiello,poi
+267,13/10/2023,11.997146,42.632581,Pietre Lanciate,poi
+268,13/10/2023,11.612092,43.065432,Viale dei cipressi de Il Gladiatore,poi
+269,13/10/2023,11.667738,43.0727987,I Campi Elisi de Il Gladiatore,poi
+270,13/10/2023,13.256636,37.976273,Memoriale Portella della Ginestra,poi
+271,13/10/2023,10.650834,45.040742,Ponte di barche sull'Oglio,poi
+272,13/10/2023,10.604769,45.426452,Ossario di San Martino della Battaglia,poi
+273,13/10/2023,10.515839,44.900997,Don Camillo e Peppone,poi
+274,13/10/2023,12.330209,46.268504,Memoriale della diga del Vajont.,poi
+275,13/10/2023,13.109937,46.503491,Cascata del Salino,poi
+276,13/10/2023,14.692941,41.780743,"Murales ""Il Molise non Esiste - Resiste""",poi
+277,13/10/2023,12.17201,42.471739,Statua del Moai,poi
+278,13/10/2023,11.7260455920043,45.9481019151282,Covolo di Butistone (Park),poi
+279,13/10/2023,13.3790983,37.6816512,Piazza Palazzo Adriano,poi
+280,13/10/2023,11.1919684,45.7515233,"Ossario del Pasubio
+",poi
+281,13/10/2023,12.6148166449386,41.7679346760648,fontanella con acqua frizzante,poi
+282,13/10/2023,13.689395,41.701088,lungolago di Posta,poi
+283,13/10/2023,13.1499823,41.9817301,Lo chiamavano Trinità,poi
+284,13/10/2023,11.2986989,44.6337231,Oratorio di Savignano,poi
+285,13/10/2023,13.141458,42.339756,"lago di rascino (strada bianca)
+",poi
+286,13/10/2023,15.0624898,40.2614579,Mulino ad acqua,poi
+287,13/10/2023,9.622176,44.378144,Porciorasco,poi
+288,13/10/2023,10.635491,45.372796,Castello di Castellaro Lagusello,poi
+289,13/10/2023,10.723991,45.353862,Borghetto Mantovano,poi
+290,13/10/2023,10.7601741,43.2719131,"Sulla Luna
+",poi
+291,13/10/2023,12.147595,42.35979,belvedere di poggio trincea,poi
+292,13/10/2023,16.0117524334235,40.2251347234866,Santuario Madonna della Rupe,poi
+293,13/10/2023,11.4848716,43.6599755,Le Balze,poi
+294,13/10/2023,8.36066419715309,45.6224499081408,TORRE DELLE CASTELLE E PANCHINA GIGANTE #35,poi
+295,13/10/2023,13.3971732,41.7802991,"Certosa di Trisulti
+",poi
+296,13/10/2023,15.8798869235417,41.6665255334025,"Belvedere golfo di Manfredonia 
+",poi
+297,13/10/2023,11.14429,44.005635,"Rocca di Cerbaia
+",poi
+298,13/10/2023,11.4283143,43.9408482,Ponte di Cimabue,poi
+299,13/10/2023,8.376811,45.871633,"Terrazza di Quarna
+",poi
+300,13/10/2023,8.018276,45.411254,Palafitte di azeglio,poi
+301,13/10/2023,13.8742592,42.2443393,Falesia La Grotta Tricolore o Grotta del Pesco,poi
+302,13/10/2023,13.829966,42.305451,"Panorama su Cona
+",poi
+303,13/10/2023,13.2354450789957,43.280026126155,Castello di Pitino,poi
+304,13/10/2023,15.9511081,40.9153302,Lago di Frontefusio,poi
+305,13/10/2023,11.799605,43.504554,Ponte Buriano (o della Maddalena).,poi
+306,13/10/2023,9.3117236,44.4093782,"Casone Dello ""Stecca""
+",poi
+307,13/10/2023,12.647232,43.196138,Monumento al Sic58,poi
+308,13/10/2023,10.5489876,46.2988834,"Case di Viso
+",poi
+309,13/10/2023,10.608058,45.72626,Antica dogana austro-ungarica di Lignago (o di Valvestino),poi
+310,13/10/2023,10.375599,45.853798,Stazione NATO Troposcatter di Dosso dei Galli,poi
+311,13/10/2023,10.8346394041793,44.0024008383186,Fontana Campari de Le Piastre,poi
+312,13/10/2023,9.09504829999586,45.8197174771231,Fontana Campari di Brunate,poi
+313,13/10/2023,11.7100647,45.9655072,Forte Tagliata della Scala,poi
+314,13/10/2023,11.2902871,45.9762532,Strada del Menador Punto Panoramico,poi
+315,13/10/2023,10.0191836,44.4150995,Lagdei,poi
+316,13/10/2023,11.4754161,43.7016283,"Sequoie Gemelle nel parco di Sammezzano
+",poi
+317,13/10/2023,8.4135121,46.4087713,Cascata del Toce,poi
+318,13/10/2023,15.7589981663632,37.9552227130707,Rocca di Pentedattilo,poi
+319,13/10/2023,15.6913087750679,38.15234823183,Monastero della Visitazione,poi
+320,13/10/2023,15.7073506401676,38.0274628149746,Castello di San Niceto,poi
+321,13/10/2023,6.7280689,43.8510024,Notre Dame De La Clue,poi
+322,13/10/2023,5.3464464,45.0599738,Pont En Royans,poi
+323,13/10/2023,15.3367925940881,37.9137320162298,Terrazza sullo Jonio,poi
+324,13/10/2023,15.3349643745065,37.9141090287289,Borgo di Forza D'Agro,poi
+325,13/10/2023,15.3397719315722,37.9557441976191,Borgo di Savoca - Il Padrino,poi
+326,13/10/2023,5.3975239,45.0723628,Grotte de Chroranche,poi
+327,13/10/2023,5.3438891,45.0602951,Pont en Royans e la cascade monumentale,poi
+328,13/10/2023,10.8738555,43.3754681,"Ex Padiglione Tanzi
+",poi
+329,13/10/2023,7.718481,44.054554,Galleria di Colle Ardente,poi
+330,13/10/2023,7.6241862,44.1660038,Tornante della Boaria,poi
+331,13/10/2023,10.9912399,44.247227,Torresotto di Pietracolora,poi
+332,13/10/2023,11.0360813,44.2603605,Grotte di Labante,poi
+333,13/10/2023,10.941305,44.3789966,"Punto di osservazione Sassi di Roccamalatina
+",poi
+334,13/10/2023,9.066075,45.8729181,Monte Bisbino,poi
+335,13/10/2023,11.2323177,43.7649362,"Panorama particolare di Firenze
+",poi
+336,13/10/2023,12.3324876,42.433915,Necropoli di Morticelli,poi
+337,13/10/2023,12.337566,42.4339796,Ruderi della chiesa di San Giovanni,poi
+338,13/10/2023,11.7975857,42.2379228,Antica strada degli Archi Romani,poi
+339,13/10/2023,11.8166068,42.2555613,Acquedotto delle Arcatelle,poi
+340,13/10/2023,12.0014553,42.22509,Necropoli Etrusca di San Giovenale,poi
+341,13/10/2023,12.077492,42.1336011,Antica Monterano,poi
+342,13/10/2023,12.3695821,42.1569786,Autodromo Nazionale di Vallelunga “Piero Taruffi”,poi
+343,13/10/2023,11.387368,45.833331,"Forte Corbin
+",poi
+344,13/10/2023,11.00294,45.447755,Punto Panoramico Castel San Pietro,poi
+345,13/10/2023,12.6705133,38.0928419,"Grotta Mangiapane a Custonaci
+",poi
+346,13/10/2023,11.4807773,45.8972289,Forte Interrotto,poi
+347,13/10/2023,9.0858841,44.7198778,Vendersi,poi
+348,13/10/2023,11.3642364,43.9893499,"punto osservazione Mugello
+",poi
+349,13/10/2023,10.8245604,44.5148534,"Riserva naturale Salse di Nirano
+",poi
+350,13/10/2023,10.4561962,44.5757966,Castello di Canossa (RE),poi
+351,13/10/2023,10.5751455,44.5586395,Salse di Regnano,poi
+352,13/10/2023,10.4684159,44.6186774,Calanchi View Point,poi
+353,13/10/2023,10.3982146,44.5113818,Murales di Vedriano,poi
+354,13/10/2023,10.9592785,44.3693586,Dito di Samone,poi
+355,13/10/2023,10.8644915,44.532646,Stabilimento Ferrari S.p.a.,poi
+356,13/10/2023,10.4896968,44.9983116,Sabbioneta,poi
+357,13/10/2023,11.7189572,45.270348,Arquà Petrarca,poi
+358,13/10/2023,11.7106734,45.3430662,Villa dei Vescovi,poi
+359,13/10/2023,11.7346021,45.3637892,Abbazia di Praglia,poi
+360,13/10/2023,12.7360058,46.4481509,Diga della Maina / Lumte zea,poi
+361,13/10/2023,10.9480004,44.3871784,Sassi di Rocca Malatina,poi
+362,13/10/2023,10.7853138,44.507162,Castello di Montegibbio,poi
+363,13/10/2023,14.9312578,41.11978,Borgo di Apice,poi
+364,13/10/2023,15.0273603,41.1010986,Ruderi di Melito Irpino,poi
+365,13/10/2023,15.5349721,41.0010603,Castello Monteverde,poi
+366,13/10/2023,16.151517,40.8546361,Castello di Monteserico,poi
+367,13/10/2023,16.4128946,40.8201121,Ponte Acquedotto sul torrente Gravina,poi
+368,13/10/2023,16.5078398,40.9674506,Ex Base Jupiter Quasano,poi
+369,13/10/2023,16.1635454,40.9471865,Ponte 21 Archi,poi
+370,13/10/2023,15.8284124,40.9691698,L'Incompiuta,poi
+371,13/10/2023,16.1816576,40.9623321,Base Jupiter,poi
+372,13/10/2023,15.3311981,40.8696083,Parco Storico e Archeologico di Conza,poi
+373,13/10/2023,15.5029689,40.9020992,Ponte di ferro di San Tommaso del Piano,poi
+374,13/10/2023,15.1148161,40.9431821,Piazza in memoria di Sergio Leone,poi
+375,13/10/2023,14.5122197,37.2387037,Scalinata di Santa Maria del Monte,poi
+376,13/10/2023,11.767171,43.722856,"Castello di Poppi
+",poi
+377,13/10/2023,10.4718929,44.5643906,La Casa del Tibet,poi
+378,13/10/2023,10.4540575,44.5691068,Castello di Canossa view point,poi
+379,13/10/2023,8.373567,45.788052,"Santuario della Madonna del Sasso
+",poi
+380,13/10/2023,11.7063145,44.3416621,Monumento a Ayrton Senna,poi
+381,13/10/2023,2.3937884,48.8592666,Tomba di Jim Morrison,poi
+382,13/10/2023,9.3317405,46.1235795,Abbazia Cistercense di Santa Maria di Piona,poi
+383,13/10/2023,9.5350628,45.5981055,Villaggio operaio di Crespi d'Adda Sito UNESCO,poi
+384,13/10/2023,9.4836196,45.6540794,Centrale Edison Carlo Esterle,poi
+385,13/10/2023,9.48548,45.6648224,Centrale Edison Angelo Bertini,poi
+386,13/10/2023,9.4510344,45.6890682,"Centrale Edison ""Guido Semenza""",poi
+387,13/10/2023,9.4524479,45.6824909,Ponte San Michele,poi
+388,13/10/2023,9.4562323,45.7079314,Traghetto di Leonardo a Imbersago,poi
+389,13/10/2023,10.6096652,43.2694865,Vecchio Mulino di Bibbona,poi
+390,13/10/2023,8.528817,45.983266,"Memoriale degli Alpini
+",poi
+391,13/10/2023,11.4525485,45.4690731,"Duomo di Brendola ""Incompiuta""",poi
+392,13/10/2023,11.6582268,45.2306206,Castello Carrarese,poi
+393,13/10/2023,11.7281266,45.2920753,Padiglione di Diana,poi
+394,13/10/2023,11.6731165,45.3073632,Buso Della Casara,poi
+395,13/10/2023,9.7298077,45.2051452,"Sponde del ""Lago Gerundo"" #1",poi
+396,13/10/2023,9.77693576996265,45.184585990876,"Sulle sponde del ""Lago Gerundo"" #2",poi
+397,13/10/2023,9.76567946162548,45.2947194941941,"Sulle sponde del ""Lago Gerundo"" #3",poi
+398,13/10/2023,9.87152794858585,45.3977250178326,"Sulle sponde del ""Lago Gerundo"" #4",poi
+399,13/10/2023,9.87721284613922,45.2419690519381,"Sulle sponde del ""Lago Gerundo"" #5",poi
+400,13/10/2023,9.86962270438102,45.1958186959367,"Sulle sponde del ""Lago Gerundo"" #6",poi
+401,13/10/2023,11.0422079,43.1078188,"Roste di Boccheggiano
+",poi
+402,13/10/2023,11.1636886,42.3934478,Panorama sull'Isola Del Giglio,poi
+403,13/10/2023,11.2048638,42.4358137,Antico Mulino Spagnolo,poi
+404,13/10/2023,11.1551682,42.4087586,Croce Monumentale,poi
+405,13/10/2023,11.3015842,42.5878792,Abbazia di San Bruzio,poi
+406,13/10/2023,11.6717592,44.2627938,"Curva Capirossi - Borgo Rivola
+",poi
+407,13/10/2023,11.096344,45.631523,"Valle delle Sfingi
+",poi
+408,13/10/2023,10.9707029,45.6071739,"Ponte di Veja
+",poi
+409,13/10/2023,11.0088067,45.6998453,Trincee di Malga Pidocchio,poi
+410,13/10/2023,12.3444499,44.8359452,Ponte di Barche del Po di Goro,poi
+411,13/10/2023,12.3747535,44.8394944,Ponte di Barche del Po di Gnocca o Donzella,poi
+412,13/10/2023,13.499269,41.511939,Grotte di Falvaterra e Rio Obaco,poi
+413,13/10/2023,12.4169771,45.0028908,Ponte di Barche sul Po di Maistra,poi
+414,13/10/2023,11.892569,44.8183009,Tresigallo | La Città Metafisica,poi
+415,13/10/2023,9.3915165,44.7672033,Ponte Gobbo o Ponte Vecchio,poi
+416,13/10/2023,9.3930439,44.9141298,Rocca d'Olgisio,poi
+417,13/10/2023,9.3289214,44.7976669,San Colombano Patrono e Protettore dei Motociclisti,poi
+418,13/10/2023,9.2595208,44.6798469,Radar Aeronautica Monte Lesima,poi
+419,13/10/2023,9.2893243,44.6649554,Zerba,poi
+420,13/10/2023,9.2843038,44.6522662,Tartago,poi
+421,13/10/2023,9.5855779,44.9643696,Monumento alla Prima Battaglia del Trebbia - 218 B.C.,poi
+422,13/10/2023,13.9772507,41.2552541,Valogno borgo d'arte,poi
+423,13/10/2023,10.027821,44.687255,DALLARA Academy,poi
+424,13/10/2023,10.1356861,44.7038235,Fondazione Museo Ettore Guatelli,poi
+425,13/10/2023,10.6485048,43.8681216,Quercia delle Streghe,poi
+426,13/10/2023,12.7260879,43.4209759,Gola del Corno del Catria,poi
+427,13/10/2023,11.6165149,43.2475742,"Cava di travertino
+",poi
+428,13/10/2023,10.4079151,44.0548134,Eremo di Calomini,poi
+429,13/10/2023,18.837092,42.400678,Terrazza mausoleo Njegusi,poi
+430,13/10/2023,19.058782,42.36299,Panorama su lago Scutari,poi
+431,13/10/2023,19.030321,42.674918,Monastero di Ostrog,poi
+432,13/10/2023,19.29535,43.150444,Ponte sul fiume Tara,poi
+433,13/10/2023,11.3521667,44.9824585,Museo della Seconda Guerra Mondiale del fiume Po,poi
+434,13/10/2023,11.422689,44.9504389,Rocca Possente di Stellata,poi
+435,13/10/2023,9.457203,46.481966,"Lago di Lei
+",poi
+436,13/10/2023,9.307623,46.435437,Cascata di Val Febbraro,poi
+437,13/10/2023,14.584851,41.586116,Belvedere di Oratino,poi
+438,13/10/2023,10.2722029,43.9716362,"Sacrario Sant'Anna di Stazzema
+",poi
+439,13/10/2023,6.7512892,44.5152948,Museo della moto,poi
+440,13/10/2023,15.9549627615309,39.531340796576,"santuario di Monteserra
+",poi
+441,13/10/2023,9.3176112,44.7849782,Vetta Monte Penice,poi
+442,13/10/2023,11.095489,44.132642,Bosco di Poranceto,poi
+443,13/10/2023,11.3542518,43.6956088,"Parco del Palazzaccio
+",poi
+444,13/10/2023,10.3439502,44.2274084,"Lago e diga di Vicaglia
+",poi
