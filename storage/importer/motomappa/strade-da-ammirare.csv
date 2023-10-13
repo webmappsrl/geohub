@@ -1,0 +1,352 @@
+id,last_modified,lon,lat,name,poi_type
+001,13/10/2023,7.1430584,44.3752501,strada colle dei morti - colle fauniera,majesty-of-streets
+002,13/10/2023,7.5166383,44.0871437,D91,majesty-of-streets
+003,13/10/2023,11.0884577,44.1243565,"Brasimone-Suviana
+",majesty-of-streets
+004,13/10/2023,10.1974848,42.761823,"sp 37 Elba
+",majesty-of-streets
+005,13/10/2023,8.7820527,44.5656336,SP 165 della Capanne di Marcarolo,majesty-of-streets
+006,13/10/2023,14.7210872,36.7217653,"sp 63-64-65 costiera di Ragusa
+",majesty-of-streets
+007,13/10/2023,7.1582225,44.5541978,Strada del Colle Sampeyre,majesty-of-streets
+008,13/10/2023,8.4072259,44.3193589,Via Cimamontata,majesty-of-streets
+009,13/10/2023,8.4448587,44.3185406,Via Alla Strà,majesty-of-streets
+010,13/10/2023,6.8277439,44.0373761,D2202 DEL GORGE DU DALUIS,majesty-of-streets
+011,13/10/2023,15.3349744,40.0127626,"sr 562 marina di Camerota
+",majesty-of-streets
+012,13/10/2023,11.6567073762417,42.894716014668,sp vetta Amiata,majesty-of-streets
+013,13/10/2023,9.2439162,44.4897437,Sp56 di Barbagelata,majesty-of-streets
+014,13/10/2023,8.2074377,44.2572344,"SP16 Melogno Osiglia
+",majesty-of-streets
+015,13/10/2023,8.5351784,44.422598,SP 57 MONTE BEIGUA,majesty-of-streets
+016,13/10/2023,12.2189918,42.8524398,"ss 317 Colonnetta-Marsciano
+",majesty-of-streets
+017,13/10/2023,11.7695191,43.9320259,"via Fiumicello
+",majesty-of-streets
+018,13/10/2023,8.601521,46.0751182,"sp 75 Cannobio-Malesco
+",majesty-of-streets
+019,13/10/2023,8.2352468,44.2444466,SP23,majesty-of-streets
+020,13/10/2023,11.7863848,43.8105164,"Lonnano-Camaldoli
+",majesty-of-streets
+021,13/10/2023,8.4779499,44.543768,strada cimaferle,majesty-of-streets
+022,13/10/2023,8.7269494,44.5352954,SP 69 per Capanne di Marcarolo,majesty-of-streets
+023,13/10/2023,14.8445893,37.0440189,"sp 54 palazzolo-Giarratana
+",majesty-of-streets
+024,13/10/2023,8.1693289,44.2390355,"SP490 Melogno Calizzano
+",majesty-of-streets
+025,13/10/2023,8.3031549,44.3055205,SP5,majesty-of-streets
+026,13/10/2023,15.0445201,37.6964706,"sp 92 Etnea
+",majesty-of-streets
+027,13/10/2023,8.148597,44.13347,strada di camporosso,majesty-of-streets
+028,13/10/2023,8.3908584,44.2018245,SP45 le Magne,majesty-of-streets
+029,13/10/2023,8.0899458,44.2223682,SP47,majesty-of-streets
+030,13/10/2023,7.8479483,44.0900908,"SP1 ""giro di Mendatica"" wp1",majesty-of-streets
+031,13/10/2023,11.2449068,44.1790068,madonna dei fornelli-val serena,majesty-of-streets
+032,13/10/2023,7.7841428,44.0814333,"SP74 ""giro di Mendatica "" wp2",majesty-of-streets
+033,13/10/2023,7.8262857,44.0678056,"SP3 ""giro di Mendatica"" wp3",majesty-of-streets
+034,13/10/2023,11.4710221,46.1383348,"sp 31 Cavalese-Telve
+",majesty-of-streets
+035,13/10/2023,11.2868509,45.9753736,"Strada del Menador - Kaiserjagerstrasse
+",majesty-of-streets
+036,13/10/2023,12.9320105,42.6743824,"sp 471 di Gavelli
+",majesty-of-streets
+037,13/10/2023,12.6079109,46.4784303,Casera Razzo - Sauris SP619 - SP73,majesty-of-streets
+038,13/10/2023,8.3642843,44.4216384,Strada Montenotte-Porri,majesty-of-streets
+039,13/10/2023,8.3406104,44.4634697,strada delle tufaie,majesty-of-streets
+040,13/10/2023,10.7657508,45.7741502,SP38 Strada della Forra,majesty-of-streets
+041,13/10/2023,13.8169016,46.9006673,Nockalmstraße,majesty-of-streets
+042,13/10/2023,13.0058847,42.4756813,"sp 10 Leonessa-Terminillo
+",majesty-of-streets
+043,13/10/2023,12.2301988,46.639936,SS51 - SP49 Dobbiaco - Misurina,majesty-of-streets
+044,13/10/2023,11.7713353,46.5356943,SS242 Ortisei - Canazei,majesty-of-streets
+045,13/10/2023,9.2519703,46.0435987,SS340dir Lago di Como Ovest,majesty-of-streets
+046,13/10/2023,8.0151993,45.6609839,SP115-SP232 Santuario Oropa - Bielmonte - Azoglio,majesty-of-streets
+047,13/10/2023,14.9882877,37.8554705,"sp etna settentrionale o Quota Mille
+",majesty-of-streets
+048,13/10/2023,12.9243475,37.7790378,"santa Ninfa-Gibellina vecchia
+",majesty-of-streets
+049,13/10/2023,9.4167211,40.2648306,"Supramonte
+",majesty-of-streets
+050,13/10/2023,7.1212668,44.3908177,Strada del vallonetto,majesty-of-streets
+051,13/10/2023,8.7613495,44.4785146,Via Giutte,majesty-of-streets
+052,13/10/2023,7.1056093,44.4191438,Strada per Marmora,majesty-of-streets
+053,13/10/2023,7.0906471,44.5128002,Strada del vallone,majesty-of-streets
+054,13/10/2023,7.1288183,44.5131013,SP335,majesty-of-streets
+055,13/10/2023,7.1186594,44.541059,Strada del colle Sampeyre,majesty-of-streets
+056,13/10/2023,9.2826351,45.9357234,"ss583 Lariana
+",majesty-of-streets
+057,13/10/2023,8.8429474,46.1076764,"Vira-Maccagno
+",majesty-of-streets
+058,13/10/2023,12.5569479167461,43.5391843983802,Pianello-Nerone,majesty-of-streets
+059,13/10/2023,6.5748798,44.7255587,D38,majesty-of-streets
+060,13/10/2023,6.7573225,44.8764645,D89T,majesty-of-streets
+061,13/10/2023,6.5776658,45.6866429,Routes des Colombier,majesty-of-streets
+062,13/10/2023,7.1970215,45.4504963,SP50 colle del Nivolet,majesty-of-streets
+063,13/10/2023,6.6551724,44.9046792,N94,majesty-of-streets
+064,13/10/2023,6.307043,45.0496305,D33,majesty-of-streets
+065,13/10/2023,6.1700052,45.042015,D1091,majesty-of-streets
+066,13/10/2023,6.0335805,45.0898512,Route de la Confession,majesty-of-streets
+067,13/10/2023,9.7080054,44.1473396,Sp370 poi SP38,majesty-of-streets
+068,13/10/2023,14.6478623,40.6443791,"Costiera amalfitana
+",majesty-of-streets
+069,13/10/2023,16.1948237,41.8025698,"sp54 Pugnochiuso
+",majesty-of-streets
+070,13/10/2023,14.3841008,41.4097291,"lungolago del Matese
+",majesty-of-streets
+071,13/10/2023,14.1936019,41.5105301,"Gallo-Monteroduni
+",majesty-of-streets
+072,13/10/2023,6.5768718,45.5072785,D88 Bois del allemandes,majesty-of-streets
+073,13/10/2023,6.7028232,45.5777689,D86,majesty-of-streets
+074,13/10/2023,7.9690956,45.5513514,SP 500,majesty-of-streets
+075,13/10/2023,8.0860983,44.7140427,SP3,majesty-of-streets
+076,13/10/2023,8.1060973,44.0793319,SP19 ,majesty-of-streets
+077,13/10/2023,8.0674735,44.0819215,SP 35,majesty-of-streets
+078,13/10/2023,8.0463591,44.0700823,SP20-SP78,majesty-of-streets
+079,13/10/2023,7.9946891,44.084511,SP14,majesty-of-streets
+080,13/10/2023,7.8413955,44.005542,SP17-18,majesty-of-streets
+081,13/10/2023,7.716426,43.9657709,SP 65,majesty-of-streets
+082,13/10/2023,16.5898219,40.4622251,"sp 21 Pomarico-Pisticci Scalo
+",majesty-of-streets
+083,13/10/2023,16.5521272,40.3945574,"Pisticci
+",majesty-of-streets
+084,13/10/2023,8.5063175,44.9966971,SP71,majesty-of-streets
+085,13/10/2023,8.6063961,44.9940872,Strada Astigliano,majesty-of-streets
+086,13/10/2023,8.3322698,45.0479647,SP37 poi SP30,majesty-of-streets
+087,13/10/2023,8.3403089,45.0865113,SP35,majesty-of-streets
+088,13/10/2023,8.4205367,45.000428,SP72,majesty-of-streets
+089,13/10/2023,16.1415057,39.9575621,"Ruggio-Visitone
+",majesty-of-streets
+090,13/10/2023,15.4738349,38.1748718,Strada di Dinnammare,majesty-of-streets
+091,13/10/2023,13.6824921,45.7341618,SS14 - Costiera di Trieste,majesty-of-streets
+092,13/10/2023,14.2428229,45.2058884,D66 Abbazia - Zagore,majesty-of-streets
+093,13/10/2023,14.2781006,38.0093072,SS 113 da S.Stefano di Camastra e Cefalù,majesty-of-streets
+094,13/10/2023,13.1228666,37.9782317,SP 2 da Partinico a San Cipirello,majesty-of-streets
+095,13/10/2023,13.3185761,37.971381,SP5 da Piana degli Albanesi in direzione di Ficuzza,majesty-of-streets
+096,13/10/2023,7.7399217,43.8811772,SP56,majesty-of-streets
+097,13/10/2023,11.5694473,43.7445558,"Via del Paradisino
+",majesty-of-streets
+098,13/10/2023,11.6462035,43.6211985,"La trappola
+",majesty-of-streets
+099,13/10/2023,10.5792107,43.2287613,"strada di Bolgheri
+",majesty-of-streets
+100,13/10/2023,20.0092989,41.9685025,Albania SH30,majesty-of-streets
+101,13/10/2023,11.0095944,44.0096906,"Acquerino-Badia Taona
+",majesty-of-streets
+102,13/10/2023,11.1057561635971,44.0091038451361,via Canvella,majesty-of-streets
+103,13/10/2023,11.1767197027802,44.0090008780734,Montecuccoli,majesty-of-streets
+104,13/10/2023,11.0586789,46.0406474,"SP85 Monte Bondone
+",majesty-of-streets
+105,13/10/2023,13.6272716,45.9833316,"Neblo - Nova Gorica
+",majesty-of-streets
+106,13/10/2023,13.5869703,45.9820625,"San Florian del Collio
+",majesty-of-streets
+107,13/10/2023,10.785592,45.7041606,"via Prada
+",majesty-of-streets
+108,13/10/2023,7.3394177,45.0934385,"SP 188 val di Susa - Sacra di San Michele
+",majesty-of-streets
+109,13/10/2023,11.2946652,43.5788859,"Montefioralle
+",majesty-of-streets
+110,13/10/2023,11.354769,43.5501317,"Lamole
+",majesty-of-streets
+111,13/10/2023,14.3923873,41.6295491,"Sessano del Molise-Frosolone
+",majesty-of-streets
+112,13/10/2023,13.6133427,42.1714502,"Secinaro-Rocca di mezzo
+",majesty-of-streets
+113,13/10/2023,13.7057846,42.4023051,"Campo Imperatore                       SS17 Bis Fonte Cerreto-Ristoro Mucciante
+",majesty-of-streets
+114,13/10/2023,9.2249184,41.6429561,"Porto Vecchio-Zonza
+",majesty-of-streets
+115,13/10/2023,9.1087037,41.7573956,Zonza-Aullena,majesty-of-streets
+116,13/10/2023,9.0986726,41.8466609,"Aullena-Zicavo
+",majesty-of-streets
+117,13/10/2023,9.1929427,42.0077135,Zicavo-Ghisoni,majesty-of-streets
+118,13/10/2023,9.190493,42.1320893,Ghisoni-Vivario,majesty-of-streets
+119,13/10/2023,9.089835,42.2637597,Corte-Restonica,majesty-of-streets
+120,13/10/2023,9.0544943,42.4559302,"Verso Monte Cinto
+",majesty-of-streets
+121,13/10/2023,8.9290956,42.2892576,Corte-Piana,majesty-of-streets
+122,13/10/2023,8.636274,42.3351309,Galeria-Piana,majesty-of-streets
+123,13/10/2023,9.4857166,42.8326497,"Bastia-Barcaggio
+",majesty-of-streets
+124,13/10/2023,9.3265277,42.8124902,"Barcaggio-San fiorenzo
+",majesty-of-streets
+125,13/10/2023,9.2104057,42.6646625,"San Fiorenzo-Isola rossa
+",majesty-of-streets
+126,13/10/2023,10.3596279,42.8139139,"Nisporto
+",majesty-of-streets
+127,13/10/2023,9.15051866322756,41.1541225700063,Castelsardo-s.teresa di Gallura,majesty-of-streets
+128,13/10/2023,11.1859837174416,44.1086930879883,Cottede monte Tavianella,majesty-of-streets
+129,13/10/2023,10.9694049,46.0653481,"Margone-Ranzo
+",majesty-of-streets
+130,13/10/2023,9.0910769,44.4049249,"La panoramica SP67 del monte Fasce
+",majesty-of-streets
+131,13/10/2023,10.94134,45.983167,Marocche di Dro,majesty-of-streets
+132,13/10/2023,11.292928,44.46645,"Colli Bolognesi, San Luca",majesty-of-streets
+133,13/10/2023,10.9121680632234,43.5883955379333,Santo Stefano,majesty-of-streets
+134,13/10/2023,11.808272,46.134546,"Strada della val Noana
+",majesty-of-streets
+135,13/10/2023,8.3381815,45.733672,"Via Cremosina
+",majesty-of-streets
+136,13/10/2023,7.1421228,45.4763222,Punto panoramico colle del Nivolet,majesty-of-streets
+137,13/10/2023,24.88898,37.869155,Transcostiera Andros / Andros / Epar.Od. Androu-Mpatsiou,majesty-of-streets
+138,13/10/2023,11.3678046,44.1568751,"Poggio Tignoso
+",majesty-of-streets
+139,13/10/2023,22.044104,38.115597,Strada Kalavryta-Egio / EO Egiou Kalavriton,majesty-of-streets
+140,13/10/2023,22.837973,37.278976,Costiera Nauplia-Leonidio / Epar.Od. Astrous - Leonidiou,majesty-of-streets
+141,13/10/2023,22.283896,36.828395,Costiera Areopoli-Kalamata / Epar.Od. Kalamatas - Areopolis,majesty-of-streets
+142,13/10/2023,20.542628,38.563421,Capo Leucade,majesty-of-streets
+143,13/10/2023,20.564824,38.637837,Costiera occidentale di Lefkada / Epar.Od. Komiliou - Akrotiriou Lefkatas,majesty-of-streets
+144,13/10/2023,8.793849,38.896665,Punto Panoramico SP 71,majesty-of-streets
+145,13/10/2023,7.8226198,44.078443,strada provinciale 3,majesty-of-streets
+146,13/10/2023,10.4300022,43.450269,"strada provinciale del Vaiolo
+",majesty-of-streets
+147,13/10/2023,11.4974495,45.7980982,Giro delle malghe di Caltrano,majesty-of-streets
+148,13/10/2023,20.6542518,38.4061558,Costiera Itaca / Epar.Od. Kioniou - Pera Pigadiou,majesty-of-streets
+149,13/10/2023,10.7532633,44.1179458,Cutigliano-Doganaccia,majesty-of-streets
+150,13/10/2023,10.7131297141314,46.8641063262171,Kaunertaler GletscherstraÃŸe,majesty-of-streets
+151,13/10/2023,9.69080010499521,45.8090344044586,Orrido di Bracca,majesty-of-streets
+152,13/10/2023,9.5985777397683,45.8865336647904,Orrido della Val Taleggio,majesty-of-streets
+153,13/10/2023,10.944659,46.924306,Otztaler Gletscherstrasse,majesty-of-streets
+154,13/10/2023,14.6414774,36.8378967,"SP81 del Pizzillo
+",majesty-of-streets
+155,13/10/2023,16.297584,39.487676,SS 660,majesty-of-streets
+156,13/10/2023,16.547383,39.385307,SS 177,majesty-of-streets
+157,13/10/2023,7.64680487723119,45.439064416627,Pian del Lupo,majesty-of-streets
+158,13/10/2023,11.8185626,43.8012037,Camaldoli-Eremo,majesty-of-streets
+159,13/10/2023,11.954412,43.4566593,"Via di Peneto
+",majesty-of-streets
+160,13/10/2023,10.3288061,44.0722365,"Via Monti-Mare
+",majesty-of-streets
+161,13/10/2023,10.1349722,44.1011047,"cave Michelangelo
+",majesty-of-streets
+162,13/10/2023,11.9061327,43.4079584,"Comunale Monte Lignano
+",majesty-of-streets
+163,13/10/2023,22.372706,36.529857,Capo Tigani,majesty-of-streets
+164,13/10/2023,22.523193,36.618521,Epar.Od. Chosiariou-Gerolimena,majesty-of-streets
+165,13/10/2023,22.190849,38.331758,Costiera Antirrio-Itea,majesty-of-streets
+166,13/10/2023,22.521202,37.546748,Provinciale Argo-Tripoli,majesty-of-streets
+167,13/10/2023,18.7834926,42.3994368,Kotor serpentine,majesty-of-streets
+168,13/10/2023,13.467992,45.719114,Via Grado- Fossalon ( Go ),majesty-of-streets
+169,13/10/2023,14.0786172,42.1817725,"sp 22 roccamorice-Passo Lanciano
+",majesty-of-streets
+170,13/10/2023,17.3862842747947,40.8908133965396,Strada panoramica di Egnazia,majesty-of-streets
+171,13/10/2023,11.2843,44.17655,Via picervara,majesty-of-streets
+172,13/10/2023,13.5387054,46.2027464,Panoramica monte Matajur,majesty-of-streets
+173,13/10/2023,13.3932623,46.1813556,Panoramica Malga Porzus,majesty-of-streets
+174,13/10/2023,11.0245097,43.6937666,"Botinaccio
+",majesty-of-streets
+175,13/10/2023,11.69367,44.3142,Salita della neretta,majesty-of-streets
+176,13/10/2023,13.738535,42.459606,sp37 da castelli a rigopiano,majesty-of-streets
+177,13/10/2023,9.153285,46.005379,Bocchetta di Lenno,majesty-of-streets
+178,13/10/2023,9.438884,44.445672,Strada panoramica Belvedere,majesty-of-streets
+179,13/10/2023,9.44207715663714,44.3239313037822,Passo Di Sciolli,majesty-of-streets
+180,13/10/2023,9.34601187273744,44.4421391816473,Belpiano,majesty-of-streets
+181,13/10/2023,9.26269901737558,44.693968715496,Strada Dei Piani Di Lesima,majesty-of-streets
+182,13/10/2023,10.384557362776,44.0200773152807,San Pellegrinetto,majesty-of-streets
+183,13/10/2023,8.24297395761834,45.646278825528,Oratorio di San Sebastiano,majesty-of-streets
+184,13/10/2023,8.35500901396127,45.7742851046533,Valpiana-Boleto,majesty-of-streets
+185,13/10/2023,8.22697897777314,45.7541679148929,Colle della Colma,majesty-of-streets
+186,13/10/2023,7.1661342196392,45.6886170627838,Les Combes,majesty-of-streets
+187,13/10/2023,7.94861880374018,45.5705100750343,Strada del tracciolino,majesty-of-streets
+188,13/10/2023,6.3376913,45.3177294,Lacets de montvenier,majesty-of-streets
+189,13/10/2023,12.291448,46.607956,Tre Cime Di Lavaredo,majesty-of-streets
+190,13/10/2023,13.722475,42.284446,"Valle magica
+",majesty-of-streets
+191,13/10/2023,14.3590157,42.0143486,"Lungolago Bomba
+",majesty-of-streets
+192,13/10/2023,15.8197970977978,40.4065177474538,"Piano dell' Imperatore
+",majesty-of-streets
+193,13/10/2023,6.996202,45.202084,Moncenisio-Novalesa,majesty-of-streets
+194,13/10/2023,12.260366,43.658418,Borgo Pace,majesty-of-streets
+195,13/10/2023,10.6285063,43.9286392,"Villa Basilica-Pizzorne
+",majesty-of-streets
+196,13/10/2023,10.5820382,43.9230154,Matraia-Pizzorne,majesty-of-streets
+197,13/10/2023,9.20065,45.13,Strada dell'Argine,majesty-of-streets
+198,13/10/2023,10.612628,45.722354,Lago e Diga di Valvestino,majesty-of-streets
+199,13/10/2023,12.043425,44.978265,Parco Amici del passo nel comune di Papozze,majesty-of-streets
+200,13/10/2023,9.434499,45.883116,Sp63 di Morterone,majesty-of-streets
+201,13/10/2023,13.8109461,41.9840595,"Castrovalva
+",majesty-of-streets
+202,13/10/2023,13.9663381,41.5093104,Forcella Di Cervaro,majesty-of-streets
+203,13/10/2023,13.6428364712066,46.4449350291763,Mangart,majesty-of-streets
+204,13/10/2023,13.66002,42.375432,"Campo Imperatore- Santo Stefano di Sessanio
+",majesty-of-streets
+205,13/10/2023,10.3700252,44.0419129,"Via la Cavana (Vergemoli-Grotta del vento)
+",majesty-of-streets
+206,13/10/2023,10.388114,44.0466866,"diga di Trombacco
+",majesty-of-streets
+207,13/10/2023,10.4179353,43.9964722,Gragliana,majesty-of-streets
+208,13/10/2023,9.6766415,44.169621,Bardellone,majesty-of-streets
+209,13/10/2023,10.5333663,44.0872893,Coreglia-Tiglio,majesty-of-streets
+210,13/10/2023,10.2415563,44.1330595,Gorfigliano-Gramolazzo,majesty-of-streets
+211,13/10/2023,10.2937115,44.1159739,"lago di Vagli
+",majesty-of-streets
+212,13/10/2023,11.0160402,47.2123473,Kuhtai,majesty-of-streets
+213,13/10/2023,8.569483,46.54709,Strada della tremola,majesty-of-streets
+214,13/10/2023,12.1282696,43.7893626,"loc Albereta (poggio Ancisa-Fagiola vecchia)
+",majesty-of-streets
+215,13/10/2023,6.2556634,44.2334903,Clue de Barles,majesty-of-streets
+216,13/10/2023,5.3335498,44.9881405,La combe laval,majesty-of-streets
+217,13/10/2023,5.5201706,45.0747793,Gorges La Bourne,majesty-of-streets
+218,13/10/2023,8.276371,46.548445,Panoramastrasse Oberaar,majesty-of-streets
+219,13/10/2023,10.8878008,45.8004387,"SP 3 del Creer
+",majesty-of-streets
+220,13/10/2023,10.9920082,45.6868452,Fittanze-Pidocchio,majesty-of-streets
+221,13/10/2023,10.442231,43.870192,Le Nubache,majesty-of-streets
+222,13/10/2023,15.3456807512235,37.9138382519665,SS114 Sant'Alessio to Letojanni,majesty-of-streets
+223,13/10/2023,15.3424107141031,37.9145461331481,SP16 - Verso il Borgo di Forza D'Agrò,majesty-of-streets
+224,13/10/2023,11.626765,44.190627,Via Cerro,majesty-of-streets
+225,13/10/2023,5.4260968,45.1650927,Gorges du Nan,majesty-of-streets
+226,13/10/2023,11.0618397,44.2669882,"Vergato-Castel d'Aiano
+",majesty-of-streets
+227,13/10/2023,11.6398707,42.6565128,Sovana,majesty-of-streets
+228,13/10/2023,9.44771,46.662927,Viamala - Thusis - Statale 13 Grand Tour of Switzerlan,majesty-of-streets
+229,13/10/2023,13.1188864,37.8427788,"SP133 - Ponte Saraceno di Calatrasi
+",majesty-of-streets
+230,13/10/2023,8.9795339,45.9313677,Salita da Melano ad Arogno,majesty-of-streets
+231,13/10/2023,25.227961,37.082667,"Doussa- Narpissa
+",majesty-of-streets
+232,13/10/2023,25.379824,36.364851,AKROTIRI LIGHTHOUSE,majesty-of-streets
+233,13/10/2023,11.268694,44.092459,"Via Fiascone ""Trophy""",majesty-of-streets
+234,13/10/2023,11.0485323,44.1016057,Lentula-Bargi,majesty-of-streets
+235,13/10/2023,9.976652,44.040634,"SP29, Montemarcello",majesty-of-streets
+236,13/10/2023,15.60098,40.9281195,Sp 167 dei Laghi di Monticchio,majesty-of-streets
+237,13/10/2023,16.0196166666667,40.7966833333333,Sp ex Ss169 di Genzano,majesty-of-streets
+238,13/10/2023,10.5298491,44.4481598,Sp76 del Castello di Carpineti,majesty-of-streets
+239,13/10/2023,10.5087934,44.5868759,Via Canossa e Via Matildica,majesty-of-streets
+240,13/10/2023,9.6391625,45.7073983,Via del Monastero di Astino,majesty-of-streets
+241,13/10/2023,8.416107,45.090464,"strada della Mandoletta
+",majesty-of-streets
+242,13/10/2023,8.352661,45.069747,Sala - ottiglio,majesty-of-streets
+243,13/10/2023,11.675606,45.3042791,Via Forestana,majesty-of-streets
+244,13/10/2023,11.1546164,42.4157812,Via Monte Panorama,majesty-of-streets
+245,13/10/2023,9.968694,45.7582805,"san fermo- Fonteno
+",majesty-of-streets
+246,13/10/2023,9.4043878,44.5698885,"Vicosoprano
+",majesty-of-streets
+247,13/10/2023,11.0698682,45.5358885,"Pissarotta
+",majesty-of-streets
+248,13/10/2023,10.7012358,43.9875024,"Svizzera Pesciatina
+",majesty-of-streets
+249,13/10/2023,12.3018438,45.1012244,"Acqua a destra, acqua a sinistra",majesty-of-streets
+250,13/10/2023,12.1460096,44.5500988,L'arrivo del Reno,majesty-of-streets
+251,13/10/2023,12.0990102,44.6196493,Argine Agosta,majesty-of-streets
+252,13/10/2023,16.5462504,40.3691119,Strada dei calanchi,majesty-of-streets
+253,13/10/2023,9.2573374,44.727567,Cima Colletta,majesty-of-streets
+254,13/10/2023,9.2858648,44.6509493,Strada di Tartago,majesty-of-streets
+255,13/10/2023,8.6482874,44.5830106,Strada panoramica Ciazze,majesty-of-streets
+256,13/10/2023,9.02637540097392,44.799403321341,strada comunale cioccale,majesty-of-streets
+257,13/10/2023,8.5785212,44.4726777,"Piampaludo-san Pietro
+",majesty-of-streets
+258,13/10/2023,8.157431,45.669836,"Oasi Zegna
+",majesty-of-streets
+259,13/10/2023,10.1045691123909,45.9482054227387,"via Mala
+",majesty-of-streets
+260,13/10/2023,11.038941,43.707008,Pulica,majesty-of-streets
+261,13/10/2023,11.271822,43.535092,"La Piazza- Pietracupa
+",majesty-of-streets
+262,13/10/2023,19.03037,42.673333,Strada per il monastero di Ostrog,majesty-of-streets
+263,13/10/2023,18.99843,43.10883,Durmitor,majesty-of-streets
+264,13/10/2023,15.6780569874373,38.2449442102809,SS18 - Panorama sul mare,majesty-of-streets
+265,13/10/2023,10.938454,44.4603956,Rio Faellano,majesty-of-streets
+266,13/10/2023,10.6021354,44.0832847,Botri,majesty-of-streets
