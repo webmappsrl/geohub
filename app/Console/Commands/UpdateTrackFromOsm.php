@@ -54,44 +54,52 @@ class UpdateTrackFromOsm extends Command
 
         $this->info('Updating tracks for user ' . $user->name . ' (' . $user->email . ')' . '...');
 
-        //loop over all the tracks and check if the osmid is not null  
+        //loop over all the tracks and check if the osmid is not null
         foreach ($tracks as $track) {
             if ($track->osmid != null) {
                 $this->info('Updating track ' . $track->name . ' (' . $track->osmid . ')' . '...');
                 try {
                     //get the geojson data from OSM
-                    $data = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
+                    $geojson_content = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
                 } catch (Exception $e) {
                     $this->info('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
                 }
-                //update the $track name to the $data name coming from OSM
-                $names = json_decode($track->name, true);
-                if (key_exists('name',$data['properties']) && $data['properties']['name']) {
-                    $names = [];
-                    $names['it'] = str_replace('"', '', $data['properties']['name']);
-                }
-                $track->name = $names;
+                //update the $track name to the $geojson_content name coming from OSM
+                $name_array = array();
 
-                //check if ascent, descent, distance duration_forward and duration_backward are not null in the geojson data and if so, update the $track
-                $track->ascent = (key_exists('ascent',$data['properties']) && $data['properties']['ascent'] ) ? $data['properties']['ascent'] : $track->ascent;
-                $track->descent = (key_exists('descent',$data['properties']) && $data['properties']['descent'] ) ? $data['properties']['descent'] : $track->descent;
-                $track->distance = (key_exists('distance',$data['properties']) && $data['properties']['distance'] ) ?str_replace(',','.',$data['properties']['distance']) : $track->distance;
+                if (array_key_exists('ref', $geojson_content['properties']) && !empty($geojson_content['properties']['ref'])) {
+                    array_push($name_array, $geojson_content['properties']['ref']);
+                }
+                if (array_key_exists('name', $geojson_content['properties']) && !empty($geojson_content['properties']['name'])) {
+                    array_push($name_array, $geojson_content['properties']['name']);
+                }
+                $trackname = !empty($name_array) ? implode(' - ', $name_array) : null;
+                $track->name = str_replace('"', '', $trackname);
+
+                //check if ascent, descent, distance duration_forward and duration_backward are not null in the geojson geojson_content and if so, update the $track
+                $track->cai_scale = (key_exists('cai_scale', $geojson_content['properties']) && $geojson_content['properties']['cai_scale']) ? $geojson_content['properties']['cai_scale'] : $track->cai_scale;
+                $track->from = (key_exists('from', $geojson_content['properties']) && $geojson_content['properties']['from']) ? $geojson_content['properties']['from'] : $track->from;
+                $track->to = (key_exists('to', $geojson_content['properties']) && $geojson_content['properties']['to']) ? $geojson_content['properties']['to'] : $track->to;
+                $track->ascent = (key_exists('ascent', $geojson_content['properties']) && $geojson_content['properties']['ascent']) ? $geojson_content['properties']['ascent'] : $track->ascent;
+                $track->descent = (key_exists('descent', $geojson_content['properties']) && $geojson_content['properties']['descent']) ? $geojson_content['properties']['descent'] : $track->descent;
+                $track->distance = (key_exists('distance', $geojson_content['properties']) && $geojson_content['properties']['distance']) ? str_replace(',', '.', $geojson_content['properties']['distance']) : $track->distance;
                 //duration forward must be converted to minutes
-                if (key_exists('duration:forward',$data['properties']) && $data['properties']['duration:forward'] != null) {
-                    $duration_forward = str_replace('.',':',$data['properties']['duration:forward']);
-                    $duration_forward = str_replace(',',':',$duration_forward);
-                    $duration_forward = str_replace(';',':',$duration_forward);
+                if (key_exists('duration:forward', $geojson_content['properties']) && $geojson_content['properties']['duration:forward'] != null) {
+                    $duration_forward = str_replace('.', ':', $geojson_content['properties']['duration:forward']);
+                    $duration_forward = str_replace(',', ':', $duration_forward);
+                    $duration_forward = str_replace(';', ':', $duration_forward);
                     $duration_forward = explode(':', $duration_forward);
                     $track->duration_forward = ($duration_forward[0] * 60) + $duration_forward[1];
                 }
                 //same for duration_backward
-                if (key_exists('duration:backward',$data['properties']) && $data['properties']['duration:backward'] != null) {
-                    $duration_backward = str_replace('.',':',$data['properties']['duration:backward']);
-                    $duration_backward = str_replace(',',':',$duration_backward);
-                    $duration_backward = str_replace(';',':',$duration_backward);
+                if (key_exists('duration:backward', $geojson_content['properties']) && $geojson_content['properties']['duration:backward'] != null) {
+                    $duration_backward = str_replace('.', ':', $geojson_content['properties']['duration:backward']);
+                    $duration_backward = str_replace(',', ':', $duration_backward);
+                    $duration_backward = str_replace(';', ':', $duration_backward);
                     $duration_backward = explode(':', $duration_backward);
                     $track->duration_backward = ($duration_backward[0] * 60) + $duration_backward[1];
                 }
+                $track->skip_geomixer_tech = true;
                 $track->save();
                 $this->info('Track ' . $track->name . ' (' . $track->osmid . ')' . ' updated!');
             } else {

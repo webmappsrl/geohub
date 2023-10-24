@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Layer extends Model
 {
-    use HasFactory, HasTranslationsFixed;
+    use HasFactory;
+    use HasTranslationsFixed;
     // protected $fillable = ['rank'];
 
     protected static function booted()
@@ -25,7 +26,7 @@ class Layer extends Model
         });
     }
 
-    public array $translatable = ['title', 'subtitle', 'description'];
+    public array $translatable = ['title', 'subtitle', 'description','track_type'];
 
     /**
      * The accessors to append to the model's array form.
@@ -84,7 +85,7 @@ class Layer extends Model
         return $this->belongsToMany(EcMedia::class);
     }
 
-    public function getTracks()
+    public function getTracks($collection = false)
     {
         $tracks = [];
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
@@ -93,9 +94,13 @@ class Layer extends Model
             if ($this->$taxonomy->count() > 0) {
                 foreach ($this->$taxonomy as $term) {
 
-                    $user_id = DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
+                    $user_id = $this->getLayerUserID();
                     $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
                     if ($ecTracks->count() > 0) {
+                        if ($collection) {
+                            return $ecTracks;
+                        }
+
                         foreach ($ecTracks as $track) {
                             array_push($tracks, $track->id);
                         }
@@ -104,6 +109,11 @@ class Layer extends Model
             }
         }
         return $tracks;
+    }
+
+    public function getLayerUserID()
+    {
+        return DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
     }
 
     public function computeBB($defaultBBOX)
@@ -164,24 +174,44 @@ class Layer extends Model
     }
 
     /**
-     * Returns a list of taxonomy IDs associated with the layer.
+     * Determines next and previous stage of each track inside the layer
      *
-     * @return array
+     * @return JSON
      */
-    public function getLayerTaxonomyIDs()
+    public function generateLayerEdges()
     {
-        $ids = [];
+        $tracks = $this->getTracks(true);
+        $trackIds = $tracks->pluck('id')->toArray();
 
-        if ($this->taxonomyThemes->count() > 0) {
-            $ids['themes'] = $this->taxonomyThemes->pluck('id')->toArray();
-        }
-        if ($this->taxonomyWheres->count() > 0) {
-            $ids['wheres'] = $this->taxonomyWheres->pluck('id')->toArray();
-        }
-        if ($this->taxonomyActivities->count() > 0) {
-            $ids['activities'] = $this->taxonomyActivities->pluck('id')->toArray();
+        if (empty($tracks)) {
+            return null;
         }
 
-        return $ids;
+        $edges = [];
+
+        foreach ($tracks as $track) {
+
+            $geometry = $track->geometry;
+
+            $start_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+            $end_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+
+            // Find the next tracks
+            $nextTrack = EcTrack::whereIn('id', $trackIds)
+            ->where('id', '<>', $track->id)
+            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$end_point}', 0.001)")
+            ->get();
+
+            // Find the previous tracks
+            $previousTrack = EcTrack::whereIn('id', $trackIds)
+            ->where('id', '<>', $track->id)
+            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$start_point}', 0.001)")
+            ->get();
+
+            $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
+            $edges[$track->id]['next'] = $nextTrack->pluck('id')->toArray();
+
+        }
+        return $edges;
     }
 }

@@ -39,6 +39,7 @@
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "~1.0",
+        "maatwebsite/excel": "^3.1",
         "maatwebsite/laravel-nova-excel": "^1.2",
         "ncus/inline-index": "^0.0.2",
         "ndamiens/gisconverter": "^1.0",
@@ -67,6 +68,7 @@
         "ynacorp/nova-swatches": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

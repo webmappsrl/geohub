@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmulateUserController;
 use App\Http\Controllers\ImportController;
+use App\Models\EcPoi;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -80,16 +81,30 @@ Route::get('/w/{type}/{id}', function ($type, $id) {
 });
 
 Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoint_slug, $source_id) {
-    $osf_id = collect(DB::select("SELECT id FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->pluck('id')->toArray();
+    $osf = collect(DB::select("SELECT * FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->toArray();
 
-    $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
+    if (empty($osf)) {
+        abort(404);
+    }
 
-    $track = EcTrack::find($ectrack_id[0]);
-    if ($track == null) {
+    $osf_id = $osf[0]->id;
+    $osf_type = $osf[0]->type;
+
+    if ($osf_type == 'track') {
+        $resource_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id'"))->pluck('id')->toArray();
+        $resource = EcTrack::find($resource_id[0]);
+    }
+
+    if ($osf_type == 'poi') {
+        $resource_id = collect(DB::select("select id from ec_pois where out_source_feature_id='$osf_id'"))->pluck('id')->toArray();
+        $resource = EcPoi::find($resource_id[0]);
+    }
+
+    if ($resource == null) {
         abort(404);
     }
     return view('widget', [
-        'track' => $track,
-        'type' => $type
+        'resource' => $resource,
+        'type' => $osf_type . '.' . $type,
     ]);
 });

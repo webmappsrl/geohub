@@ -13,7 +13,9 @@
     if (request('app_id')) {
         $app = App::find(request('app_id'));
         $appName = $app->name;
-        $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
+        if (isset($app->splash)) {
+            $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
+        }
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
         $qrCode = $app->qr_code;
     }
@@ -35,7 +37,10 @@
 
 <body>
     <div class="print-layer">
-        <button id="print-button" class="print-button loading" disabled><div>Generating PDF </div><div class="dot-typing"></div></button>
+        <button id="print-button" class="print-button loading" disabled>
+            <div>Generating PDF </div>
+            <div class="dot-typing"></div>
+        </button>
     </div>
     <div class="map-header">
         <div class="names">
@@ -138,8 +143,8 @@
                             </div>
 
                             @if ($track->featureImage)
-                                <div class="track-feature-image">
-                                    <img src="{{ $track->featureImage->url }}" alt="">
+                                <div class="track-feature-image"
+                                    style="background-image: url('{{ $track->featureImage->url }}');">
                                 </div>
                             @endif
                             @if ($track->description)
@@ -166,19 +171,20 @@
                                         <hr class="poi-horizontal-rule">
                                     </div>
                                     {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
-                                    <div class="poi-feature-image">
-                                        @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
-                                            @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
-                                                @if ($key == '150x150')
-                                                    <img class="poi-image" src="{{ $value }}" alt="">
-                                                @endif
-                                            @endforeach
-                                            {{-- if not show app icon as image --}}
-                                        @else
-                                            <img class="app-logo"src="{{ $appIcon }}" alt="">
-                                        @endif
 
-                                    </div>
+                                    @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
+                                        @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                            @if ($key == '150x150')
+                                                <div class="poi-feature-image"
+                                                    style="background-image:url('{{ $value }}')">
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        {{-- if not show app icon as image --}}
+                                    @else
+                                        <div class="poi-feature-image app-logo"
+                                            style="background-image: url('{{ $appIcon }}');"></div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

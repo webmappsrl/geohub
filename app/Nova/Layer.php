@@ -110,10 +110,12 @@ class Layer extends Resource
                 'MAIN' => [
                     BelongsTo::make('App'),
                     Text::make('Name')->required(),
-                    Text::make('Title'),
-                    Text::make('Subtitle'),
-                    Textarea::make('Description')->alwaysShow(),
-
+                    NovaTabTranslatable::make([
+                        Text::make('Title'),
+                        Text::make('Subtitle'),
+                        Textarea::make('Description')->alwaysShow(),
+                        Text::make('Track Type', 'track_type'),
+                    ])
                 ],
                 'MEDIA' => [
                     ExternalImage::make(__('Feature Image'), function () {
@@ -126,6 +128,7 @@ class Layer extends Resource
                     })->withMeta(['width' => 400])->onlyOnDetail(),
                 ],
                 'BEHAVIOUR' => [
+                    Boolean::make('Generate Edges', 'generate_edges'),
                     Boolean::make('No Details', 'noDetails'),
                     Boolean::make('No Interaction', 'noInteraction'),
                     Number::make('Zoom Min', 'minZoom'),
@@ -209,11 +212,13 @@ class Layer extends Resource
             NovaTabTranslatable::make([
                 Text::make('Title'),
                 Text::make('Subtitle'),
-                Textarea::make('Description')->alwaysShow()
+                Textarea::make('Description')->alwaysShow(),
+                Text::make('Track Type', 'track_type'),
             ]),
         ];
 
         $behaviourTab = [
+            Boolean::make('Generate Edges', 'generate_edges'),
             Boolean::make('No Details', 'noDetails'),
             Boolean::make('No Interaction', 'noInteraction'),
             Number::make('Zoom Min', 'minZoom'),
@@ -267,10 +272,15 @@ class Layer extends Resource
                     Text::make('Title'),
                     Text::make('Subtitle'),
                     Textarea::make('Description')->alwaysShow(),
+                    Text::make('Track Type', 'track_type'),
                 ]),
                 BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
                     ->searchable()
-                    ->nullable()
+                    ->nullable(),
+                Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ]),
             ];
         }
         return [

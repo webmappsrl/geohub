@@ -65,7 +65,6 @@ use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
  */
 class App extends Resource
 {
-
     use TabsOnEdit;
 
     public static function indexQuery(NovaRequest $request, $query)
@@ -244,6 +243,7 @@ class App extends Resource
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
             'FILTERS' => $this->filters_tab(),
+            'SEARCHABLE' => $this->searchable_tab(),
             'OPTIONS' => $this->options_tab(),
             'POIS' => $this->pois_tab(),
             'ROUTING' => $this->routing_tab(),
@@ -267,7 +267,8 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
-            Text::make(__('Google universal ID'),'gu_id')
+            Text::make(__('Google universal ID'), 'gu_id'),
+            Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.')
         ];
     }
 
@@ -292,7 +293,6 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
                 }),
-            AttachMany::make('TaxonomyThemes'),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
@@ -444,7 +444,7 @@ class App extends Resource
         return [
             Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
-            
+
             Boolean::make('Theme Filter', 'filter_theme')->help('Activate this option if you want to activate "Theme filter" for tracks'),
             Text::make('Theme Exclude Filter', 'filter_theme_exclude')->help('Insert the themes you want to exclude from the filter, separated by commas'),
 
@@ -462,6 +462,30 @@ class App extends Resource
             Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
 
             Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
+        ];
+    }
+
+    protected function searchable_tab(): array
+    {
+        $track_selected = is_null($this->model()->track_searchables) ? [] : json_decode($this->model()->track_searchables, true);
+        $poi_selected = is_null($this->model()->poi_searchables) ? [] : json_decode($this->model()->poi_searchables, true);
+        return [
+            MultiSelect::make(__('Track Search In'), 'track_searchables')->options([
+                'name' => 'Name',
+                'description' => 'Description',
+                'excerpt' => 'Excerpt',
+                'ref' => 'REF',
+                'osmid' => 'OSMID',
+                'taxonomyThemes' => 'Themes',
+                'taxonomyActivities' => 'Activity',
+            ], $track_selected),
+            MultiSelect::make(__('POI Search In'), 'poi_searchables')->options([
+                'name' => 'Name',
+                'description' => 'Description',
+                'excerpt' => 'Excerpt',
+                'osmid' => 'OSMID',
+                'taxonomyPoiTypes' => 'POI Type',
+            ], $poi_selected),
         ];
     }
 
@@ -993,6 +1017,7 @@ class App extends Resource
     protected function layers_tab(): array
     {
         return [
+            Boolean::make('Generate All Layers Edges', 'generate_layers_edges'),
             // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
             Text::make('Layers', function () {
                 if ($this->layers->count() > 0) {

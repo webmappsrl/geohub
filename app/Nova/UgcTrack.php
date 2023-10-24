@@ -2,18 +2,20 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\DateRange;
+use App\Nova\Filters\AppFilter;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\Text;
+use App\Nova\Filters\DateRange;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use App\Nova\Filters\UgcCreationDateFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
-use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
-use Laravel\Nova\Fields\Code;
+use Titasgailius\SearchRelations\SearchesRelations;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 
 class UgcTrack extends Resource
 {
@@ -135,10 +137,12 @@ class UgcTrack extends Resource
     public function filters(Request $request): array
     {
         return [
-            // new DateRange('created_at'),
-            // (new NovaSearchableBelongsToFilter('Author'))
-            //     ->fieldAttribute('user')
-            //     ->filterBy('user_id')
+            (new NovaSearchableBelongsToFilter('User'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id'),
+            (new UgcCreationDateFilter),
+            (new AppFilter)
+
 
         ];
     }

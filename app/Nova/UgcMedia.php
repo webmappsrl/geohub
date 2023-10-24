@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
+use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
+use App\Nova\Filters\UgcCreationDateFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -16,7 +18,8 @@ use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
-class UgcMedia extends Resource {
+class UgcMedia extends Resource
+{
     use SearchesRelations;
 
     /**
@@ -32,18 +35,20 @@ class UgcMedia extends Resource {
      */
     public static $title = 'name';
     /**
-     * The columns that should be searched.
+     * The columns that should be searched. 
      *
      * @var array
      */
     public static $search = [
-        'name',
+        'name', 'app_id'
     ];
+
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
     ];
 
-    public static function group() {
+    public static function group()
+    {
         return __('User Generated Content');
     }
 
@@ -61,7 +66,7 @@ class UgcMedia extends Resource {
         }
         return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
-    
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -69,7 +74,8 @@ class UgcMedia extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             Image::make('Image', 'relative_url')->disk('public'),
@@ -102,7 +108,8 @@ class UgcMedia extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -113,12 +120,14 @@ class UgcMedia extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [
-            // new DateRange('created_at'),
-            // (new NovaSearchableBelongsToFilter('Author'))
-            //     ->fieldAttribute('user')
-            //     ->filterBy('user_id')
+            (new NovaSearchableBelongsToFilter('Creator'))
+                ->fieldAttribute('user')
+                ->filterBy('user_id'),
+            (new UgcCreationDateFilter),
+            (new AppFilter),
         ];
     }
 
@@ -129,7 +138,8 @@ class UgcMedia extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -140,7 +150,8 @@ class UgcMedia extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [];
     }
 }

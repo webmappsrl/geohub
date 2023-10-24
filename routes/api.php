@@ -260,7 +260,7 @@ Route::name('api.')->group(function () {
         });
     });
 
-    // Export API 
+    // Export API
     Route::prefix('export')->name('export.')->group(function () {
         Route::get("/layers", [LayerAPIController::class, 'layers'])->name('export_layers');
         Route::get("/editors", function () {
@@ -300,10 +300,22 @@ Route::name('api.')->group(function () {
      */
     Route::prefix('osf')->name('osf.')->group(function () {
         Route::prefix('track')->name('track.')->group(function () {
-            Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getEcTrackFromSourceID'])->name('get_ectrack_from_source_id');
+            Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getTrackGeojsonFromSourceID'])->name('get_ectrack_from_source_id');
         });
         Route::prefix('poi')->name('poi.')->group(function () {
-            Route::get("/{endpoint_slug}/{source_id}", [EcPoiController::class, 'getEcPoiFromSourceID'])->name('get_ecpoi_from_source_id');
+            Route::get("/{endpoint_slug}/{source_id}", [EcPoiController::class, 'getPoiGeojsonFromSourceID'])->name('get_ecpoi_from_source_id');
+        });
+    });
+
+    /**
+     * webapp redirect API with external ID and Slug
+     */
+    Route::prefix('webapp')->name('webapp.')->group(function () {
+        Route::prefix('track')->name('track.')->group(function () {
+            Route::get("/{endpoint_slug}/{source_id}", [EcTrackController::class, 'getEcTrackWebappURLFromSourceID'])->name('get_ectrack_webapp_url_from_source_id');
+        });
+        Route::prefix('poi')->name('poi.')->group(function () {
+            Route::get("/{endpoint_slug}/{source_id}", [EcPoiController::class, 'getEcPoiWebappURLFromSourceID'])->name('get_ecpoi_webapp_url_from_source_id');
         });
     });
 });

@@ -18,7 +18,9 @@ use Exception;
 
 class EcPoi extends Model
 {
-    use HasFactory, GeometryFeatureTrait, HasTranslations;
+    use HasFactory;
+    use GeometryFeatureTrait;
+    use HasTranslations;
 
     protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id'];
     public array $translatable = ['name', 'description', 'excerpt', 'audio'];
@@ -44,7 +46,9 @@ class EcPoi extends Model
         parent::booted();
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
-            if (!is_null($user)) $ecPoi->author()->associate($user);
+            if (!is_null($user)) {
+                $ecPoi->author()->associate($user);
+            }
         });
 
         static::created(function ($ecPoi) {
@@ -76,6 +80,11 @@ class EcPoi extends Model
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     // public function uploadAudio($file): string
     // {
     //     $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
@@ -96,7 +105,7 @@ class EcPoi extends Model
                 // Create the path with language folder
                 $cloudPath = 'ecpoi/audio/' . $key_array[2] . '/' . $this->id . '_' . $filename;
                 Storage::disk('s3-osfmedia-test')->put($cloudPath, file_get_contents($file));
-                // Save the result url to the current langage 
+                // Save the result url to the current langage
                 $output[$key_array[2]] = Storage::disk('s3-osfmedia-test')->url($cloudPath);
             }
         }
@@ -172,8 +181,9 @@ class EcPoi extends Model
         }
         foreach ($result as $row) {
             $geojson = EcMedia::find($row->id)->getGeojson();
-            if (isset($geojson))
+            if (isset($geojson)) {
                 $features[] = $geojson;
+            }
         }
 
         return ([
@@ -188,13 +198,13 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function  getJson($allData = true): array
+    public function getJson($allData = true, $app_id = 0): array
     {
         $array = $this->setOutSourceValue();
 
         $array = $this->array_filter_recursive($array);
-        
-        if (array_key_exists('name',$array) && $array['name']) {
+
+        if (array_key_exists('name', $array) && $array['name']) {
             foreach ($array['name'] as $lang => $val) {
                 if (empty($val) || !$val) {
                     unset($array['name'][$lang]);
@@ -239,8 +249,9 @@ class EcPoi extends Model
             $array['author_email'] = $user->email;
         }
 
-        if ($this->featureImage)
+        if ($this->featureImage) {
             $array['feature_image'] = $this->featureImage->getJson($allData);
+        }
 
         if ($this->ecMedia) {
             $gallery = [];
@@ -248,8 +259,9 @@ class EcPoi extends Model
             foreach ($ecMedia as $media) {
                 $gallery[] = $media->getJson($allData);
             }
-            if (count($gallery))
+            if (count($gallery)) {
                 $array['image_gallery'] = $gallery;
+            }
         }
 
         if (isset($this->outSourcePoi->source_id) && strpos($this->outSourcePoi->source_id, '/')) {
@@ -261,7 +273,7 @@ class EcPoi extends Model
             $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);
         }
 
-        if (array_key_exists('related_url',$array) && !is_array($array['related_url']) && empty($array['related_url'])) {
+        if (array_key_exists('related_url', $array) && !is_array($array['related_url']) && empty($array['related_url'])) {
             unset($array['related_url']);
         }
 
@@ -295,8 +307,9 @@ class EcPoi extends Model
         );
 
         foreach ($taxonomy as $key => $value) {
-            if (count($value) === 0)
+            if (count($value) === 0) {
                 unset($taxonomy[$key]);
+            }
         }
 
         $array['taxonomy'] = $taxonomy;
@@ -309,11 +322,12 @@ class EcPoi extends Model
                 in_array($property, $propertiesToClear)
                 || is_null($value)
                 || (is_array($value) && count($value) === 0)
-            )
+            ) {
                 unset($array[$property]);
+            }
         }
 
-        $array['searchable'] = $this->getSearchableString();
+        $array['searchable'] = $this->getSearchableString($app_id);
 
         return $array;
     }
@@ -335,7 +349,7 @@ class EcPoi extends Model
         }
         return ['poi_type_poi'];
     }
-    function getTaxonomies()
+    public function getTaxonomies()
     {
         return [
             'activity' => $this->getValuesOfMorphToMany($this->taxonomyActivities(), 'activity'),
@@ -348,7 +362,7 @@ class EcPoi extends Model
     }
     private function getValuesOfMorphToMany($relation, $slug): array
     {
-        return $relation->get(['identifier', 'name', 'id', 'icon', 'color'])->map(function ($item)  use ($slug) {
+        return $relation->get(['identifier', 'name', 'id', 'icon', 'color'])->map(function ($item) use ($slug) {
             unset($item['pivot']);
             $item['identifier'] = $slug . "_" . $item['identifier'];
             return $item;
@@ -407,14 +421,16 @@ class EcPoi extends Model
      *
      * @return array
      */
-    public function getGeojson($allData = true): ?array
+    public function getGeojson($allData = true, $app_id = 0): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson($allData);
+            $feature["properties"] = $this->getJson($allData, $app_id);
 
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -429,12 +445,15 @@ class EcPoi extends Model
             $geojson["properties"] = $this->getJson();
             $neededProperties = ['id', 'name', 'feature_image'];
             foreach ($geojson['properties'] as $property => $value) {
-                if (!in_array($property, $neededProperties))
+                if (!in_array($property, $neededProperties)) {
                     unset($geojson['properties'][$property]);
+                }
             }
 
             return $geojson;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -506,41 +525,49 @@ class EcPoi extends Model
         return $geojson;
     }
 
-    public function getSearchableString()
+    public function getSearchableString($app_id = 0)
     {
+
         $string = '';
-        if (!empty($this->name)) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
+        $searchables = '';
+        if ($app_id) {
+            $app = App::find($app_id);
+            $searchables = json_decode($app->poi_searchables);
         }
-        if (!empty($this->description)) {
+
+        if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
+        }
+        if (empty($searchables) || (in_array('description', $searchables) && !empty($this->description))) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description).' ';
+            $string .= strip_tags($description) . ' ';
         }
-        if (!empty($this->excerpt)) {
+        if (empty($searchables) || (in_array('excerpt', $searchables) && !empty($this->excerpt))) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt).' ';
+            $string .= strip_tags($excerpt) . ' ';
         }
-        if (!empty($this->osmid)) {
-            $string .= $this->osmid.' ';
+        if (empty($searchables) || (in_array('osmid', $searchables) && !empty($this->osmid))) {
+            $string .= $this->osmid . ' ';
         }
-        if (!empty($this->taxonomyPoiTypes)) {
+        if (empty($searchables) || (in_array('taxonomyPoiTypes', $searchables) && !empty($this->taxonomyPoiTypes))) {
             foreach ($this->taxonomyPoiTypes as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
             }
         }
         return html_entity_decode($string);
     }
 
-    public function array_filter_recursive($array) {
+    public function array_filter_recursive($array)
+    {
         $result = [];
         foreach ($array as $key => $val) {
-            if (!is_array($val) && !empty($val) && $val ) {
+            if (!is_array($val) && !empty($val) && $val) {
                 $result[$key] = $val;
             } elseif (is_array($val)) {
                 foreach ($val as $lan => $cont) {
-                    if (!is_array($cont) && !empty($cont) && $cont ) {
+                    if (!is_array($cont) && !empty($cont) && $cont) {
                         $result[$key][$lan] = $cont;
                     }
                 }

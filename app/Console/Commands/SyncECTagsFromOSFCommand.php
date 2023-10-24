@@ -57,11 +57,13 @@ class SyncECTagsFromOSFCommand extends Command
     {
         $this->type = $this->argument('type');
         $this->author = $this->argument('author');
-        if ($this->option('tag'))
+        if ($this->option('tag')) {
             $this->tag = $this->option('tag');
+        }
 
-        if ($this->option('force'))
+        if ($this->option('force')) {
             $this->force = true;
+        }
 
         $this->checkParameters();
 
@@ -83,7 +85,6 @@ class SyncECTagsFromOSFCommand extends Command
                                     if (array_key_exists('description', $out_source_image->tags)) {
                                         $image->description = $out_source_image->tags['description'];
                                         $image->save();
-                                        return true;
                                     }
                                 }
                             }
@@ -91,7 +92,7 @@ class SyncECTagsFromOSFCommand extends Command
                     }
                 }
                 //if the tag is 'osmid' only update if the feature is ecPoi
-                else if ($this->tag == 'osmid') {
+                elseif ($this->tag == 'osmid') {
                     if ($feature instanceof EcPoi) {
                         if (empty($feature->osmid) || $this->force == true) {
                             $rawData = json_decode($out_source->raw_data, true);
@@ -134,40 +135,54 @@ class SyncECTagsFromOSFCommand extends Command
                 // }
 
                 if (empty($feature->addr_locality)) {
-                    if (isset($out_source->tags['addr_city']))
+                    if (isset($out_source->tags['addr_city'])) {
                         $feature->addr_locality = $out_source->tags['addr_city'];
+                    }
                 }
                 if (empty($feature->addr_housenumber)) {
-                    if (isset($out_source->tags['addr_housenumber']))
+                    if (isset($out_source->tags['addr_housenumber'])) {
                         $feature->addr_housenumber = $out_source->tags['addr_housenumber'];
+                    }
                 }
                 if (empty($feature->addr_street)) {
-                    if (isset($out_source->tags['addr_street']))
+                    if (isset($out_source->tags['addr_street'])) {
                         $feature->addr_street = $out_source->tags['addr_street'];
+                    }
                 }
                 if (empty($feature->addr_postcode)) {
-                    if (isset($out_source->tags['addr_postcode']))
+                    if (isset($out_source->tags['addr_postcode'])) {
                         $feature->addr_postcode = $out_source->tags['addr_postcode'];
+                    }
                 }
                 if (empty($feature->opening_hours)) {
-                    if (isset($out_source->tags['opening_hours']))
+                    if (isset($out_source->tags['opening_hours'])) {
                         $feature->opening_hours = $out_source->tags['opening_hours'];
+                    }
                 }
                 if (empty($feature->contact_phone)) {
-                    if (isset($out_source->tags['contact_phone']))
+                    if (isset($out_source->tags['contact_phone'])) {
                         $feature->contact_phone = $out_source->tags['contact_phone'];
+                    }
                 }
                 if (empty($feature->contact_email)) {
-                    if (isset($out_source->tags['contact_email']))
+                    if (isset($out_source->tags['contact_email'])) {
                         $feature->contact_email = $out_source->tags['contact_email'];
+                    }
                 }
                 if (empty($feature->capacity)) {
-                    if (isset($out_source->tags['capacity']))
+                    if (isset($out_source->tags['capacity'])) {
                         $feature->capacity = $out_source->tags['capacity'];
+                    }
                 }
                 if (empty($feature->stars)) {
-                    if (isset($out_source->tags['stars']))
+                    if (isset($out_source->tags['stars'])) {
                         $feature->stars = $out_source->tags['stars'];
+                    }
+                }
+                if (empty($feature->color)) {
+                    if (isset($out_source->tags['color'])) {
+                        $feature->color = $out_source->tags['color'];
+                    }
                 }
 
 
@@ -192,10 +207,10 @@ class SyncECTagsFromOSFCommand extends Command
         $features = '';
 
         if ($this->type == 'poi') {
-            $features = EcPoi::where('user_id', $this->author_id,)->get();
+            $features = EcPoi::where('user_id', $this->author_id, )->get();
         }
         if ($this->type == 'track') {
-            $features = EcTrack::where('user_id', $this->author_id,)->get();
+            $features = EcTrack::where('user_id', $this->author_id, )->get();
         }
 
         if ($features) {
@@ -257,6 +272,8 @@ class SyncECTagsFromOSFCommand extends Command
                 strtolower($this->tag) == 'description' ||
                 strtolower($this->tag) == 'excerpt' ||
                 strtolower($this->tag) == 'caption' ||
+                strtolower($this->tag) == 'difficulty' ||
+                strtolower($this->tag) == 'cai_scale' ||
                 strtolower($this->tag) == 'osmid'
             ) {
                 $this->tag = strtolower($this->tag);

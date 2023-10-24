@@ -28,6 +28,10 @@ class SelectFromThemesTrack extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
+        if ($value == 'empty') {
+            return $query->doesntHave('taxonomyThemes');
+        }
+
         if ($value) {
             return $query->whereHas('taxonomyThemes', function ($q) use ($value) {
                 $q->where('id', $value);
@@ -57,8 +61,8 @@ class SelectFromThemesTrack extends Filter
         WHERE txt.taxonomy_themeable_type='App\Models\EcTrack' 
         AND t.user_id=$current_user_id);");
 
-        $taxModels = TaxonomyTheme::hydrate($taxData)->pluck('id','name')->toArray();
-
+        $taxModels = TaxonomyTheme::hydrate($taxData)->pluck('id', 'name')->toArray();
+        $taxModels['No Theme'] = 'empty';
         return $taxModels;
     }
 }
