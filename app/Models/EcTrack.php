@@ -6,8 +6,8 @@ use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use App\Traits\TrackElasticIndexTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
-use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +26,7 @@ class EcTrack extends Model
     use GeometryFeatureTrait;
     use HasTranslations;
     use Favoriteable;
+    use TrackElasticIndexTrait;
 
     protected $fillable = [
         'name',
@@ -80,7 +81,7 @@ class EcTrack extends Model
     protected static function booted()
     {
         parent::booted();
-        // EcTrack::observe(EcTrackElasticObserver::class);
+
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
             if (!is_null($user)) {
@@ -116,18 +117,49 @@ class EcTrack extends Model
                 $ecTrack->skip_update = false;
             }
         });
+
         /**
-         * static::updated(function ($ecTrack) {
-         * $changes = $ecTrack->getChanges();
-         * if (in_array('geometry', $changes)) {
-         * try {
-         * $hoquServiceProvider = app(HoquServiceProvider::class);
-         * $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-         * } catch (\Exception $e) {
-         * Log::error('An error occurred during a store operation: ' . $e->getMessage());
-         * }
-         * }
-         * }); **/
+         * Many To Many Polymorphic Relations Events.
+         */
+        // static::morphToManyAttached(function ($relation, $parent, $ids, $attributes) {
+        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
+        //     if (!empty($ecTrackLayers)) {
+        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
+        //             // $parent->elasticIndex('app_' . $app_id, $layer_ids);
+        //             if (!empty($layer_ids)) {
+        //                 // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
+        //                 $parent->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+        //             } else {
+        //                 $parent->elasticIndexDelete('app_' . $app_id);
+        //             }
+        //         }
+        //     }
+        // });
+
+        // static::morphToManyDetached(function ($relation, $parent, $ids) {
+        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
+        //     if (!empty($ecTrackLayers)) {
+        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
+        //             // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids);
+        //         }
+        //     }
+        // });
+
+        // static::updated(function ($ecTrack) {
+        // $changes = $ecTrack->getChanges();
+        // if (in_array('geometry', $changes)) {
+        //     try {
+        //         $hoquServiceProvider = app(HoquServiceProvider::class);
+        //         $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+        //     } catch (\Exception $e) {
+        //         Log::error('An error occurred during a store operation: ' . $e->getMessage());
+        //     }
+        // }
+        // });
+        if (auth()->user()->id == 7) {
+            EcTrack::observe(EcTrackElasticObserver::class);
+        }
+
     }
 
     public function save(array $options = [])
@@ -718,7 +750,7 @@ class EcTrack extends Model
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
     }
 
-    public function elasticIndex($index = 'ectracks', $layers = [])
+    public function elasticIndex($index = 'ectracks', $layers = [], $requestType = 'POST')
     {
         // APP ID for searchable function:
         if (strpos($index, '_')) {
@@ -832,7 +864,7 @@ class EcTrack extends Model
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_CUSTOMREQUEST => $requestType,
             CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
@@ -1067,10 +1099,11 @@ class EcTrack extends Model
         return $result;
     }
 
-    function hexToRgba($hexColor, $opacity = 1.0)
+    public function hexToRgba($hexColor, $opacity = 1.0)
     {
-        if (empty($hexColor))
+        if (empty($hexColor)) {
             return '';
+        }
 
         $hexColor = ltrim($hexColor, '#');
 
@@ -1088,12 +1121,67 @@ class EcTrack extends Model
     }
 
     /**
-     * Creates or Updates the EcTrack index on Elastic
+     * returns the apps associated to a EcTrack
      *
-     * @return void
+     *
      */
-    public function elasticUpdateIndex(): void
+    public function trackHasApps()
     {
-        # code...
+        if (empty($this->user_id)) {
+            return null;
+        }
+
+        $user = User::find($this->user_id);
+        if ($user->apps->count() == 0) {
+            return null;
+        }
+
+        return $user->apps;
+    }
+
+    /**
+     * Returns an array of app_id => layer_id associated with the current EcTrack
+     *
+     * @return array
+     */
+    public function getLayersByApp(): array
+    {
+        $layers = [];
+
+        $trackTaxonomies = [];
+
+        $taxonomyActivities = $this->taxonomyActivities->pluck('id')->toArray();
+        $taxonomywheres = $this->taxonomywheres->pluck('id')->toArray();
+        $taxonomythemes = $this->taxonomythemes->pluck('id')->toArray();
+
+        if (!empty($taxonomyActivities)) {
+            $trackTaxonomies['activities'] = $taxonomyActivities;
+        }
+        if (!empty($taxonomywheres)) {
+            $trackTaxonomies['wheres'] =  $taxonomywheres;
+        }
+        if (!empty($taxonomythemes)) {
+            $trackTaxonomies['themes'] = $taxonomythemes;
+        }
+
+        if (is_null($this->trackHasApps())) {
+            return $layers;
+        }
+
+        foreach ($this->trackHasApps() as $app) {
+            foreach ($app->layers as $layer) {
+                $layers_ids = $layer->getLayerTaxonomyIDs();
+                foreach ($trackTaxonomies as $t_tax => $t_ids) {
+                    // Here we assume that there is only one category in each taxonomy type is associated with the Layer
+                    if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
+                        $layers[$app->id][] = $layers_ids[$t_tax][0];
+                    }
+                }
+            }
+            if (empty($layers)) {
+                $layers[$app->id] = [];
+            }
+        }
+        return $layers;
     }
 }

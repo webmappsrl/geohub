@@ -21,5 +21,6 @@ yarn-error.log
 /storage/tmp
 /storage/api-docs
 /storage/json
+/storage/debugbar
 dump.sql
 /public/images

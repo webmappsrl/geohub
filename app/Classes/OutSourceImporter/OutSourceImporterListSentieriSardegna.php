@@ -6,22 +6,26 @@ use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class OutSourceImporterListSentieriSardegna extends OutSourceImporterListAbstract { 
+class OutSourceImporterListSentieriSardegna extends OutSourceImporterListAbstract
+{
     use ImporterAndSyncTrait;
 
-    public function getTrackList():array {
-        $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($this->endpoint);
+    public function getTrackList(): array
+    {
         Log::info('Starting Track List CURL request ...');
+        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($this->endpoint);
         return  $response->json();
     }
-    
-    public function getPoiList():array{
+
+    public function getPoiList(): array
+    {
         Log::info('Starting POI List CURL request ...');
-        $response = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get($this->endpoint);
+        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($this->endpoint);
         return $response->json();
     }
 
-    public function getMediaList():array{
+    public function getMediaList(): array
+    {
         return [];
     }
 }

@@ -174,6 +174,29 @@ class Layer extends Model
     }
 
     /**
+     * Returns a list of taxonomy IDs associated with the layer.
+     *
+     * @return array
+     */
+    public function getLayerTaxonomyIDs()
+    {
+        $ids = [];
+
+        if ($this->taxonomyThemes->count() > 0) {
+            $ids['themes'] = $this->taxonomyThemes->pluck('id')->toArray();
+        }
+        if ($this->taxonomyWheres->count() > 0) {
+            $ids['wheres'] = $this->taxonomyWheres->pluck('id')->toArray();
+        }
+        if ($this->taxonomyActivities->count() > 0) {
+            $ids['activities'] = $this->taxonomyActivities->pluck('id')->toArray();
+        }
+
+        return $ids;
+    }
+
+
+    /**
      * Determines next and previous stage of each track inside the layer
      *
      * @return JSON
@@ -199,13 +222,13 @@ class Layer extends Model
             // Find the next tracks
             $nextTrack = EcTrack::whereIn('id', $trackIds)
             ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$end_point}', 0.001)")
+            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
             ->get();
 
             // Find the previous tracks
             $previousTrack = EcTrack::whereIn('id', $trackIds)
             ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(geometry, 'SRID=4326;{$start_point}', 0.001)")
+            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
             ->get();
 
             $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
