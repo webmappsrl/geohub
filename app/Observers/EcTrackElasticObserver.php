@@ -3,22 +3,25 @@
 namespace App\Observers;
 
 use App\Models\EcTrack;
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Exception;
 
 class EcTrackElasticObserver
 {
+    /**
+     * Handle events after all transactions are committed.
+     *
+     * @var bool
+     */
+    public $afterCommit = true;
+
     /**
      * Handle the EcTrack "created" event.
      *
      * @param  \App\Models\EcTrack  $ecTrack
      * @return void
      */
-    public function save(EcTrack $ecTrack)
+    public function created(EcTrack $ecTrack)
     {
+        $this->startElasticIndex($ecTrack);
     }
 
     /**
@@ -29,68 +32,7 @@ class EcTrackElasticObserver
      */
     public function updated(EcTrack $ecTrack)
     {
-
-        #REF: https://github.com/elastic/elasticsearch-php/
-        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
-
-        //$hosts = ['https://forge:1b0VUJxRFxeOupkjPeie@elastic.sis-te.com'];
-
-        $host = env('ELASTIC_HTTP_HOST');
-        $hosts = [$host];
-        $client = ClientBuilder::create()->setHosts($hosts)->build();
-
-
-
-        return;
-
-
-
-        Log::info('Indexing track ' . $ecTrack->id);
-        $geom = $ecTrack::where('id', '=', $ecTrack->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(geometry) as geom")
-            )
-            ->first()
-            ->geom;
-
-        $curl = curl_init();
-        // https://elastic.sis-te.com/geohub
-        //             CURLOPT_URL => 'https://elastic.geniuslocianalytics.com/geohub/_doc/'.$ecTrack->id,
-        $CURLOPT_URL = env('ELASTIC_HOST');
-        curl_setopt_array($curl, array(
-            //    CURLOPT_URL => 'https://elastic.sis-te.com/geohub/_doc/' . $ecTrack->id,
-            CURLOPT_URL =>  $CURLOPT_URL . '/geohub/_doc/' . $ecTrack->id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-  "geometry" : ' . $geom . ',
-  "id": ' . $ecTrack->id . ',
-  "ref": "100",
-  "cai_scale": "E",
-   "piccioli": "fava"
-}',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . env('ELASTIC_KEY'),
-            ),
-        ));
-
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-
-
-        curl_close($curl);
-        Log::info('Index OK');
+        $this->startElasticIndex($ecTrack);
     }
 
     /**
@@ -124,5 +66,29 @@ class EcTrackElasticObserver
     public function forceDeleted(EcTrack $ecTrack)
     {
         //
+    }
+    
+    /**
+     * function which determinse whether to upsert or Delete the EcTrack on elasticsearch.
+     *
+     * @param  \App\Models\EcTrack  $ecTrack
+     * @return void
+     */
+    public function startElasticIndex(EcTrack $ecTrack): void
+    {
+        $ecTrackLayers = $ecTrack->getLayersByApp();
+        if (!empty($ecTrackLayers)) {
+            foreach ($ecTrackLayers as $app_id => $layer_ids) {
+                if (!empty($layer_ids)) {
+                    $ecTrack->elasticIndexUpsert('app_' . $app_id, $layer_ids);
+                    $ecTrack->elasticIndexUpsertLow('app_low_' . $app_id, $layer_ids);
+                    $ecTrack->elasticIndexUpsertHigh('app_high_' . $app_id, $layer_ids);
+                } else {
+                    $ecTrack->elasticIndexDelete('app_' . $app_id);
+                    $ecTrack->elasticIndexDelete('app_low_' . $app_id);
+                    $ecTrack->elasticIndexDelete('app_high_' . $app_id);
+                }
+            }
+        }   
     }
 }

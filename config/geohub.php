@@ -9,5 +9,6 @@ return [
     'ec_track_media_distance' => env('EC_TRACK_MEDIA_DISTANCE', 500),
     'ec_track_ec_poi_distance' => env('EC_TRACK_POI_DISTANCE', 500),
     'ectrack_share_page_feature_image_placeholder' => env('ECTRACK_SHARE_PAGE_FEATURE_IMAGE_PLACEHOLDER', storage_path('app/public/images') . '/ectrack_share_page_feature_image_placeholder.jpg'),
-    'app_env' => env('APP_ENV') === 'production' ? 's3' : 'public'
+    'app_env' => env('APP_ENV') === 'production' ? 's3' : 'public',
+    'elastic_low_geom_tollerance' => env('ELASTIC_LOW_GEOM_TOLLERANCE',0.006),
 ];
