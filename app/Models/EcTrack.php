@@ -156,7 +156,7 @@ class EcTrack extends Model
         //     }
         // }
         // });
-        if (auth()->user()->id == 7) {
+        if (auth()->check() && auth()->user()->id == 1) {
             EcTrack::observe(EcTrackElasticObserver::class);
         }
 

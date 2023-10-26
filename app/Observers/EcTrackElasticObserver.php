@@ -43,7 +43,14 @@ class EcTrackElasticObserver
      */
     public function deleted(EcTrack $ecTrack)
     {
-        //
+        $ecTrackLayers = $ecTrack->getLayersByApp();
+        if (!empty($ecTrackLayers)) {
+            foreach ($ecTrackLayers as $app_id => $layer_ids) {
+                $ecTrack->elasticIndexDelete('app_' . $app_id);
+                $ecTrack->elasticIndexDelete('app_low_' . $app_id);
+                $ecTrack->elasticIndexDelete('app_high_' . $app_id);
+            }
+        }
     }
 
     /**
@@ -67,7 +74,7 @@ class EcTrackElasticObserver
     {
         //
     }
-    
+
     /**
      * function which determinse whether to upsert or Delete the EcTrack on elasticsearch.
      *
@@ -89,6 +96,6 @@ class EcTrackElasticObserver
                     $ecTrack->elasticIndexDelete('app_high_' . $app_id);
                 }
             }
-        }   
+        }
     }
 }

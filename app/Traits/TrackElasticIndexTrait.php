@@ -283,11 +283,13 @@ trait TrackElasticIndexTrait
         $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
 
         try {
-            $response = $client->delete($params);
+            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                $response = $client->delete($params);
+                Log::info($response);
+            }
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-        Log::info($response);
     }
 
 }
