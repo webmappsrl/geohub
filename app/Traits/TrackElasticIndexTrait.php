@@ -284,7 +284,8 @@ trait TrackElasticIndexTrait
     {
         if (config('app.env') == 'production') {
             $client = ClientBuilder::create()
-                ->setHosts([config('services.elastic.http')])
+                ->setHosts([config('services.elastic.host')])
+                ->setBasicAuthentication(config('services.elastic.username'), config('services.elastic.password'))
                 ->build();
         } else {
             $client = ClientBuilder::create()
