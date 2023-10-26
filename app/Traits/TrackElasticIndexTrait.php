@@ -7,6 +7,7 @@ use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 trait TrackElasticIndexTrait
 {
@@ -19,8 +20,6 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexUpsert($index_name, $layers): void
     {
-        $client = $this->elasticClientBuilder();
-
         Log::info('Update Elastic Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -124,11 +123,7 @@ trait TrackElasticIndexTrait
 
         // NORMAL INDEX
         try {
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
-                $response = $client->update($params_update);
-            } else {
-                $response = $client->index($params_index);
-            }
+            $response = $this->elasticClientBuilder($index_name, $params, $params_update, $params_index);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -145,9 +140,8 @@ trait TrackElasticIndexTrait
     public function elasticIndexUpsertLow($index_name, $layers): void
     {
         $tollerance = config('geohub.elastic_low_geom_tollerance');
-        $client = $this->elasticClientBuilder();
 
-        Log::info('Update Elastic High Indexing track ' . $this->id);
+        Log::info('Update Elastic Low Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
@@ -185,11 +179,7 @@ trait TrackElasticIndexTrait
 
         // LOW INDEX
         try {
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
-                $response = $client->update($params_update);
-            } else {
-                $response = $client->index($params_index);
-            }
+            $response = $this->elasticClientBuilder($index_name, $params, $params_update, $params_index);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -205,8 +195,6 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexUpsertHigh($index_name, $layers): void
     {
-        $client = $this->elasticClientBuilder();
-
         Log::info('Update Elastic HIGH Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -245,11 +233,7 @@ trait TrackElasticIndexTrait
 
         // HIGH INDEX
         try {
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
-                $response = $client->update($params_update);
-            } else {
-                $response = $client->index($params_index);
-            }
+            $response = $this->elasticClientBuilder($index_name, $params, $params_update, $params_index);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -264,36 +248,46 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexDelete($index_name): void
     {
-        $client = $this->elasticClientBuilder();
-
         Log::info('DELETE Elastic Indexing track ' . $this->id);
 
         $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
 
         try {
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
-                $response = $client->delete($params);
-                Log::info($response);
+            if (config('app.env') == 'production') {
+                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_/' . $index_name . '/_doc/' . $this->id)->body();
+            } else {
+                $client = ClientBuilder::create()
+                    ->setHosts([config('services.elastic.http')])
+                    ->setSSLVerification(false)
+                    ->build();
+
+                if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                    $response = $client->delete($params);
+                    Log::info($response);
+                }
             }
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
-    public function elasticClientBuilder()
+    public function elasticClientBuilder($index_name, $params, $params_update, $params_index)
     {
         if (config('app.env') == 'production') {
-            $client = ClientBuilder::create()
-                ->setHosts([config('services.elastic.host')])
-                ->setBasicAuthentication(config('services.elastic.username'), config('services.elastic.password'))
-                ->build();
+            $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->post(config('services.elastic.host') . '/geohub_/' . $index_name . '/_doc/' . $this->id, ["doc" => $params])->body();
         } else {
             $client = ClientBuilder::create()
                 ->setHosts([config('services.elastic.http')])
                 ->setSSLVerification(false)
                 ->build();
+
+            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                $response = $client->update($params_update);
+            } else {
+                $response = $client->index($params_index);
+            }
         }
 
-        return $client;
+        return $response;
     }
 }
