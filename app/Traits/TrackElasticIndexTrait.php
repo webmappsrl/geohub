@@ -19,10 +19,7 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexUpsert($index_name, $layers): void
     {
-        $client = ClientBuilder::create()
-            ->setHosts([config('services.elastic.http')])
-            ->setSSLVerification(false)
-            ->build();
+        $client = $this->elasticClientBuilder();
 
         Log::info('Update Elastic Indexing track ' . $this->id);
 
@@ -148,10 +145,7 @@ trait TrackElasticIndexTrait
     public function elasticIndexUpsertLow($index_name, $layers): void
     {
         $tollerance = config('geohub.elastic_low_geom_tollerance');
-        $client = ClientBuilder::create()
-            ->setHosts([config('services.elastic.http')])
-            ->setSSLVerification(false)
-            ->build();
+        $client = $this->elasticClientBuilder();
 
         Log::info('Update Elastic High Indexing track ' . $this->id);
 
@@ -211,10 +205,7 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexUpsertHigh($index_name, $layers): void
     {
-        $client = ClientBuilder::create()
-            ->setHosts([config('services.elastic.http')])
-            ->setSSLVerification(false)
-            ->build();
+        $client = $this->elasticClientBuilder();
 
         Log::info('Update Elastic HIGH Indexing track ' . $this->id);
 
@@ -273,10 +264,7 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexDelete($index_name): void
     {
-        $client = ClientBuilder::create()
-            ->setHosts([config('services.elastic.http')])
-            ->setSSLVerification(false)
-            ->build();
+        $client = $this->elasticClientBuilder();
 
         Log::info('DELETE Elastic Indexing track ' . $this->id);
 
@@ -292,4 +280,19 @@ trait TrackElasticIndexTrait
         }
     }
 
+    public function elasticClientBuilder()
+    {
+        if (config('app.env') == 'production') {
+            $client = ClientBuilder::create()
+                ->setHosts([config('services.elastic.http')])
+                ->build();
+        } else {
+            $client = ClientBuilder::create()
+                ->setHosts([config('services.elastic.http')])
+                ->setSSLVerification(false)
+                ->build();
+        }
+
+        return $client;
+    }
 }
