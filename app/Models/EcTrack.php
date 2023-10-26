@@ -7,7 +7,6 @@ use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use App\Traits\TrackElasticIndexTrait;
-use Chelout\RelationshipEvents\Concerns\HasMorphToManyEvents;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +26,7 @@ class EcTrack extends Model
     use GeometryFeatureTrait;
     use HasTranslations;
     use Favoriteable;
+    use TrackElasticIndexTrait;
 
     protected $fillable = [
         'name',
@@ -156,8 +156,9 @@ class EcTrack extends Model
         //     }
         // }
         // });
-
-        EcTrack::observe(EcTrackElasticObserver::class);
+        if (auth()->user()->id == 7) {
+            EcTrack::observe(EcTrackElasticObserver::class);
+        }
 
     }
 
