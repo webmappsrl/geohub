@@ -34,6 +34,8 @@ return [
         'host' => env('ELASTIC_HOST'),
         'key' => env('ELASTIC_KEY'),
         'http' => env('ELASTIC_HTTP'),
+        'password' => env('ELASTIC_PASSWORD'),
+        'username' => env('ELASTIC_USERNAME'),
     ]
 
 ];
