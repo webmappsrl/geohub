@@ -94,7 +94,7 @@ trait TrackElasticIndexTrait
             'cai_scale' =>  $this->cai_scale ,
             'from' =>  $this->getActualOrOSFValue('from'),
             'to' =>  $this->getActualOrOSFValue('to'),
-            'name' =>  $this->name,
+            'name' =>  $this->getTranslations('name'),
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
@@ -274,7 +274,7 @@ trait TrackElasticIndexTrait
     public function elasticClientBuilder($index_name, $params, $params_update, $params_index)
     {
         if (config('app.env') == 'production') {
-            $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->post(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id, ["doc" => $params])->body();
+            $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->post(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id, $params)->body();
         } else {
             $client = ClientBuilder::create()
                 ->setHosts([config('services.elastic.http')])
