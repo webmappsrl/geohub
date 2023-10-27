@@ -1174,7 +1174,7 @@ class EcTrack extends Model
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
                     // Here we assume that there is only one category in each taxonomy type is associated with the Layer
                     if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
-                        $layers[$app->id][] = $layers_ids[$t_tax][0];
+                        $layers[$app->id][] = $layer->id;
                     }
                 }
             }
