@@ -254,7 +254,7 @@ trait TrackElasticIndexTrait
 
         try {
             if (config('app.env') == 'production') {
-                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id)->body();
+                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_/' . $index_name . '/_doc/' . $this->id)->body();
             } else {
                 $client = ClientBuilder::create()
                     ->setHosts([config('services.elastic.http')])
