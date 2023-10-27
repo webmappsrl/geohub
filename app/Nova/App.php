@@ -174,6 +174,7 @@ class App extends Resource
 
             $tab_array = [
                 'APP' => $this->app_tab(),
+                'RELEASE DATA' => $this->app_release_data_tab(),
                 'HOME' => $this->home_tab(),
                 'PROJECT' => $this->project_tab(),
                 'ICONS' => $this->icons_tab(),
@@ -234,6 +235,7 @@ class App extends Resource
     {
         return [
             'APP' => $this->app_tab(),
+            'RELEASE DATA' => $this->app_release_data_tab(),
             'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
             'PROJECT' => $this->project_tab(),
@@ -284,7 +286,6 @@ class App extends Resource
             )->required(),
             Text::make(__('App Id'), 'app_id')->required(),
             Text::make(__('Name'), 'name')->sortable()->required(),
-            Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
             BelongsTo::make('Author', 'author', User::class)
@@ -905,6 +906,31 @@ class App extends Resource
     protected function icons_tab(): array
     {
         return [
+
+
+            Image::make(__('Logo Homepage'), 'logo_homepage')
+                ->rules('image', 'mimes:svg')
+                ->disk('public')
+                ->path('api/app/' . $this->model()->id . '/resources')
+                ->storeAs(function () {
+                    return 'logo_homepage.svg';
+                })
+                ->help(__('Required svg image'))
+                ->hideFromIndex(),
+            Text::make('QR Code custom URL', 'qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
+            Text::make('QR Code', 'qr_code', function () {
+                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
+            })->asHtml(),
+            Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
+                'import icoonmoon selection.json file'
+            )
+        ];
+    }
+
+    protected function app_release_data_tab(): array
+    {
+        return [
+            Text::make(__('Name'), 'customer_name')->sortable()->required(),
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
@@ -952,23 +978,6 @@ class App extends Resource
                 })
                 ->help(__('Required square png. Transparency is allowed and recommended for the background'))
                 ->hideFromIndex(),
-
-            Image::make(__('Logo Homepage'), 'logo_homepage')
-                ->rules('image', 'mimes:svg')
-                ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
-                ->storeAs(function () {
-                    return 'logo_homepage.svg';
-                })
-                ->help(__('Required svg image'))
-                ->hideFromIndex(),
-            Text::make('QR Code custom URL', 'qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
-            Text::make('QR Code', 'qr_code', function () {
-                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
-            })->asHtml(),
-            Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
-                'import icoonmoon selection.json file'
-            )
         ];
     }
 
