@@ -931,6 +931,29 @@ class App extends Resource
     {
         return [
             Text::make(__('Name'), 'customer_name')->sortable()->required(),
+            Textarea::make(__('Short Description'), 'short_description')
+                ->hideFromIndex()
+                ->rules('max:80')
+                ->help(__('Max 80 characters. To be used as a promotional message also.')),
+
+            NovaTinymce5Editor::make(__('Long Description'), 'long_description')
+                ->hideFromIndex()
+                ->rules('max:4000')
+                ->help(__('Max 4000 characters.')),
+
+            Text::make(__('Keywords'), 'keywords')
+                ->hideFromIndex()
+                ->help(__('Comma separated Keywords e.g. "hiking,trekking,map"')),
+
+            Text::make(__('Privacy Url'), 'privacy_url')
+                ->hideFromIndex()
+                ->rules('url')
+                ->help(__('Url to the privacy policy')),
+
+            Text::make(__('Website Url'), 'website_url')
+                ->hideFromIndex()
+                ->rules('url')
+                ->help(__('Url to the website')),
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
