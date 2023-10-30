@@ -40,8 +40,8 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Preparing OSF Track with external ID: ' . $this->source_id);
             $geometry = '';
 
-            if (key_exists('geometry', $track['properties'])) {
-                $geometry = json_encode($track['properties']['geometry']);
+            if (key_exists('geometry', $track)) {
+                $geometry = json_encode($track['geometry']);
             } elseif (key_exists('gpx', $track['properties']) && !empty($track['properties']['gpx'])) {
                 $gpx_content = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($track['properties']['gpx'][0]);
                 $geometry = Gisconverter::gpxToGeojson($gpx_content);
