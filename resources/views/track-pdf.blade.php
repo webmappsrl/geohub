@@ -1,15 +1,15 @@
 @php
-    
+
     use App\Models\App;
     use Illuminate\Support\Str;
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
     use Illuminate\Http\Request;
-    
+
     $appName = 'Webmapp';
     $appSocialText = $track->excerpt ? $track->excerpt : $track->description;
     $appIcon = asset('images/webmapp-logo-icon-only.png');
     $trackFeatureCollectionUrl = url('/api/ec/track/pdf/' . $track->id);
-    
+
     if (request('app_id')) {
         $app = App::find(request('app_id'));
         $appName = $app->name;
@@ -19,7 +19,7 @@
         $appUrl = 'https://' . $app->id . '.app.webmapp.it';
         $qrCode = $app->qr_code;
     }
-    
+
 @endphp
 
 
@@ -143,8 +143,8 @@
                             </div>
 
                             @if ($track->featureImage)
-                                <div class="track-feature-image"
-                                    style="background-image: url('{{ $track->featureImage->url }}');">
+                                <div class="track-feature-image-container">
+                                    <img src="{{ $track->featureImage->url }}" alt="">
                                 </div>
                             @endif
                             @if ($track->description)
@@ -182,7 +182,7 @@
                                         @endforeach
                                         {{-- if not show app icon as image --}}
                                     @else
-                                        <div class="poi-feature-image app-logo"
+                                        <div class="poi-feature-image"
                                             style="background-image: url('{{ $appIcon }}');"></div>
                                     @endif
                                 </div>
