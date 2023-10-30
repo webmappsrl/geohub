@@ -277,6 +277,7 @@ class App extends Resource
     protected function app_tab(): array
     {
         return [
+            Text::make(__('Name'), 'customer_name')->sortable()->required(),
             Select::make(__('API type'), 'api')->options(
                 [
                     'elbrus' => 'Elbrus',
@@ -285,7 +286,6 @@ class App extends Resource
                 ]
             )->required(),
             Text::make(__('App Id'), 'app_id')->required(),
-            Text::make(__('Name'), 'name')->sortable()->required(),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
             BelongsTo::make('Author', 'author', User::class)
@@ -930,7 +930,8 @@ class App extends Resource
     protected function app_release_data_tab(): array
     {
         return [
-            Text::make(__('Name'), 'customer_name')->sortable()->required(),
+            Text::make(__('Name'), 'name')->sortable()->required(),
+
             Textarea::make(__('Short Description'), 'short_description')
                 ->hideFromIndex()
                 ->rules('max:80')
@@ -982,25 +983,25 @@ class App extends Resource
                 ->help(__('Required size is :widthx:heightpx', ['width' => 512, 'height' => 512]))
                 ->hideFromIndex(),
 
-            Image::make(__('Feature image'), 'feature_image')
-                ->rules('image', 'mimes:png', 'dimensions:width=1024,height=500')
-                ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
-                ->storeAs(function () {
-                    return 'feature_image.png';
-                })
-                ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 500]))
-                ->hideFromIndex(),
+            // Image::make(__('Feature image'), 'feature_image')
+            //     ->rules('image', 'mimes:png', 'dimensions:width=1024,height=500')
+            //     ->disk('public')
+            //     ->path('api/app/' . $this->model()->id . '/resources')
+            //     ->storeAs(function () {
+            //         return 'feature_image.png';
+            //     })
+            //     ->help(__('Required size is :widthx:heightpx', ['width' => 1024, 'height' => 500]))
+            //     ->hideFromIndex(),
 
-            Image::make(__('Icon Notify'), 'icon_notify')
-                ->rules('image', 'mimes:png', 'dimensions:ratio=1')
-                ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
-                ->storeAs(function () {
-                    return 'icon_notify.png';
-                })
-                ->help(__('Required square png. Transparency is allowed and recommended for the background'))
-                ->hideFromIndex(),
+            // Image::make(__('Icon Notify'), 'icon_notify')
+            //     ->rules('image', 'mimes:png', 'dimensions:ratio=1')
+            //     ->disk('public')
+            //     ->path('api/app/' . $this->model()->id . '/resources')
+            //     ->storeAs(function () {
+            //         return 'icon_notify.png';
+            //     })
+            //     ->help(__('Required square png. Transparency is allowed and recommended for the background'))
+            //     ->hideFromIndex(),
         ];
     }
 
