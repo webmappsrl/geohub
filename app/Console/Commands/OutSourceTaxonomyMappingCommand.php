@@ -287,11 +287,8 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSPoiType()
     {
         $response = [];
-        // $response['accessibilita'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/accessibilit_?_format=json')->json();
-        $response['servizi'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/servizi?_format=json')->json();
-        $response['tipologia_poi'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_poi?_format=json')->json();
-        // $response['zona_geografica'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
-        // $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri','bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
+        $response['servizi'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/servizi?_format=json')->json();
+        $response['tipologia_poi'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_poi?_format=json')->json();
 
         $input = [];
         if ($response) {
@@ -315,11 +312,9 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSTheme()
     {
         $response = [];
-        $response['categorie_fruibilita_sentieri'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
-        $response['stato_di_validazione'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/stato_di_validazione?_format=json')->json();
-        // $response['tipo_di_fondo'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipo_di_fondo?_format=json')->json();
-        // $response['zona_geografica'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/zona_geografica?_format=json')->json();
-        $response['tipologia_itinerari'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_itinerari?_format=json')->json();
+        $response['categorie_fruibilita_sentieri'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+        $response['stato_di_validazione'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/stato_di_validazione?_format=json')->json();
+        $response['tipologia_itinerari'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_itinerari?_format=json')->json();
 
         $input = [];
         if ($response) {
@@ -343,7 +338,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSActivity()
     {
         $response = [];
-        $response['tipologia_sentieri'] = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_sentieri?_format=json')->json();
+        $response['tipologia_sentieri'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_sentieri?_format=json')->json();
 
         $input = [];
         if ($response) {
