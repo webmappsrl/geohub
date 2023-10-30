@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'sardegna_sentieri_api_username' => env('SARDEGNA_SENTIERI_API_USERNAME', ''),
+    'sardegna_sentieri_api_password' => env('SARDEGNA_SENTIERI_API_PASSWORD', ''),
     'audio_media_storage_name' => env('AUDIO_MEDIA_STORAGE_NAME', 's3-osfmedia-test'),
     'osf_media_storage_name' => env('OUT_SOURCE_FEATURE_STORAGE_NAME', 'importer-osfmedia'),
     'ec_media_storage_name' => env('EC_MEDIA_STORAGE_NAME', 'public'),

@@ -18,8 +18,16 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
     // DATA array
     protected array $params;
     protected array $tags;
+    protected array $tax_difficulty;
     protected string $mediaGeom;
     protected string $poi_type;
+
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false, $tax_difficulty = []) {
+        parent::__construct($type,$endpoint,$source_id,$only_related_url = false);
+
+        // Initialize the new parameter
+        $this->tax_difficulty = $tax_difficulty;
+    }
 
     /**
      * It imports each track of the given list to the out_source_features table.
@@ -191,7 +199,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding originale public url to related_url
         if (isset($track['properties']['url'])) {
-            $this->tags['related_url']['Website'] = $track['properties']['url'];
+            $this->tags['related_url']['sardegnasentieri.it'] = $track['properties']['url'];
         }
 
         // Processing the theme
@@ -201,6 +209,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         } else {
             $this->tags['theme'][] = 'sardegnas-sentiero';
         }
+
+        $this->tags['description']['it'] = '';
+        $this->tags['description']['en'] = '';
 
         // Processing the Theme stato di validazione
         if (isset($track['properties']['taxonomies'])) {
@@ -212,23 +223,48 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                 $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
                 $json_taxonomy_theme = json_decode($taxonomy_map, true)['theme'];
 
+                // Adding the Stato di validazione to the description
                 if (!empty($json_taxonomy_theme)) {
                     foreach ($track['properties']['taxonomies'] as $tax => $idList) {
                         if ($tax == 'stato_di_validazione') {
                             if (is_array($idList)) {
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $json_taxonomy_theme)) {
-                                        $this->tags['description']['it'] = isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p>' : '';
-                                        $this->tags['description']['en'] = isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p>' : '';
+                                        $this->tags['description']['it'] .= isset($json_taxonomy_theme[$id]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                        $this->tags['description']['en'] .= isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">More info</a>' : '';
                                     }
                                 }
                             } else {
                                 if (key_exists($idList, $json_taxonomy_theme)) {
-                                    $this->tags['description']['it'] = isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p>' : '';
-                                    $this->tags['description']['en'] = isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p>' : '';
+                                    $this->tags['description']['it'] .= isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                    $this->tags['description']['en'] .= isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
                                 }
                             }
                         }
+                    }
+                }
+
+                // Adding the difficulty to the description
+                if (!empty($this->tax_difficulty)) {
+                    $more_info_link = false;
+                    foreach ($track['properties']['taxonomies'] as $tax => $idList) {
+                        if ($tax == 'categorie_fruibilita_sentieri') {
+                            if (is_array($idList)) {
+                                foreach ($idList as $id) {
+                                    if (key_exists($id, $this->tax_difficulty)) {
+                                        $more_info_link = true;
+                                        $this->tags['description']['it'] .= '<h3>Difficoltà:<h3>';
+                                        if ($this->tax_difficulty[$id]['parent'] != 'NULL') {
+                                            $this->tags['description']['it'] .= '<p>'. $this->tax_difficulty[$this->tax_difficulty[$id]['parent']]['name']['it'] . ' > ' . $this->tax_difficulty[$id]['name']['it'] . '</p>';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ($more_info_link) {
+                        $this->tags['description']['it'] .= '<a target="_blank" href="https://sentieri.netseven.work/gradi_difficolt%C3%A0">Maggiori info</a>';
+
                     }
                 }
             }
@@ -236,13 +272,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding the description after the Stato di validazione
         if (isset($track['properties']['description'])) {
-            if (!array_key_exists('it', $this->tags['description'])) {
-                $this->tags['description']['it'] = '';
-            }
-            if (!array_key_exists('en', $this->tags['description'])) {
-                $this->tags['description']['en'] = '';
-            }
-            $this->tags['description']['it'] .= $track['properties']['description']['it'];
+            $this->tags['description']['it'] .= isset($track['properties']['description']['it']) ? '<h3>Descrizione:<h3>' : '';
+            $this->tags['description']['it'] .= isset($track['properties']['description']['it']) ? $track['properties']['description']['it'] : '';
+            $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? '<h3>Description:<h3>' : '';
             $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? $track['properties']['description']['en'] : '';
         }
 

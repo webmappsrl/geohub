@@ -257,6 +257,8 @@ class OutSourceImporterCommand extends Command
     }
 
     private function importerSentieriSardegna(){
+        $categorie_fruibilita_sentieri = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+
         if ($this->single_feature) {
             $features_list[$this->single_feature] = date('Y-M-d H:i:s');
         } else {
@@ -269,7 +271,7 @@ class OutSourceImporterCommand extends Command
                 foreach ($features_list as $id => $feature) {
                     $count++;
                     Log::info('Start importing '.$this->type. ' number '.$count. ' out of '.count($features_list));
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$id);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type,$this->endpoint,$id,false,$categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                 }
