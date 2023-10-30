@@ -182,7 +182,7 @@
                                         @endforeach
                                         {{-- if not show app icon as image --}}
                                     @else
-                                        <div class="poi-feature-image app-logo"
+                                        <div class="poi-feature-image"
                                             style="background-image: url('{{ $appIcon }}');"></div>
                                     @endif
                                 </div>

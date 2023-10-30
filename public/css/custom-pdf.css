@@ -288,7 +288,7 @@ body {
     background-position: center;
   }
 
-  .app-logo {
+  /* .app-logo {
     width: 200px;
     height: 200px;
     display: block;
@@ -297,7 +297,7 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-  }
+  } */
 
   body {
     margin: 0;
