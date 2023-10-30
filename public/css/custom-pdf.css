@@ -200,21 +200,16 @@ body {
     page-break-inside: auto;
   }
 
-  .track-feature-image {
-    width: 750px;
+  .track-feature-image-container {
     height: 500px;
     margin: auto;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .track-feature-image img {
-    width: 75%;
-    height: 350px;
+  .track-feature-image-container img {
+    height: 100%;
   }
 
   .pois-page {
@@ -239,6 +234,7 @@ body {
     page-break-after: auto;
     margin-bottom: 20px;
     page-break-inside: avoid;
+    min-height: 200px;
   }
 
   .poi-details {
@@ -284,11 +280,6 @@ body {
     background-repeat: no-repeat;
     background-position: center;
   }
-
-  /* .poi-feature-image .poi-image {
-    width: 100%;
-    height: 100%;
-  } */
 
   .app-logo {
     width: 200px;
