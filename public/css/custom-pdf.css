@@ -41,6 +41,7 @@ body {
   cursor: pointer;
   padding: 10px 20px;
 }
+
 .loading {
   display: grid;
   grid-template-columns: 1fr 50px;
@@ -48,18 +49,28 @@ body {
   align-items: center;
   justify-items: center;
 }
+
 .print-button:disabled {
   cursor: not-allowed;
   pointer-events: all !important;
 }
+
 .print-button:enabled:hover {
   box-shadow: 3px 3px 9px #c3c1c1;
 }
 
 @media print {
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
   .print-layer {
     display: none;
   }
+
   .map-header {
     width: 55%;
     background-color: white;
@@ -153,6 +164,7 @@ body {
   thead {
     display: table-header-group;
   }
+
   tfoot {
     display: table-footer-group;
   }
@@ -174,6 +186,7 @@ body {
     margin-bottom: 10px;
     margin-top: 20px;
   }
+
   .track-details span {
     margin: 5px 10px;
   }
@@ -181,8 +194,10 @@ body {
   .track-description {
     line-height: 1.2rem;
     margin: 15px 25px 0;
-    text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
-    text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
+    text-align: justify;
+    /* allinea il testo su entrambi i lati, creando margini uniformi */
+    text-justify: inter-word;
+    /* utilizza uno spazio uniforme tra le parole */
     padding: 10px 30px;
     padding-top: 5px;
     background-color: #efefef;
@@ -192,21 +207,16 @@ body {
     page-break-inside: auto;
   }
 
-  .track-feature-image {
-    width: 750px;
+  .track-feature-image-container {
     height: 500px;
     margin: auto;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .track-feature-image img {
-    width: 75%;
-    height: 350px;
+  .track-feature-image-container img {
+    height: 100%;
   }
 
   .pois-page {
@@ -226,10 +236,12 @@ body {
     align-items: center;
     background-color: #efefef;
     print-color-adjust: exact;
-    -webkit-print-color-adjust: exact; /* Per visualizzare colore di background anche in print mode*/
+    -webkit-print-color-adjust: exact;
+    /* Per visualizzare colore di background anche in print mode*/
     page-break-after: auto;
     margin-bottom: 20px;
     page-break-inside: avoid;
+    min-height: 200px;
   }
 
   .poi-details {
@@ -241,8 +253,10 @@ body {
   }
 
   .poi-description {
-    text-align: justify; /* allinea il testo su entrambi i lati, creando margini uniformi */
-    text-justify: inter-word; /* utilizza uno spazio uniforme tra le parole */
+    text-align: justify;
+    /* allinea il testo su entrambi i lati, creando margini uniformi */
+    text-justify: inter-word;
+    /* utilizza uno spazio uniforme tra le parole */
     line-height: 1.1rem;
   }
 
@@ -274,21 +288,17 @@ body {
     background-position: center;
   }
 
-  /* .poi-feature-image .poi-image {
-    width: 100%;
-    height: 100%;
-  } */
-
-  .app-logo {
-    width: 150px;
-    height: 150px;
+  /* .app-logo {
+    width: 200px;
+    height: 200px;
     display: block;
     right: 30px;
     position: absolute;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-  }
+  } */
+
   body {
     margin: 0;
   }
@@ -297,9 +307,11 @@ body {
     margin: 0mm;
     break-inside: auto;
   }
+
   .track-feature-image-page:last-child {
     page-break-after: auto;
   }
+
   .pois-page:last-child {
     page-break-after: auto;
   }
@@ -320,6 +332,7 @@ body {
     }
   }
 }
+
 /**
  * ==============================================
  * Dot Typing - https://codepen.io/nzbin/pen/GGrXbp
@@ -342,26 +355,32 @@ body {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
   }
+
   16.667% {
     box-shadow: 9984px -10px 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
   }
+
   33.333% {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
   }
+
   50% {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px -10px 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
   }
+
   66.667% {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
   }
+
   83.333% {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px -10px 0 0 #fbfbfb;
   }
+
   100% {
     box-shadow: 9984px 0 0 0 #fbfbfb, 9999px 0 0 0 #fbfbfb,
       10014px 0 0 0 #fbfbfb;
