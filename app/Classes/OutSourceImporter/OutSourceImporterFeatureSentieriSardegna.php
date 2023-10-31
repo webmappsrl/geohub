@@ -230,14 +230,14 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                             if (is_array($idList)) {
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $json_taxonomy_theme)) {
-                                        $this->tags['description']['it'] .= isset($json_taxonomy_theme[$id]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
-                                        $this->tags['description']['en'] .= isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">More info</a>' : '';
+                                        $this->tags['description']['it'] .= isset($json_taxonomy_theme[$id]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                        $this->tags['description']['en'] .= isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">More info</a>' : '';
                                     }
                                 }
                             } else {
                                 if (key_exists($idList, $json_taxonomy_theme)) {
-                                    $this->tags['description']['it'] .= isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
-                                    $this->tags['description']['en'] .= isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:<h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                    $this->tags['description']['it'] .= isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                    $this->tags['description']['en'] .= isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
                                 }
                             }
                         }
@@ -253,7 +253,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $this->tax_difficulty)) {
                                         $more_info_link = true;
-                                        $this->tags['description']['it'] .= '<h3>Difficoltà:<h3>';
+                                        $this->tags['description']['it'] .= '<h3>Difficoltà:</h3>';
                                         if ($this->tax_difficulty[$id]['parent'] != 'NULL') {
                                             $this->tags['description']['it'] .= '<p>'. $this->tax_difficulty[$this->tax_difficulty[$id]['parent']]['name']['it'] . ' > ' . $this->tax_difficulty[$id]['name']['it'] . '</p>';
                                         }
@@ -272,9 +272,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding the description after the Stato di validazione
         if (isset($track['properties']['description'])) {
-            $this->tags['description']['it'] .= isset($track['properties']['description']['it']) ? '<h3>Descrizione:<h3>' : '';
+            $this->tags['description']['it'] .= isset($track['properties']['description']['it']) ? '<h3>Descrizione:</h3>' : '';
             $this->tags['description']['it'] .= isset($track['properties']['description']['it']) ? $track['properties']['description']['it'] : '';
-            $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? '<h3>Description:<h3>' : '';
+            $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? '<h3>Description:</h3>' : '';
             $this->tags['description']['en'] .= isset($track['properties']['description']['en']) ? $track['properties']['description']['en'] : '';
         }
 

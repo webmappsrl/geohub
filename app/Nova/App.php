@@ -948,12 +948,10 @@ class App extends Resource
 
             Text::make(__('Privacy Url'), 'privacy_url')
                 ->hideFromIndex()
-                ->rules('url')
                 ->help(__('Url to the privacy policy')),
 
             Text::make(__('Website Url'), 'website_url')
                 ->hideFromIndex()
-                ->rules('url')
                 ->help(__('Url to the website')),
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
