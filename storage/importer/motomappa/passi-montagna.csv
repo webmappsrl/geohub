@@ -1,0 +1,1323 @@
+id,last_modified,Name,lat,lon,poi_type
+001,06/11/2023,Passo del Giogo,11.3886035,44.0471267,natural-saddle
+002,06/11/2023,Passo della Sambuca,11.4863689,44.0726299,natural-saddle
+003,06/11/2023,Passo della Colla,11.484178,44.0386386,natural-saddle
+004,06/11/2023,Passo della Collina,10.9319705,44.0283702,natural-saddle
+005,06/11/2023,Passo dell'Abetone,10.664949,44.1458436,natural-saddle
+006,06/11/2023,Passo della Futa,11.2764133,44.0940503,natural-saddle
+007,06/11/2023,Passo della Consuma,11.6018252,43.782987,natural-saddle
+008,06/11/2023,Passo della Raticosa,11.3378035,44.172645,natural-saddle
+009,06/11/2023,Passo del Muraglione,11.6543329,43.933316,natural-saddle
+010,06/11/2023,Passo dell'Eremo,11.6407856,44.0303252,natural-saddle
+011,06/11/2023,Passo Peschiera,11.6562311,44.0173646,natural-saddle
+012,06/11/2023,valico del Paretaio,11.5008401,44.1435793,natural-saddle
+013,06/11/2023,Passo Carnevale,11.5784907,44.0950722,natural-saddle
+014,06/11/2023,Passo delle 100 forche,11.8545397,44.0434935,natural-saddle
+015,06/11/2023,Valico tre Faggi,11.6780783,43.9278225,natural-saddle
+016,06/11/2023,Valico Croce ai Mori,11.6360907,43.8505231,natural-saddle
+017,06/11/2023,Passo della Calla,11.7445382,43.8596243,natural-saddle
+018,06/11/2023,Passo dell'Oppio,10.8379168,44.0426481,natural-saddle
+019,06/11/2023,Passo del Carnaio,11.9563704,43.8972035,natural-saddle
+020,06/11/2023,Passo dei Mandrioli,11.9150143,43.7975662,natural-saddle
+021,06/11/2023,Bocca Trabaria,12.235592,43.5951577,natural-saddle
+022,06/11/2023,Valico dello Spino,11.9615995,43.7012677,natural-saddle
+023,06/11/2023,Valico di Viamaggio,12.1163556,43.6824836,natural-saddle
+024,06/11/2023,"Passo Valbura
+",11.7633135,43.99338,natural-saddle
+025,06/11/2023,Valico Monte Fumaiolo,12.0725071,43.7900559,natural-saddle
+026,06/11/2023,Passo del Bocco,9.4434893,44.4153675,natural-saddle
+027,06/11/2023,Passo dello Stelvio,10.4532499,46.5288214,natural-saddle
+028,06/11/2023,"Passo Manghen
+",11.4392321,46.175389,natural-saddle
+029,06/11/2023,Passo del Bracco,9.5677211,44.2498932,natural-saddle
+030,06/11/2023,Passo Centocroci,9.6234075,44.4214776,natural-saddle
+031,06/11/2023,Passo della Cisa,9.9315361,44.4726243,natural-saddle
+032,06/11/2023,Passo del Cerreto,10.2170656,44.3043047,natural-saddle
+033,06/11/2023,Valico Montecoronaro,12.0250749,43.7865642,natural-saddle
+034,06/11/2023,Passo delle Radici,10.4887508,44.209288,natural-saddle
+035,06/11/2023,Passo del Tomarlo,9.5008336,44.5358905,natural-saddle
+036,06/11/2023,Passo Pradarena,10.3005974,44.2855623,natural-saddle
+037,06/11/2023,Passo Brasa,10.9957388,44.2738282,natural-saddle
+038,06/11/2023,"Passo del Sugame
+",11.3639714,43.5982224,natural-saddle
+039,06/11/2023,Bocca dei Ravari,11.0147969,44.3005261,natural-saddle
+040,06/11/2023,La Crocina (Setteponti-Talla),11.7380416,43.5735712,natural-saddle
+041,06/11/2023,"Passo del Vestito
+",10.2248525,44.0656059,natural-saddle
+042,06/11/2023,"valico dell'olmo
+",11.3398662,43.8632704,natural-saddle
+043,06/11/2023,"Passo della Mola
+",9.5756949,44.279021,natural-saddle
+044,06/11/2023,Valico Bocca Serriola,12.3569768294692,43.5155791067727,natural-saddle
+045,06/11/2023,Cento Croci,10.6200446560979,44.2604618222076,natural-saddle
+046,06/11/2023,VALICO DI SCHEGGIA,12.6590958,43.4111995,natural-saddle
+047,06/11/2023,valico monte Beccuggiano,11.6994758695364,44.1030564860036,natural-saddle
+048,06/11/2023,Passo del Faiallo,8.6674331,44.4618956,natural-saddle
+049,06/11/2023,"Forca di Cerro
+",12.8011168,42.7520413,natural-saddle
+050,06/11/2023,Passo del Prugno,11.5946534648538,44.2350976796005,natural-saddle
+051,06/11/2023,"La Foce
+",11.9517667,43.3677532,natural-saddle
+052,06/11/2023,Passo del Turchino,8.7348604,44.4853728,natural-saddle
+053,06/11/2023,Col de la Lombarde,7.15008359402418,44.2025660568001,natural-saddle
+054,06/11/2023,Colle del Melogno,8.1968805,44.2303029,natural-saddle
+055,06/11/2023,Colle San Bernardo,8.0809707,44.1558556,natural-saddle
+056,06/11/2023,Colle del Quazzo,8.0713206,44.2118799,natural-saddle
+057,06/11/2023,Colle di Caprauna,7.9297653,44.1082254,natural-saddle
+058,06/11/2023,Madonna del Colletto,7.372683,44.2835735,natural-saddle
+059,06/11/2023,Col de Larche,6.898468,44.4217434,natural-saddle
+060,06/11/2023,Passo di Gavia,10.4846264,46.3434911,natural-saddle
+061,06/11/2023,Monte Vrsic - Passo della Moistrocca,13.7430709,46.432897,natural-saddle
+062,06/11/2023,Passo del Predil,13.5803292,46.419004,natural-saddle
+063,06/11/2023,"Forca di Gualdo
+",13.1902144,42.8589188,natural-saddle
+064,06/11/2023,Passo di Pramollo,13.2756407,46.559873,natural-saddle
+065,06/11/2023,Passo di Monte Croce Carnico,12.9450803,46.603225,natural-saddle
+066,06/11/2023,Monte Zoncolan,12.9269457,46.5019792,natural-saddle
+067,06/11/2023,Passo Pura,12.743598,46.422987,natural-saddle
+068,06/11/2023,Passo della Mauria,12.5133,46.4544,natural-saddle
+069,06/11/2023,Piancavallo,12.5190185,46.1073108,natural-saddle
+070,06/11/2023,Passo Rest,12.7870774,46.3538555,natural-saddle
+071,06/11/2023,Passo Cibiana,12.258889,46.374167,natural-saddle
+072,06/11/2023,Passo di Monte Croce di Comelico,12.420278,46.655833,natural-saddle
+073,06/11/2023,Passo Giau,12.0517234,46.4840014,natural-saddle
+074,06/11/2023,Passo Falzarego,12.0089186,46.5191252,natural-saddle
+075,06/11/2023,Passo di Valparola,11.9833,46.5333,natural-saddle
+076,06/11/2023,Passo Fedaia,11.8631071,46.4615064,natural-saddle
+077,06/11/2023,Passo Pordoi,11.8117568,46.4888128,natural-saddle
+078,06/11/2023,Passo Duran,12.0961985,46.3250722,natural-saddle
+079,06/11/2023,Passo Sella,11.7573434,46.5088723,natural-saddle
+080,06/11/2023,Terminillo,12.9779757,42.454971,natural-saddle
+081,06/11/2023,Passo Gardena,11.809444,46.5502656,natural-saddle
+082,06/11/2023,Passo Furcia,11.9693363,46.7230205,natural-saddle
+083,06/11/2023,Passo delle Erbe,11.814167,46.675,natural-saddle
+084,06/11/2023,Passo San Pellegrino,11.7838054,46.3786853,natural-saddle
+085,06/11/2023,Passo Valles,11.8009012,46.3385778,natural-saddle
+086,06/11/2023,Passo Rolle,11.7839341,46.296353,natural-saddle
+087,06/11/2023,Passo Brocon,11.688333,46.118611,natural-saddle
+088,06/11/2023,Passo Croce D'aune,11.8281499,46.0635787,natural-saddle
+089,06/11/2023,Passo Stalle,12.1998712,46.8875862,natural-saddle
+090,06/11/2023,Passo Nigra,11.5860476,46.4559803,natural-saddle
+091,06/11/2023,Passo Lavazé,11.4924064,46.3545423,natural-saddle
+092,06/11/2023,Passo di Pennes,11.4409685,46.8187217,natural-saddle
+093,06/11/2023,Passo di Monte Giovo,11.3208724,46.8396011,natural-saddle
+094,06/11/2023,Passo del Rombo,11.0966525,46.9051605,natural-saddle
+095,06/11/2023,Passo delle Palade,11.112222,46.530556,natural-saddle
+096,06/11/2023,Passo della Mendola,11.1969959,46.4181756,natural-saddle
+097,06/11/2023,Passo del Tonale,10.5786348,46.2576843,natural-saddle
+098,06/11/2023,Passo del Mortirolo,10.2983079,46.2479261,natural-saddle
+099,06/11/2023,Passo dell'Aprica,10.1480688,46.1533297,natural-saddle
+100,06/11/2023,Passo Godi,13.9301597,41.8373627,natural-saddle
+101,06/11/2023,Passo del Foscagno,10.209,46.495,natural-saddle
+102,06/11/2023,Valico della Forchetta,14.1073141,41.919773,natural-saddle
+103,06/11/2023,Passo del Forno,10.2927778,46.64,natural-saddle
+104,06/11/2023,Passo Flüela,9.94744,46.7503,natural-saddle
+105,06/11/2023,Passo del Giulia - Julierpass,9.7177092,46.4701639,natural-saddle
+106,06/11/2023,Passo del Bernina,10.0266,46.4107,natural-saddle
+107,06/11/2023,Forcola di Livigno,10.0557555,46.4424704,natural-saddle
+108,06/11/2023,Forca d'Acero,13.8166667,41.75,natural-saddle
+109,06/11/2023,Passo del Maniva,10.3993562,45.8228276,natural-saddle
+110,06/11/2023,Passo Vezzena,11.3275266,45.9566843,natural-saddle
+111,06/11/2023,Passo Coe,11.2189158,45.876021,natural-saddle
+112,06/11/2023,Passo Sommo,11.2060295,45.9194578,natural-saddle
+113,06/11/2023,Passo Valbona,11.2812737,45.869116,natural-saddle
+114,06/11/2023,Passo della Borcola,11.2067199,45.8276255,natural-saddle
+115,06/11/2023,Pian delle Fugazze,11.1729451,45.7603275,natural-saddle
+116,06/11/2023,"passo delle Capannelle
+",13.3522756,42.4598323,natural-saddle
+117,06/11/2023,Großglockner-Hochalpenstraße,12.842778,47.083333,natural-saddle
+118,06/11/2023,Col de Larche o Colle della Maddalena,6.8984531,44.4216161,natural-saddle
+119,06/11/2023,Col de Vars,6.7026304,44.5389509,natural-saddle
+120,06/11/2023,Colle dell'Agnello,6.9795934,44.683986,natural-saddle
+121,06/11/2023,Col d'Izoard,6.7349823,44.8197132,natural-saddle
+122,06/11/2023,Col de l Echelle - Passo della Scala,6.6568324,45.0271661,natural-saddle
+123,06/11/2023,Passo di Sant'Antonio,12.4837921,46.5572404,natural-saddle
+124,06/11/2023,Passo Tre Croci,12.2030103,46.5566564,natural-saddle
+125,06/11/2023,Colle del Moncenisio,6.9008601,45.2596238,natural-saddle
+126,06/11/2023,Colle dell'Iseran,7.030626,45.417126,natural-saddle
+127,06/11/2023,Colle del Piccolo San Bernardo,6.88389,45.6802785,natural-saddle
+128,06/11/2023,Colle del Gran San Bernardo,7.1875437,45.8938773,natural-saddle
+129,06/11/2023,Passo San Rocco,10.5391318,45.7490835,natural-saddle
+130,06/11/2023,Passo del Vivione,10.2029,46.0379,natural-saddle
+131,06/11/2023,Passo Genna Silana,9.5081081,40.1588595,natural-saddle
+132,06/11/2023,Colle Fauniera,7.1214246,44.3860877,natural-saddle
+133,06/11/2023,Colle di Esischie,7.1236562,44.3967596,natural-saddle
+134,06/11/2023,Colle Sampeyre,7.1188902,44.5512412,natural-saddle
+135,06/11/2023,Passo di San Marco,9.623031,46.0470734,natural-saddle
+136,06/11/2023,Passo dello Spluga,9.33028,46.5056,natural-saddle
+137,06/11/2023,Passo Agueglio (1140m),9.3210059,46.0051675,natural-saddle
+138,06/11/2023,Passo Culmine San Pietro,9.4940151,45.9020566,natural-saddle
+139,06/11/2023,Passo del Sempione,8.0322074,46.2505944,natural-saddle
+140,06/11/2023,Passo della Furka,8.4148637,46.5724095,natural-saddle
+141,06/11/2023,Passo del Lucomagno,8.8014082,46.5622633,natural-saddle
+142,06/11/2023,Passo del Maloja,9.69575,46.4,natural-saddle
+143,06/11/2023,Passo della Novena,8.3880556,46.4758333,natural-saddle
+144,06/11/2023,"Passo della Cerventosa
+",12.0565171,43.2912658,natural-saddle
+145,06/11/2023,Valico del Macerone,14.2144,41.6447,natural-saddle
+146,06/11/2023,"passo Correboi
+",9.3466523,40.0849847,natural-saddle
+147,06/11/2023,Passo della Bonette,6.8041845,44.3206931,natural-saddle
+148,06/11/2023,Col de la Moutiere,6.795816,44.3152501,natural-saddle
+149,06/11/2023,Colle del Monginevro,6.7302495,44.9339532,natural-saddle
+150,06/11/2023,Colle delle Fenestrelle,7.0539539,45.0727918,natural-saddle
+151,06/11/2023,Colle San Carlo,6.9912505,45.7424422,natural-saddle
+152,06/11/2023,Col de Roselend,6.6895776,45.6912631,natural-saddle
+153,06/11/2023,Col du Pre,6.5980131,45.6902836,natural-saddle
+154,06/11/2023,Pas du Tanarel,7.7151107,44.0792465,natural-saddle
+155,06/11/2023,"Passo della Scalucchia
+",10.2289312,44.3571973,natural-saddle
+156,06/11/2023,Passo della Forcella,9.3333333,44.45,natural-saddle
+157,06/11/2023,"Passo di Santa Barbara o dell'Angelone
+",9.4606313,44.7312152,natural-saddle
+158,06/11/2023,Passo di Fregarolo,9.3191634,44.5174127,natural-saddle
+159,06/11/2023,Passo del Cornello,12.8585154,43.1253525,natural-saddle
+160,06/11/2023,passo Cantoniera,12.2881222,43.7789647,natural-saddle
+161,06/11/2023,Passo del San Gottardo,8.5623231,46.5588864,natural-saddle
+162,06/11/2023,Passo dell'Oberalp,8.671018,46.6583992,natural-saddle
+163,06/11/2023,Col du Lautaret,6.4051047,45.0352342,natural-saddle
+164,06/11/2023,Col du Galibier,6.4078458,45.0641514,natural-saddle
+165,06/11/2023,Col du Telegraphe,6.4444294,45.2027264,natural-saddle
+166,06/11/2023,Col de Sarenne,6.1490387,45.0874518,natural-saddle
+167,06/11/2023,Col du Glandon,6.1756947,45.2397508,natural-saddle
+168,06/11/2023,Col de la Croix de Fer,6.2028446,45.2278207,natural-saddle
+169,06/11/2023,"Passo della Cappelletta
+",9.6627755,44.4000642,natural-saddle
+170,06/11/2023,Passo Lagastrello,10.141402,44.3511883,natural-saddle
+171,06/11/2023,Valico di Chiunzi,14.6209505,40.7180189,natural-saddle
+172,06/11/2023,"Passo di santa Crocella
+",14.5810057,41.3839343,natural-saddle
+173,06/11/2023,Passo del Diavolo,13.752532,41.8683126,natural-saddle
+174,06/11/2023,Passo Sella di Vinchiaturo,14.5849527,41.4531125,natural-saddle
+175,06/11/2023,Passo di Pretemorto,14.4209153,41.4010945,natural-saddle
+176,06/11/2023,Passo delle Crocelle,15.55,40.7833333,natural-saddle
+177,06/11/2023,Passo dello Scalone,15.9402622,39.6299912,natural-saddle
+178,06/11/2023,Col de la Madeleine,6.3754599,45.4357621,natural-saddle
+179,06/11/2023,Colle Phantaleon,7.5682882,45.7861081,natural-saddle
+180,06/11/2023,Col de Vescavo,7.502493,43.8848497,natural-saddle
+181,06/11/2023,"Valico tre Cancelli
+",16.0588282,40.6400144,natural-saddle
+182,06/11/2023,Acquabona,16.3337731,39.0254185,natural-saddle
+183,06/11/2023,Valico del Morellino (747 slm),11.3984223,43.5501684,natural-saddle
+184,06/11/2023,Col d'Allos,6.569655,44.2932014,natural-saddle
+185,06/11/2023,Col de la Cayolle,6.743905,44.2592237,natural-saddle
+186,06/11/2023,Cima del Mont Ventoux,5.279031,44.174344,natural-saddle
+187,06/11/2023,Passo di Cirone,10.0030744,44.438979,natural-saddle
+188,06/11/2023,Passo Dei Casoni,9.3071098,44.5269629,natural-saddle
+189,06/11/2023,"Passo di Lentula
+",11.0460003,44.0916155,natural-saddle
+190,06/11/2023,Passo di Linguada',9.648925,44.669387,natural-saddle
+191,06/11/2023,"Passo Pianazze
+",9.6189829,44.6370722,natural-saddle
+192,06/11/2023,"Passo del Ghiffi
+",9.445568,44.4380325,natural-saddle
+193,06/11/2023,Passo Montevacà,9.609619,44.5353533,natural-saddle
+194,06/11/2023,"Passo del Pellizzone
+",9.7441817,44.6799703,natural-saddle
+195,06/11/2023,Passo dello Zovallo,9.520584,44.5736347,natural-saddle
+196,06/11/2023,"Passo del Brallo
+",9.2796749,44.7375395,natural-saddle
+197,06/11/2023,Passo Cà del Diavolo,9.3882762,44.8922336,natural-saddle
+198,06/11/2023,Passo della Caldarola,9.4438711,44.8551616,natural-saddle
+199,06/11/2023,Passo del Cerro,9.5528557,44.7862208,natural-saddle
+200,06/11/2023,Colle della Crocetta,9.3737411,44.851485,natural-saddle
+201,06/11/2023,"Passo delle Donne
+",9.708223,44.7471279,natural-saddle
+202,06/11/2023,Passo del Mercatello,9.4509586,44.6539,natural-saddle
+203,06/11/2023,Forca Canapine,13.1996314,42.7489756,natural-saddle
+204,06/11/2023,Forca di Presta,13.2606912,42.7899683,natural-saddle
+205,06/11/2023,Passo di Tascusì,9.2309684,40.0318065,natural-saddle
+206,06/11/2023,Passo Lanciano,14.1048517,42.1889543,natural-saddle
+207,06/11/2023,Sella di Corno,13.1919957,42.361798,natural-saddle
+208,06/11/2023,"Valico di Forca Caruso
+",13.7029182,42.0626668,natural-saddle
+209,06/11/2023,Valico Bocca di Forlì,14.121632,41.7320024,natural-saddle
+210,06/11/2023,Valico Sierra del Fiego,16.3954924,39.3531076,natural-saddle
+211,06/11/2023,Sella di Ariano,15.1330832,41.1679051,natural-saddle
+212,06/11/2023,Stretta di Arpaia,14.5509417,41.0386556,natural-saddle
+213,06/11/2023,Bocca Della Selva,14.5004142,41.3785419,natural-saddle
+214,06/11/2023,"Passo Sella di Conza
+",15.3027466,40.8384147,natural-saddle
+215,06/11/2023,"Valico della Preta Perciata
+",15.256326,40.3386032,natural-saddle
+216,06/11/2023,PASSO DELLA SENTINELLA,15.418121,40.4194918,natural-saddle
+217,06/11/2023,Passo della Bocchetta,8.8833333,44.55,natural-saddle
+218,06/11/2023,Passo della Castagnola,8.8820722,44.6008446,natural-saddle
+219,06/11/2023,Passo della Crocetta,9.2421211,44.384583,natural-saddle
+220,06/11/2023,Valico del Pescino,9.4061677,44.5849763,natural-saddle
+221,06/11/2023,Valico di San Fermo,9.103056,44.61,natural-saddle
+222,06/11/2023,"sella di Leonessa
+",13.0060822,42.4740342,natural-saddle
+223,06/11/2023,passo della Torrita,13.2255759,42.6182381,natural-saddle
+224,06/11/2023,"Portella Mandrazzi
+",15.1381307,37.9756929,natural-saddle
+225,06/11/2023,Passo di Llogara,19.5980085,40.1966103,natural-saddle
+226,06/11/2023,"Passo croce vecchia
+",11.5836836,43.7436697,natural-saddle
+227,06/11/2023,"Passo Cavallo
+",10.8612331,45.7127027,natural-saddle
+228,06/11/2023,"Passo San Boldo
+",12.1694813,46.0066503,natural-saddle
+229,06/11/2023,"Punta veleno
+",10.7951192,45.6962179,natural-saddle
+230,06/11/2023,"Passo Campiano
+",10.8233849,45.7637863,natural-saddle
+231,06/11/2023,"Passo Pozza della Cola
+",10.8958837,45.7586001,natural-saddle
+232,06/11/2023,"Passo di san Valentino
+",10.9124834,45.7832514,natural-saddle
+233,06/11/2023,"Bocca del Creer
+",10.8935902,45.7986356,natural-saddle
+234,06/11/2023,"Bocca di Navene
+",10.8728782,45.7881006,natural-saddle
+235,06/11/2023,"Passo Cavallino della Fobbia
+",10.5181288,45.7284322,natural-saddle
+236,06/11/2023,"Passo del Limbara
+",9.1030522,40.842653,natural-saddle
+237,06/11/2023,"Valico di Carlomagno
+",16.5371986,39.2687106,natural-saddle
+238,06/11/2023,"Strada delle vette
+",16.4580387,39.2802718,natural-saddle
+239,06/11/2023,Valico di Montescuro,16.3989335,39.3352729,natural-saddle
+240,06/11/2023,"Passo del Lume Spento
+",11.4805315,43.0343853,natural-saddle
+241,06/11/2023,"Sella Entrata
+",15.8332004,38.1227068,natural-saddle
+242,06/11/2023,"Passo di Petrulli
+",15.7883148,38.1539952,natural-saddle
+243,06/11/2023,Valico Nuraxi De Mesu,8.8098858,38.9462478,natural-saddle
+244,06/11/2023,"S'Arcu de Genneruxi
+",8.9027431,38.9238987,natural-saddle
+245,06/11/2023,valico Gosparini,12.1085925400257,43.2350619156501,natural-saddle
+246,06/11/2023,Passo Serra Sant'Antonio,13.368735909462,41.91858695302,natural-saddle
+247,06/11/2023,Valico di Monte Bove,13.2016912847757,42.0702070369437,natural-saddle
+248,06/11/2023,La Forca,13.249707184732,42.3014552484614,natural-saddle
+249,06/11/2023,Forca di Arrone,12.7762563899159,42.5615867413282,natural-saddle
+250,06/11/2023,Passo degli Acquiputoli,11.0349679738283,43.9991612733564,natural-saddle
+251,06/11/2023,Passo del Tabernacolo,11.0783972963691,44.0776563429836,natural-saddle
+252,06/11/2023,Valico la Sellata,15.7897041365504,40.5308233704482,natural-saddle
+253,06/11/2023,"Valico della Somma
+",12.734658,42.6665292,natural-saddle
+254,06/11/2023,Vallefiorita,13.98839,41.6961492,natural-saddle
+255,06/11/2023,Valico della Chiesola,13.3647666,42.2390569,natural-saddle
+256,06/11/2023,"Valico di capo la Serra
+",13.7456958,42.3797499,natural-saddle
+257,06/11/2023,"Vado di Sole
+",13.7877099,42.3959233,natural-saddle
+258,06/11/2023,"Torre Forca di Penne
+",13.8366686,42.2837889,natural-saddle
+259,06/11/2023,"Passo di Bavella
+",9.2244149,41.795892,natural-saddle
+260,06/11/2023,"Punto 268Prato a Ceragiola
+",10.54915,43.7365615,natural-saddle
+261,06/11/2023,"Passo del Lucese
+",10.382065,43.9365285,natural-saddle
+262,06/11/2023,"Valico di Fontana a Taona
+",10.9858402,44.0180986,natural-saddle
+263,06/11/2023,"Valico della Collina
+",11.720188,44.0750173,natural-saddle
+264,06/11/2023,"Cona di Selvapiana
+",13.1279666,41.5761724,natural-saddle
+265,06/11/2023,"Passo della Quercia del Monaco
+",13.4269155,41.3971854,natural-saddle
+266,06/11/2023,"Passo san Nicola
+",13.5232193,41.3492618,natural-saddle
+267,06/11/2023,"Colle Cimetta
+",13.2355583,41.8378081,natural-saddle
+268,06/11/2023,"Spartiacque Melezzo occidentale/melezzo Orientale
+",8.4343963,46.132895,natural-saddle
+269,06/11/2023,"Passo dello Scopello
+",8.5280041,46.1134647,natural-saddle
+270,06/11/2023,"Passo della Piazza
+",8.6407503,46.0422528,natural-saddle
+271,06/11/2023,Passo Del Cuvignone,8.6704,45.9265,natural-saddle
+272,06/11/2023,Passo San Michele,8.7088695,45.9374725,natural-saddle
+273,06/11/2023,"Passo della Motta Rossa
+",8.8056211,45.8738177,natural-saddle
+274,06/11/2023,"Passo dell'Alpe Tedesco
+",8.8373878,45.8955754,natural-saddle
+275,06/11/2023,"Passo della Forcora
+",8.7776497,46.0747392,natural-saddle
+276,06/11/2023,"Colle de Joux
+",7.7030177,45.7540896,natural-saddle
+277,06/11/2023,"Colle Tzecore
+",7.7183385,45.728025,natural-saddle
+278,06/11/2023,"Col d'Arlaz
+",7.7007003,45.6998665,natural-saddle
+279,06/11/2023,"Alpe Noveis
+",8.1902502,45.7128177,natural-saddle
+280,06/11/2023,"Bocchetta di Margosio
+",8.127456,45.667456,natural-saddle
+281,06/11/2023,"la Colma
+",8.229421,45.6604802,natural-saddle
+282,06/11/2023,"passo della Colma di Civiasco
+",8.3189786,45.8084888,natural-saddle
+283,06/11/2023,"Colle del Ghisallo
+",9.2671007,45.923558,natural-saddle
+284,06/11/2023,"Passo di Valcava
+",9.5143693,45.7883228,natural-saddle
+285,06/11/2023,"Forcella di Olino
+",9.4740718,45.8883323,natural-saddle
+286,06/11/2023,"Passo di Zambla
+",9.7975521,45.8871435,natural-saddle
+287,06/11/2023,"Passo del Selvino
+",9.7563105,45.7852775,natural-saddle
+288,06/11/2023,"Colle Gallo
+",9.8739847,45.7541054,natural-saddle
+289,06/11/2023,"Santuario d'Altino
+",9.8622552,45.7621744,natural-saddle
+290,06/11/2023,"Colli di san Fermo
+",9.9552528,45.7330582,natural-saddle
+291,06/11/2023,"Croce di Salven
+",10.1545065,45.9459747,natural-saddle
+292,06/11/2023,"Passo della Presolana
+",10.0983518,45.9290731,natural-saddle
+293,06/11/2023,"passo del Fletta
+",10.3336566,46.1605326,natural-saddle
+294,06/11/2023,"Valico di Trivigno
+",10.1810913,46.1846045,natural-saddle
+295,06/11/2023,"Passo di Guspessa
+",10.2401535,46.2016399,natural-saddle
+296,06/11/2023,"Passo dell'Eira
+",10.165228,46.5382281,natural-saddle
+297,06/11/2023,Passo di Fraele,10.2531094,46.5526507,natural-saddle
+298,06/11/2023,"passo Tremalzo
+",10.689744,45.8367455,natural-saddle
+299,06/11/2023,"Bocca di Nevese
+",10.7430486,45.7740018,natural-saddle
+300,06/11/2023,"Passo s.Giovanni
+",10.9063327,45.873957,natural-saddle
+301,06/11/2023,"Passo santa Barbara
+",10.9401776,45.8962693,natural-saddle
+302,06/11/2023,"Passo Bordala
+",10.9774729,45.9074685,natural-saddle
+303,06/11/2023,"Passo del Casello
+",10.8625456,45.6833774,natural-saddle
+304,06/11/2023,"Col di Pealda Bassa
+",10.962989,45.6814106,natural-saddle
+305,06/11/2023,Passo Fittanze Di Sega,10.9792652,45.6831519,natural-saddle
+306,06/11/2023,Bivio Del Pidocchio,11.0029538,45.6918183,natural-saddle
+307,06/11/2023,"Bocca di Selva
+",11.0562827,45.6687312,natural-saddle
+308,06/11/2023,Passo del Branchetto,11.070291,45.6791564,natural-saddle
+309,06/11/2023,"Passo di Camposilvano
+",11.0882882,45.6269728,natural-saddle
+310,06/11/2023,"Sella di Velo Veronese
+",11.0960344,45.6066286,natural-saddle
+311,06/11/2023,Passo Santa Caterina,11.2612694,45.6171194,natural-saddle
+312,06/11/2023,"Passo dello Zovo
+",11.3095348,45.6839931,natural-saddle
+313,06/11/2023,"Capitello Cima
+",11.3300054,45.6601228,natural-saddle
+314,06/11/2023,"Passo Xon
+",11.2202556,45.7205059,natural-saddle
+315,06/11/2023,"Passo di Campogrosso
+",11.1687572,45.7289619,natural-saddle
+316,06/11/2023,"Passo Xomo
+",11.237596,45.7770314,natural-saddle
+317,06/11/2023,"Sella Serrada
+",11.1546461,45.8917929,natural-saddle
+318,06/11/2023,"Passo del Colletto Piccolo
+",11.3536485,45.7699375,natural-saddle
+319,06/11/2023,"Sella di Turcio
+",11.5466494,45.8493613,natural-saddle
+320,06/11/2023,"Passo Stretto
+",11.5985126,45.8270122,natural-saddle
+321,06/11/2023,"Bocchetta di Conco
+",11.6095944,45.8172192,natural-saddle
+322,06/11/2023,"Portella Torretta
+",13.2484777,38.129201,natural-saddle
+323,06/11/2023,"Valico di Pierdiscini
+",10.33741,44.10393,natural-saddle
+324,06/11/2023,Pettino,12.8068097,42.8587175,natural-saddle
+325,06/11/2023,"Valico del Soglio
+",12.8965206,42.9049723,natural-saddle
+326,06/11/2023,"Passo di Gavelli
+",12.9221756,42.6731576,natural-saddle
+327,06/11/2023,"Poggio le Guaine
+",12.5664898,43.5451726,natural-saddle
+328,06/11/2023,"La Montagnola
+",12.5429499,43.5544,natural-saddle
+329,06/11/2023,"Monte Nerone
+",12.5180985,43.5554723,natural-saddle
+330,06/11/2023,"Foce da Caprile
+",12.7276541,43.4761668,natural-saddle
+331,06/11/2023,valico di Fossato,12.8012543,43.2991026,natural-saddle
+332,06/11/2023,"Valico Monte Cucco
+",12.7822797,43.3413024,natural-saddle
+333,06/11/2023,"La Morca
+",12.9352934,43.2084713,natural-saddle
+334,06/11/2023,"Pian dell'Elmo
+",13.0665508,43.3098976,natural-saddle
+335,06/11/2023,"Colle santa Barbara
+",13.0479694,43.1021083,natural-saddle
+336,06/11/2023,Valico di Colfiorito,12.8586269,43.002835,natural-saddle
+337,06/11/2023,"Piani di Montelago
+",12.972833,43.1140055,natural-saddle
+338,06/11/2023,"Colle Morelle
+",13.0929424,42.9777688,natural-saddle
+339,06/11/2023,Vallestretta,13.1393742,42.9642664,natural-saddle
+340,06/11/2023,"Sella della Maddalena
+",13.2423586,43.0092711,natural-saddle
+341,06/11/2023,"Piè la Rocca
+",13.1163122,42.8209558,natural-saddle
+342,06/11/2023,"Forca della Civita
+",13.1189653,42.6967125,natural-saddle
+343,06/11/2023,"Forca di Chiavano
+",13.0732115,42.6688762,natural-saddle
+344,06/11/2023,"La Forca
+",13.1363418,42.6380604,natural-saddle
+345,06/11/2023,"Forca Rua la Cama
+",12.9760896,42.6966919,natural-saddle
+346,06/11/2023,"Torre Fuscello
+",12.9149921,42.5642957,natural-saddle
+347,06/11/2023,"Valico di val carpineto
+",13.054696,42.5304142,natural-saddle
+348,06/11/2023,"Valico Cancelli
+",13.2905608,42.5677703,natural-saddle
+349,06/11/2023,"Valico Prato dell'Abate
+",13.3429466,42.5342488,natural-saddle
+350,06/11/2023,"Valico Cornillo Nuovo
+",13.3362636,42.617575,natural-saddle
+351,06/11/2023,"Sella Ciarelli
+",13.5027537,42.6908398,natural-saddle
+352,06/11/2023,"Valico di Santo Stefano di Sessanio
+",13.6163171,42.3371076,natural-saddle
+353,06/11/2023,"Valico rocca di Cambio
+",13.4910079,42.2449656,natural-saddle
+354,06/11/2023,"Vado della Forcella
+",13.5209465,42.1937963,natural-saddle
+355,06/11/2023,"Vado di Pezza
+",13.4837818,42.1817131,natural-saddle
+356,06/11/2023,"Valico di Fonte   Capo la Maina
+",13.4655902,42.1075849,natural-saddle
+357,06/11/2023,"Valico Olmo di Bobbi
+",13.7443713,42.0477228,natural-saddle
+358,06/11/2023,"La crocetta
+",13.4187199,42.2357849,natural-saddle
+359,06/11/2023,"Passo Tettone
+",14.1160148,42.171373,natural-saddle
+360,06/11/2023,"Valico della Cantoniera Mimola
+",13.9042406,41.8625979,natural-saddle
+361,06/11/2023,"Colle della Croce
+",13.9928161,41.7410547,natural-saddle
+362,06/11/2023,"Colle Calvario
+",14.0328418,41.7183223,natural-saddle
+363,06/11/2023,"Bocca di Forlì
+",14.1310131,41.7498814,natural-saddle
+364,06/11/2023,Capracotta,14.2611753,41.8329527,natural-saddle
+365,06/11/2023,"Valico Campolieto
+",14.7416263,41.6377538,natural-saddle
+366,06/11/2023,"Valico di CerroSecco
+",14.8394232,41.6966667,natural-saddle
+367,06/11/2023,Portella Misibesi,13.0183391645551,37.6491704682203,natural-saddle
+368,06/11/2023,Sella Omomorto,13.3643592149019,37.3674838005624,natural-saddle
+369,06/11/2023,portella della Paglia,13.2450032606721,38.0112795048056,natural-saddle
+370,06/11/2023,Portella della Ginestra,13.2560777664185,37.9761683902905,natural-saddle
+371,06/11/2023,Portella s.Agata,13.3163684606552,37.9563470948778,natural-saddle
+372,06/11/2023,portella di Rebuttone,13.3269239589572,38.0301196551967,natural-saddle
+373,06/11/2023,Portella di Porta,13.2509594410658,37.8613970218361,natural-saddle
+374,06/11/2023,Portella Scorciavacche,13.2816908508539,37.7776495903427,natural-saddle
+375,06/11/2023,"Portella Bordonaro
+",13.4710787,37.9439901,natural-saddle
+376,06/11/2023,"Portella di Blasi
+",13.4849427,37.8961454,natural-saddle
+377,06/11/2023,"Portella Guddemi
+",13.4637425,37.8297729,natural-saddle
+378,06/11/2023,"Portella di Croce 
+",13.4952317,37.7723602,natural-saddle
+379,06/11/2023,"Portella Imbriaca
+",13.4006033,37.7457305,natural-saddle
+380,06/11/2023,"Portella Mola
+",13.4676371,37.6825751,natural-saddle
+381,06/11/2023,"Portella dell'Olmo
+",13.5166894,37.6863263,natural-saddle
+382,06/11/2023,"Portella Tanabuco
+",13.5735093,37.5387577,natural-saddle
+383,06/11/2023,"Passo Funnuto
+",13.6561911,37.4673191,natural-saddle
+384,06/11/2023,"Portella Scannata
+",13.6499516,37.714289,natural-saddle
+385,06/11/2023,"Sella Monello
+",13.7271563,37.3413421,natural-saddle
+386,06/11/2023,"Sella di Rocca Corvo
+",13.6927109,37.2122016,natural-saddle
+387,06/11/2023,"Portella di sette Frati
+",13.8533233,37.8626812,natural-saddle
+388,06/11/2023,"Portella di Cascio
+",13.8254638,37.8965359,natural-saddle
+389,06/11/2023,"Portella del mare
+",13.9097495,37.8878658,natural-saddle
+390,06/11/2023,Portella colla,14.0050672,37.8675465,natural-saddle
+391,06/11/2023,"Portella Manderini
+",14.0985764,37.8613613,natural-saddle
+392,06/11/2023,"Portella Madonnuzza
+",14.1090618,37.7900857,natural-saddle
+393,06/11/2023,"Portella di Bafurco
+",14.1536,37.8283051,natural-saddle
+394,06/11/2023,"Portella di Geraci Siculo
+",14.1532674,37.8577682,natural-saddle
+395,06/11/2023,"Portella di Montenero
+",14.1046551,37.9661909,natural-saddle
+396,06/11/2023,"Portella Palermo
+",13.9455769,37.6106999,natural-saddle
+397,06/11/2023,"Portella del Morto
+",14.0190422,37.6580503,natural-saddle
+398,06/11/2023,"Portella di Recattivo
+",14.0100872,37.6421031,natural-saddle
+399,06/11/2023,"Portella del Vento
+",14.0815286,37.5693535,natural-saddle
+400,06/11/2023,"Portella di Xirbi
+",14.0519081,37.5356031,natural-saddle
+401,06/11/2023,"Portella s.Michele
+",14.088193,37.5070117,natural-saddle
+402,06/11/2023,"Passo Babbaurra
+",14.0135418,37.4856547,natural-saddle
+403,06/11/2023,"Portella del Toro
+",13.9730726,37.4712997,natural-saddle
+404,06/11/2023,"Portella di Naro
+",13.8638831,37.2046856,natural-saddle
+405,06/11/2023,"Portella Corso
+",13.8859373,37.1765668,natural-saddle
+406,06/11/2023,"Passo delle Pantanelle
+",14.4071774,37.0273041,natural-saddle
+407,06/11/2023,"Serra di Burgio
+",14.7150042,37.0176247,natural-saddle
+408,06/11/2023,"Passo dei Carri
+",14.942713,36.9107604,natural-saddle
+409,06/11/2023,"Portella Grottacalda
+",14.3495157,37.4689423,natural-saddle
+410,06/11/2023,"Portella Farina
+",14.3209375,37.4695995,natural-saddle
+411,06/11/2023,"portella di Castro
+",14.2695464,37.5375924,natural-saddle
+412,06/11/2023,"Portella Catania
+",14.4172843,37.5628532,natural-saddle
+413,06/11/2023,"Portella Creta
+",14.3120067,37.6814657,natural-saddle
+414,06/11/2023,"Colle del Contrasto
+",14.3981458,37.8517101,natural-saddle
+415,06/11/2023,"Portella dell'Obolo
+",14.5020622,37.9012623,natural-saddle
+416,06/11/2023,"Passo Cannelli
+",15.0341049,37.6692813,natural-saddle
+417,06/11/2023,"Passo della Zita
+",14.754767,38.0482697,natural-saddle
+418,06/11/2023,"Portelle Calcatizzo
+",14.8029394,38.0279136,natural-saddle
+419,06/11/2023,"Portella d'Addricchi
+",14.797854,38.0175685,natural-saddle
+420,06/11/2023,Portella Mitta,14.8945859,37.9917475,natural-saddle
+421,06/11/2023,Portella Castagnera,14.8725831,37.9793207,natural-saddle
+422,06/11/2023,"Portella di Zoppo
+",14.943686,37.9781123,natural-saddle
+423,06/11/2023,"Passo Favoscuro
+",14.9663118,37.9839049,natural-saddle
+424,06/11/2023,"Portella Zilla
+",14.9986954,37.9840677,natural-saddle
+425,06/11/2023,"Portella Cerasa
+",15.0365401,37.9969809,natural-saddle
+426,06/11/2023,"Passo Polverello
+",14.9821129,38.0210608,natural-saddle
+427,06/11/2023,Linguaglossa,15.1390184,37.8355635,natural-saddle
+428,06/11/2023,"Portella san Rizzo
+",15.5058438,38.2156304,natural-saddle
+429,06/11/2023,"Portella Piano verde
+",15.466439,38.1699377,natural-saddle
+430,06/11/2023,Portella Armacera,15.4918877,38.1993486,natural-saddle
+431,06/11/2023,"Portella Castanea
+",15.5278208,38.2396984,natural-saddle
+432,06/11/2023,"Arcu Gutturu Frascu
+",9.478041,39.2128023,natural-saddle
+433,06/11/2023,"Arcu 'e Tidu
+",9.3931734,39.3060675,natural-saddle
+434,06/11/2023,"Valico Sa Portedda
+",8.69407,38.986428,natural-saddle
+435,06/11/2023,Montecani,8.439054,39.3442472,natural-saddle
+436,06/11/2023,"Passo Genna Bogai
+",8.4972749,39.3737115,natural-saddle
+437,06/11/2023,"Passo Bidderdi
+",8.5167131,39.4864936,natural-saddle
+438,06/11/2023,Gennamari,8.5017786,39.4891763,natural-saddle
+439,06/11/2023,"Passo Genna e Frongia
+",8.6116031,39.5317733,natural-saddle
+440,06/11/2023,"Arcu Sa Tella
+",8.5525793,39.5482909,natural-saddle
+441,06/11/2023,"Passo Badde Urbara
+",8.6238527,40.1635845,natural-saddle
+442,06/11/2023,"passo Cantoniera Scala Piccada
+",8.380449,40.520177,natural-saddle
+443,06/11/2023,"Sa Fraigada
+",8.9037801,40.4891941,natural-saddle
+444,06/11/2023,"Valico S'Uccaidu
+",9.0196546,40.4313856,natural-saddle
+445,06/11/2023,"Punta Curtugius
+",9.6231121,40.5558613,natural-saddle
+446,06/11/2023,Passo Littu,9.6327534,40.299766,natural-saddle
+447,06/11/2023,"Valico cantoniera Iannas
+",9.3874395,40.2359698,natural-saddle
+448,06/11/2023,"Valico Nostra Signora di Loreto
+",9.3115167,40.2210195,natural-saddle
+449,06/11/2023,"Lanna Caguseli
+",9.1844955,40.1892681,natural-saddle
+450,06/11/2023,"Passo Orostode
+",9.4542613,40.0431578,natural-saddle
+451,06/11/2023,"Arcu Nostra Signora de su Monte
+",9.2609921,40.0746414,natural-saddle
+452,06/11/2023,"Arcu Gutddetorgiu
+",9.2551076,40.0011904,natural-saddle
+453,06/11/2023,"Arcu Muncinale
+",9.2280495,40.0575304,natural-saddle
+454,06/11/2023,"S'Isca de sa Mela
+",9.1425407,40.0335406,natural-saddle
+455,06/11/2023,S'Arcu,9.1668754,39.9638898,natural-saddle
+456,06/11/2023,"Valico sa Casa
+",9.1341288,39.9185805,natural-saddle
+457,06/11/2023,"Cuc e Mufloni
+",9.4153316,39.9400585,natural-saddle
+458,06/11/2023,"Genna Antini
+",9.4800534,39.9332464,natural-saddle
+459,06/11/2023,"S'Arcu e su Piratsu Trottu
+",9.3932263,39.8998075,natural-saddle
+460,06/11/2023,"Genna e Medau
+",9.3352547,39.8857205,natural-saddle
+461,06/11/2023,"Valico Arcueri
+",9.3620768,39.8132989,natural-saddle
+462,06/11/2023,"Genna Sarcerei
+",9.5140448,39.8722208,natural-saddle
+463,06/11/2023,"Portella del Lupo
+",13.7196689,37.7950789,natural-saddle
+464,06/11/2023,"Passo di san Giorgio
+",9.4862222,39.8256318,natural-saddle
+465,06/11/2023,"Genna 'E Cresia
+",9.5539537,39.7817837,natural-saddle
+466,06/11/2023,"Genna Su Ludu
+",9.4947395,39.7519625,natural-saddle
+467,06/11/2023,"Passo Quaddazzonis
+",9.5854947,39.7575892,natural-saddle
+468,06/11/2023,"Sedda de Lioni
+",9.4548175,39.6525303,natural-saddle
+469,06/11/2023,"Portella del Lupo
+",13.7441306,37.7391113,natural-saddle
+470,06/11/2023,"Portella Campanaro
+",13.8486387,37.7521508,natural-saddle
+471,06/11/2023,"Portella Mangiante
+",13.8889147,37.7675033,natural-saddle
+472,06/11/2023,"Passo Zonto
+",16.0271944,38.2512798,natural-saddle
+473,06/11/2023,"Passo di Cancelo
+",16.0976215,38.2846287,natural-saddle
+474,06/11/2023,"Passo del Mercante
+",16.1372811,38.3286743,natural-saddle
+475,06/11/2023,"Passo di Ropola
+",16.1762137,38.3027417,natural-saddle
+476,06/11/2023,"Passo della Limina
+",16.1882551,38.3932591,natural-saddle
+477,06/11/2023,"Passo di Croce Ferrata
+",16.2726426,38.4433958,natural-saddle
+478,06/11/2023,"Passo di Pietra Spada
+",16.3514921,38.5027945,natural-saddle
+479,06/11/2023,"Fossa del Lupo
+",16.3641936,38.7624371,natural-saddle
+480,06/11/2023,"Passo di Condrò
+",16.3909989,39.0050167,natural-saddle
+481,06/11/2023,"Valico di Mancuso
+",16.5460641,39.0850155,natural-saddle
+482,06/11/2023,"Valico di Tirivolo
+",16.6362336,39.0750286,natural-saddle
+483,06/11/2023,"Colle Maru
+",16.5661921,39.1285994,natural-saddle
+484,06/11/2023,"Valico Ciricilla
+",16.5402712,39.1347912,natural-saddle
+485,06/11/2023,"valico di Giraselle
+",16.4667738,39.1573912,natural-saddle
+486,06/11/2023,"Bocca di Piazza
+",16.4846529,39.1628806,natural-saddle
+487,06/11/2023,"Colle d'Ascione
+",16.4424325,39.2032995,natural-saddle
+488,06/11/2023,"Passo Potame
+",16.1945651,39.1837197,natural-saddle
+489,06/11/2023,Crocetta,16.113385,39.3208438,natural-saddle
+490,06/11/2023,"Croce di Agnara
+",16.6712071,39.2140385,natural-saddle
+491,06/11/2023,"Colle Donato
+",16.6427542,39.2850669,natural-saddle
+492,06/11/2023,"Valico Croce di Magara
+",16.4813552,39.3275559,natural-saddle
+493,06/11/2023,"Varco san Mauro
+",16.3762175,39.4179579,natural-saddle
+494,06/11/2023,"Valico del bivio Gallopane
+",16.5411555,39.4238138,natural-saddle
+495,06/11/2023,"Valico della Fossiata
+",16.5876118,39.3968004,natural-saddle
+496,06/11/2023,"valico Vivaio
+",16.6139958,39.390885,natural-saddle
+497,06/11/2023,"Valico di Pettinascura
+",16.6225333,39.36912,natural-saddle
+498,06/11/2023,"Valico della Spina
+",16.6349706,39.3526566,natural-saddle
+499,06/11/2023,"Valico di Germano
+",16.6634421,39.3259429,natural-saddle
+500,06/11/2023,"Valico Mezzocampo
+",16.778858,39.3700641,natural-saddle
+501,06/11/2023,"Colle san Martino
+",16.0490166,39.8947947,natural-saddle
+502,06/11/2023,"Colle del Dragone
+",16.1165306,39.9025236,natural-saddle
+503,06/11/2023,"Colle dell'Impiso
+",16.1624955,39.9331628,natural-saddle
+504,06/11/2023,"Colle la Colla
+",15.7342232,40.0287251,natural-saddle
+505,06/11/2023,"Valico del Monte Armizzone
+",15.9793322,40.1493686,natural-saddle
+506,06/11/2023,"Passo della Beta
+",15.3484849,40.2082346,natural-saddle
+507,06/11/2023,"Sella Cessuta
+",15.7987282,40.2504201,natural-saddle
+508,06/11/2023,"Valico di Montesano
+",15.7096119,40.2846894,natural-saddle
+509,06/11/2023,"Bocca del Passo
+",15.6847891,40.4320605,natural-saddle
+510,06/11/2023,Decolla,15.713212,40.434302,natural-saddle
+511,06/11/2023,"Serra del Corticato
+",15.4370469,40.3942864,natural-saddle
+512,06/11/2023,"Croce dello Scrivano
+",15.8389061,40.5645363,natural-saddle
+513,06/11/2023,"Valico Montepiano
+",16.1835465,40.4935165,natural-saddle
+514,06/11/2023,"Valico di Cupolicchio
+",16.0319695,40.6110344,natural-saddle
+515,06/11/2023,"Valico di Bosco Piano
+",15.9658138,40.6538707,natural-saddle
+516,06/11/2023,"Valico del Granito
+",15.3714434,40.8710764,natural-saddle
+517,06/11/2023,"Valico di Piano del Gaudio
+",15.1433556,40.758711,natural-saddle
+518,06/11/2023,"Colle del Leone
+",15.1009686,40.7780754,natural-saddle
+519,06/11/2023,"Le Croci di Acerno
+",15.0372754,40.7782468,natural-saddle
+520,06/11/2023,"Passo Cruci
+",14.9914788,40.8646074,natural-saddle
+521,06/11/2023,"Piano di Verteglia
+",14.9636512,40.8292961,natural-saddle
+522,06/11/2023,"Passo Eclano
+",15.0219273,41.0551343,natural-saddle
+523,06/11/2023,Montevergine,14.7170298,40.937478,natural-saddle
+524,06/11/2023,"Piana di Prata
+",14.5774643,41.1462767,natural-saddle
+525,06/11/2023,"Valico del Lupo 
+",16.092417,41.7787673,natural-saddle
+526,06/11/2023,"Passo di Ingarano
+",15.5016443,41.8052923,natural-saddle
+527,06/11/2023,"Foce di Scopetone 
+",11.9346673,43.4271663,natural-saddle
+528,06/11/2023,Amiata,11.6234858,42.8824477,natural-saddle
+529,06/11/2023,"Valico s. Cristoforo
+",12.2467043,43.7125167,natural-saddle
+530,06/11/2023,"Passo di Tralarbia
+",12.1049851,43.6627418,natural-saddle
+531,06/11/2023,"Passo di Frassineto
+",12.0976846,43.6984887,natural-saddle
+532,06/11/2023,"Passo san Marco
+",12.3527956,43.8471094,natural-saddle
+533,06/11/2023,"Passo della Biancarda
+",12.042403,43.8092176,natural-saddle
+534,06/11/2023,"Passo Incisa
+",12.0534104,43.8585859,natural-saddle
+535,06/11/2023,"Poggio Baiucca
+",12.1326018,43.8478782,natural-saddle
+536,06/11/2023,Perticara,12.2404279,43.9063372,natural-saddle
+537,06/11/2023,"Passo Siepi
+",12.3187965,43.9478476,natural-saddle
+538,06/11/2023,"Passo Santa Donna
+",9.7327397,44.5452625,natural-saddle
+539,06/11/2023,Passo Colla,9.6812466,44.5477965,natural-saddle
+540,06/11/2023,"Valico lo scoppio
+",12.5874563562705,42.7121225712982,natural-saddle
+541,06/11/2023,Grimsellpass - Svizzera,8.33761089307324,46.5617558119884,natural-saddle
+542,06/11/2023,"Monte Finocchio
+",12.1339601,43.9463857,natural-saddle
+543,06/11/2023,"Monte Ciola
+",12.1408247,43.9792746,natural-saddle
+544,06/11/2023,"Passo di Monte Cavallo
+",12.124786,44.0691312,natural-saddle
+545,06/11/2023,"Passo Sulparo
+",11.9862124,43.9758754,natural-saddle
+546,06/11/2023,"Passo Monte delle Forche
+",11.9009715,44.012908,natural-saddle
+547,06/11/2023,"Passo Monte Mirabello
+",11.928609,44.0759142,natural-saddle
+548,06/11/2023,Passo della Braccina,11.7744865,43.9226947,natural-saddle
+549,06/11/2023,"Prato alle Cogne
+",11.7954034,43.8175481,natural-saddle
+550,06/11/2023,"Monte Busca
+",11.7700847,44.0576239,natural-saddle
+551,06/11/2023,"santa Maria in Castello
+",11.7790969,44.0669988,natural-saddle
+552,06/11/2023,"valico monte Chioda
+",11.8031426,44.1038207,natural-saddle
+553,06/11/2023,"Passo monte Trebbio
+",11.8283339,44.1295162,natural-saddle
+554,06/11/2023,Prato All'Albero,11.4731588,44.0446857,natural-saddle
+555,06/11/2023,"valico pian di Balestra
+",11.2577142,44.1688721,natural-saddle
+556,06/11/2023,Torricella,11.1855291,44.0550505,natural-saddle
+557,06/11/2023,"Monte Tavianella
+",11.2049286,44.1052079,natural-saddle
+558,06/11/2023,"sella di Sestola
+",10.7662108,44.2304642,natural-saddle
+559,06/11/2023,Passo Serre,10.735667,44.2187777,natural-saddle
+560,06/11/2023,"passo del Lupo
+",10.7192098,44.214933,natural-saddle
+561,06/11/2023,"Passo dell'Orecchiella
+",10.3586715,44.2062675,natural-saddle
+562,06/11/2023,"Foce di Terrarossa
+",10.420849,44.1902058,natural-saddle
+563,06/11/2023,"Passo dei Carpinelli
+",10.2314536,44.2003703,natural-saddle
+564,06/11/2023,"Passo di Monteorsaro
+",10.4241064,44.3170033,natural-saddle
+565,06/11/2023,"Passo del Pradaccio
+",10.4879645,44.2007098,natural-saddle
+566,06/11/2023,"Sella dell'Osteria a Monte
+",10.5266345,44.2449122,natural-saddle
+567,06/11/2023,"Foce del Cuccu
+",10.0246271,44.1469874,natural-saddle
+568,06/11/2023,"La Foce
+",10.0305923,44.1367783,natural-saddle
+569,06/11/2023,"Sella Madonna di Pietravolta
+",10.5318435,44.2594327,natural-saddle
+570,06/11/2023,"Sella delle Vescie
+",10.5393966,44.2652106,natural-saddle
+571,06/11/2023,"Valico dei Solini
+",9.8853284,44.217108,natural-saddle
+572,06/11/2023,"Passo di Pratizzano
+",10.2511784,44.3752522,natural-saddle
+573,06/11/2023,"Valico di Comano
+",10.1315599,44.2793935,natural-saddle
+574,06/11/2023,"Passo del Giogo
+",10.1339173,44.3275007,natural-saddle
+575,06/11/2023,"Passo di Rimagna
+",10.1374034,44.3784174,natural-saddle
+576,06/11/2023,"Passo del Ticchiano
+",10.1147443,44.4279221,natural-saddle
+577,06/11/2023,"Passo Sillara
+",10.0092739,44.4811006,natural-saddle
+578,06/11/2023,"Monte Caio
+",10.1641555,44.4833423,natural-saddle
+579,06/11/2023,"Monte Gallinara
+",9.9953357,44.5366363,natural-saddle
+580,06/11/2023,"Passo del Righedo
+",9.9192898,44.4517284,natural-saddle
+581,06/11/2023,"Foce del Termine
+",9.6725337,44.1537859,natural-saddle
+582,06/11/2023,"Colla di Gritta
+",9.6496511,44.1632148,natural-saddle
+583,06/11/2023,"Passo di Fragno
+",10.1685364,44.5733604,natural-saddle
+584,06/11/2023,"Passo della Spina
+",12.846215,42.860825,natural-saddle
+585,06/11/2023,"foce di Coppigliolo
+",9.8133146,44.2700172,natural-saddle
+586,06/11/2023,"Passo dei casoni
+",9.8086406,44.2795427,natural-saddle
+587,06/11/2023,"Foce di Colle Fiorito
+",9.7641602,44.3082625,natural-saddle
+588,06/11/2023,"Passo di Rastrello
+",9.7334355,44.3287724,natural-saddle
+589,06/11/2023,"Foce di Adelano
+",9.7337601,44.3547237,natural-saddle
+590,06/11/2023,"passo Mistadella
+",9.8130482,44.3386568,natural-saddle
+591,06/11/2023,"Passo dei due santi
+",9.7525525,44.388924,natural-saddle
+592,06/11/2023,"Passo del Brattello
+",9.8243476,44.4581782,natural-saddle
+593,06/11/2023,"Passo Colla
+",9.8992113,44.6467173,natural-saddle
+594,06/11/2023,"Passo sant'Antonio
+",9.9316395,44.757135,natural-saddle
+595,06/11/2023,"Valico del Primo Termine
+",9.4717977,44.4110593,natural-saddle
+596,06/11/2023,"Passo del Biscia
+",9.4897733,44.3653486,natural-saddle
+597,06/11/2023,"Passo Iscioli
+",9.4423335,44.3240329,natural-saddle
+598,06/11/2023,"Colle di velva
+",9.5565312,44.280743,natural-saddle
+599,06/11/2023,"la Foce
+",9.5897283,44.2930929,natural-saddle
+600,06/11/2023,"Passo della Camilla
+",9.4324865,44.3842769,natural-saddle
+601,06/11/2023,"Costa Mulattiera
+",9.6398967,44.4714134,natural-saddle
+602,06/11/2023,"Passo del Romezzano
+",9.5020526,44.514027,natural-saddle
+603,06/11/2023,Passo del Chiodo,9.4946693,44.4968979,natural-saddle
+604,06/11/2023,"Passo della Tabella
+",9.5343395,44.4879885,natural-saddle
+605,06/11/2023,"Prato Barbieri
+",9.670126,44.7384776,natural-saddle
+606,06/11/2023,Passo Cappelletta,9.5231916,44.7284308,natural-saddle
+607,06/11/2023,Monte Albareto (Passo del),9.4887365,44.6807996,natural-saddle
+608,06/11/2023,"Passo di Monte Veri
+",9.3730696,44.6220681,natural-saddle
+609,06/11/2023,"Passo del crociglia
+",9.4620331,44.5834767,natural-saddle
+610,06/11/2023,"Passo della Scoglina
+",9.2499361,44.4726641,natural-saddle
+611,06/11/2023,"Passo di Romaggi
+",9.3151674,44.4018344,natural-saddle
+612,06/11/2023,"Passo dell'Anchetta
+",9.2861459,44.3510665,natural-saddle
+613,06/11/2023,"Sella di Monte Cordona
+",9.0797592,44.4055109,natural-saddle
+614,06/11/2023,Passo della Spinarola,9.182846,44.4040618,natural-saddle
+615,06/11/2023,"Passo della Scoffera
+",9.1198114,44.4809141,natural-saddle
+616,06/11/2023,"Passo della colla di Boasi
+",9.1371838,44.4794138,natural-saddle
+617,06/11/2023,"Passo del Portello
+",9.1786869,44.4953522,natural-saddle
+618,06/11/2023,"Colle di Capenardo
+",9.0691406,44.4607181,natural-saddle
+619,06/11/2023,"passo della Crocetta d'orero
+",8.9878954,44.5200358,natural-saddle
+620,06/11/2023,"Passo dei Giovi
+",8.9369704,44.5526967,natural-saddle
+621,06/11/2023,"Capanne di Marcarolo
+",8.7730226,44.5505403,natural-saddle
+622,06/11/2023,"Piani di Praglia
+",8.8140497,44.514778,natural-saddle
+623,06/11/2023,"Valico degli eremiti
+",8.8071295,44.5996945,natural-saddle
+624,06/11/2023,"Passo santa maria del Porto
+",9.1866406,44.5220308,natural-saddle
+625,06/11/2023,"Valico della Cappella di Garaventa
+",9.1712769,44.5309494,natural-saddle
+626,06/11/2023,"Capanne di carrega
+",9.2035732,44.5960672,natural-saddle
+627,06/11/2023,"Passo dell'Incisa
+",9.0748272,44.5699335,natural-saddle
+628,06/11/2023,"Costa salata
+",9.053112,44.6265365,natural-saddle
+629,06/11/2023,"Passo della Ritorta
+",9.253388,44.6970949,natural-saddle
+630,06/11/2023,"Passo Scaparina
+",9.2939152,44.7741547,natural-saddle
+631,06/11/2023,Passo Penice,9.3282982,44.7972833,natural-saddle
+632,06/11/2023,"Passo delle tre strade
+",9.3130302,44.8020402,natural-saddle
+633,06/11/2023,"asso della Crocetta
+",9.3818664,44.8298347,natural-saddle
+634,06/11/2023,"Passo di Pietragavina
+",9.242548,44.8377173,natural-saddle
+635,06/11/2023,Oramala,9.1867412,44.8585543,natural-saddle
+636,06/11/2023,"Passo del carmine
+",9.263853,44.9142884,natural-saddle
+637,06/11/2023,"Passo Crocetta
+",9.1005461,44.9187546,natural-saddle
+638,06/11/2023,"Valico della Scheggia
+",11.9643213860368,43.5487629379443,natural-saddle
+639,06/11/2023,Bocchetta di Altare o Colle di cadibona,8.3519173,44.3326083,natural-saddle
+640,06/11/2023,Passo Buzurou,8.2247157,44.4452808,natural-saddle
+641,06/11/2023,"Bric saccone
+",8.6275989,44.5550012,natural-saddle
+642,06/11/2023,"Bric Berton
+",8.5375737,44.5178648,natural-saddle
+643,06/11/2023,Monte Beigua,8.5657392,44.4334137,natural-saddle
+644,06/11/2023,"Colle del Giovo
+",8.4734624,44.4292306,natural-saddle
+645,06/11/2023,"Passo del Muraglione
+",8.5736268,44.3943751,natural-saddle
+646,06/11/2023,"Colle del Bresca
+",8.2625864,44.2839734,natural-saddle
+647,06/11/2023,"Bassa della Scoggia
+",8.2610843,44.2475009,natural-saddle
+648,06/11/2023,"Colle dei Giovetti
+",8.097274,44.2778905,natural-saddle
+649,06/11/2023,"Colle della Rionda
+",8.0595599,44.2344453,natural-saddle
+650,06/11/2023,"Colle Scravaion
+",8.120371,44.1595713,natural-saddle
+651,06/11/2023,"Giogo di Toirano
+",8.1601838,44.1690458,natural-saddle
+652,06/11/2023,"Colle san Bernardo
+",8.0474451,44.1773959,natural-saddle
+653,06/11/2023,"Passo del Ginestro
+",7.9908657,44.0074429,natural-saddle
+654,06/11/2023,"Colle san Bartolomeo
+",7.9519076,44.0101203,natural-saddle
+655,06/11/2023,"Passo Grillarine
+",8.0343642,43.9401865,natural-saddle
+656,06/11/2023,"Col di Nava
+",7.8727765,44.0849877,natural-saddle
+657,06/11/2023,"Passo delle Ville
+",7.9307292,43.9563908,natural-saddle
+658,06/11/2023,"Passo di Maro
+",7.8893226,43.9556249,natural-saddle
+659,06/11/2023,Colle D'Oggia,7.8678837,43.9820302,natural-saddle
+660,06/11/2023,Passo Teglia,7.833662,43.9953435,natural-saddle
+661,06/11/2023,Drego,7.8086313,43.9953654,natural-saddle
+662,06/11/2023,"Colle San Bernardo di Mendatica
+",7.7842306,44.0849899,natural-saddle
+663,06/11/2023,"Sella di Pian di Vento
+",7.7658624,43.9422742,natural-saddle
+664,06/11/2023,Passo Ghimbegna,7.7278352,43.9010077,natural-saddle
+665,06/11/2023,"Colle Melosa
+",7.6839316,43.9892178,natural-saddle
+666,06/11/2023,"Sella di Gouta
+",7.6084106,43.9394709,natural-saddle
+667,06/11/2023,Passo delle Fascette,7.7402838,44.1314444,natural-saddle
+668,06/11/2023,"Colle del Prel
+",7.7912787,44.2524839,natural-saddle
+669,06/11/2023,"Colla di san Giacomo
+",7.8761978,44.2917299,natural-saddle
+670,06/11/2023,"Valico di san Grato
+",7.9554069,44.2757383,natural-saddle
+671,06/11/2023,"Colle di San Giacomo
+",7.9955373,44.275435,natural-saddle
+672,06/11/2023,"Colla di Casotto
+",7.9454892,44.2162724,natural-saddle
+673,06/11/2023,Valico di Sella Lata,16.010826,40.435375,natural-saddle
+674,06/11/2023,Passo Langada / EO Kalamatas Spartis,22.266062,37.066675,natural-saddle
+675,06/11/2023,"Colletta delle Salse
+",7.7260218,44.1123625,natural-saddle
+676,06/11/2023,"Piatta Sottana (Madonna della Neve)
+",7.3353926,44.4338916,natural-saddle
+677,06/11/2023,"Colle Valcavera
+",7.102199,44.3813065,natural-saddle
+678,06/11/2023,"Colle della Cavallina
+",7.1038194,44.526886,natural-saddle
+679,06/11/2023,"Colle san pietro
+",7.3572787,44.5159756,natural-saddle
+680,06/11/2023,"Colle Valmala
+",7.340134,44.5088604,natural-saddle
+681,06/11/2023,Passo del Lagadello,10.4880055,44.2009747,natural-saddle
+682,06/11/2023,"Passo Campo Carlo Magno
+",10.8387198,46.242024,natural-saddle
+683,06/11/2023,Passo dell'Incisa,9.4814835,44.4793577,natural-saddle
+684,06/11/2023,"Passo Umbrail
+",10.437205,46.571267,natural-saddle
+685,06/11/2023,"Passo di Resia
+",10.505443,46.84777,natural-saddle
+686,06/11/2023,Colma di Sormano,9.231599,45.883687,natural-saddle
+687,06/11/2023,Passo Crosetta,12.405642,46.035066,natural-saddle
+688,06/11/2023,"colletto di Brondello
+",7.3834183,44.5976899,natural-saddle
+689,06/11/2023,"colletta di paesana
+",7.2973082,44.6960203,natural-saddle
+690,06/11/2023,"colle montoso
+",7.2452347,44.7635995,natural-saddle
+691,06/11/2023,Rucas,7.2184072,44.7578387,natural-saddle
+692,06/11/2023,"Colle Braida
+",7.3336229,45.0832401,natural-saddle
+693,06/11/2023,"Colle del Lys
+",7.3827493,45.1778802,natural-saddle
+694,06/11/2023,"Colle della Dieta
+",7.3622256,45.2588748,natural-saddle
+695,06/11/2023,"Colle della Croce
+",7.412967,45.3025699,natural-saddle
+696,06/11/2023,"Colle Pra Martino
+",7.2773284,44.9140832,natural-saddle
+697,06/11/2023,"Colle del Sestriere
+",6.8825137,44.9590353,natural-saddle
+698,06/11/2023,"Castelnuovo Nigra
+",7.7092785,45.4423817,natural-saddle
+699,06/11/2023,"Valico di Strambinello
+",7.7569841,45.4215898,natural-saddle
+700,06/11/2023,Valchiusella,7.7417792,45.4931485,natural-saddle
+701,06/11/2023,"Croce Serra
+",7.890451,45.5251128,natural-saddle
+702,06/11/2023,"La Serra
+",7.9838375,45.4708177,natural-saddle
+703,06/11/2023,"bocca d'Arbaro
+",8.0082273,45.3831698,natural-saddle
+704,06/11/2023,"Colle della Colma (Galleria Rosazza)
+",7.985126,45.6398791,natural-saddle
+705,06/11/2023,"Bocchetto Sessera
+",8.062348,45.6637281,natural-saddle
+706,06/11/2023,"Il Mottarone
+",8.4560085,45.8833865,natural-saddle
+707,06/11/2023,"Alpe Colle
+",8.6261776,46.0265431,natural-saddle
+708,06/11/2023,"Valico di sant'Antonio
+",8.6923945,45.9318769,natural-saddle
+709,06/11/2023,"Passo della Gabellaccia
+",10.0983193,44.1237077,natural-saddle
+710,06/11/2023,"Alpe Grande
+",9.0526331,45.9487072,natural-saddle
+711,06/11/2023,"Bocchetta di Colonno
+",9.1382708,45.9828401,natural-saddle
+712,06/11/2023,"Passo del Boffalora
+",9.1504587,45.9898773,natural-saddle
+713,06/11/2023,"Passo del Braulio
+",10.373279,46.5095675,natural-saddle
+714,06/11/2023,"Colle di San Zeno
+",10.1877478,45.7809229,natural-saddle
+715,06/11/2023,"Passo del Santellone
+",10.2886368,45.7566423,natural-saddle
+716,06/11/2023,"Passo del termine
+",10.3098867,45.7459837,natural-saddle
+717,06/11/2023,"Poffe de Uciù
+",10.2623056,45.669084,natural-saddle
+718,06/11/2023,"Passo del cavallo
+",10.3046358,45.6471316,natural-saddle
+719,06/11/2023,"Passo di Sant'Eusebio
+",10.3615794,45.6095123,natural-saddle
+720,06/11/2023,"Giogo della Bala
+",10.3848435,45.8706185,natural-saddle
+721,06/11/2023,"Goletto di Gaver
+",10.4372563,45.9142218,natural-saddle
+722,06/11/2023,Goletto Di Cadino,10.41723,45.90822,natural-saddle
+723,06/11/2023,"Passo daone
+",10.7451223,46.0786984,natural-saddle
+724,06/11/2023,"Passo del Duron
+",10.7954191,46.0371251,natural-saddle
+725,06/11/2023,Passo d'Ámpola,10.6455,45.8644,natural-saddle
+726,06/11/2023,"Passo Nota
+",10.7446997,45.8371563,natural-saddle
+727,06/11/2023,"Monte Bondone
+",11.057472,46.039051,natural-saddle
+728,06/11/2023,Forcella di Brez,11.0825514,46.4513921,natural-saddle
+729,06/11/2023,"Passo Castrin
+",11.0427618,46.5059434,natural-saddle
+730,06/11/2023,Schermoossattel,11.2819099,46.5901717,natural-saddle
+731,06/11/2023,"Passo di Pramadiccio
+",11.4907976,46.3177473,natural-saddle
+732,06/11/2023,"SanLugano Sattel
+",11.3935727,46.3119079,natural-saddle
+733,06/11/2023,"Sella di Trudena
+",11.3493853,46.3214684,natural-saddle
+734,06/11/2023,"Passo di Anterivo
+",11.3852025,46.2852981,natural-saddle
+735,06/11/2023,"Sella di Brusago
+",11.3259793,46.1825873,natural-saddle
+736,06/11/2023,Passo del Redebus,11.3232666,46.1359204,natural-saddle
+737,06/11/2023,"Passo del Cimirlo
+",11.1847802,46.0675632,natural-saddle
+738,06/11/2023,"Passo del vetriolo
+",11.3090138,46.0413253,natural-saddle
+739,06/11/2023,"Valico della Fricca
+",11.2088085,45.9493129,natural-saddle
+740,06/11/2023,"Sella di carbonare
+",11.2262321,45.9340333,natural-saddle
+741,06/11/2023,Passo di Tanamea,13.3497222,46.3052778,natural-saddle
+742,06/11/2023,"Sella Nevea
+",13.4775351,46.3902422,natural-saddle
+743,06/11/2023,"Sella Carnizza
+",13.3194705,46.3367551,natural-saddle
+744,06/11/2023,sella Cereschiatis,13.2453677,46.5039862,natural-saddle
+745,06/11/2023,Passo del Cason di Lanza,13.170959,46.5656397,natural-saddle
+746,06/11/2023,"Forca di Lius
+",13.0846133,46.538488,natural-saddle
+747,06/11/2023,"Cuel di Forcja
+",13.0126014,46.2733786,natural-saddle
+748,06/11/2023,"sella Chianzutan
+",12.9411902,46.3590819,natural-saddle
+749,06/11/2023,"Sella Chiampon
+",12.8785768,46.3550537,natural-saddle
+750,06/11/2023,"Forchia Piccola
+",12.7927393,46.2411679,natural-saddle
+751,06/11/2023,"Passo san Osvaldo
+",12.4088791,46.2854875,natural-saddle
+752,06/11/2023,"Sella Valcalda
+",12.9318135,46.5241638,natural-saddle
+753,06/11/2023,"La Forcje
+",12.8020188,46.4862873,natural-saddle
+754,06/11/2023,Forca Frumeibn,12.758029,46.4579438,natural-saddle
+755,06/11/2023,"Sella di Cima Corso
+",12.738015,46.3954643,natural-saddle
+756,06/11/2023,"forcella di Priuso
+",12.8098982,46.3948131,natural-saddle
+757,06/11/2023,"Cima Sappada
+",12.7211855,46.5688329,natural-saddle
+758,06/11/2023,"Forcella Zovo
+",12.5916878,46.6026233,natural-saddle
+759,06/11/2023,"Sella Ciampigotto
+",12.5794998,46.488118,natural-saddle
+760,06/11/2023,"Sella di Razzo
+",12.6174211,46.4770955,natural-saddle
+761,06/11/2023,"Forcella Lavardet
+",12.628102,46.5005854,natural-saddle
+762,06/11/2023,"Col sant'angelo
+",12.2515337,46.5817343,natural-saddle
+763,06/11/2023,"Passo Cimabanche
+",12.1837253,46.6205833,natural-saddle
+764,06/11/2023,"Passo Staulanza
+",12.1040426,46.4206593,natural-saddle
+765,06/11/2023,"Passo Cereda
+",11.9063897,46.1933962,natural-saddle
+766,06/11/2023,"Forcella Aurine
+",11.9740305,46.2367876,natural-saddle
+767,06/11/2023,"Forcella Franche
+",12.0131221,46.2330712,natural-saddle
+768,06/11/2023,"Passo Gobbera
+",11.7588478,46.1476369,natural-saddle
+769,06/11/2023,"Passo della Forcella
+",11.5928513,46.0708753,natural-saddle
+770,06/11/2023,"Passo di Celado
+",11.6548021,46.051512,natural-saddle
+771,06/11/2023,"Selletta di Col Perer
+",11.7328699,46.0096934,natural-saddle
+772,06/11/2023,"Passo d'Agnela
+",11.7151888,46.0027779,natural-saddle
+773,06/11/2023,"Colle del Zanghi
+",11.8038459,45.9627306,natural-saddle
+774,06/11/2023,"Passo del Praderadego
+",12.1091083,46.0027884,natural-saddle
+775,06/11/2023,"Pian delle Femene
+",12.2272856,46.01332,natural-saddle
+776,06/11/2023,"Passo del Nevegal
+",12.2775449,46.093774,natural-saddle
+777,06/11/2023,"Sella di Fadalto
+",12.3366305,46.0808265,natural-saddle
+778,06/11/2023,"Sella Mariech
+",12.0263057,45.9423376,natural-saddle
+779,06/11/2023,"Forcella Mostaccin
+",11.9611421,45.8237909,natural-saddle
+780,06/11/2023,"Vedetta dell'Archeson
+",11.8390674,45.8818998,natural-saddle
+781,06/11/2023,"Monte Tomba
+",11.8905425,45.8865302,natural-saddle
+782,06/11/2023,"Cima Grappa
+",11.7961484,45.875169,natural-saddle
+783,06/11/2023,"Passo di Monte Fiera
+",11.554648,45.9435157,natural-saddle
+784,06/11/2023,Passo Oclini,11.4536323,46.3472276,natural-saddle
+785,06/11/2023,"Passo di Costalunga
+",11.6090958,46.4041609,natural-saddle
+786,06/11/2023,"Passo Campolungo
+",11.8723036,46.5139349,natural-saddle
+787,06/11/2023,"Passo di Croce Rossi
+",11.7519392,46.6601143,natural-saddle
+788,06/11/2023,"Passo di Eores
+",11.7706289,46.6665612,natural-saddle
+789,06/11/2023,Passo della Calchera,12.0368784737005,45.8612795321382,natural-saddle
+790,06/11/2023,Quadrivio Tuppo delle seti,15.8397827,40.393346,natural-saddle
+791,06/11/2023,"Passo del Trebbio
+",10.6440776,43.9741272,natural-saddle
+792,06/11/2023,"Passo san Leonardo
+",14.0303021,42.0752985,natural-saddle
+793,06/11/2023,Termine di Roverano - Passo del Bracchetto,9.665264,44.232002,natural-saddle
+794,06/11/2023,Passo Monte Bicocca,10.3863471,44.0159041,natural-saddle
+795,06/11/2023,Susten pass,8.4470234,46.7293696,natural-saddle
+796,06/11/2023,"Valico di Gioia Vecchio
+",13.7346259,41.8989441,natural-saddle
+797,06/11/2023,"Passo Rionero Sannitico
+",14.144661,41.7078616,natural-saddle
+798,06/11/2023,"Goriano Sicoli
+",13.7854869,42.0943275,natural-saddle
+799,06/11/2023,"Foce di Montale
+",9.6517658,44.1930484,natural-saddle
+800,06/11/2023,Gerlospass,12.1094721602794,47.2429175871883,natural-saddle
+801,06/11/2023,Passo del Naret,8.5730021,46.481098,natural-saddle
+802,06/11/2023,Colle de la couillole,7.023042,44.100208,natural-saddle
+803,06/11/2023,Col de Rousset,5.3971353,44.8380466,natural-saddle
+804,06/11/2023,"Passo San Bernardino
+",9.1708758315031,46.4964164559902,natural-saddle
+805,06/11/2023,"Valico di Fontecerro
+",12.7220935,42.4099624,natural-saddle
+806,06/11/2023,"Valico Pantani
+",12.4589295,43.4798886,natural-saddle
