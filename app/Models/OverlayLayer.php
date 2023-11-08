@@ -23,6 +23,24 @@ class OverlayLayer extends Model
      */
     public $translatable = ['label'];
 
+    protected static function booted()
+    {
+        static::updating(function ($overlay) {
+            $overlay = $overlay;
+            if ($overlay->isDirty('default') && $overlay->default) {
+                $overlayLayers = $overlay->app->overlayLayers;
+                if ($overlayLayers->count() > 1) {
+                    foreach ($overlayLayers as $item) {
+                        if ($item->id != $overlay->id) {
+                            $item->default = false;
+                            $item->save();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     /**
      * Define the relationship with the App model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

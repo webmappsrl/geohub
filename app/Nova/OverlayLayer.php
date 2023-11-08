@@ -60,7 +60,7 @@ class OverlayLayer extends Resource
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
             ]),
-            Boolean::make('Show this overlay by default', 'default')->help('turn this option on if you want to show this overlay by default')->hideFromIndex(),
+            Boolean::make('Show this overlay by default', 'default')->help('turn this option on if you want to show this overlay by default')->hideFromIndex()->hideWhenCreating(),
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
                 ->hideFromIndex(),

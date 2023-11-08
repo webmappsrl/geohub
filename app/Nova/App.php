@@ -38,6 +38,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
+use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 
 /**
@@ -360,7 +361,9 @@ class App extends Resource
             NovaTabTranslatable::make([
                 Text::make('Tiles Label')
             ]),
-            Multiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('Select which tile layers will be used by the app, the order is the same as the insertion order, so the last one inserted will be the one visible first')),
+            // use OptimistDigital\MultiselectField\Multiselect;
+            MultiselectFieldMultiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('Select which tile layers will be used by the app, the order is the same as the insertion order, so the last one inserted will be the one visible first'))->reorderable(),
+            // Multiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('Select which tile layers will be used by the app, the order is the same as the insertion order, so the last one inserted will be the one visible first')),
             // Multiselect::make(__('Tiles'), 'tiles')->options([
             //     "{\"notile\":\"\"}" => 'no tile',
             //     "{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}" => 'webmapp',
