@@ -339,6 +339,9 @@ trait ConfTrait
                 $array = [];
                 $overlay = OverlayLayer::find($overlay['id']);
                 $array['label'] = $overlay->getTranslations('label');
+                if ($overlay['default']) {
+                    $array['default'] = $overlay['default'];
+                }
                 if (!empty($overlay['icon'])) {
                     $array['icon'] = $overlay['icon'];
                 }
@@ -362,6 +365,29 @@ trait ConfTrait
                 return $array;
             }, json_decode($this->overlayLayers, true));
             array_push($data['MAP']['controls']['overlays'], ...$overlays);
+        }
+
+        // data => turn the layers (pois,tracks) off an on 
+        if ($this->app_pois_api_layer || $this->layers->count() > 0) { 
+            $data['MAP']['controls']['data'][] = ["label" => $this->getTranslations('data_label'), "type" => "title"];
+        }
+        if ($this->app_pois_api_layer) { 
+            $data['MAP']['controls']['data'][] = [
+                "label" => $this->getTranslations('pois_data_label'), 
+                "type" => "button",
+                "url"=>"pois",
+                "default" => $this->pois_data_default,
+                "icon" => $this->pois_data_icon
+            ];
+        }
+        if ($this->layers->count() > 0) { 
+            $data['MAP']['controls']['data'][] = [
+                "label" => $this->getTranslations('tracks_data_label'), 
+                "type" => "button",
+                "url"=>"tracks",
+                "default" => $this->tracks_data_default,
+                "icon" => $this->tracks_data_icon
+            ];
         }
 
         //  Activity Filter

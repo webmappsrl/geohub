@@ -368,6 +368,21 @@ class App extends Resource
             //     "{\"satellite\":\"https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=$mapTilerApiKey\"}" => 'satellite',
             //     "{\"GOMBITELLI\":\"https://tiles.webmapp.it/mappa_gombitelli/{z}/{x}/{y}.png\"}" => 'GOMBITELLI',
             // ], $selectedTileLayers)->help(__('seleziona quali tile layer verranno utilizzati dalla app, l\' lordine è il medesimo di inserimento quindi l\'ultimo inserito sarà quello visibile per primo')),
+            NovaTabTranslatable::make([
+                Text::make('Data Label'),
+                Text::make('Pois Data Label'),
+                Text::make('Tracks Data Label')
+            ]),
+            Boolean::make('Show POIs data by default','pois_data_default')->help('Turn this option off if you do not want to show pois by default on the map'),
+            Text::make('poi Data Icon', 'pois_data_icon', function () {
+                return "<div style='width:64px;height:64px;'>" . $this->pois_data_icon . "</div>";
+            })->asHtml()->onlyOnDetail(),
+            Textarea::make('Poi Data Icon SVG', 'pois_data_icon')->onlyOnForms()->hideWhenCreating(),
+            Boolean::make('Show Tracks data by default','tracks_data_default')->help('Turn this option off if you do not want to show all track layers by default on the map'),
+            Text::make('Track Data Icon', 'tracks_data_icon', function () {
+                return "<div style='width:64px;height:64px;'>" . $this->tracks_data_icon . "</div>";
+            })->asHtml()->onlyOnDetail(),
+            Textarea::make('Track Data Icon SVG', 'tracks_data_icon')->onlyOnForms()->hideWhenCreating(),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(25)

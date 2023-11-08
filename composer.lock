@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "670a25f830cb377802bf61dee37d6326",
+    "content-hash": "283de56cb4c773b024e00263df44a195",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -10131,7 +10131,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -10167,7 +10167,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -10203,7 +10203,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10239,7 +10239,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10275,7 +10275,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10414,7 +10414,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",
@@ -13110,5 +13110,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
