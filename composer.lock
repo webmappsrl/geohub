@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "670a25f830cb377802bf61dee37d6326",
+    "content-hash": "ea9d62296a45596d82cafa725780b98c",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -5469,6 +5469,121 @@
             "time": "2022-01-27T09:35:39+00:00"
         },
         {
+            "name": "optimistdigital/nova-multiselect-field",
+            "version": "2.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/outl1ne/nova-multiselect-field.git",
+                "reference": "7735a994326b851b515785db15d3a70795b78076"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/outl1ne/nova-multiselect-field/zipball/7735a994326b851b515785db15d3a70795b78076",
+                "reference": "7735a994326b851b515785db15d3a70795b78076",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/nova": "^3.0",
+                "optimistdigital/nova-translations-loader": "^3.0.0",
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "OptimistDigital\\MultiselectField\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OptimistDigital\\MultiselectField\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tarvo Reinpalu",
+                    "email": "tarvoreinpalu@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Optimist Digital",
+                    "email": "info@optimistdigital.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A multiple select field for Laravel Nova.",
+            "keywords": [
+                "laravel",
+                "multiselect",
+                "nova",
+                "select"
+            ],
+            "support": {
+                "issues": "https://github.com/outl1ne/nova-multiselect-field/issues",
+                "source": "https://github.com/outl1ne/nova-multiselect-field/tree/2.4.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/outl1ne",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-10-21T15:06:05+00:00"
+        },
+        {
+            "name": "optimistdigital/nova-translations-loader",
+            "version": "3.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/optimistdigital/nova-translations-loader.git",
+                "reference": "d70d311b3c5b5722ebd27e1223f39e6a75b744b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/optimistdigital/nova-translations-loader/zipball/d70d311b3c5b5722ebd27e1223f39e6a75b744b2",
+                "reference": "d70d311b3c5b5722ebd27e1223f39e6a75b744b2",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^7.21 || ^8.0 || ^9.0",
+                "laravel/nova": "^3.0",
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [],
+                    "aliases": []
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OptimistDigital\\NovaTranslationsLoader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "This Laravel Nova package helps developers load translations into their packages.",
+            "keywords": [
+                "laravel",
+                "nova",
+                "optimistdigital",
+                "translations"
+            ],
+            "support": {
+                "issues": "https://github.com/optimistdigital/nova-translations-loader/issues",
+                "source": "https://github.com/optimistdigital/nova-translations-loader/tree/3.1.4"
+            },
+            "time": "2022-04-08T12:27:58+00:00"
+        },
+        {
             "name": "phpoffice/phpspreadsheet",
             "version": "1.28.0",
             "source": {
@@ -10131,7 +10246,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -10167,7 +10282,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -10203,7 +10318,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10239,7 +10354,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10275,7 +10390,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10414,7 +10529,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-develop",
+            "version": "dev-hotfix/add_pnfc_configs",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",
@@ -13110,5 +13225,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

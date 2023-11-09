@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\File;
@@ -13,6 +12,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
@@ -60,6 +60,7 @@ class OverlayLayer extends Resource
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
             ]),
+            Boolean::make('Show this overlay by default', 'default')->help('turn this option on if you want to show this overlay by default')->hideFromIndex()->hideWhenCreating(),
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
                 ->hideFromIndex(),
@@ -75,17 +76,17 @@ class OverlayLayer extends Resource
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Swatches::make('Fill Color')->default(function(){
-                    return $this->app->primary_color;
-                })->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
-            ])->hideWhenCreating(),
-            Swatches::make('Stroke Color')->default(function(){
+            Swatches::make('Fill Color')->default(function () {
                 return $this->app->primary_color;
-                })->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
+            })->colors('text-advanced')->withProps([
+            'show-fallback' => true,
+            'fallback-type' => 'input',
+            ])->hideWhenCreating(),
+            Swatches::make('Stroke Color')->default(function () {
+                return $this->app->primary_color;
+            })->colors('text-advanced')->withProps([
+            'show-fallback' => true,
+            'fallback-type' => 'input',
             ])->hideWhenCreating(),
             Number::make('Stroke width')->hideWhenCreating(),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
