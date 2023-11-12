@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Jobs\DeleteEcTrackElasticIndexJob;
+use App\Jobs\UpdateEcTrackElasticIndexJob;
 use App\Models\EcTrack;
 
 class EcTrackElasticObserver
@@ -21,7 +23,9 @@ class EcTrackElasticObserver
      */
     public function created(EcTrack $ecTrack)
     {
-        $this->startElasticIndex($ecTrack);
+        // $this->startElasticIndex($ecTrack);
+        UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
+
     }
 
     /**
@@ -32,7 +36,8 @@ class EcTrackElasticObserver
      */
     public function updated(EcTrack $ecTrack)
     {
-        $this->startElasticIndex($ecTrack);
+        // $this->startElasticIndex($ecTrack);
+        UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
     }
 
     /**
@@ -43,14 +48,15 @@ class EcTrackElasticObserver
      */
     public function deleted(EcTrack $ecTrack)
     {
-        $ecTrackLayers = $ecTrack->getLayersByApp();
-        if (!empty($ecTrackLayers)) {
-            foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                $ecTrack->elasticIndexDelete('app_' . $app_id);
-                $ecTrack->elasticIndexDelete('app_low_' . $app_id);
-                $ecTrack->elasticIndexDelete('app_high_' . $app_id);
-            }
-        }
+        DeleteEcTrackElasticIndexJob::dispatch($ecTrack);
+        // $ecTrackLayers = $ecTrack->getLayersByApp();
+        // if (!empty($ecTrackLayers)) {
+        //     foreach ($ecTrackLayers as $app_id => $layer_ids) {
+        //         $ecTrack->elasticIndexDelete('app_' . $app_id);
+        //         $ecTrack->elasticIndexDelete('app_low_' . $app_id);
+        //         $ecTrack->elasticIndexDelete('app_high_' . $app_id);
+        //     }
+        // }
     }
 
     /**
