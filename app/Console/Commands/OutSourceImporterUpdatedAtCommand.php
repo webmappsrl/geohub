@@ -215,23 +215,29 @@ class OutSourceImporterUpdatedAtCommand extends Command
             $features_list = $features->getList();
         }
         if ($features_list) {
+            $all = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
+            $count = 1;
             if ($this->type == 'track') {
                 foreach ($features_list as $count => $feature) {
-                    $count++;
-                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
-                    $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $feature['id'], $this->only_related_url);
-                    $OSF_id = $OSF->importFeature();
-                    Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
+                    if (empty($all) || !array_key_exists($feature['id'], $all) || $all[$feature['id']] < Carbon::parse($feature['updated_at'])) {
+                        Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                        $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $feature['id'], $this->only_related_url);
+                        $OSF_id = $OSF->importFeature();
+                        Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
+                        $count++;
+                    }
                 }
             }
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
-                    $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $id, $this->only_related_url);
-                    $OSF_id = $OSF->importFeature();
-                    Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
-                    $count++;
+                    if (empty($all) || !array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
+                        Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                        $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $id, $this->only_related_url);
+                        $OSF_id = $OSF->importFeature();
+                        Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
+                        $count++;
+                    }
                 }
             }
         } else {
@@ -266,6 +272,8 @@ class OutSourceImporterUpdatedAtCommand extends Command
 
     private function importerSentieriSardegna()
     {
+        $categorie_fruibilita_sentieri = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+
         if ($this->single_feature) {
             $features_list[$this->single_feature] = date('Y-M-d H:i:s');
         } else {
@@ -278,7 +286,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
             foreach ($features_list as $id => $updated_at) {
                 if (empty($all) || !array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
                     Log::info('Start importing ' . $this->type . ' number ' . $count);
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, false, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                     $count++;
