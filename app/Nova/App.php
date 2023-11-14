@@ -111,6 +111,15 @@ class App extends Resource
         'es' => 'español'
     ];
 
+    /**
+     * The relationship columns that should be searched.
+     *
+     * @var array
+     */
+    public static $searchRelations = [
+        'author' => ['name', 'email'],
+    ];
+
     private $poi_interactions = [
         'no_interaction' => 'Nessuna interazione sul POI',
         'tooltip' => 'Apre un tooltip con informazioni minime',
