@@ -100,7 +100,7 @@ class App extends Resource
      * @var array
      */
     public static $search = [
-        'name',
+        'name','customer_name','id','author'
     ];
 
     private $languages  = [
@@ -376,12 +376,12 @@ class App extends Resource
                 Text::make('Pois Data Label'),
                 Text::make('Tracks Data Label')
             ]),
-            Boolean::make('Show POIs data by default','pois_data_default')->help('Turn this option off if you do not want to show pois by default on the map'),
+            Boolean::make('Show POIs data by default', 'pois_data_default')->help('Turn this option off if you do not want to show pois by default on the map'),
             Text::make('poi Data Icon', 'pois_data_icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->pois_data_icon . "</div>";
             })->asHtml()->onlyOnDetail(),
             Textarea::make('Poi Data Icon SVG', 'pois_data_icon')->onlyOnForms()->hideWhenCreating(),
-            Boolean::make('Show Tracks data by default','tracks_data_default')->help('Turn this option off if you do not want to show all track layers by default on the map'),
+            Boolean::make('Show Tracks data by default', 'tracks_data_default')->help('Turn this option off if you do not want to show all track layers by default on the map'),
             Text::make('Track Data Icon', 'tracks_data_icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->tracks_data_icon . "</div>";
             })->asHtml()->onlyOnDetail(),
