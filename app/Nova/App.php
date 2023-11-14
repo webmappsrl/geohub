@@ -100,7 +100,7 @@ class App extends Resource
      * @var array
      */
     public static $search = [
-        'name','customer_name','id','author'
+        'name','customer_name','id'
     ];
 
     private $languages  = [
