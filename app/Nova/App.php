@@ -39,6 +39,7 @@ use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 
 /**
@@ -67,6 +68,7 @@ use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 class App extends Resource
 {
     use TabsOnEdit;
+    use SearchesRelations;
 
     public static function indexQuery(NovaRequest $request, $query)
     {
