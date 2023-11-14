@@ -367,24 +367,24 @@ trait ConfTrait
             array_push($data['MAP']['controls']['overlays'], ...$overlays);
         }
 
-        // data => turn the layers (pois,tracks) off an on 
-        if ($this->app_pois_api_layer || $this->layers->count() > 0) { 
+        // data => turn the layers (pois,tracks) off an on
+        if ($this->app_pois_api_layer || $this->layers->count() > 0) {
             $data['MAP']['controls']['data'][] = ["label" => $this->getTranslations('data_label'), "type" => "title"];
         }
-        if ($this->app_pois_api_layer) { 
+        if ($this->app_pois_api_layer) {
             $data['MAP']['controls']['data'][] = [
-                "label" => $this->getTranslations('pois_data_label'), 
+                "label" => $this->getTranslations('pois_data_label'),
                 "type" => "button",
-                "url"=>"pois",
+                "url" => "pois",
                 "default" => $this->pois_data_default,
                 "icon" => $this->pois_data_icon
             ];
         }
-        if ($this->layers->count() > 0) { 
+        if ($this->layers->count() > 0) {
             $data['MAP']['controls']['data'][] = [
-                "label" => $this->getTranslations('tracks_data_label'), 
+                "label" => $this->getTranslations('tracks_data_label'),
                 "type" => "button",
-                "url"=>"tracks",
+                "url" => "layers",
                 "default" => $this->tracks_data_default,
                 "icon" => $this->tracks_data_icon
             ];
