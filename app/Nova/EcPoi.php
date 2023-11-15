@@ -16,43 +16,32 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
-use App\Nova\Actions\ExportEcpoi;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Textarea;
 use Davidpiesse\NovaToggle\Toggle;
 use Laravel\Nova\Fields\BelongsTo;
-use Webmapp\Ecpoipopup\Ecpoipopup;
 use Wm\MapPointNova3\MapPointNova3;
-use App\Nova\Filters\HasDescription;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
-use App\Nova\Metrics\EcTracksMyValue;
-use App\Nova\Metrics\EcTracksNewValue;
-use DigitalCreative\MegaFilter\Column;
 use Laravel\Nova\Fields\BelongsToMany;
 use Webmapp\EcMediaPopup\EcMediaPopup;
 use Illuminate\Support\Facades\Storage;
-use App\Nova\Metrics\EcTracksTotalValue;
 use App\Nova\Filters\SelectFromThemesPoi;
 use App\Nova\Filters\SelectFromWheresPoi;
-use DigitalCreative\MegaFilter\MegaFilter;
 use App\Nova\Filters\SelectFromPoiTypesPoi;
 use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Filters\EcTracksCaiScaleFilter;
 use App\Nova\Filters\PoiSearchableFromOSMID;
 use App\Nova\Actions\DownloadExcelEcPoiAction;
-use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
+use App\Nova\Actions\UploadPoiFile;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
-use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
+
 
 class EcPoi extends Resource
 {
@@ -708,6 +697,7 @@ HTML;
             new RegenerateEcPoi(),
             new BulkEditThemesEcResourceAction(),
             (new DownloadExcelEcPoiAction())->allFields()->except('geometry')->withHeadings(),
+            (new UploadPoiFile())->standalone(),
         ];
     }
 }

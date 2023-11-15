@@ -36,6 +36,16 @@ return [
         'http' => env('ELASTIC_HTTP'),
         'password' => env('ELASTIC_PASSWORD'),
         'username' => env('ELASTIC_USERNAME'),
+    ],
+
+    'importers' => [
+        'ecTracks' => [
+            'validHeaders' => ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max', 'difficulty'],
+        ],
+        'ecPois' =>
+        [
+            'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'poi_type', 'theme', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url']
+        ]
     ]
 
 ];

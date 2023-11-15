@@ -22,7 +22,7 @@ class EcPoi extends Model
     use GeometryFeatureTrait;
     use HasTranslations;
 
-    protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id'];
+    protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id', 'description', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url'];
     public array $translatable = ['name', 'description', 'excerpt', 'audio'];
     public bool $skip_update = false;
 

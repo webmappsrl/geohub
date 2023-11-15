@@ -10,14 +10,20 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
-class TaxonomyPoiType extends Model {
+class TaxonomyPoiType extends Model
+{
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['identifier','name']; 
-    
+    protected $fillable = ['identifier', 'name'];
+
     public $translatable = ['name', 'description', 'excerpt'];
 
-    public function save(array $options = []) {
+    protected $casts = [
+        'name' => 'json',
+    ];
+
+    public function save(array $options = [])
+    {
         static::creating(function ($taxonomyPoiType) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -35,7 +41,8 @@ class TaxonomyPoiType extends Model {
         parent::save($options);
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
         static::creating(function ($taxonomyPoiType) {
             if ($taxonomyPoiType->identifier != null) {
@@ -47,27 +54,38 @@ class TaxonomyPoiType extends Model {
         });
     }
 
-    public function author() {
+    public function author()
+    {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
 
-    public function ecMedia() {
+    public function ecMedia()
+    {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_poi_typeable');
     }
 
-    public function ecTracks() {
+    public function ecTracks()
+    {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_poi_typeable');
     }
-    
-    public function layers() {
+
+    public function layers()
+    {
         return $this->morphedByMany(Layer::class, 'taxonomy_poi_typeable');
     }
 
-    public function featureImage(): BelongsTo {
+    public function ecPois()
+    {
+        return $this->morphedByMany(EcPoi::class, 'taxonomy_poi_typeable');
+    }
+
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message) {
+    private static function validationError($message)
+    {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
@@ -79,26 +97,27 @@ class TaxonomyPoiType extends Model {
      *
      * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $json = $this->toArray();
-        
+
         $data = [];
 
         $data['id'] = $json['id'];
 
         $data['name'] = $json['name'];
         if ($data['name']) {
-            foreach($data['name'] as $lang => $val) {
+            foreach ($data['name'] as $lang => $val) {
                 if (empty($val) || !$val) {
                     unset($data['name'][$lang]);
-                } 
+                }
             }
         }
         if ($json['description']) {
-            foreach($json['description'] as $lang => $val) {
+            foreach ($json['description'] as $lang => $val) {
                 if (!empty($val) || $val) {
                     $data['description'][$lang] = $val;
-                } 
+                }
             }
         }
 
