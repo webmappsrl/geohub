@@ -146,7 +146,7 @@ class UpdatePOIFromOsm extends Command
                         }
                     }
                 } catch (Exception $e) {
-                    Log::info('Error creating EcMedia with id: ' . $ec_media->id . "\n ERROR: " . $e->getMessage());
+                    Log::info('Error creating EcMedia with POI id: ' . $poi->id . "\n ERROR: " . $e->getMessage());
                 }
             }
         }
