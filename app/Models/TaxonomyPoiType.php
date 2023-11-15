@@ -18,10 +18,6 @@ class TaxonomyPoiType extends Model
 
     public $translatable = ['name', 'description', 'excerpt'];
 
-    protected $casts = [
-        'name' => 'json',
-    ];
-
     public function save(array $options = [])
     {
         static::creating(function ($taxonomyPoiType) {
