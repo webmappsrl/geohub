@@ -33,7 +33,7 @@ class UpdatePOIFromOsm extends Command
     protected $description =  'Loops through all the pois belonging to the user identified by user_email. If the parameter osmid is not null, it performs some sync operations from OSM to GEOHUB.';
 
     protected $errorPois = array();
-    protected $osmid = true;
+    protected $osmid;
 
     /**
      * Create a new command instance.
@@ -74,10 +74,10 @@ class UpdatePOIFromOsm extends Command
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            if (!empty($poi->osmid) && $this->osmid === true) {
+            if (!empty($poi->osmid) && empty($this->osmid)) {
                 $this->updatePoiData($poi);
             }
-            if ($poi->osmid == $this->osmid) {
+            if (!empty($this->osmid) && $poi->osmid == $this->osmid) {
                 $this->updatePoiData($poi);
             }
         }
