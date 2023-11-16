@@ -35,6 +35,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -249,7 +250,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
                 ->select('id')
                 ->where(function ($query) use ($taxonomies) {
                     foreach ($taxonomies as $taxonomy) {
-                        $query->orWhere('name', 'like', '%' . $taxonomy . '%');
+                        $query->where('identifier',  $taxonomy);
                     }
                 })
                 ->pluck('id')
