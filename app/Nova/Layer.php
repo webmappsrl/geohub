@@ -128,7 +128,6 @@ class Layer extends Resource
                     })->withMeta(['width' => 400])->onlyOnDetail(),
                 ],
                 'BEHAVIOUR' => [
-                    Boolean::make('Show this layer by default', 'default')->help('turn this option off if you want do not to show this layer by default')->hideFromIndex(),
                     Boolean::make('Generate Edges', 'generate_edges'),
                     Boolean::make('No Details', 'noDetails'),
                     Boolean::make('No Interaction', 'noInteraction'),
@@ -219,7 +218,6 @@ class Layer extends Resource
         ];
 
         $behaviourTab = [
-            Boolean::make('Show this layer by default', 'default')->help('turn this option off if you want do not to show this layer by default'),
             Boolean::make('Generate Edges', 'generate_edges'),
             Boolean::make('No Details', 'noDetails'),
             Boolean::make('No Interaction', 'noInteraction'),
