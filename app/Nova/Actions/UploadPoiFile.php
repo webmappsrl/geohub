@@ -50,12 +50,12 @@ class UploadPoiFile extends Action
      */
     public function fields()
     {
-        $filePath = Storage::url('import-poi-example.xlsx');
+        $filePath = public_path('importer-examples/import-poi-example.xlsx');
         $validHeaders = config('services.importers.ecPois.validHeaders');
         $validHeaders = implode(', ', $validHeaders);
         return [
             File::make('Upload File', 'file')
-                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . $validHeaders . '</strong>' .  '</br>' . '</br>' . 'Mandatory fields are: ' . '<strong>' . ' name_it, poi_type (at least one), theme(at least one), lat, lng.' . '</strong>' . ' Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).' . '</br>' .  'Please follow this example: ' . '<a href="' . url($filePath) . '" target="_blank">Example</a>')
+                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . $validHeaders . '</strong>' .  '</br>' . '</br>' . 'Mandatory fields are: ' . '<strong>' . ' name_it, poi_type (at least one), theme(at least one), lat, lng.' . '</strong>' . ' Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).' . '</br>' .  'Please follow this example: ' . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>')
         ];
     }
 }

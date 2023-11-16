@@ -51,10 +51,10 @@ class UploadTrackFile extends Action
     public function fields()
     {
 
-        $filePath = Storage::url('import-example.xlsx');
+        $filePath = Storage::url('importer-examples/import-track-example.xlsx');
         return [
             File::make('Upload File', 'file')
-                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . '</strong>' . 'id, from, to, ele_from, ele_to, distance, duration_forward, duration_backward, ascent, descent, ele_min, ele_max' . '</br>' . '</br>' . 'Please follow this example: ' . '<a href="' . url($filePath) . '" target="_blank">Example</a>')
+                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . '</strong>' . 'id, from, to, ele_from, ele_to, distance, duration_forward, duration_backward, ascent, descent, ele_min, ele_max' . '</br>' . '</br>' . 'Please follow this example: ' . '<a href="' . asset('importer-examples/import-track-example.xlsx') . '" target="_blank">Example</a>')
         ];
     }
 }
