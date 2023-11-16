@@ -1,0 +1,170 @@
+{
+    "poi_type": {
+        "37": {
+            "source_title": {
+                "it": "Attraversamenti fiumi e fiumare"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "attention"
+        },
+        "36": {
+            "source_title": {
+                "it": "Fonti e sorgenti"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "fountain"
+        },
+        "42": {
+            "source_title": {
+                "it": "Posto tappa"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "village"
+        },
+        "10": {
+            "source_title": {
+                "it": "Vedere"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "poi"
+        }
+    },
+    "activity": {
+        "9": {
+            "source_title": {
+                "it": "A piedi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "55": {
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mtb"
+        }
+    },
+    "theme": {
+        "44": {
+            "source_title": {
+                "it": "Bandiera Arancione Touring"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-bandiera-arancione-touring"
+        },
+        "43": {
+            "source_title": {
+                "it": "Borghi pi\u00f9 belli d'Italia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-borghi-piu-belli-ditalia"
+        },
+        "47": {
+            "source_title": {
+                "it": "Comunit\u00e0 arb\u00ebreshe"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-comunita-arbereshe"
+        },
+        "52": {
+            "source_title": {
+                "it": "Paese abbandonato"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-paese-abbandonato"
+        },
+        "45": {
+            "source_title": {
+                "it": "Parco Nazionale del Pollino"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-pollino"
+        },
+        "56": {
+            "source_title": {
+                "it": "Parco Nazionale dell'Aspromonte"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-aspromonte"
+        },
+        "50": {
+            "source_title": {
+                "it": "Parco Nazionale della Sila"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-sila"
+        },
+        "51": {
+            "source_title": {
+                "it": "Parco Regionale delle Serre"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-serre"
+        },
+        "49": {
+            "source_title": {
+                "it": "Riserva Naturale Regionale Valli Cupe"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-cupe"
+        },
+        "46": {
+            "source_title": {
+                "it": "Sito UNESCO"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "unesco"
+        },
+        "112": {
+            "source_title": {
+                "it": "Tratto Lucano"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-tratto-lucano"
+        },
+        "48": {
+            "source_title": {
+                "it": "WILD"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "cbs-wild"
+        }
+    }
+}
