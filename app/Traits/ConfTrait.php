@@ -30,7 +30,7 @@ trait ConfTrait
         $data = array_merge($data, $this->config_section_home());
         $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
-        $data = array_merge($data, $this->config_section_project());
+        $data = array_merge($data, $this->config_section_pages());
         $data = array_merge($data, $this->config_section_theme());
         $data = array_merge($data, $this->config_section_options());
         $data = array_merge($data, $this->config_section_tables());
@@ -545,13 +545,21 @@ trait ConfTrait
      *
      * @return array
      */
-    private function config_section_project(): array
+    private function config_section_pages(): array
     {
         $data = [];
         // PROJECT section
-
-        $data['PROJECT']['HTML'] = $this->page_project;
-
+        if ($this->page_project) {
+            $data['PROJECT']['HTML'] = $this->page_project;
+        }
+        // DISCLAIMER section
+        if ($this->page_disclaimer) {
+            $data['DISCLAIMER']['HTML'] = $this->page_disclaimer;
+        }
+        // CREDITS section
+        if ($this->page_credits) {
+            $data['CREDITS']['HTML'] = $this->page_credits;
+        }
 
         return $data;
     }
