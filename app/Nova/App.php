@@ -102,7 +102,7 @@ class App extends Resource
      * @var array
      */
     public static $search = [
-        'name','customer_name','id'
+        'name', 'customer_name', 'id'
     ];
 
     private $languages  = [
@@ -188,14 +188,14 @@ class App extends Resource
                 'APP' => $this->app_tab(),
                 'RELEASE DATA' => $this->app_release_data_tab(),
                 'HOME' => $this->home_tab(),
-                'PROJECT' => $this->project_tab(),
+                'PAGES' => $this->pages_tab(),
                 'ICONS' => $this->icons_tab(),
             ];
             if ($request->user()->hasDashboardShow($this->id)) {
                 $tab_array = [
                     'APP' => $this->app_tab(),
                     'HOME' => $this->home_tab(),
-                    'PROJECT' => $this->project_tab(),
+                    'PAGES' => $this->pages_tab(),
                     'ICONS' => $this->icons_tab(),
                     // 'APP Analytics' => $this->app_analytics_tab(),
                     // 'POI Analytics' => $this->poi_analytics_tab(),
@@ -237,7 +237,7 @@ class App extends Resource
             return [
                 (new Tabs("APP Details: {$this->name} ({$this->id})", [
                     'HOME' => $this->home_tab(),
-                    'PROJECT' => $this->project_tab()
+                    'PAGES' => $this->pages_tab()
                 ])),
             ];
         }
@@ -250,7 +250,7 @@ class App extends Resource
             'RELEASE DATA' => $this->app_release_data_tab(),
             'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
-            'PROJECT' => $this->project_tab(),
+            'PAGES' => $this->pages_tab(),
             'AUTH' => $this->auth_tab(),
             'OFFLINE' => $this->offline_tab(),
             'ICONS' => $this->icons_tab(),
@@ -345,10 +345,12 @@ class App extends Resource
         ];
     }
 
-    protected function project_tab(): array
+    protected function pages_tab(): array
     {
         return [
             NovaTinymce5Editor::make('Page Project', 'page_project'),
+            NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
+            NovaTinymce5Editor::make('Page Credits', 'page_credits'),
         ];
     }
     protected function languages_tab(): array
