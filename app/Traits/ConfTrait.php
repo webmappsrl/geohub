@@ -553,13 +553,13 @@ trait ConfTrait
             $data['PROJECT']['HTML'] = $this->page_project;
         }
         // DISCLAIMER section
-        if ($this->page_disclaimer) {
-            $data['DISCLAIMER']['HTML'] = $this->page_disclaimer;
-        }
+        // if ($this->page_disclaimer) {
+        //     $data['DISCLAIMER']['HTML'] = $this->page_disclaimer;
+        // }
         // CREDITS section
-        if ($this->page_credits) {
-            $data['CREDITS']['HTML'] = $this->page_credits;
-        }
+        // if ($this->page_credits) {
+        //     $data['CREDITS']['HTML'] = $this->page_credits;
+        // }
 
         return $data;
     }

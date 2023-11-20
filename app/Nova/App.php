@@ -349,8 +349,8 @@ class App extends Resource
     {
         return [
             NovaTinymce5Editor::make('Page Project', 'page_project'),
-            NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
-            NovaTinymce5Editor::make('Page Credits', 'page_credits'),
+            // NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
+            // NovaTinymce5Editor::make('Page Credits', 'page_credits'),
         ];
     }
     protected function languages_tab(): array

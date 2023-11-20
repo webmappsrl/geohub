@@ -14,8 +14,8 @@ class AddDisclaimerAndCreditsToAppsTable extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->text('page_disclaimer')->nullable();
-            $table->text('page_credits')->nullable();
+            // $table->text('page_disclaimer')->nullable();
+            // $table->text('page_credits')->nullable();
         });
     }
 
@@ -27,7 +27,7 @@ class AddDisclaimerAndCreditsToAppsTable extends Migration
     public function down()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropColumn(array('page_disclaimer', 'page_credits'));
+            // $table->dropColumn(array('page_disclaimer', 'page_credits'));
         });
     }
 }
