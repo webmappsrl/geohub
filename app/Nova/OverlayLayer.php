@@ -79,14 +79,14 @@ class OverlayLayer extends Resource
             Swatches::make('Fill Color')->default(function () {
                 return $this->app->primary_color;
             })->colors('text-advanced')->withProps([
-            'show-fallback' => true,
-            'fallback-type' => 'input',
+                'show-fallback' => true,
+                'fallback-type' => 'input',
             ])->hideWhenCreating(),
             Swatches::make('Stroke Color')->default(function () {
                 return $this->app->primary_color;
             })->colors('text-advanced')->withProps([
-            'show-fallback' => true,
-            'fallback-type' => 'input',
+                'show-fallback' => true,
+                'fallback-type' => 'input',
             ])->hideWhenCreating(),
             Number::make('Stroke width')->hideWhenCreating(),
             Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
@@ -147,7 +147,7 @@ class OverlayLayer extends Resource
         return [];
     }
 
-    public function relatableLayers(NovaRequest $request, $query)
+    public static function relatableLayers(NovaRequest $request, $query)
     {
 
         $resourceId = $request->resourceId;
