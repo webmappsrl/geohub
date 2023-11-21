@@ -80,7 +80,9 @@ class EcTrack extends Model
 
     protected static function booted()
     {
-        parent::booted();
+        // parent::booted();
+
+        EcTrack::observe(EcTrackElasticObserver::class);
 
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
@@ -117,56 +119,12 @@ class EcTrack extends Model
                 $ecTrack->skip_update = false;
             }
         });
-
-        /**
-         * Many To Many Polymorphic Relations Events.
-         */
-        // static::morphToManyAttached(function ($relation, $parent, $ids, $attributes) {
-        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
-        //     if (!empty($ecTrackLayers)) {
-        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
-        //             // $parent->elasticIndex('app_' . $app_id, $layer_ids);
-        //             if (!empty($layer_ids)) {
-        //                 // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids, 'PUT');
-        //                 $parent->elasticIndexUpsert('app_' . $app_id, $layer_ids);
-        //             } else {
-        //                 $parent->elasticIndexDelete('app_' . $app_id);
-        //             }
-        //         }
-        //     }
-        // });
-
-        // static::morphToManyDetached(function ($relation, $parent, $ids) {
-        //     $ecTrackLayers = $parent->getLayersByApp($relation, $ids);
-        //     if (!empty($ecTrackLayers)) {
-        //         foreach ($ecTrackLayers as $app_id => $layer_ids) {
-        //             // $ecTrack->elasticIndex('app_' . $app_id, $layer_ids);
-        //         }
-        //     }
-        // });
-
-        // static::updated(function ($ecTrack) {
-        // $changes = $ecTrack->getChanges();
-        // if (in_array('geometry', $changes)) {
-        //     try {
-        //         $hoquServiceProvider = app(HoquServiceProvider::class);
-        //         $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-        //     } catch (\Exception $e) {
-        //         Log::error('An error occurred during a store operation: ' . $e->getMessage());
-        //     }
-        // }
-        // });
-        
-        // if (auth()->check() && auth()->user()->id == 7) {
-            EcTrack::observe(EcTrackElasticObserver::class);
-        // }
-
     }
 
-    public function save(array $options = [])
-    {
-        parent::save($options);
-    }
+    // public function save(array $options = [])
+    // {
+    //     parent::save($options);
+    // }
 
     public function author()
     {
@@ -1173,7 +1131,7 @@ class EcTrack extends Model
             foreach ($app->layers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
-                    // Here we assume that there is only one category in each taxonomy type is associated with the Layer
+                    // Here we assume that there is only one category in each taxonomy type that is associated with the Layer
                     if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
                         $layers[$app->id][] = $layer->id;
                     }

@@ -272,7 +272,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
 
     private function importerSentieriSardegna()
     {
-        $categorie_fruibilita_sentieri = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+        $categorie_fruibilita_sentieri = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
 
         if ($this->single_feature) {
             $features_list[$this->single_feature] = date('Y-M-d H:i:s');

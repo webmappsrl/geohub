@@ -32,7 +32,7 @@ class App extends Model
     use HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label', 'overlays_label','data_label','pois_data_label','tracks_data_label'];
+    public array $translatable = ['welcome', 'tiles_label', 'overlays_label','data_label','pois_data_label','tracks_data_label','page_project','page_disclaimer','page_credits'];
     protected $casts = ['keywords' => 'array'];
     /**
      * The accessors to append to the model's array form.
