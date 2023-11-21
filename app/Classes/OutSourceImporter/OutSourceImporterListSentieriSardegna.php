@@ -13,14 +13,14 @@ class OutSourceImporterListSentieriSardegna extends OutSourceImporterListAbstrac
     public function getTrackList(): array
     {
         Log::info('Starting Track List CURL request ...');
-        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($this->endpoint);
+        $response = Http::get($this->endpoint);
         return  $response->json();
     }
 
     public function getPoiList(): array
     {
         Log::info('Starting POI List CURL request ...');
-        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($this->endpoint);
+        $response = Http::get($this->endpoint);
         return $response->json();
     }
 

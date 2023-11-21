@@ -548,18 +548,22 @@ trait ConfTrait
     private function config_section_pages(): array
     {
         $data = [];
-        // PROJECT section
+        // PROJECT section DEPRICATED (v1)
         if ($this->page_project) {
             $data['PROJECT']['HTML'] = $this->page_project;
         }
+        // PROJECT section NEW (v2)
+        if ($this->page_project) {
+            $data['PROJECT']['html'] = $this->getTranslations('page_project');
+        }
         // DISCLAIMER section
-        // if ($this->page_disclaimer) {
-        //     $data['DISCLAIMER']['HTML'] = $this->page_disclaimer;
-        // }
+        if ($this->page_disclaimer) {
+            $data['DISCLAIMER']['html'] = $this->getTranslations('page_disclaimer');
+        }
         // CREDITS section
-        // if ($this->page_credits) {
-        //     $data['CREDITS']['HTML'] = $this->page_credits;
-        // }
+        if ($this->page_credits) {
+            $data['CREDITS']['html'] = $this->getTranslations('page_credits');
+        }
 
         return $data;
     }

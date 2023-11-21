@@ -37,20 +37,20 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $poi_type;
     protected $content;
     protected $trns = array(
-        'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a',
-        'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A',
-        'ß'=>'B', 'ç'=>'c', 'Ç'=>'C',
-        'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e',
-        'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E',
-        'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
-        'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I',
-        'ñ'=>'n', 'Ñ'=>'N',
-        'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o',
-        'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O',
-        'š'=>'s', 'Š'=>'S',
-        'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u',
-        'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U',
-        'ý'=>'y', 'Ý'=>'Y', 'ž'=>'z', 'Ž'=>'Z'
+        'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a',
+        'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A',
+        'ß' => 'B', 'ç' => 'c', 'Ç' => 'C',
+        'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+        'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+        'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+        'ñ' => 'n', 'Ñ' => 'N',
+        'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
+        'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O',
+        'š' => 's', 'Š' => 'S',
+        'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u',
+        'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U',
+        'ý' => 'y', 'Ý' => 'Y', 'ž' => 'z', 'Ž' => 'Z'
         );
 
     /**
@@ -139,13 +139,13 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerWPPoiType()
     {
-        $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category?per_page=99';
+        $url = $this->endpoint . '/wp-json/wp/v2/webmapp_category?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                    Log::info('Start creating input poi_type ' . $c['name'] . ' with external id: ' . $c['id']);
                     $title = [];
                     if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [
@@ -188,13 +188,13 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerWPActivity()
     {
-        $url = $this->endpoint.'/wp-json/wp/v2/activity?per_page=99';
+        $url = $this->endpoint . '/wp-json/wp/v2/activity?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                    Log::info('Start creating input poi_type ' . $c['name'] . ' with external id: ' . $c['id']);
                     if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [];
                         $title = [
@@ -237,13 +237,13 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerWPTheme()
     {
-        $url = $this->endpoint.'/wp-json/wp/v2/theme?per_page=99';
+        $url = $this->endpoint . '/wp-json/wp/v2/theme?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input theme '.$c['name'].' with external id: '.$c['id']);
+                    Log::info('Start creating input theme ' . $c['name'] . ' with external id: ' . $c['id']);
                     if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [];
                         $title = [
@@ -287,8 +287,8 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSPoiType()
     {
         $response = [];
-        $response['servizi'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/servizi?_format=json')->json();
-        $response['tipologia_poi'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_poi?_format=json')->json();
+        $response['servizi'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/servizi?_format=json')->json();
+        $response['tipologia_poi'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/tipologia_poi?_format=json')->json();
 
         $input = [];
         if ($response) {
@@ -312,9 +312,9 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSTheme()
     {
         $response = [];
-        $response['categorie_fruibilita_sentieri'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
-        $response['stato_di_validazione'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/stato_di_validazione?_format=json')->json();
-        $response['tipologia_itinerari'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_itinerari?_format=json')->json();
+        $response['categorie_fruibilita_sentieri'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
+        $response['stato_di_validazione'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/stato_di_validazione?_format=json')->json();
+        $response['tipologia_itinerari'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/tipologia_itinerari?_format=json')->json();
 
         $input = [];
         if ($response) {
@@ -338,7 +338,7 @@ class OutSourceTaxonomyMappingCommand extends Command
     private function importerSSActivity()
     {
         $response = [];
-        $response['tipologia_sentieri'] = Http::withBasicAuth(config('geohub.sardegna_sentieri_api_username'), config('geohub.sardegna_sentieri_api_password'))->get('https://sentieri.netseven.work/ss/tassonomia/tipologia_sentieri?_format=json')->json();
+        $response['tipologia_sentieri'] = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/tipologia_sentieri?_format=json')->json();
 
         $input = [];
         if ($response) {
@@ -363,8 +363,8 @@ class OutSourceTaxonomyMappingCommand extends Command
     {
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.', '-', $path['host']);
-        Log::info('Creating mapping file: '.$file_name);
-        $p = Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content, JSON_PRETTY_PRINT));
-        Log::info('Finished creating file: '.$file_name);
+        Log::info('Creating mapping file: ' . $file_name);
+        $p = Storage::disk('mapping')->put($file_name . '.json', json_encode($this->content, JSON_PRETTY_PRINT));
+        Log::info('Finished creating file: ' . $file_name);
     }
 }

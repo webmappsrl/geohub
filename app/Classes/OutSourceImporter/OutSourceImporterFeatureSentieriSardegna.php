@@ -22,8 +22,9 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
     protected string $mediaGeom;
     protected string $poi_type;
 
-    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false, $tax_difficulty = []) {
-        parent::__construct($type,$endpoint,$source_id,$only_related_url = false);
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false, $tax_difficulty = [])
+    {
+        parent::__construct($type, $endpoint, $source_id, $only_related_url = false);
 
         // Initialize the new parameter
         $this->tax_difficulty = $tax_difficulty;
@@ -40,8 +41,8 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
-            $url = 'https://sentieri.netseven.work/ss/track/' . $this->source_id . '?_format=json';
-            $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url);
+            $url = 'https://www.sardegnasentieri.it/ss/track/' . $this->source_id . '?_format=json';
+            $response = Http::get($url);
             $track = $response->json();
 
             // prepare feature parameters to pass to updateOrCreate function
@@ -51,7 +52,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             if (key_exists('geometry', $track)) {
                 $geometry = json_encode($track['geometry']);
             } elseif (key_exists('gpx', $track['properties']) && !empty($track['properties']['gpx'])) {
-                $gpx_content = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($track['properties']['gpx'][0]);
+                $gpx_content = Http::get($track['properties']['gpx'][0]);
                 $geometry = Gisconverter::gpxToGeojson($gpx_content);
             } else {
                 throw new Exception('No Geometry found');
@@ -92,8 +93,8 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
     public function importPoi()
     {
 
-        $url = 'https://sentieri.netseven.work/ss/poi/' . $this->source_id . '?_format=json';
-        $response = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url);
+        $url = 'https://www.sardegnasentieri.it/ss/poi/' . $this->source_id . '?_format=json';
+        $response = Http::get($url);
         $poi = $response->json();
 
 
@@ -170,7 +171,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         // Related Poi of vicinity
         if ($this->params['geometry']) {
             $geometry = $this->params['geometry'];
-            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='https://sentieri.netseven.work/ss/listpoi/?_format=json' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
+            $related_pois = DB::select("SELECT id from out_source_features WHERE type='poi' and endpoint='https://www.sardegnasentieri.it/ss/listpoi/?_format=json' and ST_Contains(ST_BUFFER(ST_SetSRID(ST_GeomFromText('$geometry'),4326),0.01, 'endcap=round join=round'),geometry::geometry);");
 
             if (is_array($related_pois) && !empty($related_pois)) {
                 foreach ($related_pois as $poi) {
@@ -182,7 +183,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         // Add From e To to the Track
         if (isset($track['properties']['partenza'])) {
             $source_id = $track['properties']['partenza'];
-            $from = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://sentieri.netseven.work/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
+            $from = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://www.sardegnasentieri.it/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
             if (is_array($from) && !empty($from)) {
                 $from = json_decode($from[0], true);
             }
@@ -190,7 +191,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
         if (isset($track['properties']['arrivo'])) {
             $source_id = $track['properties']['arrivo'];
-            $to = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://sentieri.netseven.work/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
+            $to = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://www.sardegnasentieri.it/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
             if (is_array($to) && !empty($to)) {
                 $to = json_decode($to[0], true);
             }
@@ -230,14 +231,14 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                             if (is_array($idList)) {
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $json_taxonomy_theme)) {
-                                        $this->tags['description']['it'] .= isset($json_taxonomy_theme[$id]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
-                                        $this->tags['description']['en'] .= isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">More info</a>' : '';
+                                        $this->tags['description']['it'] .= isset($json_taxonomy_theme[$id]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['it'] . '</strong></p><a target="_blank" href="https://www.sardegnasentieri.it/pagina-base/note-legali">Maggiori info</a>' : '';
+                                        $this->tags['description']['en'] .= isset($json_taxonomy_theme[$id]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$id]['source_title']['en'] . '</strong></p><a target="_blank" href="https://www.sardegnasentieri.it/pagina-base/note-legali">More info</a>' : '';
                                     }
                                 }
                             } else {
                                 if (key_exists($idList, $json_taxonomy_theme)) {
-                                    $this->tags['description']['it'] .= isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
-                                    $this->tags['description']['en'] .= isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p><a target="_blank" href="https://sentieri.netseven.work/pagina-base/note-legali">Maggiori info</a>' : '';
+                                    $this->tags['description']['it'] .= isset($json_taxonomy_theme[$idList]['source_title']['it']) ? '<h3>Stato di validazione:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['it'] . '</strong></p><a target="_blank" href="https://www.sardegnasentieri.it/pagina-base/note-legali">Maggiori info</a>' : '';
+                                    $this->tags['description']['en'] .= isset($json_taxonomy_theme[$idList]['source_title']['en']) ? '<h3>Validation status:</h3><p><strong>' . $json_taxonomy_theme[$idList]['source_title']['en'] . '</strong></p><a target="_blank" href="https://www.sardegnasentieri.it/pagina-base/note-legali">Maggiori info</a>' : '';
                                 }
                             }
                         }
@@ -249,13 +250,13 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                     $more_info_link = false;
                     foreach ($track['properties']['taxonomies'] as $tax => $idList) {
                         if ($tax == 'categorie_fruibilita_sentieri') {
-                            if (is_array($idList)) {
+                            if (is_array($idList) && !empty($idList)) {
+                                $this->tags['description']['it'] .= '<h3>Difficoltà:</h3>';
                                 foreach ($idList as $id) {
                                     if (key_exists($id, $this->tax_difficulty)) {
                                         $more_info_link = true;
-                                        $this->tags['description']['it'] .= '<h3>Difficoltà:</h3>';
                                         if ($this->tax_difficulty[$id]['parent'] != 'NULL') {
-                                            $this->tags['description']['it'] .= '<p>'. $this->tax_difficulty[$this->tax_difficulty[$id]['parent']]['name']['it'] . ' > ' . $this->tax_difficulty[$id]['name']['it'] . '</p>';
+                                            $this->tags['description']['it'] .= '<p>' . $this->tax_difficulty[$this->tax_difficulty[$id]['parent']]['name']['it'] . ' > ' . $this->tax_difficulty[$id]['name']['it'] . '</p>';
                                         }
                                     }
                                 }
@@ -263,7 +264,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                         }
                     }
                     if ($more_info_link) {
-                        $this->tags['description']['it'] .= '<a target="_blank" href="https://sentieri.netseven.work/gradi_difficolt%C3%A0">Maggiori info</a>';
+                        $this->tags['description']['it'] .= '<a target="_blank" href="https://www.sardegnasentieri.it/gradi_difficolt%C3%A0">Maggiori info</a>';
 
                     }
                 }
@@ -441,7 +442,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function ($match) {
                 return urlencode($match[0]);
             }, $image_url);
-            $contents = Http::withBasicAuth('sentieri', 'bai1Eevuvah7')->get($url_encoded);
+            $contents = Http::get($url_encoded);
             $basename_explode = explode('.', basename($image_url));
             $basename = basename($image_url);
             $s3_osfmedia = Storage::disk($storage_name);
