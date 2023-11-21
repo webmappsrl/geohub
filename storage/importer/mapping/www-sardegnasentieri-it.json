@@ -1,0 +1,334 @@
+{
+    "poi_type": {
+        "4147": {
+            "skip": false,
+            "source_title": {
+                "it": "Accesso disabili"
+            },
+            "source_description": "",
+            "geohub_identifier": "disabled-access"
+        },
+        "4157": {
+            "skip": false,
+            "source_title": {
+                "it": "Accompagnamento disabili"
+            },
+            "source_description": "",
+            "geohub_identifier": "disabled-access"
+        },
+        "4158": {
+            "skip": false,
+            "source_title": {
+                "it": "Parcheggi"
+            },
+            "source_description": "",
+            "geohub_identifier": "parking"
+        },
+        "4150": {
+            "skip": false,
+            "source_title": {
+                "it": "Sorgenti"
+            },
+            "source_description": "",
+            "geohub_identifier": "natural-spring"
+        },
+        "4185": {
+            "skip": false,
+            "source_title": {
+                "it": "Bar"
+            },
+            "source_description": "",
+            "geohub_identifier": "bar"
+        },
+        "4168": {
+            "skip": false,
+            "source_title": {
+                "it": "Negozi"
+            },
+            "source_description": "",
+            "geohub_identifier": "shop"
+        },
+        "4146": {
+            "skip": false,
+            "source_title": {
+                "it": "Trasporti pubblici"
+            },
+            "source_description": "",
+            "geohub_identifier": "public-transport"
+        },
+        "4164": {
+            "skip": false,
+            "source_title": {
+                "it": "Visibilit\u00e0 TLC"
+            },
+            "source_description": "",
+            "geohub_identifier": "tlc"
+        },
+        "4162": {
+            "skip": false,
+            "source_title": {
+                "it": "Camping o Camper"
+            },
+            "source_description": "",
+            "geohub_identifier": "camping"
+        },
+        "4161": {
+            "skip": false,
+            "source_title": {
+                "it": "Area di sosta"
+            },
+            "source_description": "",
+            "geohub_identifier": "picnic-area"
+        },
+        "4166": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibilit\u00e0"
+            },
+            "source_description": "",
+            "geohub_identifier": "disabled-access"
+        },
+        "4759": {
+            "skip": false,
+            "source_title": {
+                "it": "Alberi monumentali"
+            },
+            "source_description": "",
+            "geohub_identifier": "monumental-tree"
+        },
+        "4812": {
+            "skip": false,
+            "source_title": {
+                "it": "Area sosta attrezzata"
+            },
+            "source_description": "",
+            "geohub_identifier": "equipped-rest-area"
+        },
+        "4775": {
+            "skip": false,
+            "source_title": {
+                "it": "Scoprire e imparare"
+            },
+            "source_description": "",
+            "geohub_identifier": "environmental-education"
+        },
+        "4769": {
+            "skip": false,
+            "source_title": {
+                "it": "Cascata"
+            },
+            "source_description": "",
+            "geohub_identifier": "waterway-waterfall"
+        },
+        "4747": {
+            "skip": false,
+            "source_title": {
+                "it": "Sorgente - fonte naturale"
+            },
+            "source_description": "",
+            "geohub_identifier": "natural-sprin"
+        },
+        "4754": {
+            "skip": false,
+            "source_title": {
+                "it": "Fabbricati\/case forestali"
+            },
+            "source_description": "",
+            "geohub_identifier": "foresteria"
+        },
+        "4776": {
+            "skip": false,
+            "source_title": {
+                "it": "Laghi e Corsi d'acqua"
+            },
+            "source_description": "",
+            "geohub_identifier": "water-lake"
+        },
+        "4760": {
+            "skip": false,
+            "source_title": {
+                "it": "Grotte"
+            },
+            "source_description": "",
+            "geohub_identifier": "natural-cave-entrance"
+        },
+        "4737": {
+            "skip": false,
+            "source_title": {
+                "it": "Rifugio, presidi abitati"
+            },
+            "source_description": "",
+            "geohub_identifier": "rifugio"
+        },
+        "4768": {
+            "skip": false,
+            "source_title": {
+                "it": "trekking - waypoint"
+            },
+            "source_description": "",
+            "geohub_identifier": "crossroads"
+        },
+        "4765": {
+            "skip": false,
+            "source_title": {
+                "it": "Sentieristica (punti di snodo)"
+            },
+            "source_description": "",
+            "geohub_identifier": "crossroads"
+        },
+        "4779": {
+            "skip": false,
+            "source_title": {
+                "it": "Incroci - waypoint"
+            },
+            "source_description": "",
+            "geohub_identifier": "crossroads"
+        },
+        "4771": {
+            "skip": false,
+            "source_title": {
+                "it": "Luoghi della transumanza, ovili, pinnettos"
+            },
+            "source_description": "",
+            "geohub_identifier": "places-of-transhumance"
+        },
+        "4770": {
+            "skip": false,
+            "source_title": {
+                "it": "Boschi, Parchi o aree forestali"
+            },
+            "source_description": "",
+            "geohub_identifier": "natural-wood"
+        },
+        "4914": {
+            "skip": false,
+            "source_title": {
+                "it": "Tappe del camminare..."
+            },
+            "source_description": "",
+            "geohub_identifier": "poi"
+        },
+        "4913": {
+            "skip": false,
+            "source_title": {
+                "it": "Vicino al mare..."
+            },
+            "source_description": "",
+            "geohub_identifier": "coast-seaside"
+        },
+        "4750": {
+            "skip": false,
+            "source_title": {
+                "it": "Meraviglie della Natura..."
+            },
+            "source_description": "",
+            "geohub_identifier": "nature"
+        },
+        "4774": {
+            "skip": false,
+            "source_title": {
+                "it": "Luoghi di memoria e di fede"
+            },
+            "source_description": "",
+            "geohub_identifier": "place-of-worship"
+        },
+        "4777": {
+            "skip": false,
+            "source_title": {
+                "it": "Meraviglie della Geologia e del Paesaggio"
+            },
+            "source_description": "",
+            "geohub_identifier": "natural-park"
+        },
+        "4773": {
+            "skip": false,
+            "source_title": {
+                "it": "Nuraghi e altri luoghi storico-archeologici"
+            },
+            "source_description": "",
+            "geohub_identifier": "archaeological-site"
+        },
+        "4772": {
+            "skip": false,
+            "source_title": {
+                "it": "Sguardi dall'alto"
+            },
+            "source_description": "",
+            "geohub_identifier": "viewpoint"
+        }
+    },
+    "activity": {
+        "4827": {
+            "skip": false,
+            "source_title": {
+                "it": "Trekking"
+            },
+            "source_description": "",
+            "geohub_identifier": "trekking"
+        },
+        "4828": {
+            "skip": false,
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": "mtb"
+        },
+        "4833": {
+            "skip": false,
+            "source_title": {
+                "it": "Hiking"
+            },
+            "source_description": "",
+            "geohub_identifier": "hiking"
+        },
+        "4830": {
+            "skip": false,
+            "source_title": {
+                "it": "Turismo equestre"
+            },
+            "source_description": "",
+            "geohub_identifier": "horse"
+        },
+        "4889": {
+            "skip": false,
+            "source_title": {
+                "it": "Sentieri (accessibili) per tutti"
+            },
+            "source_description": "",
+            "geohub_identifier": "accessible-trails"
+        },
+        "4831": {
+            "skip": false,
+            "source_title": {
+                "it": "Dorsali escursionistiche a tappe (per esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": "trekking"
+        },
+        "4832": {
+            "skip": false,
+            "source_title": {
+                "it": "Passeggiate e Nordic Walk"
+            },
+            "source_description": "",
+            "geohub_identifier": "nordic-walking"
+        },
+        "4829": {
+            "skip": false,
+            "source_title": {
+                "it": "Sentieri didattici"
+            },
+            "source_description": "",
+            "geohub_identifier": "educational-trails"
+        },
+        "4825": {
+            "skip": false,
+            "source_title": {
+                "it": "Alte vie"
+            },
+            "source_description": "",
+            "geohub_identifier": "hiking"
+        }
+    }
+}
