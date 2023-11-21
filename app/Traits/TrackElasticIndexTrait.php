@@ -248,12 +248,12 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexDelete($index_name): void
     {
-        Log::info('DELETE Elastic Indexing track ' . $this->id);
-
         $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
 
         try {
             if (config('app.env') == 'production') {
+                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+
                 $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id)->body();
             } else {
                 $client = ClientBuilder::create()
@@ -262,6 +262,8 @@ trait TrackElasticIndexTrait
                     ->build();
 
                 if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                    Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+
                     $response = $client->delete($params);
                     Log::info($response);
                 }
