@@ -257,6 +257,425 @@
             "geohub_identifier": "viewpoint"
         }
     },
+    "theme": {
+        "4891": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4896": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4897": {
+            "skip": false,
+            "source_title": {
+                "it": "AT (Accessibile Turistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4902": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_FACILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4916": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 1 (bassa)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4908": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_TC_trail_Grado0-1"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4906": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_MEDIO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4066": {
+            "skip": false,
+            "source_title": {
+                "it": "Turistico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4892": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4900": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4901": {
+            "skip": false,
+            "source_title": {
+                "it": "AE (Accessibile Escursionistico)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4067": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionistico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4903": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_MEDIO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4917": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 2 (media)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4909": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_MC_trail_Grado2"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4905": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_FACILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4893": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4898": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4899": {
+            "skip": false,
+            "source_title": {
+                "it": "AEE (accessibile Escursionisti Esperti)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4068": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionista Esperto"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4904": {
+            "skip": false,
+            "source_title": {
+                "it": "ippo_DIFFICILE"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4918": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 Dolce_difficolt\u00e0 3 (alta)"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4910": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_BC_trail_Grado3"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4907": {
+            "skip": false,
+            "source_title": {
+                "it": "nordic_IMPEGNATIVO"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4069": {
+            "skip": false,
+            "source_title": {
+                "it": "Escursionista Esperto Attrezzato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4911": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_OC_trail_Grado4"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4912": {
+            "skip": false,
+            "source_title": {
+                "it": "MTB_EC_trail_Grado5-6"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4060": {
+            "skip": false,
+            "source_title": {
+                "it": "Mobilit\u00e0 dolce"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4064": {
+            "skip": false,
+            "source_title": {
+                "it": "Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4062": {
+            "skip": false,
+            "source_title": {
+                "it": "Nordic Walking"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4890": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibili dis. motorie"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4894": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibile dis. Sensoriali"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4895": {
+            "skip": false,
+            "source_title": {
+                "it": "Accessibile dis.Cognitiva"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4065": {
+            "skip": false,
+            "source_title": {
+                "it": "Ippovia"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4059": {
+            "skip": false,
+            "source_title": {
+                "it": "Sentiero didattico"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4061": {
+            "skip": false,
+            "source_title": {
+                "it": "Trekking"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4871": {
+            "skip": false,
+            "source_title": {
+                "it": "Non verificato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4870": {
+            "skip": false,
+            "source_title": {
+                "it": "Non percorribile"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4869": {
+            "skip": false,
+            "source_title": {
+                "it": "In revisione-validazione"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4868": {
+            "skip": false,
+            "source_title": {
+                "it": "In pre-accatastamento o manutenzione"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4187": {
+            "skip": false,
+            "source_title": {
+                "it": "Percorribile"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4188": {
+            "skip": false,
+            "source_title": {
+                "it": "Validato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4189": {
+            "skip": false,
+            "source_title": {
+                "it": "Certificato"
+            },
+            "source_description": "",
+            "geohub_identifier": ""
+        },
+        "4731": {
+            "skip": false,
+            "source_title": {
+                "it": "Vicino alle Citt\u00e0 o attorno ai Borghi"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-vicino-citta-borghi"
+        },
+        "4732": {
+            "skip": false,
+            "source_title": {
+                "it": "Passeggiate Geo-Minerarie"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-geo-minerarie"
+        },
+        "4730": {
+            "skip": false,
+            "source_title": {
+                "it": "Orienteering ed altro \"outdoor\""
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-orienteering-outdoor"
+        },
+        "4725": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari escursionistici di lunga percorrenza (a tappe)"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-escursionistici"
+        },
+        "4724": {
+            "skip": false,
+            "source_title": {
+                "it": "Vie della Transumanza"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssaredgna-via-delle-transumanza"
+        },
+        "4727": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari tematici (proposta di visita dei territori)"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-tematici"
+        },
+        "4726": {
+            "skip": false,
+            "source_title": {
+                "it": "Circuiti di Mountain Bike"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-circuiti-mtb"
+        },
+        "4728": {
+            "skip": false,
+            "source_title": {
+                "it": "Cammini di Sardegna",
+                "en": "Official Sardinian Paths"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-cammini-sardegna"
+        },
+        "4729": {
+            "skip": false,
+            "source_title": {
+                "it": "Itinerari dello Spirito e altre Destinazioni"
+            },
+            "source_description": "",
+            "geohub_identifier": "ssardegna-itinerari-spirito"
+        }
+    },
     "activity": {
         "4827": {
             "skip": false,
