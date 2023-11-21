@@ -251,12 +251,31 @@ Route::name('api.')->group(function () {
     });
 
     /**
-     * API VERSION 1 (/api/v1)
+     * FRONTEND API VERSION 1 (/api/v1)
      */
     Route::prefix('v1')->name('v1.')->group(function () {
         Route::prefix('app')->name('v1.app.')->group(function () {
             Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
             Route::get("/all", [AppAPIController::class, 'all'])->name('apps_json');
+        });
+    });
+
+    /**
+     * FRONTEND API VERSION 2 (/api/v2)
+     */
+    Route::prefix('v2')->group(function () {
+        Route::prefix('app')->group(function () {
+            Route::get("/{id}/pois.geojson", [AppAPIController::class, 'pois'])->name('app_pois');
+            Route::get("/all", [AppAPIController::class, 'all'])->name('apps_json');
+            Route::prefix('webmapp')->name('webmapp.')->group(function () {
+                Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+                Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
+                Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
+                Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
+                Route::get("/{id}/resources/feature_image.png", [AppController::class, 'featureImage'])->name('feature_image');
+                Route::get("/{id}/resources/icon_notify.png", [AppController::class, 'iconNotify'])->name('icon_notify');
+                Route::get("/{id}/resources/logo_homepage.svg", [AppController::class, 'logoHomepage'])->name('logo_homepage');
+            });
         });
     });
 
