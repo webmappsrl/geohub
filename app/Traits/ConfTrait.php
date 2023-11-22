@@ -411,10 +411,7 @@ trait ConfTrait
 
             $data['MAP']['filters']['activities'] = [
                 'type' => 'select',
-                'name' => [
-                    'it' => 'Attività',
-                    'en' => 'Activity',
-                ],
+                'name' => $this->getTranslations('filter_activity_label'),
                 'options' => $options
             ];
         }
@@ -440,10 +437,7 @@ trait ConfTrait
 
             $data['MAP']['filters']['themes'] = [
                 'type' => 'select',
-                'name' => [
-                    'it' => 'Tema',
-                    'en' => 'Theme',
-                ],
+                'name' => $this->getTranslations('filter_theme_label'),
                 'options' => $options
             ];
         }
@@ -470,10 +464,7 @@ trait ConfTrait
 
             $data['MAP']['filters']['poi_types'] = [
                 'type' => 'select',
-                'name' => [
-                    'it' => 'Punti di interesse',
-                    'en' => 'Points of interest',
-                ],
+                'name' => $this->getTranslations('filter_theme_label'),
                 'options' => $options
             ];
 
@@ -481,10 +472,7 @@ trait ConfTrait
             // TODO: Remove it when all apps al > version .45
             $data['MAP']['filters']['poi_type'] = [
                 'type' => 'select',
-                'name' => [
-                    'it' => 'Punti di interesse',
-                    'en' => 'Points of interest',
-                ],
+                'name' => $this->getTranslations('filter_theme_label'),
                 'options' => $options
             ];
         }
@@ -494,10 +482,7 @@ trait ConfTrait
             $data['MAP']['filters']['track_duration'] = [
                 'type' => 'slider',
                 'identifier' => 'duration_forward',
-                'name' => [
-                    'it' => 'Tempo di percorrenza',
-                    'en' => 'Travel time',
-                ],
+                'name' => $this->getTranslations('filter_track_duration_label'),
                 'units' => 'min',
                 'steps' => $this->filter_track_duration_steps ?? '',
                 'min' => $this->filter_track_duration_min ?? '',
@@ -509,10 +494,7 @@ trait ConfTrait
             $data['MAP']['filters']['track_distance'] = [
                 'type' => 'slider',
                 'identifier' => 'distance',
-                'name' => [
-                    'it' => 'Lunghezza del sentiero',
-                    'en' => 'Path length',
-                ],
+                'name' => $this->getTranslations('filter_track_distance_label'),
                 'units' => 'km',
                 'steps' => $this->filter_track_distance_steps ?? '',
                 'min' => $this->filter_track_distance_min ?? '',
