@@ -477,6 +477,13 @@ class App extends Resource
     {
 
         return [
+            NovaTabTranslatable::make([
+                Text::make('Activity Filter Label', 'filter_activity_label'),
+                Text::make('Theme Filter Label', 'filter_theme_label'),
+                Text::make('Poi Type Filter Label', 'filter_poi_type_label'),
+                Text::make('Duration Filter Label', 'filter_track_duration_label'),
+                Text::make('Distance Filter Label', 'filter_track_distance_label')
+            ]),
             Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
 
