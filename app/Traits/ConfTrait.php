@@ -464,7 +464,7 @@ trait ConfTrait
 
             $data['MAP']['filters']['poi_types'] = [
                 'type' => 'select',
-                'name' => $this->getTranslations('filter_theme_label'),
+                'name' => $this->getTranslations('filter_poi_type_label'),
                 'options' => $options
             ];
 
@@ -472,7 +472,7 @@ trait ConfTrait
             // TODO: Remove it when all apps al > version .45
             $data['MAP']['filters']['poi_type'] = [
                 'type' => 'select',
-                'name' => $this->getTranslations('filter_theme_label'),
+                'name' => $this->getTranslations('filter_poi_type_label'),
                 'options' => $options
             ];
         }
