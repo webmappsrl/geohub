@@ -325,9 +325,13 @@ class App extends Resource
                 <a class='btn btn-default btn-primary' style='margin:3px' href='$urlDesktop' target='_blank'>DESKTOP</a>
                 <a class='btn btn-default btn-primary' style='margin:3px' href='$urlMobile' target='_blank'>MOBILE</a>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('social_track_text')
+            Textarea::make(__('Social track text'), 'social_track_text')
                 ->help(__('Add a description for meta tags of social share. You can customize the description with these keywords: {app.name} e {track.name}'))
                 ->placeholder('Add social Meta Tag for description'),
+            NovaTabTranslatable::make([
+                Text::make('Social share text', 'social_share_text')
+                    ->help(__('This is shown when a Track is being shared via mobile apps.')),
+            ]),
             Boolean::make('dashboard_show')
         ];
     }
