@@ -73,6 +73,9 @@ trait ConfTrait
         if ($this->social_track_text) {
             $data['APP']['socialTrackText'] = $this->social_track_text;
         }
+        if ($this->social_share_text) {
+            $data['APP']['socialShareText'] = $this->getTranslations('social_share_text');
+        }
         if ($this->poi_acquisition_form) {
             $data['APP']['poi_acquisition_form'] =  json_decode($this->poi_acquisition_form, true);
         }
