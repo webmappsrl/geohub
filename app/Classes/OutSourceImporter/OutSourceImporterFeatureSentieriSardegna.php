@@ -49,11 +49,11 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Preparing OSF Track with external ID: ' . $this->source_id);
             $geometry = '';
 
-            if (key_exists('geometry', $track)) {
-                $geometry = json_encode($track['geometry']);
-            } elseif (key_exists('gpx', $track['properties']) && !empty($track['properties']['gpx'])) {
+            if (key_exists('gpx', $track['properties']) && !empty($track['properties']['gpx'])) {
                 $gpx_content = Http::get($track['properties']['gpx'][0]);
                 $geometry = Gisconverter::gpxToGeojson($gpx_content);
+            } elseif (key_exists('geometry', $track)) {
+                $geometry = json_encode($track['geometry']);
             } else {
                 throw new Exception('No Geometry found');
             }
