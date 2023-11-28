@@ -81,7 +81,6 @@ class EcTrack extends Model
     protected static function booted()
     {
         // parent::booted();
-
         EcTrack::observe(EcTrackElasticObserver::class);
 
         static::creating(function ($ecTrack) {

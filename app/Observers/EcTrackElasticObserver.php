@@ -24,7 +24,9 @@ class EcTrackElasticObserver
     public function created(EcTrack $ecTrack)
     {
         // $this->startElasticIndex($ecTrack);
-        UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
+        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+            UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
+        }
 
     }
 
@@ -37,7 +39,9 @@ class EcTrackElasticObserver
     public function updated(EcTrack $ecTrack)
     {
         // $this->startElasticIndex($ecTrack);
-        UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
+        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+            UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
+        }
     }
 
     /**
@@ -48,7 +52,9 @@ class EcTrackElasticObserver
      */
     public function deleted(EcTrack $ecTrack)
     {
-        DeleteEcTrackElasticIndexJob::dispatch($ecTrack);
+        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+            DeleteEcTrackElasticIndexJob::dispatch($ecTrack);
+        }
         // $ecTrackLayers = $ecTrack->getLayersByApp();
         // if (!empty($ecTrackLayers)) {
         //     foreach ($ecTrackLayers as $app_id => $layer_ids) {
