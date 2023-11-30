@@ -6,6 +6,7 @@ use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
 use App\Nova\Filters\UgcUserFilter;
+use Laravel\Nova\Fields\Code;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -87,16 +88,34 @@ class UgcPoi extends Resource
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })->onlyOnIndex(),
-            Text::make(__('Raw data'), function ($model) {
-                $rawData = json_decode($model->raw_data, true);
-                $result = [];
-
-                foreach ($rawData as $key => $value) {
-                    $result[] = $key . ' = ' . json_encode($value);
-                }
-
-                return join('<br>', $result);
-            })->onlyOnDetail()->asHtml(),
+            Code::make(__('Form data'), function ($model) {
+                $jsonRawData = json_decode($model->raw_data, true);
+                unset($jsonRawData['position']);
+                unset($jsonRawData['displayPosition']);
+                unset($jsonRawData['city']);
+                unset($jsonRawData['date']);
+                unset($jsonRawData['nominatim']);
+                $rawData = json_encode($jsonRawData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                return  $rawData;
+            })->onlyOnDetail()->language('json')->rules('json'),
+            Code::make(__('Device data'), function ($model) {
+                $jsonRawData = json_decode($model->raw_data, true);
+                $jsonData['position'] = $jsonRawData['position'];
+                $jsonData['displayPosition'] = $jsonRawData['displayPosition'];
+                $jsonData['city'] = $jsonRawData['city'];
+                $jsonData['date'] = $jsonRawData['date'];
+                $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                return  $rawData;
+            })->onlyOnDetail()->language('json')->rules('json'),
+            Code::make(__('Nominatim'), function ($model) {
+                $jsonData = json_decode($model->raw_data, true)['nominatim'];
+                $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                return  $rawData;
+            })->onlyOnDetail()->language('json')->rules('json'),
+            Code::make(__('Raw data'), function ($model) {
+                $rawData = json_encode(json_decode($model->raw_data, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                return  $rawData;
+            })->onlyOnDetail()->language('json')->rules('json'),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
