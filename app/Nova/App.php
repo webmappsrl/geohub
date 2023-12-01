@@ -358,7 +358,6 @@ class App extends Resource
                 NovaTinymce5Editor::make('Page Credits', 'page_credits'),
             ])
         ];
-
     }
     protected function languages_tab(): array
     {
@@ -689,6 +688,10 @@ class App extends Resource
                 [
                     {
                         "id" : "poi",
+                        "helper": {
+                            "ït": "sono helper di Punto di interesse",
+                            "en": "helper of Point of interest"
+                          },
                         "label" : 
                         {
                             "it" : "Punto di interesse",
