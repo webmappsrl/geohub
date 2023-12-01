@@ -286,7 +286,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
             foreach ($features_list as $id => $updated_at) {
                 if (empty($all) || !array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
                     Log::info('Start importing ' . $this->type . ' number ' . $count);
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, false, $categorie_fruibilita_sentieri);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                     $count++;

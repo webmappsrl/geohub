@@ -75,8 +75,8 @@ Route::get('/w/{type}/{id}', function ($type, $id) {
         abort(404);
     }
     return view('widget', [
-        'track' => $track,
-        'type' => $type
+        'resource' => $track,
+        'type' => 'track.' . $type
     ]);
 });
 
