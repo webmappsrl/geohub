@@ -391,24 +391,26 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->tags['addr_complete'] = $poi['properties']['addr_locality'];
         }
 
-        // Processing the poi_type
-        if (isset($poi['properties']['taxonomies'])) {
-            Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: ' . $this->source_id);
+        if (!$this->only_related_url) {
+            // Processing the poi_type
+            if (isset($poi['properties']['taxonomies'])) {
+                Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: ' . $this->source_id);
 
-            $path = parse_url($this->endpoint);
-            $file_name = str_replace('.', '-', $path['host']);
-            if (Storage::disk('mapping')->exists($file_name . '.json')) {
-                $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
-                $json_poi_type = json_decode($taxonomy_map, true)['poi_type'];
+                $path = parse_url($this->endpoint);
+                $file_name = str_replace('.', '-', $path['host']);
+                if (Storage::disk('mapping')->exists($file_name . '.json')) {
+                    $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
+                    $json_poi_type = json_decode($taxonomy_map, true)['poi_type'];
 
-                if (!empty($json_poi_type)) {
-                    foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
-                        if (in_array($tax, ['servizi','tipologia_poi'])) {
-                            foreach ($idList as $id) {
-                                if (key_exists($id, $json_poi_type)) {
-                                    if (!$json_poi_type[$id]['skip'] && !empty($json_poi_type[$id]['geohub_identifier'])) {
-                                        Log::info('tax added : ' . $id);
-                                        $this->tags['poi_type'][] = $json_poi_type[$id]['geohub_identifier'];
+                    if (!empty($json_poi_type)) {
+                        foreach ($poi['properties']['taxonomies'] as $tax => $idList) {
+                            if (in_array($tax, ['servizi','tipologia_poi'])) {
+                                foreach ($idList as $id) {
+                                    if (key_exists($id, $json_poi_type)) {
+                                        if (!$json_poi_type[$id]['skip'] && !empty($json_poi_type[$id]['geohub_identifier'])) {
+                                            Log::info('tax added : ' . $id);
+                                            $this->tags['poi_type'][] = $json_poi_type[$id]['geohub_identifier'];
+                                        }
                                     }
                                 }
                             }
@@ -416,18 +418,17 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                     }
                 }
             }
-        }
 
+            // Processing the feature image of POI
+            if (isset($poi['properties']['immagine_principale'])) {
+                Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: ' . $this->source_id);
 
-        // Processing the feature image of POI
-        if (isset($poi['properties']['immagine_principale'])) {
-            Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: ' . $this->source_id);
-
-            if ($poi['properties']['immagine_principale']) {
-                $image_source_id = $this->source_id . 555;
-                $this->tags['feature_image'] = $this->createOSFMediaFromLink($poi['properties']['immagine_principale'], $image_source_id);
-            } else {
-                Log::info('ERROR reaching media: ' . $poi['properties']['immagine_principale']);
+                if ($poi['properties']['immagine_principale']) {
+                    $image_source_id = $this->source_id . 555;
+                    $this->tags['feature_image'] = $this->createOSFMediaFromLink($poi['properties']['immagine_principale'], $image_source_id);
+                } else {
+                    Log::info('ERROR reaching media: ' . $poi['properties']['immagine_principale']);
+                }
             }
         }
 
