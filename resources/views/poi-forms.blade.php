@@ -459,6 +459,10 @@
                                 "name": "title",// la chiave che verra usata per salvare il dato su laravel<br>
                                 "type": "text",// identifica il campo di tipo testuale<br>
                                 "required": true,// identifica il campo come obbligatorio<br>
+                                "helper": {
+                                "it" : "sono un helper del field",
+                                "en" : "im a helper field"
+                                },<br>
                                 "label": {
                                 "it" : "Punto di interesse",
                                 "en" : "Point of interest"
@@ -470,6 +474,10 @@
                                 "name": "description",// la chiave che verra usata per salvare il dato su laravel<br>
                                 "type": "textarea",// identifica il campo di tipo text area<br>
                                 "required": false,// identifica il campo come obbligatorio (default false)<br>
+                                "helper": {
+                                "it" : "sono un helper del field",
+                                "en" : "im a helper field"
+                                },<br>
                                 "label": {
                                 "it" : "Punto di interesse",
                                 "en" : "Point of interest"
@@ -481,6 +489,10 @@
                                 "name": "poi_type",// la chiave che verra usata per salvare il dato su laravel<br>
                                 "type": "select",// identifica il campo di tipo select<br>
                                 "required": select,// identifica il campo come obbligatorio (default false)<br>
+                                "helper": {
+                                "it" : "sono un helper del field",
+                                "en" : "im a helper field"
+                                },<br>
                                 "label": {
                                 "it" : "Punto di interesse",
                                 "en" : "Point of interest"
@@ -495,6 +507,10 @@
                                 },
                                 {<br>
                                 "value" : "place_to_eat",<br>
+                                "helper": {
+                                "it" : "sono un helper del field",
+                                "en" : "im a helper field"
+                                },<br>
                                 "label" :
                                 {
                                 "it" : "Luogo dove mangiare",
