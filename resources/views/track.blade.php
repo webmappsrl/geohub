@@ -42,7 +42,9 @@
 <x-track.trackLayout :track="$track" :gallery="$gallery" :appSocialText="$appSocialText">
     <x-track.trackHeader :track="$track" :agent="$agent" :iosStore="$iosStore" :androidStore="$androidStore" :appName="$appName" :appIcon="$appIcon"/>
     <main class="max-w-screen-xl m-auto pb-20">
-        <x-mapsection :track="$track" :appSocialText="$appSocialText"/>
+        <div style="max-height:686px;overflow:hidden;">
+            <x-mapsection :track="$track" :appSocialText="$appSocialText"/>
+        </div>
         <x-track.trackContentSection :track="$track" />
         @if ($gallery->count() > 0)
             <div class="max-w-screen-xl m-auto py-6 px-4 relative">

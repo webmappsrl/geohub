@@ -6,13 +6,23 @@
     } else {
         $featured_image = $track->featureImage->thumbnail('1440x500');
     }
+    if ($appIcon){
+        $icon = asset('storage/'.$appIcon);
+    } else {
+        $icon = asset('images/webmapp-logo-colored.png');
+    }
+    if ($appName){
+        $logoName = $appName. ' logo';
+    } else {
+        $logoName = 'Webmapp logo';
+    }
 @endphp
 
 <header>
     <div class="grid grid-cols-2 py-4 px-4 sm:px-20">
         <!-- Webmapp logo section -->
         <div class="col-span-1">
-            <img src="{{asset('images/webmapp-logo-colored.png')}}" alt="webmapp logo" class="">
+            <img src="{{$icon}}" alt="{{$logoName}}" style="max-height:100px;">
         </div>
         @include('partials/language_switcher')
     </div>

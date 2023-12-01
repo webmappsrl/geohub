@@ -430,6 +430,11 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                 Log::info('ERROR reaching media: ' . $poi['properties']['immagine_principale']);
             }
         }
+
+        // Adding originale public url to related_url
+        if (isset($poi['properties']['url'])) {
+            $this->tags['related_url']['sardegnasentieri.it'] = $poi['properties']['url'];
+        }
     }
 
     protected function createOSFMediaFromLink($image_url, $image_source_id)
