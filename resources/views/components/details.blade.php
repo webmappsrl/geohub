@@ -52,7 +52,7 @@
         @endif
      </div>
      @if (count($track->ecPois) !== 0)
-        <div x-show="tab === 'relatedpois'" class="overflow-y-auto poi-list" style="max-height: 615px;">
+        <div x-show="tab === 'relatedpois'" class="overflow-y-auto poi-list" style="max-height: 94vh;">
             @foreach ($track->ecPois as $poi)
                 <x-poi :poi="$poi"/>
             @endforeach
