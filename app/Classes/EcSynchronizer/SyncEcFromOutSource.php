@@ -669,13 +669,6 @@ class SyncEcFromOutSource
                             $ec_poi->stars = $out_source->tags['stars'];
                         }
 
-                    } // end sync if only related url is not true
-
-                    if (isset($out_source->tags['related_url'])) {
-                        $ec_poi->related_url = $out_source->tags['related_url'];
-                    }
-
-                    if (!$this->only_related_url) { // start sync if only related url is not true
                         if (isset($out_source->tags['code'])) {
                             $ec_poi->code = $out_source->tags['code'];
                         }
@@ -693,7 +686,12 @@ class SyncEcFromOutSource
                                 }
                             }
                         }
-                    }// end sync if only related url is not true
+                    } // end sync if only related url is not true
+
+                    if (isset($out_source->tags['related_url'])) {
+                        $ec_poi->related_url = $out_source->tags['related_url'];
+                    }
+
                     $ec_poi->save();
                     array_push($new_ec_features, $ec_poi->id);
                 } catch (Exception $e) {
