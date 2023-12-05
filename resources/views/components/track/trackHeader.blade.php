@@ -7,7 +7,7 @@
         $featured_image = $track->featureImage->thumbnail('1440x500');
     }
     if ($appIcon){
-        $icon = asset('storage/'.$appIcon);
+        $icon = $appIcon;
     } else {
         $icon = asset('images/webmapp-logo-colored.png');
     }

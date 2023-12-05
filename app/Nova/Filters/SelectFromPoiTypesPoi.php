@@ -27,6 +27,10 @@ class SelectFromPoiTypesPoi extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
+        if ($value == 'empty') {
+            return $query->doesntHave('taxonomyPoiTypes');
+        }
+
         if ($value) {
             return $query->whereHas('taxonomyPoiTypes', function ($q) use ($value) {
                 $q->where('id', $value);
@@ -54,9 +58,10 @@ class SelectFromPoiTypesPoi extends Filter
         INNER JOIN ec_pois as t on t.id=txw.taxonomy_poi_typeable_id 
         INNER JOIN taxonomy_poi_types as w on w.id=taxonomy_poi_type_id 
         WHERE txw.taxonomy_poi_typeable_type='App\Models\EcPoi' 
-        AND t.user_id=$current_user_id);");
+        AND t.user_id=$current_user_id) ORDER BY name ASC;");
 
-        $taxModels = TaxonomyPoiType::hydrate($taxData)->pluck('id','name')->toArray();
+        $taxModels = TaxonomyPoiType::hydrate($taxData)->pluck('id', 'name')->toArray();
+        $taxModels['No Theme'] = 'empty';
 
         return $taxModels;
     }
