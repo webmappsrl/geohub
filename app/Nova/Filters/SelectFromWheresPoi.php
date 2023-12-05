@@ -27,6 +27,10 @@ class SelectFromWheresPoi extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
+        if ($value == 'empty') {
+            return $query->doesntHave('taxonomyWheres');
+        }
+
         if ($value) {
             return $query->whereHas('taxonomyWheres', function ($q) use ($value) {
                 $q->where('id', $value);
@@ -54,9 +58,10 @@ class SelectFromWheresPoi extends Filter
         INNER JOIN ec_pois as t on t.id=txw.taxonomy_whereable_id 
         INNER JOIN taxonomy_wheres as w on w.id=taxonomy_where_id 
         WHERE txw.taxonomy_whereable_type='App\Models\EcPoi' 
-        AND t.user_id=$current_user_id);");
+        AND t.user_id=$current_user_id) ORDER BY name ASC;");
 
-        $taxModels = TaxonomyWhere::hydrate($taxData)->pluck('id','name')->toArray();
+        $taxModels = TaxonomyWhere::hydrate($taxData)->pluck('id', 'name')->toArray();
+        $taxModels['No Theme'] = 'empty';
 
         return $taxModels;
     }
