@@ -26,6 +26,10 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
         //Check if the poi belongs to the user
         try {
+            if (!isset($ecPoiData['id'])) {
+                $this->buildEcPoi($ecPoiData);
+                return;
+            }
             if (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
                 throw new \Exception('The poi with ID ' . $ecPoiData['id'] . ' is already in the database but it is not in your list. Please check the file and try again.');
             } elseif (in_array($ecPoiData['id'], $userPois)) {
@@ -154,8 +158,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      */
     private function buildEcPoi(array $ecPoiData): void
     {
-        $ecPoiData['skip_geomixer_tech'] = true;
-        $ecPoi = EcPoi::Create();
+        $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it'], 'skip_geomixer_tech' => true]);
         $this->setTranslations($ecPoi, $ecPoiData);
         $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
         $ecPoi->update($ecPoiData);
