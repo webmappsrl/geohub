@@ -38,7 +38,6 @@ class UploadPoiFile extends Action
             Log::error($e->getMessage() . ' - ' . $e->getLine() . ' - ' . $e->getFile());
             return Action::danger($e->getMessage());
         }
-        Excel::import(new \App\Imports\EcPoiFromCSV, $file);
         return Action::message('Data imported successfully');
     }
 
@@ -53,9 +52,10 @@ class UploadPoiFile extends Action
         $filePath = public_path('importer-examples/import-poi-example.xlsx');
         $validHeaders = config('services.importers.ecPois.validHeaders');
         $validHeaders = implode(', ', $validHeaders);
+        $rules = 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . $validHeaders . '</strong>' . ' Please provide ID only if the poi already exist in the database. ' . '</br>' . '</br>' . 'Mandatory fields are: ' . '<strong>' . ' name_it, poi_type (at least one, referenced by Geohub identifier), theme(at least one, referenced by Geohub identifier), lat, lng.' . '</strong>' . ' Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).' . '</br>' .  'Please follow this example: ' . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>';
         return [
             File::make('Upload File', 'file')
-                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . 'Please upload a valid .xlsx file.' . '</br>' . '<strong>' . 'The file must contain the following headers: ' . $validHeaders . '</strong>' .  '</br>' . '</br>' . 'Mandatory fields are: ' . '<strong>' . ' name_it, poi_type (at least one, referenced by Geohub identifier), theme(at least one, referenced by Geohub identifier), lat, lng.' . '</strong>' . ' Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).' . '</br>' .  'Please follow this example: ' . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>')
+                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . $rules)
         ];
     }
 }
