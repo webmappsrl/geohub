@@ -38,13 +38,13 @@ class CreateTracksWithOSMIDAction extends Action
                 try {
                     $id = trim($id);
                     $osmClient = new OsmClient();
-                    $geojson_content = $osmClient::getGeojson('relation/'.$id);
+                    $geojson_content = $osmClient::getGeojson('relation/' . $id);
                     $geojson_content = json_decode($geojson_content, true);
                     if (empty($geojson_content['geometry']) || empty($geojson_content['properties'])) {
                         throw new Exception('Wrong OSM ID');
                     }
                     $geojson_geometry = json_encode($geojson_content['geometry']);
-                    $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_geometry."')))) As wkt")[0]->wkt;
+                    $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
 
                     $name_array = array();
 
@@ -57,17 +57,15 @@ class CreateTracksWithOSMIDAction extends Action
                     $trackname = !empty($name_array) ? implode(' - ', $name_array) : null;
                     $trackname = str_replace('"', '', $trackname);
 
-                    $track = EcTrack::firstOrCreate(
+                    $track = EcTrack::updateOrCreate(
                         [
                             'user_id' => auth()->user()->id,
                             'osmid' => intval($id),
-                        ],
-                        [
-                            'name' => $trackname,
-                            'geometry' => $geometry,
                         ]
                     );
 
+                    $track->name = $trackname;
+                    $track->geometry = $geometry;
                     $track->osmid = intval($id);
                     $track->ref = $geojson_content['properties']['ref'];
 
@@ -129,6 +127,6 @@ class CreateTracksWithOSMIDAction extends Action
 
     public function name()
     {
-        return 'Create ecTrack With OSM ID';
+        return 'Create/update ecTrack With OSM ID';
     }
 }
