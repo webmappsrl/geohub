@@ -71,7 +71,7 @@ class UpdateTrackFromOsm extends Command
                     $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
 
                 } catch (Exception $e) {
-                    $this->info('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
+                    $this->error('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
                 }
 
                 //update the $track name to the $geojson_content name coming from OSM
@@ -109,9 +109,11 @@ class UpdateTrackFromOsm extends Command
                     $duration_backward = explode(':', $duration_backward);
                     $track->duration_backward = ($duration_backward[0] * 60) + $duration_backward[1];
                 }
+                if (key_exists('ref', $geojson_content['properties']) && !empty($geojson_content['properties']['ref'])) {
+                    $track->ref = $geojson_content['properties']['ref'];
+                }
                 $track->skip_geomixer_tech = true;
                 $track->geometry = $geometry;
-                $track->ref = $geojson_content['properties']['ref'];
                 $track->save();
                 $this->info('Track ' . $track->name . ' (' . $track->osmid . ')' . ' updated!');
             } else {
