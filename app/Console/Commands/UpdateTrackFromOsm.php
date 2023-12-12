@@ -7,6 +7,8 @@ use App\Models\EcTrack;
 use App\Http\Facades\OsmClient;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTrackFromOsm extends Command
 {
@@ -61,9 +63,17 @@ class UpdateTrackFromOsm extends Command
                 try {
                     //get the geojson data from OSM
                     $geojson_content = json_decode(OsmClient::getGeojson('relation/' . $track->osmid), true);
+
+                    if (empty($geojson_content['geometry']) || empty($geojson_content['properties'])) {
+                        throw new Exception('No geometry or properties found in OSM data');
+                    }
+                    $geojson_geometry = json_encode($geojson_content['geometry']);
+                    $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
+
                 } catch (Exception $e) {
                     $this->info('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
                 }
+
                 //update the $track name to the $geojson_content name coming from OSM
                 $name_array = array();
 
@@ -100,6 +110,8 @@ class UpdateTrackFromOsm extends Command
                     $track->duration_backward = ($duration_backward[0] * 60) + $duration_backward[1];
                 }
                 $track->skip_geomixer_tech = true;
+                $track->geometry = $geometry;
+                $track->ref = $geojson_content['properties']['ref'];
                 $track->save();
                 $this->info('Track ' . $track->name . ' (' . $track->osmid . ')' . ' updated!');
             } else {
