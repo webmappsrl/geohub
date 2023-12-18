@@ -332,7 +332,7 @@ class OsmClient
         // Check roundtrip
         $roundtrip = false;
         if (!array_key_exists(1, $values_count)) {
-            $roundtrip == true;
+            $roundtrip = true;
         }
 
         // Build Properties
