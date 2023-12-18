@@ -438,19 +438,19 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
     }
 
-    protected function createOSFMediaFromLink($image_url, $image_source_id)
+    protected function createOSFMediaFromLink($image, $image_source_id)
     {
         $tags = [];
         try {
             // Saving the Media in to the s3-osfmedia storage (.env in production)
             $storage_name = config('geohub.osf_media_storage_name');
-            Log::info('Geting image from url: ' . $image_url);
+            Log::info('Geting image from url: ' . $image['url']);
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function ($match) {
                 return urlencode($match[0]);
-            }, $image_url);
+            }, $image['url']);
             $contents = Http::get($url_encoded);
-            $basename_explode = explode('.', basename($image_url));
-            $basename = basename($image_url);
+            $basename_explode = explode('.', basename($image['url']));
+            $basename = basename($image['url']);
             $s3_osfmedia = Storage::disk($storage_name);
             // $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
             $fullPathName = 'sardegna-sentieri/' . $basename;
@@ -459,6 +459,17 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Saved OSF Media with name: ' . $basename);
             $tags['url'] = ($s3_osfmedia->exists($fullPathName)) ? $fullPathName : '';
             $tags['name']['it'] = $basename_explode[0];
+            $caption = '';
+            if (isset($image['autore']) && !empty($image['autore'])) {
+                $caption = $image['autore'];
+            }
+            if (isset($image['credits']) && !empty($image['credits'])) {
+                if (isset($image['autore']) && !empty($image['autore'])) {
+                    $caption .= ' - ';
+                }
+                $caption .= $image['credits'];
+            }
+            $tags['description']['it'] = $caption;
         } catch(Exception $e) {
             echo $e;
             Log::info('Saving media in s3-osfmedia error:' . $e);
