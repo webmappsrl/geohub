@@ -275,16 +275,16 @@ class OutSourceImporterUpdatedAtCommand extends Command
         $categorie_fruibilita_sentieri = Http::get('https://www.sardegnasentieri.it/ss/tassonomia/categorie_fruibilita_sentieri?_format=json')->json();
 
         if ($this->single_feature) {
-            $features_list[$this->single_feature] = date('Y-M-d H:i:s');
+            $source_list[$this->single_feature] = date('Y-M-d H:i:s');
         } else {
             $features = new OutSourceImporterListSentieriSardegna($this->type, $this->endpoint);
-            $features_list = $features->getList();
+            $source_list = $features->getList();
         }
-        if ($features_list) {
-            $all = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
+        if ($source_list) {
+            $osf_list = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
             $count = 1;
-            foreach ($features_list as $id => $updated_at) {
-                if (empty($all) || !array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
+            foreach ($source_list as $id => $updated_at) {
+                if (empty($osf_list) || !array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
                     Log::info('Start importing ' . $this->type . ' number ' . $count);
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
