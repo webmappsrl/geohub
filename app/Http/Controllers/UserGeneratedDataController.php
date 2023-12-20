@@ -208,8 +208,27 @@ class UserGeneratedDataController extends Controller
 
         $ugc = $model::find($id);
         $ugc = !is_null($ugc) ? $ugc->getGeojson() : null;
+        $ugc['properties']['user_email'] = User::find($ugc['properties']['user_id'])->email;
         if (is_null($ugc))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+
+        return response()->json($ugc);
+    }
+
+    public function getUgcGeojsonOsm2cai(int $id)
+    {
+        $apiUrl = explode("/", request()->path());
+        try {
+            $model = $this->_getUgcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+        $ugc = $model::find($id);
+        if (is_null($ugc))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        $ugc = !is_null($ugc) ? $ugc->getGeojson() : null;
+        $ugc['properties']['user_email'] = User::find($ugc['properties']['user_id'])->email;
+
 
         return response()->json($ugc);
     }

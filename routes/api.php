@@ -135,17 +135,20 @@ Route::name('api.')->group(function () {
     Route::prefix('ugc')->name('ugc.')->group(function () {
         Route::prefix('poi')->name('poi.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
+            Route::get("/geojson/{id}/osm2cai", [UserGeneratedDataController::class, 'getUgcGeojsonOsm2cai'])->name('geojson.poi.osm2cai');
             Route::get('/geojson/{app_id}/list', [UserGeneratedDataController::class, 'getUgcList'])->name('ugc_list');
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
 
         Route::prefix('track')->name('track.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
+            Route::get("/geojson/{id}/osm2cai", [UserGeneratedDataController::class, 'getUgcGeojsonOsm2cai'])->name('geojson.track.osm2cai');
             Route::get('/geojson/{app_id}/list', [UserGeneratedDataController::class, 'getUgcList'])->name('ugc_list');
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
         });
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/geojson/{id}", [UserGeneratedDataController::class, 'getUgcGeojson'])->name('geojson');
+            Route::get("/geojson/{id}/osm2cai", [UserGeneratedDataController::class, 'getUgcGeojsonOsm2cai'])->name('geojson.media.osm2cai');
             Route::get('/geojson/{app_id}/list', [UserGeneratedDataController::class, 'getUgcList'])->name('ugc_list');
             Route::post("/taxonomy_where", [UserGeneratedDataController::class, 'associateTaxonomyWhereWithUgcFeature'])->name('associate');
             Route::get("/download/{id}", [UgcMediaController::class, 'download'])->name('download');
