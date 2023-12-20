@@ -213,7 +213,6 @@ class UserGeneratedDataController extends Controller
 
         return response()->json($ugc);
     }
-
     /**
      *  Associate UcgFeature to TaxonomyWhere
      *
@@ -255,5 +254,33 @@ class UserGeneratedDataController extends Controller
         $ugc->taxonomy_wheres()->sync($validIds);
 
         return response()->json([]);
+    }
+
+
+    /**
+     * Get Ugc list by app_id as json
+     *
+     * @param int $id the Ugc id
+     *
+     */
+    public function getUgcList(string $app_id)
+    {
+        $apiUrl = explode("/", request()->path());
+        $list = [];
+        try {
+            $model = $this->_getUgcModelFromType($apiUrl[2]);
+        } catch (Exception $e) {
+            return response()->json(['code' => 400, 'error' => $e->getMessage()], 400);
+        }
+
+        $ugcs = $model::where('app_id', $app_id)->get();
+        if (is_null($ugcs))
+            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        else
+            foreach ($ugcs as $ugc) {
+                $list[$ugc->id] = $ugc->updated_at;
+            }
+
+        return $list;
     }
 }
