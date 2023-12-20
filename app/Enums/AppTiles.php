@@ -62,6 +62,33 @@ class AppTiles
         'url' => "https://tiles.webmapp.it/374_Roma_3857/{z}/{x}/{y}.jpg"
     ];
 
+    public const OSM = [
+        'name' => 'OSM',
+        'label' => [
+            'it' => 'OSM'
+        ],
+        'icon' => '',
+        'url' => "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    ];
+
+    public const Humanitarian = [
+        'name' => 'Humanitarian',
+        'label' => [
+            'it' => 'Humanitarian'
+        ],
+        'icon' => '',
+        'url' => "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+    ];
+
+    public const CyclOSM = [
+        'name' => 'CyclOSM',
+        'label' => [
+            'it' => 'CyclOSM'
+        ],
+        'icon' => '',
+        'url' => "https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+    ];
+
     public function getConstants()
     {
         $reflectionClass = new ReflectionClass($this);
