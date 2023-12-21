@@ -22,14 +22,13 @@ return [
     |
     | Here you may configure as many filesystem "disks" as you wish, and you
     | may even configure multiple disks of the same driver. Defaults have
-    | been setup for each driver as an example of the required options.
+    | been set up for each driver as an example of the required values.
     |
     | Supported Drivers: "local", "ftp", "sftp", "s3"
     |
     */
 
     'disks' => [
-
         'importer' => [
             'driver' => 'local',
             'root' => storage_path('importer'),
@@ -60,9 +59,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'throw' => false,
         ],
 
         'public' => [
@@ -70,6 +71,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
+            'throw' => false,
         ],
 
         's3' => [
@@ -81,7 +83,10 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'visibility' => 'public',
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
         ],
+
         'wmdumps' => [
             'driver' => 's3',
             'key' => env('AWS_DUMPS_ACCESS_KEY_ID'),
@@ -91,6 +96,7 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+
         's3-osfmedia' => [
             'driver' => 's3',
             'key' => env('AWS_OSFMEDIA_ACCESS_KEY_ID'),
@@ -100,6 +106,7 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+
         's3-osfmedia-test' => [
             'driver' => 's3',
             'key' => env('AWS_OSFMEDIA_TEST_ACCESS_KEY_ID'),
@@ -109,6 +116,7 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+
     ],
 
     /*
