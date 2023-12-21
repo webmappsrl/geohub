@@ -226,11 +226,27 @@ class UserGeneratedDataController extends Controller
         $ugc = $model::find($id);
         if (is_null($ugc))
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        $ugc = !is_null($ugc) ? $ugc->getGeojson() : null;
-        $ugc['properties']['user_email'] = User::find($ugc['properties']['user_id'])->email;
+
+        $taxonomyWheres = $ugc->taxonomy_wheres;
+        $taxonomyWheresNames = [];
+        if (count($taxonomyWheres) > 0) {
+            foreach ($taxonomyWheres as $taxonomyWhere) {
+                $taxonomyWheresNames[] = $taxonomyWhere->name;
+            }
+            $taxonomyWheresNames = implode(',', $taxonomyWheresNames);
+        } else $taxonomyWheresNames = null;
+
+        $ugcGeojson = !is_null($ugc) ? $ugc->getGeojson() : null;
+        $ugcGeojson['properties']['user_email'] = User::find($ugcGeojson['properties']['user_id'])->email;
+        if (!is_null($taxonomyWheresNames)) {
+            $ugcGeojson['properties']['taxonomy_wheres'] =  $taxonomyWheresNames;
+        }
+        if ($ugc instanceof UgcMedia) {
+            $ugcGeojson['properties']['relative_url'] = $ugc->relative_url;
+        }
 
 
-        return response()->json($ugc);
+        return response()->json($ugcGeojson);
     }
     /**
      *  Associate UcgFeature to TaxonomyWhere
