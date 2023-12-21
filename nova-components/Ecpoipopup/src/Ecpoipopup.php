@@ -2,12 +2,9 @@
 
 namespace Webmapp\Ecpoipopup;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ResourceRelationshipGuesser;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Ecpoipopup extends Field
 {
@@ -30,8 +27,7 @@ class Ecpoipopup extends Field
         $this->resourceName = $resource::uriKey();
         $this->manyToManyRelationship = $this->attribute;
 
-
-        $this->fillUsing(function ($request, $model, $attribute, $requestAttribute) use ($resource) {
+        $this->fillUsing(function ($request, $model, $attribute, $requestAttribute) {
             if (is_subclass_of($model, 'Illuminate\Database\Eloquent\Model')) {
                 $model::saved(function ($model) use ($attribute, $request) {
 
@@ -50,7 +46,7 @@ class Ecpoipopup extends Field
 
                     $changes = $model->ecpois()->sync($filtered_values);
 
-                    $method = Str::camel($attribute) . 'Synced';
+                    $method = Str::camel($attribute).'Synced';
 
                     $parent = $request->newResource();
 

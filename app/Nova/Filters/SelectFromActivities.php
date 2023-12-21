@@ -2,7 +2,6 @@
 
 namespace App\Nova\Filters;
 
-use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +19,6 @@ class SelectFromActivities extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -39,7 +37,6 @@ class SelectFromActivities extends Filter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
@@ -56,7 +53,7 @@ class SelectFromActivities extends Filter
         WHERE txa.taxonomy_activityable_type='App\Models\EcTrack' 
         AND t.user_id=$current_user_id);");
 
-        $taxModels = TaxonomyActivity::hydrate($taxData)->pluck('id','name')->toArray();
+        $taxModels = TaxonomyActivity::hydrate($taxData)->pluck('id', 'name')->toArray();
 
         return $taxModels;
     }

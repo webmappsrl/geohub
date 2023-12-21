@@ -30,11 +30,11 @@ class UgcMediaStoreTest extends TestCase
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
+            'type' => 'Point',
+            'coordinates' => [10, 44],
         ];
 
-        $image = base_path() . '/tests/Fixtures/EcMedia/test.jpg';
+        $image = base_path().'/tests/Fixtures/EcMedia/test.jpg';
         $exif = exif_read_data($image);
         $uploadedFile = new UploadedFile(
             $image,
@@ -53,7 +53,7 @@ class UgcMediaStoreTest extends TestCase
                 'description' => $this->faker->text(),
                 'raw_data' => json_encode($exif),
             ],
-            'geometry' => $geometry
+            'geometry' => $geometry,
         ];
 
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -62,9 +62,9 @@ class UgcMediaStoreTest extends TestCase
                 ->andReturn(201);
         });
 
-        $response = $this->postJson(route("api.ugc.media.store"), [
+        $response = $this->postJson(route('api.ugc.media.store'), [
             'geojson' => json_encode($geojson),
-            'image' => $uploadedFile
+            'image' => $uploadedFile,
         ]);
         $content = $response->getContent();
         $response->assertStatus(201);
@@ -89,7 +89,7 @@ class UgcMediaStoreTest extends TestCase
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->postJson(route("api.ugc.media.store"), $data);
+        $response = $this->postJson(route('api.ugc.media.store'), $data);
         $response->assertStatus(401);
     }
 
@@ -98,11 +98,11 @@ class UgcMediaStoreTest extends TestCase
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
+            'type' => 'Point',
+            'coordinates' => [10, 44],
         ];
 
-        $image = base_path() . '/tests/Fixtures/EcMedia/test.jpg';
+        $image = base_path().'/tests/Fixtures/EcMedia/test.jpg';
         $exif = exif_read_data($image);
         $uploadedFile = new UploadedFile(
             $image,
@@ -119,12 +119,12 @@ class UgcMediaStoreTest extends TestCase
                 'app_id' => $app_id,
                 'raw_data' => json_encode($exif),
             ],
-            'geometry' => $geometry
+            'geometry' => $geometry,
         ];
 
-        $response = $this->postJson(route("api.ugc.media.store"), [
+        $response = $this->postJson(route('api.ugc.media.store'), [
             'geojson' => json_encode($geojson),
-            'image' => $uploadedFile
+            'image' => $uploadedFile,
         ]);
         $content = $response->getContent();
         $response->assertStatus(201);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEmbedCodeBodyToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddEmbedCodeBodyToAppsTable extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->text("embed_code_body")->nullable();
+            $table->text('embed_code_body')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddEmbedCodeBodyToAppsTable extends Migration
     public function down()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropColumn("embed_code_body");
+            $table->dropColumn('embed_code_body');
         });
     }
-}
+};

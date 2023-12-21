@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserGeneratedDataTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -21,9 +21,9 @@ class CreateUserGeneratedDataTable extends Migration
             $table->geometry('geometry')->nullable();
             $table->jsonb('raw_data')->nullable();
             $table->jsonb('raw_gallery')->nullable();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 
@@ -36,4 +36,4 @@ class CreateUserGeneratedDataTable extends Migration
     {
         Schema::dropIfExists('user_generated_data');
     }
-}
+};

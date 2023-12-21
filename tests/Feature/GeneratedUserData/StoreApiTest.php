@@ -43,25 +43,25 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "Point",
-                        "coordinates" => [10, 20]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'Point',
+                        'coordinates' => [10, 20],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/usergenerateddata/store', $data);
@@ -82,25 +82,25 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "LineString",
-                        "coordinates" => [[10, 20], [10, 20], [10, 20]]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'LineString',
+                        'coordinates' => [[10, 20], [10, 20], [10, 20]],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/usergenerateddata/store', $data);
@@ -129,25 +129,25 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "Point",
-                        "coordinates" => [10, 20]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'Point',
+                        'coordinates' => [10, 20],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
         $response = $this->postJson('/api/usergenerateddata/store', $data);
     }
@@ -166,25 +166,25 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "LineString",
-                        "coordinates" => [[10, 20], [10, 20], [10, 20]]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'LineString',
+                        'coordinates' => [[10, 20], [10, 20], [10, 20]],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
         $response = $this->postJson('/api/usergenerateddata/store', $data);
     }

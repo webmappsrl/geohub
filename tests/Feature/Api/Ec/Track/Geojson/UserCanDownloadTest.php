@@ -8,10 +8,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class UserCanDownloadTest extends TestCase {
+class UserCanDownloadTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -20,7 +22,8 @@ class UserCanDownloadTest extends TestCase {
         });
     }
 
-    public function test_guest_user_can_not_download() {
+    public function test_guest_user_can_not_download()
+    {
         $track = EcTrack::factory()->create();
 
         $response = $this->get(route('api.ec.track.view.geojson', ['id' => $track->id]));
@@ -35,7 +38,8 @@ class UserCanDownloadTest extends TestCase {
         $this->assertFalse($json['properties']['user_can_download']);
     }
 
-    public function test_logged_user_can_not_download() {
+    public function test_logged_user_can_not_download()
+    {
         $track = EcTrack::factory()->create();
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
@@ -52,7 +56,8 @@ class UserCanDownloadTest extends TestCase {
         $this->assertFalse($json['properties']['user_can_download']);
     }
 
-    public function test_logged_user_can_download() {
+    public function test_logged_user_can_download()
+    {
         $track = EcTrack::factory()->create();
         $user = User::factory()->create();
 

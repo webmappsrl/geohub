@@ -4,30 +4,32 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class LoginApiTest extends TestCase {
+class LoginApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testNoCredentials() {
+    public function testNoCredentials()
+    {
         $response = $this->post('/api/auth/login', []);
         $this->assertSame(401, $response->status());
     }
 
-    public function testInvalidCredentials() {
+    public function testInvalidCredentials()
+    {
         $response = $this->post('/api/auth/login', [
             'email' => 'test@webmapp.it',
-            'password' => 'test'
+            'password' => 'test',
         ]);
         $this->assertSame(401, $response->status());
     }
 
-    public function testValidCredentials() {
+    public function testValidCredentials()
+    {
         $response = $this->post('/api/auth/login', [
             'email' => 'team@webmapp.it',
-            'password' => 'webmapp'
+            'password' => 'webmapp',
         ]);
         $this->assertSame(200, $response->status());
         $this->assertArrayHasKey('id', $response->json());
@@ -43,7 +45,8 @@ class LoginApiTest extends TestCase {
         $this->assertArrayHasKey('avatar', $response->json());
     }
 
-    public function testMeApiRespondCorrectly() {
+    public function testMeApiRespondCorrectly()
+    {
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $response = $this->post('/api/auth/me');
         $this->assertSame(200, $response->status());

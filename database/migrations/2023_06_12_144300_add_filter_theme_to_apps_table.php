@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFilterThemeToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,8 +29,8 @@ class AddFilterThemeToAppsTable extends Migration
         Schema::table('apps', function (Blueprint $table) {
             $table->dropColumn([
                 'filter_theme',
-                'filter_theme_exclude'
+                'filter_theme_exclude',
             ]);
         });
     }
-}
+};

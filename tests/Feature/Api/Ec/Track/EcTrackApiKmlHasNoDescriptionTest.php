@@ -4,15 +4,17 @@ namespace Tests\Feature;
 
 use App\Models\EcTrack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EcTrackApiKmlHasNoDescriptionTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * Undocumented function
+     *
      * @test
+     *
      * @return void
      */
     public function kml_api_has_no_description_tag()

@@ -3,20 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\EcMedia;
-use App\Models\EcPoi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
 class EcPoiFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = EcPoi::class;
-
     /**
      * Define the model's default state.
      *
@@ -43,7 +35,7 @@ class EcPoiFactory extends Factory
             'contact_phone' => $this->faker->phoneNumber(),
             'contact_email' => $this->faker->safeEmail(),
             'addr_street' => $this->faker->streetAddress(),
-            'addr_housenumber' => $this->faker->numberBetween(11,99),
+            'addr_housenumber' => $this->faker->numberBetween(11, 99),
             'addr_postcode' => $this->faker->postcode(),
             'addr_locality' => $this->faker->city(),
             'opening_hours' => '24/7',

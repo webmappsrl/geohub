@@ -65,7 +65,6 @@ class HasMany extends Field implements ListableField, RelatableField
     /**
      * Determine if the field should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)
@@ -110,7 +109,7 @@ class HasMany extends Field implements ListableField, RelatableField
         return array_merge([
             'hasManyRelationship' => $this->hasManyRelationship,
             'listable' => true,
-            'perPage'=> $this->resourceClass::$perPageViaRelationship,
+            'perPage' => $this->resourceClass::$perPageViaRelationship,
             'resourceName' => $this->resourceName,
             'singularLabel' => $this->singularLabel ?? $this->resourceClass::singularLabel(),
         ], parent::jsonSerialize());

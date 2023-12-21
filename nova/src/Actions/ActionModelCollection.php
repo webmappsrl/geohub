@@ -10,7 +10,6 @@ class ActionModelCollection extends EloquentCollection
     /**
      * Remove models the user does not have permission to execute the action against.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return static
      */
     public function filterForExecution(ActionRequest $request)
@@ -31,7 +30,6 @@ class ActionModelCollection extends EloquentCollection
     /**
      * Remove models the user does not have permission to execute the action against.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return \Illuminate\Support\Collection
      */
     protected function filterByResourceAuthorization(ActionRequest $request)
@@ -40,14 +38,14 @@ class ActionModelCollection extends EloquentCollection
             $models = $this->mapInto($request->resource())->map->resource;
         } else {
             $models = $this->mapInto($request->resource())
-                           ->filter->authorizedToUpdate($request)->map->resource;
+                ->filter->authorizedToUpdate($request)->map->resource;
         }
 
         $action = $request->action();
 
         if ($action instanceof DestructiveAction) {
             $models = $this->mapInto($request->resource())
-                           ->filter->authorizedToDelete($request)->map->resource;
+                ->filter->authorizedToDelete($request)->map->resource;
         }
 
         return $models;

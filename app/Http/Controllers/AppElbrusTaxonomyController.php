@@ -7,20 +7,22 @@ use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
-use App\Models\TaxonomyWhere;
 use App\Models\TaxonomyWhen;
+use App\Models\TaxonomyWhere;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class AppElbrusTaxonomyController extends Controller {
+class AppElbrusTaxonomyController extends Controller
+{
     private array $names = [
-        'activity', 'where', 'when', 'who', 'theme', 'webmapp_category'
+        'activity', 'where', 'when', 'who', 'theme', 'webmapp_category',
     ];
 
-    public function getTerms(int $app_id, string $taxonomy_name): JsonResponse {
+    public function getTerms(int $app_id, string $taxonomy_name): JsonResponse
+    {
         $json = [];
         $code = 200;
-        if (!in_array($taxonomy_name, $this->names)) {
+        if (! in_array($taxonomy_name, $this->names)) {
             $code = 400;
             $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
 
@@ -60,15 +62,16 @@ class AppElbrusTaxonomyController extends Controller {
                         break;
                 }
                 $tax['items'] = $items;
-                $tax['id'] = $taxonomy_name . '_' . $tid;
-                $json[$taxonomy_name . '_' . $tid] = $tax;
+                $tax['id'] = $taxonomy_name.'_'.$tid;
+                $json[$taxonomy_name.'_'.$tid] = $tax;
             }
         }
 
         return response()->json($json, $code);
     }
 
-    private function _termsByUserId($app, $taxonomy_name) {
+    private function _termsByUserId($app, $taxonomy_name)
+    {
         $terms = [];
         $add_poi_types = false;
         switch ($taxonomy_name) {
@@ -123,7 +126,7 @@ class AppElbrusTaxonomyController extends Controller {
          ");
         if (count($res) > 0) {
             foreach ($res as $item) {
-                $terms[$item->tid]['track'][] = 'ec_track_' . $item->fid;
+                $terms[$item->tid]['track'][] = 'ec_track_'.$item->fid;
             }
         }
 
@@ -139,7 +142,7 @@ class AppElbrusTaxonomyController extends Controller {
 
             if (count($res) > 0) {
                 foreach ($res as $item) {
-                    $terms[$item->tid]['poi'][] = 'ec_poi_' . $item->fid;
+                    $terms[$item->tid]['poi'][] = 'ec_poi_'.$item->fid;
                 }
             }
         }
@@ -149,20 +152,15 @@ class AppElbrusTaxonomyController extends Controller {
 
     /**
      * Update the specified user.
-     *
-     * @param int    $app_id
-     * @param string $taxonomy_name
-     * @param int    $term_id
-     *
-     * @return JsonResponse
      */
-    public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse {
+    public function getTracksByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse
+    {
         $json = [];
         $code = 200;
 
         $json['tracks'] = [];
 
-        if (!in_array($taxonomy_name, $this->names)) {
+        if (! in_array($taxonomy_name, $this->names)) {
             $code = 400;
             $json = ['code' => $code, 'error' => 'Taxonomy name not valid'];
 
@@ -180,7 +178,7 @@ class AppElbrusTaxonomyController extends Controller {
         $term = $this->_getTermByTaxonomy($taxonomy_name, $term_id);
         if (is_null($term)) {
             $code = 404;
-            $json = ['code' => $code, 'Term NOT found in taxonomy ' . $taxonomy_name];
+            $json = ['code' => $code, 'Term NOT found in taxonomy '.$taxonomy_name];
 
             return response()->json($json, $code);
         }
@@ -190,7 +188,8 @@ class AppElbrusTaxonomyController extends Controller {
         return response()->json($tracks, $code);
     }
 
-    protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id) {
+    protected function _getTermByTaxonomy(string $taxonomy_name, int $term_id)
+    {
         $tax = null;
 
         switch ($taxonomy_name) {

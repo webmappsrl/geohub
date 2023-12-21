@@ -2,19 +2,10 @@
 
 namespace Database\Factories;
 
-
-use App\Models\OverlayLayer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OverlayLayerFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = OverlayLayer::class;
-
     /**
      * Define the model's default state.
      *

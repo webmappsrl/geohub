@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
@@ -31,11 +30,14 @@ class SyncECTagsFromOSFCommand extends Command
      */
     protected $description = 'This command copies the value of the given input from OSF to the given EC resource';
 
-
     protected $type;
+
     protected $author;
+
     protected $author_id;
+
     protected $tag;
+
     protected $force;
 
     /**
@@ -100,13 +102,16 @@ class SyncECTagsFromOSFCommand extends Command
                                 $this->info($rawData['_osmid']);
                                 $this->info('key exists');
                                 //take the _osmid and cut 'node/' at the beginning of the string
-                                $id =  substr($rawData['_osmid'], 5);
+                                $id = substr($rawData['_osmid'], 5);
                                 $feature->osmid = $id;
                                 $feature->save();
+
                                 return true;
                             }
+
                             return false;
                         }
+
                         return false;
                     }
                 } else {
@@ -115,10 +120,13 @@ class SyncECTagsFromOSFCommand extends Command
                         if (isset($out_source->tags[$thistag])) {
                             $feature->$thistag = $out_source->tags[$this->tag];
                             $feature->save();
+
                             return true;
                         }
+
                         return false;
                     }
+
                     return false;
                 }
             }
@@ -185,8 +193,6 @@ class SyncECTagsFromOSFCommand extends Command
                     }
                 }
 
-
-
                 // if (empty($feature->related_url)) {
                 //     $urls = [];
                 //     foreach ($out_source->tags['related_url'] as $key => $val) {
@@ -197,6 +203,7 @@ class SyncECTagsFromOSFCommand extends Command
                 //     $feature->related_url = implode(",",$urls);
                 // }
                 $feature->save();
+
                 return true;
             }
         }
@@ -207,10 +214,10 @@ class SyncECTagsFromOSFCommand extends Command
         $features = '';
 
         if ($this->type == 'poi') {
-            $features = EcPoi::where('user_id', $this->author_id, )->get();
+            $features = EcPoi::where('user_id', $this->author_id)->get();
         }
         if ($this->type == 'track') {
-            $features = EcTrack::where('user_id', $this->author_id, )->get();
+            $features = EcTrack::where('user_id', $this->author_id)->get();
         }
 
         if ($features) {
@@ -218,15 +225,15 @@ class SyncECTagsFromOSFCommand extends Command
             foreach ($features as $feature) {
                 $res = $this->sync($feature);
                 if ($res) {
-                    Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
-                    $this->info($this->tag . ' of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
+                    Log::info($this->tag.' of Feature with ID: '.$feature->id.' saved successfully - '.$count.' out of -> '.count($features));
+                    $this->info($this->tag.' of Feature with ID: '.$feature->id.' saved successfully - '.$count.' out of -> '.count($features));
                 } else {
-                    Log::info($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
-                    $this->error($this->tag . ' of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
+                    Log::info($this->tag.' of Feature with ID: '.$feature->id.' NOT saved - '.$count.' out of -> '.count($features));
+                    $this->error($this->tag.' of Feature with ID: '.$feature->id.' NOT saved - '.$count.' out of -> '.count($features));
                 }
                 $count++;
             }
-            // return $features->pluck('id')->toArray();
+        // return $features->pluck('id')->toArray();
         } else {
             return 0;
         }
@@ -241,7 +248,7 @@ class SyncECTagsFromOSFCommand extends Command
                 $user = User::find(intval($this->author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID ' . $this->author);
+                throw new Exception('No User found with this ID '.$this->author);
             }
         } else {
             try {
@@ -249,7 +256,7 @@ class SyncECTagsFromOSFCommand extends Command
 
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this email ' . $this->author);
+                throw new Exception('No User found with this email '.$this->author);
             }
         }
 
@@ -261,9 +268,8 @@ class SyncECTagsFromOSFCommand extends Command
         ) {
             $this->type = strtolower($this->type);
         } else {
-            throw new Exception('The value of parameter type: ' . $this->type . ' is not currect');
+            throw new Exception('The value of parameter type: '.$this->type.' is not currect');
         }
-
 
         // Check the type
         Log::info('Checking paramtere TAG');
@@ -278,7 +284,7 @@ class SyncECTagsFromOSFCommand extends Command
             ) {
                 $this->tag = strtolower($this->tag);
             } else {
-                throw new Exception('The value of parameter tag: ' . $this->tag . ' is not currect');
+                throw new Exception('The value of parameter tag: '.$this->tag.' is not currect');
             }
         } else {
             $this->tag = 'all';

@@ -21,10 +21,7 @@ class CallQueuedAction
     /**
      * Create a new job instance.
      *
-     * @param  \Laravel\Nova\Actions\Action  $action
      * @param  string  $method
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @param  string  $batchId
      * @return void
      */

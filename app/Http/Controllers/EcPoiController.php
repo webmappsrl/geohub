@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EcPoi;
-use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EcPoiController extends Controller
@@ -29,7 +27,7 @@ class EcPoiController extends Controller
         }
         $result = [
             'type' => 'FeatureCollection',
-            'features' => []
+            'features' => [],
         ];
         foreach ($poi->ecMedia as $media) {
             $result['features'][] = $media->getGeojson();
@@ -47,8 +45,6 @@ class EcPoiController extends Controller
      * Returns an array of ID and Updated_at based on the Author emails provided
      *
      * @param $email string
-     *
-     *
      * @return JsonResponse with the current
      */
     public function exportPoisByAuthorEmail($email = ''): JsonResponse
@@ -56,6 +52,7 @@ class EcPoiController extends Controller
         if (empty($email)) {
             $ids = DB::select('select id, updated_at from ec_pois where user_id != 20548 and user_id != 17482');
             $ids = collect($ids)->pluck('updated_at', 'id');
+
             return response()->json($ids);
         }
 
@@ -67,6 +64,7 @@ class EcPoiController extends Controller
                 $ids = EcPoi::where('user_id', $user->id)->pluck('updated_at', 'id')->toArray();
                 $list = $list + $ids;
             }
+
             return response()->json($list);
         }
     }
@@ -74,8 +72,8 @@ class EcPoiController extends Controller
     /**
      * Returns the EcPoi ID associated to an external feature
      *
-     * @param string $endpoint_slug
-     * @param integer $source_id
+     * @param  string  $endpoint_slug
+     * @param  int  $source_id
      * @return JsonResponse
      */
     public function getEcPoiFromSourceID($endpoint_slug, $source_id)
@@ -90,8 +88,8 @@ class EcPoiController extends Controller
     /**
      * Returns the EcPoi Geojson associated to an external feature
      *
-     * @param string $endpoint_slug
-     * @param integer $source_id
+     * @param  string  $endpoint_slug
+     * @param  int  $source_id
      * @return JsonResponse
      */
     public function getPoiGeojsonFromSourceID($endpoint_slug, $source_id)
@@ -101,7 +99,7 @@ class EcPoiController extends Controller
         $headers = [];
 
         if (is_null($poi)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
         }
 
         return response()->json($poi->getGeojson(), 200, $headers);
@@ -110,8 +108,8 @@ class EcPoiController extends Controller
     /**
      * Returns the EcPoi Webapp URL associated to an external feature
      *
-     * @param string $endpoint_slug
-     * @param integer $source_id
+     * @param  string  $endpoint_slug
+     * @param  int  $source_id
      * @return JsonResponse
      */
     public function getEcPoiWebappURLFromSourceID($endpoint_slug, $source_id)
@@ -120,13 +118,12 @@ class EcPoiController extends Controller
         $poi = EcPoi::find($poi_id);
         $app_id = $poi->user->apps[0]->id;
 
-
         $headers = [];
 
         if (is_null($poi) || empty($app_id)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
         }
 
-        return redirect('https://' . $app_id . '.app.webmapp.it/#/map?poi='.$poi_id);
+        return redirect('https://'.$app_id.'.app.webmapp.it/#/map?poi='.$poi_id);
     }
 }

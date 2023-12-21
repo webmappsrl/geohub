@@ -10,17 +10,14 @@ trait PerformsQueries
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string|null  $search
-     * @param  array  $filters
-     * @param  array  $orderings
      * @param  string  $withTrashed
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function buildIndexQuery(NovaRequest $request, $query, $search = null,
-                                      array $filters = [], array $orderings = [],
-                                      $withTrashed = TrashedStatus::DEFAULT)
+        array $filters = [], array $orderings = [],
+        $withTrashed = TrashedStatus::DEFAULT)
     {
         return static::applyOrderings(static::applyFilters(
             $request, static::initializeQuery($request, $query, (string) $search, $withTrashed), $filters
@@ -32,7 +29,6 @@ trait PerformsQueries
     /**
      * Initialize the given index query.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string  $search
      * @param  string  $withTrashed
@@ -87,7 +83,6 @@ trait PerformsQueries
     /**
      * Initialize the given index query using Laravel Scout.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string  $search
      * @param  string  $withTrashed
@@ -105,13 +100,12 @@ trait PerformsQueries
     /**
      * Build an "index" result for the given resource using Scout.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string|null  $search
      * @param  string  $withTrashed
      * @return \Laravel\Scout\Builder
      */
     public static function buildIndexQueryUsingScout(NovaRequest $request, $search = null,
-                                          $withTrashed = TrashedStatus::DEFAULT)
+        $withTrashed = TrashedStatus::DEFAULT)
     {
         return tap(static::applySoftDeleteConstraint(
             static::newModel()->search($search), $withTrashed
@@ -137,9 +131,7 @@ trait PerformsQueries
     /**
      * Apply any applicable filters to the query.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  array  $filters
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected static function applyFilters(NovaRequest $request, $query, array $filters)
@@ -153,7 +145,6 @@ trait PerformsQueries
      * Apply any applicable orderings to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  array  $orderings
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected static function applyOrderings($query, array $orderings)
@@ -176,7 +167,6 @@ trait PerformsQueries
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -188,7 +178,6 @@ trait PerformsQueries
     /**
      * Build a Scout search query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Scout\Builder  $query
      * @return \Laravel\Scout\Builder
      */
@@ -200,7 +189,6 @@ trait PerformsQueries
     /**
      * Build a "detail" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -214,7 +202,6 @@ trait PerformsQueries
      *
      * This query determines which instances of the model may be attached to other resources.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */

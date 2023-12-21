@@ -123,7 +123,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Determine if the field should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)
@@ -146,7 +145,6 @@ class MorphTo extends Field implements RelatableField
      *
      * See: Explanation on belongsTo field.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function isNotRedundant(Request $request)
@@ -252,7 +250,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the validation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getRules(NovaRequest $request)
@@ -268,7 +265,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the validation rule to verify that the selected model is relatable.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Laravel\Nova\Rules\Relatable|null
      */
     protected function getRelatableRule(NovaRequest $request)
@@ -283,7 +279,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  object  $model
      * @return void
      */
@@ -327,7 +322,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Build an morphable query for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $relatedResource
      * @param  bool  $withTrashed
      * @return \Laravel\Nova\Contracts\QueryBuilder
@@ -341,9 +335,9 @@ class MorphTo extends Field implements RelatableField
         $request->first === 'true'
                         ? $query->whereKey($model->newQueryWithoutScopes(), $request->current)
                         : $query->search(
-                                $request, $model->newQuery(), $request->search,
-                                [], [], TrashedStatus::fromBoolean($withTrashed)
-                          );
+                            $request, $model->newQuery(), $request->search,
+                            [], [], TrashedStatus::fromBoolean($withTrashed)
+                        );
 
         return $query->tap(function ($query) use ($request, $relatedResource, $model) {
             forward_static_call(
@@ -356,7 +350,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the morphable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $relatedResource
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return array
@@ -371,7 +364,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the morphable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return string
      */
@@ -385,7 +377,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Format the given morphable resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
      * @param  string  $relatedResource
      * @return array
@@ -423,7 +414,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Set the types of resources that may be related to the resource.
      *
-     * @param  array  $types
      * @return $this
      */
     public function types(array $types)
@@ -543,7 +533,6 @@ class MorphTo extends Field implements RelatableField
     /**
      * Resolve the default resource class for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return string|void
      */
     protected function resolveDefaultResource(NovaRequest $request)

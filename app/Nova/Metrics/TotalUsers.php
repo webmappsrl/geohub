@@ -6,15 +6,16 @@ use App\Models\User;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class TotalUsers extends Value {
+class TotalUsers extends Value
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->result(count(User::all()));
     }
 
@@ -23,7 +24,8 @@ class TotalUsers extends Value {
      *
      * @return array
      */
-    public function ranges() {
+    public function ranges()
+    {
         return [];
     }
 
@@ -32,7 +34,8 @@ class TotalUsers extends Value {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -41,7 +44,8 @@ class TotalUsers extends Value {
      *
      * @return string
      */
-    public function uriKey() {
+    public function uriKey()
+    {
         return 'users';
     }
 }

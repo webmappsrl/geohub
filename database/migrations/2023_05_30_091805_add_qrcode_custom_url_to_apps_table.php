@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddQrcodeCustomUrlToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddQrcodeCustomUrlToAppsTable extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->text("qrcode_custom_url")->nullable();
+            $table->text('qrcode_custom_url')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddQrcodeCustomUrlToAppsTable extends Migration
     public function down()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropColumn("qrcode_custom_url");
+            $table->dropColumn('qrcode_custom_url');
         });
     }
-}
+};

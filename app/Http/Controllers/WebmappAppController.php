@@ -8,23 +8,26 @@ use App\Models\TaxonomyWhere;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
-class WebmappAppController extends Controller {
-    public function search(Request $request): JsonResponse {
+class WebmappAppController extends Controller
+{
+    public function search(Request $request): JsonResponse
+    {
         $searchString = $request->get('string');
         $language = $request->get('language');
 
-        if (!isset($searchString) || empty($searchString))
+        if (! isset($searchString) || empty($searchString)) {
             return response()->json(['error' => 'Missing parameter: string'], 400);
+        }
 
-        if (!isset($language) || empty($language))
+        if (! isset($language) || empty($language)) {
             $language = 'it';
-        else
+        } else {
             $language = substr($language, 0, 2);
+        }
 
         $escapedSearchString = preg_replace('/[^0-9a-z\s]/', '', strtolower($searchString));
-        $escapedSearchString = implode(':* || ', explode(' ', $escapedSearchString)) . ':*';
+        $escapedSearchString = implode(':* || ', explode(' ', $escapedSearchString)).':*';
 
         return response()->json([
             'places' => $this->getPlacesSearchSection($escapedSearchString, $language),
@@ -36,12 +39,11 @@ class WebmappAppController extends Controller {
     /**
      * Get the places related to the search string
      *
-     * @param string $escapedSearchString
-     * @param string $language
      *
      * @return array with the simplified information - id, name, bbox
      */
-    public function getPlacesSearchSection(string $escapedSearchString, string $language): array {
+    public function getPlacesSearchSection(string $escapedSearchString, string $language): array
+    {
         $query = $this->getSearchQuery('taxonomy_wheres', $escapedSearchString, $language);
         $results = DB::select($query);
 
@@ -50,9 +52,9 @@ class WebmappAppController extends Controller {
             $where = TaxonomyWhere::find($row->id);
 
             $places[] = [
-                "id" => $where->id,
-                "name" => $where->getTranslation('name', $language),
-                "bbox" => $where->bbox()
+                'id' => $where->id,
+                'name' => $where->getTranslation('name', $language),
+                'bbox' => $where->bbox(),
             ];
         }
 
@@ -62,12 +64,11 @@ class WebmappAppController extends Controller {
     /**
      * Get the tracks related to the search string
      *
-     * @param string $escapedSearchString
-     * @param string $language
      *
      * @return array with the simplified information - id, name, image, wheres
      */
-    public function getEcTracksSearchSection(string $escapedSearchString, string $language): array {
+    public function getEcTracksSearchSection(string $escapedSearchString, string $language): array
+    {
         $query = $this->getSearchQuery('ec_tracks', $escapedSearchString, $language);
         $results = DB::select($query);
 
@@ -76,13 +77,14 @@ class WebmappAppController extends Controller {
             $track = EcTrack::find($row->id);
 
             $obj = [
-                "id" => $track->id,
-                "name" => $track->getTranslation('name', $language),
-                "where" => $track->taxonomyWheres()->pluck('id')
+                'id' => $track->id,
+                'name' => $track->getTranslation('name', $language),
+                'where' => $track->taxonomyWheres()->pluck('id'),
             ];
 
-            if (isset($track->featureImage))
+            if (isset($track->featureImage)) {
                 $obj['image'] = $track->featureImage;
+            }
 
             $tracks[] = $obj;
         }
@@ -93,12 +95,11 @@ class WebmappAppController extends Controller {
     /**
      * Get the poi types related to the search string
      *
-     * @param string $escapedSearchString
-     * @param string $language
      *
      * @return array with the simplified information - id, name, bbox
      */
-    public function getPoiTypesSearchSection(string $escapedSearchString, string $language): array {
+    public function getPoiTypesSearchSection(string $escapedSearchString, string $language): array
+    {
         $query = $this->getSearchQuery('taxonomy_poi_types', $escapedSearchString, $language);
         $results = DB::select($query);
 
@@ -107,8 +108,8 @@ class WebmappAppController extends Controller {
             $poiType = TaxonomyPoiType::find($row->id);
 
             $poiTypes[] = [
-                "id" => $poiType->id,
-                "name" => $poiType->getTranslation('name', $language)
+                'id' => $poiType->id,
+                'name' => $poiType->getTranslation('name', $language),
             ];
         }
 
@@ -118,25 +119,22 @@ class WebmappAppController extends Controller {
     /**
      * Create the search by string query
      *
-     * @param string $table
-     * @param string $escapedSearchString
-     * @param string $language
-     * @param array  $columnToCheck
      *
      * @return string the query
      */
-    public function getSearchQuery(string $table, string $escapedSearchString, string $language, array $columnToCheck = []): string {
-        return "SELECT id
-            FROM " . $table . ",
+    public function getSearchQuery(string $table, string $escapedSearchString, string $language, array $columnToCheck = []): string
+    {
+        return 'SELECT id
+            FROM '.$table.',
                  to_tsvector(
                     regexp_replace(
                         LOWER(
-                            ((" . $table . ".name::json))->>'" . $language . "'
+                            (('.$table.".name::json))->>'".$language."'
                         ),
                         '[^0-9a-z\s]', '', 'g'
                     )
                 ) as documentNameVector,
-                to_tsquery('" . $escapedSearchString . "') as searchQuery
+                to_tsquery('".$escapedSearchString."') as searchQuery
             WHERE documentNameVector @@ searchQuery 
             ORDER BY ts_rank_cd(documentNameVector, searchQuery)
             LIMIT 5;";

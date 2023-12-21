@@ -161,9 +161,7 @@ abstract class FieldElement extends Element
     /**
      * Check for showing when updating.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
-     * @return bool
      */
     public function isShownOnUpdate(NovaRequest $request, $resource): bool
     {
@@ -177,9 +175,7 @@ abstract class FieldElement extends Element
     /**
      * Check showing on index.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
-     * @return bool
      */
     public function isShownOnIndex(NovaRequest $request, $resource): bool
     {
@@ -193,9 +189,7 @@ abstract class FieldElement extends Element
     /**
      * Check showing on detail.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
-     * @return bool
      */
     public function isShownOnDetail(NovaRequest $request, $resource): bool
     {
@@ -208,9 +202,6 @@ abstract class FieldElement extends Element
 
     /**
      * Check for showing when creating.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return bool
      */
     public function isShownOnCreation(NovaRequest $request): bool
     {

@@ -26,6 +26,6 @@ class MetricRequest extends NovaRequest
     public function availableMetrics()
     {
         return $this->newResource()->availableCards($this)
-                ->whereInstanceOf(Metric::class);
+            ->whereInstanceOf(Metric::class);
     }
 }

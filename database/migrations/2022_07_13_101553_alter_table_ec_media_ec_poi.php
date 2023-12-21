@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTableEcMediaEcPoi extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AlterTableEcMediaEcPoi extends Migration
     public function up()
     {
         Schema::table('ec_media_ec_poi', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_poi_id']);
             $table->dropForeign(['ec_media_id']);
 
@@ -37,7 +37,7 @@ class AlterTableEcMediaEcPoi extends Migration
     public function down()
     {
         Schema::table('ec_media_ec_poi', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_poi_id']);
             $table->dropForeign(['ec_media_id']);
 
@@ -49,4 +49,4 @@ class AlterTableEcMediaEcPoi extends Migration
                 ->on('ec_media');
         });
     }
-}
+};

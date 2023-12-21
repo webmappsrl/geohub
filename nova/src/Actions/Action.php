@@ -149,7 +149,6 @@ class Action implements JsonSerializable
     /**
      * Determine if the action is executable for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return bool
      */
@@ -256,7 +255,6 @@ class Action implements JsonSerializable
     /**
      * Execute the action for the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return mixed
      *
      * @throws MissingActionHandlerException
@@ -307,7 +305,6 @@ class Action implements JsonSerializable
     /**
      * Handle chunk results.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  array  $results
      * @return mixed
      */
@@ -319,7 +316,6 @@ class Action implements JsonSerializable
     /**
      * Handle any post-validation processing.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */
@@ -364,7 +360,6 @@ class Action implements JsonSerializable
     /**
      * Validate the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return array
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -545,7 +540,6 @@ class Action implements JsonSerializable
     /**
      * Set the callback to be run to authorize running the action.
      *
-     * @param  \Closure  $callback
      * @return $this
      */
     public function canRun(Closure $callback)

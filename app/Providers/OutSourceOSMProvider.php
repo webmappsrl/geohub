@@ -29,12 +29,13 @@ class OutSourceOSMProvider extends ServiceProvider
         //
     }
 
-    public function getItem(string $id): array {
+    public function getItem(string $id): array
+    {
         $data = [];
 
         $db = DB::connection('out_source_osm');
         $item = $db->table('hiking_routes')
-            ->where('relation_id',$id)
+            ->where('relation_id', $id)
             ->select([
                 'ref',
                 'name',
@@ -43,26 +44,26 @@ class OutSourceOSMProvider extends ServiceProvider
                 'to',
             ])
             ->first();
-        if(!is_null($item)) {
+        if (! is_null($item)) {
             // ADD Geometry
             $geometry = null;
             $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from hiking_routes where relation_id='.$id));
-            if(isset($res[0]->geometry)) {
-                $geometry=$res[0]->geometry;
+            if (isset($res[0]->geometry)) {
+                $geometry = $res[0]->geometry;
             }
 
             // NAME
-            if(!empty($item->name)) {
+            if (! empty($item->name)) {
                 $name = $item->name;
-            } else if(!empty($item->ref)) {
+            } elseif (! empty($item->ref)) {
                 $name = "Percorso escursionistico {$item->ref}";
             } else {
                 $name = "Percorso escursionistico (OSMID:$id)";
             }
 
-            $data=[
+            $data = [
                 'provider' => get_class($this),
-                'source_id'=> $id,
+                'source_id' => $id,
                 'tags' => [
                     'name' => ['it' => $name],
                     'ref' => $item->ref,
@@ -73,6 +74,7 @@ class OutSourceOSMProvider extends ServiceProvider
                 'geometry' => $geometry,
             ];
         }
+
         return $data;
     }
 }

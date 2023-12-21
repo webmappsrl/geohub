@@ -2,13 +2,13 @@
 
 namespace Webmapp\EcMediaPopup;
 
-use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\EcMedia;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class EcMediaPopup extends Field
 {
@@ -27,6 +27,7 @@ class EcMediaPopup extends Field
      *  ext: string image/jpeg
      *  base64: string
      * }
+     *
      * @param  json  $uploadFeature
      * @return ecMedia || null
      */
@@ -40,10 +41,10 @@ class EcMediaPopup extends Field
         try {
             $name = $uploadFeature['properties']['name'];
             $ext = explode('image/', basename($uploadFeature['properties']['ext']))[0];
-            $url = $name . '.' . $ext;
+            $url = $name.'.'.$ext;
             $base64 = $uploadFeature['properties']['base64'];
-            $contents =  base64_decode(explode(',', $base64)[1]);
-            $storage->put($url,  $contents); // salvo l'image sullo storage come concatenazione id estensione
+            $contents = base64_decode(explode(',', $base64)[1]);
+            $storage->put($url, $contents); // salvo l'image sullo storage come concatenazione id estensione
             $coords = $uploadFeature['geometry']['coordinates'];
             $geometry = (DB::select(DB::raw("SELECT ST_GeomFromText('POINT({$coords[0]} {$coords[1]})') as g;")))[0]->g;
 
@@ -51,21 +52,21 @@ class EcMediaPopup extends Field
             $ecMedia->save();
         } catch (Exception $e) {
             Log::error("featureImage: create ec media -> $e->getMessage()");
+
             return null;
         }
+
         return $ecMedia;
     }
 
-
-
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
-        if (!is_null($request["uploadFeatures"])) {
-            $uploadFeatures = json_decode($request["uploadFeatures"], true);
+        if (! is_null($request['uploadFeatures'])) {
+            $uploadFeatures = json_decode($request['uploadFeatures'], true);
             $ecMedias = [];
-            foreach ($uploadFeatures["features"] as $uploadFeature) {
+            foreach ($uploadFeatures['features'] as $uploadFeature) {
                 $ecMedia = $this->storeEcMediaByFeature($uploadFeature);
-                if (!is_null($ecMedia)) {
+                if (! is_null($ecMedia)) {
                     array_push($ecMedias, $ecMedia->id);
                 }
             }

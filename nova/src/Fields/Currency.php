@@ -224,7 +224,6 @@ class Currency extends Number
     /**
      * Set the context used to create the Money instance.
      *
-     * @param  Context  $context
      * @return $this
      */
     public function context(Context $context)

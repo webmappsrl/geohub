@@ -3,19 +3,18 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Nova\Dashboards\MainDashboard;
-use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcMedia;
 use App\Nova\Metrics\NewUgcMediaByLoggedUser;
-use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\NewUgcPoisByLoggedUser;
-use App\Nova\Metrics\NewUgcTracksPerDay;
+use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcTracks;
 use App\Nova\Metrics\NewUgcTracksByLoggedUser;
+use App\Nova\Metrics\NewUgcTracksPerDay;
 use App\Nova\Metrics\NewUsers;
 use App\Nova\Metrics\TotalUgc;
 use App\Nova\Metrics\TotalUsers;
-use App\Nova\Metrics\NewUgcMedia;
-use App\Nova\Metrics\NewUgcPois;
-use App\Nova\Metrics\NewUgcTracks;
 use App\Nova\Metrics\UserReferrers;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
@@ -23,16 +22,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Silvanite\NovaToolPermissions\NovaToolPermissions;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
 use Webmapp\Import\Import;
-class NovaServiceProvider extends NovaApplicationServiceProvider {
+
+class NovaServiceProvider extends NovaApplicationServiceProvider
+{
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         parent::boot();
     }
 
@@ -41,7 +42,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function routes() {
+    protected function routes()
+    {
         Nova::routes()
             ->withAuthenticationRoutes()
             ->withPasswordResetRoutes()
@@ -55,7 +57,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function gate() {
+    protected function gate()
+    {
         Gate::define('viewNova', function ($user) {
             $usersEmails = DB::select('
                 SELECT DISTINCT users.email as email
@@ -80,10 +83,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
     /**
      * Get the cards that should be displayed on the default Nova dashboard.
-     *
-     * @return array
      */
-    protected function cards(): array {
+    protected function cards(): array
+    {
         $cards = [];
         $currentUser = User::getEmulatedUser();
 
@@ -115,16 +117,16 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function dashboards() {
+    protected function dashboards()
+    {
         return [];
     }
 
     /**
      * Get the tools that should be listed in the Nova sidebar.
-     *
-     * @return array
      */
-    public function tools(): array {
+    public function tools(): array
+    {
         return [
             NovaPermissionTool::make()
                 ->rolePolicy(RolePolicy::class)
@@ -138,7 +140,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         Nova::sortResourcesBy(function ($resource) {
             return $resource::$priority ?? 99999;
         });

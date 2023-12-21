@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
-use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyWhen;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -17,21 +15,21 @@ class WhenTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $taxonomyWhen = TaxonomyWhen::factory()->create();
-        $response = $this->get(route("api.taxonomy.when.json", ['id' => $taxonomyWhen->id]));
+        $response = $this->get(route('api.taxonomy.when.json', ['id' => $taxonomyWhen->id]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
     }
 
     public function testGetJsonMissingId()
     {
-        $response = $this->get(route("api.taxonomy.when.json", ['id' => 1]));
+        $response = $this->get(route('api.taxonomy.when.json', ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
     public function testGetJsonByIdentifier()
     {
         $taxonomyWhen = TaxonomyWhen::factory()->create();
-        $response = $this->get(route("api.taxonomy.when.json.idt", ['identifier' => $taxonomyWhen->identifier]));
+        $response = $this->get(route('api.taxonomy.when.json.idt', ['identifier' => $taxonomyWhen->identifier]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
     }
@@ -39,18 +37,18 @@ class WhenTest extends TestCase
     public function testIdentifierFormat()
     {
         $taxonomyWhen = TaxonomyWhen::factory()->create(['identifier' => "Testo dell'identifier di prova"]);
-        $this->assertEquals($taxonomyWhen->identifier, "testo-dellidentifier-di-prova");
+        $this->assertEquals($taxonomyWhen->identifier, 'testo-dellidentifier-di-prova');
     }
 
     public function testIdentifierUniqueness()
     {
-        TaxonomyWhen::factory()->create(['identifier' => "identifier"]);
-        $taxonomyWhenSecond = TaxonomyWhen::factory()->create(['identifier' => NULL]);
-        $taxonomyWhenThird = TaxonomyWhen::factory()->create(['identifier' => NULL]);
+        TaxonomyWhen::factory()->create(['identifier' => 'identifier']);
+        $taxonomyWhenSecond = TaxonomyWhen::factory()->create(['identifier' => null]);
+        $taxonomyWhenThird = TaxonomyWhen::factory()->create(['identifier' => null]);
         $this->assertEquals($taxonomyWhenSecond->identifier, $taxonomyWhenThird->identifier);
         $this->assertNull($taxonomyWhenSecond->identifier);
         $this->assertNull($taxonomyWhenThird->identifier);
         $this->expectException(ValidationException::class);
-        TaxonomyWhen::factory()->create(['identifier' => "identifier"]);
+        TaxonomyWhen::factory()->create(['identifier' => 'identifier']);
     }
 }

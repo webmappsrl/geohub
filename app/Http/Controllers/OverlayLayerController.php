@@ -31,7 +31,6 @@ class OverlayLayerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreOverlayLayerRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreOverlayLayerRequest $request)
@@ -42,7 +41,6 @@ class OverlayLayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Http\Response
      */
     public function show(OverlayLayer $overlayLayer)
@@ -53,7 +51,6 @@ class OverlayLayerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Http\Response
      */
     public function edit(OverlayLayer $overlayLayer)
@@ -64,8 +61,6 @@ class OverlayLayerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateOverlayLayerRequest  $request
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateOverlayLayerRequest $request, OverlayLayer $overlayLayer)
@@ -76,7 +71,6 @@ class OverlayLayerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Http\Response
      */
     public function destroy(OverlayLayer $overlayLayer)

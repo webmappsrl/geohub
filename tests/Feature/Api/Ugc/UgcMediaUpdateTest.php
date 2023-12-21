@@ -27,11 +27,11 @@ class UgcMediaUpdateTest extends TestCase
     public function test_coordinates_updated_correctly()
     {
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 10]
+            'type' => 'Point',
+            'coordinates' => [10, 10],
         ];
         $media = UgcMedia::factory([
-            'geometry' => DB::raw("ST_GeomFromGeojson('" . json_encode($geometry) . "')")
+            'geometry' => DB::raw("ST_GeomFromGeojson('".json_encode($geometry)."')"),
         ])->create();
 
         $geometry['coordinates'] = [20, 20];
@@ -39,7 +39,7 @@ class UgcMediaUpdateTest extends TestCase
         $geojson = [
             'type' => 'Feature',
             'properties' => [],
-            'geometry' => $geometry
+            'geometry' => $geometry,
         ];
 
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -47,8 +47,8 @@ class UgcMediaUpdateTest extends TestCase
                 ->times(0);
         });
 
-        $response = $this->postJson(route("api.ugc.media.update", [$media->id]), [
-            'geojson' => $geojson
+        $response = $this->postJson(route('api.ugc.media.update', [$media->id]), [
+            'geojson' => $geojson,
         ]);
         $response->assertStatus(204);
 
@@ -72,7 +72,7 @@ class UgcMediaUpdateTest extends TestCase
         $geojson = [
             'type' => 'Feature',
             'properties' => [
-                'where_ids' => $wheres->pluck('id')->toArray()
+                'where_ids' => $wheres->pluck('id')->toArray(),
             ],
         ];
 
@@ -81,8 +81,8 @@ class UgcMediaUpdateTest extends TestCase
                 ->times(0);
         });
 
-        $response = $this->postJson(route("api.ugc.media.update", [$media->id]), [
-            'geojson' => $geojson
+        $response = $this->postJson(route('api.ugc.media.update', [$media->id]), [
+            'geojson' => $geojson,
         ]);
         $response->assertStatus(204);
 

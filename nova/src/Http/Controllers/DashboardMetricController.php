@@ -10,7 +10,6 @@ class DashboardMetricController extends Controller
     /**
      * List the metrics for the dashboard.
      *
-     * @param  \Laravel\Nova\Http\Requests\DashboardMetricRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(DashboardMetricRequest $request)
@@ -21,7 +20,6 @@ class DashboardMetricController extends Controller
     /**
      * Get the specified metric's value.
      *
-     * @param  \Laravel\Nova\Http\Requests\DashboardMetricRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function show(DashboardMetricRequest $request)

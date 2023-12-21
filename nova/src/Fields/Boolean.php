@@ -53,7 +53,6 @@ class Boolean extends Field
     /**
      * Resolve the default value for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return bool
      */
     protected function resolveDefaultValue(NovaRequest $request)
@@ -64,7 +63,6 @@ class Boolean extends Field
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute

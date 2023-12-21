@@ -8,8 +8,11 @@ use Laravel\Nova\Nova;
 class UpdateAttached extends Page
 {
     public $resourceName;
+
     public $resourceId;
+
     public $relation;
+
     public $relatedId;
 
     /**
@@ -42,7 +45,6 @@ class UpdateAttached extends Page
     /**
      * Click the update button.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
     public function update(Browser $browser)
@@ -53,7 +55,6 @@ class UpdateAttached extends Page
     /**
      * Click the update and continue editing button.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
     public function updateAndContinueEditing(Browser $browser)
@@ -64,7 +65,6 @@ class UpdateAttached extends Page
     /**
      * Assert that the browser is on the page.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      *
      * @throws \Facebook\WebDriver\Exception\TimeOutException
@@ -72,7 +72,7 @@ class UpdateAttached extends Page
     public function assert(Browser $browser)
     {
         $browser->pause(500)
-                ->waitFor('#nova .content form', 25);
+            ->waitFor('#nova .content form', 25);
     }
 
     /**

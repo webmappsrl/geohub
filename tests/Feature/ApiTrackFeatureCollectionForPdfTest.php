@@ -2,17 +2,18 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\EcTrack;
-use App\Http\Controllers\EcTrackController;
 use App\Models\EcPoi;
+use App\Models\EcTrack;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class ApiTrackFeatureCollectionForPdfTest extends TestCase
 {
     use DatabaseTransactions;
+
     /**
      * Test if the Api works
+     *
      * @return void
      */
     public function test_api_works()
@@ -35,6 +36,7 @@ class ApiTrackFeatureCollectionForPdfTest extends TestCase
 
     /**
      * Test if the Api returns a FeatureCollection
+     *
      * @return void
      */
     public function test_api_returns_feature_collection()
@@ -60,15 +62,16 @@ class ApiTrackFeatureCollectionForPdfTest extends TestCase
                     'properties',
                     'geometry' => [
                         'type',
-                        'coordinates'
-                    ]
-                ]
-            ]
+                        'coordinates',
+                    ],
+                ],
+            ],
         ]);
     }
 
     /**
      * Test if the Api returns a FeatureCollection with the correct structure
+     *
      * @return void
      */
     public function test_api_returns_feature_collection_with_correct_structure()
@@ -113,6 +116,7 @@ class ApiTrackFeatureCollectionForPdfTest extends TestCase
 
     /**
      * Test if the track is not found the Api returns a 404
+     *
      * @return void
      */
     public function test_api_returns_404_if_track_not_found()
@@ -126,6 +130,7 @@ class ApiTrackFeatureCollectionForPdfTest extends TestCase
 
     /**
      * Test if the track has no related pois the geojson structure contains only track feature
+     *
      * @return void
      */
     public function test_api_returns_feature_collection_with_only_track_feature_if_no_pois()

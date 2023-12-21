@@ -4,15 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldsUXUIToTaxonomies extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-
-
     public function up()
     {
         $taxonomies = ['taxonomy_wheres', 'taxonomy_whens', 'taxonomy_themes', 'taxonomy_activities', 'taxonomy_targets', 'taxonomy_poi_types'];
@@ -44,4 +42,4 @@ class AddFieldsUXUIToTaxonomies extends Migration
             //
         });
     }
-}
+};

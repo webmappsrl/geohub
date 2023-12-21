@@ -3,44 +3,36 @@
 namespace App\Nova;
 
 use App\Enums\AppTiles;
-use App\Helpers\NovaCurrentResourceActionHelper;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
 use App\Nova\Actions\generateQrCodeAction;
-use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
-use Eminiarts\Tabs\ActionsInTabs;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use Nova\Multiselect\Multiselect;
 use NovaAttachMany\AttachMany;
-use Robertboes\NovaSliderField\NovaSliderField;
-use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
-use Yna\NovaSwatches\Swatches;
-use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
+use Robertboes\NovaSliderField\NovaSliderField;
 use Titasgailius\SearchRelations\SearchesRelations;
+use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
+use Yna\NovaSwatches\Swatches;
 
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
@@ -67,8 +59,8 @@ use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
  */
 class App extends Resource
 {
-    use TabsOnEdit;
     use SearchesRelations;
+    use TabsOnEdit;
 
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -90,27 +82,29 @@ class App extends Resource
      * @var string
      */
     public static $model = \App\Models\App::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name', 'customer_name', 'id'
+        'name', 'customer_name', 'id',
     ];
 
-    private $languages  = [
+    private $languages = [
         'en' => 'English',
         'it' => 'Italiano',
         'fr' => 'Français',
         'de' => 'Deutsch',
-        'es' => 'español'
+        'es' => 'español',
     ];
 
     /**
@@ -126,7 +120,7 @@ class App extends Resource
         'no_interaction' => 'Nessuna interazione sul POI',
         'tooltip' => 'Apre un tooltip con informazioni minime',
         'popup' => ' Apre il popup',
-        'tooltip_popup' => 'apre Tooltip con X per chiudere Tooltip oppure un bottone che apre il popup'
+        'tooltip_popup' => 'apre Tooltip con X per chiudere Tooltip oppure un bottone che apre il popup',
     ];
 
     public static function group()
@@ -136,10 +130,6 @@ class App extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -163,9 +153,10 @@ class App extends Resource
             Text::make('Name')->sortable(),
             Text::make('Customer Name'),
             Text::make(__('APP'), function () {
-                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
-                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                $urlAny = 'https://'.$this->model()->id.'.app.webmapp.it';
+                $urlDesktop = 'https://'.$this->model()->id.'.app.geohub.webmapp.it';
+                $urlMobile = 'https://'.$this->model()->id.'.mobile.webmapp.it';
+
                 return "
                 <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
                 <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlDesktop' target='_blank'>DESKTOP</a>
@@ -173,8 +164,6 @@ class App extends Resource
             })->asHtml(),
         ];
     }
-
-
 
     public function fieldsForDetail(Request $request)
     {
@@ -202,6 +191,7 @@ class App extends Resource
                     'MAP Analytics' => $this->map_analytics_tab(),
                 ];
             }
+
             return [
                 (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array))->withToolbar(),
             ];
@@ -224,9 +214,10 @@ class App extends Resource
             Text::make(__('Name'), 'name')->sortable()->required(),
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels()->required(),
-            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages)
+            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages),
         ];
     }
+
     public function fieldsForUpdate(Request $request)
     {
         if ($request->user()->can('Admin')) {
@@ -237,7 +228,7 @@ class App extends Resource
             return [
                 (new Tabs("APP Details: {$this->name} ({$this->id})", [
                     'HOME' => $this->home_tab(),
-                    'PAGES' => $this->pages_tab()
+                    'PAGES' => $this->pages_tab(),
                 ])),
             ];
         }
@@ -282,7 +273,7 @@ class App extends Resource
                 ->default(false)
                 ->hideFromIndex(),
             Text::make(__('Google universal ID'), 'gu_id'),
-            Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.')
+            Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.'),
         ];
     }
 
@@ -310,16 +301,19 @@ class App extends Resource
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
+
                 return 'No Themes';
             }),
             Text::make('API conf', function () {
                 $url = route('api.app.webmapp.config', ['id' => $this->id]);
-                return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">CONF</a>';
+
+                return '<a class="btn btn-default btn-primary" href="'.$url.'" target="_blank">CONF</a>';
             })->asHtml(),
             Text::make(__('APP'), function () {
-                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
-                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                $urlAny = 'https://'.$this->model()->id.'.app.webmapp.it';
+                $urlDesktop = 'https://'.$this->model()->id.'.app.geohub.webmapp.it';
+                $urlMobile = 'https://'.$this->model()->id.'.mobile.webmapp.it';
+
                 return "
                 <a class='btn btn-default btn-primary' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
                 <a class='btn btn-default btn-primary' style='margin:3px' href='$urlDesktop' target='_blank'>DESKTOP</a>
@@ -332,7 +326,7 @@ class App extends Resource
                 Text::make('Social share text', 'social_share_text')
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
-            Boolean::make('dashboard_show')
+            Boolean::make('dashboard_show'),
         ];
     }
 
@@ -345,7 +339,7 @@ class App extends Resource
             ]),
             Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
                 view('layers', ['layers' => $this->layers])->render()
-            )
+            ),
         ];
     }
 
@@ -356,9 +350,10 @@ class App extends Resource
                 NovaTinymce5Editor::make('Page Project', 'page_project'),
                 NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
                 NovaTinymce5Editor::make('Page Credits', 'page_credits'),
-            ])
+            ]),
         ];
     }
+
     protected function languages_tab(): array
     {
 
@@ -366,7 +361,7 @@ class App extends Resource
 
         return [
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels(),
-            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages)
+            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages),
         ];
     }
 
@@ -376,9 +371,10 @@ class App extends Resource
         // $mapTilerApiKey = '0Z7ou7nfFFXipdDXHChf';
         $appTiles = new AppTiles();
         $t = $appTiles->oldval();
+
         return [
             NovaTabTranslatable::make([
-                Text::make('Tiles Label')
+                Text::make('Tiles Label'),
             ]),
             // use OptimistDigital\MultiselectField\Multiselect;
             MultiselectFieldMultiselect::make(__('Tiles'), 'tiles')->options($t, $selectedTileLayers)->help(__('Select which tile layers will be used by the app, the order is the same as the insertion order, so the last one inserted will be the one visible first'))->reorderable(),
@@ -393,16 +389,16 @@ class App extends Resource
             NovaTabTranslatable::make([
                 Text::make('Data Label'),
                 Text::make('Pois Data Label'),
-                Text::make('Tracks Data Label')
+                Text::make('Tracks Data Label'),
             ]),
             Boolean::make('Show POIs data by default', 'pois_data_default')->help('Turn this option off if you do not want to show pois by default on the map'),
             Text::make('poi Data Icon', 'pois_data_icon', function () {
-                return "<div style='width:64px;height:64px;'>" . $this->pois_data_icon . "</div>";
+                return "<div style='width:64px;height:64px;'>".$this->pois_data_icon.'</div>';
             })->asHtml()->onlyOnDetail(),
             Textarea::make('Poi Data Icon SVG', 'pois_data_icon')->onlyOnForms()->hideWhenCreating(),
             Boolean::make('Show Tracks data by default', 'tracks_data_default')->help('Turn this option off if you do not want to show all track layers by default on the map'),
             Text::make('Track Data Icon', 'tracks_data_icon', function () {
-                return "<div style='width:64px;height:64px;'>" . $this->tracks_data_icon . "</div>";
+                return "<div style='width:64px;height:64px;'>".$this->tracks_data_icon.'</div>';
             })->asHtml()->onlyOnDetail(),
             Textarea::make('Track Data Icon SVG', 'tracks_data_icon')->onlyOnForms()->hideWhenCreating(),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
@@ -437,9 +433,9 @@ class App extends Resource
                     function ($attribute, $value, $fail) {
                         $decoded = json_decode($value);
                         if (is_array($decoded) == false) {
-                            $fail('The ' . $attribute . ' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
+                            $fail('The '.$attribute.' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
                         }
-                    }
+                    },
                 ]),
 
             Number::make(__('Max Zoom'), 'map_max_zoom')->onlyOnDetail(),
@@ -451,7 +447,8 @@ class App extends Resource
             Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
                 ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
             Text::make(__('POIS API'), function () {
-                $url = '/api/v1/app/' . $this->model()->id . '/pois.geojson';
+                $url = '/api/v1/app/'.$this->model()->id.'/pois.geojson';
+
                 return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>POIS API</a>";
             })->asHtml()->onlyOnDetail(),
             Toggle::make('start_end_icons_show')
@@ -485,7 +482,7 @@ class App extends Resource
                 Text::make('Theme Filter Label', 'filter_theme_label'),
                 Text::make('Poi Type Filter Label', 'filter_poi_type_label'),
                 Text::make('Duration Filter Label', 'filter_track_duration_label'),
-                Text::make('Distance Filter Label', 'filter_track_distance_label')
+                Text::make('Distance Filter Label', 'filter_track_distance_label'),
             ]),
             Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
@@ -514,6 +511,7 @@ class App extends Resource
     {
         $track_selected = is_null($this->model()->track_searchables) ? [] : json_decode($this->model()->track_searchables, true);
         $poi_selected = is_null($this->model()->poi_searchables) ? [] : json_decode($this->model()->poi_searchables, true);
+
         return [
             MultiSelect::make(__('Track Search In'), 'track_searchables')->options([
                 'name' => 'Name',
@@ -550,7 +548,7 @@ class App extends Resource
             'Roboto' => ['label' => 'Noto Serif'],
             'Roboto Slab' => ['label' => 'Roboto Slab'],
             'Sora' => ['label' => 'Sora'],
-            'Source Sans Pro' => ['label' => 'Source Sans Pro']
+            'Source Sans Pro' => ['label' => 'Source Sans Pro'],
         ];
 
         return [
@@ -675,11 +673,13 @@ class App extends Resource
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(', ', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
+
                 return 'No Themes';
             })->onlyOnDetail(),
             Text::make('Download GeoJSON collection', function () {
-                $url = url('/api/v1/app/' . $this->id . '/pois.geojson');
-                return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>';
+                $url = url('/api/v1/app/'.$this->id.'/pois.geojson');
+
+                return '<a class="btn btn-default btn-primary" href="'.$url.'" target="_blank">Download</a>';
             })->asHtml()->onlyOnDetail(),
             Code::Make(__('POI acquisition forms'), 'poi_acquisition_form')
                 ->language('json')
@@ -792,7 +792,7 @@ class App extends Resource
                 ]`)
                 ->help(
                     view('poi-forms')->render()
-                )
+                ),
         ];
     }
 
@@ -905,10 +905,9 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex()
+                ->hideFromIndex(),
         ];
     }
-
 
     protected function routing_tab(): array
     {
@@ -955,11 +954,10 @@ class App extends Resource
     {
         return [
 
-
             Image::make(__('Logo Homepage'), 'logo_homepage')
                 ->rules('image', 'mimes:svg')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'logo_homepage.svg';
                 })
@@ -967,11 +965,11 @@ class App extends Resource
                 ->hideFromIndex(),
             Text::make('QR Code custom URL', 'qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
             Text::make('QR Code', 'qr_code', function () {
-                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
+                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>".$this->qr_code.'</div>';
             })->asHtml(),
             Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
                 'import icoonmoon selection.json file'
-            )
+            ),
         ];
     }
 
@@ -1004,7 +1002,7 @@ class App extends Resource
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'icon.png';
                 })
@@ -1013,7 +1011,7 @@ class App extends Resource
             Image::make(__('Splash image'), 'splash')
                 ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'splash.png';
                 })
@@ -1022,7 +1020,7 @@ class App extends Resource
             Image::make(__('Icon small'), 'icon_small')
                 ->rules('image', 'mimes:png', 'dimensions:width=512,height=512')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'icon_small.png';
                 })
@@ -1055,13 +1053,13 @@ class App extends Resource
     {
         return [
             Text::make(__('API List'), function () {
-                return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
-                <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/activity.json" target="_blank">Activity</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/theme.json" target="_blank">Theme</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/when.json" target="_blank">When</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/where.json" target="_blank">Where</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/webmapp_category.json" target="_blank">Webmapp Category</a>';
+                return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/config.json" target="_blank">Config</a>
+                <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/activity.json" target="_blank">Activity</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/theme.json" target="_blank">Theme</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/when.json" target="_blank">When</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/where.json" target="_blank">Where</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/who.json" target="_blank">Target</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/webmapp_category.json" target="_blank">Webmapp Category</a>';
             })->asHtml()->onlyOnDetail(),
             Text::make(__('API List (Tracks)'), function ($tracks) {
                 $tracks = \App\Models\EcTrack::where('user_id', $this->model()->user_id)->get();
@@ -1069,10 +1067,10 @@ class App extends Resource
                 foreach ($tracks as $track) {
                     $html .= '<div style="display:flex;margin-top:15px">';
                     $html .= '<div class="col-3">';
-                    $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/' . $this->model()->id . '/geojson/ec_track_' . $track->id . '.geojson">' . $track->name . '</a>';
+                    $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/'.$this->model()->id.'/geojson/ec_track_'.$track->id.'.geojson">'.$track->name.'</a>';
                     $html .= '</div>';
                     $html .= '<div class="col-3">';
-                    $html .= '<a class="btn btn-default btn-secondary mx-2" href="/resources/ec-tracks/' . $track->id . '/edit">Modifica Track</a>';
+                    $html .= '<a class="btn btn-default btn-secondary mx-2" href="/resources/ec-tracks/'.$track->id.'/edit">Modifica Track</a>';
                     $html .= '</div>';
                     $html .= '</div>';
                 }
@@ -1102,8 +1100,9 @@ class App extends Resource
                 if ($this->layers->count() > 0) {
                     $out = '';
                     foreach ($this->layers as $l) {
-                        $out .= '<a href="/resources/layers/' . $l->id . '">' . $l->name . '</a></br>';
+                        $out .= '<a href="/resources/layers/'.$l->id.'">'.$l->name.'</a></br>';
                     }
+
                     return $out;
                 } else {
                     return 'No Layers';
@@ -1116,14 +1115,15 @@ class App extends Resource
     {
         return [
             NovaTabTranslatable::make([
-                Text::make('Overlays Label', 'overlays_label')
+                Text::make('Overlays Label', 'overlays_label'),
             ]),
             Text::make('Overlay Layer', function () {
                 if ($this->overlayLayers->count() > 0) {
                     $out = '';
                     foreach ($this->overlayLayers as $l) {
-                        $out .= '<a href="/resources/overlay-layers/' . $l->id . '">' . $l->name . '</a></br>';
+                        $out .= '<a href="/resources/overlay-layers/'.$l->id.'">'.$l->name.'</a></br>';
                     }
+
                     return $out;
                 } else {
                     return 'No Overlay Layers';
@@ -1137,18 +1137,22 @@ class App extends Resource
         return [
             Text::make('Impressions', function () {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>5.8K</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>The number of times the App\'s icon was viewed on the store.</i></p>';
+
                 return $html;
             })->asHtml(),
             Text::make('Product Page View', function () {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong style="width: 50%;">Android</strong></td></tr><tr><td>696</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>The number of times the App\'s product page was viewed on the store.</i></p>';
+
                 return $html;
             })->asHtml(),
             Text::make('Conversion rate', function () {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>11.4%</td><td></td></tr></tbody></table><p style="font-size:14px;"><i>Calculated by dividing total downloads by unique device impressions.</i></p>';
+
                 return $html;
             })->asHtml(),
             Text::make('Total Download', function () {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody><tr><td style="width: 50%;"><strong>iOS</strong></td><td style="width: 50%;"><strong>Android</strong></td></tr><tr><td>506</td><td>303</td></tr></tbody></table><p style="font-size:14px;"><i>The number of first-time downloads and redownloads.</i></p>';
+
                 return $html;
             })->asHtml(),
         ];
@@ -1157,22 +1161,24 @@ class App extends Resource
     protected function poi_analytics_tab(): array
     {
         $mostviewedpois = $this->model()->getMostViewedPoiGeojson();
+
         return [
             MapMultiPurposeNova3::make('Most Viewed POIs Map')->withMeta([
-                'center' => ["43", "10"],
+                'center' => ['43', '10'],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'defaultZoom' => 10,
-                'poigeojson' => $mostviewedpois
+                'poigeojson' => $mostviewedpois,
             ]),
             Text::make('Most Viewed POIs List', function () use ($mostviewedpois) {
                 $html = '<table style="width: 100%;" border="1" cellpadding="10"><tbody>';
                 $collection = json_decode($mostviewedpois);
                 foreach ($collection->features as $count => $feature) {
                     $count++;
-                    $html .= '<tr><td style="width: 50%;">' . $count . ' - ' . $feature->properties->name . '</td><td style="width: 50%;"><strong>' . $feature->properties->visits . '</strong> visits</td></tr>';
+                    $html .= '<tr><td style="width: 50%;">'.$count.' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
                 }
                 $html .= '</tbody></table>';
+
                 return $html;
             })->asHtml(),
         ];
@@ -1183,15 +1189,16 @@ class App extends Resource
         $poigeojson = $this->model()->getUGCPoiGeojson($this->model()->app_id);
         $mediageojson = $this->model()->getUGCMediaGeojson($this->model()->app_id);
         $trackgeojson = $this->model()->getiUGCTrackGeojson($this->model()->app_id);
+
         return [
             MapMultiPurposeNova3::make('All user created contents')->withMeta([
-                'center' => ["43", "12"],
+                'center' => ['43', '12'],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'defaultZoom' => 5,
                 'poigeojson' => $poigeojson,
                 'mediageojson' => $mediageojson,
-                'trackgeojson' => $trackgeojson
+                'trackgeojson' => $trackgeojson,
             ]),
         ];
     }
@@ -1199,7 +1206,6 @@ class App extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -1211,7 +1217,6 @@ class App extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -1223,7 +1228,6 @@ class App extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -1235,7 +1239,6 @@ class App extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */

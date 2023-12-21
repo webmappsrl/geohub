@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -54,9 +54,9 @@ class CreateAppsTable extends Migration
             $table->boolean('enableRouting')->default(false);
 
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
 
         });
     }
@@ -70,4 +70,4 @@ class CreateAppsTable extends Migration
     {
         Schema::dropIfExists('apps');
     }
-}
+};

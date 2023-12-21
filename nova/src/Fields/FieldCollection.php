@@ -28,7 +28,6 @@ class FieldCollection extends Collection
     /**
      * Filter elements should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Nova\Fields\FieldCollection
      */
     public function authorized(Request $request)
@@ -71,7 +70,6 @@ class FieldCollection extends Collection
     /**
      * Filter fields for showing on detail.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
      * @return \Laravel\Nova\Fields\FieldCollection
      */
@@ -85,7 +83,6 @@ class FieldCollection extends Collection
     /**
      * Filter fields for showing on index.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
      * @return \Laravel\Nova\Fields\FieldCollection
      */
@@ -99,7 +96,6 @@ class FieldCollection extends Collection
     /**
      * Reject if the field is readonly.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Laravel\Nova\Fields\FieldCollection
      */
     public function withoutReadonly(NovaRequest $request)

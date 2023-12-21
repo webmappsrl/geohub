@@ -7,7 +7,6 @@ use App\Models\EcTrack;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CopyFeatureToGalleryCommand extends Command
@@ -52,10 +51,10 @@ class CopyFeatureToGalleryCommand extends Command
 
         // get All Ec Features
         switch ($type) {
-            case "track":
+            case 'track':
                 $eloquentQuery = EcTrack::query();
                 break;
-            case "poi":
+            case 'poi':
                 $eloquentQuery = EcPoi::query();
                 break;
             default:
@@ -67,7 +66,7 @@ class CopyFeatureToGalleryCommand extends Command
                 $user = User::find(intval($author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID ' . $author);
+                throw new Exception('No User found with this ID '.$author);
             }
         } else {
             try {
@@ -76,7 +75,7 @@ class CopyFeatureToGalleryCommand extends Command
                 $this->author_id = $user->id;
 
             } catch (Exception $e) {
-                throw new Exception('No User found with this email ' . $author);
+                throw new Exception('No User found with this email '.$author);
             }
         }
 
@@ -86,13 +85,13 @@ class CopyFeatureToGalleryCommand extends Command
             foreach ($features as $feature) {
                 if ($feature->ecMedia()->count() < 1) {
                     if ($feature->feature_image) {
-                        Log::info('Updating: ' . $feature->id);
+                        Log::info('Updating: '.$feature->id);
                         $feature->ecMedia()->sync($feature->featureImage);
                     }
                 }
             }
         } catch (Exception $e) {
-            throw new Exception('EC image gallery not updated ' . $feature->id . ' ERROR ' . $e->getMessage());
+            throw new Exception('EC image gallery not updated '.$feature->id.' ERROR '.$e->getMessage());
         }
 
     }

@@ -15,7 +15,6 @@ class LensResourceDestroyController extends Controller
     /**
      * Destroy the given resource(s).
      *
-     * @param  \Laravel\Nova\Http\Requests\DeleteLensResourceRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function handle(DeleteLensResourceRequest $request)

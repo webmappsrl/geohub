@@ -100,7 +100,6 @@ class LensRequest extends NovaRequest
     /**
      * Map the given models to the appropriate resource for the request.
      *
-     * @param  \Illuminate\Support\Collection  $models
      * @return \Illuminate\Support\Collection
      */
     public function toResources(Collection $models)
@@ -116,9 +115,9 @@ class LensRequest extends NovaRequest
                 $this, $lenResource->resolveFields($this)
             ), function ($payload) use ($lenResource) {
                 $payload['actions'] = collect(array_values($lenResource->actions($this)))
-                        ->filter(function ($action) {
-                            return $action->shownOnIndex() || $action->shownOnTableRow();
-                        })->filter->authorizedToSee($this)->values();
+                    ->filter(function ($action) {
+                        return $action->shownOnIndex() || $action->shownOnTableRow();
+                    })->filter->authorizedToSee($this)->values();
 
                 return $payload;
             });
@@ -128,7 +127,6 @@ class LensRequest extends NovaRequest
     /**
      * Get foreign key name for relation.
      *
-     * @param  \Illuminate\Database\Eloquent\Relations\Relation  $relation
      * @return string
      */
     protected function getRelationForeignKeyName(Relation $relation)

@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTaxonomyFieldsOnWhere extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::table('taxonomy_wheres', function (Blueprint $table) {
             $table->text('description')->nullable();
             $table->text('excerpt')->nullable();
@@ -28,7 +30,8 @@ class AddTaxonomyFieldsOnWhere extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::table('taxonomy_wheres', function (Blueprint $table) {
             $table->dropColumn('description');
             $table->dropColumn('excerpt');
@@ -36,4 +39,4 @@ class AddTaxonomyFieldsOnWhere extends Migration {
             $table->dropColumn('user_id');
         });
     }
-}
+};

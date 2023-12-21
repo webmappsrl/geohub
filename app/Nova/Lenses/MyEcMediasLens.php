@@ -2,7 +2,6 @@
 
 namespace App\Nova\Lenses;
 
-use App\Models\EcMedia;
 use App\Models\User;
 use Chaseconey\ExternalImage\ExternalImage;
 use Illuminate\Http\Request;
@@ -19,7 +18,6 @@ class MyEcMediasLens extends Lens
     /**
      * Get the query builder / paginator for the lens.
      *
-     * @param  \Laravel\Nova\Http\Requests\LensRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return mixed
      */
@@ -35,7 +33,6 @@ class MyEcMediasLens extends Lens
     /**
      * Get the fields available to the lens.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -46,17 +43,18 @@ class MyEcMediasLens extends Lens
                 $thumbnails = $this->thumbnails;
                 $url = '';
                 if ($thumbnails) {
-                    $thumbnails = json_decode($thumbnails,true);
+                    $thumbnails = json_decode($thumbnails, true);
                     if ($thumbnails[array_key_first($thumbnails)]) {
                         $url = $thumbnails[array_key_first($thumbnails)];
                     }
                 }
-                if (!$url) {
+                if (! $url) {
                     $url = $this->url;
-                    if (substr($url, 0, 4) !== 'http')
+                    if (substr($url, 0, 4) !== 'http') {
                         $url = Storage::disk('public')->url($url);
+                    }
                 }
-                        
+
                 return $url;
             }),
 
@@ -64,23 +62,23 @@ class MyEcMediasLens extends Lens
                 Text::make(__('Name'), 'name'),
             ]),
             // BelongsTo::make('Author', 'author', User::class)->sortable(),
-            Text::make('Author', function (){
+            Text::make('Author', function () {
                 return $this->author->name;
             }),
             Text::make('Url', function () {
                 $url = $this->url;
-                if (substr($url, 0, 4) !== 'http')
+                if (substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
+                }
 
-                return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
-            })->asHtml()
+                return '<a href="'.$url.'" target="_blank">'.__('Original image').'</a>';
+            })->asHtml(),
         ];
     }
 
     /**
      * Get the cards available on the lens.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -91,7 +89,6 @@ class MyEcMediasLens extends Lens
     /**
      * Get the filters available for the lens.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -102,7 +99,6 @@ class MyEcMediasLens extends Lens
     /**
      * Get the actions available on the lens.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
@@ -119,7 +115,7 @@ class MyEcMediasLens extends Lens
     {
         return 'my-ec-medias-lens';
     }
-    
+
     public function name()
     {
         return 'Le mie foto';

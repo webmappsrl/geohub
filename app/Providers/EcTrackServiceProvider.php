@@ -5,16 +5,17 @@ namespace App\Providers;
 use App\Models\App;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
-class EcTrackServiceProvider extends ServiceProvider {
+class EcTrackServiceProvider extends ServiceProvider
+{
     /**
      * Register services.
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         $this->app->bind(EcTrackServiceProvider::class, function ($app) {
             return new EcTrackServiceProvider($app);
         });
@@ -25,7 +26,8 @@ class EcTrackServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         //
     }
 
@@ -33,16 +35,11 @@ class EcTrackServiceProvider extends ServiceProvider {
      * Return a collection of ec tracks inside the bbox. The tracks must be within $distance meters
      * of the given $trackId if provided
      *
-     * @param App         $app
-     * @param array       $bbox
-     * @param int|null    $trackId an ec track id to reference
-     * @param string|null $searchString
-     * @param string      $language
-     * @param int         $distanceLimit
-     *
+     * @param  int|null  $trackId an ec track id to reference
      * @return mixed
      */
-    public static function getSearchClustersInsideBBox(App $app, array $bbox, int $trackId = null, string $searchString = null, string $language = 'it', int $distanceLimit = 1000): array {
+    public static function getSearchClustersInsideBBox(App $app, array $bbox, ?int $trackId = null, ?string $searchString = null, string $language = 'it', int $distanceLimit = 1000): array
+    {
         $deltaLon = ($bbox[2] - $bbox[0]) / 6;
         $deltaLat = ($bbox[3] - $bbox[1]) / 6;
 
@@ -53,14 +50,16 @@ class EcTrackServiceProvider extends ServiceProvider {
         $params = [$clusterRadius];
         $validTrackIds = null;
 
-        if ($app->app_id !== 'it.webmapp.webmapp')
+        if ($app->app_id !== 'it.webmapp.webmapp') {
             $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
+        }
 
-        if (!is_null($validTrackIds))
-            $where .= 'ec_tracks.id IN (' . join(',', $validTrackIds) . ') AND ';
+        if (! is_null($validTrackIds)) {
+            $where .= 'ec_tracks.id IN ('.implode(',', $validTrackIds).') AND ';
+        }
 
         if (is_int($trackId)
-            && (!$validTrackIds || in_array($trackId, $validTrackIds))) {
+            && (! $validTrackIds || in_array($trackId, $validTrackIds))) {
             $track = EcTrack::find($trackId);
 
             if (isset($track)) {
@@ -71,7 +70,7 @@ class EcTrackServiceProvider extends ServiceProvider {
             }
         }
 
-        if (isset($searchString) && !empty($searchString)) {
+        if (isset($searchString) && ! empty($searchString)) {
             $escapedSearchString = preg_replace('/[^0-9a-z\s]/', '', strtolower($searchString));
             $where .= "to_tsvector(regexp_replace(LOWER(((ec_tracks.name::json))->>'$language'), '[^0-9a-z\s]', '', 'g')) @@ to_tsquery('$escapedSearchString') AND ";
         }
@@ -111,8 +110,8 @@ GROUP BY
          */
         $res = DB::select($query, $params);
         $featureCollection = [
-            "type" => "FeatureCollection",
-            "features" => []
+            'type' => 'FeatureCollection',
+            'features' => [],
         ];
 
         foreach ($res as $cluster) {
@@ -128,19 +127,20 @@ GROUP BY
                 $track = EcTrack::find($ids[$i]);
 
                 $image = isset($track->featureImage) ? $track->featureImage->thumbnail('150x150') : '';
-                if (isset($image) && !empty($image) && !in_array($image, $images))
+                if (isset($image) && ! empty($image) && ! in_array($image, $images)) {
                     $images[] = $image;
+                }
                 $i++;
             }
 
             $featureCollection['features'][] = [
-                "type" => "Feature",
-                "geometry" => $geometry,
-                "properties" => [
-                    "ids" => $ids,
-                    "bbox" => $bbox,
-                    "images" => $images,
-                ]
+                'type' => 'Feature',
+                'geometry' => $geometry,
+                'properties' => [
+                    'ids' => $ids,
+                    'bbox' => $bbox,
+                    'images' => $images,
+                ],
             ];
         }
 
@@ -150,18 +150,15 @@ GROUP BY
     /**
      * Retrieve the closest tracks to the given location
      *
-     * @param App   $app      the reference app
-     * @param float $lon
-     * @param float $lat
-     * @param int   $distance the distance limit in meters
-     * @param int   $limit    the max numbers of results
-     *
-     * @return array
+     * @param  App  $app      the reference app
+     * @param  int  $distance the distance limit in meters
+     * @param  int  $limit    the max numbers of results
      */
-    public static function getNearestToLonLat(App $app, float $lon, float $lat, int $distance = 10000, int $limit = 5): array {
+    public static function getNearestToLonLat(App $app, float $lon, float $lat, int $distance = 10000, int $limit = 5): array
+    {
         $featureCollection = [
-            "type" => "FeatureCollection",
-            "features" => []
+            'type' => 'FeatureCollection',
+            'features' => [],
         ];
         $query = EcTrack::whereRaw("ST_Distance(
                 ST_Transform('SRID=4326;POINT($lon $lat)'::geometry, 3857),
@@ -170,7 +167,7 @@ GROUP BY
 
         if ($app->app_id !== 'it.webmapp.webmapp') {
             $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
-            $query = $query->whereIn('id',$validTrackIds);
+            $query = $query->whereIn('id', $validTrackIds);
         }
 
         $tracks = $query->orderByRaw("ST_Distance(
@@ -190,26 +187,27 @@ GROUP BY
     /**
      * Retrieves the $limit most viewed ec tracks
      *
-     * @param App $app   the reference app
-     * @param int $limit the max number of tracks to respond
-     *
+     * @param  App  $app   the reference app
+     * @param  int  $limit the max number of tracks to respond
      * @return array the geojson feature collection
      */
     // TODO: select the most viewed tracks from a real analytic value and not randomly
-    public static function getMostViewed(App $app, int $limit = 5): array {
+    public static function getMostViewed(App $app, int $limit = 5): array
+    {
         $featureCollection = [
-            "type" => "FeatureCollection",
-            "features" => []
+            'type' => 'FeatureCollection',
+            'features' => [],
         ];
 
         $validTrackIds = null;
 
-        if ($app->app_id !== 'it.webmapp.webmapp')
+        if ($app->app_id !== 'it.webmapp.webmapp') {
             $validTrackIds = $app->ecTracks->pluck('id')->toArray() ?? [];
+        }
 
         $tracks = is_null($validTrackIds)
             ? EcTrack::limit($limit)->get()
-            : EcTrack::whereIn('id',$validTrackIds)->limit($limit)->get();
+            : EcTrack::whereIn('id', $validTrackIds)->limit($limit)->get();
 
         foreach ($tracks as $track) {
             $featureCollection['features'][] = $track->getGeojson();

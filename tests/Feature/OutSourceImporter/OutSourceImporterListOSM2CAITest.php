@@ -3,12 +3,8 @@
 namespace Tests\Feature;
 
 use App\Classes\OutSourceImporter\OutSourceImporterListOSM2CAI;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Mockery\MockInterface;
 use Tests\TestCase;
 
 class OutSourceImporterListOSM2CAITest extends TestCase
@@ -27,14 +23,14 @@ class OutSourceImporterListOSM2CAITest extends TestCase
         "19370":"2022-04-08 06:06:08",
         "22679":"2022-05-06 06:03:01"}';
 
-        $tracks = array(
+        $tracks = [
             12212824,
             7773335,
             10402547,
             10615577,
             10402662,
-            10402512
-        );
+            10402512,
+        ];
 
         // TODO: DB mock is not working
         // DB::shouldReceive('connection')
@@ -56,7 +52,7 @@ class OutSourceImporterListOSM2CAITest extends TestCase
         //     })
         // );
 
-        $importer = new OutSourceImporterListOSM2CAI($type,$endpoint);
+        $importer = new OutSourceImporterListOSM2CAI($type, $endpoint);
         $features = $importer->getList();
 
         $this->assertTrue(true);

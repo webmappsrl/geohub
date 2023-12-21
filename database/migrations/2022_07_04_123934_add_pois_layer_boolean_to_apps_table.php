@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPoisLayerBooleanToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,4 +29,4 @@ class AddPoisLayerBooleanToAppsTable extends Migration
             $table->dropColumn('app_pois_api_layer');
         });
     }
-}
+};

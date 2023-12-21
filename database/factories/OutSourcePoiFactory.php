@@ -6,10 +6,10 @@ use App\Models\OutSourceFeature;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
-
-class OutSourcePoiFactory extends Factory {
-
+class OutSourcePoiFactory extends Factory
+{
     protected $model = OutSourceFeature::class;
+
     /**
      * Define the model's default state.
      *
@@ -18,8 +18,8 @@ class OutSourcePoiFactory extends Factory {
     public function definition()
     {
         // POI
-        $lon = $this->faker->longitude(10,11);
-        $lat = $this->faker->latitude(43,44);
+        $lon = $this->faker->longitude(10, 11);
+        $lat = $this->faker->latitude(43, 44);
         $geometry = DB::raw("(ST_GeomFromText('POINT($lon $lat)'))");
 
         return [
@@ -27,8 +27,8 @@ class OutSourcePoiFactory extends Factory {
             'type' => 'poi',
             'source_id' => $this->faker->uuid(),
             'tags' => [
-                'name' => [ 'it' => $this->faker->name() ],
-                'description' => [ 'it' => $this->faker->text()],
+                'name' => ['it' => $this->faker->name()],
+                'description' => ['it' => $this->faker->text()],
             ],
             'geometry' => $geometry,
         ];

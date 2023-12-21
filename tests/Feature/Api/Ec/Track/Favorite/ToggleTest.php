@@ -8,10 +8,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ToggleTest extends TestCase {
+class ToggleTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -20,7 +22,8 @@ class ToggleTest extends TestCase {
         });
     }
 
-    public function test_api_works() {
+    public function test_api_works()
+    {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
         $track = EcTrack::factory()->create();
@@ -34,7 +37,8 @@ class ToggleTest extends TestCase {
         $this->assertEquals(true, $content['favorite']);
     }
 
-    public function test_double_toggle_works() {
+    public function test_double_toggle_works()
+    {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
 
@@ -51,17 +55,19 @@ class ToggleTest extends TestCase {
         $this->assertEquals(false, $content['favorite']);
     }
 
-    public function test_without_authentication() {
+    public function test_without_authentication()
+    {
         $track = EcTrack::factory()->create();
         $id = $track->id;
         $response = $this->post("/api/ec/track/favorite/toggle/$id");
         $response->assertStatus(401);
     }
 
-    public function test_with_invalid_track_id() {
+    public function test_with_invalid_track_id()
+    {
         $user = User::factory()->create();
         $this->actingAs($user, 'api');
-        $response = $this->post("/api/ec/track/favorite/toggle/10");
+        $response = $this->post('/api/ec/track/favorite/toggle/10');
         $response->assertStatus(404);
     }
 }

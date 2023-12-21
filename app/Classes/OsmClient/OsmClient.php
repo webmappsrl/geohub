@@ -2,19 +2,8 @@
 
 namespace App\Classes\OsmClient;
 
-use Illuminate\Support\Facades\Http;
 use Exception;
-use App\Exceptions\OsmClientException;
-use App\Exceptions\OsmClientExceptionNodeHasNoLat;
-use App\Exceptions\OsmClientExceptionNodeHasNoLon;
-use App\Exceptions\OsmClientExceptionNoElements;
-use App\Exceptions\OsmClientExceptionNoTags;
-use App\Exceptions\OsmClientExceptionRelationHasInvalidGeometry;
-use App\Exceptions\OsmClientExceptionRelationHasNoMembers;
-use App\Exceptions\OsmClientExceptionRelationHasNoNodes;
-use App\Exceptions\OsmClientExceptionRelationHasNoRelationElement;
-use App\Exceptions\OsmClientExceptionRelationHasNoWays;
-use App\Exceptions\OsmClientExceptionWayHasNoNodes;
+use Illuminate\Support\Facades\Http;
 
 /**
  * General purpose OpenStreetMap http client.
@@ -71,8 +60,8 @@ class OsmClient
      */
     public function getGeojson(string $osmid): string
     {
-        if (!$this->checkOsmId($osmid)) {
-            throw new Exception('Invalid osmid ' . $osmid);
+        if (! $this->checkOsmId($osmid)) {
+            throw new Exception('Invalid osmid '.$osmid);
         }
 
         $geojson = [];
@@ -94,29 +83,28 @@ class OsmClient
      * Returns the URL OSM v06 JSON API string (full form way and relation)
      *
      * @param [type] $osmid
-     * @return string
      */
     public function getFullOsmApiUrlByOsmId($osmid): string
     {
-        $url = 'https://api.openstreetmap.org/api/0.6/' . $osmid;
+        $url = 'https://api.openstreetmap.org/api/0.6/'.$osmid;
         if (preg_match('/node/', $osmid)) {
-            $url = $url . '.json';
+            $url = $url.'.json';
         } else {
             // way and relation directly call full.json
-            $url = $url . '/full.json';
+            $url = $url.'/full.json';
         }
         //check if the url is valid, else return empty string
         $response = Http::get($url);
         if ($response->status() != 200) {
             $url = '';
         }
+
         return $url;
     }
 
     /**
      * Return true if osmid is valid: node/[id], way/[id], relation/[id]
      *
-     * @param  string  $osmid
      * @return bool true if is valid false otherwise
      */
     public function checkOsmId(string $osmid): bool
@@ -143,7 +131,7 @@ class OsmClient
         } else {
             $json = Http::get($url)->json();
 
-            if (!array_key_exists('elements', $json)) {
+            if (! array_key_exists('elements', $json)) {
                 throw new Exception("Response from OSM has something wrong: check it out with $url.", 1);
             }
             if (preg_match('/node/', $osmid)) {
@@ -153,9 +141,10 @@ class OsmClient
             } elseif (preg_match('/relation/', $osmid)) {
                 return $this->getPropertiesAndGeometryForRelation($json);
             } else {
-                throw new Exception('OSMID has not valid type (node,way,relation) ' . $osmid);
+                throw new Exception('OSMID has not valid type (node,way,relation) '.$osmid);
             }
         }
+
         return [];
     }
 
@@ -165,23 +154,23 @@ class OsmClient
         if (empty($json)) {
             return [];
         }
-        if (!isset($json['elements'][0]['tags'])) {
+        if (! isset($json['elements'][0]['tags'])) {
             $properties = [];
-            echo 'JSON from OSM has no tags: ' . PHP_EOL;
+            echo 'JSON from OSM has no tags: '.PHP_EOL;
         } else {
             $properties = $json['elements'][0]['tags'];
         }
 
-        if (!isset($json['elements'][0]['lat'])) {
+        if (! isset($json['elements'][0]['lat'])) {
             $geometry['coordinates'][] = '';
-            echo 'JSON from OSM has no lat: ' . PHP_EOL;
+            echo 'JSON from OSM has no lat: '.PHP_EOL;
         } else {
             $geometry['coordinates'][] = $json['elements'][0]['lat'];
         }
 
-        if (!isset($json['elements'][0]['lon'])) {
+        if (! isset($json['elements'][0]['lon'])) {
             $geometry['coordinates'][] = '';
-            echo 'JSON from OSM has no lon: ' . PHP_EOL;
+            echo 'JSON from OSM has no lon: '.PHP_EOL;
         } else {
             $geometry['coordinates'][] = $json['elements'][0]['lon'];
         }
@@ -209,10 +198,10 @@ class OsmClient
         // Loop on elements
         foreach ($json['elements'] as $element) {
             if ($element['type'] == 'node') {
-                if (!array_key_exists('lon', $element)) {
+                if (! array_key_exists('lon', $element)) {
                     throw new Exception('No lon (longitude) found', 1);
                 }
-                if (!array_key_exists('lat', $element)) {
+                if (! array_key_exists('lat', $element)) {
                     throw new Exception('No lat (latitude) found', 1);
                 }
                 $nodes_full[$element['id']] = [
@@ -220,11 +209,11 @@ class OsmClient
                     $element['lat'],
                 ];
             } elseif ($element['type'] == 'way') {
-                if (!array_key_exists('tags', $element)) {
+                if (! array_key_exists('tags', $element)) {
                     throw new Exception('No tags found in way', 1);
                 }
                 $properties = $element['tags'];
-                if (!array_key_exists('nodes', $element)) {
+                if (! array_key_exists('nodes', $element)) {
                     throw new Exception('No nodes found in way', 1);
                 }
                 $nodes = $element['nodes'];
@@ -264,7 +253,6 @@ class OsmClient
      *         }
      *       ]
      * }
-     * @return array
      */
     private function getPropertiesAndGeometryForRelation(array $json): array
     {
@@ -295,11 +283,11 @@ class OsmClient
             throw new Exception('It seems that relation has no nodes in elements');
         }
 
-        if (!array_key_exists('members', $relation)) {
+        if (! array_key_exists('members', $relation)) {
             throw new Exception('It seems that relation has no members');
         }
 
-        if (!array_key_exists('tags', $relation)) {
+        if (! array_key_exists('tags', $relation)) {
             throw new Exception('It seems that relation has no tags');
         }
 
@@ -308,12 +296,12 @@ class OsmClient
         foreach ($ways as $way) {
             $first = $way['nodes'][0];
             $last = end($way['nodes']);
-            if (!array_key_exists($first, $border_nodes_counter)) {
+            if (! array_key_exists($first, $border_nodes_counter)) {
                 $border_nodes_counter[$first] = 1;
             } else {
                 $border_nodes_counter[$first] = $border_nodes_counter[$first] + 1;
             }
-            if (!array_key_exists($last, $border_nodes_counter)) {
+            if (! array_key_exists($last, $border_nodes_counter)) {
                 $border_nodes_counter[$last] = 1;
             } else {
                 $border_nodes_counter[$last] = $border_nodes_counter[$last] + 1;
@@ -331,7 +319,7 @@ class OsmClient
 
         // Check roundtrip
         $roundtrip = false;
-        if (!array_key_exists(1, $values_count)) {
+        if (! array_key_exists(1, $values_count)) {
             $roundtrip = true;
         }
 
@@ -419,16 +407,15 @@ class OsmClient
      * way member has timestamp 01-01-2001 the return value will be 01-01-2001 and NOT 01-01-2000
      *
      * @param  array  $json Json array response from node/way/relation full API (v06)
-     * @return string
      */
     public function getUpdatedAt(array $json): string
     {
-        if (!array_key_exists('elements', $json)) {
+        if (! array_key_exists('elements', $json)) {
             throw new Exception('Json ARRAY has not elements key, something is wrong.', 1);
         }
         $updated_at = [];
         foreach ($json['elements'] as $element) {
-            if (!array_key_exists('timestamp', $element)) {
+            if (! array_key_exists('timestamp', $element)) {
                 throw new Exception('An element has no TIMESTAMP key', 1);
             }
             $updated_at[] = strtotime($element['timestamp']);

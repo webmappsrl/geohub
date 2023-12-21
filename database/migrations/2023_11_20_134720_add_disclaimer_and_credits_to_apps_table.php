@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddDisclaimerAndCreditsToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -44,7 +44,7 @@ class AddDisclaimerAndCreditsToAppsTable extends Migration
                     ->update(['page_project' => $record->page_project]);
             }
 
-            $table->dropColumn(array('page_disclaimer', 'page_credits'));
+            $table->dropColumn(['page_disclaimer', 'page_credits']);
         });
     }
-}
+};

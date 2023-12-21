@@ -9,13 +9,14 @@ use App\Models\TaxonomyActivity;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EcTrackHasDifficultyTest extends TestCase {
+class EcTrackHasDifficultyTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -24,7 +25,8 @@ class EcTrackHasDifficultyTest extends TestCase {
         });
     }
 
-    public function testEcTrackDownloadGeojson() {
+    public function testEcTrackDownloadGeojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -33,7 +35,8 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $json['properties']['difficulty']['en']);
     }
 
-    public function testEcTrack() {
+    public function testEcTrack()
+    {
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
@@ -42,7 +45,8 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $json['properties']['difficulty']['en']);
     }
 
-    public function testEcTrackGeojson() {
+    public function testEcTrackGeojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -51,7 +55,8 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $json['properties']['difficulty']['en']);
     }
 
-    public function testAppElbrusGeojson() {
+    public function testAppElbrusGeojson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
@@ -60,7 +65,8 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $json['properties']['difficulty']['en']);
     }
 
-    public function testAppElbrusJson() {
+    public function testAppElbrusJson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('difficulty', $json);
@@ -68,11 +74,12 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $json['difficulty']['en']);
     }
 
-    public function testAppElbrusTaxonomies() {
+    public function testAppElbrusTaxonomies()
+    {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
         $difficulty = [
             'it' => 'alta',
-            'en' => 'high'
+            'en' => 'high',
         ];
 
         $user = User::factory()->create();
@@ -108,7 +115,7 @@ class EcTrackHasDifficultyTest extends TestCase {
         $fields = [
             'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent', 'difficulty',
             'ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward',
-            'image', 'imageGallery'
+            'image', 'imageGallery',
         ];
 
         foreach ($fields as $field) {
@@ -120,10 +127,11 @@ class EcTrackHasDifficultyTest extends TestCase {
         $this->assertEquals('high', $tracks[1]['difficulty']['en']);
     }
 
-    public function _getJsonTrack($route_name) {
+    public function _getJsonTrack($route_name)
+    {
         $difficulty = [
             'it' => 'alta',
-            'en' => 'high'
+            'en' => 'high',
         ];
         $track = EcTrack::factory()->create(['difficulty' => $difficulty]);
         if (preg_match('/elbrus/', $route_name)) {

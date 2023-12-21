@@ -11,7 +11,6 @@ class ForceDeleteLensResourceRequest extends LensResourceDeletionRequest
      * Get the selected models for the action in chunks.
      *
      * @param  int  $count
-     * @param  \Closure  $callback
      * @return mixed
      */
     public function chunks($count, Closure $callback)
@@ -24,14 +23,13 @@ class ForceDeleteLensResourceRequest extends LensResourceDeletionRequest
     /**
      * Get the models that may be deleted.
      *
-     * @param  \Illuminate\Support\Collection  $models
      * @return \Illuminate\Support\Collection
      */
     protected function deletableModels(Collection $models)
     {
         return $models->mapInto($this->resource())
-                        ->filter
-                        ->authorizedToForceDelete($this)
-                        ->map->model();
+            ->filter
+            ->authorizedToForceDelete($this)
+            ->map->model();
     }
 }

@@ -1,14 +1,13 @@
 <?php
 
-
 namespace Laravel\Nova\Tools;
 
-use App\Nova\OverlayLayer;
 use App\Nova\App;
 use App\Nova\EcMedia;
 use App\Nova\EcPoi;
 use App\Nova\EcTrack;
 use App\Nova\Layer;
+use App\Nova\OverlayLayer;
 use App\Nova\TaxonomyActivity;
 use App\Nova\TaxonomyPoiType;
 use App\Nova\TaxonomyTarget;
@@ -20,7 +19,6 @@ use App\Nova\UgcPoi;
 use App\Nova\UgcTrack;
 use App\Nova\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
 use Vyuldashev\NovaPermission\Permission;
@@ -65,7 +63,7 @@ class ResourceManager extends Tool
             EcTrack::class,
             EcPoi::class,
             Layer::class,
-            OverlayLayer::class
+            OverlayLayer::class,
         ];
 
         $UgcArray = [];
@@ -108,7 +106,6 @@ class ResourceManager extends Tool
                 $TaxonomiesArray[] = $resource;
             }
         }
-
 
         $newNavigation = collect([
             'Editorial Content' => collect($editorialContentArray),

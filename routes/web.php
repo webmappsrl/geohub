@@ -4,7 +4,6 @@ use App\Http\Controllers\EmulateUserController;
 use App\Http\Controllers\ImportController;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +26,10 @@ Route::prefix('/emulatedUser')->name('emulatedUser.')->group(function () {
 Route::post('import/geojson', [ImportController::class, 'importGeojson'])->name('import');
 Route::post('import/confirm', [ImportController::class, 'saveImport'])->name('save-import');
 
-
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
     session()->put('locale', $locale);
+
     return redirect()->back();
 });
 
@@ -39,8 +38,9 @@ Route::get('/track/{id}', function ($id) {
     if ($track == null) {
         abort(404);
     }
+
     return view('track', [
-        'track' => $track
+        'track' => $track,
     ]);
 });
 
@@ -49,8 +49,9 @@ Route::get('/track/pdf/{id}', function ($id) {
     if ($track == null) {
         abort(404);
     }
+
     return view('track-pdf', [
-        'track' => $track
+        'track' => $track,
     ]);
 })->name('track.pdf');
 
@@ -64,8 +65,9 @@ Route::get('/osf/{endpoint_slug}/{source_id}', function ($endpoint_slug, $source
     if ($track == null) {
         abort(404);
     }
+
     return view('track', [
-        'track' => $track
+        'track' => $track,
     ]);
 });
 
@@ -74,9 +76,10 @@ Route::get('/w/{type}/{id}', function ($type, $id) {
     if ($track == null) {
         abort(404);
     }
+
     return view('widget', [
         'resource' => $track,
-        'type' => 'track.' . $type
+        'type' => 'track.'.$type,
     ]);
 });
 
@@ -103,8 +106,9 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoi
     if ($resource == null) {
         abort(404);
     }
+
     return view('widget', [
         'resource' => $resource,
-        'type' => $osf_type . '.' . $type,
+        'type' => $osf_type.'.'.$type,
     ]);
 });

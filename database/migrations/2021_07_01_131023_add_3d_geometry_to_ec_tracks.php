@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
-class Add3dGeometryToEcTracks extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -32,4 +30,4 @@ class Add3dGeometryToEcTracks extends Migration
                 USING ST_force2D(geometry);';
         DB::statement($sql);
     }
-}
+};

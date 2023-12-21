@@ -28,12 +28,14 @@ class TaxonomyTheme extends Resource
      * @var string
      */
     public static $model = \App\Models\TaxonomyTheme::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -41,7 +43,7 @@ class TaxonomyTheme extends Resource
      */
     public static $search = [
         'name',
-        'identifier'
+        'identifier',
     ];
 
     public static function group()
@@ -52,7 +54,6 @@ class TaxonomyTheme extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -78,12 +79,12 @@ class TaxonomyTheme extends Resource
             Text::make('Icon', function () {
                 return $this->icon;
             })->asHtml()->onlyOnIndex(),
-            NovaIconSelect::make("Icon Label",'icon')->setIconProvider(WebmappAppIconProvider::class),
+            NovaIconSelect::make('Icon Label', 'icon')->setIconProvider(WebmappAppIconProvider::class),
             Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)->nullable()->searchable()->onlyOnForms(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                if ($url !== '' && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
 
@@ -95,7 +96,7 @@ class TaxonomyTheme extends Resource
             new Panel('UX/UI', $this->ux_ui_panel()),
 
             MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class)
-                ->searchable()
+                ->searchable(),
         ];
     }
 
@@ -126,7 +127,6 @@ class TaxonomyTheme extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -138,7 +138,6 @@ class TaxonomyTheme extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -150,7 +149,6 @@ class TaxonomyTheme extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -162,7 +160,6 @@ class TaxonomyTheme extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */

@@ -23,7 +23,7 @@ class UgcPoiStoreTest extends TestCase
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
-            'app_id' => 'it.webmapp.test'
+            'app_id' => 'it.webmapp.test',
         ])->create();
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -32,8 +32,8 @@ class UgcPoiStoreTest extends TestCase
         });
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
+            'type' => 'Point',
+            'coordinates' => [10, 44],
         ];
 
         $data = [
@@ -41,12 +41,12 @@ class UgcPoiStoreTest extends TestCase
             'properties' => [
                 'app_id' => 'it.webmapp.test',
                 'name' => $this->faker->name(),
-                'description' => $this->faker->text()
+                'description' => $this->faker->text(),
             ],
-            'geometry' => $geometry
+            'geometry' => $geometry,
         ];
 
-        $response = $this->post(route("api.ugc.poi.store"), $data);
+        $response = $this->post(route('api.ugc.poi.store'), $data);
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
@@ -67,7 +67,7 @@ class UgcPoiStoreTest extends TestCase
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->post(route("api.ugc.poi.store", $data));
+        $response = $this->post(route('api.ugc.poi.store', $data));
         $response->assertStatus(401);
     }
 
@@ -75,7 +75,7 @@ class UgcPoiStoreTest extends TestCase
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
-            'app_id' => 'it.webmapp.test'
+            'app_id' => 'it.webmapp.test',
         ])->create();
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -86,8 +86,8 @@ class UgcPoiStoreTest extends TestCase
 
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "Point",
-            "coordinates" => [10, 44]
+            'type' => 'Point',
+            'coordinates' => [10, 44],
         ];
 
         $data = [
@@ -96,12 +96,12 @@ class UgcPoiStoreTest extends TestCase
                 'app_id' => 'it.webmapp.test',
                 'name' => $this->faker->name(),
                 'description' => $this->faker->text(),
-                'image_gallery' => $medias->pluck('id')->toArray()
+                'image_gallery' => $medias->pluck('id')->toArray(),
             ],
-            'geometry' => $geometry
+            'geometry' => $geometry,
         ];
 
-        $response = $this->post(route("api.ugc.poi.store"), $data);
+        $response = $this->post(route('api.ugc.poi.store'), $data);
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);

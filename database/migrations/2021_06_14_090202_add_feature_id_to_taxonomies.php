@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFeatureIdToTaxonomies extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -86,4 +86,4 @@ class AddFeatureIdToTaxonomies extends Migration
             $table->dropColumn('feature_image')->nullable();
         });
     }
-}
+};

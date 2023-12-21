@@ -11,17 +11,16 @@ class AssociatableController extends Controller
     /**
      * List the available related resources for a given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(NovaRequest $request)
     {
         $field = $request->newResource()
-                    ->availableFields($request)
-                    ->whereInstanceOf(RelatableField::class)
-                    ->findFieldByAttribute($request->field, function () {
-                        abort(404);
-                    });
+            ->availableFields($request)
+            ->whereInstanceOf(RelatableField::class)
+            ->findFieldByAttribute($request->field, function () {
+                abort(404);
+            });
 
         $withTrashed = $this->shouldIncludeTrashed(
             $request, $associatedResource = $field->resourceClass
@@ -33,15 +32,15 @@ class AssociatableController extends Controller
 
         return [
             'resources' => $field->buildAssociatableQuery($request, $withTrashed)
-                        ->take($limit)
-                        ->get()
-                        ->mapInto($field->resourceClass)
-                        ->filter->authorizedToAdd($request, $request->model())
-                        ->map(function ($resource) use ($request, $field) {
-                            return $field->formatAssociatableResource($request, $resource);
-                        })->when(optional($field)->shouldReorderAssociatableValues($request) ?? true, function ($collection) {
-                            return $collection->sortBy('display');
-                        })->values(),
+                ->take($limit)
+                ->get()
+                ->mapInto($field->resourceClass)
+                ->filter->authorizedToAdd($request, $request->model())
+                ->map(function ($resource) use ($request, $field) {
+                    return $field->formatAssociatableResource($request, $resource);
+                })->when(optional($field)->shouldReorderAssociatableValues($request) ?? true, function ($collection) {
+                    return $collection->sortBy('display');
+                })->values(),
             'softDeletes' => $associatedResource::softDeletes(),
             'withTrashed' => $withTrashed,
         ];
@@ -50,7 +49,6 @@ class AssociatableController extends Controller
     /**
      * Determine if the query should include trashed models.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $associatedResource
      * @return bool
      */

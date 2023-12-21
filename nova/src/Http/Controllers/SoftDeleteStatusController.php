@@ -10,7 +10,6 @@ class SoftDeleteStatusController extends Controller
     /**
      * Determine if the resource is soft deleting.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function show(NovaRequest $request)

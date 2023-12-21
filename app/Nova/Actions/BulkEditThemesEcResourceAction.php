@@ -4,7 +4,6 @@ namespace App\Nova\Actions;
 
 use App\Models\TaxonomyTheme;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
@@ -19,8 +18,6 @@ class BulkEditThemesEcResourceAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -42,8 +39,8 @@ class BulkEditThemesEcResourceAction extends Action
     {
         return [
             Select::make('Taxonomy Themes', 'taxonomy_theme')->options(TaxonomyTheme::all()->pluck('name', 'id'))
-            ->displayUsingLabels()
-            ->searchable()
+                ->displayUsingLabels()
+                ->searchable(),
         ];
     }
 

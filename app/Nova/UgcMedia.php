@@ -2,9 +2,7 @@
 
 namespace App\Nova;
 
-use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
 use App\Nova\Filters\AppFilter;
-use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -24,27 +22,27 @@ class UgcMedia extends Resource
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\UgcMedia::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
-     * The columns that should be searched. 
+     * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name', 'app_id'
+        'name', 'app_id',
     ];
 
     public static array $searchRelations = [
-        'taxonomy_wheres' => ['name']
+        'taxonomy_wheres' => ['name'],
     ];
 
     public static function group()
@@ -55,7 +53,6 @@ class UgcMedia extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -64,15 +61,12 @@ class UgcMedia extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -95,7 +89,7 @@ class UgcMedia extends Resource
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
+                    'related' => $model->getRelatedUgcGeojson(),
                 ];
             })->onlyOnDetail(),
         ];
@@ -103,10 +97,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -115,10 +105,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -133,10 +119,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -145,10 +127,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {

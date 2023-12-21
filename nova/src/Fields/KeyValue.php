@@ -65,7 +65,6 @@ class KeyValue extends Field
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute
@@ -133,7 +132,6 @@ class KeyValue extends Field
     /**
      * Determine if the keys are readonly.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return bool
      */
     public function readonlyKeys(NovaRequest $request)

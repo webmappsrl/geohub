@@ -8,53 +8,50 @@ use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Providers\HoquServiceProvider;
 use App\Traits\UGCFeatureCollectionTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Exception;
 
 class UgcPoiController extends Controller
 {
     use UGCFeatureCollectionTrait;
+
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
      *
      * @return Response
      */
-       public function index(Request $request) {
+    public function index(Request $request)
+    {
         $user = auth('api')->user();
         if (isset($user)) {
-            
-            if (!empty($request->header('app-id'))) {
+
+            if (! empty($request->header('app-id'))) {
                 $app = App::find($request->header('app-id'));
-                $pois = UgcPoi::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $pois = UgcPoi::where([['user_id', $user->id], ['app_id', $app->app_id]])->orderByRaw('updated_at DESC')->get();
+
                 return $this->getUGCFeatureCollection($pois);
             }
 
             $pois = UgcPoi::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+
             return $this->getUGCFeatureCollection($pois);
         } else {
             return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
         }
-       }
+    }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return Response
      */
     //    public function create() {
     //    }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function store(Request $request): Response
     {
@@ -70,26 +67,30 @@ class UgcPoiController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 400);
+        }
 
         $user = auth('api')->user();
-        if (is_null($user))
+        if (is_null($user)) {
             return response(['error' => 'User not authenticated'], 403);
+        }
 
         $poi = new UgcPoi();
         $poi->name = $data['properties']['name'];
-        if (isset($data['properties']['description']))
+        if (isset($data['properties']['description'])) {
             $poi->description = $data['properties']['description'];
-        $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
+        }
+        $poi->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($data['geometry']).")')");
         $poi->user_id = $user->id;
 
         if (isset($data['properties']['app_id'])) {
             $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            if (!is_null($app))
+            if (! is_null($app)) {
                 $poi->app_id = $app->app_id;
-            else
+            } else {
                 $poi->app_id = $data['properties']['app_id'];
+            }
         }
 
         unset($data['properties']['name']);
@@ -100,8 +101,9 @@ class UgcPoiController extends Controller
 
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
             foreach ($data['properties']['image_gallery'] as $imageId) {
-                if (!!UgcMedia::find($imageId))
+                if ((bool) UgcMedia::find($imageId)) {
                     $poi->ugc_media()->attach($imageId);
+                }
             }
         }
 
@@ -114,14 +116,14 @@ class UgcPoiController extends Controller
             $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
         } catch (\Exception $e) {
         }
+
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param UgcPoi $ugcPoi
-     *
+     * @param  UgcPoi  $ugcPoi
      * @return Response
      */
     //    public function show(UgcPoi $ugcPoi) {
@@ -130,8 +132,7 @@ class UgcPoiController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param UgcPoi $ugcPoi
-     *
+     * @param  UgcPoi  $ugcPoi
      * @return Response
      */
     //    public function edit(UgcPoi $ugcPoi) {
@@ -140,9 +141,8 @@ class UgcPoiController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param UgcPoi  $ugcPoi
-     *
+     * @param  Request  $request
+     * @param  UgcPoi  $ugcPoi
      * @return Response
      */
     //    public function update(Request $request, UgcPoi $ugcPoi) {
@@ -151,8 +151,7 @@ class UgcPoiController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param UgcPoi $ugcPoi
-     *
+     * @param  UgcPoi  $ugcPoi
      * @return Response
      */
     public function destroy($id)
@@ -163,9 +162,10 @@ class UgcPoiController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => "this waypoint can't be deleted by api",
-                'code' => 400
+                'code' => 400,
             ], 400);
         }
+
         return response()->json(['success' => 'waypoint deleted']);
     }
 }

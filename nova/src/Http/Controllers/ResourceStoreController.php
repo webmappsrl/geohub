@@ -22,7 +22,6 @@ class ResourceStoreController extends Controller
     /**
      * Create a new resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\CreateResourceRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function handle(CreateResourceRequest $request)
@@ -65,8 +64,6 @@ class ResourceStoreController extends Controller
     /**
      * Save the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\CreateResourceRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return void
      */
     protected function storeResource(CreateResourceRequest $request, Model $model)

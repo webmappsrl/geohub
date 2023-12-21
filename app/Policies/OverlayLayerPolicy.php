@@ -13,7 +13,6 @@ class OverlayLayerPolicy
     /**
      * Perform pre-authorization checks.
      *
-     * @param  \App\Models\User  $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -30,7 +29,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user)
@@ -41,8 +39,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, OverlayLayer $overlayLayer)
@@ -53,7 +49,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user)
@@ -64,8 +59,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, OverlayLayer $overlayLayer)
@@ -76,8 +69,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, OverlayLayer $overlayLayer)
@@ -88,8 +79,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, OverlayLayer $overlayLayer)
@@ -100,8 +89,6 @@ class OverlayLayerPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OverlayLayer  $overlayLayer
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, OverlayLayer $overlayLayer)

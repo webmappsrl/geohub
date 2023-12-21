@@ -3,19 +3,19 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Models\OutSourceFeature;
-use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
 {
     use ImporterAndSyncTrait;
+
     // DATA array
     protected array $params;
+
     protected array $tags;
+
     protected string $mediaGeom;
 
     /**
@@ -47,7 +47,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
                 'osm2cai_status',
                 'issues_status',
                 'issues_description',
-                'issues_last_update'
+                'issues_last_update',
             ])
             ->first();
 
@@ -64,6 +64,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $this->params['tags'] = $this->tags;
         Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
         Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+
         return $this->create_or_update_feature($this->params);
     }
 
@@ -86,7 +87,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
     /**
      * It updateOrCreate method of the class OutSourceFeature
      *
-     * @param array $params The OutSourceFeature parameters to be added or updated
+     * @param  array  $params The OutSourceFeature parameters to be added or updated
      * @return int The ID of OutSourceFeature created
      */
     protected function create_or_update_feature(array $params)
@@ -95,18 +96,18 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint
+                'endpoint' => $this->endpoint,
             ],
             $params
         );
+
         return $feature->id;
     }
 
     /**
      * It populates the tags variable with the track curl information so that it can be syncronized with EcTrack
      *
-     * @param object $track The OutSourceFeature parameters to be added or updated
-     *
+     * @param  object  $track The OutSourceFeature parameters to be added or updated
      */
     protected function prepareTrackTagsJson($track)
     {
@@ -116,11 +117,11 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         }
         $this->tags['description']['it'] = '';
         if ($track->description) {
-            $this->tags['description']['it'] = $track->description .'<br>';
+            $this->tags['description']['it'] = $track->description.'<br>';
         }
         if ($track->osm2cai_status) {
             $this->tags['sda'] = $track->osm2cai_status;
-            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' .$track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
+            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>'.$track->osm2cai_status.'</strong> ('.$this->getSDADescription($track->osm2cai_status).')<br>';
         }
         $this->tags['description']['it'] .= "<a href='https://osm2cai.cai.it/resources/hiking-routes/$track->id' target='_blank'>Modifica questo percorso</a>";
         if ($track->note) {
@@ -152,8 +153,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
     /**
      * It populates the tags variable with the POI curl information so that it can be syncronized with EcPOI
      *
-     * @param array $poi The OutSourceFeature parameters to be added or updated
-     *
+     * @param  array  $poi The OutSourceFeature parameters to be added or updated
      */
     protected function preparePOITagsJson($poi)
     {
@@ -163,8 +163,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
     /**
      * It populates the tags variable of media so that it can be syncronized with EcMedia
      *
-     * @param array $media The OutSourceFeature parameters to be added or updated
-     *
+     * @param  array  $media The OutSourceFeature parameters to be added or updated
      */
     public function prepareMediaTagsJson($media)
     {
@@ -174,8 +173,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
     /**
      * It returns the description of the osm2cai status
      *
-     * @param integer $sda track osm2cai status
-     *
+     * @param  int  $sda track osm2cai status
      */
     public function getSDADescription($sda)
     {
@@ -197,6 +195,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
                 $description = 'Percorsi importati in INFOMONT';
                 break;
         }
+
         return $description;
     }
 }

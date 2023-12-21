@@ -17,11 +17,11 @@ use App\Classes\OutSourceImporter\OutSourceImporterListSentieriSardegna;
 use App\Classes\OutSourceImporter\OutSourceImporterListSICAI;
 use App\Classes\OutSourceImporter\OutSourceImporterListSisteco;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
-use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use App\Models\OutSourceFeature;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -47,8 +47,11 @@ class OutSourceImporterUpdatedAtCommand extends Command
     protected $description = 'Import data from external source';
 
     protected $type;
+
     protected $endpoint;
+
     protected $single_feature;
+
     protected $only_related_url;
 
     /**
@@ -125,7 +128,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $last_modified) {
-                Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureWP($this->type, $this->endpoint, $id, $this->only_related_url);
                 $OSF_id = $OSF->importFeature();
                 Log::info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
@@ -144,7 +147,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $last_modified) {
-                Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureStorageCSV($this->type, $this->endpoint, $id);
                 $OSF_id = $OSF->importFeature();
                 Log::info("OutSourceImporterFeatureStorageCSV::importFeature() returns $OSF_id");
@@ -163,7 +166,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
             $count = 1;
             if (strpos($this->endpoint, '.txt')) {
                 foreach ($features_list as $id => $date) {
-                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureOSM2CAI($this->type, $this->endpoint, $id);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
@@ -171,7 +174,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
                 }
             } else {
                 foreach ($features_list as $id) {
-                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureOSM2CAI($this->type, $this->endpoint, $id);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
@@ -195,7 +198,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $date) {
-                Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureSICAI($this->type, $this->endpoint, $id);
                 $OSF_id = $OSF->importFeature();
                 Log::info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
@@ -219,8 +222,8 @@ class OutSourceImporterUpdatedAtCommand extends Command
             $count = 1;
             if ($this->type == 'track') {
                 foreach ($features_list as $count => $feature) {
-                    if (empty($all) || !array_key_exists($feature['id'], $all) || $all[$feature['id']] < Carbon::parse($feature['updated_at'])) {
-                        Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    if (empty($all) || ! array_key_exists($feature['id'], $all) || $all[$feature['id']] < Carbon::parse($feature['updated_at'])) {
+                        Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                         $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $feature['id'], $this->only_related_url);
                         $OSF_id = $OSF->importFeature();
                         Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
@@ -231,8 +234,8 @@ class OutSourceImporterUpdatedAtCommand extends Command
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    if (empty($all) || !array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
-                        Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    if (empty($all) || ! array_key_exists($id, $all) || $all[$id] < Carbon::parse($updated_at)) {
+                        Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                         $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $id, $this->only_related_url);
                         $OSF_id = $OSF->importFeature();
                         Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
@@ -247,7 +250,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
 
     private function importerOSMPoi()
     {
-        if($this->type != 'poi') {
+        if ($this->type != 'poi') {
             throw new Exception('Only POI type supported by importerOSMPoi');
         }
         if ($this->single_feature) {
@@ -259,7 +262,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $updated_at) {
-                Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureOSMPoi($this->type, $this->endpoint, $id);
                 $OSF_id = $OSF->importFeature();
                 Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
@@ -284,8 +287,8 @@ class OutSourceImporterUpdatedAtCommand extends Command
             $osf_list = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
             $count = 1;
             foreach ($source_list as $id => $updated_at) {
-                if (empty($osf_list) || !array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
-                    Log::info('Start importing ' . $this->type . ' number ' . $count);
+                if (empty($osf_list) || ! array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
+                    Log::info('Start importing '.$this->type.' number '.$count);
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
@@ -309,7 +312,7 @@ class OutSourceImporterUpdatedAtCommand extends Command
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    Log::info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureSisteco($this->type, $this->endpoint, $id, $this->only_related_url);
                     $OSF_id = $OSF->importFeature();
                     Log::info("OutSourceImporterFeatureSisteco::importFeature() returns $OSF_id");

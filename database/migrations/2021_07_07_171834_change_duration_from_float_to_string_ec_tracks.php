@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-class ChangeDurationFromFloatToStringEcTracks extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -29,4 +27,4 @@ class ChangeDurationFromFloatToStringEcTracks extends Migration
         DB::statement('ALTER TABLE ec_tracks  ALTER COLUMN duration_backward TYPE FLOAT USING duration_forward::double precision');
 
     }
-}
+};

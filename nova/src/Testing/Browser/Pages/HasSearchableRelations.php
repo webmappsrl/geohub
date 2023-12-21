@@ -11,7 +11,6 @@ trait HasSearchableRelations
     /**
      * Search for the given value for a searchable relationship attribute.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  string  $search
      * @return void
@@ -24,7 +23,6 @@ trait HasSearchableRelations
     /**
      * Select the currently highlighted searchable relation.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @return void
      */
@@ -36,7 +34,6 @@ trait HasSearchableRelations
     /**
      * Select the currently highlighted searchable relation.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @return void
      */
@@ -48,7 +45,6 @@ trait HasSearchableRelations
     /**
      * Select the currently highlighted searchable relation.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @return void
      */
@@ -60,7 +56,6 @@ trait HasSearchableRelations
     /**
      * Search and select the currently highlighted searchable relation.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  string  $search
      * @return void
@@ -73,7 +68,6 @@ trait HasSearchableRelations
     /**
      * Indicate that trashed relations should be included in the search results.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $resourceName
      * @return void
      */
@@ -90,7 +84,6 @@ trait HasSearchableRelations
     /**
      * Indicate that trashed relations should not be included in the search results.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $resourceName
      * @return void
      */

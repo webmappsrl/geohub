@@ -7,20 +7,18 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Partition;
 use Laravel\Nova\Metrics\PartitionResult;
 
-class UserReferrers extends Partition {
+class UserReferrers extends Partition
+{
     /**
      * Calculate the value of the metric.
-     *
-     * @param NovaRequest $request
-     *
-     * @return PartitionResult
      */
-    public function calculate(NovaRequest $request): PartitionResult {
+    public function calculate(NovaRequest $request): PartitionResult
+    {
         return $this->count($request, User::class, 'referrer')
             ->label(function ($value) {
-                if ($value == null)
+                if ($value == null) {
                     return 'None';
-                else {
+                } else {
                     $str = $value;
                     if (substr($value, 0, 10) == 'it.webmapp') {
                         $array = explode('.', $value);
@@ -28,7 +26,7 @@ class UserReferrers extends Partition {
                         $str = end($array);
                     }
 
-                    return substr($str, 0, 10) . '...';
+                    return substr($str, 0, 10).'...';
                 }
             });
     }
@@ -38,16 +36,16 @@ class UserReferrers extends Partition {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
     /**
      * Get the URI key for the metric.
-     *
-     * @return string
      */
-    public function uriKey(): string {
+    public function uriKey(): string
+    {
         return 'user-referrers';
     }
 }

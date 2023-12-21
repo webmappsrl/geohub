@@ -3,20 +3,22 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Models\OutSourceFeature;
-use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 {
     use ImporterAndSyncTrait;
+
     // DATA array
     protected array $params;
+
     protected array $tags;
+
     protected string $mediaGeom;
+
     protected string $poi_type;
 
     /**
@@ -46,6 +48,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             $this->params['tags'] = $this->tags;
             Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
             Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             array_push($error_not_created, $url);
@@ -79,7 +82,6 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         }
         $poi = $this->curlRequest($url);
 
-
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
@@ -96,6 +98,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             $this->params['tags'] = $this->tags;
             Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
             Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
+
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             Log::info('Error creating OSF : '.$e);
@@ -110,7 +113,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
     /**
      * It updateOrCreate method of the class OutSourceFeature
      *
-     * @param array $params The OutSourceFeature parameters to be added or updated
+     * @param  array  $params The OutSourceFeature parameters to be added or updated
      * @return int The ID of OutSourceFeature created
      */
     protected function create_or_update_feature(array $params)
@@ -119,18 +122,18 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint
+                'endpoint' => $this->endpoint,
             ],
             $params
         );
+
         return $feature->id;
     }
 
     /**
      * It populates the tags variable with the track curl information so that it can be syncronized with EcTrack
      *
-     * @param array $track The OutSourceFeature parameters to be added or updated
-     *
+     * @param  array  $track The OutSourceFeature parameters to be added or updated
      */
     protected function prepareTrackTagsJson($track)
     {
@@ -138,7 +141,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         if (isset($track['properties']['name'])) {
             $trackname = html_entity_decode($track['properties']['name']);
         } else {
-            $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
+            $trackname = $track['properties']['ref'].' - '.$track['properties']['member_acronym'];
         }
         $this->tags['name']['it'] = $trackname;
 
@@ -148,7 +151,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 
         if (isset($track['properties']['url'])) {
             $urlarray = explode(',', $track['properties']['url']);
-            foreach($urlarray as $url) {
+            foreach ($urlarray as $url) {
                 $related_url_name = parse_url($url);
                 if (isset($related_url_name['host'])) {
                     $this->tags['related_url'][$related_url_name['host']] = $url;
@@ -162,8 +165,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
     /**
      * It populates the tags variable with the POI curl information so that it can be syncronized with EcPOI
      *
-     * @param array $poi The OutSourceFeature parameters to be added or updated
-     *
+     * @param  array  $poi The OutSourceFeature parameters to be added or updated
      */
     protected function preparePOITagsJson($poi)
     {
@@ -259,10 +261,10 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
                         $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.$db['mobile_app_name'].'</strong></td></tr>';
                     }
                     if (isset($db['mobile_app_os'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.implode(", ", $db['mobile_app_os']).'</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.implode(', ', $db['mobile_app_os']).'</strong></td></tr>';
                     }
                     if (isset($db['access'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Access:</td><td style="width: 48.6%;"><strong>'.str_replace("_", " ", $db['access']).'</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Access:</td><td style="width: 48.6%;"><strong>'.str_replace('_', ' ', $db['access']).'</strong></td></tr>';
                     }
                     if (isset($db['offline'])) {
                         $poidescription .= '<tr><td style="width: 48.6%;">Offline:</td><td style="width: 48.6%;"><strong>'.$db['offline'].'</strong></td></tr>';
@@ -274,7 +276,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
                         $poidescription .= '<tr><td style="width: 48.6%;">Scope:</td><td style="width: 48.6%;"><strong>'.$db['scope'].'</strong></td></tr>';
                     }
                     if (isset($db['contribution'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Contribution:</td><td style="width: 48.6%;"><strong>'.str_replace("_", " ", $db['contribution']).'</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Contribution:</td><td style="width: 48.6%;"><strong>'.str_replace('_', ' ', $db['contribution']).'</strong></td></tr>';
                     }
                     if (isset($db['languages'])) {
                         $poidescription .= '<tr><td style="width: 48.6%;">Languages:</td><td style="width: 48.6%;"><strong>'.$db['languages'].'</strong></td></tr>';
@@ -326,7 +328,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         }
         if (isset($poi['properties']['url'])) {
             $urlarray = explode(',', $poi['properties']['url']);
-            foreach($urlarray as $url) {
+            foreach ($urlarray as $url) {
                 $related_url_name = parse_url($url);
                 if (isset($related_url_name['host'])) {
                     $this->tags['related_url'][$related_url_name['host']] = $url;
@@ -335,7 +337,6 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
                 }
             }
         }
-
 
         // Processing the poi_type
         Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);

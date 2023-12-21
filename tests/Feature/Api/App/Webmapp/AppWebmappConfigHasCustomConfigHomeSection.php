@@ -5,12 +5,10 @@ namespace Tests\Feature\Api\App\Webmapp;
 use App\Models\App;
 use App\Models\Layer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AppWebmappConfigHasCustomConfigHomeSection extends TestCase
 {
-    
     use RefreshDatabase;
 
     /** @test */
@@ -19,18 +17,21 @@ class AppWebmappConfigHasCustomConfigHomeSection extends TestCase
         $app = App::factory()->
           create([
               'api' => 'webmapp',
-              'config_home'=>$this->getConfigHome()
-            ]);
-        $l1 = Layer::factory()->create(['app_id'=>$app->id]);
-        $l1->rank=3;$l1->save();
+              'config_home' => $this->getConfigHome(),
+          ]);
+        $l1 = Layer::factory()->create(['app_id' => $app->id]);
+        $l1->rank = 3;
+        $l1->save();
 
-        $l2 = Layer::factory()->create(['app_id'=>$app->id]);
-        $l2->rank=2;$l2->save();
+        $l2 = Layer::factory()->create(['app_id' => $app->id]);
+        $l2->rank = 2;
+        $l2->save();
 
-        $l3 = Layer::factory()->create(['app_id'=>$app->id]);
-        $l3->rank=1;$l3->save();
+        $l3 = Layer::factory()->create(['app_id' => $app->id]);
+        $l3->rank = 1;
+        $l3->save();
 
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webmapp/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
 
         $json = json_decode($result->getContent());
@@ -38,13 +39,14 @@ class AppWebmappConfigHasCustomConfigHomeSection extends TestCase
         $this->assertTrue(isset($json->HOME));
         $this->assertIsArray($json->HOME);
         $title = $json->HOME[0];
-        $this->assertEquals('title',$json->HOME[0]->box_type);
-        $this->assertEquals('Parco Maremma APP - testing',$json->HOME[0]->title);
+        $this->assertEquals('title', $json->HOME[0]->box_type);
+        $this->assertEquals('Parco Maremma APP - testing', $json->HOME[0]->title);
 
     }
 
-    private function getConfigHome() {
-        $string = <<<EOF
+    private function getConfigHome()
+    {
+        $string = <<<'EOF'
         {
             "HOME": [
               {
@@ -88,5 +90,4 @@ class AppWebmappConfigHasCustomConfigHomeSection extends TestCase
 
         return $string;
     }
-
 }

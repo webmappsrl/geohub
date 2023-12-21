@@ -51,8 +51,8 @@ class ID extends Field
 
         $field = transform(
             $resource->buildAvailableFields(app(NovaRequest::class), $methods)
-                    ->whereInstanceOf(self::class)
-                    ->first(),
+                ->whereInstanceOf(self::class)
+                ->first(),
             function ($field) use ($model) {
                 return tap($field)->resolve($model);
             },

@@ -9,7 +9,7 @@ use Laravel\Nova\Metrics\HasHelpText;
 
 class Panel extends MergeValue implements JsonSerializable
 {
-    use Macroable, Metable, Makeable, HasHelpText;
+    use HasHelpText, Macroable, Makeable, Metable;
 
     /**
      * The name of the panel.

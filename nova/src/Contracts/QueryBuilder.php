@@ -18,17 +18,14 @@ interface QueryBuilder
     /**
      * Build a "search" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string|null  $search
-     * @param  array  $filters
-     * @param  array  $orderings
      * @param  string  $withTrashed
      * @return $this
      */
     public function search(NovaRequest $request, $query, $search = null,
-                                      array $filters = [], array $orderings = [],
-                                      $withTrashed = TrashedStatus::DEFAULT);
+        array $filters = [], array $orderings = [],
+        $withTrashed = TrashedStatus::DEFAULT);
 
     /**
      * Set the "limit" for the search query.

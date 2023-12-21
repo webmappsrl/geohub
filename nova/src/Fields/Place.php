@@ -27,13 +27,13 @@ class Place extends Text
         parent::__construct($name, $attribute, $resolveCallback);
 
         $this->secondAddressLine('address_line_2')
-             ->city('city')
-             ->state('state')
-             ->postalCode('postal_code')
-             ->suburb('suburb')
-             ->country('country')
-             ->latitude('latitude')
-             ->longitude('longitude');
+            ->city('city')
+            ->state('state')
+            ->postalCode('postal_code')
+            ->suburb('suburb')
+            ->country('country')
+            ->latitude('latitude')
+            ->longitude('longitude');
     }
 
     /**
@@ -64,7 +64,6 @@ class Place extends Text
     /**
      * Set the countries to search within.
      *
-     * @param  array  $countries
      * @return $this
      */
     public function countries(array $countries)

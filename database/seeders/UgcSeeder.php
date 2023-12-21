@@ -18,8 +18,8 @@ class UgcSeeder extends Seeder
     {
         // User
 
-      UgcPoi::factory(100)->create();
-      UgcTrack::factory(100)->create();
-      UgcMedia::factory(100)->create();
+        UgcPoi::factory(100)->create();
+        UgcTrack::factory(100)->create();
+        UgcMedia::factory(100)->create();
     }
 }

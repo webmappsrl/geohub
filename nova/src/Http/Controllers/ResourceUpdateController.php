@@ -21,7 +21,6 @@ class ResourceUpdateController extends Controller
     /**
      * Create a new resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\UpdateResourceRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function handle(UpdateResourceRequest $request)
@@ -63,7 +62,6 @@ class ResourceUpdateController extends Controller
     /**
      * Determine if the model has been updated since it was retrieved.
      *
-     * @param  \Laravel\Nova\Http\Requests\UpdateResourceRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return bool
      */

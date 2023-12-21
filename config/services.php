@@ -18,6 +18,7 @@ return [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'scheme' => 'https',
     ],
 
     'postmark' => [
@@ -42,10 +43,9 @@ return [
         'ecTracks' => [
             'validHeaders' => ['id', 'from', 'to', 'ele_from', 'ele_to', 'distance', 'duration_forward', 'duration_backward', 'ascent', 'descent', 'ele_min', 'ele_max', 'difficulty'],
         ],
-        'ecPois' =>
-        [
-            'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'poi_type', 'theme', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url']
-        ]
-    ]
+        'ecPois' => [
+            'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'poi_type', 'theme', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url'],
+        ],
+    ],
 
 ];

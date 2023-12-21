@@ -8,7 +8,8 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class ImportFiscalCodeFromSentieroItalia extends Command {
+class ImportFiscalCodeFromSentieroItalia extends Command
+{
     /**
      * The name and signature of the console command.
      *
@@ -17,6 +18,7 @@ class ImportFiscalCodeFromSentieroItalia extends Command {
     protected $signature = 'geohub:import_fiscal_code_from_sentiero_italia
         {--csvUri=}
     ';
+
     /**
      * The console command description.
      *
@@ -30,25 +32,27 @@ class ImportFiscalCodeFromSentieroItalia extends Command {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FileNotFoundException
      */
-    public function handle(): int {
-        Log::channel('stdout')->info("Starting fiscal code import");
+    public function handle(): int
+    {
+        Log::channel('stdout')->info('Starting fiscal code import');
         $csvUri = $this->option('csvUri');
 
-        if (!isset($csvUri))
+        if (! isset($csvUri)) {
             $csvUri = '/import/sentieroItaliaFiscalCodes.csv';
+        }
 
-        if (!Storage::disk('local')->exists($csvUri)) {
-            Log::channel('stdout')->error("Missing import file: " . Storage::disk('local')->path($csvUri));
+        if (! Storage::disk('local')->exists($csvUri)) {
+            Log::channel('stdout')->error('Missing import file: '.Storage::disk('local')->path($csvUri));
 
             return 1;
         }
@@ -57,15 +61,15 @@ class ImportFiscalCodeFromSentieroItalia extends Command {
         $headers = [];
         $count = 0;
 
-        while ($csvLine = fgetcsv($handle, 1000, ",")) {
-            if (count($headers) === 0)
+        while ($csvLine = fgetcsv($handle, 1000, ',')) {
+            if (count($headers) === 0) {
                 $headers = array_flip($csvLine);
-            else {
-                $email = $csvLine[$headers["Email"]];
-                $fiscalCode = $csvLine[$headers["Codice fiscale"]];
+            } else {
+                $email = $csvLine[$headers['Email']];
+                $fiscalCode = $csvLine[$headers['Codice fiscale']];
                 if ($fiscalCode !== 'tappasiitalia' && strlen($fiscalCode) === 16) {
                     $user = User::where('email', '=', $email)->first();
-                    if ($user && !$user->fiscal_code) {
+                    if ($user && ! $user->fiscal_code) {
                         $user->fiscal_code = strtoupper($fiscalCode);
                         $user->save();
                         $count++;

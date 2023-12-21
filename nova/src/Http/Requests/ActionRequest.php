@@ -23,11 +23,11 @@ class ActionRequest extends NovaRequest
             $hasResources = ! empty($this->resources);
 
             return $this->availableActions()
-                        ->filter(function ($action) use ($hasResources) {
-                            return $hasResources ? true : $action->isStandalone();
-                        })->first(function ($action) {
-                            return $action->uriKey() == $this->query('action');
-                        }) ?: abort($this->actionExists() ? 403 : 404);
+                ->filter(function ($action) use ($hasResources) {
+                    return $hasResources ? true : $action->isStandalone();
+                })->first(function ($action) {
+                    return $action->uriKey() == $this->query('action');
+                }) ?: abort($this->actionExists() ? 403 : 404);
         });
     }
 
@@ -79,7 +79,6 @@ class ActionRequest extends NovaRequest
      * Get the selected models for the action in chunks.
      *
      * @param  int  $count
-     * @param  \Closure  $callback
      * @return mixed
      */
     public function chunks($count, Closure $callback)
@@ -90,10 +89,10 @@ class ActionRequest extends NovaRequest
             $query->whereKey(explode(',', $this->resources))
                 ->latest($this->model()->getQualifiedKeyName());
         })->cursor()
-        ->chunk($count)
-        ->each(function ($chunk) use ($callback, &$output) {
-            $output[] = $callback($this->mapChunk($chunk));
-        });
+            ->chunk($count)
+            ->each(function ($chunk) use ($callback, &$output) {
+                $output[] = $callback($this->mapChunk($chunk));
+            });
 
         return $output;
     }
@@ -130,8 +129,8 @@ class ActionRequest extends NovaRequest
         return tap($this->findParentResource(), function ($resource) {
             abort_unless($resource->hasRelatableField($this, $this->viaRelationship), 404);
         })->model()->{$this->viaRelationship}()
-                        ->withoutGlobalScopes()
-                        ->whereIn($this->model()->getQualifiedKeyName(), explode(',', $this->resources));
+            ->withoutGlobalScopes()
+            ->whereIn($this->model()->getQualifiedKeyName(), explode(',', $this->resources));
     }
 
     /**

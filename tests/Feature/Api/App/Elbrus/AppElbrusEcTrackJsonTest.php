@@ -14,10 +14,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AppElbrusEcTrackJsonTest extends TestCase {
+class AppElbrusEcTrackJsonTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -26,34 +28,39 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         });
     }
 
-    public function testNoAppAndNoTrackReturns404() {
+    public function testNoAppAndNoTrackReturns404()
+    {
         $result = $this->getJson('/api/app/elbrus/0/geojson/ec_track_0.json', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testAppAndNoTrackReturns404() {
+    public function testAppAndNoTrackReturns404()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_0.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_0.json', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testNoAppTrackReturns404() {
+    public function testNoAppTrackReturns404()
+    {
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/0/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/0/geojson/ec_track_'.$track->id.'.json', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    public function testAppAndTrackReturns200() {
+    public function testAppAndTrackReturns200()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $this->assertEquals(200, $result->getStatusCode());
     }
 
-    public function testMappingUnderscoreAndColon() {
+    public function testMappingUnderscoreAndColon()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $this->assertEquals(200, $result->getStatusCode());
 
         // test response is geojson
@@ -70,30 +77,33 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertEquals($track->ascent, $json['ascent']);
     }
 
-    public function testSpecialIdField() {
+    public function testSpecialIdField()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $this->assertEquals(200, $result->getStatusCode());
 
         $json = json_decode($result->content(), true);
-        $this->assertEquals('ec_track_' . $track->id, $json['id']);
+        $this->assertEquals('ec_track_'.$track->id, $json['id']);
     }
 
-    public function testTaxonomyFieldWithActivity() {
+    public function testTaxonomyFieldWithActivity()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
         $track->taxonomyActivities()->attach($activity->id);
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $json = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('activity_' . $activity->id, $json['taxonomy']['activity'][0]);
+        $this->assertEquals('activity_'.$activity->id, $json['taxonomy']['activity'][0]);
     }
 
-    public function testTaxonomyFieldWithTwoActivity() {
+    public function testTaxonomyFieldWithTwoActivity()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -101,28 +111,30 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $activity1 = TaxonomyActivity::factory()->create();
         $track->taxonomyActivities()->attach($activity1->id);
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $json = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertTrue(in_array('activity_' . $activity->id, $json['taxonomy']['activity']));
-        $this->assertTrue(in_array('activity_' . $activity1->id, $json['taxonomy']['activity']));
+        $this->assertTrue(in_array('activity_'.$activity->id, $json['taxonomy']['activity']));
+        $this->assertTrue(in_array('activity_'.$activity1->id, $json['taxonomy']['activity']));
     }
 
-    public function testTaxonomyFieldWithTheme() {
+    public function testTaxonomyFieldWithTheme()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
         $theme = TaxonomyTheme::factory()->create();
         $track->taxonomyThemes()->attach($theme->id);
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $json = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('theme_' . $theme->id, $json['taxonomy']['theme'][0]);
+        $this->assertEquals('theme_'.$theme->id, $json['taxonomy']['theme'][0]);
     }
 
-    public function testTaxonomyFieldWithAllTaxonomies() {
+    public function testTaxonomyFieldWithAllTaxonomies()
+    {
         $app = App::factory()->create();
         $track = EcTrack::factory()->create();
 
@@ -141,18 +153,19 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $where = TaxonomyWhere::factory()->create();
         $track->taxonomyWheres()->attach($where->id);
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
         $json = json_decode($result->content(), true);
 
         $this->assertEquals(200, $result->getStatusCode());
-        $this->assertEquals('activity_' . $activity->id, $json['taxonomy']['activity'][0]);
-        $this->assertEquals('theme_' . $theme->id, $json['taxonomy']['theme'][0]);
-        $this->assertEquals('who_' . $who->id, $json['taxonomy']['who'][0]);
-        $this->assertEquals('when_' . $when->id, $json['taxonomy']['when'][0]);
-        $this->assertEquals('where_' . $where->id, $json['taxonomy']['where'][0]);
+        $this->assertEquals('activity_'.$activity->id, $json['taxonomy']['activity'][0]);
+        $this->assertEquals('theme_'.$theme->id, $json['taxonomy']['theme'][0]);
+        $this->assertEquals('who_'.$who->id, $json['taxonomy']['who'][0]);
+        $this->assertEquals('when_'.$when->id, $json['taxonomy']['when'][0]);
+        $this->assertEquals('where_'.$where->id, $json['taxonomy']['where'][0]);
     }
 
-    public function testFeatureImageWithImage() {
+    public function testFeatureImageWithImage()
+    {
         $media = EcMedia::factory()->create();
         $api_url = route('api.ec.media.geojson', ['id' => $media->id], true);
 
@@ -161,7 +174,7 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $ecTrack->save();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);
@@ -192,11 +205,12 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertArrayHasKey('original', $image['sizes']);
     }
 
-    public function testFeatureImageWithoutImage() {
+    public function testFeatureImageWithoutImage()
+    {
         $ecTrack = EcTrack::factory()->create();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);
@@ -207,7 +221,8 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertArrayNotHasKey('image', $json);
     }
 
-    public function testGalleryWithImage() {
+    public function testGalleryWithImage()
+    {
         $media1 = EcMedia::factory()->create();
         $media2 = EcMedia::factory()->create();
         $media3 = EcMedia::factory()->create();
@@ -222,7 +237,7 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $ecTrack->save();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);
@@ -290,11 +305,12 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertArrayHasKey('original', $gallery[2]['sizes']);
     }
 
-    public function testGalleryWithoutImage() {
+    public function testGalleryWithoutImage()
+    {
         $ecTrack = EcTrack::factory()->create();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);
@@ -305,11 +321,12 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertArrayNotHasKey('imageGallery', $json);
     }
 
-    public function testGpxField() {
+    public function testGpxField()
+    {
         $ecTrack = EcTrack::factory()->create();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);
@@ -325,11 +342,12 @@ class AppElbrusEcTrackJsonTest extends TestCase {
         $this->assertStringContainsString('.gpx', $json['gpx']);
     }
 
-    public function testKmlField() {
+    public function testKmlField()
+    {
         $ecTrack = EcTrack::factory()->create();
 
         $app = App::factory()->create();
-        $response = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $ecTrack->id . '.json', []);
+        $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$ecTrack->id.'.json', []);
 
         $content = $response->getContent();
         $this->assertJson($content);

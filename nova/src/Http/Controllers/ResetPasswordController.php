@@ -12,7 +12,6 @@ use Laravel\Nova\Nova;
 
 class ResetPasswordController extends Controller
 {
-    use ValidatesRequests;
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -25,6 +24,7 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
+    use ValidatesRequests;
 
     /**
      * Create a new controller instance.
@@ -41,7 +41,6 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string|null  $token
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

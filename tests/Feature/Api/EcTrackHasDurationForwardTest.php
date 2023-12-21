@@ -11,10 +11,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EcTrackHasDurationForwardTest extends TestCase {
+class EcTrackHasDurationForwardTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -23,7 +25,8 @@ class EcTrackHasDurationForwardTest extends TestCase {
         });
     }
 
-    public function testEcTrackDownloadGeojson() {
+    public function testEcTrackDownloadGeojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -31,7 +34,8 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $this->assertEquals(60, $json['properties']['duration_forward']);
     }
 
-    public function testEcTrack() {
+    public function testEcTrack()
+    {
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
@@ -39,7 +43,8 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $this->assertEquals(60, $json['properties']['duration_forward']);
     }
 
-    public function testEcTrackGeojson() {
+    public function testEcTrackGeojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -47,7 +52,8 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $this->assertEquals(60, $json['properties']['duration_forward']);
     }
 
-    public function testAppElbrusGeojson() {
+    public function testAppElbrusGeojson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
@@ -55,14 +61,16 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $this->assertEquals(60, $json['properties']['duration:forward']);
     }
 
-    public function testAppElbrusJson() {
+    public function testAppElbrusJson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('duration:forward', $json);
         $this->assertEquals(60, $json['duration:forward']);
     }
 
-    public function testAppElbrusTaxonomies() {
+    public function testAppElbrusTaxonomies()
+    {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
 
         $user = User::factory()->create();
@@ -98,7 +106,7 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $fields = [
             'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent', 'difficulty',
             'ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward',
-            'image', 'imageGallery'
+            'image', 'imageGallery',
         ];
 
         foreach ($fields as $field) {
@@ -108,7 +116,8 @@ class EcTrackHasDurationForwardTest extends TestCase {
         $this->assertEquals(60, $tracks[1]['duration:forward']);
     }
 
-    public function _getJsonTrack($route_name) {
+    public function _getJsonTrack($route_name)
+    {
         $track = EcTrack::factory()->create(['duration_forward' => 60]);
         if (preg_match('/elbrus/', $route_name)) {
             $app = App::factory()->create();

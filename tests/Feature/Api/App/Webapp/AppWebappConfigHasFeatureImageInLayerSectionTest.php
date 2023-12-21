@@ -14,19 +14,23 @@ use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyWhere;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AppWebappConfigHasFeatureImageInLayerSectionTest extends TestCase
 {
     private $author;
+
     private $image;
+
     private $track;
+
     private $layer;
+
     private $webapp;
 
     use RefreshDatabase;
+
     /** @test */
     public function single_layer_with_theme_taxonomy_has_proper_feature_image()
     {
@@ -90,10 +94,9 @@ class AppWebappConfigHasFeatureImageInLayerSectionTest extends TestCase
     private function prepare()
     {
         $this->author = User::factory()->create();
-        $this->image = EcMedia::factory()->create(['thumbnails' =>
-        json_encode([
+        $this->image = EcMedia::factory()->create(['thumbnails' => json_encode([
             '50x50' => 'https://50x50.jpg',
-            '400x200' => 'https://400x200.jpg'
+            '400x200' => 'https://400x200.jpg',
         ])]);
         $this->track = EcTrack::factory()->create(['user_id' => $this->author->id]);
 
@@ -104,8 +107,8 @@ class AppWebappConfigHasFeatureImageInLayerSectionTest extends TestCase
 
     private function check()
     {
-        Storage::disk('conf')->delete($this->webapp->id . '.json');
-        $result = $this->getJson('/api/app/webapp/' . $this->webapp->id . '/config', []);
+        Storage::disk('conf')->delete($this->webapp->id.'.json');
+        $result = $this->getJson('/api/app/webapp/'.$this->webapp->id.'/config', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 

@@ -22,7 +22,7 @@ class UgcPoiIndexTest extends TestCase
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
-        
+
         $app_id = 'it.webmapp.test';
         UgcPoi::factory(5)->create([
             'app_id' => $app_id,
@@ -32,9 +32,9 @@ class UgcPoiIndexTest extends TestCase
             'app_id' => $app_id,
             'user_id' => $user2,
         ]);
-        
+
         $this->actingAs($user1, 'api');
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id]));
+        $response = $this->get(route('api.ugc.poi.index', ['app_id' => $app_id]));
         $content = $response->getContent();
         $response->assertStatus(200);
         $this->assertJson($content);
@@ -46,12 +46,12 @@ class UgcPoiIndexTest extends TestCase
             'app_id' => $app_id,
             'user_id' => $user1,
         ]);
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id, 'page' => 1]));
+        $response = $this->get(route('api.ugc.poi.index', ['app_id' => $app_id, 'page' => 1]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list10 = $json['data'];
 
-        $response = $this->get(route("api.ugc.poi.index", ['app_id' => $app_id, 'page' => 2]));
+        $response = $this->get(route('api.ugc.poi.index', ['app_id' => $app_id, 'page' => 2]));
         $json = $response->json();
         $this->assertCount(10, $json['data']);
         $list11 = $json['data'];

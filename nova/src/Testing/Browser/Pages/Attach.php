@@ -10,7 +10,9 @@ class Attach extends Page
     use HasSearchableRelations;
 
     public $resourceName;
+
     public $resourceId;
+
     public $relation;
 
     /**
@@ -41,7 +43,6 @@ class Attach extends Page
     /**
      * Select the attachable resource with the given ID.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string|int  $id
      * @return void
      */
@@ -53,7 +54,6 @@ class Attach extends Page
     /**
      * Click the attach button.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
     public function clickAttach(Browser $browser)
@@ -64,13 +64,12 @@ class Attach extends Page
     /**
      * Assert that the browser is on the page.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
     public function assert(Browser $browser)
     {
         $browser->pause(500)
-                ->waitFor('#nova .content form', 25);
+            ->waitFor('#nova .content form', 25);
     }
 
     /**

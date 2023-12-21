@@ -5,30 +5,32 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use App\Providers\PartnershipValidationProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class SignupApiTest extends TestCase {
+class SignupApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testNoCredentials() {
+    public function testNoCredentials()
+    {
         $response = $this->post('/api/auth/signup', []);
         $this->assertSame(400, $response->status());
     }
 
-    public function testInvalidCredentials() {
+    public function testInvalidCredentials()
+    {
         $response = $this->post('/api/auth/signup', [
             'email' => 'test@webmapp.it',
-            'password' => 'test'
+            'password' => 'test',
         ]);
         $this->assertSame(400, $response->status());
     }
 
-    public function testValidExistingCredentials() {
+    public function testValidExistingCredentials()
+    {
         $response = $this->post('/api/auth/signup', [
             'email' => 'team@webmapp.it',
-            'password' => 'webmapp'
+            'password' => 'webmapp',
         ]);
         $this->assertSame(200, $response->status());
         $this->assertArrayHasKey('id', $response->json());
@@ -41,7 +43,8 @@ class SignupApiTest extends TestCase {
         $this->assertArrayHasKey('created_at', $response->json());
     }
 
-    public function testValidNonExistingCredentials() {
+    public function testValidNonExistingCredentials()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $response = $this->post('/api/auth/signup', [
@@ -65,7 +68,8 @@ class SignupApiTest extends TestCase {
         $this->assertArrayHasKey('created_at', $json);
     }
 
-    public function testReferrerField() {
+    public function testReferrerField()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $referrer = 'test_referrer';
@@ -74,7 +78,7 @@ class SignupApiTest extends TestCase {
             'password' => 'webmapp',
             'name' => $name,
             'last_name' => $name,
-            'referrer' => $referrer
+            'referrer' => $referrer,
         ]);
         $json = $response->json();
         $this->assertSame(200, $response->status());
@@ -87,7 +91,8 @@ class SignupApiTest extends TestCase {
         $this->assertSame($referrer, $user->referrer);
     }
 
-    public function test_invalid_fiscal_code_field() {
+    public function test_invalid_fiscal_code_field()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $fiscalCode = '1234567890123456';
@@ -102,7 +107,7 @@ class SignupApiTest extends TestCase {
             'password' => 'webmapp',
             'name' => $name,
             'last_name' => $name,
-            'fiscal_code' => $fiscalCode
+            'fiscal_code' => $fiscalCode,
         ]);
         $json = $response->json();
         $this->assertSame(200, $response->status());
@@ -119,7 +124,8 @@ class SignupApiTest extends TestCase {
         $this->assertCount(0, $json['partnerships']);
     }
 
-    public function test_valid_fiscal_code_field() {
+    public function test_valid_fiscal_code_field()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $fiscalCode = '1234567890123456';
@@ -134,7 +140,7 @@ class SignupApiTest extends TestCase {
             'password' => 'webmapp',
             'name' => $name,
             'last_name' => $name,
-            'fiscal_code' => $fiscalCode
+            'fiscal_code' => $fiscalCode,
         ]);
         $json = $response->json();
         $this->assertSame(200, $response->status());

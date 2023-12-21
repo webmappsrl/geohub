@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddReferrerFieldToUsers extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::table('users', function (Blueprint $table) {
             $table->string('referrer')->nullable();
         });
@@ -21,9 +23,10 @@ class AddReferrerFieldToUsers extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('referrer');
         });
     }
-}
+};

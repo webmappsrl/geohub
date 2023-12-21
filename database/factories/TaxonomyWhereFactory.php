@@ -2,19 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyWhere;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
 class TaxonomyWhereFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = TaxonomyWhere::class;
-
     /**
      * Define the model's default state.
      *
@@ -23,6 +15,7 @@ class TaxonomyWhereFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

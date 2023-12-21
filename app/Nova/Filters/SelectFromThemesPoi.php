@@ -2,7 +2,6 @@
 
 namespace App\Nova\Filters;
 
-use App\Models\EcPoi;
 use App\Models\TaxonomyTheme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +19,6 @@ class SelectFromThemesPoi extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -43,7 +41,6 @@ class SelectFromThemesPoi extends Filter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
@@ -62,6 +59,7 @@ class SelectFromThemesPoi extends Filter
 
         $taxModels = TaxonomyTheme::hydrate($taxData)->pluck('id', 'name')->toArray();
         $taxModels['No Theme'] = 'empty';
+
         return $taxModels;
     }
 }

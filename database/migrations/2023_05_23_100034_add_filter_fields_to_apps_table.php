@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFilterFieldsToAppsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -51,8 +51,8 @@ class AddFilterFieldsToAppsTable extends Migration
                 'filter_track_distance_steps',
                 'filter_track_distance_min',
                 'filter_track_distance_max',
-                'filter_track_difficulty'
+                'filter_track_difficulty',
             ]);
         });
     }
-}
+};

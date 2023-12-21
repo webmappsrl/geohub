@@ -6,18 +6,19 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\TaxonomyPoiType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ApiTrackHasAllRelatedPoiMeta extends TestCase
 {
     use RefreshDatabase;
+
     /**
-     *
      * @return void
+     *
      * @test
      */
-    public function when_track_has_no_pois_api_has_no_section_related_pois() {
+    public function when_track_has_no_pois_api_has_no_section_related_pois()
+    {
         $track = EcTrack::factory()->create();
         $response = $this->get(route('api.ec.track.json', ['id' => $track->id]));
 
@@ -30,11 +31,12 @@ class ApiTrackHasAllRelatedPoiMeta extends TestCase
     }
 
     /**
-     *
      * @return void
+     *
      * @test
      */
-    public function when_track_has_pois_api_has_section_related_pois() {
+    public function when_track_has_pois_api_has_section_related_pois()
+    {
         $poi = EcPoi::factory()->create();
         $track = EcTrack::factory()->create();
         $track->ecPois()->attach($poi->id);
@@ -50,11 +52,12 @@ class ApiTrackHasAllRelatedPoiMeta extends TestCase
     }
 
     /**
-     *
      * @return void
+     *
      * @test
      */
-    public function when_track_has_pois_api_related_poi_section_has_all_meta() {
+    public function when_track_has_pois_api_related_poi_section_has_all_meta()
+    {
         $poi_type = TaxonomyPoiType::factory()->create();
         $poi = EcPoi::factory()->create();
         $poi->taxonomyPoiTypes()->attach($poi_type->id);
@@ -88,14 +91,11 @@ class ApiTrackHasAllRelatedPoiMeta extends TestCase
             'addr_housenumber',
             'addr_postcode',
             'opening_hours',
-            'taxonomy'
+            'taxonomy',
         ];
 
-        foreach($to_check as $key) {
-            $this->assertArrayHasKey($key,$poi['properties']);
+        foreach ($to_check as $key) {
+            $this->assertArrayHasKey($key, $poi['properties']);
         }
     }
-
-
-
 }

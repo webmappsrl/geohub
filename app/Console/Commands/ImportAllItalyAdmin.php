@@ -44,31 +44,31 @@ class ImportAllItalyAdmin extends Command
     public function handle()
     {
 
-        $this->path = base_path() . '/geodata/italy_admin';
-        if (!file_exists($this->path)) {
+        $this->path = base_path().'/geodata/italy_admin';
+        if (! file_exists($this->path)) {
             $this->download();
         } else {
             $this->info("$this->path already existing: skipping download. Remove dir if you want to download it again.");
         }
 
-        $this->info("Import and Sync Regioni");
+        $this->info('Import and Sync Regioni');
         $args_and_options = [
             'import_method' => 'regioni_italiane',
-            '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84'
+            '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84',
         ];
         $this->call('geohub:import_and_sync', $args_and_options);
 
-        $this->info("Import and Sync Province");
+        $this->info('Import and Sync Province');
         $args_and_options = [
             'import_method' => 'province_italiane',
-            '--shp' => 'geodata/italy_admin/Limiti01012021/ProvCM01012021/ProvCM01012021_WGS84'
+            '--shp' => 'geodata/italy_admin/Limiti01012021/ProvCM01012021/ProvCM01012021_WGS84',
         ];
         $this->call('geohub:import_and_sync', $args_and_options);
 
-        $this->info("Import and Sync Comuni");
+        $this->info('Import and Sync Comuni');
         $args_and_options = [
             'import_method' => 'comuni_italiani',
-            '--shp' => 'geodata/italy_admin/Limiti01012021/Com01012021/Com01012021_WGS84'
+            '--shp' => 'geodata/italy_admin/Limiti01012021/Com01012021/Com01012021_WGS84',
         ];
         $this->call('geohub:import_and_sync', $args_and_options);
 
@@ -79,20 +79,20 @@ class ImportAllItalyAdmin extends Command
     {
         $this->info("$this->path does not exist. Start downloading.");
         // Manage options
-        if (!empty($this->option('url'))) {
+        if (! empty($this->option('url'))) {
             $this->url = $this->option('url');
         }
         // check geodata dir
-        if (!file_exists(base_path() . '/geodata')) {
-            mkdir(base_path() . '/geodata');
+        if (! file_exists(base_path().'/geodata')) {
+            mkdir(base_path().'/geodata');
         }
         // Download and unzip
-        $this->info('Downloading from ' . $this->url . ' ... be patient!');
-        $tmpzip = $this->path . 'italy_' . substr(str_shuffle(MD5(microtime())), 0, 5) . '.zip';
+        $this->info('Downloading from '.$this->url.' ... be patient!');
+        $tmpzip = $this->path.'italy_'.substr(str_shuffle(md5(microtime())), 0, 5).'.zip';
         file_put_contents($tmpzip, fopen($this->url, 'r'));
         $this->info("$tmpzip downloaded");
         $zip = new ZipArchive;
-        if ($zip->open($tmpzip) === TRUE) {
+        if ($zip->open($tmpzip) === true) {
             $zip->extractTo($this->path);
             $zip->close();
         }

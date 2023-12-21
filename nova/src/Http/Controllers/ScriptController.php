@@ -13,7 +13,6 @@ class ScriptController extends Controller
     /**
      * Serve the requested script.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Http\Response
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException

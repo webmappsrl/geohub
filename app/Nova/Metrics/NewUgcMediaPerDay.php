@@ -6,15 +6,16 @@ use App\Models\UgcMedia;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Trend;
 
-class NewUgcMediaPerDay extends Trend {
+class NewUgcMediaPerDay extends Trend
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->countByDays($request, UgcMedia::class);
     }
 
@@ -23,7 +24,8 @@ class NewUgcMediaPerDay extends Trend {
      *
      * @return array
      */
-    public function ranges() {
+    public function ranges()
+    {
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
@@ -36,7 +38,8 @@ class NewUgcMediaPerDay extends Trend {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -45,7 +48,8 @@ class NewUgcMediaPerDay extends Trend {
      *
      * @return string
      */
-    public function uriKey() {
+    public function uriKey()
+    {
         return 'new-ugc-media-per-day';
     }
 }

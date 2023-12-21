@@ -87,7 +87,6 @@ class HasOneThrough extends Field implements ListableField, RelatableField
     /**
      * Determine if the field should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)
@@ -156,7 +155,6 @@ class HasOneThrough extends Field implements ListableField, RelatableField
     /**
      * Determine if the HasOne field has alreaady been filled.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return bool
      */
     public function alreadyFilled(NovaRequest $request)

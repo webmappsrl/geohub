@@ -2,18 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyTheme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyThemeFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = TaxonomyTheme::class;
-
     /**
      * Define the model's default state.
      *
@@ -22,6 +14,7 @@ class TaxonomyThemeFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

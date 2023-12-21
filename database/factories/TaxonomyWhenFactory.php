@@ -2,20 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyWhen;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
 
 class TaxonomyWhenFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = TaxonomyWhen::class;
-
     /**
      * Define the model's default state.
      *
@@ -24,6 +14,7 @@ class TaxonomyWhenFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

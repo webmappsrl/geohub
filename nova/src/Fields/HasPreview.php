@@ -21,7 +21,6 @@ trait HasPreview
     /**
      * Specify the callback that should be used to retrieve the preview URL.
      *
-     * @param  callable  $previewUrlCallback
      * @return $this
      */
     public function preview(callable $previewUrlCallback)
