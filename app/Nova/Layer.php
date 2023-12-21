@@ -3,25 +3,23 @@
 namespace App\Nova;
 
 use App\Models\User;
+use Chaseconey\ExternalImage\ExternalImage;
 use Eminiarts\Tabs\Tabs;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
-use NovaAttachMany\AttachMany;
-use Yna\NovaSwatches\Swatches;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Ncus\InlineIndex\InlineIndex;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Illuminate\Support\Facades\Storage;
-use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Ncus\InlineIndex\InlineIndex;
+use NovaAttachMany\AttachMany;
+use Yna\NovaSwatches\Swatches;
 
 class Layer extends Resource
 {
@@ -34,8 +32,10 @@ class Layer extends Resource
         }
         $userId = $request->user()->id;
         $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+
         return $query->whereIn('app_id', $userApps);
     }
+
     /**
      * The model the resource corresponds to.
      *
@@ -56,15 +56,12 @@ class Layer extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'title', 'subtitle'
+        'id', 'name', 'title', 'subtitle',
     ];
-
-
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -78,7 +75,7 @@ class Layer extends Resource
         return [
             ID::make('id'),
             NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')
+                Text::make(__('Name'), 'name'),
             ]),
             AttachMany::make('taxonomyActivities'),
             AttachMany::make('TaxonomyThemes'),
@@ -99,7 +96,6 @@ class Layer extends Resource
             InlineIndex::make('Rank')->sortable()->rules('required'),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
 
-
         ];
     }
 
@@ -115,12 +111,12 @@ class Layer extends Resource
                         Text::make('Subtitle'),
                         Textarea::make('Description')->alwaysShow(),
                         Text::make('Track Type', 'track_type'),
-                    ])
+                    ]),
                 ],
                 'MEDIA' => [
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
 
@@ -151,7 +147,7 @@ class Layer extends Resource
                     Number::make('Stroke Width', 'stroke_width'),
                     Number::make('Stroke Opacity', 'stroke_opacity'),
                     Number::make('Zindex', 'zindex'),
-                    Text::make('Line Dash', 'line_dash')
+                    Text::make('Line Dash', 'line_dash'),
                 ],
                 'DATA' => [
                     Heading::make('Here are shown rules used to assign data to this layer'),
@@ -161,37 +157,43 @@ class Layer extends Resource
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
+
                         return 'No activities';
                     }),
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
+
                         return 'No Wheres';
                     }),
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
+
                         return 'No Themes';
                     }),
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
+
                         return 'No Targets';
                     }),
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
+
                         return 'No Whens';
                     }),
-                ]
+                ],
 
             ]))->withToolbar(),
         ];
     }
+
     public function fieldsForCreate(Request $request)
     {
         return [
@@ -200,6 +202,7 @@ class Layer extends Resource
             Text::make('Title'),
         ];
     }
+
     public function fieldsForUpdate(Request $request)
     {
 
@@ -242,7 +245,7 @@ class Layer extends Resource
             Number::make('Stroke Width', 'stroke_width'),
             Number::make('Stroke Opacity', 'stroke_opacity'),
             Number::make('Zindex', 'zindex'),
-            Text::make('Line Dash', 'line_dash')
+            Text::make('Line Dash', 'line_dash'),
         ];
 
         $dataTab = [
@@ -259,10 +262,10 @@ class Layer extends Resource
                 ->showPreview(),
         ];
 
-        $mediaTab =  [
+        $mediaTab = [
             BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
                 ->searchable()
-                ->nullable()
+                ->nullable(),
         ];
 
         //if the logged user has role editor only show the main tab
@@ -283,13 +286,14 @@ class Layer extends Resource
                 ]),
             ];
         }
+
         return [
             (new Tabs($title, [
                 'MAIN' => $mainTab,
                 'MEDIA' => $mediaTab,
                 'BEHAVIOUR' => $behaviourTab,
                 'STYLE' => $styleTab,
-                'DATA' => $dataTab
+                'DATA' => $dataTab,
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
         ];
@@ -298,7 +302,6 @@ class Layer extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -309,7 +312,6 @@ class Layer extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -324,7 +326,6 @@ class Layer extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -335,7 +336,6 @@ class Layer extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
@@ -352,6 +352,7 @@ class Layer extends Resource
         }
         $userId = $request->user()->id;
         $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+
         return $this->app_id && in_array($this->app_id, $userApps);
     }
 }

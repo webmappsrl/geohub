@@ -5,9 +5,9 @@ namespace App\Policies;
 use App\Models\EcTrack;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Log;
 
-class EcTrackPolicy {
+class EcTrackPolicy
+{
     use HandlesAuthorization;
 
     /**
@@ -15,13 +15,13 @@ class EcTrackPolicy {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
      * Perform pre-authorization checks.
      *
-     * @param  \App\Models\User  $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -34,50 +34,62 @@ class EcTrackPolicy {
             return false;
         }
     }
-    
-    public function viewAny(User $user): bool {
+
+    public function viewAny(User $user): bool
+    {
         if ($user->hasRole('Editor')) {
             return true;
         }
     }
 
-    public function view(User $user, EcTrack $model): bool {
+    public function view(User $user, EcTrack $model): bool
+    {
         if ($user->hasRole('Editor') && $user->id === $model->user_id) {
             return true;
         }
+
         return false;
     }
 
-    public function create(User $user): bool {
+    public function create(User $user): bool
+    {
         if ($user->hasRole('Editor')) {
             return true;
         }
+
         return false;
     }
 
-    public function update(User $user, EcTrack $model): bool {
+    public function update(User $user, EcTrack $model): bool
+    {
         if ($user->hasRole('Editor') && $user->id === $model->user_id) {
             return true;
         }
+
         return false;
     }
 
-    public function delete(User $user, EcTrack $model): bool {
+    public function delete(User $user, EcTrack $model): bool
+    {
         if ($user->hasRole('Editor')) {
             return true;
         }
+
         return false;
     }
 
-    public function restore(User $user, EcTrack $model): bool {
+    public function restore(User $user, EcTrack $model): bool
+    {
         return false;
     }
 
-    public function forceDelete(User $user, EcTrack $model): bool {
+    public function forceDelete(User $user, EcTrack $model): bool
+    {
         return false;
     }
 
-    public function downloadOffline(User $user, EcTrack $model): bool {
+    public function downloadOffline(User $user, EcTrack $model): bool
+    {
         $userPartnerships = $user->partnerships()->pluck('id')->toArray();
         $ecTrackPartnerships = $model->partnerships()->pluck('id')->toArray();
         $diff = array_diff($userPartnerships, $ecTrackPartnerships);

@@ -3,7 +3,6 @@
 namespace App\Nova\Actions;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
@@ -18,8 +17,6 @@ class generateQrCodeAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -28,6 +25,7 @@ class generateQrCodeAction extends Action
         foreach ($models as $model) {
             $model->generateQrCode($model->qrcode_custom_url);
         }
+
         //return a success message
         return Action::message('QR Code Generated Successfully!');
     }

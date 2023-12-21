@@ -16,58 +16,58 @@ use App\Nova\Filters\SelectFromActivities;
 use App\Nova\Filters\SelectFromThemesTrack;
 use App\Nova\Filters\SelectFromWheresTrack;
 use Chaseconey\ExternalImage\ExternalImage;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\TabsOnEdit;
-use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Textarea;
-use Titasgailius\SearchRelations\SearchesRelations;
-use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use Wm\MapMultiLinestringNova3\MapMultiLinestringNova3;
 use Yna\NovaSwatches\Swatches;
 
 class EcTrack extends Resource
 {
-    use TabsOnEdit;
     use SearchesRelations;
+    use TabsOnEdit;
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\EcTrack::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name', 'ref', 'osmid'
+        'name', 'ref', 'osmid',
     ];
 
     /**
@@ -92,7 +92,6 @@ class EcTrack extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -101,15 +100,12 @@ class EcTrack extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->where('user_id', $request->user()->id);
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -117,7 +113,7 @@ class EcTrack extends Resource
         return [
             ID::make('id'),
             NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')
+                Text::make(__('Name'), 'name'),
             ]),
             AttachMany::make('TaxonomyActivities'),
             AttachMany::make('TaxonomyTargets'),
@@ -126,7 +122,6 @@ class EcTrack extends Resource
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
-
 
     public function fieldsForIndex(Request $request)
     {
@@ -145,7 +140,7 @@ class EcTrack extends Resource
                 //     return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/track/' . $this->id . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -181,6 +176,7 @@ class EcTrack extends Resource
                     if ($this->taxonomyActivities()->count() > 0) {
                         return implode('<br/>', $this->taxonomyActivities()->pluck('name')->toArray());
                     }
+
                     return 'No activities';
                 })->asHtml(),
 
@@ -188,10 +184,11 @@ class EcTrack extends Resource
                     if ($this->taxonomyThemes()->count() > 0) {
                         return implode('<br/>', $this->taxonomyThemes()->pluck('name')->toArray());
                     }
+
                     return 'No themes';
                 })->asHtml(),
 
-                Number::make('osmid')
+                Number::make('osmid'),
 
                 // Text::make('Wheres', function () {
                 //     if ($this->taxonomyWheres()->count() > 0) {
@@ -239,13 +236,14 @@ class EcTrack extends Resource
                                 $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
                             }
                         } else {
-                            $out = "No related Url";
+                            $out = 'No related Url';
                         }
+
                         return $out;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
 
@@ -288,132 +286,144 @@ class EcTrack extends Resource
                     Text::make('Difficulty'),
                     Text::make('Cai Scale'),
                     NovaTabTranslatable::make([
-                        Text::make('Difficulty I18n')
-                    ])
+                        Text::make('Difficulty I18n'),
+                    ]),
                 ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
+
                         return 'No activities';
                     }),
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
+
                         return 'No Wheres';
                     }),
                     Text::make('First where to show', function () {
                         if ($this->taxonomy_wheres_show_first) {
                             return TaxonomyWhere::find($this->taxonomy_wheres_show_first)->name;
                         }
+
                         return 'Nothing selected';
                     }),
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
+
                         return 'No Themes';
                     }),
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
+
                         return 'No Targets';
                     }),
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
+
                         return 'No Whens';
                     }),
                 ],
                 'Out Source' => [
                     Text::make('Out Source Feature ID', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             return $this->out_source_feature_id;
                         } else {
                             return 'No Out Source Feature associated';
                         }
                     })->onlyOnDetail(),
                     Text::make('External Source ID', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->source_id;
                         } else {
                             return 'No External Source associated';
                         }
                     })->onlyOnDetail(),
                     Text::make('Endpoint', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->endpoint;
                         } else {
                             return 'No endpoint associated';
                         }
                     })->onlyOnDetail(),
                     Text::make('Endpoint slug', 'endpoint_slug', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->endpoint_slug;
                         } else {
                             return 'No endpoint slug associated';
                         }
                     })->onlyOnDetail(),
                     Text::make('Public Page', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug . '/' . $t->source_id;
+                            $url_base_api = request()->root().'/osf/'.$t->endpoint_slug.'/'.$t->source_id;
+
                             return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Public Page</a>";
                         } else {
-                            return "No Out Source Feature.";
+                            return 'No Out Source Feature.';
                         }
                     })
                         ->asHtml(),
 
                     Text::make('Base API', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug . '/' . $t->source_id;
+                            $url_base_api = request()->root().'/api/osf/track/'.$t->endpoint_slug.'/'.$t->source_id;
+
                             return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base Api</a>";
                         } else {
-                            return "No Out Source Feature.";
+                            return 'No Out Source Feature.';
                         }
                     })->asHtml(),
                     Text::make('Widget: Simple', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug . '/' . $t->source_id;
+                            $url_base_api = request()->root().'/w/osf/simple/'.$t->endpoint_slug.'/'.$t->source_id;
+
                             return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Widget Simple</a>";
                         } else {
-                            return "No Out Source Feature.";
+                            return 'No Out Source Feature.';
                         }
                     })->asHtml(),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
-                        $url_pubblic = request()->root() . '/track/' . $this->id;
+                        $url_pubblic = request()->root().'/track/'.$this->id;
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_pubblic}'>View Public Page</a>";
                     })->asHtml(),
                     Text::make('Base API', function () {
-                        $url_base_api = request()->root() . '/api/ec/track/' . $this->id;
+                        $url_base_api = request()->root().'/api/ec/track/'.$this->id;
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>";
                     })->asHtml(),
                     Text::make('Widget: Simple', function () {
-                        $url_widget_simple = request()->root() . '/w/simple/' . $this->id;
+                        $url_widget_simple = request()->root().'/w/simple/'.$this->id;
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>";
                     })->asHtml(),
                     //show a link to the track-pdf.blade.php
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
-                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">Generate PDF</a>';
+                            return '<a target="_blank" style="color:#3aadcc;" href="'.route('track.pdf', ['id' => $resource->id]).'">Generate PDF</a>';
                         })
                         ->asHtml()
-                        ->onlyOnDetail()
+                        ->onlyOnDetail(),
                 ],
 
                 'Data' => [
@@ -425,16 +435,16 @@ class EcTrack extends Resource
                             'show-fallback' => true,
                             'fallback-type' => 'input',
                         ]),
-                ]
+                ],
             ]))->withToolbar(),
             new Panel('Map', [
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
             // Necessary for view
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
@@ -450,7 +460,7 @@ class EcTrack extends Resource
             $geojson = [];
         }
 
-        $tab_title = "New EC Track";
+        $tab_title = 'New EC Track';
         if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Track Edit: {$this->name} ({$this->id})";
         }
@@ -526,10 +536,10 @@ class EcTrack extends Resource
                         'T' => 'Turistico (T)',
                         'E' => 'Escursionistico (E)',
                         'EE' => 'Per escursionisti esperti (EE)',
-                        'EEA' => 'Alpinistico (EEA)'
+                        'EEA' => 'Alpinistico (EEA)',
                     ]),
                     NovaTabTranslatable::make([
-                        Text::make('Difficulty I18n')
+                        Text::make('Difficulty I18n'),
                     ]),
                 ],
                 'Taxonomies' => [
@@ -548,21 +558,20 @@ class EcTrack extends Resource
                             'show-fallback' => true,
                             'fallback-type' => 'input',
                         ]),
-                ]
+                ],
             ]),
             new Panel('Map', [
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
 
             // Do not remove below code, necessary for Edit mode
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
-
 
         ];
     }
@@ -574,10 +583,6 @@ class EcTrack extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -586,10 +591,6 @@ class EcTrack extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -603,15 +604,12 @@ class EcTrack extends Resource
                 new SelectFromWheresTrack(),
             ];
         }
+
         return [];
     }
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -620,10 +618,6 @@ class EcTrack extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {
@@ -636,17 +630,14 @@ class EcTrack extends Resource
         ];
     }
 
-
     /**
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
      * Refers to OFFICIAL DOCUMENTATION:
      * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
-     *
-     * @return string
      */
     public function getData(): string
     {
-        $text = <<<HTML
+        $text = <<<'HTML'
         <style>
         table {
         font-family: arial, sans-serif;
@@ -710,6 +701,7 @@ class EcTrack extends Resource
 
         </table>
         HTML;
+
         return $text;
     }
 }

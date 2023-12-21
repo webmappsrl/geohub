@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-class OutSourceImporterHelper {
-
-    
+class OutSourceImporterHelper
+{
 }

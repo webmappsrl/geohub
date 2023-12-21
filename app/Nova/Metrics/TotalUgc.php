@@ -8,15 +8,16 @@ use App\Models\UgcTrack;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class TotalUgc extends Value {
+class TotalUgc extends Value
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->result(UgcTrack::get()->count() + UgcPoi::get()->count() + UgcMedia::get()->count());
     }
 
@@ -25,7 +26,8 @@ class TotalUgc extends Value {
      *
      * @return array
      */
-    public function ranges() {
+    public function ranges()
+    {
         return [];
     }
 
@@ -34,7 +36,8 @@ class TotalUgc extends Value {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -43,7 +46,8 @@ class TotalUgc extends Value {
      *
      * @return string
      */
-    public function uriKey() {
+    public function uriKey()
+    {
         return 'total-user-generated-content';
     }
 }

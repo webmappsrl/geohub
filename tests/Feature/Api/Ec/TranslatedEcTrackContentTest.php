@@ -4,9 +4,9 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\App;
 use App\Models\EcMedia;
+use App\Models\EcTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\User;
-use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,15 +22,15 @@ use Tests\TestCase;
  * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
  * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json
  * api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
- *
- * @package Tests\Feature
  */
-class TranslatedEcTrackContentTest extends TestCase {
-    use WithFaker, RefreshDatabase;
+class TranslatedEcTrackContentTest extends TestCase
+{
+    use RefreshDatabase, WithFaker;
 
     private $fields = ['name', 'excerpt', 'description'];
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -42,10 +42,11 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/ec/track/{id}
      */
-    public function testApiEcTrack() {
+    public function testApiEcTrack()
+    {
         $data = $this->_getData();
         $track = EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/' . $track->id);
+        $geojson = $this->getJson('api/ec/track/'.$track->id);
         $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
         foreach ($this->fields as $field) {
@@ -60,10 +61,11 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/ec/track/{id}.geojson
      */
-    public function testApiEcTrackGeojson() {
+    public function testApiEcTrackGeojson()
+    {
         $data = $this->_getData();
         $track = EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/' . $track->id . '.geojson');
+        $geojson = $this->getJson('api/ec/track/'.$track->id.'.geojson');
         $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
         foreach ($this->fields as $field) {
@@ -78,10 +80,11 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/ec/track/download/{id}
      */
-    public function testApiEcTrackDownload() {
+    public function testApiEcTrackDownload()
+    {
         $data = $this->_getData();
         $track = EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/download/' . $track->id);
+        $geojson = $this->getJson('api/ec/track/download/'.$track->id);
         $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
         foreach ($this->fields as $field) {
@@ -96,10 +99,11 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/ec/track/download/{id}.geojson
      */
-    public function testApiEcTrackDownloadGeojson() {
+    public function testApiEcTrackDownloadGeojson()
+    {
         $data = $this->_getData();
         $track = EcTrack::factory()->create($data);
-        $geojson = $this->getJson('api/ec/track/download/' . $track->id . '.geojson');
+        $geojson = $this->getJson('api/ec/track/download/'.$track->id.'.geojson');
         $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
         foreach ($this->fields as $field) {
@@ -114,11 +118,12 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.geojson
      */
-    public function testApiAppElbrusEcTrackGeojson() {
+    public function testApiAppElbrusEcTrackGeojson()
+    {
         $data = $this->_getData();
         $app = App::factory()->create();
         $track = EcTrack::factory()->create($data);
-        $geojson = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.geojson', []);
+        $geojson = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.geojson', []);
 
         $this->assertArrayHasKey('properties', $geojson);
         $p = $geojson['properties'];
@@ -134,11 +139,12 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json
      */
-    public function testApiAppElbrusEcTrackJson() {
+    public function testApiAppElbrusEcTrackJson()
+    {
         $data = $this->_getData();
         $app = App::factory()->create();
         $track = EcTrack::factory()->create($data);
-        $p = $this->getJson('/api/app/elbrus/' . $app->id . '/geojson/ec_track_' . $track->id . '.json', []);
+        $p = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.json', []);
 
         foreach ($this->fields as $field) {
             $this->assertArrayHasKey($field, $p);
@@ -152,7 +158,8 @@ class TranslatedEcTrackContentTest extends TestCase {
     /**
      * api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
      */
-    public function testApiAppElbrusEcTaxonomiesTrack() {
+    public function testApiAppElbrusEcTaxonomiesTrack()
+    {
         $user = User::factory()->create();
         $image = EcMedia::factory()->create();
         $activity = TaxonomyActivity::factory()->create();
@@ -197,11 +204,12 @@ class TranslatedEcTrackContentTest extends TestCase {
         }
     }
 
-    private function _getData() {
+    private function _getData()
+    {
         return [
             'name' => [
                 'it' => $this->faker->name(),
-                'en' => $this->faker->name()
+                'en' => $this->faker->name(),
             ],
             'excerpt' => [
                 'it' => $this->faker->text(90),
@@ -209,8 +217,8 @@ class TranslatedEcTrackContentTest extends TestCase {
             ],
             'description' => [
                 'it' => $this->faker->paragraph(5),
-                'en' => $this->faker->paragraph(5)
-            ]
+                'en' => $this->faker->paragraph(5),
+            ],
         ];
     }
 }

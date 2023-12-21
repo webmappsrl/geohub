@@ -4,10 +4,9 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
+
 class RestoreDbCommand extends Command
 {
     /**
@@ -41,16 +40,17 @@ class RestoreDbCommand extends Command
      */
     public function handle()
     {
-        Log::info("db:restore -> is started");
-        $localDirectory = "database";
-        $localRootPath = "storage/app";
-        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/last-dump.sql";
+        Log::info('db:restore -> is started');
+        $localDirectory = 'database';
+        $localRootPath = 'storage/app';
+        $AbsolutePath = base_path()."/$localRootPath/$localDirectory/last-dump.sql";
 
-        if (!file_exists($AbsolutePath)) {
+        if (! file_exists($AbsolutePath)) {
             try {
                 Artisan::call('db:download');
             } catch (Exception $e) {
                 echo $e;
+
                 return 0;
             }
         }
@@ -61,7 +61,7 @@ class RestoreDbCommand extends Command
         $drop_cmd = 'psql -c "DROP DATABASE '.$db_name.'"';
         Log::info("db:restore -> $drop_cmd");
         exec($drop_cmd);
-        
+
         // psql -c "CREATE DATABASE geohub"
         $create_cmd = 'psql -c "CREATE DATABASE '.$db_name.'"';
         Log::info("db:restore -> $create_cmd");
@@ -77,7 +77,8 @@ class RestoreDbCommand extends Command
         Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 
-        Log::info("db:restore -> finished");
+        Log::info('db:restore -> finished');
+
         return 0;
     }
 }

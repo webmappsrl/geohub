@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Class UgcMedia
  *
- * @package App\Models
  *
  * @property int    id
  * @property string app_id
@@ -26,7 +25,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class UgcMedia extends Model
 {
-    use HasFactory, GeometryFeatureTrait;
+    use GeometryFeatureTrait, HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -44,12 +43,12 @@ class UgcMedia extends Model
     {
         parent::boot();
         static::saved(function ($media) {
-            if (!$media->preventHoquSave) {
+            if (! $media->preventHoquSave) {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error('An error occurred during a store operation: '.$e->getMessage());
                 }
             }
         });
@@ -68,8 +67,7 @@ class UgcMedia extends Model
     /**
      * Scope a query to only include current user EcMedia.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCurrentUser($query)
@@ -100,8 +98,6 @@ class UgcMedia extends Model
     /**
      * Return the json version of the ugc media, avoiding the geometry
      * TODO: unit TEST
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -109,13 +105,15 @@ class UgcMedia extends Model
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-                
-                if ($property == 'relative_url') {
-                    if (Storage::disk('public')->exists($value))
+            }
+
+            if ($property == 'relative_url') {
+                if (Storage::disk('public')->exists($value)) {
                     $array['url'] = Storage::disk('public')->url($value);
-                    unset($array[$property]);
+                }
+                unset($array[$property]);
             }
         }
 
@@ -124,17 +122,17 @@ class UgcMedia extends Model
 
     /**
      * Create a geojson from the ec track
-     *
-     * @return array
      */
     public function getGeojson(): ?array
     {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson();
 
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     public function setGeometry(array $geometry)

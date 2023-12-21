@@ -8,12 +8,11 @@ use Laravel\Nova\Metrics\Value;
 
 class EcTracksTotalValue extends Value
 {
-
     public $name = 'Ec Tracks totali';
+
     /**
      * Calculate the value of the metric.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)

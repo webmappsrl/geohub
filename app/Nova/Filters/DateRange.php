@@ -17,15 +17,14 @@ class DateRange extends DateRangeFilter
 
     public function key()
     {
-        return 'date_range_' . $this->column;
+        return 'date_range_'.$this->column;
     }
 
     /**
      * Apply the filter to the given query.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param mixed $value
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply(Request $request, $query, $value)
@@ -39,7 +38,6 @@ class DateRange extends DateRangeFilter
     /**
      * Get the filter's available options.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function options(Request $request)

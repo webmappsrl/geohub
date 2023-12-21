@@ -51,7 +51,7 @@ class AddFilterFieldsToAppsTable extends Migration
                 'filter_track_distance_steps',
                 'filter_track_distance_min',
                 'filter_track_distance_max',
-                'filter_track_difficulty'
+                'filter_track_difficulty',
             ]);
         });
     }

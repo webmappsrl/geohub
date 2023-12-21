@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxonomyWheresTable extends Migration {
+class CreateTaxonomyWheresTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         // TODO: approfondire postgist https://github.com/mstaack/laravel-postgis
         Schema::create('taxonomy_wheres', function (Blueprint $table) {
             $table->id();
@@ -33,7 +35,8 @@ class CreateTaxonomyWheresTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('taxonomy_wheres');
     }
 }

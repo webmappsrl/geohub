@@ -11,8 +11,6 @@ class AddFieldsUXUIToTaxonomies extends Migration
      *
      * @return void
      */
-
-
     public function up()
     {
         $taxonomies = ['taxonomy_wheres', 'taxonomy_whens', 'taxonomy_themes', 'taxonomy_activities', 'taxonomy_targets', 'taxonomy_poi_types'];

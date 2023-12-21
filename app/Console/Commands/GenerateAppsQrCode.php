@@ -41,19 +41,21 @@ class GenerateAppsQrCode extends Command
         //if app name is provided, generate QR code for that app
         if ($this->argument('id')) {
             $app = App::where('id', $this->argument('id'))->first();
-            if (!$app) {
-                $this->error('App with id ' . $this->argument('id') . ' not found!');
+            if (! $app) {
+                $this->error('App with id '.$this->argument('id').' not found!');
+
                 return;
             }
             $app->generateQrCode($app->qrcode_custom_url);
-            $this->info('QR code generated for app with id:  ' . $app->id);
+            $this->info('QR code generated for app with id:  '.$app->id);
+
             return;
         }
-        //if no app name is provided, generate QR code for all apps 
+        //if no app name is provided, generate QR code for all apps
         $apps = App::all();
         foreach ($apps as $app) {
             $app->generateQrCode($app->qrcode_custom_url);
-            $this->info('QR code generated for app: ' . $app->id);
+            $this->info('QR code generated for app: '.$app->id);
         }
     }
 }

@@ -8,24 +8,24 @@ use DateTimeInterface;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class NewUsers extends Value {
+class NewUsers extends Value
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->count($request, User::class);
     }
 
     /**
      * Get the ranges available for the metric.
-     *
-     * @return array
      */
-    public function ranges(): array {
+    public function ranges(): array
+    {
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
@@ -42,16 +42,16 @@ class NewUsers extends Value {
      *
      * @return  DateTimeInterface|DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
     /**
      * Get the URI key for the metric.
-     *
-     * @return string
      */
-    public function uriKey(): string {
+    public function uriKey(): string
+    {
         return 'new-users';
     }
 }

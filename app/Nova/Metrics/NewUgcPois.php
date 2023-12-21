@@ -6,15 +6,16 @@ use App\Models\UgcPoi;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 
-class NewUgcPois extends Value {
+class NewUgcPois extends Value
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->count($request, UgcPoi::class);
     }
 
@@ -23,7 +24,8 @@ class NewUgcPois extends Value {
      *
      * @return array
      */
-    public function ranges() {
+    public function ranges()
+    {
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
@@ -40,7 +42,8 @@ class NewUgcPois extends Value {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -49,7 +52,8 @@ class NewUgcPois extends Value {
      *
      * @return string
      */
-    public function uriKey() {
+    public function uriKey()
+    {
         return 'user-generated-content-pois';
     }
 }

@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
@@ -33,7 +32,7 @@ class TaxonomyActivity extends Model
         });
 
         static::saving(function ($taxonomyActivity) {
-            if (null !== $taxonomyActivity->identifier) {
+            if ($taxonomyActivity->identifier !== null) {
                 $taxonomyActivity->identifier = Str::slug($taxonomyActivity->identifier, '-');
             }
         });
@@ -47,7 +46,7 @@ class TaxonomyActivity extends Model
         static::creating(function ($taxonomyActivity) {
             if ($taxonomyActivity->identifier != null) {
                 $validateTaxonomyActivity = TaxonomyActivity::where('identifier', 'LIKE', $taxonomyActivity->identifier)->first();
-                if (!$validateTaxonomyActivity == null) {
+                if (! $validateTaxonomyActivity == null) {
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
@@ -56,7 +55,7 @@ class TaxonomyActivity extends Model
 
     public function author()
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function ecMedia()
@@ -74,7 +73,6 @@ class TaxonomyActivity extends Model
         return $this->morphedByMany(Layer::class, 'taxonomy_activityable');
     }
 
-
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
@@ -85,13 +83,11 @@ class TaxonomyActivity extends Model
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
-        throw  ValidationException::withMessages($messageBag->getMessages());
+        throw ValidationException::withMessages($messageBag->getMessages());
     }
 
     /**
      * Create a json for the activity
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -104,8 +100,9 @@ class TaxonomyActivity extends Model
         unset($json['user_id']);
 
         foreach (array_keys($json) as $key) {
-            if (is_null($json[$key]))
+            if (is_null($json[$key])) {
                 unset($json[$key]);
+            }
         }
 
         return $json;

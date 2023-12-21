@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Exception;
-use App\Models\OverlayLayer;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Traits\HasTranslationsFixed;
+use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Layer extends Model
 {
@@ -26,7 +25,7 @@ class Layer extends Model
         });
     }
 
-    public array $translatable = ['title', 'subtitle', 'description','track_type'];
+    public array $translatable = ['title', 'subtitle', 'description', 'track_type'];
 
     /**
      * The accessors to append to the model's array form.
@@ -39,6 +38,7 @@ class Layer extends Model
     {
         return $this->belongsTo(App::class);
     }
+
     public function taxonomyWheres()
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
@@ -90,7 +90,7 @@ class Layer extends Model
         $tracks = [];
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
         foreach ($taxonomies as $taxonomy) {
-            $taxonomy = 'taxonomy' . $taxonomy;
+            $taxonomy = 'taxonomy'.$taxonomy;
             if ($this->$taxonomy->count() > 0) {
                 foreach ($this->$taxonomy as $term) {
 
@@ -108,6 +108,7 @@ class Layer extends Model
                 }
             }
         }
+
         return $tracks;
     }
 
@@ -121,11 +122,11 @@ class Layer extends Model
         $bbox = $defaultBBOX;
         $tracks = $this->getTracks();
         if (count($tracks) > 0) {
-            $q = "select ST_Extent(geometry::geometry)
-             as bbox from ec_tracks where id IN (" . implode(',', array_map('intval', $tracks)) . ");";
+            $q = 'select ST_Extent(geometry::geometry)
+             as bbox from ec_tracks where id IN ('.implode(',', array_map('intval', $tracks)).');';
             $res = DB::select($q);
             if (count($res) > 0) {
-                if (!is_null($res[0]->bbox)) {
+                if (! is_null($res[0]->bbox)) {
                     preg_match('/\((.*?)\)/', $res[0]->bbox, $match);
                     $coords = $match[1];
                     $coord_array = explode(',', $coords);
@@ -141,7 +142,7 @@ class Layer extends Model
             $this->bbox = $bbox;
             $this->save();
         } catch (Exception $e) {
-            Log::error("computeBB of layer with id: " . $this->id);
+            Log::error('computeBB of layer with id: '.$this->id);
         }
     }
 
@@ -195,7 +196,6 @@ class Layer extends Model
         return $ids;
     }
 
-
     /**
      * Determines next and previous stage of each track inside the layer
      *
@@ -216,25 +216,26 @@ class Layer extends Model
 
             $geometry = $track->geometry;
 
-            $start_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
-            $end_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+            $start_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('".$geometry."')), 4326)) As wkt")[0]->wkt;
+            $end_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('".$geometry."')), 4326)) As wkt")[0]->wkt;
 
             // Find the next tracks
             $nextTrack = EcTrack::whereIn('id', $trackIds)
-            ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
-            ->get();
+                ->where('id', '<>', $track->id)
+                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
+                ->get();
 
             // Find the previous tracks
             $previousTrack = EcTrack::whereIn('id', $trackIds)
-            ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
-            ->get();
+                ->where('id', '<>', $track->id)
+                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
+                ->get();
 
             $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
             $edges[$track->id]['next'] = $nextTrack->pluck('id')->toArray();
 
         }
+
         return $edges;
     }
 }

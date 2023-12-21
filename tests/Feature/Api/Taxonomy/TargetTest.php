@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Api\Taxonomy;
 
-use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyTarget;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
@@ -16,21 +14,21 @@ class TargetTest extends TestCase
     public function testGetJson()
     {
         $taxonomyTarget = TaxonomyTarget::factory()->create();
-        $response = $this->get(route("api.taxonomy.target.json", ['id' => $taxonomyTarget->id]));
+        $response = $this->get(route('api.taxonomy.target.json', ['id' => $taxonomyTarget->id]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
     }
 
     public function testGetJsonMissingId()
     {
-        $response = $this->get(route("api.taxonomy.target.json", ['id' => 1]));
+        $response = $this->get(route('api.taxonomy.target.json', ['id' => 1]));
         $this->assertSame(404, $response->status());
     }
 
     public function testGetJsonByIdentifier()
     {
         $taxonomyTarget = TaxonomyTarget::factory()->create();
-        $response = $this->get(route("api.taxonomy.target.json.idt", ['identifier' => $taxonomyTarget->identifier]));
+        $response = $this->get(route('api.taxonomy.target.json.idt', ['identifier' => $taxonomyTarget->identifier]));
         $this->assertSame(200, $response->status());
         $this->assertIsObject($response);
     }
@@ -38,18 +36,18 @@ class TargetTest extends TestCase
     public function testIdentifierFormat()
     {
         $taxonomyTarget = TaxonomyTarget::factory()->create(['identifier' => "Testo dell'identifier di prova"]);
-        $this->assertEquals($taxonomyTarget->identifier, "testo-dellidentifier-di-prova");
+        $this->assertEquals($taxonomyTarget->identifier, 'testo-dellidentifier-di-prova');
     }
 
     public function testIdentifierUniqueness()
     {
-        TaxonomyTarget::factory()->create(['identifier' => "identifier"]);
-        $taxonomyTargetSecond = TaxonomyTarget::factory()->create(['identifier' => NULL]);
-        $taxonomyTargetThird = TaxonomyTarget::factory()->create(['identifier' => NULL]);
+        TaxonomyTarget::factory()->create(['identifier' => 'identifier']);
+        $taxonomyTargetSecond = TaxonomyTarget::factory()->create(['identifier' => null]);
+        $taxonomyTargetThird = TaxonomyTarget::factory()->create(['identifier' => null]);
         $this->assertEquals($taxonomyTargetSecond->identifier, $taxonomyTargetThird->identifier);
         $this->assertNull($taxonomyTargetSecond->identifier);
         $this->assertNull($taxonomyTargetThird->identifier);
         $this->expectException(ValidationException::class);
-        TaxonomyTarget::factory()->create(['identifier' => "identifier"]);
+        TaxonomyTarget::factory()->create(['identifier' => 'identifier']);
     }
 }

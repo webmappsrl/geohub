@@ -4,8 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class DeleteApiTest extends TestCase
@@ -19,6 +17,7 @@ class DeleteApiTest extends TestCase
         $response = $this->post('/api/auth/delete');
         $this->assertSame(400, $response->status());
     }
+
     public function testEditorUserIsNotDeleted()
     {
         $editorUser = User::Find(8);
@@ -26,6 +25,7 @@ class DeleteApiTest extends TestCase
         $response = $this->post('/api/auth/delete');
         $this->assertSame(400, $response->status());
     }
+
     public function testContributorUserIsDeleted()
     {
         $email = 'newemail@webmapp.it';

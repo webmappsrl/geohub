@@ -3,14 +3,12 @@
 namespace App\Nova;
 
 use App\Nova\Filters\AppFilter;
-use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
-use App\Nova\Filters\UgcUserFilter;
-use Laravel\Nova\Fields\Code;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -24,21 +22,22 @@ class UgcPoi extends Resource
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\UgcPoi::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'id';
+
     public static $search = [
-        'name'
+        'name',
     ];
+
     public static array $searchRelations = [
-        'taxonomy_wheres' => ['name']
+        'taxonomy_wheres' => ['name'],
     ];
 
     public static function group()
@@ -49,7 +48,6 @@ class UgcPoi extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -58,15 +56,12 @@ class UgcPoi extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -96,7 +91,8 @@ class UgcPoi extends Resource
                 unset($jsonRawData['date']);
                 unset($jsonRawData['nominatim']);
                 $rawData = json_encode($jsonRawData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                return  $rawData;
+
+                return $rawData;
             })->onlyOnDetail()->language('json')->rules('json'),
             Code::make(__('Device data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);
@@ -105,21 +101,24 @@ class UgcPoi extends Resource
                 $jsonData['city'] = $jsonRawData['city'];
                 $jsonData['date'] = $jsonRawData['date'];
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                return  $rawData;
+
+                return $rawData;
             })->onlyOnDetail()->language('json')->rules('json'),
             Code::make(__('Nominatim'), function ($model) {
                 $jsonData = json_decode($model->raw_data, true)['nominatim'];
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                return  $rawData;
+
+                return $rawData;
             })->onlyOnDetail()->language('json')->rules('json'),
             Code::make(__('Raw data'), function ($model) {
                 $rawData = json_encode(json_decode($model->raw_data, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                return  $rawData;
+
+                return $rawData;
             })->onlyOnDetail()->language('json')->rules('json'),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
+                    'related' => $model->getRelatedUgcGeojson(),
                 ];
             })->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
@@ -128,10 +127,6 @@ class UgcPoi extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -140,10 +135,6 @@ class UgcPoi extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -159,10 +150,6 @@ class UgcPoi extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -171,10 +158,6 @@ class UgcPoi extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {

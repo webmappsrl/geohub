@@ -123,7 +123,6 @@ return [
             'sslmode' => 'prefer',
         ],
 
-
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -169,7 +168,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
 
         'default' => [
@@ -200,10 +199,10 @@ return [
     */
     'dbal' => [
         'types' => [
-            # See https://github.com/mstaack/laravel-postgis/issues/144
+            // See https://github.com/mstaack/laravel-postgis/issues/144
             'geometry' => '\Doctrine\DBAL\Types\StringType',
             'geography' => '\Doctrine\DBAL\Types\StringType',
-        ]
-    ]
+        ],
+    ],
 
 ];

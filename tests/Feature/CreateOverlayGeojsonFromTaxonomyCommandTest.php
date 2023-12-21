@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\App;
-use Tests\TestCase;
 use App\Models\Layer;
 use App\Models\OverlayLayer;
 use App\Models\TaxonomyWhere;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 {
@@ -16,7 +16,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
     /**
      * @test if the command creates a geojson file
-     * 
+     *
      * @return void
      */
     public function test_the_command_creates_a_geojson_file()
@@ -58,7 +58,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
         //define the file path, directory path and the file extension
         $directoryPath = storage_path('/app/public/geojson/1000');
-        $filePath = $directoryPath . '/test.geojson';
+        $filePath = $directoryPath.'/test.geojson';
         $actualFileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 
         //define the expected extension of the file
@@ -80,7 +80,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
     /**
      * @test if the command creates a geojson file with the correct content
-     * 
+     *
      * @return void
      */
     public function test_the_content_is_a_feature_collection()
@@ -120,9 +120,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'name' => 'test',
         ]);
 
-        //define the file path and directory path 
+        //define the file path and directory path
         $directoryPath = storage_path('/app/public/geojson/1000');
-        $filePath = $directoryPath . '/test.geojson';
+        $filePath = $directoryPath.'/test.geojson';
 
         //check if the content is a featureCollection
         $this->assertStringContainsString('FeatureCollection', Storage::get('public/geojson/1000/test.geojson'));
@@ -134,7 +134,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
     /**
      * @test if the feature collection has the correct structure
-     * 
+     *
      * @return void
      */
     public function test_the_feature_collection_has_the_correct_structure()
@@ -174,10 +174,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'name' => 'test',
         ]);
 
-        //define the file path and directory path 
+        //define the file path and directory path
         $directoryPath = storage_path('/app/public/geojson/1000');
-        $filePath = $directoryPath . '/test.geojson';
-
+        $filePath = $directoryPath.'/test.geojson';
 
         //check if the content is a featureCollection
         $this->assertStringContainsString('FeatureCollection', Storage::get('public/geojson/1000/test.geojson'));
@@ -201,7 +200,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
 
     /**
      * @test if the property field has the correct structure
-     * 
+     *
      * @return void
      */
     public function test_the_property_field_has_the_correct_structure()
@@ -223,9 +222,9 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             'overlay_layer_id' => 1000,
         ]);
 
-        //define the file path and directory path 
+        //define the file path and directory path
         $directoryPath = storage_path('/app/public/geojson/1000');
-        $filePath = $directoryPath . '/test.geojson';
+        $filePath = $directoryPath.'/test.geojson';
 
         //create a taxonomyWhere
         $taxonomyWhere = TaxonomyWhere::factory()->create([
@@ -256,7 +255,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
             $this->assertArrayHasKey('properties', $feature);
         }
 
-        //check if the property field has the correct structure 
+        //check if the property field has the correct structure
         foreach ($geojson['features'] as $feature) {
             $this->assertArrayHasKey('layer', $feature['properties']);
             $this->assertArrayHasKey('id', $feature['properties']['layer']);
@@ -274,7 +273,6 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         unlink($filePath);
         rmdir($directoryPath);
     }
-
 
     /**
      * Test if the command can handle no layers found for the overlay layer.
@@ -301,8 +299,8 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         ]);
 
         //run the command with no layers attached to the overlay layer
-        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' ' . $overlayLayer->id . ' test_file_name')
-            ->expectsOutput('No layers found for overlay layer ' . $overlayLayer->name)
+        $this->artisan('geohub:createOverlayGeojson '.$app->id.' '.$overlayLayer->id.' test_file_name')
+            ->expectsOutput('No layers found for overlay layer '.$overlayLayer->name)
             ->assertExitCode(1);
     }
 
@@ -326,8 +324,8 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         $overlayLayer->layers()->attach($layer);
 
         //run the command with no taxonomies attached to the layer
-        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' ' . $overlayLayer->id . ' test_file_name')
-            ->expectsOutput('No taxonomies found for layer ' . $layer->name)
+        $this->artisan('geohub:createOverlayGeojson '.$app->id.' '.$overlayLayer->id.' test_file_name')
+            ->expectsOutput('No taxonomies found for layer '.$layer->name)
             ->assertExitCode(0);
     }
 
@@ -342,7 +340,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         $overlayLayer = OverlayLayer::factory()->create();
 
         //run the command with an invalid app id
-        $this->artisan('geohub:createOverlayGeojson 9999 ' . $overlayLayer->id . ' test_file_name')
+        $this->artisan('geohub:createOverlayGeojson 9999 '.$overlayLayer->id.' test_file_name')
             ->expectsOutput('App with id 9999 not found.')
             ->assertExitCode(1);
     }
@@ -358,7 +356,7 @@ class CreateOverlayGeojsonFromTaxonomyCommandTest extends TestCase
         $app = App::factory()->create();
 
         //run the command with an invalid overlayLayer id
-        $this->artisan('geohub:createOverlayGeojson ' . $app->id . ' 9999 test_file_name')
+        $this->artisan('geohub:createOverlayGeojson '.$app->id.' 9999 test_file_name')
             ->expectsOutput('OverlayLayer with id 9999 not found.')
             ->assertExitCode(1);
     }

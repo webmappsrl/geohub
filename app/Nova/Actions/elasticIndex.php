@@ -12,18 +12,14 @@ class elasticIndex extends Action
 {
     use InteractsWithQueue, Queueable;
 
-
     public function name(): string
     {
-        return __("Elastic Index");
+        return __('Elastic Index');
     }
-
 
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)

@@ -23,7 +23,7 @@ class UgcTrackStoreTest extends TestCase
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
-            'app_id' => 'it.webmapp.test'
+            'app_id' => 'it.webmapp.test',
         ])->create();
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -33,8 +33,8 @@ class UgcTrackStoreTest extends TestCase
 
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "LineString",
-            "coordinates" => [[10, 44], [11, 44], [11, 43], [10, 43]]
+            'type' => 'LineString',
+            'coordinates' => [[10, 44], [11, 44], [11, 43], [10, 43]],
         ];
 
         $data = [
@@ -43,12 +43,12 @@ class UgcTrackStoreTest extends TestCase
                 'user_id' => $user->id,
                 'app_id' => 'it.webmapp.test',
                 'name' => $this->faker->name(),
-                'description' => $this->faker->text()
+                'description' => $this->faker->text(),
             ],
             'geometry' => $geometry,
         ];
 
-        $response = $this->postJson(route("api.ugc.track.store", $data));
+        $response = $this->postJson(route('api.ugc.track.store', $data));
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);
@@ -71,7 +71,7 @@ class UgcTrackStoreTest extends TestCase
             'description' => $this->faker->text(),
         ];
 
-        $response = $this->postJson(route("api.ugc.track.store", $data));
+        $response = $this->postJson(route('api.ugc.track.store', $data));
         $response->assertStatus(401);
     }
 
@@ -79,7 +79,7 @@ class UgcTrackStoreTest extends TestCase
     {
         $user = User::where('email', '=', 'team@webmapp.it')->first();
         App::factory([
-            'app_id' => 'it.webmapp.test'
+            'app_id' => 'it.webmapp.test',
         ])->create();
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -90,8 +90,8 @@ class UgcTrackStoreTest extends TestCase
 
         $this->actingAs($user, 'api');
         $geometry = [
-            "type" => "LineString",
-            "coordinates" => [[10, 44], [11, 44], [11, 43], [10, 43]]
+            'type' => 'LineString',
+            'coordinates' => [[10, 44], [11, 44], [11, 43], [10, 43]],
         ];
 
         $data = [
@@ -100,12 +100,12 @@ class UgcTrackStoreTest extends TestCase
                 'user_id' => $user->id,
                 'app_id' => 'it.webmapp.test',
                 'name' => $this->faker->name(),
-                'image_gallery' => $medias->pluck('id')->toArray()
+                'image_gallery' => $medias->pluck('id')->toArray(),
             ],
             'geometry' => $geometry,
         ];
 
-        $response = $this->postJson(route("api.ugc.track.store", $data));
+        $response = $this->postJson(route('api.ugc.track.store', $data));
         $content = $response->getContent();
         $response->assertStatus(201);
         $this->assertJson($content);

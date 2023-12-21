@@ -18,7 +18,7 @@ class UgcTrackTest extends TestCase
     public function testGetGeojsonWithoutGeometry()
     {
         $track = UgcTrack::factory([
-            'geometry' => null
+            'geometry' => null,
         ])->create();
 
         $geojson = $track->getGeojson();
@@ -29,7 +29,7 @@ class UgcTrackTest extends TestCase
     public function testGetGeojsonWithGeometry()
     {
         $track = UgcTrack::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
         ])->create();
 
         $geojson = $track->getGeojson();
@@ -52,7 +52,7 @@ class UgcTrackTest extends TestCase
     public function testGetRelatedUgcWithNoRelated()
     {
         $track = UgcTrack::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
         ])->create();
 
         $geojson = $track->getRelatedUgcGeojson();

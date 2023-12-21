@@ -2,21 +2,17 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Text;
-use NovaAttachMany\AttachMany;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\MorphTo;
-use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
-use Nova\Multiselect\Multiselect;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaAttachMany\AttachMany;
 use Yna\NovaSwatches\Swatches;
 
 class OverlayLayer extends Resource
@@ -41,24 +37,24 @@ class OverlayLayer extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name'
+        'id', 'name',
     ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
     {
         // $app_name = str_replace(' ','-',strtolower($this->app->name));
         $app_name = $this->app_id;
+
         return [
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('name'),
             NovaTabTranslatable::make([
-                Text::make(__('Label'), 'label')
+                Text::make(__('Label'), 'label'),
             ]),
             Boolean::make('Show this overlay by default', 'default')->help('turn this option on if you want to show this overlay by default')->hideFromIndex()->hideWhenCreating(),
             BelongsTo::make('App', 'app', App::class)
@@ -66,7 +62,7 @@ class OverlayLayer extends Resource
                 ->hideFromIndex(),
             File::make('File', 'feature_collection')
                 ->disk('public')
-                ->path('geojson/' . $app_name)
+                ->path('geojson/'.$app_name)
                 ->acceptedTypes(['.json', '.geojson'])
                 //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
@@ -74,7 +70,7 @@ class OverlayLayer extends Resource
                 })
                 ->hideWhenCreating(),
             Text::make('Icon', 'icon', function () {
-                return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
+                return "<div style='width:64px;height:64px;'>".$this->icon.'</div>';
             })->asHtml()->onlyOnDetail(),
             Swatches::make('Fill Color')->default(function () {
                 return $this->app->primary_color;
@@ -95,7 +91,7 @@ class OverlayLayer extends Resource
                 ->hideWhenCreating(),
             Text::make('Layers', function () {
                 if (count($this->layers) > 0) {
-                    return $this->layers->pluck('name')->implode("</br>");
+                    return $this->layers->pluck('name')->implode('</br>');
                 } else {
                     return 'No layers';
                 }
@@ -106,7 +102,6 @@ class OverlayLayer extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -117,7 +112,6 @@ class OverlayLayer extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -128,7 +122,6 @@ class OverlayLayer extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -139,7 +132,6 @@ class OverlayLayer extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
@@ -155,6 +147,7 @@ class OverlayLayer extends Resource
         try {
             $resource = \App\Models\OverlayLayer::find($resourceId);
             $app_id = $resource->app_id;
+
             return $query->where('app_id', $app_id);
         } catch (\Throwable $th) {
             return $query->where('id', $resourceId);

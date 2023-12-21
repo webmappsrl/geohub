@@ -2,17 +2,16 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use App\Models\EcPoi;
 use App\Http\Facades\OsmClient;
 use App\Models\EcMedia;
+use App\Models\EcPoi;
+use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Stmt\Foreach_;
 
 class UpdatePOIFromOsm extends Command
 {
@@ -30,9 +29,10 @@ class UpdatePOIFromOsm extends Command
      *
      * @var string
      */
-    protected $description =  'Loops through all the pois belonging to the user identified by user_email. If the parameter osmid is not null, it performs some sync operations from OSM to GEOHUB.';
+    protected $description = 'Loops through all the pois belonging to the user identified by user_email. If the parameter osmid is not null, it performs some sync operations from OSM to GEOHUB.';
 
-    protected $errorPois = array();
+    protected $errorPois = [];
+
     protected $osmid;
 
     /**
@@ -56,35 +56,37 @@ class UpdatePOIFromOsm extends Command
         $this->osmid = $this->option('osmid');
         if ($userEmail == null) {
             $this->error('Please provide a user email');
+
             return 0;
         }
 
         // Find the user based on the provided email
         $user = User::where('email', $userEmail)->first();
 
-        if (!$user) {
+        if (! $user) {
             $this->error('User not found');
+
             return 0;
         }
 
         // Retrieve all pois belonging to the user
         $pois = EcPoi::where('user_id', $user->id)->get();
 
-        $this->info('Updating pois for user ' . $user->name . ' (' . $user->email . ')...');
+        $this->info('Updating pois for user '.$user->name.' ('.$user->email.')...');
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            if (!empty($poi->osmid) && empty($this->osmid)) {
+            if (! empty($poi->osmid) && empty($this->osmid)) {
                 $this->updatePoiData($poi);
             }
-            if (!empty($this->osmid) && $poi->osmid == $this->osmid) {
+            if (! empty($this->osmid) && $poi->osmid == $this->osmid) {
                 $this->updatePoiData($poi);
             }
         }
         //print to terminal all the pois not updated
-        if (!empty($this->errorPois)) {
+        if (! empty($this->errorPois)) {
             foreach ($this->errorPois as $poi) {
-                $this->error('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ' ) not updated.');
+                $this->error('Poi '.$poi->name.' (osmid: '.$poi->osmid.' ) not updated.');
             }
         }
 
@@ -95,32 +97,34 @@ class UpdatePOIFromOsm extends Command
     private function updatePoiData(EcPoi $poi)
     {
 
-        $this->info('Updating poi ' . $poi->name . ' (' . $poi->osmid . ')...');
+        $this->info('Updating poi '.$poi->name.' ('.$poi->osmid.')...');
 
         try {
             // Retrieve the geojson data from OSM based on the poi's osmid
-            $osmPoi = json_decode(OsmClient::getGeojson('node/' . $poi->osmid), true);
+            $osmPoi = json_decode(OsmClient::getGeojson('node/'.$poi->osmid), true);
             //if $osmPoi['_api_url'] is empty log error and skip the poi
             if (empty($osmPoi['_api_url'])) {
-                $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (https://api.openstreetmap.org/api/0.6/node/' . $poi->osmid . '.json). Url not valid');
+                $this->error('Error while retrieving data from OSM for poi '.$poi->name.' (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
                 array_push($this->errorPois, $poi);
+
                 return;
             }
         } catch (Exception $e) {
-            $this->error('Error while retrieving data from OSM for poi ' . $poi->name . ' (' . $poi->osmid . '). Error: ' . $e->getMessage());
+            $this->error('Error while retrieving data from OSM for poi '.$poi->name.' ('.$poi->osmid.'). Error: '.$e->getMessage());
             array_push($this->errorPois, $poi);
+
             return;
         }
 
         if (array_key_exists('properties', $osmPoi) && array_key_exists('wikimedia_commons', $osmPoi['properties'])) {
-            if (!$poi->feature_image) {
-                $url = 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=timestamp|user|userid|comment|canonicaltitle|url|size|dimensions|sha1|mime|thumbmime|mediatype|bitdepth&format=json&titles=' . $osmPoi['properties']['wikimedia_commons'];
+            if (! $poi->feature_image) {
+                $url = 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=timestamp|user|userid|comment|canonicaltitle|url|size|dimensions|sha1|mime|thumbmime|mediatype|bitdepth&format=json&titles='.$osmPoi['properties']['wikimedia_commons'];
                 try {
                     $image = http::get($url);
                     $pages = json_decode($image->body(), true)['query']['pages'];
                     foreach ($pages as $page) {
-                        $options  = array('http' => array('user_agent' => 'custom user agent string'));
-                        $context  = stream_context_create($options);
+                        $options = ['http' => ['user_agent' => 'custom user agent string']];
+                        $context = stream_context_create($options);
                         $image_content = file_get_contents($page['imageinfo'][0]['url'], false, $context);
                     }
                     $ec_storage_name = config('geohub.ec_media_storage_name');
@@ -132,21 +136,21 @@ class UpdatePOIFromOsm extends Command
                             'name' => $poi->name,
                             'geometry' => DB::select("SELECT ST_AsText('$poi->geometry') As wkt")[0]->wkt,
                             'url' => '',
-                            'description' => $tag_description
+                            'description' => $tag_description,
                         ]
                     );
-                    Storage::disk('public')->put('ec_media/' . $page['imageinfo'][0]['canonicaltitle'], $image_content);
-                    $ec_media->url = (Storage::disk('public')->exists('ec_media/' . $page['imageinfo'][0]['canonicaltitle'])) ? 'ec_media/' . $page['imageinfo'][0]['canonicaltitle'] : '';
+                    Storage::disk('public')->put('ec_media/'.$page['imageinfo'][0]['canonicaltitle'], $image_content);
+                    $ec_media->url = (Storage::disk('public')->exists('ec_media/'.$page['imageinfo'][0]['canonicaltitle'])) ? 'ec_media/'.$page['imageinfo'][0]['canonicaltitle'] : '';
                     $ec_media->save();
                     $poi->featureImage()->associate($ec_media);
                     if ($poi->ecMedia()->count() < 1) {
                         if ($poi->feature_image) {
-                            Log::info('Updating: ' . $poi->id);
+                            Log::info('Updating: '.$poi->id);
                             $poi->ecMedia()->sync($poi->featureImage);
                         }
                     }
                 } catch (Exception $e) {
-                    Log::info('Error creating EcMedia with POI id: ' . $poi->id . "\n ERROR: " . $e->getMessage());
+                    Log::info('Error creating EcMedia with POI id: '.$poi->id."\n ERROR: ".$e->getMessage());
                 }
             }
         }
@@ -160,11 +164,11 @@ class UpdatePOIFromOsm extends Command
         // Set the 'skip_geomixer_tech' field to true if the 'ele' attribute was updated
         if ($poi->isDirty('ele')) {
             $poi->skip_geomixer_tech = true;
-            $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') ele updated. Skip_geomixer_tech set to true.');
+            $this->info('Poi '.$poi->name.' (osmid: '.$poi->osmid.') ele updated. Skip_geomixer_tech set to true.');
         }
         // Save the updated poi
         $poi->save();
-        $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') updated.');
+        $this->info('Poi '.$poi->name.' (osmid: '.$poi->osmid.') updated.');
     }
 
     // Update attribute of the poi if it exists in the OSM data
@@ -184,15 +188,15 @@ class UpdatePOIFromOsm extends Command
     // Update the name of the poi if the 'name' key exists in the OSM data
     private function updatePoiName(EcPoi $poi, array $osmPoi)
     {
-        $name_array = array();
+        $name_array = [];
 
-        if (array_key_exists('ref', $osmPoi['properties']) && !empty($osmPoi['properties']['ref'])) {
+        if (array_key_exists('ref', $osmPoi['properties']) && ! empty($osmPoi['properties']['ref'])) {
             array_push($name_array, $osmPoi['properties']['ref']);
         }
-        if (array_key_exists('name', $osmPoi['properties']) && !empty($osmPoi['properties']['name'])) {
+        if (array_key_exists('name', $osmPoi['properties']) && ! empty($osmPoi['properties']['name'])) {
             array_push($name_array, $osmPoi['properties']['name']);
         }
-        if (!empty($name_array)) {
+        if (! empty($name_array)) {
             $poi->name = implode(' - ', $name_array);
         }
     }

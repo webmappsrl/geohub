@@ -4,7 +4,6 @@ namespace App\Nova\Filters;
 
 use App\Models\EcTrack;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Filters\Filter;
 
 class SearchableFromOSMID extends Filter
@@ -19,7 +18,6 @@ class SearchableFromOSMID extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -36,14 +34,13 @@ class SearchableFromOSMID extends Filter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
     {
         $current_user_id = $request->user()->id;
 
-        $taxModels = EcTrack::where('user_id',$current_user_id)->orderBy('osmid')->pluck('id','osmid')->toArray();
+        $taxModels = EcTrack::where('user_id', $current_user_id)->orderBy('osmid')->pluck('id', 'osmid')->toArray();
 
         return $taxModels;
     }

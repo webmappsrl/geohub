@@ -121,7 +121,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Determine if the field should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)
@@ -136,7 +135,6 @@ class BelongsTo extends Field implements RelatableField
      *
      * Ex: Is this a "user" belongs to field in a blog post list being shown on the "user" detail page.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function isNotRedundant(Request $request)
@@ -176,7 +174,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Define the callback that should be used to resolve the field's value.
      *
-     * @param  callable  $displayCallback
      * @return $this
      */
     public function displayUsing(callable $displayCallback)
@@ -187,7 +184,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Get the validation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getRules(NovaRequest $request)
@@ -207,7 +203,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  object  $model
      * @return void
      */
@@ -229,7 +224,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute
@@ -255,7 +249,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Build an associatable query for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  bool  $withTrashed
      * @return \Laravel\Nova\Contracts\QueryBuilder
      */
@@ -270,9 +263,9 @@ class BelongsTo extends Field implements RelatableField
         $request->first === 'true'
                         ? $query->whereKey($model->newQueryWithoutScopes(), $request->current)
                         : $query->search(
-                                $request, $model->newQuery(), $request->search,
-                                [], [], TrashedStatus::fromBoolean($withTrashed)
-                          );
+                            $request, $model->newQuery(), $request->search,
+                            [], [], TrashedStatus::fromBoolean($withTrashed)
+                        );
 
         return $query->tap(function ($query) use ($request, $model) {
             forward_static_call($this->associatableQueryCallable($request, $model), $request, $query, $this);
@@ -282,7 +275,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Get the associatable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return array
      */
@@ -296,7 +288,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Get the associatable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return string
      */
@@ -312,7 +303,6 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Format the given associatable resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
      * @return array
      */

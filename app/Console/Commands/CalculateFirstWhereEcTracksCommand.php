@@ -52,10 +52,10 @@ class CalculateFirstWhereEcTracksCommand extends Command
 
         // get All Ec Features
         switch ($type) {
-            case "track":
+            case 'track':
                 $eloquentQuery = EcTrack::query();
                 break;
-            case "poi":
+            case 'poi':
                 $eloquentQuery = EcPoi::query();
                 break;
             default:
@@ -67,7 +67,7 @@ class CalculateFirstWhereEcTracksCommand extends Command
                 $user = User::find(intval($author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID ' . $author);
+                throw new Exception('No User found with this ID '.$author);
             }
         } else {
             try {
@@ -76,7 +76,7 @@ class CalculateFirstWhereEcTracksCommand extends Command
                 $this->author_id = $user->id;
 
             } catch (Exception $e) {
-                throw new Exception('No User found with this email ' . $author);
+                throw new Exception('No User found with this email '.$author);
             }
         }
 
@@ -89,17 +89,17 @@ class CalculateFirstWhereEcTracksCommand extends Command
                 foreach ($wheres as $where) {
                     if ($where->admin_level == 8) {
                         $where_geom = $where->geometry;
-                        $risultato[$where->id] = DB::select("SELECT ST_Length(ST_Intersection(:track_geom, :where_geom)::geography) / 1000 AS km", ['track_geom' => $track_geom,'where_geom' => $where_geom])[0]->km;
+                        $risultato[$where->id] = DB::select('SELECT ST_Length(ST_Intersection(:track_geom, :where_geom)::geography) / 1000 AS km', ['track_geom' => $track_geom, 'where_geom' => $where_geom])[0]->km;
                     }
                 }
-                if (!empty($risultato)) {
+                if (! empty($risultato)) {
                     $feature->taxonomy_wheres_show_first = $this->trovaChiaveValoreMassimo($risultato);
-                    Log::info('Adding First where tax to ectrack: ' . $feature->id);
+                    Log::info('Adding First where tax to ectrack: '.$feature->id);
                     $feature->save();
                 }
             }
         } catch (Exception $e) {
-            throw new Exception('Error ' . $feature->id . ' ERROR ' . $e->getMessage());
+            throw new Exception('Error '.$feature->id.' ERROR '.$e->getMessage());
         }
 
     }

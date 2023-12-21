@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDetailsTableFieldToApps extends Migration {
+class AddDetailsTableFieldToApps extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::table('apps', function (Blueprint $table) {
             $table->boolean('table_details_show_duration_forward')->default(true);
             $table->boolean('table_details_show_duration_backward')->default(false);
@@ -36,7 +38,8 @@ class AddDetailsTableFieldToApps extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::table('apps', function (Blueprint $table) {
             $table->dropColumn('table_details_show_duration_forward');
             $table->dropColumn('table_details_show_duration_backward');

@@ -2,19 +2,14 @@
 
 namespace App\Imports;
 
-use Schema;
 use App\Models\EcTrack;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-
 class EcTrackFromCSV implements ToModel, WithHeadingRow
 {
     /**
-     * @param array $row
-     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
@@ -29,7 +24,6 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
         //ascent = dislivello totale UP
         //descent = dislivello totale DOWN
 
-
         $user_id = auth()->user()->id;
         $ecTrackData = [];
         $validHeaders = config('services.importers.ecTracks.validHeaders');
@@ -37,11 +31,11 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
         $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
         $invalidHeaders = array_filter($invalidHeaders, function ($value) {
-            return !is_numeric($value);
+            return ! is_numeric($value);
         });
 
-        if (!empty($invalidHeaders)) {
-            $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeaders) . ". Please check the file and try again.";
+        if (! empty($invalidHeaders)) {
+            $errorMessage = 'Invalid headers found:'.implode(', ', $invalidHeaders).'. Please check the file and try again.';
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
@@ -60,7 +54,7 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                             $value = str_replace('km', '', $value);
                         }
                     }
-                    if (!empty($value)) {
+                    if (! empty($value)) {
                         $ecTrackData[$key] = $value;
                     }
                 }

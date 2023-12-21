@@ -16,28 +16,29 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 
 /**
  * Class TaxonomyWhere
  *
- * @package App\Models
  *
  * @property string import_method
  * @property int    id
  */
 class TaxonomyWhere extends Model
 {
-    use HasFactory, GeometryFeatureTrait, HasTranslationsFixed;
+    use GeometryFeatureTrait, HasFactory, HasTranslationsFixed;
 
     public array $translatable = ['name', 'description', 'excerpt'];
+
     protected $table = 'taxonomy_wheres';
+
     protected $fillable = [
         'name',
-        'import_method'
+        'import_method',
     ];
+
     private HoquServiceProvider $hoquServiceProvider;
 
     public function __construct(array $attributes = [])
@@ -52,7 +53,7 @@ class TaxonomyWhere extends Model
         static::creating(function ($taxonomyWhere) {
             if ($taxonomyWhere->identifier != null) {
                 $validateTaxonomyWhere = TaxonomyWhere::where('identifier', 'LIKE', $taxonomyWhere->identifier)->first();
-                if (!$validateTaxonomyWhere == null) {
+                if (! $validateTaxonomyWhere == null) {
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
@@ -66,22 +67,18 @@ class TaxonomyWhere extends Model
 
     /**
      * All the taxonomy where imported using a sync command are not editable
-     *
-     * @return bool
      */
     public function isEditableByUserInterface(): bool
     {
-        return !$this->isImportedByExternalData();
+        return ! $this->isImportedByExternalData();
     }
 
     /**
      * Check if the current taxonomy where is imported from an external source
-     *
-     * @return bool
      */
     public function isImportedByExternalData(): bool
     {
-        return !is_null($this->import_method);
+        return ! is_null($this->import_method);
     }
 
     public function save(array $options = [])
@@ -95,7 +92,7 @@ class TaxonomyWhere extends Model
         });
 
         static::saving(function ($taxonomyWhere) {
-            if (null !== $taxonomyWhere->identifier) {
+            if ($taxonomyWhere->identifier !== null) {
                 $taxonomyWhere->identifier = Str::slug($taxonomyWhere->identifier, '-');
             }
         });
@@ -104,13 +101,13 @@ class TaxonomyWhere extends Model
         try {
             $this->hoquServiceProvider->store('update_geomixer_taxonomy_where', ['id' => $this->id]);
         } catch (\Exception $e) {
-            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            Log::error('An error occurred during a store operation: '.$e->getMessage());
         }
     }
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function ugc_pois(): BelongsToMany
@@ -154,8 +151,6 @@ class TaxonomyWhere extends Model
     }
 
     /**
-     * @param $message
-     *
      * @throws ValidationException
      */
     private static function validationError($message)
@@ -163,13 +158,11 @@ class TaxonomyWhere extends Model
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
-        throw  ValidationException::withMessages($messageBag->getMessages());
+        throw ValidationException::withMessages($messageBag->getMessages());
     }
 
     /**
      * Return the json version of the taxonomy where, avoiding the geometry
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -181,8 +174,9 @@ class TaxonomyWhere extends Model
                 in_array($property, $propertiesToClear)
                 || is_null($value)
                 || (is_array($value) && count($value) === 0)
-            )
+            ) {
                 unset($array[$property]);
+            }
         }
 
         return $array;
@@ -190,23 +184,21 @@ class TaxonomyWhere extends Model
 
     /**
      * Create a geojson from the ec track
-     *
-     * @return array
      */
     public function getGeojson(): ?array
     {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson();
 
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
      * Calculate the bounding box of the track
-     *
-     * @return array
      */
     public function bbox(): array
     {
@@ -216,7 +208,6 @@ class TaxonomyWhere extends Model
         return array_map('floatval', explode(' ', $bboxString));
     }
 
-
     /**
      * @param string json encoded geometry.
      */
@@ -224,9 +215,9 @@ class TaxonomyWhere extends Model
     {
         $geometry = $contentType = null;
         if ($fileContent) {
-            if (substr($fileContent, 0, 5) == "<?xml") {
+            if (substr($fileContent, 0, 5) == '<?xml') {
                 $geojson = '';
-                if ('' === $geojson) {
+                if ($geojson === '') {
                     try {
                         $geojson = Gisconverter::gpxToGeojson($fileContent);
                         $content = json_decode($geojson);
@@ -235,7 +226,7 @@ class TaxonomyWhere extends Model
                     }
                 }
 
-                if ('' === $geojson) {
+                if ($geojson === '') {
                     try {
                         $geojson = Gisconverter::kmlToGeojson($fileContent);
                         $content = json_decode($geojson);
@@ -253,7 +244,7 @@ class TaxonomyWhere extends Model
                 }
             }
             $contentGeometry = $content->geometry;
-            $geometry = DB::raw("(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "'))");
+            $geometry = DB::raw("(ST_GeomFromGeoJSON('".json_encode($contentGeometry)."'))");
         }
 
         return $geometry;

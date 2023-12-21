@@ -32,5 +32,4 @@ class TaxonomyWhenable extends Migration
     {
         Schema::dropIfExists('taxonomy_whenables');
     }
-
 }

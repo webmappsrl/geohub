@@ -2,9 +2,7 @@
 
 namespace App\Imports;
 
-use Schema;
 use App\Models\EcPoi;
-use App\Models\TaxonomyPoiType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -13,8 +11,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class EcPoiFromCSV implements ToModel, WithHeadingRow
 {
     /**
-     * @param array $row
-     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
@@ -26,12 +22,13 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
         //Check if the poi belongs to the user
         try {
-            if (!isset($ecPoiData['id'])) {
+            if (! isset($ecPoiData['id'])) {
                 $this->buildEcPoi($ecPoiData);
+
                 return;
             }
-            if (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
-                throw new \Exception('The poi with ID ' . $ecPoiData['id'] . ' is already in the database but it is not in your list. Please check the file and try again.');
+            if (! in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
+                throw new \Exception('The poi with ID '.$ecPoiData['id'].' is already in the database but it is not in your list. Please check the file and try again.');
             } elseif (in_array($ecPoiData['id'], $userPois)) {
                 $this->updateEcPoi($ecPoiData);
             } else {
@@ -46,8 +43,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     /**
      * Process the row data.
      *
-     * @param array $row
-     * @return array
      * @throws \Exception
      */
     private function processRow(array $row): array
@@ -58,11 +53,11 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
         $invalidHeaders = array_filter($invalidHeaders, function ($value) {
-            return !is_numeric($value);
+            return ! is_numeric($value);
         });
 
-        if (!empty($invalidHeaders)) {
-            $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeaders) . ". Please check the file and try again.";
+        if (! empty($invalidHeaders)) {
+            $errorMessage = 'Invalid headers found:'.implode(', ', $invalidHeaders).'. Please check the file and try again.';
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
@@ -83,8 +78,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     /**
      * Validate Poi data.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  mixed  $value
+     *
      * @throws \Exception
      */
     private function validatePoiData(string $key, $value): void
@@ -102,7 +97,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         }
 
         if (($key == 'lat' || $key == 'lng') && $value === null) {
-            if (!is_numeric($value)) {
+            if (! is_numeric($value)) {
                 throw new \Exception('Invalid coordinates found. Please check the file and try again.');
             }
         }
@@ -115,7 +110,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     /**
      * Validate URL.
      *
-     * @param mixed $value
+     * @param  mixed  $value
+     *
      * @throws \Exception
      */
     private function validateUrl($value): void
@@ -127,12 +123,10 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
     /**
      * Add geometry to Poi data.
-     *
-     * @param array $ecPoiData
      */
     private function addGeometry(array &$ecPoiData): void
     {
-        $geom = '{"type":"Point","coordinates":[' . $ecPoiData['lng'] . ',' . $ecPoiData['lat'] . ']}';
+        $geom = '{"type":"Point","coordinates":['.$ecPoiData['lng'].','.$ecPoiData['lat'].']}';
         $geom = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geom')) As wkt")[0]->wkt;
         $ecPoiData['geometry'] = $geom;
 
@@ -142,9 +136,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
     /**
      * Add user_id to Poi data.
-     *
-     * @param array $ecPoiData
-     * @param int $user_id
      */
     private function addUserId(array &$ecPoiData, int $user_id): void
     {
@@ -153,8 +144,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
     /**
      * Create EcPoi.
-     *
-     * @param array $ecPoiData
      */
     private function buildEcPoi(array $ecPoiData): void
     {
@@ -165,9 +154,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         $ecPoi->save();
     }
 
-    /** Update EcPoi 
-     * 
-     * @param array $ecPoiData
+    /** Update EcPoi
+     *
      */
     private function updateEcPoi(array $ecPoiData): void
     {
@@ -181,9 +169,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
     /**
      * Set translations for Poi.
-     *
-     * @param EcPoi $ecPoi
-     * @param array $ecPoiData
      */
     private function setTranslations(EcPoi $ecPoi, array $ecPoiData): void
     {
@@ -207,9 +192,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
 
     /**
      * Sync Poi types and themes.
-     *
-     * @param EcPoi $ecPoi
-     * @param array $ecPoiData
      */
     private function syncPoiTypesAndThemes(EcPoi $ecPoi, array $ecPoiData): void
     {
@@ -236,9 +218,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     /**
      * Get Taxonomy IDs.
      *
-     * @param mixed $taxonomy
-     * @param string $table
-     * @return array
+     * @param  mixed  $taxonomy
      */
     private function getTaxonomyIds($taxonomy, string $table): array
     {
@@ -253,14 +233,14 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
                 ->select('id')
                 ->where(function ($query) use ($taxonomies) {
                     foreach ($taxonomies as $taxonomy) {
-                        $query->where('identifier',  $taxonomy);
+                        $query->where('identifier', $taxonomy);
                     }
                 })
                 ->pluck('id')
                 ->toArray() ?? [];
         } catch (\Illuminate\Database\QueryException $e) {
             \Log::error("A database error occurred: {$e->getMessage()}");
-            throw new \Exception($name . ' not found in the database. Please check the file and try again.');
+            throw new \Exception($name.' not found in the database. Please check the file and try again.');
         }
 
         return $modelsId;

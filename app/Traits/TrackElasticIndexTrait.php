@@ -4,29 +4,28 @@ namespace App\Traits;
 
 use App\Models\EcTrack;
 use Elasticsearch\ClientBuilder;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 trait TrackElasticIndexTrait
 {
     /**
      * Creates or Updates the EcTrack index on Elastic
      *
-     * @param String $index_name
-     * @param Array $layers
-     * @return void
+     * @param  string  $index_name
+     * @param  array  $layers
      */
     public function elasticIndexUpsert($index_name, $layers): void
     {
-        Log::info('Update Elastic Indexing track ' . $this->id);
+        Log::info('Update Elastic Indexing track '.$this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
-        ->select(
-            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-        )
-        ->first()
+            ->select(
+                DB::raw('ST_AsGeoJSON(ST_Force2D(geometry)) as geom')
+            )
+            ->first()
         ->geom;
 
         // FEATURE IMAGE
@@ -88,37 +87,37 @@ trait TrackElasticIndexTrait
             'properties' => $properties,
             'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref,
-            'start' =>  $start,
-            'end' =>  $end,
-            'cai_scale' =>  $this->cai_scale ,
-            'from' =>  $this->getActualOrOSFValue('from'),
-            'to' =>  $this->getActualOrOSFValue('to'),
-            'name' =>  $this->name,
+            'ref' => $this->ref,
+            'start' => $start,
+            'end' => $end,
+            'cai_scale' => $this->cai_scale,
+            'from' => $this->getActualOrOSFValue('from'),
+            'to' => $this->getActualOrOSFValue('to'),
+            'name' => $this->name,
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
             'feature_image' => $feature_image,
-            "distance" => $this->setEmptyValueToZero($this->distance),
-            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
-            "ascent" => $this->setEmptyValueToZero($this->ascent),
+            'distance' => $this->setEmptyValueToZero($this->distance),
+            'duration_forward' => $this->setEmptyValueToZero($this->duration_forward),
+            'ascent' => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'layers' => $layers,
-            'searchable' => $this->getSearchableString()
+            'searchable' => $this->getSearchableString(),
         ];
 
         $params_update = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => [
-                'doc' => $params
-            ]
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => [
+                'doc' => $params,
+            ],
         ];
         $params_index = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => $params
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => $params,
         ];
 
         // NORMAL INDEX
@@ -133,15 +132,14 @@ trait TrackElasticIndexTrait
     /**
      * Creates or Updates the EcTrack LOW index on Elastic
      *
-     * @param String $index_name
-     * @param Array $layers
-     * @return void
+     * @param  string  $index_name
+     * @param  array  $layers
      */
     public function elasticIndexUpsertLow($index_name, $layers): void
     {
         $tollerance = config('geohub.elastic_low_geom_tollerance');
 
-        Log::info('Update Elastic Low Indexing track ' . $this->id);
+        Log::info('Update Elastic Low Indexing track '.$this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
@@ -153,28 +151,28 @@ trait TrackElasticIndexTrait
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref ,
-            'strokeColor' =>  $this->hexToRgba($this->color),
-            'layers' =>  $layers,
-            "distance" => $this->setEmptyValueToZero($this->distance),
-            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
-            "ascent" => $this->setEmptyValueToZero($this->ascent),
+            'ref' => $this->ref,
+            'strokeColor' => $this->hexToRgba($this->color),
+            'layers' => $layers,
+            'distance' => $this->setEmptyValueToZero($this->distance),
+            'duration_forward' => $this->setEmptyValueToZero($this->duration_forward),
+            'ascent' => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
-            'searchable' => $this->getSearchableString()
+            'searchable' => $this->getSearchableString(),
         ];
 
         $params_update = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => [
-                'doc' => $params
-            ]
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => [
+                'doc' => $params,
+            ],
         ];
         $params_index = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => $params
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => $params,
         ];
 
         // LOW INDEX
@@ -189,46 +187,45 @@ trait TrackElasticIndexTrait
     /**
      * Creates or Updates the EcTrack HIGH index on Elastic
      *
-     * @param String $index_name
-     * @param Array $layers
-     * @return void
+     * @param  string  $index_name
+     * @param  array  $layers
      */
     public function elasticIndexUpsertHigh($index_name, $layers): void
     {
-        Log::info('Update Elastic HIGH Indexing track ' . $this->id);
+        Log::info('Update Elastic HIGH Indexing track '.$this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
-        ->select(
-            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-        )
-        ->first()
+            ->select(
+                DB::raw('ST_AsGeoJSON(ST_Force2D(geometry)) as geom')
+            )
+            ->first()
         ->geom;
 
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref ,
-            'strokeColor' =>  $this->hexToRgba($this->color),
-            'layers' =>  $layers,
-            "distance" => $this->setEmptyValueToZero($this->distance),
-            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
-            "ascent" => $this->setEmptyValueToZero($this->ascent),
+            'ref' => $this->ref,
+            'strokeColor' => $this->hexToRgba($this->color),
+            'layers' => $layers,
+            'distance' => $this->setEmptyValueToZero($this->distance),
+            'duration_forward' => $this->setEmptyValueToZero($this->duration_forward),
+            'ascent' => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
-            'searchable' => $this->getSearchableString()
+            'searchable' => $this->getSearchableString(),
         ];
 
         $params_update = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => [
-                'doc' => $params
-            ]
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => [
+                'doc' => $params,
+            ],
         ];
         $params_index = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => $params
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => $params,
         ];
 
         // HIGH INDEX
@@ -243,26 +240,25 @@ trait TrackElasticIndexTrait
     /**
      * Deletes the EcTrack index on Elastic
      *
-     * @param String $index_name
-     * @return void
+     * @param  string  $index_name
      */
     public function elasticIndexDelete($index_name): void
     {
-        $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
+        $params = ['index' => 'geohub_'.$index_name, 'id' => $this->id];
 
         try {
             if (config('app.env') == 'production') {
-                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+                Log::info('DELETE Elastic Indexing '.$index_name.' track '.$this->id);
 
-                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id)->body();
+                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host').'/geohub_'.$index_name.'/_doc/'.$this->id)->body();
             } else {
                 $client = ClientBuilder::create()
                     ->setHosts([config('services.elastic.http')])
                     ->setSSLVerification(false)
                     ->build();
 
-                if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
-                    Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+                if ($client->exists(['index' => 'geohub_'.$index_name, 'id' => $this->id])) {
+                    Log::info('DELETE Elastic Indexing '.$index_name.' track '.$this->id);
 
                     $response = $client->delete($params);
                     Log::info($response);
@@ -276,14 +272,14 @@ trait TrackElasticIndexTrait
     public function elasticClientBuilder($index_name, $params, $params_update, $params_index)
     {
         if (config('app.env') == 'production') {
-            $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->post(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id, $params)->body();
+            $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->post(config('services.elastic.host').'/geohub_'.$index_name.'/_doc/'.$this->id, $params)->body();
         } else {
             $client = ClientBuilder::create()
                 ->setHosts([config('services.elastic.http')])
                 ->setSSLVerification(false)
                 ->build();
 
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+            if ($client->exists(['index' => 'geohub_'.$index_name, 'id' => $this->id])) {
                 $response = $client->update($params_update);
             } else {
                 $response = $client->index($params_index);

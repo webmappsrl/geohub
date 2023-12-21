@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use App\Traits\TrackElasticIndexTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,10 +22,10 @@ use Symm\Gisconverter\Gisconverter;
 
 class EcTrack extends Model
 {
-    use HasFactory;
-    use GeometryFeatureTrait;
-    use HasTranslations;
     use Favoriteable;
+    use GeometryFeatureTrait;
+    use HasFactory;
+    use HasTranslations;
     use TrackElasticIndexTrait;
 
     protected $fillable = [
@@ -49,6 +49,7 @@ class EcTrack extends Model
         'from',
         'to',
     ];
+
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
     /**
@@ -69,6 +70,7 @@ class EcTrack extends Model
         'duration_backward' => 'int',
         'related_url' => 'array',
     ];
+
     public bool $skip_update = false;
 
     public function __construct(array $attributes = [])
@@ -85,7 +87,7 @@ class EcTrack extends Model
 
         static::creating(function ($ecTrack) {
             $user = User::getEmulatedUser();
-            if (!is_null($user)) {
+            if (! is_null($user)) {
                 $ecTrack->author()->associate($user);
             }
         });
@@ -96,7 +98,7 @@ class EcTrack extends Model
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error('An error occurred during a store operation: '.$e->getMessage());
             }
         });
 
@@ -106,13 +108,13 @@ class EcTrack extends Model
 
         static::updating(function ($ecTrack) {
             $skip_update = $ecTrack->skip_update;
-            if (!$skip_update) {
+            if (! $skip_update) {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                     $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error('An error occurred during a store operation: '.$e->getMessage());
                 }
             } else {
                 $ecTrack->skip_update = false;
@@ -127,7 +129,7 @@ class EcTrack extends Model
 
     public function author()
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function user()
@@ -137,8 +139,8 @@ class EcTrack extends Model
 
     public function uploadAudio($file)
     {
-        $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-        $cloudPath = 'ectrack/audio/' . $this->id . '/' . $filename;
+        $filename = sha1($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+        $cloudPath = 'ectrack/audio/'.$this->id.'/'.$filename;
         Storage::disk('s3')->put($cloudPath, file_get_contents($file));
 
         return Storage::cloud()->url($cloudPath);
@@ -151,9 +153,9 @@ class EcTrack extends Model
     {
         $geometry = $contentType = null;
         if ($fileContent) {
-            if (substr($fileContent, 0, 5) == "<?xml") {
+            if (substr($fileContent, 0, 5) == '<?xml') {
                 $geojson = '';
-                if ('' === $geojson) {
+                if ($geojson === '') {
                     try {
                         $geojson = Gisconverter::gpxToGeojson($fileContent);
                         $content = json_decode($geojson);
@@ -162,7 +164,7 @@ class EcTrack extends Model
                     }
                 }
 
-                if ('' === $geojson) {
+                if ($geojson === '') {
                     try {
                         $geojson = Gisconverter::kmlToGeojson($fileContent);
                         $content = json_decode($geojson);
@@ -180,17 +182,17 @@ class EcTrack extends Model
 
             if ($contentType) {
                 switch ($contentType) {
-                    case "FeatureCollection":
+                    case 'FeatureCollection':
                         $contentGeometry = $content->features[0]->geometry;
-                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('".json_encode($contentGeometry)."')))");
                         break;
-                    case "LineString":
+                    case 'LineString':
                         $contentGeometry = $content;
-                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('".json_encode($contentGeometry)."')))");
                         break;
                     default:
                         $contentGeometry = $content->geometry;
-                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('" . json_encode($contentGeometry) . "')))");
+                        $geometry = DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('".json_encode($contentGeometry)."')))");
                         break;
                 }
             }
@@ -240,7 +242,6 @@ class EcTrack extends Model
         return $this->morphToMany(TaxonomyPoiType::class, 'taxonomy_poi_typeable');
     }
 
-
     public function featureImage(): BelongsTo
     {
         return $this->belongsTo(EcMedia::class, 'feature_image');
@@ -263,8 +264,6 @@ class EcTrack extends Model
 
     /**
      * Return the json version of the ec track, avoiding the geometry
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -304,12 +303,12 @@ class EcTrack extends Model
         }
 
         if (isset($this->osmid)) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/relation/' . $this->osmid;
+            $array['osm_url'] = 'https://www.openstreetmap.org/relation/'.$this->osmid;
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
         foreach ($fileTypes as $fileType) {
-            $array[$fileType . '_url'] = route('api.ec.track.download.' . $fileType, ['id' => $this->id]);
+            $array[$fileType.'_url'] = route('api.ec.track.download.'.$fileType, ['id' => $this->id]);
         }
 
         $activities = [];
@@ -334,7 +333,7 @@ class EcTrack extends Model
             'theme' => $this->taxonomyThemes()->pluck('id')->toArray(),
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $wheres,
-            'who' => $this->taxonomyTargets()->pluck('id')->toArray()
+            'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
         ];
 
         foreach ($taxonomies as $key => $value) {
@@ -395,10 +394,10 @@ class EcTrack extends Model
         if ($this->allow_print_pdf) {
             $user = User::find($this->user_id);
             if ($user->apps->count() > 0) {
-                $pdf_url = url('/track/pdf/' . $this->id . '?app_id=' . $user->apps[0]->id);
+                $pdf_url = url('/track/pdf/'.$this->id.'?app_id='.$user->apps[0]->id);
                 $array['related_url']['Print PDF'] = $pdf_url;
             } else {
-                $pdf_url = url('/track/pdf/' . $this->id);
+                $pdf_url = url('/track/pdf/'.$this->id);
                 $array['related_url']['Print PDF'] = $pdf_url;
             }
         }
@@ -428,12 +427,13 @@ class EcTrack extends Model
                 'from',
                 'to',
                 'audio',
-                'related_url'
+                'related_url',
             ];
             foreach ($keys as $key) {
                 $array = $this->setOutSourceSingleValue($array, $key);
             }
         }
+
         return $array;
     }
 
@@ -447,20 +447,22 @@ class EcTrack extends Model
         if (is_array($array[$varname]) && is_null($array[$varname]) === false && count(array_keys($array[$varname])) === 1 && isset(array_values($array[$varname])[0]) === false) {
             $array[$varname] = null;
         }
+
         return $array;
     }
 
     public function getActualOrOSFValue($field)
     {
-        if (!empty($this->$field)) {
+        if (! empty($this->$field)) {
             return $this->$field;
         }
-        if (!empty($this->out_source_feature_id)) {
+        if (! empty($this->out_source_feature_id)) {
             $osf = OutSourceTrack::find($this->out_source_feature_id);
             if (array_key_exists($field, $osf->tags)) {
                 return $osf->tags[$field];
             }
         }
+
         return null;
     }
 
@@ -478,26 +480,26 @@ class EcTrack extends Model
             }
 
             foreach ($val as $lang => $cont) {
-                if (!empty($cont)) {
+                if (! empty($cont)) {
                     return false;
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Create a geojson from the ec track
-     *
-     * @return array
      */
     public function getGeojson(): ?array
     {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
-            $feature["properties"]["roundtrip"] = $this->_isRoundtrip($feature["geometry"]["coordinates"]);
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson();
+            $feature['properties']['roundtrip'] = $this->_isRoundtrip($feature['geometry']['coordinates']);
             $slope = json_decode($this->slope, true);
             if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
                 foreach ($slope as $key => $value) {
@@ -513,14 +515,12 @@ class EcTrack extends Model
 
     /**
      * Create the track geojson using the elbrus standard
-     *
-     * @return array
      */
     public function getElbrusGeojson(): array
     {
         $geojson = $this->getGeojson();
         // MAPPING
-        $geojson['properties']['id'] = 'ec_track_' . $this->id;
+        $geojson['properties']['id'] = 'ec_track_'.$this->id;
         $geojson = $this->_mapElbrusGeojsonProperties($geojson);
 
         if ($this->ecPois) {
@@ -548,15 +548,12 @@ class EcTrack extends Model
         $lastX = $lastCoord[0];
         $firstY = $firstCoord[1];
         $lastY = $lastCoord[1];
+
         return (abs($lastX - $firstX) < $treshold) && (abs($lastY - $firstY) < $treshold);
     }
 
     /**
      * Map the geojson properties to the elbrus standard
-     *
-     * @param array $geojson
-     *
-     * @return array
      */
     private function _mapElbrusGeojsonProperties(array $geojson): array
     {
@@ -572,9 +569,9 @@ class EcTrack extends Model
 
         $fields = ['kml', 'gpx'];
         foreach ($fields as $field) {
-            if (isset($geojson['properties'][$field . '_url'])) {
-                $geojson['properties'][$field] = $geojson['properties'][$field . '_url'];
-                unset($geojson['properties'][$field . '_url']);
+            if (isset($geojson['properties'][$field.'_url'])) {
+                $geojson['properties'][$field] = $geojson['properties'][$field.'_url'];
+                unset($geojson['properties'][$field.'_url']);
             }
         }
 
@@ -584,13 +581,13 @@ class EcTrack extends Model
 
                 if ($taxonomy === 'activity') {
                     $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                        return $name . '_' . $item;
+                        return $name.'_'.$item;
                     }, array_map(function ($item) {
                         return $item['id'];
                     }, $values));
                 } else {
                     $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                        return $name . '_' . $item;
+                        return $name.'_'.$item;
                     }, $values);
                 }
             }
@@ -618,7 +615,7 @@ class EcTrack extends Model
             // where st_dwithin(geometry,(select geometry from ec_tracks where id = 2029),5) order by st_linelocatepoint(st_geomfromgeojson(st_asgeojson((select geometry from ec_tracks where id = 2029))),st_geomfromgeojson(st_asgeojson(geometry)));
             $result = DB::select(
                 'SELECT id FROM ec_media
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_media_distance") . ')
+                    WHERE St_DWithin(geometry, ?, '.config('geohub.ec_track_media_distance').')
                     order by St_Linelocatepoint(St_Geomfromgeojson(St_Asgeojson(?)),St_Geomfromgeojson(St_Asgeojson(geometry)));',
                 [
                     $this->geometry, $this->geometry,
@@ -634,10 +631,10 @@ class EcTrack extends Model
             }
         }
 
-        return ([
-            "type" => "FeatureCollection",
-            "features" => $features,
-        ]);
+        return [
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ];
     }
 
     public function getNeighbourEcPoi(): array
@@ -650,7 +647,7 @@ class EcTrack extends Model
         try {
             $result = DB::select(
                 'SELECT id FROM ec_pois
-                    WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_ec_poi_distance") . ')
+                    WHERE St_DWithin(geometry, ?, '.config('geohub.ec_track_ec_poi_distance').')
                     order by St_Linelocatepoint(St_Geomfromgeojson(St_Asgeojson(?)),St_Geomfromgeojson(St_Asgeojson(geometry)));',
                 [
                     $this->geometry,
@@ -671,16 +668,14 @@ class EcTrack extends Model
             }
         }
 
-        return ([
-            "type" => "FeatureCollection",
-            "features" => $features,
-        ]);
+        return [
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ];
     }
 
     /**
      * Calculate the bounding box of the track
-     *
-     * @return array
      */
     public function bbox(): array
     {
@@ -715,16 +710,16 @@ class EcTrack extends Model
             $app_id = explode('_', $index)[1];
         }
 
-        #REF: https://github.com/elastic/elasticsearch-php/
-        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
+        //REF: https://github.com/elastic/elasticsearch-php/
+        //REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
 
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
+        Log::info('Elastic Indexing track '.$this->id);
+        $url = config('services.elastic.host').'/geohub_'.$index.'/_doc/'.$this->id;
         Log::info($url);
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+                DB::raw('ST_AsGeoJSON(ST_Force2D(geometry)) as geom')
             )
             ->first()
             ->geom;
@@ -778,34 +773,34 @@ class EcTrack extends Model
             $json = $this->getJson();
             unset($json['taxonomy_wheres']);
             unset($json['sizes']);
-            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
+            $json['roundtrip'] = $this->_isRoundtrip(json_decode($geom)->coordinates);
             $properties = $json;
         } catch (Exception $e) {
             $properties = null;
         }
 
         $postfields = '{
-                "properties": ' . json_encode($properties) . ',
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "start": ' . $start . ',
-                "end": ' . $end . ',
-                "cai_scale": "' . $this->cai_scale . '",
-                "from": "' . $this->getActualOrOSFValue('from') . '",
-                "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->name . '",
-                "taxonomyActivities": ' . $taxonomy_activities . ',
-                "taxonomyWheres": ' . $taxonomy_wheres . ',
-                "taxonomyThemes": ' . $taxonomy_themes . ',
-                "feature_image": "' . $feature_image . '",
-                "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-                "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-                "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-                "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . ',
-                "searchable": "' . $this->getSearchableString($app_id) . '"
+                "properties": '.json_encode($properties).',
+                "geometry" : '.$geom.',
+                "id": '.$this->id.',
+                "ref": "'.$this->ref.'",
+                "start": '.$start.',
+                "end": '.$end.',
+                "cai_scale": "'.$this->cai_scale.'",
+                "from": "'.$this->getActualOrOSFValue('from').'",
+                "to": "'.$this->getActualOrOSFValue('to').'",
+                "name": "'.$this->name.'",
+                "taxonomyActivities": '.$taxonomy_activities.',
+                "taxonomyWheres": '.$taxonomy_wheres.',
+                "taxonomyThemes": '.$taxonomy_themes.',
+                "feature_image": "'.$feature_image.'",
+                "distance": '.$this->setEmptyValueToZero($this->distance).',
+                "duration_forward": '.$this->setEmptyValueToZero($this->duration_forward).',
+                "ascent": '.$this->setEmptyValueToZero($this->ascent).',
+                "activities": '.json_encode($this->taxonomyActivities->pluck('identifier')->toArray()).',
+                "themes": '.json_encode($this->taxonomyThemes->pluck('identifier')->toArray()).',
+                "layers": '.json_encode($layers).',
+                "searchable": "'.$this->getSearchableString($app_id).'"
               }';
 
         Log::info('');
@@ -814,7 +809,7 @@ class EcTrack extends Model
         Log::info($postfields);
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -824,11 +819,11 @@ class EcTrack extends Model
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $requestType,
             CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
+                'Authorization: Basic '.config('services.elastic.key'),
+            ],
+        ]);
         if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -849,8 +844,8 @@ class EcTrack extends Model
             $app_id = explode('_', $index)[2];
         }
 
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
+        Log::info('Elastic Indexing track '.$this->id);
+        $url = config('services.elastic.host').'/geohub_'.$index.'/_doc/'.$this->id;
         Log::info($url);
 
         $geom = EcTrack::where('id', '=', $this->id)
@@ -861,17 +856,17 @@ class EcTrack extends Model
             ->geom;
 
         $postfields = '{
-            "geometry" : ' . $geom . ',
-            "id": ' . $this->id . ',
-            "ref": "' . $this->ref . '",
-            "strokeColor": "' . $this->hexToRgba($this->color) . '",
-            "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString($app_id) . '"
+            "geometry" : '.$geom.',
+            "id": '.$this->id.',
+            "ref": "'.$this->ref.'",
+            "strokeColor": "'.$this->hexToRgba($this->color).'",
+            "layers": '.json_encode($layers).',
+            "distance": '.$this->setEmptyValueToZero($this->distance).',
+            "duration_forward": '.$this->setEmptyValueToZero($this->duration_forward).',
+            "ascent": '.$this->setEmptyValueToZero($this->ascent).',
+            "activities": '.json_encode($this->taxonomyActivities->pluck('identifier')->toArray()).',
+            "themes": '.json_encode($this->taxonomyThemes->pluck('identifier')->toArray()).',
+            "searchable": "'.$this->getSearchableString($app_id).'"
           }';
         Log::info('');
         Log::info('LOW');
@@ -879,7 +874,7 @@ class EcTrack extends Model
         Log::info($postfields);
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -889,11 +884,11 @@ class EcTrack extends Model
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
+                'Authorization: Basic '.config('services.elastic.key'),
+            ],
+        ]);
         if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -906,6 +901,7 @@ class EcTrack extends Model
 
         curl_close($curl);
     }
+
     public function elasticHighIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
     {
         // APP ID for searchable function:
@@ -913,30 +909,29 @@ class EcTrack extends Model
             $app_id = explode('_', $index)[2];
         }
 
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
+        Log::info('Elastic Indexing track '.$this->id);
+        $url = config('services.elastic.host').'/geohub_'.$index.'/_doc/'.$this->id;
         Log::info($url);
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+                DB::raw('ST_AsGeoJSON(ST_Force2D(geometry)) as geom')
             )
             ->first()
             ->geom;
 
-
         $postfields = '{
-            "geometry" : ' . $geom . ',
-            "id": ' . $this->id . ',
-            "ref": "' . $this->ref . '",
-            "strokeColor": "' . $this->hexToRgba($this->color) . '",
-            "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString($app_id) . '"
+            "geometry" : '.$geom.',
+            "id": '.$this->id.',
+            "ref": "'.$this->ref.'",
+            "strokeColor": "'.$this->hexToRgba($this->color).'",
+            "layers": '.json_encode($layers).',
+            "distance": '.$this->setEmptyValueToZero($this->distance).',
+            "duration_forward": '.$this->setEmptyValueToZero($this->duration_forward).',
+            "ascent": '.$this->setEmptyValueToZero($this->ascent).',
+            "activities": '.json_encode($this->taxonomyActivities->pluck('identifier')->toArray()).',
+            "themes": '.json_encode($this->taxonomyThemes->pluck('identifier')->toArray()).',
+            "searchable": "'.$this->getSearchableString($app_id).'"
           }';
 
         Log::info('');
@@ -945,7 +940,7 @@ class EcTrack extends Model
         Log::info($postfields);
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -955,11 +950,11 @@ class EcTrack extends Model
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
+                'Authorization: Basic '.config('services.elastic.key'),
+            ],
+        ]);
         if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -978,14 +973,16 @@ class EcTrack extends Model
         if (empty($value)) {
             $value = 0;
         }
+
         return $value;
     }
 
     public function cleanTrackNameSpecialChar()
     {
-        if (!empty($this->name)) {
+        if (! empty($this->name)) {
             $name = str_replace('"', '', $this->name);
         }
+
         return $name;
     }
 
@@ -998,35 +995,36 @@ class EcTrack extends Model
             $searchables = json_decode($app->track_searchables);
         }
 
-        if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
+        if (empty($searchables) || (in_array('name', $searchables) && ! empty($this->name))) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
         }
-        if (empty($searchables) || (in_array('description', $searchables) && !empty($this->description))) {
+        if (empty($searchables) || (in_array('description', $searchables) && ! empty($this->description))) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description) . ' ';
+            $string .= strip_tags($description).' ';
         }
-        if (empty($searchables) || (in_array('excerpt', $searchables) && !empty($this->excerpt))) {
+        if (empty($searchables) || (in_array('excerpt', $searchables) && ! empty($this->excerpt))) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt) . ' ';
+            $string .= strip_tags($excerpt).' ';
         }
-        if (empty($searchables) || (in_array('ref', $searchables) && !empty($this->ref))) {
-            $string .= $this->ref . ' ';
+        if (empty($searchables) || (in_array('ref', $searchables) && ! empty($this->ref))) {
+            $string .= $this->ref.' ';
         }
-        if (empty($searchables) || (in_array('osmid', $searchables) && !empty($this->osmid))) {
-            $string .= $this->osmid . ' ';
+        if (empty($searchables) || (in_array('osmid', $searchables) && ! empty($this->osmid))) {
+            $string .= $this->osmid.' ';
         }
-        if (empty($searchables) || (in_array('taxonomyThemes', $searchables) && !empty($this->taxonomyThemes))) {
+        if (empty($searchables) || (in_array('taxonomyThemes', $searchables) && ! empty($this->taxonomyThemes))) {
             foreach ($this->taxonomyThemes as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
             }
         }
-        if (empty($searchables) || (in_array('taxonomyActivities', $searchables) && !empty($this->taxonomyActivities))) {
+        if (empty($searchables) || (in_array('taxonomyActivities', $searchables) && ! empty($this->taxonomyActivities))) {
             foreach ($this->taxonomyActivities as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
             }
         }
+
         return html_entity_decode($string);
     }
 
@@ -1037,6 +1035,7 @@ class EcTrack extends Model
         if (empty($this->color)) {
             $color = '';
         }
+
         return $color;
     }
 
@@ -1044,16 +1043,17 @@ class EcTrack extends Model
     {
         $result = [];
         foreach ($array as $key => $val) {
-            if (!is_array($val) && !empty($val) && $val) {
+            if (! is_array($val) && ! empty($val) && $val) {
                 $result[$key] = $val;
             } elseif (is_array($val)) {
                 foreach ($val as $lan => $cont) {
-                    if (!is_array($cont) && !empty($cont) && $cont) {
+                    if (! is_array($cont) && ! empty($cont) && $cont) {
                         $result[$key][$lan] = $cont;
                     }
                 }
             }
         }
+
         return $result;
     }
 
@@ -1066,22 +1066,21 @@ class EcTrack extends Model
         $hexColor = ltrim($hexColor, '#');
 
         if (strlen($hexColor) === 6) {
-            list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
+            [$r, $g, $b] = sscanf($hexColor, '%02x%02x%02x');
         } elseif (strlen($hexColor) === 8) {
-            list($r, $g, $b, $a) = sscanf($hexColor, "%02x%02x%02x%02x");
+            [$r, $g, $b, $a] = sscanf($hexColor, '%02x%02x%02x%02x');
             $opacity = round($a / 255, 2);
         } else {
             throw new Exception('Invalid hex color format.');
         }
 
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
+
         return $rgbaColor;
     }
 
     /**
      * returns the apps associated to a EcTrack
-     *
-     *
      */
     public function trackHasApps()
     {
@@ -1099,8 +1098,6 @@ class EcTrack extends Model
 
     /**
      * Returns an array of app_id => layer_id associated with the current EcTrack
-     *
-     * @return array
      */
     public function getLayersByApp(): array
     {
@@ -1112,13 +1109,13 @@ class EcTrack extends Model
         $taxonomywheres = $this->taxonomywheres->pluck('id')->toArray();
         $taxonomythemes = $this->taxonomythemes->pluck('id')->toArray();
 
-        if (!empty($taxonomyActivities)) {
+        if (! empty($taxonomyActivities)) {
             $trackTaxonomies['activities'] = $taxonomyActivities;
         }
-        if (!empty($taxonomywheres)) {
-            $trackTaxonomies['wheres'] =  $taxonomywheres;
+        if (! empty($taxonomywheres)) {
+            $trackTaxonomies['wheres'] = $taxonomywheres;
         }
-        if (!empty($taxonomythemes)) {
+        if (! empty($taxonomythemes)) {
             $trackTaxonomies['themes'] = $taxonomythemes;
         }
 
@@ -1140,6 +1137,7 @@ class EcTrack extends Model
                 $layers[$app->id] = [];
             }
         }
+
         return $layers;
     }
 }

@@ -6,7 +6,8 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Spatie\Permission\Models\Permission;
 
-class PermissionPolicy {
+class PermissionPolicy
+{
     use HandlesAuthorization;
 
     /**
@@ -14,13 +15,13 @@ class PermissionPolicy {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
      * Perform pre-authorization checks.
      *
-     * @param  \App\Models\User  $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -33,44 +34,51 @@ class PermissionPolicy {
             return false;
         }
     }
-    
-    public function viewAny(User $user): bool {
+
+    public function viewAny(User $user): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('view_permission');
     }
 
-    public function view(User $user, Permission $model): bool {
+    public function view(User $user, Permission $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('view_permission');
     }
 
-    public function create(User $user): bool {
+    public function create(User $user): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('create_permission');
     }
 
-    public function update(User $user, Permission $model): bool {
+    public function update(User $user, Permission $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('edit_permission');
     }
 
-    public function delete(User $user, Permission $model): bool {
+    public function delete(User $user, Permission $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_permission');
     }
 
-    public function restore(User $user, Permission $model): bool {
+    public function restore(User $user, Permission $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_permission');
     }
 
-    public function forceDelete(User $user, Permission $model): bool {
+    public function forceDelete(User $user, Permission $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_permission');

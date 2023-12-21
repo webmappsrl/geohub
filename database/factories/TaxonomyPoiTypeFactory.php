@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\TaxonomyPoiType;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TaxonomyPoiTypeFactory extends Factory
 {
@@ -24,6 +22,7 @@ class TaxonomyPoiTypeFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

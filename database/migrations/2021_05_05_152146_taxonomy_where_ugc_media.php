@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TaxonomyWhereUgcMedia extends Migration {
+class TaxonomyWhereUgcMedia extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('taxonomy_where_ugc_media', function (Blueprint $table) {
             $table->id();
             $table->integer('ugc_media_id')->unsigned();
@@ -29,7 +31,8 @@ class TaxonomyWhereUgcMedia extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('taxonomy_where_ugc_media');
     }
 }

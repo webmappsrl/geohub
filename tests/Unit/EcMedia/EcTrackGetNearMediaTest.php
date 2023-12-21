@@ -10,10 +10,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class EcTrackGetNearMediaTest extends TestCase {
+class EcTrackGetNearMediaTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -22,7 +24,8 @@ class EcTrackGetNearMediaTest extends TestCase {
         });
     }
 
-    public function testNoGetNearEcMedia() {
+    public function testNoGetNearEcMedia()
+    {
         $track = EcTrack::factory()->create();
 
         $geojson = $track->getRelatedUgcGeojson();
@@ -36,7 +39,8 @@ class EcTrackGetNearMediaTest extends TestCase {
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function _testGetNearEcMedia() {
+    public function _testGetNearEcMedia()
+    {
         $media11 = EcMedia::factory()->create([
             'name' => 'TestMedia1',
             'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),

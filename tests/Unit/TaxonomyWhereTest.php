@@ -26,32 +26,31 @@ class TaxonomyWhereTest extends TestCase
      *
      * @return void
      */
-
     public function testIsEditableByUserInterface()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake']);
         $this->assertTrue($where->isEditableByUserInterface());
     }
 
     public function testIsNotEditableByUserInterface()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake', 'import_method' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake', 'import_method' => 'fake']);
         $this->assertFalse($where->isEditableByUserInterface());
     }
 
     public function testIsImportedByExternalData()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake', 'import_method' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake', 'import_method' => 'fake']);
         $this->assertTrue($where->isImportedByExternalData());
     }
 
     public function testIsNotImportedByExternalData()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake']);
         $this->assertFalse($where->isImportedByExternalData());
     }
 

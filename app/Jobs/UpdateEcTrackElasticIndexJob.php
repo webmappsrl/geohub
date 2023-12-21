@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -17,6 +16,7 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
     use SerializesModels;
 
     protected $ecTrack;
+
     /**
      * Create a new job instance.
      *
@@ -35,12 +35,12 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
     public function handle()
     {
         $ecTrackLayers = $this->ecTrack->getLayersByApp();
-        if (!empty($ecTrackLayers)) {
+        if (! empty($ecTrackLayers)) {
             foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                if (!empty($layer_ids)) {
-                    $this->ecTrack->elasticIndexUpsert('app_' . $app_id, $layer_ids);
-                    $this->ecTrack->elasticIndexUpsertLow('app_low_' . $app_id, $layer_ids);
-                    $this->ecTrack->elasticIndexUpsertHigh('app_high_' . $app_id, $layer_ids);
+                if (! empty($layer_ids)) {
+                    $this->ecTrack->elasticIndexUpsert('app_'.$app_id, $layer_ids);
+                    $this->ecTrack->elasticIndexUpsertLow('app_low_'.$app_id, $layer_ids);
+                    $this->ecTrack->elasticIndexUpsertHigh('app_high_'.$app_id, $layer_ids);
                 } else {
                     DeleteEcTrackElasticIndexJob::dispatch($this->ecTrack);
                     // $this->ecTrack->elasticIndexDelete('app_' . $app_id);

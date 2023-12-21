@@ -1,11 +1,10 @@
 <?php
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\EcPoi;
 use App\Http\Facades\OsmClient;
+use App\Models\EcPoi;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Artisan;
+use Tests\TestCase;
 
 class UpdatePOIFromOsmTest extends TestCase
 {
@@ -19,7 +18,7 @@ class UpdatePOIFromOsmTest extends TestCase
     public function testCommandWithNonExistingUser()
     {
         $this->artisan('geohub:update_pois_from_osm', [
-            'user_email' => ''
+            'user_email' => '',
         ])->expectsOutput('Please provide a user email');
     }
 
@@ -34,17 +33,17 @@ class UpdatePOIFromOsmTest extends TestCase
 
         //create a poi
         $poi = EcPoi::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $this->artisan('geohub:update_pois_from_osm', [
-            'user_email' => $user->email
+            'user_email' => $user->email,
         ])->expectsOutput('Finished.');
     }
 
     /**
      * Test if the command does not update poi if osmid is null
-     * 
+     *
      * @return void
      */
     public function testCommandWithInvalidOsmUrl()
@@ -55,23 +54,23 @@ class UpdatePOIFromOsmTest extends TestCase
         $poi = EcPoi::factory()->create([
             'user_id' => $user->id,
             //take an osmid that does not exist
-            'osmid' => null
+            'osmid' => null,
         ]);
 
         $this->artisan('geohub:update_pois_from_osm', [
-            'user_email' => $user->email
+            'user_email' => $user->email,
         ]);
 
         //check if 'ele' column in poi table is not updated
         $this->assertDatabaseHas('ec_pois', [
             'ele' => null,
-            'skip_geomixer_tech' => false
+            'skip_geomixer_tech' => false,
         ]);
     }
 
     /**
      * Test if the command updates poi if osmid is not null
-     * 
+     *
      * @return void
      */
     public function testCommandWithValidOsmUrl()
@@ -82,10 +81,10 @@ class UpdatePOIFromOsmTest extends TestCase
         $poi = EcPoi::where('osmid', '!=', null)->first();
 
         //call the getGeojson method of the OsmClient facade
-        $data = json_decode(OsmClient::getGeojson('node/' . $poi->osmid), true);
+        $data = json_decode(OsmClient::getGeojson('node/'.$poi->osmid), true);
 
         //if  data has no 'ele' properties, set it to 123
-        if (!array_key_exists('ele', $data['properties'])) {
+        if (! array_key_exists('ele', $data['properties'])) {
             $data['properties']['ele'] = 123;
         }
 
@@ -94,19 +93,19 @@ class UpdatePOIFromOsmTest extends TestCase
 
         //call the command
         $this->artisan('geohub:update_pois_from_osm', [
-            'user_email' => $user->email
+            'user_email' => $user->email,
         ]);
 
         //check if the 'ele' column in poi table is updated
         $this->assertDatabaseHas('ec_pois', [
             'ele' => $data['properties']['ele'],
-            'skip_geomixer_tech' => false
+            'skip_geomixer_tech' => false,
         ]);
     }
 
     /**
      * Test if the command throws error when Url is not valid
-     * 
+     *
      * @return void
      */
     public function testCommandWithInvalidOsmUrlThrowsError()
@@ -117,11 +116,11 @@ class UpdatePOIFromOsmTest extends TestCase
         $poi = EcPoi::factory()->create([
             'user_id' => $user->id,
             //take an osmid that does not exist
-            'osmid' => EcPoi::where('osmid', '!=', null)->first()->osmid . '123'
+            'osmid' => EcPoi::where('osmid', '!=', null)->first()->osmid.'123',
         ]);
 
         $this->artisan('geohub:update_pois_from_osm', [
-            'user_email' => $user->email
-        ])->expectsOutput('Error while retrieving data from OSM for poi ' . $poi->name . ' (https://api.openstreetmap.org/api/0.6/node/' . $poi->osmid . '.json). Url not valid');
+            'user_email' => $user->email,
+        ])->expectsOutput('Error while retrieving data from OSM for poi '.$poi->name.' (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
     }
 }

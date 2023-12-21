@@ -5,13 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddNameToUserGeneratedData extends Migration {
+class AddNameToUserGeneratedData extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::table('user_generated_data', function (Blueprint $table) {
             $table->text('name')->default('');
         });
@@ -24,10 +26,11 @@ class AddNameToUserGeneratedData extends Migration {
                 : (isset($json['title'])
                     ? $json['title']
                     : '');
-            if (isset($json['name']))
+            if (isset($json['name'])) {
                 unset($json['name']);
-            elseif (isset($json['title']))
+            } elseif (isset($json['title'])) {
                 unset($json['title']);
+            }
             $row->name = $name;
             $row->raw_data = $json;
             $row->save();
@@ -39,10 +42,11 @@ class AddNameToUserGeneratedData extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         $data = UserGeneratedData::get();
         foreach ($data as $row) {
-            if (isset($row->name) && !empty($row->name)) {
+            if (isset($row->name) && ! empty($row->name)) {
                 $json = json_decode($row->raw_data, true);
                 $json['name'] = $row->name;
                 $row->raw_data = json_encode($json);

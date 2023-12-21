@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,16 +15,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 
-use Exception;
-
 class EcPoi extends Model
 {
-    use HasFactory;
     use GeometryFeatureTrait;
+    use HasFactory;
     use HasTranslations;
 
     protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id', 'description', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url'];
+
     public array $translatable = ['name', 'description', 'excerpt', 'audio'];
+
     public bool $skip_update = false;
 
     /**
@@ -46,7 +47,7 @@ class EcPoi extends Model
         parent::booted();
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
-            if (!is_null($user)) {
+            if (! is_null($user)) {
                 $ecPoi->author()->associate($user);
             }
         });
@@ -56,18 +57,18 @@ class EcPoi extends Model
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error('An error occurred during a store operation: '.$e->getMessage());
             }
         });
 
         static::updating(function ($ecPoi) {
             $skip_update = $ecPoi->skip_update;
-            if (!$skip_update) {
+            if (! $skip_update) {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error('An error occurred during a store operation: '.$e->getMessage());
                 }
             } else {
                 $ecPoi->skip_update = false;
@@ -77,7 +78,7 @@ class EcPoi extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function user()
@@ -101,9 +102,9 @@ class EcPoi extends Model
                 // To get the current language
                 $key_array = explode('_', $key);
                 // Add sha1 to name
-                $filename = sha1($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+                $filename = sha1($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
                 // Create the path with language folder
-                $cloudPath = 'ecpoi/audio/' . $key_array[2] . '/' . $this->id . '_' . $filename;
+                $cloudPath = 'ecpoi/audio/'.$key_array[2].'/'.$this->id.'_'.$filename;
                 Storage::disk('s3-osfmedia-test')->put($cloudPath, file_get_contents($file));
                 // Save the result url to the current langage
                 $output[$key_array[2]] = Storage::disk('s3-osfmedia-test')->url($cloudPath);
@@ -170,7 +171,7 @@ class EcPoi extends Model
             $result = DB::select(
                 'SELECT id,St_Distance(geometry,?) as dist 
                  FROM ec_media
-                 WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_poi_media_distance") . ') ORDER by St_Distance(geometry,?);',
+                 WHERE St_DWithin(geometry, ?, '.config('geohub.ec_poi_media_distance').') ORDER by St_Distance(geometry,?);',
                 [
                     $this->geometry, $this->geometry, $this->geometry,
                 ]
@@ -186,17 +187,15 @@ class EcPoi extends Model
             }
         }
 
-        return ([
-            "type" => "FeatureCollection",
-            "features" => $features,
-        ]);
+        return [
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ];
     }
 
     /**
      * Return the json version of the ec poi, avoiding the geometry
      * TODO: unit TEST
-     *
-     * @return array
      */
     public function getJson($allData = true, $app_id = 0): array
     {
@@ -206,7 +205,7 @@ class EcPoi extends Model
 
         if (array_key_exists('name', $array) && $array['name']) {
             foreach ($array['name'] as $lang => $val) {
-                if (empty($val) || !$val) {
+                if (empty($val) || ! $val) {
                     unset($array['name'][$lang]);
                 }
             }
@@ -265,15 +264,15 @@ class EcPoi extends Model
         }
 
         if (isset($this->outSourcePoi->source_id) && strpos($this->outSourcePoi->source_id, '/')) {
-            $array['osm_url'] = 'https://www.openstreetmap.org/' . $this->outSourcePoi->source_id;
+            $array['osm_url'] = 'https://www.openstreetmap.org/'.$this->outSourcePoi->source_id;
         }
 
         $fileTypes = ['geojson', 'gpx', 'kml'];
         foreach ($fileTypes as $fileType) {
-            $array[$fileType . '_url'] = route('api.ec.poi.download.' . $fileType, ['id' => $this->id]);
+            $array[$fileType.'_url'] = route('api.ec.poi.download.'.$fileType, ['id' => $this->id]);
         }
 
-        if (array_key_exists('related_url', $array) && !is_array($array['related_url']) && empty($array['related_url'])) {
+        if (array_key_exists('related_url', $array) && ! is_array($array['related_url']) && empty($array['related_url'])) {
             unset($array['related_url']);
         }
 
@@ -294,7 +293,7 @@ class EcPoi extends Model
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
-            'poi_type' => $poitypes
+            'poi_type' => $poitypes,
         ];
 
         $taxonomiesidentifiers = array_merge(
@@ -331,24 +330,29 @@ class EcPoi extends Model
 
         return $array;
     }
+
     private function addPrefix($array, $prefix)
     {
         return array_map(function ($elem) use ($prefix) {
-            return $prefix . "_" . $elem;
+            return $prefix.'_'.$elem;
         }, $array);
     }
+
     private function addTaxonomyPoiTypes()
     {
         $taxonomyPoiTypes = $this->taxonomyPoiTypes()->pluck('identifier')->toArray();
         if (count($taxonomyPoiTypes) > 1 && in_array('poi', $taxonomyPoiTypes) == true) {
             $taxonomyPoiTypes = array_diff($taxonomyPoiTypes, ['poi']);
+
             return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
         }
         if (in_array('poi', $taxonomyPoiTypes) == false) {
             return $this->addPrefix($taxonomyPoiTypes, 'poi_type');
         }
+
         return ['poi_type_poi'];
     }
+
     public function getTaxonomies()
     {
         return [
@@ -357,14 +361,16 @@ class EcPoi extends Model
             'when' => $this->getValuesOfMorphToMany($this->taxonomyWhens(), 'when'),
             'where' => $this->getValuesOfMorphToMany($this->taxonomyWheres(), 'where'),
             'who' => $this->getValuesOfMorphToMany($this->taxonomyTargets(), 'who'),
-            'poi_type' => $this->getValuesOfMorphToMany($this->taxonomyPoiTypes(), 'poi_type')
+            'poi_type' => $this->getValuesOfMorphToMany($this->taxonomyPoiTypes(), 'poi_type'),
         ];
     }
+
     private function getValuesOfMorphToMany($relation, $slug): array
     {
         return $relation->get(['identifier', 'name', 'id', 'icon', 'color'])->map(function ($item) use ($slug) {
             unset($item['pivot']);
-            $item['identifier'] = $slug . "_" . $item['identifier'];
+            $item['identifier'] = $slug.'_'.$item['identifier'];
+
             return $item;
         })->toArray();
     }
@@ -381,6 +387,7 @@ class EcPoi extends Model
                 $array = $this->setOutSourceSingleValue($array, $key);
             }
         }
+
         return $array;
     }
 
@@ -391,6 +398,7 @@ class EcPoi extends Model
                 $array[$varname] = $this->outSourcePOI->tags[$varname];
             }
         }
+
         return $array;
     }
 
@@ -407,25 +415,25 @@ class EcPoi extends Model
                 return true;
             }
             foreach ($val as $lang => $cont) {
-                if (!empty($cont)) {
+                if (! empty($cont)) {
                     return false;
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Create a geojson from the ec poi
-     *
-     * @return array
      */
     public function getGeojson($allData = true, $app_id = 0): ?array
     {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson($allData, $app_id);
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson($allData, $app_id);
 
             return $feature;
         } else {
@@ -435,17 +443,15 @@ class EcPoi extends Model
 
     /**
      * Return a geojson of the poi with only the basic informations
-     *
-     * @return array|null
      */
     public function getBasicGeojson(): ?array
     {
         $geojson = $this->getGeojson();
-        if (isset($geojson["properties"])) {
-            $geojson["properties"] = $this->getJson();
+        if (isset($geojson['properties'])) {
+            $geojson['properties'] = $this->getJson();
             $neededProperties = ['id', 'name', 'feature_image'];
             foreach ($geojson['properties'] as $property => $value) {
-                if (!in_array($property, $neededProperties)) {
+                if (! in_array($property, $neededProperties)) {
                     unset($geojson['properties'][$property]);
                 }
             }
@@ -458,14 +464,12 @@ class EcPoi extends Model
 
     /**
      * Create the track geojson using the elbrus standard
-     *
-     * @return array
      */
     public function getElbrusGeojson(): array
     {
         $geojson = $this->getGeojson();
         // MAPPING
-        $geojson['properties']['id'] = 'ec_poi_' . $this->id;
+        $geojson['properties']['id'] = 'ec_poi_'.$this->id;
         $geojson = $this->_mapElbrusGeojsonProperties($geojson);
 
         return $geojson;
@@ -473,10 +477,6 @@ class EcPoi extends Model
 
     /**
      * Map the geojson properties to the elbrus standard
-     *
-     * @param array $geojson
-     *
-     * @return array
      */
     private function _mapElbrusGeojsonProperties(array $geojson): array
     {
@@ -492,9 +492,9 @@ class EcPoi extends Model
 
         $fields = ['kml', 'gpx'];
         foreach ($fields as $field) {
-            if (isset($geojson['properties'][$field . '_url'])) {
-                $geojson['properties'][$field] = $geojson['properties'][$field . '_url'];
-                unset($geojson['properties'][$field . '_url']);
+            if (isset($geojson['properties'][$field.'_url'])) {
+                $geojson['properties'][$field] = $geojson['properties'][$field.'_url'];
+                unset($geojson['properties'][$field.'_url']);
             }
         }
 
@@ -504,7 +504,7 @@ class EcPoi extends Model
                 try {
 
                     $geojson['properties']['taxonomy'][$name] = array_map(function ($item) use ($name) {
-                        return $name . '_' . $item;
+                        return $name.'_'.$item;
                     }, $values);
                 } catch (Exception $e) {
                     // TODO: viene generato durante indicizzazione capire perchè
@@ -535,27 +535,28 @@ class EcPoi extends Model
             $searchables = json_decode($app->poi_searchables);
         }
 
-        if (empty($searchables) || (in_array('name', $searchables) && !empty($this->name))) {
-            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))) . ' ';
+        if (empty($searchables) || (in_array('name', $searchables) && ! empty($this->name))) {
+            $string .= str_replace('"', '', json_encode($this->getTranslations('name'))).' ';
         }
-        if (empty($searchables) || (in_array('description', $searchables) && !empty($this->description))) {
+        if (empty($searchables) || (in_array('description', $searchables) && ! empty($this->description))) {
             $description = str_replace('"', '', json_encode($this->getTranslations('description')));
             $description = str_replace('\\', '', $description);
-            $string .= strip_tags($description) . ' ';
+            $string .= strip_tags($description).' ';
         }
-        if (empty($searchables) || (in_array('excerpt', $searchables) && !empty($this->excerpt))) {
+        if (empty($searchables) || (in_array('excerpt', $searchables) && ! empty($this->excerpt))) {
             $excerpt = str_replace('"', '', json_encode($this->getTranslations('excerpt')));
             $excerpt = str_replace('\\', '', $excerpt);
-            $string .= strip_tags($excerpt) . ' ';
+            $string .= strip_tags($excerpt).' ';
         }
-        if (empty($searchables) || (in_array('osmid', $searchables) && !empty($this->osmid))) {
-            $string .= $this->osmid . ' ';
+        if (empty($searchables) || (in_array('osmid', $searchables) && ! empty($this->osmid))) {
+            $string .= $this->osmid.' ';
         }
-        if (empty($searchables) || (in_array('taxonomyPoiTypes', $searchables) && !empty($this->taxonomyPoiTypes))) {
+        if (empty($searchables) || (in_array('taxonomyPoiTypes', $searchables) && ! empty($this->taxonomyPoiTypes))) {
             foreach ($this->taxonomyPoiTypes as $tax) {
-                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))) . ' ';
+                $string .= str_replace('"', '', json_encode($tax->getTranslations('name'))).' ';
             }
         }
+
         return html_entity_decode($string);
     }
 
@@ -563,16 +564,17 @@ class EcPoi extends Model
     {
         $result = [];
         foreach ($array as $key => $val) {
-            if (!is_array($val) && !empty($val) && $val) {
+            if (! is_array($val) && ! empty($val) && $val) {
                 $result[$key] = $val;
             } elseif (is_array($val)) {
                 foreach ($val as $lan => $cont) {
-                    if (!is_array($cont) && !empty($cont) && $cont) {
+                    if (! is_array($cont) && ! empty($cont) && $cont) {
                         $result[$key][$lan] = $cont;
                     }
                 }
             }
         }
+
         return $result;
     }
 }

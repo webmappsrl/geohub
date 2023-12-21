@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\TaxonomyWhere;
 
 class EcMediaFactory extends Factory
 {
@@ -25,10 +24,10 @@ class EcMediaFactory extends Factory
      */
     public function definition()
     {
-        Storage::disk('public')->put('/ec_media_test/test_108x137.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x137.jpg'));
-        Storage::disk('public')->put('/ec_media_test/test_108x148.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_108x148.jpg'));
-        Storage::disk('public')->put('/ec_media_test/test_100x200.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_100x200.jpg'));
-        Storage::disk('public')->put('/ec_media_test/test.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test_108x137.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test_108x137.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test_108x148.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test_108x148.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test_100x200.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test_100x200.jpg'));
+        Storage::disk('public')->put('/ec_media_test/test.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test.jpg'));
 
         $url108x137 = Storage::disk('public')->url('/ec_media_test/test_108x137.jpg');
         $url108x148 = Storage::disk('public')->url('/ec_media_test/test_108x148.jpg');
@@ -57,25 +56,27 @@ class EcMediaFactory extends Factory
             '108x137' => $url108x137,
             '108x148' => $url108x148,
             '100x200' => $url100x200,
-            'original' => $url
+            'original' => $url,
         ]);
 
         return $result;
     }
 
-    public function frontEndSizes() {
+    public function frontEndSizes()
+    {
         return $this->state(function (array $result) {
-            Storage::disk('public')->put('/ec_media_test/test_1440x500.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_1440x500.jpg'));
-            Storage::disk('public')->put('/ec_media_test/test_400x200.jpg', file_get_contents(base_path() . '/tests/Fixtures/EcMedia/test_400x200.jpg'));
+            Storage::disk('public')->put('/ec_media_test/test_1440x500.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test_1440x500.jpg'));
+            Storage::disk('public')->put('/ec_media_test/test_400x200.jpg', file_get_contents(base_path().'/tests/Fixtures/EcMedia/test_400x200.jpg'));
 
             $url1440x500 = Storage::disk('public')->url('/ec_media_test/test_1440x500.jpg');
             $url400x200 = Storage::disk('public')->url('/ec_media_test/test_400x200.jpg');
 
-            $thumbnails = json_decode($result['thumbnails'],true);
+            $thumbnails = json_decode($result['thumbnails'], true);
             $thumbnails['1440x500'] = $url1440x500;
             $thumbnails['400x200'] = $url400x200;
+
             return [
-                'thumbnails' => json_encode($thumbnails)
+                'thumbnails' => json_encode($thumbnails),
             ];
 
         });

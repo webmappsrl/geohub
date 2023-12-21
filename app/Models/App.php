@@ -4,43 +4,43 @@ namespace App\Models;
 
 use App\Traits\ConfTrait;
 use App\Traits\HasTranslationsFixed;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Translatable\HasTranslations;
-use Exception;
-use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
  * Class App
  *
- * @package App\Models\
  *
  * @property string app_id
  * @property string available_languages
  */
 class App extends Model
 {
-    use HasFactory;
     use ConfTrait;
+    use HasFactory;
     use HasTranslationsFixed;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label', 'overlays_label','data_label','pois_data_label','tracks_data_label','page_project','page_disclaimer','page_credits','filter_activity_label', 'filter_theme_label','filter_poi_type_label','filter_track_duration_label','filter_track_distance_label','social_share_text'];
+
+    public array $translatable = ['welcome', 'tiles_label', 'overlays_label', 'data_label', 'pois_data_label', 'tracks_data_label', 'page_project', 'page_disclaimer', 'page_credits', 'filter_activity_label', 'filter_theme_label', 'filter_poi_type_label', 'filter_track_duration_label', 'filter_track_distance_label', 'social_share_text'];
+
     protected $casts = ['keywords' => 'array'];
+
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
     protected $appends = ['user_email'];
-
 
     protected static function booted()
     {
@@ -63,7 +63,7 @@ class App extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function layers()
@@ -100,15 +100,15 @@ class App extends Model
     {
         $tracks = EcTrack::where('user_id', $this->user_id)->get();
 
-        if (!is_null($tracks)) {
-            $geoJson = ["type" => "FeatureCollection"];
+        if (! is_null($tracks)) {
+            $geoJson = ['type' => 'FeatureCollection'];
             $features = [];
             foreach ($tracks as $track) {
                 $geojson = $track->getGeojson();
                 //                if (isset($geojson))
                 $features[] = $geojson;
             }
-            $geoJson["features"] = $features;
+            $geoJson['features'] = $features;
 
             return json_encode($geoJson);
         }
@@ -118,19 +118,19 @@ class App extends Model
     {
         $pois = EcPoi::where('user_id', $this->user_id)->limit(10)->get();
 
-        if (!is_null($pois)) {
-            $geoJson = ["type" => "FeatureCollection"];
+        if (! is_null($pois)) {
+            $geoJson = ['type' => 'FeatureCollection'];
             $features = [];
             foreach ($pois as $count => $poi) {
                 $feature = $poi->getEmptyGeojson();
-                if (isset($feature["properties"])) {
-                    $feature["properties"]["name"] = $poi->name;
-                    $feature["properties"]["visits"] = (11 - $count) * 10;
+                if (isset($feature['properties'])) {
+                    $feature['properties']['name'] = $poi->name;
+                    $feature['properties']['visits'] = (11 - $count) * 10;
                 }
 
                 $features[] = $feature;
             }
-            $geoJson["features"] = $features;
+            $geoJson['features'] = $features;
 
             return json_encode($geoJson);
         }
@@ -141,17 +141,17 @@ class App extends Model
         $pois = UgcPoi::where('app_id', $app_id)->get();
 
         if ($pois->count() > 0) {
-            $geoJson = ["type" => "FeatureCollection"];
+            $geoJson = ['type' => 'FeatureCollection'];
             $features = [];
             foreach ($pois as $count => $poi) {
                 $feature = $poi->getEmptyGeojson();
-                if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-pois/' . $poi->id;
+                if (isset($feature['properties'])) {
+                    $feature['properties']['view'] = '/resources/ugc-pois/'.$poi->id;
                 }
 
                 $features[] = $feature;
             }
-            $geoJson["features"] = $features;
+            $geoJson['features'] = $features;
 
             return json_encode($geoJson);
         }
@@ -162,17 +162,17 @@ class App extends Model
         $medias = UgcMedia::where('app_id', $app_id)->get();
 
         if ($medias->count() > 0) {
-            $geoJson = ["type" => "FeatureCollection"];
+            $geoJson = ['type' => 'FeatureCollection'];
             $features = [];
             foreach ($medias as $count => $media) {
                 $feature = $media->getEmptyGeojson();
-                if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-medias/' . $media->id;
+                if (isset($feature['properties'])) {
+                    $feature['properties']['view'] = '/resources/ugc-medias/'.$media->id;
                 }
 
                 $features[] = $feature;
             }
-            $geoJson["features"] = $features;
+            $geoJson['features'] = $features;
 
             return json_encode($geoJson);
         }
@@ -183,17 +183,17 @@ class App extends Model
         $tracks = UgcTrack::where('app_id', $app_id)->get();
 
         if ($tracks->count() > 0) {
-            $geoJson = ["type" => "FeatureCollection"];
+            $geoJson = ['type' => 'FeatureCollection'];
             $features = [];
             foreach ($tracks as $count => $track) {
                 $feature = $track->getEmptyGeojson();
-                if (isset($feature["properties"])) {
-                    $feature["properties"]["view"] = '/resources/ugc-tracks/' . $track->id;
+                if (isset($feature['properties'])) {
+                    $feature['properties']['view'] = '/resources/ugc-tracks/'.$track->id;
                 }
 
                 $features[] = $feature;
             }
-            $geoJson["features"] = $features;
+            $geoJson['features'] = $features;
 
             return json_encode($geoJson);
         }
@@ -218,29 +218,32 @@ class App extends Model
                 array_push($pois, $item);
             }
         }
+
         return $pois;
     }
 
     public function BuildPoisGeojson()
     {
-        $poisUri = $this->id . ".geojson";
+        $poisUri = $this->id.'.geojson';
         $json = [
-            "type" => "FeatureCollection",
-            "features" => $this->getAllPoisGeojson(),
+            'type' => 'FeatureCollection',
+            'features' => $this->getAllPoisGeojson(),
         ];
         Storage::disk('pois')->put($poisUri, json_encode($json));
+
         return $json;
     }
 
     public function BuildConfJson()
     {
-        $confUri = $this->id . ".json";
+        $confUri = $this->id.'.json';
         $json = $this->config();
         $jidoTime = $this->config_get_jido_time();
-        if (!is_null($jidoTime)) {
+        if (! is_null($jidoTime)) {
             $json['JIDO_UPDATE_TIME'] = $jidoTime;
         }
         Storage::disk('conf')->put($confUri, json_encode($json));
+
         return $json;
     }
 
@@ -253,7 +256,7 @@ class App extends Model
             'when' => [],
             'where' => [],
             'who' => [],
-            'poi_type' => []
+            'poi_type' => [],
         ];
         foreach ($themes as $theme) {
             $theme_id = $theme->id;
@@ -264,15 +267,15 @@ class App extends Model
             $where_array = json_decode(json_encode($where_db), true);
             $where_result = [];
             foreach ($where_array as $akey => $aval) {
-                $new_array = array();
+                $new_array = [];
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
                         $new_array[$key] = json_decode($val, true);
                     }
                     if ($key == 'identifier') {
-                        $new_array[$key] = "poi_type_" . $val;
+                        $new_array[$key] = 'poi_type_'.$val;
                     }
-                    if (!empty($val) && $key != 'name' && $key != 'identifier') {
+                    if (! empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
@@ -285,15 +288,15 @@ class App extends Model
             $poi_array = json_decode(json_encode($poi_db), true);
             $poi_result = [];
             foreach ($poi_array as $akey => $aval) {
-                $new_array = array();
+                $new_array = [];
                 foreach ($aval as $key => $val) {
                     if ($key == 'name') {
                         $new_array[$key] = json_decode($val, true);
                     }
                     if ($key == 'identifier') {
-                        $new_array[$key] = "poi_type_" . $val;
+                        $new_array[$key] = 'poi_type_'.$val;
                     }
-                    if (!empty($val) && $key != 'name' && $key != 'identifier') {
+                    if (! empty($val) && $key != 'name' && $key != 'identifier') {
                         $new_array[$key] = $val;
                     }
                 }
@@ -328,15 +331,12 @@ class App extends Model
         return $res;
     }
 
-
-    /**
-     * @return Collection
-     */
     public function getEcTracks(): Collection
     {
         if ($this->api == 'webmapp') {
             return EcTrack::all();
         }
+
         return EcTrack::where('user_id', $this->user_id)->get();
     }
 
@@ -378,7 +378,7 @@ class App extends Model
                     });
                 break;
             default:
-                throw new \Exception('Wrong taxonomy name: ' . $taxonomy_name);
+                throw new \Exception('Wrong taxonomy name: '.$taxonomy_name);
         }
 
         $tracks = $query->orderBy('name')->get();
@@ -400,23 +400,22 @@ class App extends Model
     {
         $tracksFromLayer = $this->getTracksFromLayer();
         if (count($tracksFromLayer) > 0) {
-            $index_name = 'app_' . $this->id;
+            $index_name = 'app_'.$this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
                 $t->elasticIndex($index_name, $layers);
             }
         } else {
-            Log::info('No tracks in APP ' . $this->id);
+            Log::info('No tracks in APP '.$this->id);
         }
     }
-
 
     public function elasticJidoIndex()
     {
         $tracksFromLayer = $this->getTracksFromLayer();
         if (count($tracksFromLayer) > 0) {
-            $index_low_name = 'app_low_' . $this->id;
-            $index_high_name = 'app_high_' . $this->id;
+            $index_low_name = 'app_low_'.$this->id;
+            $index_high_name = 'app_high_'.$this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
                 $tollerance = config('geohub.elastic_low_geom_tollerance');
@@ -424,7 +423,7 @@ class App extends Model
                 $t->elasticHighIndex($index_high_name, $layers);
             }
         } else {
-            Log::info('No tracks in APP ' . $this->id);
+            Log::info('No tracks in APP '.$this->id);
         }
     }
 
@@ -433,15 +432,15 @@ class App extends Model
      */
     public function elasticIndexDelete($suffix = '')
     {
-        Log::info('Deleting Elastic Indexing APP ' . $this->id);
+        Log::info('Deleting Elastic Indexing APP '.$this->id);
         if (strlen($suffix) > 0) {
-            $suffix = $suffix . '_';
+            $suffix = $suffix.'_';
         }
-        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
+        $url = config('services.elastic.host').'/geohub_app_'.$suffix.$this->id;
         Log::info($url);
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -450,11 +449,11 @@ class App extends Model
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'DELETE',
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
+                'Authorization: Basic '.config('services.elastic.key'),
+            ],
+        ]);
         if (str_contains(config('services.elastic.host'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -465,17 +464,18 @@ class App extends Model
         Log::info($response);
         curl_close($curl);
     }
+
     /**
      * Delete APP INDEX
      */
     public function elasticIndexCreate($suffix = '')
     {
-        Log::info('Creating Elastic Indexing APP ' . $this->id);
+        Log::info('Creating Elastic Indexing APP '.$this->id);
         if (strlen($suffix) > 0) {
-            $suffix = $suffix . '_';
+            $suffix = $suffix.'_';
         }
         // Create Index
-        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
+        $url = config('services.elastic.host').'/geohub_app_'.$suffix.$this->id;
         $posts = '
                {
                   "mappings": {
@@ -492,11 +492,11 @@ class App extends Model
         try {
             $this->_curlExec($url, 'PUT', $posts);
         } catch (Exception $e) {
-            Log::info("\n ERROR: " . $e);
+            Log::info("\n ERROR: ".$e);
         }
 
         // Settings
-        $urls = $url . '/_settings';
+        $urls = $url.'/_settings';
         $posts = '{"max_result_window": 50000}';
         $this->_curlExec($urls, 'PUT', $posts);
     }
@@ -508,12 +508,14 @@ class App extends Model
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
     }
+
     public function elasticInfoRoutine()
     {
         $this->elasticIndexDelete();
         $this->elasticIndexCreate();
         $this->elasticIndex();
     }
+
     public function elasticJidoRoutine()
     {
         $this->elasticIndexDelete('low');
@@ -536,7 +538,7 @@ class App extends Model
 
     public function config_update_jido_time()
     {
-        $confUri = $this->id . ".json";
+        $confUri = $this->id.'.json';
         if (Storage::disk('conf')->exists($confUri)) {
             $json = json_decode(Storage::disk('conf')->get($confUri));
             $json->JIDO_UPDATE_TIME = floor(microtime(true) * 1000);
@@ -546,7 +548,7 @@ class App extends Model
 
     public function config_get_jido_time()
     {
-        $confUri = $this->id . ".json";
+        $confUri = $this->id.'.json';
         if (Storage::disk('conf')->exists($confUri)) {
             $json = json_decode(Storage::disk('conf')->get($confUri));
             if (isset($json->JIDO_UPDATE_TIME)) {
@@ -555,20 +557,16 @@ class App extends Model
                 return null;
             }
         }
+
         return null;
     }
 
-    /**
-     * @param string $url
-     * @param string $type
-     * @param string $posts
-     */
     private function _curlExec(string $url, string $type, string $posts): void
     {
         Log::info("CURL EXEC TYPE:$type URL:$url");
 
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -578,11 +576,11 @@ class App extends Model
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $type,
             CURLOPT_POSTFIELDS => $posts,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
+                'Authorization: Basic '.config('services.elastic.key'),
+            ],
+        ]);
         if (str_contains(config('services.elastic.host'), 'localhost')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -602,8 +600,6 @@ class App extends Model
      *               tM_d => [lM1_id,lM2_id, ... , lMN_M_id],
      *            ]
      * where t*_id are tracks ids and l*_id are layers where tracks are found
-     *
-     * @return array
      */
     public function getTracksFromLayer(): array
     {
@@ -619,6 +615,7 @@ class App extends Model
                 }
             }
         }
+
         return $res;
     }
 
@@ -636,15 +633,16 @@ class App extends Model
 
     /**
      * generate a QR code for the app
+     *
      * @return string
      */
-    public function generateQrCode(string $customUrl = null)
+    public function generateQrCode(?string $customUrl = null)
     {
         //if the customer has his own customUrl use it, otherwise use the default one
         if (isset($customUrl) && $customUrl != null) {
             $url = $customUrl;
         } else {
-            $url = 'https://' . $this->id . '.app.webmapp.it';
+            $url = 'https://'.$this->id.'.app.webmapp.it';
         }
         //create the svg code for the QR code
         $svg = QrCode::size(80)->generate($url);
@@ -653,24 +651,24 @@ class App extends Model
         $this->save();
 
         //save the file in storage/app/public/qrcode/app_id/
-        Storage::disk('public')->put('qrcode/' . $this->id . '/webapp-qrcode.svg', $svg);
-
+        Storage::disk('public')->put('qrcode/'.$this->id.'/webapp-qrcode.svg', $svg);
 
         return $svg;
     }
 
     public function unique_multidim_array($array, $key)
     {
-        $temp_array = array();
+        $temp_array = [];
         $i = 0;
-        $key_array = array();
-        foreach($array as $val) {
-            if (!in_array($val[$key], $key_array)) {
+        $key_array = [];
+        foreach ($array as $val) {
+            if (! in_array($val[$key], $key_array)) {
                 $key_array[$i] = $val[$key];
                 $temp_array[$i] = $val;
             }
             $i++;
         }
+
         return $temp_array;
     }
 }

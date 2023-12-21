@@ -5,7 +5,8 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy {
+class UserPolicy
+{
     use HandlesAuthorization;
 
     /**
@@ -13,13 +14,13 @@ class UserPolicy {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
      * Perform pre-authorization checks.
      *
-     * @param  \App\Models\User  $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -32,53 +33,61 @@ class UserPolicy {
             return false;
         }
     }
-    
-    public function viewAny(User $user): bool {
+
+    public function viewAny(User $user): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('view_user') ||
             $user->can('view_self_user');
     }
 
-    public function view(User $user, User $model): bool {
+    public function view(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('view_user') ||
             ($user->id === $model->id && $user->can('view_self_user'));
     }
 
-    public function create(User $user): bool {
+    public function create(User $user): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('create_user');
     }
 
-    public function update(User $user, User $model): bool {
+    public function update(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('edit_user') ||
             ($user->id === $model->id && $user->can('view_self_user'));
     }
 
-    public function delete(User $user, User $model): bool {
+    public function delete(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_user');
     }
 
-    public function restore(User $user, User $model): bool {
+    public function restore(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_user');
     }
 
-    public function forceDelete(User $user, User $model): bool {
+    public function forceDelete(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_user');
     }
 
-    public function emulate(User $user, User $model): bool {
+    public function emulate(User $user, User $model): bool
+    {
         $user = User::getEmulatedUser($user);
 
         return $user->hasRole('Admin') && $user->id !== $model->id;

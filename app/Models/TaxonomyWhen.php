@@ -11,12 +11,14 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
-class TaxonomyWhen extends Model {
+class TaxonomyWhen extends Model
+{
     use HasFactory, HasTranslations;
 
     public $translatable = ['name', 'description', 'excerpt'];
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         static::creating(function ($taxonomyWhen) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -26,7 +28,7 @@ class TaxonomyWhen extends Model {
         });
 
         static::saving(function ($taxonomyWhen) {
-            if (null !== $taxonomyWhen->identifier) {
+            if ($taxonomyWhen->identifier !== null) {
                 $taxonomyWhen->identifier = Str::slug($taxonomyWhen->identifier, '-');
             }
         });
@@ -34,42 +36,49 @@ class TaxonomyWhen extends Model {
         parent::save($options);
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
         static::creating(function ($taxonomyWhen) {
             if ($taxonomyWhen->identifier != null) {
                 $validateTaxonomyWhen = TaxonomyWhen::where('identifier', 'LIKE', $taxonomyWhen->identifier)->first();
-                if (!$validateTaxonomyWhen == null) {
+                if (! $validateTaxonomyWhen == null) {
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
         });
     }
 
-    public function author() {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+    public function author()
+    {
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
-    public function ecMedia() {
+    public function ecMedia()
+    {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_whenable');
     }
 
-    public function ecTracks() {
+    public function ecTracks()
+    {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_whenable');
     }
 
-    public function layers(): MorphToMany {
+    public function layers(): MorphToMany
+    {
         return $this->morphedByMany(Layer::class, 'taxonomy_whenable');
     }
 
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message) {
+    private static function validationError($message)
+    {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
-        throw  ValidationException::withMessages($messageBag->getMessages());
+        throw ValidationException::withMessages($messageBag->getMessages());
     }
 }

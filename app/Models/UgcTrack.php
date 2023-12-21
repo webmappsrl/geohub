@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class UgcTrack
  *
- * @package App\Models
  *
  * @property int    id
  * @property string app_id
@@ -23,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class UgcTrack extends Model
 {
-    use HasFactory, GeometryFeatureTrait;
+    use GeometryFeatureTrait, HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -36,8 +35,7 @@ class UgcTrack extends Model
     /**
      * Scope a query to only include current user EcTracks.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCurrentUser($query)
@@ -63,8 +61,6 @@ class UgcTrack extends Model
     /**
      * Return the json version of the ec track, avoiding the geometry
      * TODO: unit TEST
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -72,8 +68,9 @@ class UgcTrack extends Model
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
+            }
         }
 
         return $array;
@@ -81,15 +78,16 @@ class UgcTrack extends Model
 
     /**
      * Create a geojson from the ec track
-     *
-     * @return array
      */
     public function getGeojson(): ?array
     {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson();
+
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 }

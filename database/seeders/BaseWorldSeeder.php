@@ -12,7 +12,6 @@ use App\Models\TaxonomyTarget;
 use App\Models\TaxonomyTheme;
 use App\Models\TaxonomyWhen;
 use App\Models\User;
-use App\Nova\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -28,16 +27,16 @@ use Spatie\Permission\Models\Role;
  * Use command
  *
  * php artisan
- *
- * @package Database\Seeders
  */
-class BaseWorldSeeder extends Seeder {
+class BaseWorldSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         // TODO: check that we are running in LOCAL environment if not DIE
 
         // TODO: check if HOQU (LOCAL) IS WORKING if not die
@@ -70,7 +69,7 @@ class BaseWorldSeeder extends Seeder {
         // TODO: taxonomy where with command (must be enrtiched by geomixer through local HOQU and GEOMIXER instance)
         Artisan::call('geohub:import_and_sync', [
             'import_method' => 'regioni_italiane',
-            '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84'
+            '--shp' => 'geodata/italy_admin/Limiti01012021/Reg01012021/Reg01012021_WGS84',
         ]);
 
         // EC MEDIA
@@ -83,7 +82,7 @@ class BaseWorldSeeder extends Seeder {
         // Create a track in the test dem, then generate some more tracks
         $geom = '{"type":"LineString","coordinates":[[11.03,43.18,0],[11.05,43.14,0],[11.01,43.20,0],[11.06,43.17,0]]}';
         EcTrack::factory([
-            'geometry' => DB::raw("ST_GeomFromGeojson('$geom')")
+            'geometry' => DB::raw("ST_GeomFromGeojson('$geom')"),
         ])->create();
         EcTrack::factory(10)->create();
 
@@ -106,7 +105,7 @@ class BaseWorldSeeder extends Seeder {
             DB::table($modelHasRolesTableName)->insert([
                 'role_id' => $editor_id,
                 'model_id' => $user->id,
-                'model_type' => User::class
+                'model_type' => User::class,
             ]);
         }
 
@@ -139,7 +138,7 @@ class BaseWorldSeeder extends Seeder {
 
         $track2 = EcTrack::factory()->create([
             'name' => 'Frontend Track',
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 2, 3 3 3)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(2 2 2, 3 3 3)'))"),
         ]);
         $track2->user_id = $user->id;
         $track2->featureImage()->associate($media5);

@@ -10,7 +10,6 @@ class ResourceCollection extends Collection
     /**
      * Return the authorized resources of the collection.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Nova\ResourceCollection
      */
     public function authorized(Request $request)
@@ -23,7 +22,6 @@ class ResourceCollection extends Collection
     /**
      * Return the resources available to be displayed in the navigation.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Nova\ResourceCollection
      */
     public function availableForNavigation(Request $request)
@@ -60,7 +58,6 @@ class ResourceCollection extends Collection
     /**
      * Group the resources for display in navigation.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Nova\ResourceCollection
      */
     public function groupedForNavigation(Request $request)

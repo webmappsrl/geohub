@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class UgcPoi
  *
- * @package App\Models
  *
  * @property int    id
  * @property string app_id
@@ -23,8 +22,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string raw_data
  * @property mixed  ugc_media
  */
-class UgcPoi extends Model {
-    use HasFactory, GeometryFeatureTrait;
+class UgcPoi extends Model
+{
+    use GeometryFeatureTrait, HasFactory;
 
     /**
      * @var mixed|string
@@ -39,40 +39,40 @@ class UgcPoi extends Model {
 
     /**
      * Scope a query to only include current user EcPois.
-     *
-     * @param Builder $query
-     *
-     * @return Builder
      */
-    public function scopeCurrentUser(Builder $query): Builder {
+    public function scopeCurrentUser(Builder $query): Builder
+    {
         return $query->where('user_id', Auth()->user()->id);
     }
 
-    public function ugc_media(): BelongsToMany {
+    public function ugc_media(): BelongsToMany
+    {
         return $this->belongsToMany(UgcMedia::class);
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function taxonomy_wheres(): BelongsToMany {
+    public function taxonomy_wheres(): BelongsToMany
+    {
         return $this->belongsToMany(TaxonomyWhere::class);
     }
 
     /**
      * Return the json version of the ec track, avoiding the geometry
      * TODO: unit TEST
-     *
-     * @return array
      */
-    public function getJson(): array {
+    public function getJson(): array
+    {
         $array = $this->toArray();
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
+            }
         }
 
         return $array;
@@ -80,15 +80,16 @@ class UgcPoi extends Model {
 
     /**
      * Create a geojson from the ec track
-     *
-     * @return array
      */
-    public function getGeojson(): ?array {
+    public function getGeojson(): ?array
+    {
         $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+        if (isset($feature['properties'])) {
+            $feature['properties'] = $this->getJson();
 
             return $feature;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 }

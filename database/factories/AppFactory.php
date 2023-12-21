@@ -6,7 +6,8 @@ use App\Models\App;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AppFactory extends Factory {
+class AppFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,15 +20,16 @@ class AppFactory extends Factory {
      *
      * @return array
      */
-    public function definition() {
+    public function definition()
+    {
         return [
             'name' => $this->faker->name(),
-            'app_id' => 'it.webmapp.' . $this->faker->unique()->slug(),
+            'app_id' => 'it.webmapp.'.$this->faker->unique()->slug(),
             'customer_name' => $this->faker->name(),
             'map_max_zoom' => $this->faker->numberBetween(15, 19),
             'map_def_zoom' => $this->faker->numberBetween(12, 14),
             'map_min_zoom' => $this->faker->numberBetween(9, 11),
-            'map_bbox' => json_encode([$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19),$this->faker->numberBetween(15, 19)]),
+            'map_bbox' => json_encode([$this->faker->numberBetween(15, 19), $this->faker->numberBetween(15, 19), $this->faker->numberBetween(15, 19), $this->faker->numberBetween(15, 19)]),
             'font_family_header' => 'Roboto',
             'font_family_content' => 'Roboto',
             'default_feature_color' => $this->faker->hexColor(),
@@ -64,10 +66,10 @@ class AppFactory extends Factory {
             'table_details_show_geojson_download' => $this->faker->boolean(),
             'table_details_show_shapefile_download' => $this->faker->boolean(),
             'start_end_icons_show' => $this->faker->boolean(),
-            'start_end_icons_min_zoom' => $this->faker->numberBetween(10,20),
+            'start_end_icons_min_zoom' => $this->faker->numberBetween(10, 20),
             'ref_on_track_show' => $this->faker->boolean(),
-            'ref_on_track_min_zoom' => $this->faker->numberBetween(10,20),
-            'tiles' => json_encode([$this->faker->url(),$this->faker->url()]),
+            'ref_on_track_min_zoom' => $this->faker->numberBetween(10, 20),
+            'tiles' => json_encode([$this->faker->url(), $this->faker->url()]),
         ];
     }
 }

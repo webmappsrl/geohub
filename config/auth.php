@@ -116,8 +116,8 @@ return [
 
     'partnerships' => [
         'cai' => [
-            'basic_auth_key' => env('PARTNERSHIP_CAI_BASIC_AUTHENTICATION_KEY')
-        ]
-    ]
+            'basic_auth_key' => env('PARTNERSHIP_CAI_BASIC_AUTHENTICATION_KEY'),
+        ],
+    ],
 
 ];

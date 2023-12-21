@@ -14,17 +14,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
     {
         DB::table('taxonomy_activities')->lazyById()->each(function ($activity) {
             $updateActivities = [];
-            if (null != $activity->name) {
+            if ($activity->name != null) {
                 $name = json_encode(['it' => $activity->name, 'en' => $activity->name]);
                 $updateActivities['name'] = $name;
             }
 
-            if (null != $activity->description) {
+            if ($activity->description != null) {
                 $description = json_encode(['it' => $activity->description, 'en' => $activity->description]);
                 $updateActivities['description'] = $description;
             }
 
-            if (null != $activity->excerpt) {
+            if ($activity->excerpt != null) {
                 $excerpt = json_encode(['it' => $activity->excerpt, 'en' => $activity->excerpt]);
                 $updateActivities['excerpt'] = $excerpt;
             }
@@ -38,17 +38,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_wheres')->lazyById()->each(function ($where) {
             $updateWheres = [];
-            if (null != $where->name) {
+            if ($where->name != null) {
                 $name = json_encode(['it' => $where->name, 'en' => $where->name]);
                 $updateWheres['name'] = $name;
             }
 
-            if (null != $where->description) {
+            if ($where->description != null) {
                 $description = json_encode(['it' => $where->description, 'en' => $where->description]);
                 $updateWheres['description'] = $description;
             }
 
-            if (null != $where->excerpt) {
+            if ($where->excerpt != null) {
                 $excerpt = json_encode(['it' => $where->excerpt, 'en' => $where->excerpt]);
                 $updateWheres['excerpt'] = $excerpt;
             }
@@ -62,17 +62,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_whens')->lazyById()->each(function ($when) {
             $updateWhens = [];
-            if (null != $when->name) {
+            if ($when->name != null) {
                 $name = json_encode(['it' => $when->name, 'en' => $when->name]);
                 $updateWhens['name'] = $name;
             }
 
-            if (null != $when->description) {
+            if ($when->description != null) {
                 $description = json_encode(['it' => $when->description, 'en' => $when->description]);
                 $updateWhens['description'] = $description;
             }
 
-            if (null != $when->excerpt) {
+            if ($when->excerpt != null) {
                 $excerpt = json_encode(['it' => $when->excerpt, 'en' => $when->excerpt]);
                 $updateWhens['excerpt'] = $excerpt;
             }
@@ -86,17 +86,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
             $updateTargets = [];
-            if (null != $target->name) {
+            if ($target->name != null) {
                 $name = json_encode(['it' => $target->name, 'en' => $target->name]);
                 $updateTargets['name'] = $name;
             }
 
-            if (null != $target->description) {
+            if ($target->description != null) {
                 $description = json_encode(['it' => $target->description, 'en' => $target->description]);
                 $updateTargets['description'] = $description;
             }
 
-            if (null != $target->excerpt) {
+            if ($target->excerpt != null) {
                 $excerpt = json_encode(['it' => $target->excerpt, 'en' => $target->excerpt]);
                 $updateTargets['excerpt'] = $excerpt;
             }
@@ -110,17 +110,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_themes')->lazyById()->each(function ($theme) {
             $updateThemes = [];
-            if (null != $theme->name) {
+            if ($theme->name != null) {
                 $name = json_encode(['it' => $theme->name, 'en' => $theme->name]);
                 $updateThemes['name'] = $name;
             }
 
-            if (null != $theme->description) {
+            if ($theme->description != null) {
                 $description = json_encode(['it' => $theme->description, 'en' => $theme->description]);
                 $updateThemes['description'] = $description;
             }
 
-            if (null != $theme->excerpt) {
+            if ($theme->excerpt != null) {
                 $excerpt = json_encode(['it' => $theme->excerpt, 'en' => $theme->excerpt]);
                 $updateThemes['excerpt'] = $excerpt;
             }
@@ -134,17 +134,17 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
             $updatePoiTypes = [];
-            if (null != $poiType->name) {
+            if ($poiType->name != null) {
                 $name = json_encode(['it' => $poiType->name, 'en' => $poiType->name]);
                 $updatePoiTypes['name'] = $name;
             }
 
-            if (null != $poiType->description) {
+            if ($poiType->description != null) {
                 $description = json_encode(['it' => $poiType->description, 'en' => $poiType->description]);
                 $updatePoiTypes['description'] = $description;
             }
 
-            if (null != $poiType->excerpt) {
+            if ($poiType->excerpt != null) {
                 $excerpt = json_encode(['it' => $poiType->excerpt, 'en' => $poiType->excerpt]);
                 $updatePoiTypes['excerpt'] = $excerpt;
             }
@@ -166,21 +166,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
     {
         DB::table('taxonomy_activities')->lazyById()->each(function ($activity) {
             $updateActivities = [];
-            if (null != $activity->name) {
+            if ($activity->name != null) {
                 $name = json_decode($activity->name);
                 if (isset($name)) {
                     $updateActivities['name'] = $name->it;
                 }
             }
 
-            if (null != $activity->description) {
+            if ($activity->description != null) {
                 $description = json_decode($activity->description);
                 if (isset($description)) {
                     $updateActivities['description'] = $description->it;
                 }
             }
 
-            if (null != $activity->excerpt) {
+            if ($activity->excerpt != null) {
                 $excerpt = json_decode($activity->excerpt);
                 if (isset($excerpt)) {
                     $updateActivities['excerpt'] = $excerpt->it;
@@ -196,21 +196,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_wheres')->lazyById()->each(function ($where) {
             $updateWheres = [];
-            if (null != $where->name) {
+            if ($where->name != null) {
                 $name = json_decode($where->name);
                 if (isset($name)) {
                     $updateWheres['name'] = $name->it;
                 }
             }
 
-            if (null != $where->description) {
+            if ($where->description != null) {
                 $description = json_decode($where->description);
                 if (isset($description)) {
                     $updateWheres['description'] = $description->it;
                 }
             }
 
-            if (null != $where->excerpt) {
+            if ($where->excerpt != null) {
                 $excerpt = json_decode($where->excerpt);
                 if (isset($excerpt)) {
                     $updateWheres['excerpt'] = $excerpt->it;
@@ -226,21 +226,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_whens')->lazyById()->each(function ($when) {
             $updateWhens = [];
-            if (null != $when->name) {
+            if ($when->name != null) {
                 $name = json_decode($when->name);
                 if (isset($name)) {
                     $updateWhens['name'] = $name->it;
                 }
             }
 
-            if (null != $when->description) {
+            if ($when->description != null) {
                 $description = json_decode($when->description);
                 if (isset($description)) {
                     $updateWhens['description'] = $description->it;
                 }
             }
 
-            if (null != $when->excerpt) {
+            if ($when->excerpt != null) {
                 $excerpt = json_decode($when->excerpt);
                 if (isset($excerpt)) {
                     $updateWhens['excerpt'] = $excerpt->it;
@@ -256,21 +256,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_targets')->lazyById()->each(function ($target) {
             $updateTargets = [];
-            if (null != $target->name) {
+            if ($target->name != null) {
                 $name = json_decode($target->name);
                 if (isset($name)) {
                     $updateTargets['name'] = $name->it;
                 }
             }
 
-            if (null != $target->description) {
+            if ($target->description != null) {
                 $description = json_decode($target->description);
                 if (isset($description)) {
                     $updateTargets['description'] = $description->it;
                 }
             }
 
-            if (null != $target->excerpt) {
+            if ($target->excerpt != null) {
                 $excerpt = json_decode($target->excerpt);
                 if (isset($excerpt)) {
                     $updateTargets['excerpt'] = $excerpt->it;
@@ -286,21 +286,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_themes')->lazyById()->each(function ($theme) {
             $updateThemes = [];
-            if (null != $theme->name) {
+            if ($theme->name != null) {
                 $name = json_decode($theme->name);
                 if (isset($name)) {
                     $updateThemes['name'] = $name->it;
                 }
             }
 
-            if (null != $theme->description) {
+            if ($theme->description != null) {
                 $description = json_decode($theme->description);
                 if (isset($description)) {
                     $updateThemes['description'] = $description->it;
                 }
             }
 
-            if (null != $theme->excerpt) {
+            if ($theme->excerpt != null) {
                 $excerpt = json_decode($theme->excerpt);
                 if (isset($excerpt)) {
                     $updateThemes['excerpt'] = $excerpt->it;
@@ -316,21 +316,21 @@ class UpdateValuesToI18nInTaxonomies extends Migration
 
         DB::table('taxonomy_poi_types')->lazyById()->each(function ($poiType) {
             $updatePoiTypes = [];
-            if (null != $poiType->name) {
+            if ($poiType->name != null) {
                 $name = json_decode($poiType->name);
                 if (isset($name)) {
                     $updatePoiTypes['name'] = $name->it;
                 }
             }
 
-            if (null != $poiType->description) {
+            if ($poiType->description != null) {
                 $description = json_decode($poiType->description);
                 if (isset($description)) {
                     $updatePoiTypes['description'] = $description->it;
                 }
             }
 
-            if (null != $poiType->excerpt) {
+            if ($poiType->excerpt != null) {
                 $excerpt = json_decode($poiType->excerpt);
                 if (isset($excerpt)) {
                     $updatePoiTypes['excerpt'] = $excerpt->it;

@@ -114,18 +114,18 @@ return [
         'osm2cai' => [
             'driver' => 'single',
             'days' => '1',
-            'level'  => 'debug',
-            'path'   => storage_path('logs/osm2cai.log'),
-            'bubble' => false
+            'level' => 'debug',
+            'path' => storage_path('logs/osm2cai.log'),
+            'bubble' => false,
         ],
-        
+
         'euma' => [
             'driver' => 'single',
             'days' => '1',
-            'level'  => 'debug',
-            'path'   => storage_path('logs/euma.log'),
-            'bubble' => false
-        ]
+            'level' => 'debug',
+            'path' => storage_path('logs/euma.log'),
+            'bubble' => false,
+        ],
     ],
 
 ];

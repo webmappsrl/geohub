@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class EcPoiTest extends TestCase {
+class EcPoiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testSaveEcPoiOk() {
+    public function testSaveEcPoiOk()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -32,7 +34,8 @@ class EcPoiTest extends TestCase {
      * 0.1.7.11 Come GC voglio che le tassonomie WHERE si aggiornino automaticamente
      * quando cambio la geometria del punto perché altrimenti sarebbero potenzialmente sbagliate
      */
-    public function testEcPoiChangeGeometry() {
+    public function testEcPoiChangeGeometry()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -58,7 +61,8 @@ class EcPoiTest extends TestCase {
         $ecPoi->save();
     }
 
-    public function testSaveEcPoiError() {
+    public function testSaveEcPoiError()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -73,7 +77,8 @@ class EcPoiTest extends TestCase {
         $ecPoi->save();
     }
 
-    public function testAssociateFeatureImageToPoi() {
+    public function testAssociateFeatureImageToPoi()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -89,7 +94,8 @@ class EcPoiTest extends TestCase {
         $this->assertEquals($ecPoi->feature_image, $ecMedia->id);
     }
 
-    public function testContactFields() {
+    public function testContactFields()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -100,7 +106,8 @@ class EcPoiTest extends TestCase {
         $this->assertNotEmpty($ecPoi->contact_email);
     }
 
-    public function testAssociateTaxonomyPoiTypeToEcPoi() {
+    public function testAssociateTaxonomyPoiTypeToEcPoi()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -116,7 +123,8 @@ class EcPoiTest extends TestCase {
         $this->assertEquals(2, $ecPoi->taxonomyPoiTypes()->count());
     }
 
-    public function testExistsEleField() {
+    public function testExistsEleField()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);

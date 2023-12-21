@@ -4,39 +4,31 @@ namespace App\Nova;
 
 use App\Nova\Actions\DownloadMyUgcMediaAction;
 use App\Nova\Actions\EmulateUser;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Avatar;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use League\Flysystem\Exception;
-use Vyuldashev\NovaPermission\Permission;
-use Vyuldashev\NovaPermission\PermissionBooleanGroup;
-use Vyuldashev\NovaPermission\Role;
-use Vyuldashev\NovaPermission\RoleBooleanGroup;
 use Vyuldashev\NovaPermission\RoleSelect;
 
-class User extends Resource {
+class User extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = \App\Models\User::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -49,7 +41,6 @@ class User extends Resource {
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -65,18 +56,16 @@ class User extends Resource {
         }
     }
 
-    public static function group() {
+    public static function group()
+    {
         return __('Admin');
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
             Avatar::make('Avatar')->disk('public'),
             /*Avatar::make('Avatar')->store(function (Request $request, $model) {
@@ -126,45 +115,33 @@ class User extends Resource {
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [];
     }
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [
             (new DownloadMyUgcMediaAction())->onlyOnDetail(),
             (new EmulateUser())

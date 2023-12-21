@@ -4,7 +4,6 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\App;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AppAPIController extends Controller
@@ -14,16 +13,20 @@ class AppAPIController extends Controller
      *     name="pois",
      *     description="Feature Collection",
      * )
-     * 
+     *
      * @OA\Get(
      *      path="/api/v1/app/{id}/pois.geojson",
      *      tags={"pois"},
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Returns a Feature Collection of pois related to the app by Theme taxonomy",
+     *
      *      @OA\MediaType(
      *             mediaType="application/json",
+     *
      *             @OA\Schema(
+     *
      *                 @OA\Property(
      *                     property="type",
      *                     description="FeatureCollection geojson",
@@ -64,26 +67,27 @@ class AppAPIController extends Controller
      *                 @OA\Property(property="geometry", type="object",
      *                      @OA\Property( property="type", type="string",  description="Postgis geometry type: POINT"),
      *                      @OA\Property( property="coordinates", type="object",  description="POINT coordinates (WGS84)")
-     *                      ) 
+     *                      )
      *                 ),
-     *                  
+     *
      *                 ),
      *                 example={"type":"FeatureCollection","features":{{"type":"Feature","properties":{"id":531,"created_at":"2022-06-23T08:36:21.000000Z","updated_at":"2022-07-04T16:37:27.000000Z","name":{"it":"MERCADO DE LA LONJA DEL BARRANCO","de":null},"description":{"en":"<p>This building was conceived to host the Fish Market of Seville","it":"<p>Questo edificio è stato concepito per ospitare il mercato del pesce di Siviglia"},"excerpt":{"en":"This building was conceived to host the Fish Market","it":"Questo edificio è stato concepito per ospitare il mercato"},"user_id":17455,"out_source_feature_id":3263,"noDetails":false,"noInteraction":false,"access_mobility_check":false,"access_hearing_check":false,"access_vision_check":false,"access_cognitive_check":false,"access_food_check":false,"reachability_by_bike_check":false,"reachability_on_foot_check":false,"reachability_by_car_check":false,"reachability_by_public_transportation_check":false,"geojson_url":"https://geohub.webmapp.it/api/ec/poi/download/531.geojson","gpx_url":"https://geohub.webmapp.it/api/ec/poi/download/531.gpx","kml_url":"https://geohub.webmapp.it/api/ec/poi/download/531.kml","taxonomy":{"theme":{9},"poi_type":{35,37,38,39,47,49}}},"geometry":{"type":"Point","coordinates":{-6.002129316,37.387627623}}}}}
      *             )
-     *         )   
+     *         )
      *      ),
+     *
      *      @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="The internal ID of the APP",
      *         required=true,
+     *
      *         @OA\Schema(
      *             type="integer",
      *             format="int64"
      *         )
      *     ),
      * )
-     * 
      */
     public function pois(int $id)
     {
@@ -92,21 +96,20 @@ class AppAPIController extends Controller
             return response()->json(['code' => 404, 'error' => '404 not found'], 404);
         }
 
-        $poisUri = $id . ".geojson";
+        $poisUri = $id.'.geojson';
         if (Storage::disk('pois')->exists($poisUri)) {
             $json = Storage::disk('pois')->get($poisUri);
+
             return response()->json(json_decode($json));
         } else {
             $json = $app->BuildPoisGeojson($id);
+
             return response()->json($json);
         }
     }
-    
-    
+
     public function all()
     {
         return App::all()->toArray();
     }
-
-
 }

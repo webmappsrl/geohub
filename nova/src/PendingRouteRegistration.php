@@ -85,7 +85,7 @@ class PendingRouteRegistration
                 ->domain(config('nova.domain', null))
                 ->prefix(Nova::path())
                 ->get('/{view}', 'Laravel\Nova\Http\Controllers\RouterController@show')
-                 ->where('view', '.*');
+                ->where('view', '.*');
         };
 
         if (app()->runningInConsole() && ! app()->runningUnitTests()) {

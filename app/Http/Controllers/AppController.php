@@ -8,106 +8,101 @@ use Illuminate\Support\Facades\Storage;
 
 class AppController extends Controller
 {
+    public function icon(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-
-
-
-  public function icon(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app);
     }
 
-    return $this->getOrDownloadIcon($app);
-  }
+    public function splash(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  public function splash(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app, 'splash');
     }
 
-    return $this->getOrDownloadIcon($app, 'splash');
-  }
+    public function iconSmall(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  public function iconSmall(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app, 'icon_small');
     }
 
-    return $this->getOrDownloadIcon($app, 'icon_small');
-  }
+    public function featureImage(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  public function featureImage(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app, 'feature_image');
     }
 
-    return $this->getOrDownloadIcon($app, 'feature_image');
-  }
+    public function iconNotify(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  public function iconNotify(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app, 'icon_notify');
     }
 
-    return $this->getOrDownloadIcon($app, 'icon_notify');
-  }
+    public function logoHomepage(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  public function logoHomepage(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        return $this->getOrDownloadIcon($app, 'logo_homepage');
     }
 
-    return $this->getOrDownloadIcon($app, 'logo_homepage');
-  }
+    protected function getOrDownloadIcon(App $app, $type = 'icon')
+    {
+        if (! isset($app->$type)) {
+            return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
+        }
 
-  protected function getOrDownloadIcon(App $app, $type = 'icon')
-  {
-    if (!isset($app->$type)) {
-      return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        $pathInfo = pathinfo(parse_url($app->$type)['path']);
+        if (substr($app->$type, 0, 4) === 'http') {
+            header("Content-disposition:attachment; filename=$type.".$pathInfo['extension']);
+            header('Content-Type:'.CONTENT_TYPE_IMAGE_MAPPING[$pathInfo['extension']]);
+            readfile($app->$type);
+        } else {
+            //Scaricare risorsa locale
+            //            if (Storage::disk('public')->exists($app->$type . '.' . $pathInfo['extension']))
+            return Storage::disk('public')->download($app->$type, $type.'.'.$pathInfo['extension']);
+            //            else return response()->json(['error' => 'File not found'], 404);
+        }
     }
 
-    $pathInfo = pathinfo(parse_url($app->$type)['path']);
-    if (substr($app->$type, 0, 4) === 'http') {
-      header("Content-disposition:attachment; filename=$type." . $pathInfo['extension']);
-      header('Content-Type:' . CONTENT_TYPE_IMAGE_MAPPING[$pathInfo['extension']]);
-      readfile($app->$type);
-    } else {
-      //Scaricare risorsa locale
-      //            if (Storage::disk('public')->exists($app->$type . '.' . $pathInfo['extension']))
-      return Storage::disk('public')->download($app->$type, $type . '.' . $pathInfo['extension']);
-      //            else return response()->json(['error' => 'File not found'], 404);
-    }
-  }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id the app id in the database
+     * @return JsonResponse
+     */
+    public function vectorStyle(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param int $id the app id in the database
-   *
-   * @return JsonResponse
-   */
-  public function vectorStyle(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => '404 not found'], 404);
-    }
+        $url = route('api.app.webapp.vector_layer', ['id' => $app->id]);
 
-    $url = route('api.app.webapp.vector_layer', ['id' => $app->id]);
-
-    $data = <<<EOF
+        $data = <<<EOF
 {
   "version": 8,
   "name": "tracks",
@@ -291,35 +286,32 @@ class AppController extends Controller
   "id": "63fa0rhhq"
 }
 EOF;
-    $data = json_decode($data, TRUE);
-    return response()->json($data);
-  }
+        $data = json_decode($data, true);
 
-  /**
-   * Display the specified resource.
-   *
-   * @param int $id the app id in the database
-   *
-   * @return JsonResponse
-   */
-  public function vectorLayer(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        return response()->json($data);
     }
 
     /**
+     * Display the specified resource.
      *
-     *   "grids": [
-     *       "https://tiles.webmapp.it/sentieri_toscana/{z}/{x}/{y}.grid.json"
-     *    ],
-     *
+     * @param  int  $id the app id in the database
+     * @return JsonResponse
      */
+    public function vectorLayer(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
 
-    $tile_url = "https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_{$app->id}";
+        /**
+         *   "grids": [
+         *       "https://tiles.webmapp.it/sentieri_toscana/{z}/{x}/{y}.grid.json"
+         *    ],
+         */
+        $tile_url = "https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_{$app->id}";
 
-    $data = <<<EOF
+        $data = <<<EOF
 {
   "name": "sentieri_toscana",
   "description": "",
@@ -362,27 +354,26 @@ EOF;
 }
 EOF;
 
-    $data = json_decode($data, TRUE);
-    return response()->json($data);
-  }
+        $data = json_decode($data, true);
 
-
-
-
-
-  public function config(int $id)
-  {
-    $app = App::find($id);
-    if (is_null($app)) {
-      return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        return response()->json($data);
     }
-    $confUri = $id . ".json";
-    if (Storage::disk('conf')->exists($confUri)) {
-      $json = Storage::disk('conf')->get($confUri);
-      return response()->json(json_decode($json));
-    } else {
-      $json = $app->BuildConfJson($id);
-      return response()->json($json);
+
+    public function config(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+        $confUri = $id.'.json';
+        if (Storage::disk('conf')->exists($confUri)) {
+            $json = Storage::disk('conf')->get($confUri);
+
+            return response()->json(json_decode($json));
+        } else {
+            $json = $app->BuildConfJson($id);
+
+            return response()->json($json);
+        }
     }
-  }
 }

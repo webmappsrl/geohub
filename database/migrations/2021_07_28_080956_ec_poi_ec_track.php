@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EcPoiEcTrack extends Migration {
+class EcPoiEcTrack extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('ec_poi_ec_track', function (Blueprint $table) {
             $table->id();
             $table->integer('ec_poi_id')->unsigned();
@@ -29,7 +31,8 @@ class EcPoiEcTrack extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('ec_poi_ec_track');
     }
 }

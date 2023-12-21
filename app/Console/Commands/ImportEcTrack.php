@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EcMedia;
 use App\Models\EcTrack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -47,8 +46,9 @@ class ImportEcTrack extends Command
         $url = $this->argument('path');
         $file = @file_get_contents($url);
         $fileName = basename($this->argument('path'));
-        if ($file === FALSE)
+        if ($file === false) {
             return $this->error('Error, file does not exists');
+        }
         $contents = file_get_contents($url);
         $feature = json_decode($contents);
         $geometry = $feature->geometry;
@@ -57,13 +57,13 @@ class ImportEcTrack extends Command
             $newEcTrack = EcTrack::create([
                 'name' => $this->argument('name'),
                 'user_id' => $this->argument('user_id'),
-                'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
+                'geometry' => DB::raw("(ST_GeomFromGeoJSON('".json_encode($geometry)."'))")]);
             $newEcTrack->save();
-            $this->info("File uploaded correctly");
+            $this->info('File uploaded correctly');
         } else {
             $newEcTrack = EcTrack::create([
                 'name' => $fileName, 'user_id' => $this->argument('user_id'),
-                'geometry' => DB::raw("(ST_GeomFromGeoJSON('" . json_encode($geometry) . "'))")]);
+                'geometry' => DB::raw("(ST_GeomFromGeoJSON('".json_encode($geometry)."'))")]);
             $newEcTrack->save();
         }
 

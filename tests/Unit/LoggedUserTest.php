@@ -6,14 +6,17 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class LoggedUserTest extends TestCase {
+class LoggedUserTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testLoggedUserWithNoLogin() {
+    public function testLoggedUserWithNoLogin()
+    {
         $this->assertSame(null, User::getLoggedUser());
     }
 
-    public function testLoggedUser() {
+    public function testLoggedUser()
+    {
         $user = User::factory()->create();
         User::factory()->count(2)->create();
 
@@ -21,7 +24,8 @@ class LoggedUserTest extends TestCase {
         $this->assertSame($user->id, User::getLoggedUser()->id);
     }
 
-    public function testEmulatedUserWithNoEmulation() {
+    public function testEmulatedUserWithNoEmulation()
+    {
         $user = User::factory()->create();
         User::factory()->count(2)->create();
 
@@ -29,7 +33,8 @@ class LoggedUserTest extends TestCase {
         $this->assertSame($user->id, User::getEmulatedUser()->id);
     }
 
-    public function testEmulatedUserWithEmulation() {
+    public function testEmulatedUserWithEmulation()
+    {
         $user = User::factory()->create();
         User::factory()->count(2)->create();
 
@@ -37,7 +42,7 @@ class LoggedUserTest extends TestCase {
 
         $this->actingAs($user)
             ->withSession([
-                'emulate_user_id' => $fakeUserId
+                'emulate_user_id' => $fakeUserId,
             ]);
         $this->assertSame($fakeUserId, User::getEmulatedUser()->id);
     }

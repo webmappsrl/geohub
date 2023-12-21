@@ -30,7 +30,7 @@ class AddFilterLabelsToAppsTable extends Migration
     public function down()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->dropColumn(array('filter_activity_label', 'filter_theme_label','filter_poi_type_label','filter_track_duration_label','filter_track_distance_label'));
+            $table->dropColumn(['filter_activity_label', 'filter_theme_label', 'filter_poi_type_label', 'filter_track_duration_label', 'filter_track_distance_label']);
         });
     }
 }
