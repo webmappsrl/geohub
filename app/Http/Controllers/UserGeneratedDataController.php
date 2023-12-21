@@ -243,6 +243,28 @@ class UserGeneratedDataController extends Controller
         }
         if ($ugc instanceof UgcMedia) {
             $ugcGeojson['properties']['relative_url'] = $ugc->relative_url;
+            $ugcPois = $ugc->ugc_pois;
+            $ugcTracks = $ugc->ugc_tracks;
+            if (count($ugcPois) > 0) {
+                $ugcGeojson['properties']['ugc_pois'] = [];
+                foreach ($ugcPois as $ugcPoi) {
+                    $ugcGeojson['properties']['ugc_pois'][] = $ugcPoi->id;
+                }
+            }
+            if (count($ugcTracks) > 0) {
+                $ugcGeojson['properties']['ugc_tracks'] = [];
+                foreach ($ugcTracks as $ugcTrack) {
+                    $ugcGeojson['properties']['ugc_tracks'][] = $ugcTrack->id;
+                }
+            }
+        } else {
+            $ugcMedia = $ugc->ugc_media;
+            if (count($ugcMedia) > 0) {
+                $ugcGeojson['properties']['ugc_media'] = [];
+                foreach ($ugcMedia as $media) {
+                    $ugcGeojson['properties']['ugc_media'][] = $media->id;
+                }
+            }
         }
 
 
