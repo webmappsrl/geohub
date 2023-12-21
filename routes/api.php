@@ -47,10 +47,7 @@ Route::get('downloadUserUgcMediaGeojson/{user_id}', [UgcMediaController::class, 
 Route::name('api.')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
     Route::middleware('throttle:100,1')->post('/auth/signup', [AuthController::class, 'signup'])->name('signup');
-    Route::group([
-        'middleware' => 'auth.jwt',
-        'prefix' => 'auth',
-    ], function () {
+    Route::middleware('auth.jwt')->prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('me', [AuthController::class, 'me'])->name('me');
@@ -60,9 +57,7 @@ Route::name('api.')->group(function () {
     /**
      * Here should go all the api that need authentication
      */
-    Route::group([
-        'middleware' => 'auth.jwt',
-    ], function () {
+    Route::middleware('auth.jwt')->group(function () {
         Route::prefix('ugc')->name('ugc.')->group(function () {
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post('store', [UgcPoiController::class, 'store'])->name('store');
