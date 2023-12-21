@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\DB;
 class UgcMediaFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = UgcMedia::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array

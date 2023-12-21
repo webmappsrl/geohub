@@ -8,13 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class TaxonomyActivityFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = TaxonomyActivity::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array

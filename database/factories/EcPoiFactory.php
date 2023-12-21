@@ -11,13 +11,6 @@ use Illuminate\Support\Facades\DB;
 class EcPoiFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = EcPoi::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array

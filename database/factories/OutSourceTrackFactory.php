@@ -9,13 +9,6 @@ use Illuminate\Support\Facades\DB;
 class OutSourceTrackFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = OutSourceTrack::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array
