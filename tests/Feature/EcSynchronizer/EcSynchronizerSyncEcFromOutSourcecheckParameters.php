@@ -21,7 +21,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_command_variables_are_currect_checkParamteres_should_return_true()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -37,7 +37,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -57,7 +57,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_type_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -68,7 +68,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'xxx';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $name_format = 'path {ref} - {name}';
@@ -90,7 +90,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_author_email_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -101,7 +101,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'xxx';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $name_format = 'path {ref} - {name}';
@@ -122,7 +122,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_author_id_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -133,7 +133,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = '10000000';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $name_format = 'path {ref} - {name}';
@@ -154,7 +154,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_provider_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -186,7 +186,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_endpoint_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -197,7 +197,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'xxx';
         $activity = 'hiking';
         $name_format = 'path {ref} - {name}';
@@ -218,7 +218,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_activity_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -229,7 +229,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'xxx';
         $name_format = 'path {ref} - {name}';
@@ -250,7 +250,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_name_format_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -266,7 +266,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = '';
@@ -288,7 +288,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_poi_type_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -304,7 +304,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'poi';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'xxx';
@@ -326,7 +326,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
     public function when_parameter_theme_is_wrong_should_return_false()
     {
         OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
         ]);
 
@@ -347,7 +347,7 @@ class EcSynchronizerSyncEcFromOutSourcecheckParameters extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $theme = 'xxx';

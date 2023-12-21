@@ -65,7 +65,7 @@ class OutSourceImportCommand extends Command
         foreach ($si->getTrackList() as $id) {
             Log::info("Importing track: source_id -> {$id}");
             $os = OutSourceTrack::firstOrCreate([
-                'provider' => 'App\Providers\OutSourceSentieroItaliaProvider',
+                'provider' => \App\Providers\OutSourceSentieroItaliaProvider::class,
                 'type' => 'track',
                 'source_id' => $id,
             ]);
@@ -86,7 +86,7 @@ class OutSourceImportCommand extends Command
             Log::info("Processing OSMID $id");
             $item = $provider->getItem($id);
             $os = OutSourceTrack::firstOrCreate([
-                'provider' => 'App\Providers\OutSourceOSMProvider',
+                'provider' => \App\Providers\OutSourceOSMProvider::class,
                 'type' => 'track',
                 'source_id' => $id,
             ]);

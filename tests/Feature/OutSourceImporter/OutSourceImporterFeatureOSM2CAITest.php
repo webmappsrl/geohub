@@ -28,7 +28,7 @@ class OutSourceImporterFeatureOSM2CAITest extends TestCase
         $this->assertEquals('track', $out_source->type);
         $this->assertEquals(1, $out_source->source_id);
         $this->assertEquals('osm2cai;pec-osmidlist-test.txt', $out_source->endpoint);
-        $this->assertEquals('App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI', $out_source->provider);
+        $this->assertEquals(\App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI::class, $out_source->provider);
 
     }
 }

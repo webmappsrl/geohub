@@ -41,7 +41,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             ->andReturn($image);
 
         $source1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'media',
             'tags' => [
@@ -64,7 +64,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $type = 'media';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -91,7 +91,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         });
 
         $media1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'media',
             'tags' => [
@@ -101,7 +101,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         ]);
 
         $poi1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
@@ -124,7 +124,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $type = 'poi';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -158,7 +158,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         });
 
         $media1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'media',
             'tags' => [
@@ -168,7 +168,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         ]);
 
         $poi1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
@@ -191,7 +191,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $type = 'poi';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -225,7 +225,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         });
 
         $media1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'media',
             'tags' => [
@@ -235,7 +235,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         ]);
 
         $track1 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
@@ -258,7 +258,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $type = 'track';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -292,7 +292,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         });
 
         $media1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'media',
             'tags' => [
@@ -302,7 +302,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
         ]);
 
         $track1 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
@@ -325,7 +325,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $type = 'track';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';

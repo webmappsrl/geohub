@@ -52,7 +52,7 @@ class TaxonomyPoiType extends Model
 
     public function author()
     {
-        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
     public function ecMedia()

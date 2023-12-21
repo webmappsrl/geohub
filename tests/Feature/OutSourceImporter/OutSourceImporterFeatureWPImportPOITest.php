@@ -40,7 +40,7 @@ class OutSourceImporterFeatureWPImportPOITest extends TestCase
         $this->assertEquals('poi', $out_source->type);
         $this->assertEquals(2654, $out_source->source_id);
         $this->assertEquals('https://stelvio.wp.webmapp.it', $out_source->endpoint);
-        $this->assertEquals('App\Classes\OutSourceImporter\OutSourceImporterFeatureWP', $out_source->provider);
+        $this->assertEquals(\App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class, $out_source->provider);
 
         // TODO: add some checks on tags
         // TODO: add some checks on geometry

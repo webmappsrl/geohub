@@ -19,22 +19,22 @@ class EcSynchronizerSyncEcFromOutSourcegetList extends TestCase
     public function when_method_get_list_it_returns_array_of_ids()
     {
         $source1 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
         ]);
         $source2 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
         ]);
         $source3 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Providers\OutSourceOSMProvider',
+            'provider' => \App\Providers\OutSourceOSMProvider::class,
             'endpoint' => 'https://osm.it',
             'type' => 'poi',
         ]);
         $source4 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Providers\OutSourceOSMProvider',
+            'provider' => \App\Providers\OutSourceOSMProvider::class,
             'endpoint' => 'https://osm.it',
             'type' => 'poi',
         ]);
@@ -51,7 +51,7 @@ class EcSynchronizerSyncEcFromOutSourcegetList extends TestCase
 
         $type = 'track';
         $author = 'team@webmapp.it';
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';

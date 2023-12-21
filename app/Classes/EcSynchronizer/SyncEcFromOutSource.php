@@ -354,7 +354,7 @@ class SyncEcFromOutSource
                 // Create Track
                 Log::info('Creating EC Track from OSF with id: '.$id);
                 try {
-                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                    if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA::class) {
                         $ec_track = EcTrack::updateOrCreate(
                             [
                                 'user_id' => $this->author_id,
@@ -416,7 +416,7 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track taxonomyThemes: '.$this->theme);
                         $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                     }
-                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP') {
+                    if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class) {
                         if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             $path = parse_url($this->endpoint);
                             $file_name = str_replace('.', '-', $path['host']);
@@ -445,7 +445,7 @@ class SyncEcFromOutSource
                             }
                         }
                     }
-                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna') {
+                    if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna::class) {
                         if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             foreach ($out_source->tags['theme'] as $cat) {
                                 Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
@@ -464,7 +464,7 @@ class SyncEcFromOutSource
                             }
                         }
                     }
-                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
+                    if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI::class) {
                         if (isset($out_source->tags['sda'])) {
                             $sda = $out_source->tags['sda'];
                             if ($sda) {
@@ -578,14 +578,14 @@ class SyncEcFromOutSource
                     if (! $this->only_related_url) { // start sync if only related url is not true
                         // Attach poi_type to poi
                         if (! empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial') {
-                            if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
+                            if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV::class) {
                                 foreach ($out_source->tags['poi_type'] as $cat) {
                                     $geohub_w = TaxonomyPoiType::where('identifier', $cat)->first();
                                     if ($geohub_w && ! is_null($geohub_w)) {
                                         $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                     }
                                 }
-                            } elseif ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                            } elseif ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA::class) {
                                 $geohub_w = TaxonomyPoiType::where('identifier', $out_source->tags['poi_type'])->first();
                                 if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
@@ -746,14 +746,14 @@ class SyncEcFromOutSource
         }
         if ($error_not_created) {
             Log::info('Ec features not created from Source with ID: ');
-            if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
+            if ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI::class) {
                 Log::channel('osm2cai')->info(' ');
                 Log::channel('osm2cai')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
                     Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/'.$id);
                     Log::info('https://osm2cai.cai.it/resources/hiking-routes/'.$id);
                 }
-            } elseif ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+            } elseif ($this->provider == \App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA::class) {
                 Log::channel('euma')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
                     Log::channel('euma')->info('https://database.european-mountaineers.eu/resources/trails/'.$id);

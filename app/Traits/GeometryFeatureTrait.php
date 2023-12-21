@@ -82,7 +82,7 @@ trait GeometryFeatureTrait
      */
     public function getRelatedUgcGeojson(): array
     {
-        $classes = ['App\Models\UgcPoi' => 'ugc_pois', 'App\Models\UgcTrack' => 'ugc_tracks', 'App\Models\UgcMedia' => 'ugc_media'];
+        $classes = [\App\Models\UgcPoi::class => 'ugc_pois', \App\Models\UgcTrack::class => 'ugc_tracks', \App\Models\UgcMedia::class => 'ugc_media'];
         $modelType = get_class($this);
         $model = $modelType::find($this->id);
         $features = [];

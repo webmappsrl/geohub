@@ -182,13 +182,13 @@ class UserGeneratedDataController extends Controller
     {
         switch ($type) {
             case 'poi':
-                $model = "\App\Models\UgcPoi";
+                $model = \App\Models\UgcPoi::class;
                 break;
             case 'track':
-                $model = "\App\Models\UgcTrack";
+                $model = \App\Models\UgcTrack::class;
                 break;
             case 'media':
-                $model = "\App\Models\UgcMedia";
+                $model = \App\Models\UgcMedia::class;
                 break;
             default:
                 throw new Exception("Invalid type ' . $type . '. Available types: poi, track, media");

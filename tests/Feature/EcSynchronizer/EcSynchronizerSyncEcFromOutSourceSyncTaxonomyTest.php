@@ -28,7 +28,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
         });
 
         $poi1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
@@ -58,7 +58,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
 
         $type = 'poi';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -86,7 +86,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
         });
 
         $track1 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
@@ -116,7 +116,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
 
         $type = 'track';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
@@ -144,7 +144,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
         });
 
         $poi1 = OutSourcePoi::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
@@ -179,7 +179,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
 
         $type = 'poi';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'xxx';
@@ -208,7 +208,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
         });
 
         $track1 = OutSourceTrack::factory()->create([
-            'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
+            'provider' => \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class,
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
@@ -243,7 +243,7 @@ class EcSynchronizerSyncEcFromOutSourceSyncTaxonomyTest extends TestCase
 
         $type = 'track';
         $author = 1;
-        $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
+        $provider = \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class;
         $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'xxx';
         $poi_type = 'poi';

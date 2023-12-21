@@ -55,7 +55,7 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $poi_geom = DB::select("SELECT ST_AsGeojson('$OSF_poi_geometry')")[0]->st_asgeojson;
         $media_geom = DB::select("SELECT ST_AsGeojson('$OSF_media_geometry')")[0]->st_asgeojson;
         $this->assertEquals($out_source_media->id, $out_source_poi->tags['feature_image']);
-        $this->assertEquals($out_source_media->provider, 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
+        $this->assertEquals($out_source_media->provider, \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class);
         $this->assertEquals($out_source_media->tags['name']['it'], $stelvio_media_decode->title->rendered);
         $this->assertEquals($out_source_media->tags['url'], sha1($stelvio_media_decode->title->rendered).'.jpg');
         $this->assertEquals($poi_geom, $media_geom);
@@ -105,7 +105,7 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $track_geom = DB::select("SELECT ST_AsGeojson(ST_startpoint('$OSF_track_geometry'))")[0]->st_asgeojson;
         $media_geom = DB::select("SELECT ST_AsGeojson('$OSF_media_geometry')")[0]->st_asgeojson;
         $this->assertEquals($out_source_media->id, $out_source_track->tags['feature_image']);
-        $this->assertEquals($out_source_media->provider, 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
+        $this->assertEquals($out_source_media->provider, \App\Classes\OutSourceImporter\OutSourceImporterFeatureWP::class);
         $this->assertEquals($out_source_media->tags['name']['it'], $stelvio_media_decode->title->rendered);
         $this->assertEquals($track_geom, $media_geom);
         $basename = explode('.', basename($stelvio_media_decode->guid->rendered));

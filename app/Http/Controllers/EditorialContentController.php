@@ -38,13 +38,13 @@ class EditorialContentController extends Controller
     {
         switch ($type) {
             case 'poi':
-                $model = "\App\Models\EcPoi";
+                $model = \App\Models\EcPoi::class;
                 break;
             case 'track':
-                $model = "\App\Models\EcTrack";
+                $model = \App\Models\EcTrack::class;
                 break;
             case 'media':
-                $model = "\App\Models\EcMedia";
+                $model = \App\Models\EcMedia::class;
                 break;
             default:
                 throw new Exception("Invalid type ' . $type . '. Available types: poi, track, media");

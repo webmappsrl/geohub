@@ -119,7 +119,7 @@ class EcTrack extends Resource
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyThemes'),
             // Do not remove below code, necessary for data binding
-            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', \App\Nova\EcMedia::class)->searchable()->nullable(),
         ];
     }
 
@@ -447,7 +447,7 @@ class EcTrack extends Resource
                 ]),
             ]),
             // Necessary for view
-            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', \App\Nova\EcMedia::class)->searchable()->nullable(),
         ];
     }
 
@@ -571,7 +571,7 @@ class EcTrack extends Resource
             ]),
 
             // Do not remove below code, necessary for Edit mode
-            BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Gallery', 'ecMedia', \App\Nova\EcMedia::class)->searchable()->nullable(),
 
         ];
     }

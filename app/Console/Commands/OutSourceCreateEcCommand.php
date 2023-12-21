@@ -59,10 +59,10 @@ class OutSourceCreateEcCommand extends Command
         $provider = $this->argument('provider');
         switch ($provider) {
             case 'sicai':
-                $oss = OutSourceTrack::where('provider', 'App\Providers\OutSourceSentieroItaliaProvider')->get();
+                $oss = OutSourceTrack::where('provider', \App\Providers\OutSourceSentieroItaliaProvider::class)->get();
                 break;
             case 'osm':
-                $oss = OutSourceTrack::where('provider', 'App\Providers\OutSourceOSMProvider')->get();
+                $oss = OutSourceTrack::where('provider', \App\Providers\OutSourceOSMProvider::class)->get();
                 break;
 
             default:

@@ -78,7 +78,7 @@ class EcMedia extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
     public function ecPois(): BelongsToMany

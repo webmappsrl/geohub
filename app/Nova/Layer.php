@@ -263,7 +263,7 @@ class Layer extends Resource
         ];
 
         $mediaTab = [
-            BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
+            BelongsTo::make('Feature Image', 'featureImage', \App\Nova\EcMedia::class)
                 ->searchable()
                 ->nullable(),
         ];
@@ -277,7 +277,7 @@ class Layer extends Resource
                     Textarea::make('Description')->alwaysShow(),
                     Text::make('Track Type', 'track_type'),
                 ]),
-                BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
+                BelongsTo::make('Feature Image', 'featureImage', \App\Nova\EcMedia::class)
                     ->searchable()
                     ->nullable(),
                 Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([

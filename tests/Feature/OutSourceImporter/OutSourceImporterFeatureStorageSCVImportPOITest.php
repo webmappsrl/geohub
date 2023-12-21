@@ -28,7 +28,7 @@ class OutSourceImporterFeatureStorageSCVImportPOITest extends TestCase
         $this->assertEquals('poi', $out_source->type);
         $this->assertEquals(1, $out_source->source_id);
         $this->assertEquals('importer;parco-maremma/esercizi.csv', $out_source->endpoint);
-        $this->assertEquals('App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV', $out_source->provider);
+        $this->assertEquals(\App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV::class, $out_source->provider);
 
         // TODO: add some checks on tags
         // TODO: add some checks on geometry

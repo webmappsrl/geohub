@@ -21,7 +21,7 @@ class LayerSimpleTest extends TestCase
     public function layer_belongs_to_app()
     {
         $l = Layer::factory()->create();
-        $this->assertEquals('App\Models\App', get_class($l->app));
+        $this->assertEquals(\App\Models\App::class, get_class($l->app));
     }
 
     /**
@@ -37,7 +37,7 @@ class LayerSimpleTest extends TestCase
         Layer::factory(2)->create(['app_id' => $app->id]);
         $this->assertEquals(2, $app->layers->count());
         foreach ($app->layers as $layer) {
-            $this->assertEquals('App\Models\Layer', get_class($layer));
+            $this->assertEquals(\App\Models\Layer::class, get_class($layer));
         }
     }
 }

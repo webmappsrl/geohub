@@ -22,9 +22,9 @@ class AppConfigApiHasLayersSectionTest extends TestCase
     public function simple_check()
     {
         $this->init_features();
-        $this->assertEquals('App\Models\App', get_class($this->a));
-        $this->assertEquals('App\Models\Layer', get_class($this->l1));
-        $this->assertEquals('App\Models\Layer', get_class($this->l2));
+        $this->assertEquals(\App\Models\App::class, get_class($this->a));
+        $this->assertEquals(\App\Models\Layer::class, get_class($this->l1));
+        $this->assertEquals(\App\Models\Layer::class, get_class($this->l2));
     }
 
     /** @test    */
