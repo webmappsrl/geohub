@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyWhen;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyWhenFactory extends Factory

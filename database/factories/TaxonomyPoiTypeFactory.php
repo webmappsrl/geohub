@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyPoiType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyPoiTypeFactory extends Factory

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyTarget;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaxonomyTargetFactory extends Factory

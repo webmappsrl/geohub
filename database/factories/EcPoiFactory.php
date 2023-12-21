@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\EcMedia;
-use App\Models\EcPoi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;

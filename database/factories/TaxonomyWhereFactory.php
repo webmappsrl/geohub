@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\TaxonomyWhere;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 

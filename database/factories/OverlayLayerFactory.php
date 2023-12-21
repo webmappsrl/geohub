@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\OverlayLayer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OverlayLayerFactory extends Factory

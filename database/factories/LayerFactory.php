@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\App;
-use App\Models\Layer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LayerFactory extends Factory
