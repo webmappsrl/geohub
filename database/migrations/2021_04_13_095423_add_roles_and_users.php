@@ -4,7 +4,7 @@ use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AddRolesAndUsers extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -238,4 +238,4 @@ class AddRolesAndUsers extends Migration
     public function down()
     {
     }
-}
+};

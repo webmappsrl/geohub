@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class UpdateValuesToI18nInEcMedia extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -74,4 +74,4 @@ class UpdateValuesToI18nInEcMedia extends Migration
             }
         });
     }
-}
+};

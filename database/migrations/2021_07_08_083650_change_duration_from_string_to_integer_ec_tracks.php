@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeDurationFromStringToIntegerEcTracks extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -26,4 +26,4 @@ class ChangeDurationFromStringToIntegerEcTracks extends Migration
         DB::statement('ALTER TABLE ec_tracks  ALTER COLUMN duration_forward TYPE VARCHAR(255)');
         DB::statement('ALTER TABLE ec_tracks  ALTER COLUMN duration_backward TYPE VARCHAR(255)');
     }
-}
+};

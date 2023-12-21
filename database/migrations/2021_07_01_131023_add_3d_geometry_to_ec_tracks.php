@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class Add3dGeometryToEcTracks extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -30,4 +30,4 @@ class Add3dGeometryToEcTracks extends Migration
                 USING ST_force2D(geometry);';
         DB::statement($sql);
     }
-}
+};

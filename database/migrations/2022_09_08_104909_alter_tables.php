@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTables extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -130,4 +130,4 @@ class AlterTables extends Migration
                 ->on('ugc_tracks');
         });
     }
-}
+};

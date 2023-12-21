@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUgcMediaTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -38,4 +38,4 @@ class CreateUgcMediaTable extends Migration
         MigrationsHelpers::removeDefaultPermissions('ugc_media');
         Schema::dropIfExists('ugc_media');
     }
-}
+};

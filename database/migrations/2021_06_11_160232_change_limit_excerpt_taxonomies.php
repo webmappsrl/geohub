@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class ChangeLimitExcerptTaxonomies extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -34,4 +34,4 @@ class ChangeLimitExcerptTaxonomies extends Migration
         DB::statement('ALTER TABLE taxonomy_poi_types  ALTER COLUMN excerpt TYPE TEXT');
         DB::statement('ALTER TABLE taxonomy_targets  ALTER COLUMN excerpt TYPE TEXT');
     }
-}
+};

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AlterTranslatableFieldsToLayers extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -69,4 +69,4 @@ class AlterTranslatableFieldsToLayers extends Migration
             }
         });
     }
-}
+};

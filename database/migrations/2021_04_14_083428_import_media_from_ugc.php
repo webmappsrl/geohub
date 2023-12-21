@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
-class ImportMediaFromUGC extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -122,4 +122,4 @@ class ImportMediaFromUGC extends Migration
         Schema::dropIfExists('ugc_media_ugc_poi');
         DB::table('ugc_media')->truncate();
     }
-}
+};
