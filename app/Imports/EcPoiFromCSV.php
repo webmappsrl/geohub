@@ -2,11 +2,14 @@
 
 namespace App\Imports;
 
+use App\Models\EcMedia;
 use Schema;
 use App\Models\EcPoi;
 use App\Models\TaxonomyPoiType;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -141,6 +144,29 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     }
 
     /**
+     * Add FeatureImage to Poi data.
+     *
+     * @param array $ecPoiData
+     */
+    private function addFeatureImage(array &$ecPoiData, $ecPoi)
+    {
+        $ecMedia = null;
+        $storage = Storage::disk('public');
+        try {
+            $url = $ecPoiData['name_it'] . '.png';
+            $contents = file_get_contents($ecPoiData['feature_image']);
+            $storage->put($url, $contents); // salvo l'image sullo storage come concatenazione nome estensione
+
+            $ecMedia = new EcMedia(['name' => $ecPoiData['name_it'], 'url' => $url, 'geometry' => $ecPoiData['geometry']]);
+            $ecMedia->save();
+        } catch (Exception $e) {
+            Log::error("featureImage: create ec media -> " . $e->getMessage());
+        }
+        $ecPoi->featureImage()->associate($ecMedia);
+        unset($ecPoiData['feature_image']);
+    }
+
+    /**
      * Add user_id to Poi data.
      *
      * @param array $ecPoiData
@@ -161,18 +187,24 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it'], 'skip_geomixer_tech' => true]);
         $this->setTranslations($ecPoi, $ecPoiData);
         $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
+        if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
+            $this->addFeatureImage($ecPoiData, $ecPoi);
+        }
         $ecPoi->update($ecPoiData);
         $ecPoi->save();
     }
 
-    /** Update EcPoi 
-     * 
+    /** Update EcPoi
+     *
      * @param array $ecPoiData
      */
     private function updateEcPoi(array $ecPoiData): void
     {
         $ecPoi = EcPoi::find($ecPoiData['id']);
         $ecPoi->skip_geomixer_tech = true;
+        if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
+            $this->addFeatureImage($ecPoiData, $ecPoi);
+        }
         $ecPoi->update($ecPoiData);
         $this->setTranslations($ecPoi, $ecPoiData);
         $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
@@ -253,7 +285,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
                 ->select('id')
                 ->where(function ($query) use ($taxonomies) {
                     foreach ($taxonomies as $taxonomy) {
-                        $query->where('identifier',  $taxonomy);
+                        $query->where('identifier', $taxonomy);
                     }
                 })
                 ->pluck('id')
