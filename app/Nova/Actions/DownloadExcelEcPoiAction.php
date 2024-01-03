@@ -20,6 +20,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'id',
             'created_at',
             'updated_at',
+            'osmid',
             'name',
             'name_it',
             'name_en',
@@ -84,7 +85,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'wheres'
         ];
     }
-    
+
     /**
      * @param EcPoi $poi
      *
@@ -97,39 +98,39 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
         $poi_type = '';
         $lng = 0;
         $lat = 0;
-        
+
         if ($poi->geometry) {
             $lng = DB::select("SELECT ST_X(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
             $lat = DB::select("SELECT ST_Y(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
         }
-        $geohub_backend = url('/').'/resources/ec-pois/'. $poi->id;
+        $geohub_backend = url('/') . '/resources/ec-pois/' . $poi->id;
         if($poi->featureImage) {
-            if (strpos($poi->featureImage->url,'ecmedia')){
+            if (strpos($poi->featureImage->url, 'ecmedia')) {
                 $featureImage = $poi->featureImage->url;
             } else {
                 $featureImage = Storage::disk('public')->url($poi->featureImage->url);
             }
         }
         if ($poi->EcMedia) {
-            $image_gallery = implode(',',$poi->EcMedia->pluck('url')->toArray());
+            $image_gallery = implode(',', $poi->EcMedia->pluck('url')->toArray());
         }
         if ($poi->taxonomyPoiTypes) {
-            $poi_type = implode(',',$poi->taxonomyPoiTypes->pluck('name')->toArray());
+            $poi_type = implode(',', $poi->taxonomyPoiTypes->pluck('name')->toArray());
         }
 
         if ($poi->taxonomyWheres) {
-            $wheres = implode(',',$poi->taxonomyWheres->pluck('name')->toArray());
+            $wheres = implode(',', $poi->taxonomyWheres->pluck('name')->toArray());
         }
-        
+
         $poi = (object) $this->setOutSourceValue($poi);
 
-        $description_it = isset($poi->description['it'])?$poi->description['it']:'';
-        $description_en = isset($poi->description['en'])?$poi->description['en']:'';
-        $description_fr = isset($poi->description['fr'])?$poi->description['fr']:'';
+        $description_it = isset($poi->description['it']) ? $poi->description['it'] : '';
+        $description_en = isset($poi->description['en']) ? $poi->description['en'] : '';
+        $description_fr = isset($poi->description['fr']) ? $poi->description['fr'] : '';
 
-        $name_it = isset($poi->name['it'])?$poi->name['it']:'';
-        $name_en = isset($poi->name['en'])?$poi->name['en']:'';
-        $name_fr = isset($poi->name['fr'])?$poi->name['fr']:'';
+        $name_it = isset($poi->name['it']) ? $poi->name['it'] : '';
+        $name_en = isset($poi->name['en']) ? $poi->name['en'] : '';
+        $name_fr = isset($poi->name['fr']) ? $poi->name['fr'] : '';
 
         $geohub_backend_edit = "https://geohub.webmapp.it/resources/ec-pois/$poi->id/edit";
 
@@ -145,6 +146,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi->id,
             $poi->created_at,
             $poi->updated_at,
+            $poi->osmid,
             $poi->name,
             $name_it,
             $name_en,
@@ -155,8 +157,8 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $lat,
             $lng,
             $poi->description,
-            $description_it, 
-            $description_en, 
+            $description_it,
+            $description_en,
             $description_fr,
             $poi->excerpt,
             $featureImage,
@@ -210,7 +212,8 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
         ];
     }
 
-    private function setOutSourceValue($poi):array {
+    private function setOutSourceValue($poi): array
+    {
         $array = $poi->toArray();
         if(isset($poi->out_source_feature_id)) {
             $keys = [
@@ -229,13 +232,14 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
                 'opening_hours',
             ];
             foreach ($keys as $key) {
-                $array= $this->setOutSourceSingleValue($array,$key,$poi);
+                $array = $this->setOutSourceSingleValue($array, $key, $poi);
             }
         }
         return $array;
     }
 
-    private function setOutSourceSingleValue($array,$varname,$poi):array {
+    private function setOutSourceSingleValue($array, $varname, $poi): array
+    {
         if($this->isReallyEmpty($array[$varname])) {
             if(isset($poi->outSourcePoi->tags[$varname])) {
                 $array[$varname] = $poi->outSourcePoi->tags[$varname];
@@ -244,7 +248,8 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
         return $array;
     }
 
-    private function isReallyEmpty($val): bool {
+    private function isReallyEmpty($val): bool
+    {
         if(is_null($val)) {
             return true;
         }
@@ -252,7 +257,7 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             return true;
         }
         if(is_array($val)) {
-            if(count($val)==0) {
+            if(count($val) == 0) {
                 return true;
             }
             foreach($val as $lang => $cont) {
