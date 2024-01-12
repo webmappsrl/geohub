@@ -97,6 +97,7 @@ class CreateTracksWithOSMIDAction extends Action
 
                     $successCount++;
                 } catch (\Exception $e) {
+                    Log::error($e->getMessage());
                     array_push($errorCount, $id);
                 }
             }
