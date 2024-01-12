@@ -105,8 +105,10 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
                 $ids_array = $SyncEcFromOutSource->getList();
                 // get All OSF ids and updated_at array
                 $ids_updated_at_osf = $SyncEcFromOutSource->getOSFListWithUpdatedAt();
-                // get All EcFeatures woth osf ids and updated_at array
+                // get All EcFeatures with osf ids and updated_at array
                 $ids_updated_at_ec = $SyncEcFromOutSource->getEcFeaturesListWithUpdatedAt($ids_array);
+
+                $SyncEcFromOutSource->deleteOldEcFeatures($ids_updated_at_osf, $ids_updated_at_ec, $type);
 
                 $recentIDs = [];
 

@@ -321,6 +321,28 @@ class SyncEcFromOutSource
         return $features->pluck('id')->toArray();
     }
 
+    public function deleteOldEcFeatures($ids_updated_at_osf, $ids_updated_at_ec, $type)
+    {
+        // Identify entries to delete from $ids_updated_at_ec
+        $deleteEntriesEc = array_diff(array_keys($ids_updated_at_ec), array_keys($ids_updated_at_osf));
+
+        // Delete entries that are not in $ids_updated_at_osf
+        if (!empty($deleteEntriesEc)) {
+            // Assuming you have a model named EcFeature, adjust the model name accordingly
+            // get All Ec Features
+            switch ($this->type) {
+                case "track":
+                    $eloquentQuery = EcTrack::query();
+                    break;
+                case "poi":
+                    $eloquentQuery = EcPoi::query();
+                    break;
+                default:
+                    break;
+            }
+            $eloquentQuery->whereIn('id', $deleteEntriesEc)->delete();
+        }
+    }
 
     /**
      * It updates or creates the Ec features based on the list if IDs from out_source_features table
