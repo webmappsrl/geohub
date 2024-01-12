@@ -19,9 +19,11 @@ use App\Classes\OutSourceImporter\OutSourceImporterListSisteco;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
+use App\Models\EcPoi;
 use App\Models\OutSourceFeature;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -256,14 +258,42 @@ class OutSourceImporterUpdatedAtCommand extends Command
             $features = new OutSourceImporterListOSMPoi('poi', $this->endpoint);
             $features_list = $features->getList();
         }
+
         if ($features_list) {
+            $osf_list = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
             $count = 1;
+
+            // Identify entries to delete from OutSourceFeatures
+            $deleteEntries = array_diff(array_keys($osf_list), array_keys($features_list));
+
+            // Delete entries that are not in $features_list
+            if (!empty($deleteEntries)) {
+
+                // Delete EcPoi entries where it's OutSourceFeature with relation on out_source_feature_id has the source_id in $deleteEntries
+                $deleteEntriesString = [];
+                foreach ($deleteEntries as $deleteEntry) {
+                    $deleteEntriesString[] = "'$deleteEntry'";
+                }
+                $implodeDeleteEntries = implode(',', $deleteEntriesString);
+
+                $ec_ids = collect(DB::select("SELECT ec_pois.id FROM ec_pois INNER JOIN out_source_features ON ec_pois.out_source_feature_id = out_source_features.id WHERE out_source_features.source_id IN ($implodeDeleteEntries)"));
+                $ec_ids = $ec_ids->pluck('id')->toArray();
+                EcPoi::whereIn('id', $ec_ids)->delete();
+
+                OutSourceFeature::where('type', $this->type)
+                    ->where('endpoint', 'LIKE', $this->endpoint)
+                    ->whereIn('source_id', $deleteEntries)
+                    ->delete();
+            }
+
             foreach ($features_list as $id => $updated_at) {
-                Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
-                $OSF = new OutSourceImporterFeatureOSMPoi($this->type, $this->endpoint, $id);
-                $OSF_id = $OSF->importFeature();
-                Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
-                $count++;
+                if (empty($osf_list) || !array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
+                    Log::info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $OSF = new OutSourceImporterFeatureOSMPoi($this->type, $this->endpoint, $id);
+                    $OSF_id = $OSF->importFeature();
+                    Log::info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
+                    $count++;
+                }
             }
         } else {
             Log::info('Importer EUMA get List is empty.');
