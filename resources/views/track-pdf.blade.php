@@ -57,7 +57,7 @@ $qrCode = $app->qr_code;
         @endif
     </div>
     <div class="map">
-        <feature-collection-widget-map padding="200" pointPosition="true" pointRadius="10" strokeWidth="2" strokeColor="rgba(255, 92, 0, 1)" geojsonurl={{ $trackFeatureCollectionUrl }}>
+        <feature-collection-widget-map padding="100" pointPosition="true" pointRadius="10" pointStrokeWidth="1" strokeWidth="2" strokeColor="rgba(255, 92, 0, 1)" geojsonurl={{ $trackFeatureCollectionUrl }}>
         </feature-collection-widget-map>
     </div>
     <header class="pdf-header">
