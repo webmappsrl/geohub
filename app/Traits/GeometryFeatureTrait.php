@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Schema;
 use Symm\Gisconverter\Gisconverter;
 use function PHPUnit\Framework\arrayHasKey;
 
-trait GeometryFeatureTrait {
+trait GeometryFeatureTrait
+{
     /**
      * Calculate the geojson of a model with only the geometry
      *
      * @return array
      */
-    public function getEmptyGeojson(): ?array {
+    public function getEmptyGeojson(): ?array
+    {
         $model = get_class($this);
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -29,7 +31,11 @@ trait GeometryFeatureTrait {
                 "geometry" => json_decode($geom, true)
             ];
         } else
-            return null;
+            return [
+                "type" => "Feature",
+                "properties" => [],
+                "geometry" => null
+            ];
     }
 
     /**
@@ -37,7 +43,8 @@ trait GeometryFeatureTrait {
      *
      * @return string
      */
-    public function getKml(): ?string {
+    public function getKml(): ?string
+    {
         $model = get_class($this);
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -61,7 +68,8 @@ trait GeometryFeatureTrait {
      *
      * @return mixed|null
      */
-    public function getGpx() {
+    public function getGpx()
+    {
         $model = get_class($this);
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -81,7 +89,8 @@ trait GeometryFeatureTrait {
      *
      * @return array
      */
-    public function getRelatedUgcGeojson(): array {
+    public function getRelatedUgcGeojson(): array
+    {
         $classes = ['App\Models\UgcPoi' => 'ugc_pois', 'App\Models\UgcTrack' => 'ugc_tracks', 'App\Models\UgcMedia' => 'ugc_media'];
         $modelType = get_class($this);
         $model = $modelType::find($this->id);
@@ -93,12 +102,12 @@ trait GeometryFeatureTrait {
         foreach ($classes as $class => $table) {
             $result = DB::select(
                 'SELECT id FROM '
-                . $table
-                . ' WHERE user_id = ?'
-                . " AND ABS(EXTRACT(EPOCH FROM created_at) - EXTRACT(EPOCH FROM TIMESTAMP '"
-                . $model->created_at
-                . "')) < 5400"
-                . ' AND St_DWithin(geometry, ?, 400);',
+                    . $table
+                    . ' WHERE user_id = ?'
+                    . " AND ABS(EXTRACT(EPOCH FROM created_at) - EXTRACT(EPOCH FROM TIMESTAMP '"
+                    . $model->created_at
+                    . "')) < 5400"
+                    . ' AND St_DWithin(geometry, ?, 400);',
                 [
                     $model->user_id,
                     $model->geometry
