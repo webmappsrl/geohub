@@ -26,7 +26,7 @@ class BulkEditPOIColorAction extends Action
     {
         foreach ($models as $model) {
             if (isset($fields['color'])) {
-                $model->color = $fields['taxonomy_theme'];
+                $model->color = $fields['color'];
             }
             $model->save();
         }
