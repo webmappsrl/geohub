@@ -146,25 +146,28 @@ class EcTrackController extends Controller
             $ecTrack->taxonomyWheres()->sync($request->where_ids);
         }
 
-        if (!empty($request->duration)) {
-            foreach ($request->duration as $activityIdentifier => $values) {
-                $tax = $ecTrack->taxonomyActivities()->where('identifier', $activityIdentifier)->pluck('id')->first();
-                $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']], false);
-            }
-        }
+        // NO
+        // if (!empty($request->duration)) {
+        //     foreach ($request->duration as $activityIdentifier => $values) {
+        //         $tax = $ecTrack->taxonomyActivities()->where('identifier', $activityIdentifier)->pluck('id')->first();
+        //         $ecTrack->taxonomyActivities()->syncWithPivotValues([$tax], ['duration_forward' => $values['forward'], 'duration_backward' => $values['backward']], false);
+        //     }
+        // }
 
-        if (
-            isset($request->geometry)
-            && is_array($request->geometry)
-            && isset($request->geometry['type'])
-            && isset($request->geometry['coordinates'])
-        ) {
-            $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
-        }
+        // NO
+        // if (
+        //     isset($request->geometry)
+        //     && is_array($request->geometry)
+        //     && isset($request->geometry['type'])
+        //     && isset($request->geometry['coordinates'])
+        // ) {
+        //     $ecTrack->geometry = DB::raw("public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "')");
+        // }
 
-        if (isset($request->slope) && is_array($request->slope)) {
-            $ecTrack->slope = json_encode($request->slope);
-        }
+        // NO
+        // if (isset($request->slope) && is_array($request->slope)) {
+        //     $ecTrack->slope = json_encode($request->slope);
+        // }
 
         if (isset($request->mbtiles) && is_array($request->mbtiles)) {
             $ecTrack->mbtiles = json_encode($request->mbtiles);
@@ -174,28 +177,29 @@ class EcTrackController extends Controller
             $ecTrack->elevation_chart_image = $request->elevation_chart_image;
         }
 
-        if (!$ecTrack->skip_geomixer_tech) {
-            $fields = [
-                'distance_comp',
-                'distance',
-                'ele_min',
-                'ele_max',
-                'ele_from',
-                'ele_to',
-                'ascent',
-                'descent',
-                'duration_forward',
-                'duration_backward',
-            ];
+        // NO
+        // if (!$ecTrack->skip_geomixer_tech) {
+        //     $fields = [
+        //         'distance_comp',
+        //         'distance',
+        //         'ele_min',
+        //         'ele_max',
+        //         'ele_from',
+        //         'ele_to',
+        //         'ascent',
+        //         'descent',
+        //         'duration_forward',
+        //         'duration_backward',
+        //     ];
 
-            foreach ($fields as $field) {
-                if (isset($request->$field)) {
-                    $ecTrack->$field = $request->$field;
-                } else {
-                    $ecTrack->$field = null;
-                }
-            }
-        }
+        //     foreach ($fields as $field) {
+        //         if (isset($request->$field)) {
+        //             $ecTrack->$field = $request->$field;
+        //         } else {
+        //             $ecTrack->$field = null;
+        //         }
+        //     }
+        // }
 
 
         // Related POI Order

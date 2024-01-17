@@ -30,7 +30,8 @@ $qrCode = $app->qr_code;
     <base href="/track/pdf/{{ $track->id }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="stylesheet" href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/styles.css">
+    <link rel="stylesheet"
+        href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/styles.css">
     <link rel="stylesheet" href="{{ asset('css/custom-pdf.css') }}">
 </head>
 
@@ -57,7 +58,8 @@ $qrCode = $app->qr_code;
         @endif
     </div>
     <div class="map">
-        <feature-collection-widget-map padding="100" pointPosition="true" pointRadius="10" pointStrokeWidth="1" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)" geojsonurl={{ $trackFeatureCollectionUrl }}>
+        <feature-collection-widget-map padding="200" pointPosition="true" pointRadius="10" strokeWidth="2" strokeColor="rgba(255, 92, 0, 1)"
+            geojsonurl={{ $trackFeatureCollectionUrl }}>
         </feature-collection-widget-map>
     </div>
     <header class="pdf-header">
@@ -154,6 +156,7 @@ $qrCode = $app->qr_code;
                     @endif
                     {{-- If track has pois then create the pois page --}}
                     @if ($track->ecPois->count() > 0)
+<<<<<<< HEAD
                     <div class="pois-page">
                         <h2 class="pois-header">Punti di interesse</h2>
                         @foreach ($track->ecPois as $number => $poi)
@@ -164,6 +167,37 @@ $qrCode = $app->qr_code;
                                 <h3 class="poi-name">{{$number+1}} - {{ $poi->name }}</h3>
                                 <div class="poi-description">
                                     {!! $poi->description !!}
+=======
+                        <div class="pois-page">
+                            <h2 class="pois-header">Punti di interesse</h2>
+                            @foreach ($track->ecPois as $number => $poi)
+                                {{-- create the poi container --}}
+                                <div class="poi">
+                                    {{-- create poi description --}}
+                                    <div class="poi-details">
+                                        <h3 class="poi-name">{{$number+1}} - {{ $poi->name }}</h3>
+                                        <div class="poi-description">
+                                            {!! $poi->description !!}
+                                        </div>
+
+                                        <hr class="poi-horizontal-rule">
+                                    </div>
+                                    {{-- create poi image. If poi has feature image of thumbnails loop over them and take the 150x150 size --}}
+
+                                    @if ($poi->featureImage != null && $poi->featureImage->thumbnails != null)
+                                        @foreach (json_decode($poi->featureImage->thumbnails) as $key => $value)
+                                            @if ($key == '150x150')
+                                                <div class="poi-feature-image"
+                                                    style="background-image:url('{{ $value }}')">
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        {{-- if not show app icon as image --}}
+                                    @else
+                                        <div class="poi-feature-image"
+                                            style="background-image: url('{{ $appIcon }}');"></div>
+                                    @endif
+>>>>>>> feature/add_dem_service_provider
                                 </div>
 
                                 <hr class="poi-horizontal-rule">
