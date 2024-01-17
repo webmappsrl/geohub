@@ -17,6 +17,7 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
     use SerializesModels;
 
     protected $ecTrack;
+
     /**
      * Create a new job instance.
      *

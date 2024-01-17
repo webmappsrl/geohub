@@ -31,7 +31,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet"
-        href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/8778f562/dist/styles.css">
+        href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/styles.css">
     <link rel="stylesheet" href="{{ asset('css/custom-pdf.css') }}">
 </head>
 
@@ -58,7 +58,7 @@
         @endif
     </div>
     <div class="map">
-        <feature-collection-widget-map padding="200" strokeWidth="5" strokeColor="rgba(255, 92, 0, 1)"
+        <feature-collection-widget-map padding="200" pointPosition="true" pointRadius="10" strokeWidth="2" strokeColor="rgba(255, 92, 0, 1)"
             geojsonurl={{ $trackFeatureCollectionUrl }}>
         </feature-collection-widget-map>
     </div>
@@ -158,12 +158,12 @@
                     @if ($track->ecPois->count() > 0)
                         <div class="pois-page">
                             <h2 class="pois-header">Punti di interesse</h2>
-                            @foreach ($track->ecPois as $poi)
+                            @foreach ($track->ecPois as $number => $poi)
                                 {{-- create the poi container --}}
                                 <div class="poi">
                                     {{-- create poi description --}}
                                     <div class="poi-details">
-                                        <h3 class="poi-name">{{ $poi->name }}</h3>
+                                        <h3 class="poi-name">{{$number+1}} - {{ $poi->name }}</h3>
                                         <div class="poi-description">
                                             {!! $poi->description !!}
                                         </div>
@@ -203,11 +203,11 @@
 
         </tfoot>
     </table>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/runtime.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/runtime.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/polyfills.js" defer>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/polyfills.js" defer>
     </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist/main.js" defer></script>
+    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/main.js" defer></script>
     <script defer>
         //handling the loading of the map
         window.onload = (event) => {

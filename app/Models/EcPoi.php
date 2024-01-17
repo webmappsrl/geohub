@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\EcPoiObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,7 +44,9 @@ class EcPoi extends Model
 
     protected static function booted()
     {
-        parent::booted();
+        // parent::booted();
+        EcPoi::observe(EcPoiObserver::class);
+
         static::creating(function ($ecPoi) {
             $user = User::getEmulatedUser();
             if (!is_null($user)) {
