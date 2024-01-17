@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\BulkEditPOIColorAction;
 use Exception;
 use Laravel\Nova\Panel;
 use Eminiarts\Tabs\Tabs;
@@ -696,6 +697,7 @@ HTML;
         return [
             new RegenerateEcPoi(),
             new BulkEditThemesEcResourceAction(),
+            new BulkEditPOIColorAction(),
             (new DownloadExcelEcPoiAction())->allFields()->except('geometry')->withHeadings(),
             (new UploadPoiFile())->standalone(),
         ];
