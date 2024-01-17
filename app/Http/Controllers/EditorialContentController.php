@@ -73,8 +73,9 @@ class EditorialContentController extends Controller
         }
 
         $ec = $model::find($id);
-        if (is_null($ec))
+        if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         // https://wmptest.s3.eu-central-1.amazonaws.com/EcMedia/2.jpg
 
@@ -108,11 +109,13 @@ class EditorialContentController extends Controller
     {
         $ecMedia = EcMedia::find($id);
 
-        if (is_null($ecMedia))
+        if (is_null($ecMedia)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
         $actualUrl = $ecMedia->url;
-        if (is_null($request->url))
+        if (is_null($request->url)) {
             return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
+        }
         $ecMedia->url = $request->url;
 
         if (
@@ -139,8 +142,9 @@ class EditorialContentController extends Controller
             if (isset($url) && substr($url, 0, 4) === 'http') {
                 $headers = get_headers($request->url);
 
-                if (stripos($headers[0], "200 OK") >= 0)
+                if (stripos($headers[0], "200 OK") >= 0) {
                     Storage::disk('public')->delete($actualUrl);
+                }
             }
         } catch (Exception $e) {
             Log::warning($e->getMessage());
@@ -168,23 +172,25 @@ class EditorialContentController extends Controller
         ) {
             $ecPoi->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
         }
-        if ($ecPoi->skip_geomixer_tech == false) {
-            $fields = [
-                'ele',
-            ];
-            foreach ($fields as $field) {
-                if (isset($request->$field)) {
-                    $ecPoi->$field = $request->$field;
-                }
-            }
+
+        // TODO: Removed this part. ELE is now calculated by UpdateEcPoiDemJob
+        // if ($ecPoi->skip_geomixer_tech == false) {
+        //     $fields = [
+        //         'ele',
+        //     ];
+        //     foreach ($fields as $field) {
+        //         if (isset($request->$field)) {
+        //             $ecPoi->$field = $request->$field;
+        //         }
+        //     }
+        // }
+
+        if (!empty($request->where_ids)) {
+            $ecPoi->taxonomyWheres()->sync($request->where_ids);
         }
 
-            if (!empty($request->where_ids)) {
-                $ecPoi->taxonomyWheres()->sync($request->where_ids);
-            }
-
-            $ecPoi->skip_update = true;
-            $ecPoi->save();
+        $ecPoi->skip_update = true;
+        $ecPoi->save();
     }
 
 
@@ -201,8 +207,9 @@ class EditorialContentController extends Controller
     {
         $ecPoi = EcPoi::find($id);
 
-        if (is_null($ecPoi))
+        if (is_null($ecPoi)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         $headers = [];
         $downloadUrls = [
@@ -211,13 +218,13 @@ class EditorialContentController extends Controller
             'kml' => route('api.ec.poi.download.kml', ['id' => $id]),
         ];
         switch ($format) {
-            case 'gpx';
+            case 'gpx':
                 $headers['Content-Type'] = 'application/vnd.api+json';
                 $headers['Content-Disposition'] = 'attachment; filename="' . $ecPoi->id . '.gpx"';
                 $content = $ecPoi->getGpx();
                 $response = response()->gpx($content, 200, $headers);
                 break;
-            case 'kml';
+            case 'kml':
                 $headers['Content-Type'] = 'application/xml';
                 $headers['Content-Disposition'] = 'attachment; filename="' . $ecPoi->id . '.kml"';
                 $content = $ecPoi->getKml();
@@ -253,8 +260,9 @@ class EditorialContentController extends Controller
         }
 
         $ec = $model::find($id);
-        if (is_null($ec))
+        if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         return response()->json($ec->getGeojson(), 200, $headers);
     }
@@ -276,8 +284,9 @@ class EditorialContentController extends Controller
         }
 
         $ec = $model::find($id);
-        if (is_null($ec))
+        if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         $content = $ec->getGpx();
 
@@ -301,8 +310,9 @@ class EditorialContentController extends Controller
         }
 
         $ec = $model::find($id);
-        if (is_null($ec))
+        if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        }
 
         $content = $ec->getKml();
 

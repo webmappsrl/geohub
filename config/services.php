@@ -46,6 +46,11 @@ return [
         [
             'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'poi_type', 'theme', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url','feature_image']
         ]
-    ]
+        ],
 
+    'dem' => [
+        'host' => env('DEM_HOST', 'https://dem.maphub.it'),
+        'ele_api' => env('DEM_ELE_API', '/api/v1/elevation'),
+        'tech_data_api' => env('DEM_TECH_DATA_API', '/api/v1/track'),
+    ],
 ];
