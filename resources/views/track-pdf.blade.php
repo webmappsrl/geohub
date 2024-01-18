@@ -156,18 +156,6 @@ $qrCode = $app->qr_code;
                     @endif
                     {{-- If track has pois then create the pois page --}}
                     @if ($track->ecPois->count() > 0)
-<<<<<<< HEAD
-                    <div class="pois-page">
-                        <h2 class="pois-header">Punti di interesse</h2>
-                        @foreach ($track->ecPois as $number => $poi)
-                        {{-- create the poi container --}}
-                        <div class="poi">
-                            {{-- create poi description --}}
-                            <div class="poi-details">
-                                <h3 class="poi-name">{{$number+1}} - {{ $poi->name }}</h3>
-                                <div class="poi-description">
-                                    {!! $poi->description !!}
-=======
                         <div class="pois-page">
                             <h2 class="pois-header">Punti di interesse</h2>
                             @foreach ($track->ecPois as $number => $poi)
@@ -197,7 +185,6 @@ $qrCode = $app->qr_code;
                                         <div class="poi-feature-image"
                                             style="background-image: url('{{ $appIcon }}');"></div>
                                     @endif
->>>>>>> feature/add_dem_service_provider
                                 </div>
 
                                 <hr class="poi-horizontal-rule">
