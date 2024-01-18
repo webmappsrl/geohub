@@ -61,10 +61,12 @@ class CreateTracksWithOSMIDAction extends Action
                         [
                             'user_id' => auth()->user()->id,
                             'osmid' => intval($id),
+                        ],
+                        [
+                            'name' => $trackname,
                         ]
                     );
 
-                    $track->name = $trackname;
                     $track->geometry = $geometry;
                     $track->osmid = intval($id);
                     $track->ref = $geojson_content['properties']['ref'];
