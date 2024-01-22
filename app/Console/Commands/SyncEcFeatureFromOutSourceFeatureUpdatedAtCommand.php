@@ -51,9 +51,6 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
      */
     public function handle()
     {
-        // TODO: remove this when problems with HOQU are resolved
-        $hoquServiceProvider = app(HoquServiceProvider::class);
-        $hoquServiceProvider->setPreventStore();
 
         $type = $this->argument('type');
         $author = $this->argument('author');

@@ -20,6 +20,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use App\Models\EcPoi;
+use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
 use Carbon\Carbon;
 use Exception;
@@ -312,6 +313,36 @@ class OutSourceImporterUpdatedAtCommand extends Command
         }
         if ($source_list) {
             $osf_list = OutSourceFeature::where('type', $this->type)->where('endpoint', 'LIKE', $this->endpoint)->pluck('updated_at', 'source_id')->toArray();
+
+            // Identify entries to delete from OutSourceFeatures
+            $deleteEntries = array_diff(array_keys($osf_list), array_keys($source_list));
+
+            // Delete entries that are not in $features_list
+            if (!empty($deleteEntries)) {
+
+                $deleteEntriesString = [];
+                foreach ($deleteEntries as $deleteEntry) {
+                    $deleteEntriesString[] = "'$deleteEntry'";
+                }
+                $implodeDeleteEntries = implode(',', $deleteEntriesString);
+
+                if ($this->type == 'poi') {
+                    $ec_ids = collect(DB::select("SELECT ec_pois.id FROM ec_pois INNER JOIN out_source_features ON ec_pois.out_source_feature_id = out_source_features.id WHERE out_source_features.source_id IN ($implodeDeleteEntries)"));
+                    $ec_ids = $ec_ids->pluck('id')->toArray();
+                    EcPoi::whereIn('id', $ec_ids)->delete();
+                }
+                if ($this->type == 'track') {
+                    $ec_ids = collect(DB::select("SELECT ec_tracks.id FROM ec_tracks INNER JOIN out_source_features ON ec_tracks.out_source_feature_id = out_source_features.id WHERE out_source_features.source_id IN ($implodeDeleteEntries)"));
+                    $ec_ids = $ec_ids->pluck('id')->toArray();
+                    EcTrack::whereIn('id', $ec_ids)->delete();
+                }
+
+                OutSourceFeature::where('type', $this->type)
+                    ->where('endpoint', 'LIKE', $this->endpoint)
+                    ->whereIn('source_id', $deleteEntries)
+                    ->delete();
+            }
+
             $count = 1;
             foreach ($source_list as $id => $updated_at) {
                 if (empty($osf_list) || !array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
