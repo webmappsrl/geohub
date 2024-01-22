@@ -19,6 +19,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterListSisteco;
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use Illuminate\Console\Command;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
+use App\Mail\SendImportErrorsEmail;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
@@ -27,6 +28,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OutSourceImporterUpdatedAtCommand extends Command
 {
@@ -344,13 +346,26 @@ class OutSourceImporterUpdatedAtCommand extends Command
             }
 
             $count = 1;
+            $errors = [];
             foreach ($source_list as $id => $updated_at) {
                 if (empty($osf_list) || !array_key_exists($id, $osf_list) || $osf_list[$id] < Carbon::parse($updated_at)) {
                     Log::info('Start importing ' . $this->type . ' number ' . $count);
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
-                    Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
+                    if (!is_array($OSF_id)) {
+                        Log::info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
+                    } 
+                    if (is_array($OSF_id) && $OSF_id[0][0] == 'error') {
+                        $errors[] = $OSF_id[0][1];
+                    } 
+                    
                     $count++;
+                }
+            }
+            if (!empty($errors)) {
+                $destinatari = config('services.emails.sardegna_sentieri');
+                foreach (explode(',',$destinatari) as $destinatario) {
+                    Mail::to($destinatario)->send(new SendImportErrorsEmail($errors));
                 }
             }
         } else {

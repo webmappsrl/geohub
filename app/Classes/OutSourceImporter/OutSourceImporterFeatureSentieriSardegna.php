@@ -2,6 +2,7 @@
 
 namespace App\Classes\OutSourceImporter;
 
+use App\Mail\SendImportErrorsEmail;
 use App\Models\OutSourceFeature;
 use App\Providers\CurlServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
@@ -9,6 +10,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symm\Gisconverter\Gisconverter;
 
@@ -73,14 +75,16 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             Log::info('Starting creating OSF Track with external ID: ' . $this->source_id);
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            array_push($error_not_created, $url);
+            array_push($error_not_created, ["error" , [$url,$e->getMessage()]]);
             Log::info('Error creating OSF from external with id: ' . $this->source_id . "\n ERROR: " . $e->getMessage());
         }
         if ($error_not_created) {
             Log::info('Ec features not created from Source with URL: ');
-            foreach ($error_not_created as $url) {
+            foreach ($error_not_created as $url => $error) {
                 Log::info($url);
             }
+
+            return $error_not_created;
         }
     }
 
@@ -339,32 +343,32 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
 
         // Processing the feature image of Track
-        if (isset($track['properties']['immagine_principale'])) {
-            Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
-            if ($track['properties']['immagine_principale']) {
-                $image_source_id = $this->source_id . 666;
-                $this->tags['feature_image'] = $this->createOSFMediaFromLink($track['properties']['immagine_principale'], $image_source_id);
-            } else {
-                Log::info('ERROR reaching media: ' . $track['properties']['immagine_principale']);
-            }
-        }
+        // if (isset($track['properties']['immagine_principale'])) {
+        //     Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
+        //     if ($track['properties']['immagine_principale']) {
+        //         $image_source_id = $this->source_id . 666;
+        //         $this->tags['feature_image'] = $this->createOSFMediaFromLink($track['properties']['immagine_principale'], $image_source_id);
+        //     } else {
+        //         Log::info('ERROR reaching media: ' . $track['properties']['immagine_principale']);
+        //     }
+        // }
 
         // Processing the image Gallery of Track
-        if (isset($track['properties']['galleria_immagini'])) {
-            if (is_array($track['properties']['galleria_immagini'])) {
-                Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
-                $count = 777;
-                foreach($track['properties']['galleria_immagini'] as $img) {
-                    if ($img) {
-                        $image_source_id = $this->source_id . $count;
-                        $this->tags['image_gallery'][] = $this->createOSFMediaFromLink($img, $image_source_id);
-                        $count++;
-                    } else {
-                        Log::info('ERROR reaching media: ' . $img);
-                    }
-                }
-            }
-        }
+        // if (isset($track['properties']['galleria_immagini'])) {
+        //     if (is_array($track['properties']['galleria_immagini'])) {
+        //         Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
+        //         $count = 777;
+        //         foreach($track['properties']['galleria_immagini'] as $img) {
+        //             if ($img) {
+        //                 $image_source_id = $this->source_id . $count;
+        //                 $this->tags['image_gallery'][] = $this->createOSFMediaFromLink($img, $image_source_id);
+        //                 $count++;
+        //             } else {
+        //                 Log::info('ERROR reaching media: ' . $img);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     /**
