@@ -52,8 +52,9 @@ return [
         'host' => env('DEM_HOST', 'https://dem.maphub.it'),
         'ele_api' => env('DEM_ELE_API', '/api/v1/elevation'),
         'tech_data_api' => env('DEM_TECH_DATA_API', '/api/v1/track'),
+        '3d_data_api' => env('DEM_3D_DATA_API', '/api/v1/track3d'),
     ],
-    
+
     'emails' => [
         'sardegna_sentieri' => env('EMAILS_SARDEGNA_SENTIERI', 'pedramkatanchi@webmapp.it'),
         'cai_parma' => env('EMAILS_CAI_PARMA', 'pedramkatanchi@webmapp.it'),
