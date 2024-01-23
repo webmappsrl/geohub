@@ -510,6 +510,29 @@ class EcTrack extends Model
             return null;
         }
     }
+    
+    /**
+     * Create only the Geometry and track id from the ec track as getGeojsonGeojson
+     *
+     * @return array
+     */
+    public function getTrackGeometryGeojson(): ?array
+    {
+        $feature = $this->getEmptyGeojson();
+        if (isset($feature["properties"])) {
+            $feature["properties"]["id"] = $this->id;
+            $slope = json_decode($this->slope, true);
+            if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
+                foreach ($slope as $key => $value) {
+                    $feature['geometry']['coordinates'][$key][3] = $value;
+                }
+            }
+
+            return $feature;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Create the track geojson using the elbrus standard
