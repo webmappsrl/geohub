@@ -8,6 +8,7 @@ use App\Nova\Actions\BulkEditThemesEcResourceAction;
 use App\Nova\Actions\CreateTracksWithOSMIDAction;
 use App\Nova\Actions\DownloadExcelEcTrackAction;
 use App\Nova\Actions\RegenerateEcTrack;
+use App\Nova\Actions\UpdateEcTracks3DDEMAction;
 use App\Nova\Actions\UpdateEcTracksDEMAction;
 use App\Nova\Actions\UploadTrackFile;
 use App\Nova\Filters\HasFeatureImage;
@@ -631,6 +632,7 @@ class EcTrack extends Resource
         return [
             new RegenerateEcTrack(),
             new UpdateEcTracksDEMAction(),
+            new UpdateEcTracks3DDEMAction(),
             new BulkEditThemesEcResourceAction(),
             (new DownloadExcelEcTrackAction())->allFields()->except('geometry')->withHeadings(),
             (new CreateTracksWithOSMIDAction())->standalone(),
