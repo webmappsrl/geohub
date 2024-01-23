@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
-class UpdateEcTracks3DDEMction extends Action
+class UpdateEcTracks3DDEMAction extends Action
 {
     use InteractsWithQueue;
     use Queueable;
+
+    public $name = 'Generate 3D';
 
     /**
      * Perform the action on the given models.
