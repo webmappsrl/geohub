@@ -498,12 +498,14 @@ class EcTrack extends Model
         if (isset($feature["properties"])) {
             $feature["properties"] = $this->getJson();
             $feature["properties"]["roundtrip"] = $this->_isRoundtrip($feature["geometry"]["coordinates"]);
-            $slope = json_decode($this->slope, true);
-            if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
-                foreach ($slope as $key => $value) {
-                    $feature['geometry']['coordinates'][$key][3] = $value;
-                }
-            }
+            // TODO: Remove this line
+            // Commented this because it reset the slope (z) generated from DEM
+            // $slope = json_decode($this->slope, true);
+            // if (isset($slope) && count($slope) === count($feature['geometry']['coordinates'])) {
+            //     foreach ($slope as $key => $value) {
+            //         $feature['geometry']['coordinates'][$key][3] = $value;
+            //     }
+            // }
 
             return $feature;
         } else {
