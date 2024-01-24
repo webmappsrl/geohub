@@ -135,8 +135,12 @@ class UpdatePOIFromOsm extends Command
                             'description' => $tag_description
                         ]
                     );
-                    Storage::disk('public')->put('ec_media/' . $page['imageinfo'][0]['canonicaltitle'], $image_content);
-                    $ec_media->url = (Storage::disk('public')->exists('ec_media/' . $page['imageinfo'][0]['canonicaltitle'])) ? 'ec_media/' . $page['imageinfo'][0]['canonicaltitle'] : '';
+                    if (Storage::disk($ec_storage_name)->exists('ec_media/' . $page['imageinfo'][0]['canonicaltitle'])) {
+                        $ec_media->url = Storage::disk($ec_storage_name)->url('ec_media/' . $page['imageinfo'][0]['canonicaltitle']);
+                    } else {
+                        Storage::disk('public')->put('ec_media/' . $page['imageinfo'][0]['canonicaltitle'], $image_content);
+                        $ec_media->url = 'ec_media/' . $page['imageinfo'][0]['canonicaltitle'];
+                    }
                     $ec_media->save();
                     $poi->featureImage()->associate($ec_media);
                     if ($poi->ecMedia()->count() < 1) {

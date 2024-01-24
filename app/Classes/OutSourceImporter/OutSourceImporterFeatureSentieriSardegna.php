@@ -343,32 +343,32 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         }
 
         // Processing the feature image of Track
-        // if (isset($track['properties']['immagine_principale'])) {
-        //     Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
-        //     if ($track['properties']['immagine_principale']) {
-        //         $image_source_id = $this->source_id . 666;
-        //         $this->tags['feature_image'] = $this->createOSFMediaFromLink($track['properties']['immagine_principale'], $image_source_id);
-        //     } else {
-        //         Log::info('ERROR reaching media: ' . $track['properties']['immagine_principale']);
-        //     }
-        // }
+        if (isset($track['properties']['immagine_principale'])) {
+            Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
+            if ($track['properties']['immagine_principale']) {
+                $image_source_id = $this->source_id . 666;
+                $this->tags['feature_image'] = $this->createOSFMediaFromLink($track['properties']['immagine_principale'], $image_source_id);
+            } else {
+                Log::info('ERROR reaching media: ' . $track['properties']['immagine_principale']);
+            }
+        }
 
         // Processing the image Gallery of Track
-        // if (isset($track['properties']['galleria_immagini'])) {
-        //     if (is_array($track['properties']['galleria_immagini'])) {
-        //         Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
-        //         $count = 777;
-        //         foreach($track['properties']['galleria_immagini'] as $img) {
-        //             if ($img) {
-        //                 $image_source_id = $this->source_id . $count;
-        //                 $this->tags['image_gallery'][] = $this->createOSFMediaFromLink($img, $image_source_id);
-        //                 $count++;
-        //             } else {
-        //                 Log::info('ERROR reaching media: ' . $img);
-        //             }
-        //         }
-        //     }
-        // }
+        if (isset($track['properties']['galleria_immagini'])) {
+            if (is_array($track['properties']['galleria_immagini'])) {
+                Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
+                $count = 777;
+                foreach($track['properties']['galleria_immagini'] as $img) {
+                    if ($img) {
+                        $image_source_id = $this->source_id . $count;
+                        $this->tags['image_gallery'][] = $this->createOSFMediaFromLink($img, $image_source_id);
+                        $count++;
+                    } else {
+                        Log::info('ERROR reaching media: ' . $img);
+                    }
+                }
+            }
+        }
     }
 
     /**

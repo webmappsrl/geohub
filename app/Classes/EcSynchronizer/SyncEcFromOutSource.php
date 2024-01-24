@@ -744,8 +744,12 @@ class SyncEcFromOutSource
                         ]
                     );
                     $new_media_name = $ec_media->id . '.' . explode('.', basename($out_source->tags['url']))[1];
-                    Storage::disk($ec_storage_name)->put('ec_media/' . $new_media_name, $s3_osfmedia->get($out_source->tags['url']));
-                    $ec_media->url = (Storage::disk($ec_storage_name)->exists('ec_media/' . $new_media_name)) ? 'ec_media/' . $new_media_name : '';
+                    if (Storage::disk($ec_storage_name)->exists('ec_media/' . $new_media_name)) {
+                        $ec_media->url = Storage::disk($ec_storage_name)->url('ec_media/' . $new_media_name);
+                    } else {
+                        Storage::disk('public')->put('ec_media/' . $new_media_name, $s3_osfmedia->get($out_source->tags['url']));
+                        $ec_media->url = 'ec_media/' . $new_media_name;
+                    }
                     $ec_media->save();
                     array_push($new_ec_features, $ec_media->id);
                 } catch (Exception $e) {
