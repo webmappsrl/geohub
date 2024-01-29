@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\EcTrack;
 use App\Http\Facades\OsmClient;
+use App\Jobs\UpdateEcTrack3DDemJob;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -115,6 +116,7 @@ class UpdateTrackFromOsm extends Command
                 $track->skip_geomixer_tech = true;
                 $track->geometry = $geometry;
                 $track->save();
+                UpdateEcTrack3DDemJob::dispatch($track);
                 $this->info('Track ' . $track->name . ' (' . $track->osmid . ')' . ' updated!');
             } else {
                 $this->info('Track ' . $track->name . ' (' . $track->osmid . ')' . ' has no osmid!');
