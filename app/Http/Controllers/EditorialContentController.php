@@ -263,6 +263,7 @@ class EditorialContentController extends Controller
         if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
+        $headers = $this->createDownloadFileName($ec, $headers);
 
         return response()->json($ec->getGeojson(), 200, $headers);
     }
@@ -289,6 +290,7 @@ class EditorialContentController extends Controller
         }
 
         $content = $ec->getGpx();
+        $headers = $this->createDownloadFileName($ec, $headers);
 
         return response()->gpx($content, 200, $headers);
     }
@@ -315,6 +317,7 @@ class EditorialContentController extends Controller
         }
 
         $content = $ec->getKml();
+        $headers = $this->createDownloadFileName($ec, $headers);
 
         return response()->kml($content, 200, $headers);
     }
@@ -359,5 +362,30 @@ class EditorialContentController extends Controller
         $headers['Content-Disposition'] = 'attachment; filename="' . $id . '.kml"';
 
         return $this->viewEcKml($request, $id, $headers);
+    }
+
+    /**
+     * @param Model $ec
+     * @param array $headers
+     *
+     * @return array
+     */
+    public function createDownloadFileName($ec, $headers)
+    {
+        $fileName = '';
+        if ($ec->ref) {
+            $fileName = $ec->ref;
+        }
+        if (empty($ec->ref) && $ec->name) {
+            $fileName = $ec->name;
+        }
+        if ($fileName) {
+            $originalFileName = $headers['Content-Disposition'];
+            $extension = trim(pathinfo($originalFileName, PATHINFO_EXTENSION), '"');
+
+            $headers['Content-Disposition'] = 'attachment; filename="' . $fileName . '.' . $extension . '"';
+        }
+
+        return $headers;
     }
 }
