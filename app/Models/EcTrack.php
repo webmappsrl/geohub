@@ -1018,6 +1018,12 @@ class EcTrack extends Model
     {
         $string = '';
         $searchables = '';
+        if (empty($app_id) && !empty($this->user_id)) {
+            $user = User::find($this->user_id);
+            if ($user->apps->count() > 0) {
+                $app_id = $user->apps[0]->id;
+            }
+        }
         if ($app_id) {
             $app = App::find($app_id);
             $searchables = json_decode($app->track_searchables);
