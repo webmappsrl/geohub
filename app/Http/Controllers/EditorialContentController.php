@@ -263,7 +263,9 @@ class EditorialContentController extends Controller
         if (is_null($ec)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-        $headers = $this->createDownloadFileName($ec, $headers);
+        if (!empty($headers)) {
+            $headers = $this->createDownloadFileName($ec, $headers);
+        }
 
         return response()->json($ec->getGeojson(), 200, $headers);
     }
