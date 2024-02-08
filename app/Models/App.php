@@ -95,6 +95,12 @@ class App extends Model
     {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
+    
+    public function getUserEmailById($user_id)
+    {
+        $user = User::find($user_id);
+        return $user->email;
+    }
 
     public function getGeojson()
     {

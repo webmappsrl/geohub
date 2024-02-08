@@ -56,6 +56,11 @@ class UgcPoi extends Model {
         return $this->belongsTo(User::class);
     }
 
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo("\App\Models\User", "user_id", "id");
+    }
+    
     public function taxonomy_wheres(): BelongsToMany {
         return $this->belongsToMany(TaxonomyWhere::class);
     }

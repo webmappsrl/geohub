@@ -233,6 +233,34 @@ class User extends Authenticatable implements JWTSubject
         }
         return $result;
     }
+    
+    /**
+     * defines whether at least one app associated to the user has Classification show true or not
+     * @param User|null $user
+     */
+    public function hasClassificationShow($app_id = null)
+    {
+        $apps = $this->apps;
+        $result = false;
+
+        if ($app_id) {
+            foreach ($apps as $app) {
+                if ($app->id == $app_id) {
+                    if ($app->classification_show == true) {
+                        $result = true;
+                    }
+                }
+            }
+            return $result;
+        }
+
+        foreach ($apps as $app) {
+            if ($app->classification_show == true) {
+                $result = true;
+            }
+        }
+        return $result;
+    }
 
     /**
      * Determine if the user is an administrator.
