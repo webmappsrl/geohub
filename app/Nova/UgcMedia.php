@@ -17,6 +17,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Wm\MapPointNova3\MapPointNova3;
 
 class UgcMedia extends Resource
 {
@@ -84,7 +85,8 @@ class UgcMedia extends Resource
 
                 return last(explode('/', $relativeUrl));
             }),
-            BelongsTo::make(__('Creator'), 'user', User::class),
+            BelongsTo::make(__('Creator'), 'user', User::class)->onlyOnIndex(),
+            BelongsTo::make(__('Creator'), 'author', User::class)->searchable()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             Text::make(__('App ID'), 'app_id')->sortable(),
 
@@ -98,6 +100,13 @@ class UgcMedia extends Resource
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
+            MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                'center' => ["51", "4"],
+                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                'minZoom' => 7,
+                'maxZoom' => 16,
+            ])->onlyOnForms(),
         ];
     }
 
