@@ -1212,7 +1212,7 @@ class App extends Resource
     protected function ugc_media_classification_tab(): array
     {
         $html = 'No results yet! Run the classification action to see the results.';
-        if (!empty($this->classification)){
+        if (!empty(json_decode($this->classification,true))){
             // Decode the JSON into an associative array
             $data = json_decode($this->classification, true);
             
@@ -1311,6 +1311,10 @@ class App extends Resource
                 return true;
             }),
             (new GenerateUgcMediaRankingAction())->canSee(function ($request) {
+                // Nova models are being run two times for some reason, so we need to check if the model is already loaded
+                if (isset($this->id)) {
+                    return $request->user()->hasClassificationShow($this->id);
+                }
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
