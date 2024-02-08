@@ -202,6 +202,9 @@ class App extends Resource
                     'MAP Analytics' => $this->map_analytics_tab(),
                 ];
             }
+            if ($request->user()->hasClassificationShow($this->id)) {
+                $tab_array['Classification'] = $this->ugc_media_classification_tab();
+            }
             return [
                 (new Tabs("APP Details: {$this->name} ({$this->id})", $tab_array))->withToolbar(),
             ];
@@ -332,7 +335,8 @@ class App extends Resource
                 Text::make('Social share text', 'social_share_text')
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
-            Boolean::make('dashboard_show')
+            Boolean::make(__('Activate dashboard'),'dashboard_show'),
+            Boolean::make(__('Activate classificationon Ugc Media'),'classification_show')
         ];
     }
 
@@ -918,6 +922,14 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
+            Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
+            ->options([
+                '5' => '5 meters',
+                '10' => '10 meters', // default
+                '20' => '20 meters',
+                '100' => '100 meters'
+            ])
+            ->displayUsingLabels()
         ];
     }
 
@@ -1193,6 +1205,41 @@ class App extends Resource
                 'mediageojson' => $mediageojson,
                 'trackgeojson' => $trackgeojson
             ]),
+        ];
+    }
+    
+    protected function ugc_media_classification_tab(): array
+    {
+        $html = 'No results yet! Run the classification action to see the results.';
+        if (!empty($this->classification)){
+            // Decode the JSON into an associative array
+            $data = json_decode($this->classification, true);
+            
+            // Sort users by the number of POIs
+            uasort($data, function($a, $b) {
+                return count($b) - count($a); // Descending order
+            });
+            
+            // Start the HTML table
+            $html = '<table border="1">';
+            $html .= '<tr><th>User ID (Email)</th><th>Score</th></tr>';
+            
+            foreach ($data as $userId => $pois) {
+                // Assuming getUserEmailById() is a function that retrieves the user's email by their ID
+                $userEmail = $this->getUserEmailById($userId); // You'll need to define this function
+                $count = count($pois);
+                $html .= "<tr>";
+                $html .= "<td>$userId ($userEmail)</td>"; // Display User ID and Email
+                $html .= "<td>$count</td>"; // Display POI:Media
+                $html .= "</tr>";
+            }
+            
+            $html .= '</table>';
+        }
+        return [
+            Text::Make(__('Results'),'classification',function () use ($html) {
+                return $html;
+            })->asHtml(),
         ];
     }
 

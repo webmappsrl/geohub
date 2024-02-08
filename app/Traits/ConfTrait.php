@@ -661,6 +661,9 @@ trait ConfTrait
                 $data['GEOLOCATION']['record']['enable'] = !!$this->geolocation_record_enable;
             }
         }
+        if ($this->gps_accuracy_default) {
+            $data['GEOLOCATION']['gps_accuracy_default'] = $this->gps_accuracy_default;
+        }
 
         return $data;
     }
