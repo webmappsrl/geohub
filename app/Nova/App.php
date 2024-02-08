@@ -9,6 +9,7 @@ use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
 use App\Nova\Actions\generateQrCodeAction;
+use App\Nova\Actions\GenerateUgcMediaRankingAction;
 use App\Rules\AppImagesRule;
 use Davidpiesse\NovaToggle\Toggle;
 use Eminiarts\Tabs\ActionsInTabs;
@@ -1305,6 +1306,11 @@ class App extends Resource
                 return true;
             }),
             (new generateQrCodeAction())->canSee(function ($request) {
+                return true;
+            })->canRun(function ($request, $zone) {
+                return true;
+            }),
+            (new GenerateUgcMediaRankingAction())->canSee(function ($request) {
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
