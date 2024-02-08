@@ -469,6 +469,14 @@ class App extends Resource
                 ->default(false)
                 ->hideFromIndex()
                 ->help('Activate this option if you want enable user track record'),
+            Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
+            ->options([
+                '5' => '5 meters',
+                '10' => '10 meters', // default
+                '20' => '20 meters',
+                '100' => '100 meters'
+            ])
+            ->displayUsingLabels(),
             Toggle::make('alert_poi_show')
                 ->help('Activate this option if you want to show a poi proximity alert'),
             Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert'),
@@ -923,14 +931,6 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
-            Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
-            ->options([
-                '5' => '5 meters',
-                '10' => '10 meters', // default
-                '20' => '20 meters',
-                '100' => '100 meters'
-            ])
-            ->displayUsingLabels()
         ];
     }
 
