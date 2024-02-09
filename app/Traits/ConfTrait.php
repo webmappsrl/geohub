@@ -79,9 +79,6 @@ trait ConfTrait
         if ($this->poi_acquisition_form) {
             $data['APP']['poi_acquisition_form'] =  json_decode($this->poi_acquisition_form, true);
         }
-        if ($this->track_acquisition_form) {
-            $data['APP']['track_acquisition_form'] =  json_decode($this->track_acquisition_form, true);
-        }
 
         return $data;
     }
@@ -283,7 +280,7 @@ trait ConfTrait
                 if ($item['taxonomy_wheres']) {
                     $unsetAttr = ['geometry', 'query_string'];
                     for ($i = 0; $i < count($item['taxonomy_wheres']); ++$i) {
-                        foreach ($unsetAttr as $attr) {
+                        foreach($unsetAttr as $attr) {
                             unset($item['taxonomy_wheres'][$i][$attr]);
                         }
                     }
@@ -815,4 +812,5 @@ EOT;
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
         return $rgbaColor;
     }
+
 }
