@@ -269,6 +269,7 @@ class App extends Resource
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
             'OVERLAYS' => $this->overlayLayers_tab(),
+            'ACQUISITION FORM' => $this->acquisition_form_tab()
         ];
     }
 
@@ -336,8 +337,8 @@ class App extends Resource
                 Text::make('Social share text', 'social_share_text')
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
-            Boolean::make(__('Activate dashboard'),'dashboard_show'),
-            Boolean::make(__('Activate classificationon Ugc Media'),'classification_show')
+            Boolean::make(__('Activate dashboard'), 'dashboard_show'),
+            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show')
         ];
     }
 
@@ -470,13 +471,13 @@ class App extends Resource
                 ->hideFromIndex()
                 ->help('Activate this option if you want enable user track record'),
             Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
-            ->options([
-                '5' => '5 meters',
-                '10' => '10 meters', // default
-                '20' => '20 meters',
-                '100' => '100 meters'
-            ])
-            ->displayUsingLabels(),
+                ->options([
+                    '5' => '5 meters',
+                    '10' => '10 meters', // default
+                    '20' => '20 meters',
+                    '100' => '100 meters'
+                ])
+                ->displayUsingLabels(),
             Toggle::make('alert_poi_show')
                 ->help('Activate this option if you want to show a poi proximity alert'),
             Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert'),
@@ -694,118 +695,6 @@ class App extends Resource
                 $url = url('/api/v1/app/' . $this->id . '/pois.geojson');
                 return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>';
             })->asHtml()->onlyOnDetail(),
-            Code::Make(__('POI acquisition forms'), 'poi_acquisition_form')
-                ->language('json')
-                ->rules('json')
-                ->default(`
-                [
-                    {
-                        "id" : "poi",
-                        "helper": {
-                            "ït": "sono helper di Punto di interesse",
-                            "en": "helper of Point of interest"
-                          },
-                        "label" : 
-                        {
-                            "it" : "Punto di interesse",
-                            "en" : "Point of interest"
-                        },
-                        "fields" :
-                        [
-                            {
-                                "name" : "title",
-                                "type" : "text",
-                                "placeholder": {
-                                    "it" : "Inserisci un titolo",
-                                    "en" : "Add a title"
-                                },
-                                "required" : true,
-                                "label" : 
-                                {
-                                    "it" : "Titolo",
-                                    "en" : "Title"
-                                }
-                            },
-                            {
-                                "name" : "waypointtype",
-                                "type" : "select",
-                                "required" : true,
-                                "label" : 
-                                {
-                                    "it" : "Tipo punto di interesse",
-                                    "en" : "Point of interest type"
-                                },
-                                "values" : [
-                                    {
-                                        "value" : "landscape",
-                                        "label" :
-                                        {
-                                            "it" : "Panorama",
-                                            "en" : "Landscape"
-                                        }
-                                    },
-                                    {
-                                        "value" : "place_to_eat",
-                                        "label" :
-                                        {
-                                            "it" : "Luogo dove mangiare",
-                                            "en" : "Place to eat"
-                                        }
-                                    },
-                                    {
-                                        "value" : "place_to_sleep",
-                                        "label" :
-                                        {
-                                            "it" : "Luogo dove dormire",
-                                            "en" : "Place to eat"
-                                        }
-                                    },
-                                    {
-                                        "value" : "natural",
-                                        "label" :
-                                        {
-                                            "it" : "Luogo di interesse naturalistico",
-                                            "en" : "Place of naturalistic interest"
-                                        }
-                                    },
-                                    {
-                                        "value" : "cultural",
-                                        "label" :
-                                        {
-                                            "it" : "Luogo di interesse culturale",
-                                            "en" : "Place of cultural interest"
-                                        }
-                                    },
-                                    {
-                                        "value" : "other",
-                                        "label" :
-                                        {
-                                            "it" : "Altri tipi ti luoghi di interesse",
-                                            "en" : "Other types of Point of interest"
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "name" : "description",
-                                "type" : "textarea",
-                                "placeholder": {
-                                    "it" : "Se vuoi puoi aggiungere una descrizione",
-                                    "en" : "You can add a description if you want"
-                                },
-                                "required" : false,
-                                "label" : 
-                                {
-                                    "it" : "Descrizione",
-                                    "en" : "Title"
-                                }
-                            }
-                        ] 
-                    }
-                ]`)
-                ->help(
-                    view('poi-forms')->render()
-                )
         ];
     }
 
@@ -1145,6 +1034,236 @@ class App extends Resource
         ];
     }
 
+    protected function acquisition_form_tab(): array
+    {
+        return [
+            Code::Make(__('POI acquisition forms'), 'poi_acquisition_form')
+                ->language('json')
+                ->rules('json')
+                ->default(`
+            [
+                {
+                    "id" : "poi",
+                    "helper": {
+                        "ït": "sono helper di Punto di interesse",
+                        "en": "helper of Point of interest"
+                      },
+                    "label" : 
+                    {
+                        "it" : "Punto di interesse",
+                        "en" : "Point of interest"
+                    },
+                    "fields" :
+                    [
+                        {
+                            "name" : "title",
+                            "type" : "text",
+                            "placeholder": {
+                                "it" : "Inserisci un titolo",
+                                "en" : "Add a title"
+                            },
+                            "required" : true,
+                            "label" : 
+                            {
+                                "it" : "Titolo",
+                                "en" : "Title"
+                            }
+                        },
+                        {
+                            "name" : "waypointtype",
+                            "type" : "select",
+                            "required" : true,
+                            "label" : 
+                            {
+                                "it" : "Tipo punto di interesse",
+                                "en" : "Point of interest type"
+                            },
+                            "values" : [
+                                {
+                                    "value" : "landscape",
+                                    "label" :
+                                    {
+                                        "it" : "Panorama",
+                                        "en" : "Landscape"
+                                    }
+                                },
+                                {
+                                    "value" : "place_to_eat",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo dove mangiare",
+                                        "en" : "Place to eat"
+                                    }
+                                },
+                                {
+                                    "value" : "place_to_sleep",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo dove dormire",
+                                        "en" : "Place to eat"
+                                    }
+                                },
+                                {
+                                    "value" : "natural",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo di interesse naturalistico",
+                                        "en" : "Place of naturalistic interest"
+                                    }
+                                },
+                                {
+                                    "value" : "cultural",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo di interesse culturale",
+                                        "en" : "Place of cultural interest"
+                                    }
+                                },
+                                {
+                                    "value" : "other",
+                                    "label" :
+                                    {
+                                        "it" : "Altri tipi ti luoghi di interesse",
+                                        "en" : "Other types of Point of interest"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "description",
+                            "type" : "textarea",
+                            "placeholder": {
+                                "it" : "Se vuoi puoi aggiungere una descrizione",
+                                "en" : "You can add a description if you want"
+                            },
+                            "required" : false,
+                            "label" : 
+                            {
+                                "it" : "Descrizione",
+                                "en" : "Title"
+                            }
+                        }
+                    ] 
+                }
+            ]`)
+                ->help(
+                    view('poi-forms')->render()
+                ),
+            Code::Make(__('TRACK acquisition forms'), 'track_acquisition_form')
+                ->language('json')
+                ->rules('json')
+                ->default(`
+            [
+                {
+                    "id" : "track",
+                    "helper": {
+                        "ït": "sono helper di track",
+                        "en": "helper of track"
+                      },
+                    "label" : 
+                    {
+                        "it" : "traccia",
+                        "en" : "track"
+                    },
+                    "fields" :
+                    [
+                        {
+                            "name" : "title",
+                            "type" : "text",
+                            "placeholder": {
+                                "it" : "Inserisci un titolo",
+                                "en" : "Add a title"
+                            },
+                            "required" : true,
+                            "label" : 
+                            {
+                                "it" : "Titolo",
+                                "en" : "Title"
+                            }
+                        },
+                        {
+                            "name" : "tracktype",
+                            "type" : "select",
+                            "required" : true,
+                            "label" : 
+                            {
+                                "it" : "Tipo traccia",
+                                "en" : "Track type"
+                            },
+                            "values" : [
+                                {
+                                    "value" : "landscape",
+                                    "label" :
+                                    {
+                                        "it" : "Panorama",
+                                        "en" : "Landscape"
+                                    }
+                                },
+                                {
+                                    "value" : "place_to_eat",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo dove mangiare",
+                                        "en" : "Place to eat"
+                                    }
+                                },
+                                {
+                                    "value" : "place_to_sleep",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo dove dormire",
+                                        "en" : "Place to eat"
+                                    }
+                                },
+                                {
+                                    "value" : "natural",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo di interesse naturalistico",
+                                        "en" : "Place of naturalistic interest"
+                                    }
+                                },
+                                {
+                                    "value" : "cultural",
+                                    "label" :
+                                    {
+                                        "it" : "Luogo di interesse culturale",
+                                        "en" : "Place of cultural interest"
+                                    }
+                                },
+                                {
+                                    "value" : "other",
+                                    "label" :
+                                    {
+                                        "it" : "Altri tipi ti luoghi di interesse",
+                                        "en" : "Other types of Point of interest"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "description",
+                            "type" : "textarea",
+                            "placeholder": {
+                                "it" : "Se vuoi puoi aggiungere una descrizione",
+                                "en" : "You can add a description if you want"
+                            },
+                            "required" : false,
+                            "label" : 
+                            {
+                                "it" : "Descrizione",
+                                "en" : "Title"
+                            }
+                        }
+                    ] 
+                }
+            ]`)
+                ->help(
+                    view('track-forms')->render()
+                )
+        ];
+    }
+
     protected function app_analytics_tab(): array
     {
         return [
@@ -1208,23 +1327,23 @@ class App extends Resource
             ]),
         ];
     }
-    
+
     protected function ugc_media_classification_tab(): array
     {
         $html = 'No results yet! Run the classification action to see the results.';
-        if (!empty(json_decode($this->classification,true))){
+        if (!empty(json_decode($this->classification, true))) {
             // Decode the JSON into an associative array
             $data = json_decode($this->classification, true);
-            
+
             // Sort users by the number of POIs
-            uasort($data, function($a, $b) {
+            uasort($data, function ($a, $b) {
                 return count($b) - count($a); // Descending order
             });
-            
+
             // Start the HTML table
             $html = '<table border="1">';
             $html .= '<tr><th>User ID (Email)</th><th>Score</th></tr>';
-            
+
             foreach ($data as $userId => $pois) {
                 // Assuming getUserEmailById() is a function that retrieves the user's email by their ID
                 $userEmail = $this->getUserEmailById($userId); // You'll need to define this function
@@ -1234,11 +1353,11 @@ class App extends Resource
                 $html .= "<td>$count</td>"; // Display POI:Media
                 $html .= "</tr>";
             }
-            
+
             $html .= '</table>';
         }
         return [
-            Text::Make(__('Results'),'classification',function () use ($html) {
+            Text::Make(__('Results'), 'classification', function () use ($html) {
                 return $html;
             })->asHtml(),
         ];
