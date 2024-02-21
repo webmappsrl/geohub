@@ -94,7 +94,7 @@ trait TrackElasticIndexTrait
             'cai_scale' =>  $this->cai_scale,
             'from' =>  $this->getActualOrOSFValue('from'),
             'to' =>  $this->getActualOrOSFValue('to'),
-            'name' => $this->getTranslations('name'),
+            'name' =>  $this->name,
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
