@@ -8,7 +8,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use SQLite3;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
@@ -33,6 +32,7 @@ class CreatePBFCommand extends Command
     protected $format;
     protected $min_zoom;
     protected $max_zoom;
+    protected $app_id;
     /**
      * Create a new command instance.
      *
@@ -59,78 +59,25 @@ class CreatePBFCommand extends Command
             $this->error('This app does not have app_id! Please add app_id. (e.g. it.webmapp.webmapp)');
             return;
         }
+        $this->app_id = $app->id;
         $this->author_id = $app->user_id;
 
-        // Nome del file MBTiles
-        $mbtiles_filename = "hiking_routes.mbtiles";
-
-        // Creazione del file MBTiles
-        $conn = new SQLite3($mbtiles_filename);
-        $conn->busyTimeout(600000);
-        $conn->exec('
-            CREATE TABLE IF NOT EXISTS metadata (name TEXT, value TEXT);
-        ');
-
-        // Creazione della tabella "tiles"
-        $conn->exec('
-            CREATE TABLE IF NOT EXISTS tiles (zoom_level INTEGER, tile_column INTEGER, tile_row INTEGER, tile_data BLOB);
-        ');
-
-        $this->min_zoom = 10;
-        $this->max_zoom = 10;
-        // $this->min_zoom = $app->map_min_zoom;
-        // $this->max_zoom = $app->map_max_zoom;
+        // $this->min_zoom = 10;
+        // $this->max_zoom = 10;
+        $this->min_zoom = $app->map_min_zoom;
+        $this->max_zoom = $app->map_max_zoom;
         $bbox = json_decode($app->map_bbox);
         $this->format = 'pbf';
 
         try {
             // Iterazione attraverso i livelli di zoom
             for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
-                $tiles = $this->generateTiles($bbox[0], $bbox[1], $bbox[2], $bbox[3], $zoom);
+                $tiles = $this->generateTiles($bbox, $zoom);
                 foreach ($tiles as $tile) {
                     list($x, $y, $z) = $tile;
-                    $vector_tile = $this->download_vector_tile($z, $x, $y);
-                    
-                    if (!empty($vector_tile)) {
-                        // Aggiungi i dati alla tabella "tiles"
-                        $stmt = $conn->prepare("INSERT INTO tiles (zoom_level, tile_column, tile_row, tile_data) VALUES (:zoom, :x, :y, :tile_data)");
-                        $stmt->bindParam(':zoom', $zoom, SQLITE3_INTEGER);
-                        $stmt->bindParam(':x', $x, SQLITE3_INTEGER);
-                        $stmt->bindParam(':y', $y, SQLITE3_INTEGER);
-                        $stmt->bindParam(':tile_data', $vector_tile, SQLITE3_BLOB);
-                        $stmt->execute();
-                    }
+                    $this->download_vector_tile($z, $x, $y);
                 }
             }
-
-            // Inserisci metadati nella tabella "metadata" con un campo "json"
-            $metadata = array(
-                array("name", "hiking_routes"),
-                array("format", "pbf"),
-                array("json", '{"vector_layers":[{"id":"hiking_routes_layer","description":"","minzoom":'.$this->min_zoom.',"maxzoom":'.$this->max_zoom.',"fields":{"id":"Number","name":"String"}}]}'),
-                array("description", "Pacchetto fatto con minimal-mvt"),
-                array("minzoom", strval($this->min_zoom)),
-                array("maxzoom", strval($this->max_zoom)),
-                array("bounds", "{$bbox[0]},{$bbox[1]},{$bbox[2]},{$bbox[3]}")
-                // Aggiungi altri metadati secondo le tue esigenze
-            );
-
-            foreach ($metadata as $item) {
-                list($name, $value) = $item;
-                $stmt = $conn->prepare("INSERT INTO metadata (name, value) VALUES (:name, :value)");
-                $stmt->bindParam(':name', $name, SQLITE3_TEXT);
-                $stmt->bindParam(':value', $value, SQLITE3_TEXT);
-                $stmt->execute();
-            }
-            
-            // Indicizza la tabella tiles
-            $conn->exec('
-                CREATE UNIQUE INDEX tile_index ON tiles (zoom_level, tile_column, tile_row);
-            ');
-            
-            $conn->close();
-            echo "MBTiles generato: $mbtiles_filename\n";
-            
         } catch (Exception $e) {
             throw new Exception('ERROR ' . $e->getMessage());
         }
@@ -143,7 +90,8 @@ class CreatePBFCommand extends Command
             'x'      => $x,
             'y'      => $y,
             'format' => $this->format
-        );;
+        );
+        ;
         if (!($tile && $this->tileIsValid($tile))) {
             throw new Exception('ERROR Invalid Tile Path');
         }
@@ -153,31 +101,45 @@ class CreatePBFCommand extends Command
         $pbf = DB::select($sql);
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
-            file_put_contents($z.'_'.$x.'_'.$y.'file.pbf', $pbfContent);
+            $directory = $this->app_id . '/' . $z . '/' . $x;
+            if (!is_dir($directory)) {
+                mkdir($directory, 0777, true);
+            }
+            file_put_contents($directory . '/' . $y . '.pbf', $pbfContent);
+            return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
         }
-        return $pbfContent;
+        return '';
     }
 
-    public function generateTiles($minLon, $minLat, $maxLon, $maxLat, $zoom) :array {
-        $tiles = [];
-        
-        $minTileX = floor(($minLon + 180) / 360 * pow(2, $zoom));
-        $maxTileX = floor(($maxLon + 180) / 360 * pow(2, $zoom));
-        $minTileY = floor((1 - log(tan(deg2rad($minLat)) + 1 / cos(deg2rad($minLat))) / pi()) /2 * pow(2, $zoom));
-        $maxTileY = floor((1 - log(tan(deg2rad($maxLat)) + 1 / cos(deg2rad($maxLat))) / pi()) /2 * pow(2, $zoom));
-        list($minTileY, $maxTileY) = [$maxTileY, $minTileY];
+    // The deg2num function converts latitude and longitude to tile coordinates at a specific zoom level.
+    public function deg2num($lat_deg, $lon_deg, $zoom)
+    {
+        $lat_rad = deg2rad($lat_deg);
+        $n = pow(2, $zoom);
+        $xtile = intval(($lon_deg + 180.0) / 360.0 * $n);
+        $ytile = intval((1.0 - log(tan($lat_rad) + (1 / cos($lat_rad))) / pi()) / 2.0 * $n);
+        return array($xtile, $ytile);
+    }
 
+    // The generateTiles function generates all tiles within the bounding box at the specified zoom level.
+    public function generateTiles($bbox, $zoom)
+    {
+        list($minLon, $minLat, $maxLon, $maxLat) = $bbox;
+        list($minTileX, $minTileY) = $this->deg2num($maxLat, $minLon, $zoom);
+        list($maxTileX, $maxTileY) = $this->deg2num($minLat, $maxLon, $zoom);
+
+        $tiles = [];
         for ($x = $minTileX; $x <= $maxTileX; $x++) {
             for ($y = $minTileY; $y <= $maxTileY; $y++) {
                 $tiles[] = [$x, $y, $zoom];
             }
         }
-    
         return $tiles;
     }
 
     // Check if the tile is valid
-    private function tileIsValid($tile) {
+    private function tileIsValid($tile)
+    {
         if (!isset($tile['x']) || !isset($tile['y']) || !isset($tile['zoom'])) {
             return false;
         }
@@ -196,7 +158,8 @@ class CreatePBFCommand extends Command
     }
 
     // Calculate envelope in "Spherical Mercator" (EPSG:3857)
-    private function tileToEnvelope($tile) : array {
+    private function tileToEnvelope($tile): array
+    {
         $worldMercMax = 20037508.3427892;
         $worldMercMin = -$worldMercMax;
         $worldMercSize = $worldMercMax - $worldMercMin;
@@ -213,7 +176,8 @@ class CreatePBFCommand extends Command
     }
 
     // Generate SQL to materialize a query envelope in EPSG:3857
-    private function envelopeToBoundsSQL($env) {
+    private function envelopeToBoundsSQL($env)
+    {
         $DENSIFY_FACTOR = 4;
         $env['segSize'] = ($env['xmax'] - $env['xmin']) / $DENSIFY_FACTOR;
         $sql_tmpl = 'ST_Segmentize(ST_MakeEnvelope(%f, %f, %f, %f, 3857), %f)';
@@ -221,12 +185,13 @@ class CreatePBFCommand extends Command
     }
 
     // Generate a SQL query to pull a tile worth of MVT data
-    private function envelopeToSQL($env) {
+    private function envelopeToSQL($env)
+    {
         $tbl = array(
             'table'       => 'ec_tracks',
             'srid'        => '4326',
             'geomColumn'  => 'geometry',
-            'attrColumns' => 'id, name'
+            'attrColumns' => 'id, name, color, cai_scale'
         );
 
         $tbl['env'] = $this->envelopeToBoundsSQL($env);
@@ -237,10 +202,17 @@ class CreatePBFCommand extends Command
                 SELECT %s AS geom, %s::box2d AS b2d
             ),
             mvtgeom AS (
-                SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom, %s
+                SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom,
+                CASE 
+                    WHEN random() < 0.25 THEN 'rgba(255, 0, 0, 1)'
+                    WHEN random() < 0.5 THEN 'rgba(0, 255, 0, 1)'
+                    WHEN random() < 0.75 THEN 'rgba(255, 255, 0, 1)'
+                    ELSE 'rgba(0, 0, 255, 1)'
+                END as color,
+                %s
                 FROM %s t, bounds
                 WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.%s), 4326), ST_Transform(bounds.geom, %s))
-                AND t.user_id = ".$this->author_id."
+                AND t.user_id = " . $this->author_id . "
             ) 
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
         ";
