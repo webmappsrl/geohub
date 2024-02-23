@@ -287,8 +287,9 @@ class EcPoi extends Model
                 $poitypes[] = $poitype->getJson();
             }
         }
+        $poitype = [];
         if (is_array($poitypes) && count($poitypes) > 0) {
-            $poitypes = $poitypes[0];
+            $poitype = $poitypes[0];
         }
 
         $taxonomy = [
@@ -297,7 +298,8 @@ class EcPoi extends Model
             'when' => $this->taxonomyWhens()->pluck('id')->toArray(),
             'where' => $this->taxonomyWheres()->pluck('id')->toArray(),
             'who' => $this->taxonomyTargets()->pluck('id')->toArray(),
-            'poi_type' => $poitypes
+            'poi_type' => $poitype, // deprecated
+            'poi_types' => $poitypes
         ];
 
         $taxonomiesidentifiers = array_merge(
