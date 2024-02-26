@@ -8,6 +8,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
@@ -62,10 +63,10 @@ class CreatePBFCommand extends Command
         $this->app_id = $app->id;
         $this->author_id = $app->user_id;
 
-        // $this->min_zoom = 10;
-        // $this->max_zoom = 10;
-        $this->min_zoom = $app->map_min_zoom;
-        $this->max_zoom = $app->map_max_zoom;
+        $this->min_zoom = 5;
+        $this->max_zoom = 5;
+        // $this->min_zoom = $app->map_min_zoom;
+        // $this->max_zoom = $app->map_max_zoom;
         $bbox = json_decode($app->map_bbox);
         $this->format = 'pbf';
 
@@ -101,11 +102,14 @@ class CreatePBFCommand extends Command
         $pbf = DB::select($sql);
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
-            $directory = $this->app_id . '/' . $z . '/' . $x;
-            if (!is_dir($directory)) {
-                mkdir($directory, 0777, true);
-            }
-            file_put_contents($directory . '/' . $y . '.pbf', $pbfContent);
+            // $directory = $this->app_id . '/' . $z . '/' . $x;
+            // if (!is_dir($directory)) {
+            //     mkdir($directory, 0777, true);
+            // }
+            // file_put_contents($directory . '/' . $y . '.pbf', $pbfContent);
+            $storage_name = config('geohub.s3_pbf_storage_name');
+            $s3_osfmedia = Storage::disk($storage_name);
+            $s3_osfmedia->put($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf', $pbfContent);
             return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
         }
         return '';
@@ -191,7 +195,7 @@ class CreatePBFCommand extends Command
             'table'       => 'ec_tracks',
             'srid'        => '4326',
             'geomColumn'  => 'geometry',
-            'attrColumns' => 'id, name, color, cai_scale'
+            'attrColumns' => 't.id, t.name, t.ref, t.cai_scale'
         );
 
         $tbl['env'] = $this->envelopeToBoundsSQL($env);
@@ -203,21 +207,28 @@ class CreatePBFCommand extends Command
             ),
             mvtgeom AS (
                 SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom,
-                CASE 
-                    WHEN random() < 0.25 THEN 'rgba(255, 0, 0, 1)'
-                    WHEN random() < 0.5 THEN 'rgba(0, 255, 0, 1)'
-                    WHEN random() < 0.75 THEN 'rgba(255, 255, 0, 1)'
-                    ELSE 'rgba(0, 0, 255, 1)'
-                END as color,
+                t.color as strokeColor,
+                taxact.identifier AS activities,
+                taxthe.identifier AS themes,
                 %s
-                FROM %s t, bounds
+                FROM
+                    ec_tracks t
+                LEFT JOIN
+                    taxonomy_activityables ta ON t.id = ta.taxonomy_activityable_id
+                LEFT JOIN
+                    taxonomy_activities taxact ON ta.taxonomy_activity_id = taxact.id
+                LEFT JOIN
+                    taxonomy_themeables tt ON t.id = tt.taxonomy_themeable_id
+                LEFT JOIN
+                    taxonomy_themes taxthe ON tt.taxonomy_theme_id = taxthe.id,
+                bounds
                 WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.%s), 4326), ST_Transform(bounds.geom, %s))
                 AND t.user_id = " . $this->author_id . "
             ) 
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
         ";
 
-        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['table'], $tbl['geomColumn'], $tbl['srid']);
+        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid']);
 
     }
 }

@@ -3,6 +3,7 @@
 return [
     'audio_media_storage_name' => env('AUDIO_MEDIA_STORAGE_NAME', 's3-osfmedia-test'),
     'osf_media_storage_name' => env('OUT_SOURCE_FEATURE_STORAGE_NAME', 'importer-osfmedia'),
+    's3_pbf_storage_name' => env('AWS_WMPBF_STORAGE_NAME', 's3-wmpbf'),
     'ec_media_storage_name' => env('EC_MEDIA_STORAGE_NAME', 'public'),
     'use_local_storage' => env('SAVE_MEDIA_ON_LOCAL_STORAGE', false),
     'ec_poi_media_distance' => env('EC_POI_MEDIA_DISTANCE', 500),
