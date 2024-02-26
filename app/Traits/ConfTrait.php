@@ -438,6 +438,9 @@ trait ConfTrait
                 if ($theme->color) {
                     $a['color'] = $theme->color;
                 }
+                if ($theme->icon) {
+                    $a['icon'] = $theme->icon;
+                }
                 array_push($options, $a);
             }
 
