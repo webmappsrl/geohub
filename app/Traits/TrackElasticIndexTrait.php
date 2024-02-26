@@ -23,11 +23,11 @@ trait TrackElasticIndexTrait
         Log::info('Update Elastic Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
-        ->select(
-            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-        )
-        ->first()
-        ->geom;
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+            )
+            ->first()
+            ->geom;
 
         // FEATURE IMAGE
         $feature_image = '';
@@ -91,7 +91,7 @@ trait TrackElasticIndexTrait
             'ref' =>  $this->ref,
             'start' =>  $start,
             'end' =>  $end,
-            'cai_scale' =>  $this->cai_scale ,
+            'cai_scale' =>  $this->cai_scale,
             'from' =>  $this->getActualOrOSFValue('from'),
             'to' =>  $this->getActualOrOSFValue('to'),
             'name' =>  $this->name,
@@ -153,7 +153,7 @@ trait TrackElasticIndexTrait
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref ,
+            'ref' =>  $this->ref,
             'strokeColor' =>  $this->hexToRgba($this->color),
             'layers' =>  $layers,
             "distance" => $this->setEmptyValueToZero($this->distance),
@@ -198,16 +198,16 @@ trait TrackElasticIndexTrait
         Log::info('Update Elastic HIGH Indexing track ' . $this->id);
 
         $geom = EcTrack::where('id', '=', $this->id)
-        ->select(
-            DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-        )
-        ->first()
-        ->geom;
+            ->select(
+                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+            )
+            ->first()
+            ->geom;
 
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
-            'ref' =>  $this->ref ,
+            'ref' =>  $this->ref,
             'strokeColor' =>  $this->hexToRgba($this->color),
             'layers' =>  $layers,
             "distance" => $this->setEmptyValueToZero($this->distance),
@@ -248,7 +248,7 @@ trait TrackElasticIndexTrait
      */
     public function elasticIndexDelete($index_name): void
     {
-        $params = ['index' => 'geohub_' . $index_name,'id' => $this->id];
+        $params = ['index' => 'geohub_' . $index_name, 'id' => $this->id];
 
         try {
             if (config('app.env') == 'production') {
@@ -261,7 +261,7 @@ trait TrackElasticIndexTrait
                     ->setSSLVerification(false)
                     ->build();
 
-                if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+                if ($client->exists(['index' => 'geohub_' . $index_name, 'id' => $this->id])) {
                     Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
 
                     $response = $client->delete($params);
@@ -283,7 +283,7 @@ trait TrackElasticIndexTrait
                 ->setSSLVerification(false)
                 ->build();
 
-            if ($client->exists(['index' => 'geohub_' . $index_name,'id' => $this->id])) {
+            if ($client->exists(['index' => 'geohub_' . $index_name, 'id' => $this->id])) {
                 $response = $client->update($params_update);
             } else {
                 $response = $client->index($params_index);

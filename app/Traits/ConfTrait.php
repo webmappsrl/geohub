@@ -427,7 +427,7 @@ trait ConfTrait
             $app_user_id = $this->user_id;
             $options = [];
 
-            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
+            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
 
             foreach ($themes as $theme) {
                 $a = array(
@@ -437,6 +437,9 @@ trait ConfTrait
                 );
                 if ($theme->color) {
                     $a['color'] = $theme->color;
+                }
+                if ($theme->icon) {
+                    $a['icon'] = $theme->icon;
                 }
                 array_push($options, $a);
             }

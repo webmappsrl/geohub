@@ -512,7 +512,6 @@ class EcTrack extends Model
             return null;
         }
     }
-    
     /**
      * Create only the Geometry and track id from the ec track as getGeojsonGeojson
      *
