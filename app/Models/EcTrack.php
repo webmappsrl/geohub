@@ -35,7 +35,6 @@ class EcTrack extends Model
         'feature_image',
         'out_source_feature_id',
         'user_id',
-        'distance_comp',
         'distance',
         'ele_min',
         'ele_max',
@@ -48,6 +47,10 @@ class EcTrack extends Model
         'skip_geomixer_tech',
         'from',
         'to',
+        'layers',
+        'themes',
+        'activities',
+        'searchable'
     ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
@@ -68,6 +71,10 @@ class EcTrack extends Model
         'duration_forward' => 'int',
         'duration_backward' => 'int',
         'related_url' => 'array',
+        'layers' => 'array',
+        'themes' => 'array',
+        'activities' => 'array',
+        'searchable' => 'array',
     ];
     public bool $skip_update = false;
 
