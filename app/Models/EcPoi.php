@@ -258,7 +258,7 @@ class EcPoi extends Model
 
         if ($this->ecMedia) {
             $gallery = [];
-            $ecMedia = $this->ecMedia;
+            $ecMedia = $this->ecMedia()->orderBy('rank', 'asc')->get();
             foreach ($ecMedia as $media) {
                 $gallery[] = $media->getJson($allData);
             }

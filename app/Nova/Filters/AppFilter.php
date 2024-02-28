@@ -39,15 +39,6 @@ class AppFilter extends Filter
     {
         $request;
 
-
-        //if the model is UgcMedia return the app_id values
-        if ($request->resource == 'ugc-medias')
-            return \App\Models\UgcMedia::select('app_id')->distinct()->get()->pluck('app_id', 'app_id')->toArray();
-        //if the model is UgcTrack return the app_id values
-        if ($request->resource == 'ugc-tracks')
-            return \App\Models\UgcTrack::select('app_id')->distinct()->get()->pluck('app_id', 'app_id')->toArray();
-        //if the model is UgcPoint return the app_id values
-        if ($request->resource == 'ugc-pois')
-            return \App\Models\UgcPoi::select('app_id')->distinct()->get()->pluck('app_id', 'app_id')->toArray();
+        return \App\Models\App::where('user_id', $request->user()->id)->get()->pluck('app_id', 'app_id')->toArray();
     }
 }

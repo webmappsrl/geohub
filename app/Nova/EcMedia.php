@@ -21,11 +21,13 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 use DigitalCreative\MegaFilter\MegaFilter;
 use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
+use Ncus\InlineIndex\InlineIndex;
 use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Wm\MapPointNova3\MapPointNova3;
 
@@ -61,6 +63,21 @@ class EcMedia extends Resource
     public static function group()
     {
         return __('Editorial Content');
+    }
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if ($request->user()->can('Admin')) {
+            return $query;
+        }
+        return $query->where('user_id', $request->user()->id);
     }
 
     /**
@@ -149,9 +166,7 @@ class EcMedia extends Resource
                 return $url;
             }),
 
-            NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name'),
-            ]),
+            Text::make('Name')->sortable(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideFromIndex(),
             Date::make(__('Created At'), 'created_at')->sortable()->hideFromIndex(),
             Date::make(__('Updated At'), 'updated_at')->sortable()->hideFromIndex(),
@@ -162,6 +177,11 @@ class EcMedia extends Resource
 
                 return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
             })->asHtml(),
+            InlineIndex::make('Rank')
+                ->sortable()
+                ->canSee(function ($request) {
+                    return $request->viaResource() === 'App\Nova\EcPoi' || $request->viaResource() === 'App\Nova\EcTrack';
+                }),
             Link::make('GeoJSON', 'id')
                 ->url(function () {
                     return isset($this->id) ? route('api.ec.media.geojson', ['id' => $this->id]) : '';
