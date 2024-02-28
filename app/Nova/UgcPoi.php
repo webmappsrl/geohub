@@ -35,7 +35,7 @@ class UgcPoi extends Resource
      */
     public static $title = 'id';
     public static $search = [
-        'name'
+        'name', 'raw_data->waypointtype'
     ];
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
@@ -123,6 +123,12 @@ class UgcPoi extends Resource
                 ];
             })->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
+            Text::make(__('Poi Type'), function ($model) {
+                if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'waypointtype')) {
+                    return json_decode($model->raw_data)->waypointtype;
+                }
+                return '';
+            })->onlyOnIndex(),
         ];
     }
 
@@ -151,8 +157,8 @@ class UgcPoi extends Resource
             (new NovaSearchableBelongsToFilter('User'))
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
-            (new UgcCreationDateFilter),
-            (new AppFilter),
+            (new UgcCreationDateFilter()),
+            (new AppFilter()),
 
         ];
     }

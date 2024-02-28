@@ -152,9 +152,7 @@ class EcTrack extends Resource
             ];
         } else {
             return [
-                Text::make('Name', function () {
-                    return implode('<br />', explode("\n", wordwrap($this->name), 50));
-                })->asHtml(),
+                Text::make('Name')->sortable(),
                 Boolean::make('Description', function () {
                     if ($this->description) {
                         return true;
