@@ -27,6 +27,10 @@ class SelectFromActivities extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
+        if ($value == 'empty') {
+            return $query->doesntHave('taxonomyActivities');
+        }
+
         if ($value) {
             return $query->whereHas('taxonomyActivities', function ($q) use ($value) {
                 $q->where('id', $value);
@@ -57,7 +61,7 @@ class SelectFromActivities extends Filter
         AND t.user_id=$current_user_id);");
 
         $taxModels = TaxonomyActivity::hydrate($taxData)->pluck('id','name')->toArray();
-
+        $taxModels['No Activity'] = 'empty';
         return $taxModels;
     }
 }
