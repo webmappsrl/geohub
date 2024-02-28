@@ -58,8 +58,9 @@ class User extends Resource {
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        if (count($request->user()->apps) > 0 && $request->user()->apps[0]->dashboard_show == true) {
-            return $query->where('id', $request->user()->id)->orWhere('referrer', $request->user()->apps[0]->app_id);
+        if ($request->user()->apps->count() > 0 && $request->user()->apps[0]->dashboard_show == true) {
+            $referrers = $request->user()->apps->pluck('app_id')->toArray();
+            return $query->whereIn('referrer', $referrers);
         } else {
             return $query->where('id', $request->user()->id);
         }
