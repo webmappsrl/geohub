@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\UpdateTrackPBFInfoJob;
 use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTracksInfoForPBFCommand extends Command
 {
@@ -78,7 +80,11 @@ class UpdateTracksInfoForPBFCommand extends Command
 
         foreach ($tracks as $track_id) {
             $track = EcTrack::find($track_id->id);
-            $track->updateTrackPBFInfo($this->app_id);
+            try {
+                UpdateTrackPBFInfoJob::dispatch($track,$this->app_id);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during updating EcTrack PBF Info dispatch: ' . $e->getMessage());
+            }
         }
 
         return 0;

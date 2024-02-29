@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
+ * 
+ * ATTENTION!!!!!
+ * 
+ * For this command to work first the EcTracks should have the following columns calculated:
+ * - layers
+ * - themes
+ * - activities
+ * - searchable
+ * This is done by following command:
+ * php artisan geohub:update-tracks-for-pbf {app_id} {author}
+ * 
+ * And also the geometry of all EcTracks should have been transformed to EPSG:4326 ('UPDATE ec_tracks SET geometry = ST_SetSRID(geometry, 4326);')
+ * 
  */
 class CreatePBFCommand extends Command
 {
@@ -27,7 +40,7 @@ class CreatePBFCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Create PBF files for the app and upload the to AWS';
 
     protected $author_id;
     protected $format;
@@ -102,11 +115,6 @@ class CreatePBFCommand extends Command
         $pbf = DB::select($sql);
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
-            // $directory = $this->app_id . '/' . $z . '/' . $x;
-            // if (!is_dir($directory)) {
-            //     mkdir($directory, 0777, true);
-            // }
-            // file_put_contents($directory . '/' . $y . '.pbf', $pbfContent);
             $storage_name = config('geohub.s3_pbf_storage_name');
             $s3_osfmedia = Storage::disk($storage_name);
             $s3_osfmedia->put($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf', $pbfContent);
