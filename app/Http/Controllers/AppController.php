@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Storage;
 class AppController extends Controller
 {
 
-
-
-
   public function icon(int $id)
   {
     $app = App::find($id);
@@ -365,10 +362,6 @@ EOF;
     $data = json_decode($data, TRUE);
     return response()->json($data);
   }
-
-
-
-
 
   public function config(int $id)
   {
