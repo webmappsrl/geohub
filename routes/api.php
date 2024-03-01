@@ -38,6 +38,7 @@ use App\Http\Controllers\TaxonomyActivityController;
 use App\Http\Controllers\AppElbrusTaxonomyController;
 use App\Http\Controllers\UserGeneratedDataController;
 use App\Http\Controllers\AppElbrusEditorialContentController;
+use App\Http\Controllers\ClassificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -243,6 +244,7 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/classification/ranked_users_near_pois.json", [ClassificationController::class, 'getRankedUsersNearPois'])->name('getRankedUsersNearPois');
             Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
             Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
             Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
