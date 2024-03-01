@@ -96,6 +96,11 @@ class ClassificationController extends Controller
                 $classificaTrasformata[] = $dettagliUtente;
             }
         }
+
+        usort($classificaTrasformata, function($a, $b) {
+            return $b['total_points'] - $a['total_points'];
+        });
+
         return $classificaTrasformata;
     }
 }
