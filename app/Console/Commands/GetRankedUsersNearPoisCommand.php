@@ -51,37 +51,8 @@ class GetRankedUsersNearPoisCommand extends Command
                 $this->error('This app does not have app_id! Please add app_id. (e.g. it.webmapp.webmapp)');
                 return;
             }
-
-            $rankings = EcPoi::query()
-            ->select('ugc_media.user_id', 
-                    DB::raw('string_agg(DISTINCT CAST(ugc_media.id as TEXT), \',\') as media_ids'), 
-                    DB::raw('COUNT(DISTINCT ugc_media.user_id) as unique_media_count'),
-                    'ec_pois.id')
-            ->join('ugc_media', function ($join) use ($app) {
-                $join->on('ec_pois.user_id', '=', DB::raw("'".$app->user_id."'"))
-                    ->whereRaw("ST_DWithin(ugc_media.geometry, ec_pois.geometry, 100.0)")
-                    ->where('ugc_media.app_id', '=', DB::raw("'".$app->app_id."'"));
-            })
-            ->groupBy('ugc_media.user_id','ec_pois.id')
-            ->orderByDesc('unique_media_count')
-            ->get();
-
-            $groupedArray = [];
-            foreach ($rankings as $item) {
-                $userId = $item['user_id'];
-                $id = $item['id'];
-                $mediaIds = $item['media_ids'];
             
-                // Initialize the user_id array if not already set
-                if (!isset($groupedArray[$userId])) {
-                    $groupedArray[$userId] = [];
-                }
-            
-                // Append the id:media_ids pair to the user_id key
-                $groupedArray[$userId][] = [$id => $mediaIds];
-            }
-            
-            $app->classification = $groupedArray;
+            $app->classification = $app->getRankedUsersNearPois();
             $app->save();
             return;
         }
