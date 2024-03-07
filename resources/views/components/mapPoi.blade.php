@@ -19,6 +19,8 @@
         tileSize: 256,
         scrollWheelZoom: false,
     }).addTo(map);
+    // Aggiunta della scala alla mappa
+    L.control.scale({imperial: false}).addTo(map);
     var Icon = L.icon({
             radius: 200,
             iconUrl: "{{$image}}",
