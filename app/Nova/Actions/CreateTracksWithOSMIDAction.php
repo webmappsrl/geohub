@@ -69,7 +69,7 @@ class CreateTracksWithOSMIDAction extends Action
 
                     $track->geometry = $geometry;
                     $track->osmid = intval($id);
-                    $track->ref = $geojson_content['properties']['ref'];
+                    $track->ref = (key_exists('ref', $geojson_content['properties']) && $geojson_content['properties']['ref']) ? $geojson_content['properties']['ref'] : null;
 
                     //check if ascent, descent, distance duration_forward and duration_backward are not null in the geojson data and if so, update the $track
                     $track->cai_scale = (key_exists('cai_scale', $geojson_content['properties']) && $geojson_content['properties']['cai_scale']) ? $geojson_content['properties']['cai_scale'] : $track->cai_scale;
