@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Log;
 class OutSourceImporterCommand extends Command
 {
     /**
+     * for OSM2CAI import the POSGRSQL ports on geohub production server are all closed. In case of need, check if the osm2cai IP isadded to the firewall rules. 
      * The name and signature of the console command.
      *
      * @var string
