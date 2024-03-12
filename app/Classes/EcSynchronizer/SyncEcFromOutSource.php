@@ -721,6 +721,7 @@ class SyncEcFromOutSource
                     Log::info('Error creating EcPoi from OSF with id: ' . $id . "\n ERROR: " . $e->getMessage());
                 }
             }
+            
             if ($this->type == 'media') {
                 try {
                     $osf_storage_name = config('geohub.osf_media_storage_name');
@@ -734,7 +735,7 @@ class SyncEcFromOutSource
                     $ec_media = EcMedia::updateOrCreate(
                         [
                             'out_source_feature_id' => $id,
-                            'user_id' => $this->author_webmapp,
+                            'user_id' => $this->author_id,
                         ],
                         [
                             'name' => $this->generateName($out_source),
