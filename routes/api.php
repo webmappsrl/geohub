@@ -256,6 +256,14 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/config", [AppController::class, 'config'])->name('config');
             Route::get("/{id}/vector_style", [AppController::class, 'vectorStyle'])->name('vector_style');
             Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
+            Route::get("/{id}/tracks_list", [AppController::class, 'tracksList'])->name('tracks_list');
+            Route::get("/{id}/pois_list", [AppController::class, 'poisList'])->name('pois_list');
+            Route::get("/{id}/layer/{layer_id}", [AppController::class, 'layer'])->name('layer');
+            Route::get("/{id}/taxonomies/{taxonomy_name}/{term_id}", [AppController::class, 'getFeaturesByAppAndTerm'])->where([
+                'app_id' => '[0-9]+',
+                'taxonomy_name' => '[a-z\_]+',
+                'term_id' => '[0-9]+',
+            ])->name('feature.taxonomies');
         });
     });
 
