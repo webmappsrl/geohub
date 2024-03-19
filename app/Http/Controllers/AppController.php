@@ -424,10 +424,15 @@ EOF;
         $json = $layer->toArray();
         $tracks = $layer->getTracks(true);
         $tracks = $tracks->map(function ($track) {
+          if ($track->feature_image) {
+            $track['featureImage'] = $track->featureImage->getJson();
+          }
+          unset($track['feature_image']);
           unset($track['geometry']);
           unset($track['slope']);
           return $track;
         });
+
         $json['tracks'] = $tracks;
 
         return response()->json($json);
@@ -478,6 +483,10 @@ EOF;
                     });
 
           $features = $query->orderBy('name')->get()->map(function ($feature) {
+                        if ($feature->feature_image) {
+                          $feature['featureImage'] = $feature->featureImage->getJson();
+                        }
+                        unset($feature['feature_image']);
                         unset($feature['geometry']);
                         return $feature;
                     })->toArray();
@@ -487,6 +496,10 @@ EOF;
                         $q->where('id', $term_id);
                     });
             $features = $query->orderBy('name')->get()->map(function ($feature) {
+                        if ($feature->feature_image) {
+                          $feature['featureImage'] = $feature->featureImage->getJson();
+                        }
+                        unset($feature['feature_image']);
                         unset($feature['geometry']);
                         unset($feature['slope']);
                         return $feature;
