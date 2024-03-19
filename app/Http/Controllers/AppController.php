@@ -424,10 +424,15 @@ EOF;
         $json = $layer->toArray();
         $tracks = $layer->getTracks(true);
         $tracks = $tracks->map(function ($track) {
+          if ($track->feature_image) {
+            $track['featureImage'] = $track->featureImage->getJson();
+          }
+          unset($track['feature_image']);
           unset($track['geometry']);
           unset($track['slope']);
           return $track;
         });
+
         $json['tracks'] = $tracks;
 
         return response()->json($json);
