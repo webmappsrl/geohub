@@ -33,8 +33,8 @@ use Wm\MapPointNova3\MapPointNova3;
 
 class EcMedia extends Resource
 {
-
-    use TabsOnEdit, SearchesRelations;
+    use TabsOnEdit;
+    use SearchesRelations;
     use HasMegaFilterTrait;
 
 
@@ -101,21 +101,22 @@ class EcMedia extends Resource
             return $this->form($request);
         }
 
-        
+
         $fields = [
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')->sortable(),
                 Textarea::make(__('Description'), 'description')->rows(3)->hideFromIndex(),
             ]),
             MorphToMany::make('TaxonomyWheres'),
-            BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating(),
             Text::make(__('Excerpt'), 'excerpt')->onlyOnDetail(),
             Text::make(__('Source'), 'source')->onlyOnDetail(),
             Image::make('Url')->onlyOnForms()->hideWhenUpdating(),
             ExternalImage::make('Image', function () {
                 $url = $this->model()->url;
-                if (substr($url, 0, 4) !== 'http')
+                if (substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
+                }
 
                 return $url;
             })->withMeta(['width' => 500]),
@@ -146,23 +147,25 @@ class EcMedia extends Resource
     }
 
 
-    private function index() {
+    private function index()
+    {
         return [
             ExternalImage::make('Image', function () {
                 $thumbnails = $this->model()->thumbnails;
                 $url = '';
                 if ($thumbnails) {
-                    $thumbnails = json_decode($thumbnails,true);
+                    $thumbnails = json_decode($thumbnails, true);
                     if ($thumbnails[array_key_first($thumbnails)]) {
                         $url = $thumbnails[array_key_first($thumbnails)];
                     }
                 }
                 if (!$url) {
                     $url = $this->model()->url;
-                    if (substr($url, 0, 4) !== 'http')
+                    if (substr($url, 0, 4) !== 'http') {
                         $url = Storage::disk('public')->url($url);
+                    }
                 }
-                        
+
                 return $url;
             }),
 
@@ -172,8 +175,9 @@ class EcMedia extends Resource
             Date::make(__('Updated At'), 'updated_at')->sortable()->hideFromIndex(),
             Text::make('Url', function () {
                 $url = $this->model()->url;
-                if (substr($url, 0, 4) !== 'http')
+                if (substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
+                }
 
                 return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
             })->asHtml(),
@@ -192,19 +196,21 @@ class EcMedia extends Resource
         ];
     }
 
-    private function detail() {
-        return [(new Tabs("Taxnonomy Where Details: {$this->name} ($this->id)",
-        [
+    private function detail()
+    {
+        return [(new Tabs(
+            "Taxnonomy Where Details: {$this->name} ($this->id)",
+            [
             'Main' => [
-                Text::make('Geohub ID',function(){return $this->id;}),
+                Text::make('Geohub ID', function () {return $this->id;}),
                 BelongsTo::make('Author', 'author', User::class),
                 DateTime::make(__('Created At'), 'created_at'),
-                DateTime::make(__('Updated At'), 'updated_at'),        
+                DateTime::make(__('Updated At'), 'updated_at'),
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
                     Textarea::make(__('Excerpt'), 'excerpt'),
                     Textarea::make(__('Description'), 'description'),
-                ]),     
+                ]),
             ],
             'Images' => $this->getImages(),
             'Map' => [
@@ -214,36 +220,36 @@ class EcMedia extends Resource
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])    
+                ])
             ],
             'Taxonomies' => [
-                Text::make('Activities',function(){
-                    if($this->taxonomyActivities()->count() >0) {
-                        return implode(',',$this->taxonomyActivities()->pluck('name')->toArray());
+                Text::make('Activities', function () {
+                    if($this->taxonomyActivities()->count() > 0) {
+                        return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                     }
                     return 'No activities';
                 }),
-                Text::make('Wheres',function(){
-                    if($this->taxonomyWheres()->count() >0) {
-                        return implode(',',$this->taxonomyWheres()->pluck('name')->toArray());
+                Text::make('Wheres', function () {
+                    if($this->taxonomyWheres()->count() > 0) {
+                        return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                     }
                     return 'No Wheres';
                 }),
-                Text::make('Themes',function(){
-                    if($this->taxonomyThemes()->count() >0) {
-                        return implode(',',$this->taxonomyThemes()->pluck('name')->toArray());
+                Text::make('Themes', function () {
+                    if($this->taxonomyThemes()->count() > 0) {
+                        return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                     }
                     return 'No Themes';
                 }),
-                Text::make('Targets',function(){
-                    if($this->taxonomyTargets()->count() >0) {
-                        return implode(',',$this->taxonomyTargets()->pluck('name')->toArray());
+                Text::make('Targets', function () {
+                    if($this->taxonomyTargets()->count() > 0) {
+                        return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                     }
                     return 'No Targets';
                 }),
-                Text::make('Whens',function(){
-                    if($this->taxonomyWhens()->count() >0) {
-                        return implode(',',$this->taxonomyWhens()->pluck('name')->toArray());
+                Text::make('Whens', function () {
+                    if($this->taxonomyWhens()->count() > 0) {
+                        return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                     }
                     return 'No Whens';
                 }),
@@ -256,7 +262,8 @@ class EcMedia extends Resource
         ]
         ))->withToolbar()];
     }
-    private function form($request) {
+    private function form($request)
+    {
 
         try {
             $geojson = $this->model()->getGeojson();
@@ -270,14 +277,21 @@ class EcMedia extends Resource
             $tab_title = "EC Media Edit: {$this->name} ({$this->id})";
         }
 
-        return [(new Tabs($tab_title,
-        [
+        return [(new Tabs(
+            $tab_title,
+            [
             'Main' => [
                 NovaTabTranslatable::make([
                     Text::make(__('Name'), 'name'),
                     Textarea::make(__('Excerpt'), 'excerpt'),
                     Textarea::make(__('Description'), 'description'),
-                ]),     
+                ]),
+                BelongsTo::make('Author', 'author', User::class)
+                    ->searchable()
+                    ->nullable()
+                    ->canSee(function ($request) {
+                        return $request->user()->can('Admin');
+                    }),
             ],
             'Images' => [
                 Image::make('Url'),
@@ -301,27 +315,30 @@ class EcMedia extends Resource
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'minZoom' => 7,
                 'maxZoom' => 16,
-            ])   
+            ])
         ]),
 
     ];
     }
 
 
-    private function getImages() {
+    private function getImages()
+    {
         $return = [];
         $return[] = Text::make('Original Image', function () {
             $url = $this->model()->url;
-            if (substr($url, 0, 4) !== 'http')
+            if (substr($url, 0, 4) !== 'http') {
                 $url = Storage::disk('public')->url($url);
+            }
 
             return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
         })->asHtml();
 
-        $return[] =ExternalImage::make('Image', function () {
+        $return[] = ExternalImage::make('Image', function () {
             $url = $this->model()->url;
-            if (substr($url, 0, 4) !== 'http')
+            if (substr($url, 0, 4) !== 'http') {
                 $url = Storage::disk('public')->url($url);
+            }
 
             return $url;
         })->withMeta(['width' => 500]);
@@ -329,17 +346,17 @@ class EcMedia extends Resource
         if(isset($this->model()->thumbnails)) {
             $thumbnails = json_decode($this->model()->thumbnails, true);
             $fields = [];
-    
+
             if (isset($thumbnails)) {
                 foreach ($thumbnails as $size => $url) {
                     $return[] = Text::make($size, function () use ($url) {
                         return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
-                    })->asHtml();                    
+                    })->asHtml();
                 }
             }
         }
 
-        return $return; 
+        return $return;
     }
 
     /**
@@ -420,14 +437,15 @@ class EcMedia extends Resource
         ];
     }
 
-        /**
+    /**
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
      * Refers to OFFICIAL DOCUMENTATION:
      * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
      *
      * @return string
      */
-    public function getData() : string {
+    public function getData(): string
+    {
         $text = <<<HTML
         <style>
 table {
@@ -466,7 +484,7 @@ tr:nth-child(even) {
 <tr><td><i>outsource</i></td><td>source</td><td>text</td><td>YES</td><td>NULL</td><td>NULL</td><td>NO</td><td>TBD</td><td></td></tr>
 </table>
 HTML;
-               return $text;
+        return $text;
     }
 
 

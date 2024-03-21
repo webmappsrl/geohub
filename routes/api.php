@@ -38,6 +38,7 @@ use App\Http\Controllers\TaxonomyActivityController;
 use App\Http\Controllers\AppElbrusTaxonomyController;
 use App\Http\Controllers\UserGeneratedDataController;
 use App\Http\Controllers\AppElbrusEditorialContentController;
+use App\Http\Controllers\ClassificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -243,6 +244,7 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/classification/ranked_users_near_pois.json", [ClassificationController::class, 'getRankedUsersNearPois'])->name('getRankedUsersNearPois');
             Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
             Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
             Route::get("/{id}/resources/icon_small.png", [AppController::class, 'iconSmall'])->name('icon_small');
@@ -254,6 +256,14 @@ Route::name('api.')->group(function () {
             Route::get("/{id}/config", [AppController::class, 'config'])->name('config');
             Route::get("/{id}/vector_style", [AppController::class, 'vectorStyle'])->name('vector_style');
             Route::get("/{id}/vector_layer", [AppController::class, 'vectorLayer'])->name('vector_layer');
+            Route::get("/{id}/tracks_list", [AppController::class, 'tracksList'])->name('tracks_list');
+            Route::get("/{id}/pois_list", [AppController::class, 'poisList'])->name('pois_list');
+            Route::get("/{id}/layer/{layer_id}", [AppController::class, 'layer'])->name('layer');
+            Route::get("/{id}/taxonomies/{taxonomy_name}/{term_id}", [AppController::class, 'getFeaturesByAppAndTerm'])->where([
+                'app_id' => '[0-9]+',
+                'taxonomy_name' => '[a-z\_]+',
+                'term_id' => '[0-9]+',
+            ])->name('feature.taxonomies');
         });
     });
 

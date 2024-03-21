@@ -57,6 +57,8 @@
         tileSize: 256,
         scrollWheelZoom: false,
     }).addTo(map);
+    // Aggiunta della scala alla mappa
+    L.control.scale({position: 'bottomright',imperial: false}).addTo(map);
     var polyline = L.polyline({{$geometry}}, {color: 'white',weight:7}).addTo(map);
     var polyline2 = L.polyline({{$geometry}}, {color: 'red',weight:3}).addTo(map);
     for (const [poiID, value] of Object.entries(pois_collection)) {

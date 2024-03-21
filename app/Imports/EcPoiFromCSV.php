@@ -92,25 +92,23 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      */
     private function validatePoiData(string $key, $value): void
     {
-        if ($key == 'name_it' && $value === null) {
+        if ($key == 'name_it' && empty(trim($value))) {
             throw new \Exception('Poi name is mandatory. Please check the file and try again.');
         }
 
-        if ($key == 'poi_type' && $value === null) {
+        if ($key == 'poi_type' && empty(trim($value))) {
             throw new \Exception('At least one Poi type is mandatory. Please check the file and try again.');
         }
 
-        if ($key == 'theme' && $value === null) {
+        if ($key == 'theme' && empty(trim($value))) {
             throw new \Exception('At least one Poi theme is mandatory. Please check the file and try again.');
         }
 
-        if (($key == 'lat' || $key == 'lng') && $value === null) {
-            if (!is_numeric($value)) {
-                throw new \Exception('Invalid coordinates found. Please check the file and try again.');
-            }
+        if (($key == 'lat' || $key == 'lng') && empty(trim($value))) {
+            throw new \Exception('Invalid coordinates found. Please check the file and try again.');
         }
 
-        if ($key == 'related_url') {
+        if ($key == 'related_url' && !empty(trim($value))) {
             $this->validateUrl($value);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ClassificationTrait;
 use App\Traits\ConfTrait;
 use App\Traits\HasTranslationsFixed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ class App extends Model
     use HasFactory;
     use ConfTrait;
     use HasTranslationsFixed;
+    use ClassificationTrait;
 
     protected $fillable = ['welcome'];
     public array $translatable = ['welcome', 'tiles_label', 'overlays_label','data_label','pois_data_label','tracks_data_label','page_project','page_disclaimer','page_credits','filter_activity_label', 'filter_theme_label','filter_poi_type_label','filter_track_duration_label','filter_track_distance_label','social_share_text'];
@@ -95,7 +97,7 @@ class App extends Model
     {
         return $this->morphToMany(TaxonomyTheme::class, 'taxonomy_themeable');
     }
-    
+
     public function getUserEmailById($user_id)
     {
         $user = User::find($user_id);
@@ -626,6 +628,57 @@ class App extends Model
             }
         }
         return $res;
+    }
+
+    /**
+    * Returns array of all tracks'id in APP through layers deifinition
+    *  $tracks = [
+    *               t1_id => updated_at,
+    *               t2_id => updated_at,
+    *               ... ,
+    *               tM_id => updated_at,
+    *            ]
+    *
+    * @return array
+    */
+    public function getTracksUpdatedAtFromLayer(): array
+    {
+        $res = [];
+        if ($this->layers->count() > 0) {
+            foreach ($this->layers as $layer) {
+                $tracks = $layer->getTracks(true);
+                if (count($tracks) > 0) {
+                    foreach ($tracks as $track) {
+                        $res[$track->id] = $track->updated_at;
+                    }
+                }
+            }
+        }
+        return $res;
+    }
+    
+    /**
+    * Returns array of all tracks'id in APP through layers deifinition
+    *  $tracks = [
+    *               t1_id => updated_at,
+    *               t2_id => updated_at,
+    *               ... ,
+    *               tM_id => updated_at,
+    *            ]
+    *
+    * @return array
+    */
+    public function getPOIsUpdatedAtFromApp(): array
+    {
+        $themes = $this->taxonomyThemes()->get();
+
+        $pois = [];
+        foreach ($themes as $theme) {
+            foreach ($theme->ecPois()->orderBy('name')->get() as $poi) {
+                $pois[$poi->id] = $poi->updated_at;
+            }
+        }
+        return $pois;
     }
 
     /**
