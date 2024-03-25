@@ -422,15 +422,18 @@ EOF;
         }
         $json = [];
         $json = $layer->toArray();
+        if ($layer->feature_image) {
+            $json['featureImage'] = $layer->featureImage->getJson();
+        }
         $tracks = $layer->getTracks(true);
         $tracks = $tracks->map(function ($track) {
-          if ($track->feature_image) {
-            $track['featureImage'] = $track->featureImage->getJson();
-          }
-          unset($track['feature_image']);
-          unset($track['geometry']);
-          unset($track['slope']);
-          return $track;
+            if ($track->feature_image) {
+                $track['featureImage'] = $track->featureImage->getJson();
+            }
+            unset($track['feature_image']);
+            unset($track['geometry']);
+            unset($track['slope']);
+            return $track;
         });
 
         $json['tracks'] = $tracks;
@@ -438,7 +441,8 @@ EOF;
         return response()->json($json);
     }
 
-    public function getFeaturesByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse {
+    public function getFeaturesByAppAndTerm(int $app_id, string $taxonomy_name, int $term_id): JsonResponse
+    {
         $json = [];
         $code = 200;
 
@@ -462,48 +466,48 @@ EOF;
         }
 
         switch ($taxonomy_name) {
-          case 'activity':
-              $tax_name = 'taxonomyActivities';
-              break;
-          case 'theme':
-              $tax_name = 'taxonomyThemes';
-              break;
-          case 'where':
-              $tax_name = 'taxonomyWheres';
-              break;
-          case 'poi_type':
-              $tax_name = 'taxonomyPoiTypes';
-              break;
+            case 'activity':
+                $tax_name = 'taxonomyActivities';
+                break;
+            case 'theme':
+                $tax_name = 'taxonomyThemes';
+                break;
+            case 'where':
+                $tax_name = 'taxonomyWheres';
+                break;
+            case 'poi_type':
+                $tax_name = 'taxonomyPoiTypes';
+                break;
         }
 
         if ($taxonomy_name === 'poi_type') {
-          $query = EcPoi::where('user_id', $app->user_id)
-                    ->whereHas('taxonomyPoiTypes', function ($q) use ($term_id) {
-                        $q->where('id', $term_id);
-                    });
+            $query = EcPoi::where('user_id', $app->user_id)
+                      ->whereHas('taxonomyPoiTypes', function ($q) use ($term_id) {
+                          $q->where('id', $term_id);
+                      });
 
-          $features = $query->orderBy('name')->get()->map(function ($feature) {
-                        if ($feature->feature_image) {
-                          $feature['featureImage'] = $feature->featureImage->getJson();
-                        }
-                        unset($feature['feature_image']);
-                        unset($feature['geometry']);
-                        return $feature;
-                    })->toArray();
-        } else {
-          $query = EcTrack::where('user_id', $app->user_id)
-                    ->whereHas($tax_name, function ($q) use ($term_id) {
-                        $q->where('id', $term_id);
-                    });
             $features = $query->orderBy('name')->get()->map(function ($feature) {
-                        if ($feature->feature_image) {
-                          $feature['featureImage'] = $feature->featureImage->getJson();
-                        }
-                        unset($feature['feature_image']);
-                        unset($feature['geometry']);
-                        unset($feature['slope']);
-                        return $feature;
-                    })->toArray();
+                if ($feature->feature_image) {
+                    $feature['featureImage'] = $feature->featureImage->getJson();
+                }
+                unset($feature['feature_image']);
+                unset($feature['geometry']);
+                return $feature;
+            })->toArray();
+        } else {
+            $query = EcTrack::where('user_id', $app->user_id)
+                      ->whereHas($tax_name, function ($q) use ($term_id) {
+                          $q->where('id', $term_id);
+                      });
+            $features = $query->orderBy('name')->get()->map(function ($feature) {
+                if ($feature->feature_image) {
+                    $feature['featureImage'] = $feature->featureImage->getJson();
+                }
+                unset($feature['feature_image']);
+                unset($feature['geometry']);
+                unset($feature['slope']);
+                return $feature;
+            })->toArray();
         }
 
         return response()->json($features, $code);
