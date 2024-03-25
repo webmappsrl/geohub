@@ -25,7 +25,7 @@ class UpdateTracksInfoForPBFCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Update tracks info for PBF files for the app and upload the to AWS';
 
     protected $app_id;
     protected $author_id;
@@ -48,7 +48,7 @@ class UpdateTracksInfoForPBFCommand extends Command
     public function handle()
     {
         $app = App::where('id', $this->argument('app_id'))->first();
-        
+
         $this->app_id = $this->argument('app_id');
 
         if (!$app) {
@@ -81,7 +81,7 @@ class UpdateTracksInfoForPBFCommand extends Command
         foreach ($tracks as $track_id) {
             $track = EcTrack::find($track_id->id);
             try {
-                UpdateTrackPBFInfoJob::dispatch($track,$this->app_id);
+                UpdateTrackPBFInfoJob::dispatch($track, $this->app_id);
             } catch (\Exception $e) {
                 Log::error('An error occurred during updating EcTrack PBF Info dispatch: ' . $e->getMessage());
             }
