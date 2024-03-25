@@ -109,7 +109,7 @@ trait TrackElasticIndexTrait
             'layers' => $layers,
             'searchable' => json_encode($this->getSearchableString($app_id))
         ];
-        
+
         $this->updateTrackPBFInfo($app_id);
 
         $params_update = [
@@ -307,19 +307,20 @@ trait TrackElasticIndexTrait
             $layers = null;
             $ecTrackLayers = $this->getLayersByApp();
             if (is_array($ecTrackLayers)) {
-                foreach($ecTrackLayers as $layer) {
-                    if (!empty($layer)){
-                        $layers = $ecTrackLayers;
+                foreach($ecTrackLayers as $id => $layer) {
+                    if (!empty($layer) && $id == $app_id) {
+                        $layers = $layer;
                     }
                 }
             }
-            $this->update([
-                'layers' => $layers,
-                'activities' => [$app_id => $this->taxonomyActivities->pluck('identifier')->toArray()],
-                'themes' => [$app_id => $this->taxonomyThemes->pluck('identifier')->toArray()],
-                'searchable' => [$app_id => $this->getSearchableString($app_id)]
-            ]);
-
+            EcTrack::withoutEvents(function () use ($layers, $app_id) {
+                $this->update([
+                    'layers' => $layers,
+                    'activities' => [$app_id => $this->taxonomyActivities->pluck('identifier')->toArray()],
+                    'themes' => [$app_id => $this->taxonomyThemes->pluck('identifier')->toArray()],
+                    'searchable' => [$app_id => $this->getSearchableString($app_id)]
+                ]);
+            });
         } catch (Exception $e) {
             throw new Exception('ERROR ' . $e->getMessage());
         }

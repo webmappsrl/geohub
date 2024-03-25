@@ -8,6 +8,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -76,8 +77,8 @@ class CreatePBFCommand extends Command
         $this->app_id = $app->id;
         $this->author_id = $app->user_id;
 
-        $this->min_zoom = 5;
-        $this->max_zoom = 7;
+        $this->min_zoom = 9;
+        $this->max_zoom = 12;
         // $this->min_zoom = $app->map_min_zoom;
         // $this->max_zoom = $app->map_max_zoom;
         $bbox = json_decode($app->map_bbox);
@@ -87,9 +88,10 @@ class CreatePBFCommand extends Command
             // Iterazione attraverso i livelli di zoom
             for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
                 $tiles = $this->generateTiles($bbox, $zoom);
-                foreach ($tiles as $tile) {
+                foreach ($tiles as $c => $tile) {
                     list($x, $y, $z) = $tile;
-                    $this->download_vector_tile($z, $x, $y);
+                    $res = $this->download_vector_tile($z, $x, $y);
+                    Log::info($zoom . ' ' . $c . '/'. count($tiles));
                 }
             }
         } catch (Exception $e) {

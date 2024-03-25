@@ -87,7 +87,6 @@ class EcTrack extends Model
 
     protected static function booted()
     {
-        // parent::booted();
         EcTrack::observe(EcTrackElasticObserver::class);
 
         static::creating(function ($ecTrack) {
@@ -126,11 +125,6 @@ class EcTrack extends Model
             }
         });
     }
-
-    // public function save(array $options = [])
-    // {
-    //     parent::save($options);
-    // }
 
     public function author()
     {
