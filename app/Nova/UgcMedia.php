@@ -65,10 +65,6 @@ class UgcMedia extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        if ($request->user()->apps->pluck('app_id')->contains('it.netseven.forestecasentinesi')) {
-            return $query->whereIn('app_id', ['it.net7.parcoforestecasentinesi'])
-                ->orWhereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
-        }
         return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
     }
 
