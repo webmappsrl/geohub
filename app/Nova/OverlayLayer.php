@@ -18,6 +18,7 @@ use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Nova\Multiselect\Multiselect;
 use Yna\NovaSwatches\Swatches;
+use Laravel\Nova\Fields\Code;
 
 class OverlayLayer extends Resource
 {
@@ -100,6 +101,7 @@ class OverlayLayer extends Resource
                     return 'No layers';
                 }
             })->onlyOnDetail()->hideWhenCreating()->asHtml(),
+            Code::Make('configuration')->language('json')->rules('json')->default(null)
         ];
     }
 
