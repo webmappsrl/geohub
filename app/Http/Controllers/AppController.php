@@ -446,7 +446,7 @@ EOF;
         $json = [];
         $code = 200;
 
-        $json['tracks'] = [];
+        $json = [];
 
         $taxonomy_names = ['activity', 'theme', 'where', 'poi_type'];
 
@@ -481,6 +481,8 @@ EOF;
         }
 
         if ($taxonomy_name === 'poi_type') {
+            $tax = TaxonomyPoiType::find($term_id);
+            
             $query = EcPoi::where('user_id', $app->user_id)
                       ->whereHas('taxonomyPoiTypes', function ($q) use ($term_id) {
                           $q->where('id', $term_id);
@@ -494,6 +496,11 @@ EOF;
                 unset($feature['geometry']);
                 return $feature;
             })->toArray();
+
+            if ($tax) {
+              $json = $tax->getJson();
+            }
+            $json['features'] = $features;
         } else {
             $query = EcTrack::where('user_id', $app->user_id)
                       ->whereHas($tax_name, function ($q) use ($term_id) {
@@ -508,8 +515,9 @@ EOF;
                 unset($feature['slope']);
                 return $feature;
             })->toArray();
+            $json['features'] = $features;
         }
 
-        return response()->json($features, $code);
+        return response()->json($json, $code);
     }
 }
