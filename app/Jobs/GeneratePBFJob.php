@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\VectorTileDownloader;
+use App\Services\PBFGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class DownloadVectorTileJob implements ShouldQueue
+class GeneratePBFJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -41,7 +41,7 @@ class DownloadVectorTileJob implements ShouldQueue
      */
     public function handle()
     {
-        $downloader = new VectorTileDownloader($this->app_id,$this->author_id);
-        $downloader->download($this->z, $this->x, $this->y);
+        $generator = new PBFGenerator($this->app_id,$this->author_id);
+        $generator->generate($this->z, $this->x, $this->y);
     }
 }

@@ -3,8 +3,11 @@
 namespace App\Observers;
 
 use App\Jobs\DeleteEcTrackElasticIndexJob;
+use App\Jobs\DeleteTrackPBFJob;
 use App\Jobs\UpdateEcTrackDemJob;
 use App\Jobs\UpdateEcTrackElasticIndexJob;
+use App\Jobs\UpdateTrackPBFInfoJob;
+use App\Jobs\UpdateTrackPBFJob;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +36,8 @@ class EcTrackElasticObserver
 
             Bus::chain([
                 // new UpdateEcTrackDemJob($ecTrack),
+                new UpdateTrackPBFInfoJob($ecTrack),
+                new UpdateTrackPBFJob($ecTrack),
                 new UpdateEcTrackElasticIndexJob($ecTrack),
             ])->catch(function (Throwable $e) {
                 // A job within the chain has failed...
@@ -56,6 +61,8 @@ class EcTrackElasticObserver
 
             Bus::chain([
                 // new UpdateEcTrackDemJob($ecTrack),
+                new UpdateTrackPBFInfoJob($ecTrack),
+                new UpdateTrackPBFJob($ecTrack),
                 new UpdateEcTrackElasticIndexJob($ecTrack),
             ])->catch(function (Throwable $e) {
                 // A job within the chain has failed...
@@ -73,16 +80,26 @@ class EcTrackElasticObserver
     public function deleted(EcTrack $ecTrack)
     {
         if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            DeleteEcTrackElasticIndexJob::dispatch($ecTrack);
+            
+            $ecTrackLayers = $ecTrack->getLayersByApp();
+            DeleteEcTrackElasticIndexJob::dispatch($ecTrack,$ecTrackLayers,$ecTrack->id);
+
+            /**
+             * Delete track PBFs if the track has associated apps, a bounding box, and an author ID.
+             * Otherwise, log an info message.
+             *
+             * @param EcTrack $ecTrack The track to observe.
+             * @return void
+             */
+            $apps = $ecTrack->trackHasApps();
+            $author_id = $ecTrack->user->id;
+            $bbox = $ecTrack->bbox($ecTrack->geometry);
+            if ($apps && $bbox && $author_id) {
+                DeleteTrackPBFJob::dispatch($apps, $author_id, $bbox);
+            } else {
+                Log::info('No apps or bbox or author_id found for track ' . $ecTrack->id . ' to delete PBFs.');
+            }
         }
-        // $ecTrackLayers = $ecTrack->getLayersByApp();
-        // if (!empty($ecTrackLayers)) {
-        //     foreach ($ecTrackLayers as $app_id => $layer_ids) {
-        //         $ecTrack->elasticIndexDelete('app_' . $app_id);
-        //         $ecTrack->elasticIndexDelete('app_low_' . $app_id);
-        //         $ecTrack->elasticIndexDelete('app_high_' . $app_id);
-        //     }
-        // }
     }
 
     /**

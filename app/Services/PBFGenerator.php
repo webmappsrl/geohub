@@ -4,9 +4,10 @@ namespace App\Services;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class VectorTileDownloader
+class PBFGenerator
 {
     protected $app_id;
     protected $author_id;
@@ -19,7 +20,7 @@ class VectorTileDownloader
         $this->format = $format;
     }
 
-    public function download($z, $x, $y)
+    public function generate($z, $x, $y)
     {
         $tile = [
             'zoom'   => $z,
@@ -40,36 +41,11 @@ class VectorTileDownloader
             $storage_name = config('geohub.s3_pbf_storage_name');
             $s3_osfmedia = Storage::disk($storage_name);
             $s3_osfmedia->put($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf', $pbfContent);
+            Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf');
             return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
         }
+        Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> EMPTY');
         return '';
-    }
-
-    
-    // The deg2num function converts latitude and longitude to tile coordinates at a specific zoom level.
-    public function deg2num($lat_deg, $lon_deg, $zoom)
-    {
-        $lat_rad = deg2rad($lat_deg);
-        $n = pow(2, $zoom);
-        $xtile = intval(($lon_deg + 180.0) / 360.0 * $n);
-        $ytile = intval((1.0 - log(tan($lat_rad) + (1 / cos($lat_rad))) / pi()) / 2.0 * $n);
-        return array($xtile, $ytile);
-    }
-
-    // The generateTiles function generates all tiles within the bounding box at the specified zoom level.
-    public function generateTiles($bbox, $zoom)
-    {
-        list($minLon, $minLat, $maxLon, $maxLat) = $bbox;
-        list($minTileX, $minTileY) = $this->deg2num($maxLat, $minLon, $zoom);
-        list($maxTileX, $maxTileY) = $this->deg2num($minLat, $maxLon, $zoom);
-
-        $tiles = [];
-        for ($x = $minTileX; $x <= $maxTileX; $x++) {
-            for ($y = $minTileY; $y <= $maxTileY; $y++) {
-                $tiles[] = [$x, $y, $zoom];
-            }
-        }
-        return $tiles;
     }
 
     // Check if the tile is valid

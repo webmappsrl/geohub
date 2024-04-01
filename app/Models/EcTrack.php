@@ -262,6 +262,13 @@ class EcTrack extends Model
         return $this->belongsTo(OutSourceTrack::class, 'out_source_feature_id');
     }
 
+    public function setGeometryAttribute($value)
+    {
+        if (strpos($value, 'SRID=4326;') === false) {
+            $this->attributes['geometry'] = "SRID=4326;$value";
+        }
+    }
+
     /**
      * Return the json version of the ec track, avoiding the geometry
      *
@@ -707,10 +714,18 @@ class EcTrack extends Model
      *
      * @return array
      */
-    public function bbox(): array
+    public function bbox($geometry = ''): array
     {
-        $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
-        $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+        if ($geometry) {
+            $b = DB::select("SELECT ST_Extent(?) as bbox",[$geometry]);
+            if (!empty($b)){
+                $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $b[0]->bbox));
+            }
+        }
+        else {
+            $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
+            $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+        }
 
         return array_map('floatval', explode(' ', $bboxString));
     }
@@ -1158,7 +1173,9 @@ class EcTrack extends Model
         }
 
         foreach ($this->trackHasApps() as $app) {
-            foreach ($app->layers as $layer) {
+            $layersCollection = collect($app->layers);
+            $sortedLayers = $layersCollection->sortBy('rank');
+            foreach ($sortedLayers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
                     // Here we assume that there is only one category in each taxonomy type that is associated with the Layer

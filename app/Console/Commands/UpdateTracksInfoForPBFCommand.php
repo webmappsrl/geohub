@@ -81,7 +81,7 @@ class UpdateTracksInfoForPBFCommand extends Command
         foreach ($tracks as $c => $track_id) {
             $track = EcTrack::find($track_id->id);
             try {
-                UpdateTrackPBFInfoJob::dispatch($track, $this->app_id);
+                UpdateTrackPBFInfoJob::dispatch($track);
                 Log::info($c . '/'. count($tracks));
             } catch (\Exception $e) {
                 Log::error('An error occurred during updating EcTrack PBF Info dispatch: ' . $e->getMessage());

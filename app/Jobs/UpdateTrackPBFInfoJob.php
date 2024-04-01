@@ -13,7 +13,6 @@ class UpdateTrackPBFInfoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $app_id;
     protected $track;
 
     /**
@@ -21,9 +20,8 @@ class UpdateTrackPBFInfoJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($track,$app_id)
+    public function __construct($track)
     {
-        $this->app_id = $app_id;
         $this->track = $track;
     }
 
@@ -34,6 +32,6 @@ class UpdateTrackPBFInfoJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->track->updateTrackPBFInfo($this->app_id);
+        $this->track->updateTrackPBFInfo();
     }
 }
