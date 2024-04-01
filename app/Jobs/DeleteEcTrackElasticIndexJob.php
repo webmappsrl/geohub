@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\EcTrack;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,9 +26,8 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($ecTrack,$ecTrackLayers,$id)
+    public function __construct($ecTrackLayers,$id)
     {
-        $this->ecTrack = $ecTrack;
         $this->ecTrackLayers = $ecTrackLayers;
         $this->id = $id;
     }
@@ -39,6 +39,8 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
      */
     public function handle()
     {
+        $this->ecTrack = new EcTrack();
+
         if (!empty($this->ecTrackLayers)) {
             foreach ($this->ecTrackLayers as $app_id => $layer_ids) {
                 $this->ecTrack->elasticIndexDelete('app_' . $app_id,$this->id);

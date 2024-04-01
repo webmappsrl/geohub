@@ -43,10 +43,7 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
                     $this->ecTrack->elasticIndexUpsertLow('app_low_' . $app_id, $layer_ids);
                     $this->ecTrack->elasticIndexUpsertHigh('app_high_' . $app_id, $layer_ids);
                 } else {
-                    DeleteEcTrackElasticIndexJob::dispatch($this->ecTrack);
-                    // $this->ecTrack->elasticIndexDelete('app_' . $app_id);
-                    // $this->ecTrack->elasticIndexDelete('app_low_' . $app_id);
-                    // $this->ecTrack->elasticIndexDelete('app_high_' . $app_id);
+                    DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers,$this->ecTrack->id);
                 }
             }
         }

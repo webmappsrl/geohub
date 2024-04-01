@@ -82,7 +82,7 @@ class EcTrackElasticObserver
         if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
             
             $ecTrackLayers = $ecTrack->getLayersByApp();
-            DeleteEcTrackElasticIndexJob::dispatch($ecTrack,$ecTrackLayers,$ecTrack->id);
+            DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers,$ecTrack->id);
 
             /**
              * Delete track PBFs if the track has associated apps, a bounding box, and an author ID.
