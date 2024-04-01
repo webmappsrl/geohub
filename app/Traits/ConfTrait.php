@@ -367,6 +367,12 @@ trait ConfTrait
                 if (!empty($overlay['feature_collection'])) {
                     $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
                 }
+                if (!empty($overlay['configuration'])) {
+                    $configuration = json_decode($overlay['configuration'], true);
+                    if (is_array($configuration)) {
+                        $array = array_merge($array, $configuration);
+                    }
+                }
                 $array['type'] = 'button';
                 return $array;
             }, json_decode($this->overlayLayers, true));
