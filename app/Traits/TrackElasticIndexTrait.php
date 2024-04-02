@@ -84,6 +84,8 @@ trait TrackElasticIndexTrait
             $properties = null;
         }
 
+        $index_array = explode('_', $index_name);
+        $app_id = end($index_array);
         $params = [
             'properties' => $properties,
             'geometry' => json_decode($geom),
@@ -105,7 +107,7 @@ trait TrackElasticIndexTrait
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'layers' => $layers,
-            'searchable' => $this->getSearchableString()
+            'searchable' => json_encode($this->getSearchableString($app_id))
         ];
 
         $params_update = [
@@ -150,6 +152,8 @@ trait TrackElasticIndexTrait
             ->first()
             ->geom;
 
+        $index_array = explode('_', $index_name);
+        $app_id = end($index_array);
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
@@ -161,7 +165,7 @@ trait TrackElasticIndexTrait
             "ascent" => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
-            'searchable' => $this->getSearchableString()
+            'searchable' => $this->getSearchableString($app_id)
         ];
 
         $params_update = [
@@ -204,6 +208,8 @@ trait TrackElasticIndexTrait
             ->first()
             ->geom;
 
+        $index_array = explode('_', $index_name);
+        $app_id = end($index_array);
         $params = [
             'geometry' => json_decode($geom),
             'id' => $this->id,
@@ -215,7 +221,7 @@ trait TrackElasticIndexTrait
             "ascent" => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
-            'searchable' => $this->getSearchableString()
+            'searchable' => $this->getSearchableString($app_id)
         ];
 
         $params_update = [
@@ -246,23 +252,23 @@ trait TrackElasticIndexTrait
      * @param String $index_name
      * @return void
      */
-    public function elasticIndexDelete($index_name): void
+    public function elasticIndexDelete($index_name,$id): void
     {
-        $params = ['index' => 'geohub_' . $index_name, 'id' => $this->id];
+        $params = ['index' => 'geohub_' . $index_name, 'id' => $id];
 
         try {
             if (config('app.env') == 'production') {
-                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
 
-                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $this->id)->body();
+                $response = Http::withBasicAuth(config('services.elastic.username'), config('services.elastic.password'))->delete(config('services.elastic.host') . '/geohub_' . $index_name . '/_doc/' . $id)->body();
             } else {
                 $client = ClientBuilder::create()
                     ->setHosts([config('services.elastic.http')])
                     ->setSSLVerification(false)
                     ->build();
 
-                if ($client->exists(['index' => 'geohub_' . $index_name, 'id' => $this->id])) {
-                    Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $this->id);
+                if ($client->exists(['index' => 'geohub_' . $index_name, 'id' => $id])) {
+                    Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
 
                     $response = $client->delete($params);
                     Log::info($response);
@@ -291,5 +297,32 @@ trait TrackElasticIndexTrait
         }
 
         return $response;
+    }
+
+    public function updateTrackPBFInfo()
+    {
+        try {
+            $updates = null;
+            $ecTrackLayers = $this->getLayersByApp();
+            if (is_array($ecTrackLayers)) {
+                foreach($ecTrackLayers as $app_id => $layer) {
+                    if (!empty($layer)) {
+                        $updates = [
+                            'layers' => [$app_id => $layer],
+                            'activities' => [$app_id => $this->taxonomyActivities->pluck('identifier')->toArray()],
+                            'themes' => [$app_id => $this->taxonomyThemes->pluck('identifier')->toArray()],
+                            'searchable' => [$app_id => $this->getSearchableString($app_id)]
+                        ];
+                    }
+                }
+                if ($updates) {
+                    EcTrack::withoutEvents(function () use ($updates) {
+                        $this->update($updates);
+                    });
+                }
+            }
+        } catch (Exception $e) {
+            throw new Exception('ERROR ' . $e->getMessage());
+        }
     }
 }
