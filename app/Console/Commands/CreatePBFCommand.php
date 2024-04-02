@@ -84,8 +84,8 @@ class CreatePBFCommand extends Command
         // $this->min_zoom = $this->option('min') ?? $app->map_min_zoom;
         // $this->max_zoom = $this->option('max') ?? $app->map_max_zoom;
 
-        $this->min_zoom = $this->option('min') ?? config('geohub.pbf_min_zoom');
-        $this->max_zoom = $this->option('max') ?? config('geohub.pbf_max_zoom');
+        $this->min_zoom = $this->option('min') ? $this->option('min') : config('geohub.pbf_min_zoom');
+        $this->max_zoom = $this->option('max') ? $this->option('max') : config('geohub.pbf_max_zoom');
 
         $bbox = json_decode($app->map_bbox);
         $this->format = 'pbf';
