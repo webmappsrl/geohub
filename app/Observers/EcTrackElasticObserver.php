@@ -80,9 +80,9 @@ class EcTrackElasticObserver
     public function deleted(EcTrack $ecTrack)
     {
         if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            
+
             $ecTrackLayers = $ecTrack->getLayersByApp();
-            DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers,$ecTrack->id);
+            DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers, $ecTrack->id);
 
             /**
              * Delete track PBFs if the track has associated apps, a bounding box, and an author ID.
@@ -122,29 +122,5 @@ class EcTrackElasticObserver
     public function forceDeleted(EcTrack $ecTrack)
     {
         //
-    }
-
-    /**
-     * function which determinse whether to upsert or Delete the EcTrack on elasticsearch.
-     *
-     * @param  \App\Models\EcTrack  $ecTrack
-     * @return void
-     */
-    public function startElasticIndex(EcTrack $ecTrack): void
-    {
-        $ecTrackLayers = $ecTrack->getLayersByApp();
-        if (!empty($ecTrackLayers)) {
-            foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                if (!empty($layer_ids)) {
-                    $ecTrack->elasticIndexUpsert('app_' . $app_id, $layer_ids);
-                    $ecTrack->elasticIndexUpsertLow('app_low_' . $app_id, $layer_ids);
-                    $ecTrack->elasticIndexUpsertHigh('app_high_' . $app_id, $layer_ids);
-                } else {
-                    $ecTrack->elasticIndexDelete('app_' . $app_id);
-                    $ecTrack->elasticIndexDelete('app_low_' . $app_id);
-                    $ecTrack->elasticIndexDelete('app_high_' . $app_id);
-                }
-            }
-        }
     }
 }

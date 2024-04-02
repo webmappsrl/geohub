@@ -41,10 +41,13 @@ class UpdateTrackPBFJob implements ShouldQueue
                 $app_id = $app->id;
                 $author_id = $this->track->user->id;
 
-                // $min_zoom = 5;
-                // $max_zoom = 9;
-                $min_zoom = $app->map_min_zoom;
-                $max_zoom = $app->map_max_zoom;
+                // Min and Max zoom levels can be obtained prom APP configuration
+                // $min_zoom = $app->map_min_zoom;
+                // $max_zoom = $app->map_max_zoom;
+                
+                $min_zoom = config('geohub.pbf_min_zoom');
+                $max_zoom = config('geohub.pbf_max_zoom');
+
                 $bbox = $this->track->bbox();
                 $format = 'pbf';
                 $generator = new PBFGenerateTilesAndDispatch($app_id, $author_id, $format);

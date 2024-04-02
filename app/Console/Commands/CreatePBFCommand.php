@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
- * 
+ *
  * ATTENTION!!!!!
- * 
+ *
  * For this command to work first the EcTracks should have the following columns calculated:
  * - layers
  * - themes
@@ -26,9 +26,9 @@ use Illuminate\Support\Facades\Storage;
  * - searchable
  * This is done by following command:
  * php artisan geohub:update-tracks-for-pbf {app_id} {author}
- * 
+ *
  * And also the geometry of all EcTracks should have been transformed to EPSG:4326 ('UPDATE ec_tracks SET geometry = ST_SetSRID(geometry, 4326);')
- * 
+ *
  */
 class CreatePBFCommand extends Command
 {
@@ -80,13 +80,17 @@ class CreatePBFCommand extends Command
         $this->app_id = $app->id;
         $this->author_id = $app->user_id;
 
-        $this->min_zoom = $this->option('min') ?? $app->map_min_zoom;
-        $this->max_zoom = $this->option('max') ?? $app->map_max_zoom;
+        // Min and Max zoom levels can be obtained prom APP configuration or command optional parameters
+        // $this->min_zoom = $this->option('min') ?? $app->map_min_zoom;
+        // $this->max_zoom = $this->option('max') ?? $app->map_max_zoom;
+
+        $this->min_zoom = $this->option('min') ?? config('geohub.pbf_min_zoom');
+        $this->max_zoom = $this->option('max') ?? config('geohub.pbf_max_zoom');
 
         $bbox = json_decode($app->map_bbox);
         $this->format = 'pbf';
 
-        $generator = new PBFGenerateTilesAndDispatch($this->app_id,$this->author_id);
+        $generator = new PBFGenerateTilesAndDispatch($this->app_id, $this->author_id);
         $generator->generateTilesAndDispatch($bbox, $this->min_zoom, $this->max_zoom);
     }
 

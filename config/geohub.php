@@ -12,4 +12,6 @@ return [
     'ectrack_share_page_feature_image_placeholder' => env('ECTRACK_SHARE_PAGE_FEATURE_IMAGE_PLACEHOLDER', storage_path('app/public/images') . '/ectrack_share_page_feature_image_placeholder.jpg'),
     'app_env' => env('APP_ENV') === 'production' ? 's3' : 'public',
     'elastic_low_geom_tollerance' => env('ELASTIC_LOW_GEOM_TOLLERANCE', 0.006),
+    'pbf_min_zoom' => env('PBF_MIN_ZOOM', 5),
+    'pbf_max_zoom' => env('PBF_MAX_ZOOM', 14),
 ];
