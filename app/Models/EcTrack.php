@@ -778,8 +778,8 @@ class EcTrack extends Model
         $taxonomy_wheres = '[]';
         if ($this->taxonomyWheres->count() > 0) {
             // add tax where first show to the end of taxonomy_wheres array
-            if ($this->taxonomy_wheres_show_first) {
-                $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
+            $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
+            if ($this->taxonomy_wheres_show_first && isset($taxonomy_wheres[$this->taxonomy_wheres_show_first])) {
                 $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
                 unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
                 $taxonomy_wheres = array_values($taxonomy_wheres);
