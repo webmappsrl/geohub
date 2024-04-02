@@ -37,7 +37,7 @@ class CreatePBFCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:create_pbf {app_id} {--min : custom min_zoom} {--max= : custom max_zoom}';
+    protected $signature = 'geohub:create_pbf {app_id} {--min= : custom min_zoom} {--max= : custom max_zoom}';
 
     /**
      * The console command description.
@@ -92,31 +92,5 @@ class CreatePBFCommand extends Command
 
         $generator = new PBFGenerateTilesAndDispatch($this->app_id, $this->author_id);
         $generator->generateTilesAndDispatch($bbox, $this->min_zoom, $this->max_zoom);
-    }
-
-    // The deg2num function converts latitude and longitude to tile coordinates at a specific zoom level.
-    public function deg2num($lat_deg, $lon_deg, $zoom)
-    {
-        $lat_rad = deg2rad($lat_deg);
-        $n = pow(2, $zoom);
-        $xtile = intval(($lon_deg + 180.0) / 360.0 * $n);
-        $ytile = intval((1.0 - log(tan($lat_rad) + (1 / cos($lat_rad))) / pi()) / 2.0 * $n);
-        return array($xtile, $ytile);
-    }
-
-    // The generateTiles function generates all tiles within the bounding box at the specified zoom level.
-    public function generateTiles($bbox, $zoom)
-    {
-        list($minLon, $minLat, $maxLon, $maxLat) = $bbox;
-        list($minTileX, $minTileY) = $this->deg2num($maxLat, $minLon, $zoom);
-        list($maxTileX, $maxTileY) = $this->deg2num($minLat, $maxLon, $zoom);
-
-        $tiles = [];
-        for ($x = $minTileX; $x <= $maxTileX; $x++) {
-            for ($y = $minTileY; $y <= $maxTileY; $y++) {
-                $tiles[] = [$x, $y, $zoom];
-            }
-        }
-        return $tiles;
     }
 }
