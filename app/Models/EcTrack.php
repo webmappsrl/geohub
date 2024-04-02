@@ -35,7 +35,6 @@ class EcTrack extends Model
         'feature_image',
         'out_source_feature_id',
         'user_id',
-        'distance_comp',
         'distance',
         'ele_min',
         'ele_max',
@@ -48,6 +47,10 @@ class EcTrack extends Model
         'skip_geomixer_tech',
         'from',
         'to',
+        'layers',
+        'themes',
+        'activities',
+        'searchable'
     ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
@@ -68,6 +71,10 @@ class EcTrack extends Model
         'duration_forward' => 'int',
         'duration_backward' => 'int',
         'related_url' => 'array',
+        'layers' => 'array',
+        'themes' => 'array',
+        'activities' => 'array',
+        'searchable' => 'array',
     ];
     public bool $skip_update = false;
 
@@ -80,7 +87,6 @@ class EcTrack extends Model
 
     protected static function booted()
     {
-        // parent::booted();
         EcTrack::observe(EcTrackElasticObserver::class);
 
         static::creating(function ($ecTrack) {
@@ -119,11 +125,6 @@ class EcTrack extends Model
             }
         });
     }
-
-    // public function save(array $options = [])
-    // {
-    //     parent::save($options);
-    // }
 
     public function author()
     {
@@ -259,6 +260,13 @@ class EcTrack extends Model
     public function outSourceTrack(): BelongsTo
     {
         return $this->belongsTo(OutSourceTrack::class, 'out_source_feature_id');
+    }
+
+    public function setGeometryAttribute($value)
+    {
+        if (strpos($value, 'SRID=4326;') === false) {
+            $this->attributes['geometry'] = "SRID=4326;$value";
+        }
     }
 
     /**
@@ -706,10 +714,18 @@ class EcTrack extends Model
      *
      * @return array
      */
-    public function bbox(): array
+    public function bbox($geometry = ''): array
     {
-        $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
-        $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+        if ($geometry) {
+            $b = DB::select("SELECT ST_Extent(?) as bbox",[$geometry]);
+            if (!empty($b)){
+                $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $b[0]->bbox));
+            }
+        }
+        else {
+            $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
+            $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
+        }
 
         return array_map('floatval', explode(' ', $bboxString));
     }
@@ -1157,7 +1173,9 @@ class EcTrack extends Model
         }
 
         foreach ($this->trackHasApps() as $app) {
-            foreach ($app->layers as $layer) {
+            $layersCollection = collect($app->layers);
+            $sortedLayers = $layersCollection->sortBy('rank');
+            foreach ($sortedLayers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
                     // Here we assume that there is only one category in each taxonomy type that is associated with the Layer

@@ -100,6 +100,15 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+        's3-wmpbf' => [
+            'driver' => 's3',
+            'key' => env('AWS_OSFMEDIA_ACCESS_KEY_ID'),
+            'secret' => env('AWS_OSFMEDIA_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_WMPBF_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+        ],
         's3-osfmedia-test' => [
             'driver' => 's3',
             'key' => env('AWS_OSFMEDIA_TEST_ACCESS_KEY_ID'),
