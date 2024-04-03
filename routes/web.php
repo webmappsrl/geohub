@@ -80,6 +80,17 @@ Route::get('/w/{type}/{id}', function ($type, $id) {
     ]);
 });
 
+Route::get('/poi/{type}/{id}', function ($type, $id) {
+    $poi = EcPoi::find($id);
+    if ($poi == null) {
+        abort(404);
+    }
+    return view('widget', [
+        'resource' => $poi,
+        'type' => 'poi.' . $type
+    ]);
+});
+
 Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoint_slug, $source_id) {
     $osf = collect(DB::select("SELECT * FROM out_source_features where endpoint_slug='$endpoint_slug' and source_id='$source_id'"))->toArray();
 
