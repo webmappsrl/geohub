@@ -386,7 +386,7 @@ class SyncEcFromOutSource
                             [
                                 'name' => $this->generateName($out_source),
                                 'not_accessible' => false,
-                                'geometry' => DB::raw("(ST_Force3D('$out_source->geometry'))"),
+                                'geometry' => DB::select("SELECT ST_Force3D('$out_source->geometry')As wkt")[0]->wkt,
                             ]
                         );
                     }
@@ -721,7 +721,7 @@ class SyncEcFromOutSource
                     Log::info('Error creating EcPoi from OSF with id: ' . $id . "\n ERROR: " . $e->getMessage());
                 }
             }
-            
+
             if ($this->type == 'media') {
                 try {
                     $osf_storage_name = config('geohub.osf_media_storage_name');
