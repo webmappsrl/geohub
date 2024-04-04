@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\App;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -105,6 +106,7 @@ class PBFGenerator
             'attrColumns' => 't.id, t.name, t.ref, t.cai_scale'
         );
 
+        $tbl['layers'] = $this->getAppLayersIDs($this->app_id);
         $tbl['env'] = $this->envelopeToBoundsSQL($env);
 
         $sql_tmpl = "
@@ -126,11 +128,30 @@ class PBFGenerator
                 WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.%s), 4326), ST_Transform(bounds.geom, %s))
                 AND t.layers IS NOT NULL
                 AND t.user_id = " . $this->author_id . "
+                AND EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements_text((t.layers::jsonb) #> '{" . $this->app_id . "}') AS elem
+                    WHERE elem::integer = ANY(ARRAY[%s]::integer[])
+                )
             ) 
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
         ";
 
-        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid']);
+        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid'],$tbl['layers']);
 
+    }
+
+    private function getAppLayersIDs($app_id)
+    {
+        $app = App::where('id', $app_id)->first();
+        if (!$app) {
+            return [];
+        }
+        $layers = $app->layers;
+        $layers = $layers->map(function ($layer) {
+            return $layer->id;
+        });
+        $ids = $layers->toArray();
+        return implode(',',$ids);
     }
 }

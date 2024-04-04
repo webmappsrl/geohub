@@ -305,14 +305,12 @@ trait TrackElasticIndexTrait
             $updates = null;
             $ecTrackLayers = $this->getLayersByApp();
             if (is_array($ecTrackLayers)) {
-                foreach($ecTrackLayers as $app_id => $layer) {
+                foreach ($ecTrackLayers as $app_id => $layer) {
                     if (!empty($layer)) {
-                        $updates = [
-                            'layers' => [$app_id => $layer],
-                            'activities' => [$app_id => $this->taxonomyActivities->pluck('identifier')->toArray()],
-                            'themes' => [$app_id => $this->taxonomyThemes->pluck('identifier')->toArray()],
-                            'searchable' => [$app_id => $this->getSearchableString($app_id)]
-                        ];
+                        $updates['layers'][$app_id] = $layer;
+                        $updates['activities'][$app_id] = $this->taxonomyActivities->pluck('identifier')->toArray();
+                        $updates['themes'][$app_id] = $this->taxonomyThemes->pluck('identifier')->toArray();
+                        $updates['searchable'][$app_id] = $this->getSearchableString($app_id);
                     }
                 }
                 if ($updates) {
