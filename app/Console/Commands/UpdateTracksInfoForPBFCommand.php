@@ -18,7 +18,7 @@ class UpdateTracksInfoForPBFCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:update-tracks-for-pbf {app_id} {author : Set the author that must be assigned to EcFeature created, use email or ID}';
+    protected $signature = 'geohub:update-tracks-for-pbf {app_id}';
 
     /**
      * The console command description.
@@ -55,22 +55,10 @@ class UpdateTracksInfoForPBFCommand extends Command
             $this->error('App with id ' . $this->argument('app_id') . ' not found!');
             return 0;
         }
-
-        if (is_numeric($this->argument('author'))) {
-            try {
-                $user = User::find(intval($this->argument('author')));
-                $this->author_id = $user->id;
-            } catch (Exception $e) {
-                throw new Exception('No User found with this ID ' . $this->argument('author'));
-            }
-        } else {
-            try {
-                $user = User::where('email', strtolower($this->argument('author')))->first();
-
-                $this->author_id = $user->id;
-            } catch (Exception $e) {
-                throw new Exception('No User found with this email ' . $this->argument('author'));
-            }
+        try {
+            $this->author_id = $app->user_id;
+        } catch (Exception $e) {
+            throw new Exception('No User found for this app ' . $this->app_id);
         }
 
         $tracks = DB::table('ec_tracks')
