@@ -51,7 +51,7 @@ class UpdateEcTrackDemJob implements ShouldQueue
             // Request was successful, handle the response data here
             $responseData = $response->json();
             // if (!$this->ecTrack->skip_geomixer_tech) {
-            try{
+            try {
                 if (isset($responseData['properties'])) {
                     if (isset($responseData['properties']['duration_forward_hiking']) && !empty($responseData['properties']['duration_forward_hiking'])) {
                         $this->ecTrack->duration_forward = $responseData['properties']['duration_forward_hiking'];
@@ -68,16 +68,16 @@ class UpdateEcTrackDemJob implements ShouldQueue
                         'descent',
                         'distance',
                     ];
-    
+
                     foreach ($fields as $field) {
                         if (isset($responseData['properties'][$field]) && !empty($responseData['properties'][$field])) {
                             $this->ecTrack->$field = $responseData['properties'][$field];
                         }
-                    }    
+                    }
                 }
                 if (isset($responseData['geometry']) && !empty($responseData['geometry'])) {
                     $this->ecTrack->geometry = DB::select("SELECT ST_GeomFromGeoJSON('" . json_encode($responseData['geometry']) . "') As wkt")[0]->wkt;
-                    $this->ecTrack->save();
+                    $this->ecTrack->saveQuietly();
                 }
             } catch (\Exception $e) {
                 Log::error('An error occurred during DEM operation: ' . $e->getMessage());
