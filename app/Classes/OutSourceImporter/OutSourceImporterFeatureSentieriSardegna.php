@@ -190,16 +190,16 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $from = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://www.sardegnasentieri.it/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
             if (is_array($from) && !empty($from)) {
                 $from = json_decode($from[0], true);
+                $this->tags['from'] = $from['name']['it'];
             }
-            $this->tags['from'] = $from['name']['it'];
         }
         if (isset($track['properties']['arrivo'])) {
             $source_id = $track['properties']['arrivo'];
             $to = collect(DB::select("SELECT tags FROM out_source_features where endpoint='https://www.sardegnasentieri.it/ss/listpoi/?_format=json' and source_id='$source_id'"))->pluck('tags')->toArray();
             if (is_array($to) && !empty($to)) {
                 $to = json_decode($to[0], true);
+                $this->tags['to'] = $to['name']['it'];
             }
-            $this->tags['to'] = $to['name']['it'];
         }
 
         // Adding originale public url to related_url
