@@ -584,6 +584,7 @@ trait ConfTrait
         $data['OPTIONS']['showTrackRefLabel'] = $this->show_track_ref_label;
         $data['OPTIONS']['download_track_enable'] = $this->download_track_enable;
         $data['OPTIONS']['print_track_enable'] = $this->print_track_enable;
+        $data['OPTIONS']['show_searchbar'] = $this->show_search;
 
 
         return $data;

@@ -351,7 +351,12 @@ class App extends Resource
             ]),
             Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
                 view('layers', ['layers' => $this->layers])->render()
-            )
+            ),
+            Toggle::make(__('Show searchbar'), 'show_search')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex(),
         ];
     }
 
