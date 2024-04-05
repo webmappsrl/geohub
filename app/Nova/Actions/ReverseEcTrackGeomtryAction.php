@@ -35,7 +35,7 @@ class ReverseEcTrackGeomtryAction extends Action
                 $reversedGeometry = DB::select(" SELECT ST_Reverse('$model->geometry') as geometry")[0]->geometry;
         
                 $model->geometry = $reversedGeometry;
-                $model->saveQuietly();
+                $model->save();
             } catch (\Exception $e) {
                 Log::error('An error occurred during Reverse operation: ' . $e->getMessage());
             }
