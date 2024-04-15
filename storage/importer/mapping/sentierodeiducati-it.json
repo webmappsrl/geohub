@@ -1,0 +1,463 @@
+{
+    "poi_type": {
+        "22": {
+            "source_title": {
+                "it": "Affittacamere",
+                "en": "Guest house",
+                "de": "Gasthaus"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "23": {
+            "source_title": {
+                "it": "Agriturismo",
+                "en": "Farmhouse",
+                "de": "Agrotourismus"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "98": {
+            "source_title": {
+                "it": "Agriturismo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "24": {
+            "source_title": {
+                "it": "Albergo",
+                "en": "Hotel",
+                "de": "Hotel"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "117": {
+            "source_title": {
+                "it": "Alimentari"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "shop-convenience"
+        },
+        "119": {
+            "source_title": {
+                "it": "Appartamento"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "house"
+        },
+        "118": {
+            "source_title": {
+                "it": "Bar Tavola calda"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "bar"
+        },
+        "21": {
+            "source_title": {
+                "it": "Bed &amp; Breakfast",
+                "en": "Bed &amp; Breakfast",
+                "de": "Bed &amp; Breakfast"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "32": {
+            "source_title": {
+                "it": "Borgo Storico",
+                "en": "Historic village",
+                "de": "Historisches Dorf"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "borgo"
+        },
+        "25": {
+            "source_title": {
+                "it": "Campeggio",
+                "en": "Camping",
+                "de": "Camping"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "camping"
+        },
+        "122": {
+            "source_title": {
+                "it": "Camping"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "camping"
+        },
+        "26": {
+            "source_title": {
+                "it": "Casa per ferie",
+                "en": "Holiday house",
+                "de": "Ferienhaus"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "96": {
+            "source_title": {
+                "it": "Case per ferie"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "15": {
+            "source_title": {
+                "it": "Dormire",
+                "en": "Sleep",
+                "de": "Schlafen"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "37": {
+            "source_title": {
+                "it": "Edificio religioso",
+                "en": "Religious building",
+                "de": "Religi\u00f6ses Geb\u00e4ude"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "religious-building"
+        },
+        "33": {
+            "source_title": {
+                "it": "Edificio storico",
+                "en": "Historical building",
+                "de": "Historisches Geb\u00e4ude"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "120": {
+            "source_title": {
+                "it": "Farmacia"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pharmacy"
+        },
+        "17": {
+            "source_title": {
+                "it": "Locanda",
+                "en": "Inn",
+                "de": "Gasthaus"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "locanda"
+        },
+        "95": {
+            "source_title": {
+                "it": "Locanda"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "locanda"
+        },
+        "14": {
+            "source_title": {
+                "it": "Mangiare",
+                "en": "Eat",
+                "de": "Essen"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "34": {
+            "source_title": {
+                "it": "Museo",
+                "en": "Museum",
+                "de": "Museum"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "museum"
+        },
+        "27": {
+            "source_title": {
+                "it": "Ostello",
+                "en": "Hostel",
+                "de": "Herberge"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "ostello"
+        },
+        "18": {
+            "source_title": {
+                "it": "Osteria",
+                "en": "Tavern",
+                "de": "Taverne"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "osteria"
+        },
+        "121": {
+            "source_title": {
+                "it": "Pizzeria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "pizzeria"
+        },
+        "38": {
+            "source_title": {
+                "it": "Prodotti del territorio",
+                "en": "Local products",
+                "de": "Lokale Produkte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "shop-farm"
+        },
+        "28": {
+            "source_title": {
+                "it": "Rifugio",
+                "en": "Hut",
+                "de": "H\u00fctte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "29": {
+            "source_title": {
+                "it": "Rifugio autogestito",
+                "en": "Self-managed Hut",
+                "de": "Selbstverwaltete H\u00fctte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "wilderness-hut"
+        },
+        "19": {
+            "source_title": {
+                "it": "Ristorante",
+                "en": "Restaurant",
+                "de": "Restaurant"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "123": {
+            "source_title": {
+                "it": "Ristorante Pizzeria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "20": {
+            "source_title": {
+                "it": "Ristorante-Birreria",
+                "en": "Pub",
+                "de": "Pub"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "restaurant"
+        },
+        "30": {
+            "source_title": {
+                "it": "Room &amp; Breakfast",
+                "en": "Room &amp; Breakfast",
+                "de": "Zimmer &amp; Fr\u00fchst\u00fcck"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "31": {
+            "source_title": {
+                "it": "Sito archeologico",
+                "en": "Archaeological site",
+                "de": "Arch\u00e4ologische Fundst\u00e4tte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "archaeological-site"
+        },
+        "35": {
+            "source_title": {
+                "it": "Sito naturalistico",
+                "en": "Naturalistic site",
+                "de": "Naturalistische St\u00e4tte"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "elementi-naturalistici"
+        },
+        "36": {
+            "source_title": {
+                "it": "Sito panoramico",
+                "en": "Panoramic site",
+                "de": "Panoramastandort"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "97": {
+            "source_title": {
+                "it": "Trattoria"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "osteria"
+        },
+        "16": {
+            "source_title": {
+                "it": "Vedere",
+                "en": "See",
+                "de": "Sehen"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "poi"
+        }
+    },
+    "activity": {
+        "10": {
+            "source_title": {
+                "it": "A piedi",
+                "en": "Trekking"
+            },
+            "source_description": {
+                "it": "12 tappe, ben 201 km, oltre 7400 metri di salita e circa altrettanto di discesa, dai poco pi\u00f9 50 m di quota della citt\u00e0 di Reggio Emilia agli oltre 1200 m del Passo del Lagastrello. Poi di nuovo gi\u00f9, attraverso la Lunigiana, fino alla graziosa cittadella fortificata di Sarzana, sfiorando\u00a0<a href=\"https:\/\/www.comune.luni.sp.it\/it-it\/home\" target=\"_blank\" rel=\"noopener noreferrer\">Luni<\/a>,\u00a0antico porto romano prossimo alla costa Tirrenica.\u00a0Scoprendo, giorno dopo giorno, uno dei pi\u00f9 spettacolari angoli dell\u2019Appennino settentrionale, forse trai pi\u00f9 ricchi di storia, sempre immersi nel silenzio profondo di una natura primigenia, spesso in totale solitudine, lontanissimo dalle folle che oramai invadono i cammini pi\u00f9 battuti.",
+                "en": "11 stages, nearly 160 km, over 7,000 meters of ascent and 7,300 meters of descent, from just over 150 m. altitude of the matildic village of <a href=\"https:\/\/www.comune.quattro-castella.re.it\/\" target=\"_blank\" rel=\"noopener noreferrer\">Quattro Castella<\/a> to over 1200 m. of Passo del Lagastrello. Then down again, through Lunigiana, to the pretty fortified citadel of Sarzana, touching <a href=\"https:\/\/www.comune.luni.sp.it\/it-it\/home\" target=\"_blank\" rel=\"noopener noreferrer\">Luni<\/a>, an ancient Roman port near the Tyrrhenian coast.\u00a0Discovering, day after day, one of the most spectacular corners of the northern Apennines, perhaps among the richest in history, always immersed in the deep silence of a primitive nature, often in total solitude, far from the crowds that now invade the most beaten paths."
+            },
+            "geohub_identifier": "hiking"
+        },
+        "12": {
+            "source_title": {
+                "it": "SD-GRAVEL",
+                "en": "SD-GRAVEL"
+            },
+            "source_description": {
+                "it": "La straordinaria novit\u00e0 del nuovo Sentiero dei Ducati: due itinerari, uno per Mountain Bike e l\u2019altro per Gravel, che in 6 tappe rincorre e si intreccia con l\u2019itinerario di trekking, condividendone molte tappe intermedie. Una straordinaria cavalcata, dalla pianura al mare, sfiorando alcuni dei pi\u00f9 imponenti massici montuosi dell\u2019Appennino Tosco Emiliano fino a ridosso delle Alpi Apuane. Tante carrarecce e mulattiere, sentieri e adrenalinici \u201csingle-track\u201d ma anche tranquille stradine di montagna, sicure e senza traffico, per esplorare antichi borghi e raggiungere ameni castelli, nel cuore di territori ricchi delle tracce lasciate da Canossa, dai Malaspina e dagli Estensi, ora protetti dal Parco Nazionale.",
+                "en": "The extraordinary novelty of the new Sentiero dei Ducati: two itineraries, one for Mountain Bike and the other for Gravel, which in 6 stages follows and intertwines with the trekking itinerary, sharing many intermediate stages. An extraordinary ride, from the plain to the sea, touching some of the most imposing mountain massifs of the Tuscan-Emilian Apennines up to the Apuan Alps. Many cart tracks and mule tracks, paths and adrenaline \"single-track\" but also quiet mountain roads, safe and without traffic, to explore ancient villages and reach beautiful castles, in the heart of territories rich in traces left by Canossa, Malaspina and Estensi, now protected by the National Park."
+            },
+            "geohub_identifier": "gravel"
+        },
+        "11": {
+            "source_title": {
+                "it": "SD-MTB",
+                "en": "SD-MTB"
+            },
+            "source_description": {
+                "it": "La straordinaria novit\u00e0 del nuovo Sentiero dei Ducati: due itinerari, uno per Mountain Bike e l\u2019altro per Gravel, che in 6 tappe rincorre e si intreccia con l\u2019itinerario di trekking, condividendone molte tappe intermedie. Una straordinaria cavalcata, dalla pianura al mare, sfiorando alcuni dei pi\u00f9 imponenti massici montuosi dell\u2019Appennino Tosco Emiliano fino a ridosso delle Alpi Apuane. Tante carrarecce e mulattiere, sentieri e adrenalinici \u201csingle-track\u201d ma anche tranquille stradine di montagna, sicure e senza traffico, per esplorare antichi borghi e raggiungere ameni castelli, nel cuore di territori ricchi delle tracce lasciate da Canossa, dai Malaspina e dagli Estensi, ora protetti dal Parco Nazionale.",
+                "en": "The extraordinary novelty of the new Sentiero dei Ducati: two itineraries, one for Mountain Bike and the other for Gravel, which in 6 stages follows and intertwines with the trekking itinerary, sharing many intermediate stages. An extraordinary ride, from the plain to the sea, touching some of the most imposing mountain massifs of the Tuscan-Emilian Apennines up to the Apuan Alps. Many cart tracks and mule tracks, paths and adrenaline \"single-track\" but also quiet mountain roads, safe and without traffic, to explore ancient villages and reach beautiful castles, in the heart of territories rich in traces left by Canossa, Malaspina and Estensi, now protected by the National Park."
+            },
+            "geohub_identifier": "mtb"
+        }
+    }
+}
