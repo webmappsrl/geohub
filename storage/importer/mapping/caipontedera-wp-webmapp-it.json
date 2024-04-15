@@ -1,0 +1,105 @@
+{
+    "poi_type": {
+        "12": {
+            "source_title": {
+                "it": "Agriturismo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "11": {
+            "source_title": {
+                "it": "B&amp;B"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "tourism-guest-house"
+        },
+        "14": {
+            "source_title": {
+                "it": "Borghi e frazioni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "borgo"
+        },
+        "15": {
+            "source_title": {
+                "it": "Casa vacanze"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "casa-vacanze"
+        },
+        "9": {
+            "source_title": {
+                "it": "Dormire"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "22": {
+            "source_title": {
+                "it": "Luogo di interesse pubblico"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "poi"
+        },
+        "23": {
+            "source_title": {
+                "it": "Punti panoramici"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "17": {
+            "source_title": {
+                "it": "Villa storica"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        }
+    },
+    "activity": {
+        "21": {
+            "source_title": {
+                "it": "A cavallo"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "horse"
+        },
+        "18": {
+            "source_title": {
+                "it": "A piedi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "20": {
+            "source_title": {
+                "it": "In Mountain Bike"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "mtb"
+        }
+    }
+}
