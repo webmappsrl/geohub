@@ -656,7 +656,7 @@ class App extends Model
         }
         return $res;
     }
-    
+
     /**
     * Returns array of all tracks'id in APP through layers deifinition
     *  $tracks = [
@@ -731,5 +731,23 @@ class App extends Model
             $i++;
         }
         return $temp_array;
+    }
+
+    public function getTracksBBOX()
+    {
+        $query = "
+            SELECT ST_Extent(geometry) as bounding_box
+            FROM ec_tracks
+            WHERE user_id = $this->user_id
+        ";
+
+        $result = DB::select(DB::raw($query));
+
+        if (!empty($result)) {
+            $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $result[0]->bounding_box));
+            return array_map('floatval', explode(' ', $bboxString));
+        }
+
+        return null;
     }
 }
