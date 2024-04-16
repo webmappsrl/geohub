@@ -87,7 +87,14 @@ class CreatePBFCommand extends Command
         $this->min_zoom = $this->option('min') ? $this->option('min') : config('geohub.pbf_min_zoom');
         $this->max_zoom = $this->option('max') ? $this->option('max') : config('geohub.pbf_max_zoom');
 
-        $bbox = json_decode($app->map_bbox);
+        $bbox = $app->getTracksBBOX();
+        if (empty($bbox)) {
+            $bbox = json_decode($app->map_bbox);
+        }
+        if (empty($bbox)) {
+            $this->error('This app does not have bounding box! Please add bbox. (e.g. [10.39637,43.71683,10.52729,43.84512])');
+            return;
+        }
         $this->format = 'pbf';
 
         $generator = new PBFGenerateTilesAndDispatch($this->app_id, $this->author_id);
