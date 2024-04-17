@@ -1,24 +1,25 @@
 @php
-    use Jenssegers\Agent\Agent;
-    use App\Models\App;
-    $agent = new Agent();
+use Jenssegers\Agent\Agent;
+use App\Models\App;
+$agent = new Agent();
 
-    $gallery = $track->ecMedia;
+$gallery = $track->ecMedia;
 
-    // TODO: ADD WEBMAPP APP LINK WHEN IT WILL BE READY
-    $iosStore = '#';
-    $androidStore = '#';
-    $appName = 'Webmapp';
-    $appSocialText = $track->excerpt?$track->excerpt:$track->description;;
-    $appIcon = asset('images/webmapp-logo-icon-only.png');
-    if (request('app_id')) {
-        $app = App::find(request('app_id'));
-        $iosStore = $app->ios_store_link;
-        $androidStore = $app->android_store_link;
-        $appName = $app->name;
-        if ($app->social_track_text) {
-            $format = $app->social_track_text;
-            preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
+// TODO: ADD WEBMAPP APP LINK WHEN IT WILL BE READY
+$iosStore = '#';
+$androidStore = '#';
+$appName = 'Webmapp';
+$appSocialText = $track->excerpt?$track->excerpt:$track->description;;
+$appIcon = asset('images/webmapp-logo-icon-only.png');
+$appId =request('app_id');
+if ($appId) {
+$app = App::find($appId);
+$iosStore = $app->ios_store_link;
+$androidStore = $app->android_store_link;
+$appName = $app->name;
+if ($app->social_track_text) {
+$format = $app->social_track_text;
+preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
             if (is_array($matches[0])) {
                 foreach($matches[0] as $m) {
                     $field = str_replace('{','',$m);
@@ -40,7 +41,7 @@
 @endphp
 
 <x-track.trackLayout :track="$track" :gallery="$gallery" :appSocialText="$appSocialText">
-    <x-track.trackHeader :track="$track" :agent="$agent" :iosStore="$iosStore" :androidStore="$androidStore" :appName="$appName" :appIcon="$appIcon"/>
+    <x-track.trackHeader :track="$track" :agent="$agent" :iosStore="$iosStore" :androidStore="$androidStore" :appName="$appName" :appIcon="$appIcon" :appId="$appId"/>
     <main class="max-w-screen-xl m-auto pb-20">
         <div style="max-height:686px;overflow:hidden;">
             <x-mapsection :track="$track" :appSocialText="$appSocialText"/>
@@ -52,7 +53,7 @@
             </div>
         @endif
         @if ($agent->isMobile())
-            <x-track.trackMobileDownloadSection :track="$track" :agent="$agent" :iosStore="$iosStore" :androidStore="$androidStore" :appName="$appName" :appIcon="$appIcon"/>
+            <x-track.trackMobileDownloadSection :track="$track" :agent="$agent" :iosStore="$iosStore" :androidStore="$androidStore" :appName="$appName" :appIcon="$appIcon" :appId="$appId"/>
         @endif
     </main>
 </x-track.trackLayout>
