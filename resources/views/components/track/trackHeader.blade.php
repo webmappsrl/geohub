@@ -50,7 +50,7 @@ $logoName = 'Webmapp logo';
                 <div class="bg-white bg-opacity-70 rounded-lg max-w-md h-full flex flex-col justify-center gap-y-4 px-6">
                     <div class="flex gap-x-6 justify-left items-center">
                         <div><img src="{{$appIcon}}" width="50" alt="app name"></div>
-                        <a class="font-semibold text-xl" href="https://{{$appId}}.app.geohub.webmapp.it/#/map?track={{$track->id}}">{{ __("Vai alla webapp") }}</a>
+                        <a class="font-semibold text-xl" href="https://{{$appId}}.app.webmapp.it/#/map?track={{$track->id}}">{{ __("Vai alla webapp") }}</a>
                     </div>
                 </div>
             </div>

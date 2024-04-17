@@ -20,7 +20,7 @@
         <x-buttonInstall :link="$androidStore" />
         @endif
         @else
-        <a target="_blank" class="bg-secondary text-white h-12 w-full rounded-full flex justify-center items-center font-semibold" href="https://{{$appId}}.app.geohub.webmapp.it/#/map?track={{$track->id}}">vai</a>
+        <a target="_blank" class="bg-secondary text-white h-12 w-full rounded-full flex justify-center items-center font-semibold" href="https://{{$appId}}.app.webmapp.it/#/map?track={{$track->id}}">vai</a>
         @endif
     </div>
 </div>
