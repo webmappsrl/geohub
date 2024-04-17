@@ -1,0 +1,211 @@
+{
+    "poi_type": {
+        "279": {
+            "source_title": {
+                "it": "Agriturismo",
+                "en": "Agriturismo Farmhouse"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "195": {
+            "source_title": {
+                "it": "Albero monumentale",
+                "en": "Monumental tree"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "monumental-tree"
+        },
+        "138": {
+            "source_title": {
+                "it": "Chiesa",
+                "en": "Church"
+            },
+            "source_description": {
+                "it": "Le antiche chiese sono disseminate sul territorio.",
+                "en": ""
+            },
+            "geohub_identifier": "church"
+        },
+        "157": {
+            "source_title": {
+                "it": "Infopoint",
+                "en": "Infopoint"
+            },
+            "source_description": {
+                "it": "Il Bagnolo centro informazioni",
+                "en": ""
+            },
+            "geohub_identifier": "tourist-information"
+        },
+        "358": {
+            "source_title": {
+                "it": "Localit\u00e0"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "place-locality"
+        },
+        "154": {
+            "source_title": {
+                "it": "Parcheggio",
+                "en": "Parking"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "231": {
+            "source_title": {
+                "it": "Percorsi a piedi",
+                "en": "Excursion destination"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "hiking-poi"
+        },
+        "141": {
+            "source_title": {
+                "it": "Punto Panoramico",
+                "en": "Landscape"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "356": {
+            "source_title": {
+                "it": "Rifugio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "147": {
+            "source_title": {
+                "it": "Ristorante",
+                "en": "Restaurant"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": ""
+        },
+        "357": {
+            "source_title": {
+                "it": "Sella"
+            },
+            "source_description": {
+                "it": "Le selle e i passi del territorio."
+            },
+            "geohub_identifier": "natural-saddle"
+        },
+        "201": {
+            "source_title": {
+                "it": "Vetta",
+                "en": "Peak"
+            },
+            "source_description": {
+                "it": "Le cime dei Monti dell'Alto Garda Bresciano",
+                "en": ""
+            },
+            "geohub_identifier": "natural-peak"
+        }
+    },
+    "activity": {
+        "206": {
+            "source_title": {
+                "it": "A cavallo",
+                "en": "horse"
+            },
+            "source_description": {
+                "it": "Questa \u00e8 una selezione dei percorsi percorribili anche a cavallo, partendo dal Bagnolo.",
+                "en": "Questa \u00e8 una selezione dei percorsi percorribili anche a cavallo, partendo dal Bagnolo."
+            },
+            "geohub_identifier": "horse"
+        },
+        "205": {
+            "source_title": {
+                "it": "Corsa",
+                "en": "running"
+            },
+            "source_description": {
+                "it": "Intorno al Bagnolo abbiamo un percorso dedicato agli amanti della corsa.",
+                "en": "Intorno al Bagnolo abbiamo un percorso dedicato agli amanti della corsa."
+            },
+            "geohub_identifier": "running"
+        },
+        "204": {
+            "source_title": {
+                "it": "Mountain Bike",
+                "en": "Mountain Bike"
+            },
+            "source_description": {
+                "it": "Questi sono i percorsi percorribili in Mountain Bike, partendo dal Bagnolo.",
+                "en": "Questi sono i percorsi percorribili in Mountain Bike, partendo dal Bagnolo."
+            },
+            "geohub_identifier": "mbt"
+        },
+        "116": {
+            "source_title": {
+                "it": "Trekking",
+                "en": "Hiking"
+            },
+            "source_description": {
+                "it": "Questi sono i percorsi percorribili a piedi, partendo dal Bagnolo.",
+                "en": "Questi sono i percorsi percorribili a piedi, partendo dal Bagnolo."
+            },
+            "geohub_identifier": "trekking"
+        }
+    },
+    "theme": {
+        "360": {
+            "source_title": {
+                "it": "Alla scoperta del territorio",
+                "en": "Discovering the area"
+            },
+            "source_description": {
+                "it": "Qui sotto presentiamo una selezione di itinerari di media difficolt\u00e0 e durata, con partenza dall'Agriturismo.",
+                "en": "Below we present a selection of itineraries of medium difficulty and duration, departing from the Farmhouse"
+            },
+            "geohub_identifier": "discovering-the-area"
+        },
+        "361": {
+            "source_title": {
+                "it": "Le cime del Garda Bresciano",
+                "en": "The peaks of Garda Bresciano"
+            },
+            "source_description": {
+                "it": "Le gite pi\u00f9 impegnative della zona, con salite alle parti alte del territorio.",
+                "en": "The most demanding trips in the area, with climbs to the upper parts of the area."
+            },
+            "geohub_identifier": "the-peaks-of-garda-bresciano"
+        },
+        "359": {
+            "source_title": {
+                "it": "Una passeggiata rilassante",
+                "en": "A relaxing walk"
+            },
+            "source_description": {
+                "it": "Qui sotto presentiamo una selezione di itinerari facili e poco impegnativi, per una passeggiata intorno all'Agriturismo il Bagnolo.",
+                "en": "Below we present a selection of easy itineraries for a walk around the farmhouse il Bagnolo."
+            },
+            "geohub_identifier": "a-relaxing-walk"
+        }
+    }
+}
