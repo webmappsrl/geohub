@@ -182,7 +182,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      */
     private function buildEcPoi(array $ecPoiData): void
     {
-        $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it'], 'skip_geomixer_tech' => true]);
+        $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it']]);
         $this->setTranslations($ecPoi, $ecPoiData);
         $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
@@ -199,7 +199,6 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     private function updateEcPoi(array $ecPoiData): void
     {
         $ecPoi = EcPoi::find($ecPoiData['id']);
-        $ecPoi->skip_geomixer_tech = true;
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
         }
@@ -221,11 +220,15 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         $englishName = $ecPoiData['name_en'] ?? '';
         $italianDescription = $ecPoiData['description_it'] ?? '';
         $englishDescription = $ecPoiData['description_en'] ?? '';
+        $italianExcerpt = $ecPoiData['excerpt_it'] ?? '';
+        $englishExcerpt = $ecPoiData['excerpt_en'] ?? '';
 
         $ecPoi->setTranslation('name', 'it', $italianName);
         $ecPoi->setTranslation('name', 'en', $englishName);
         $ecPoi->setTranslation('description', 'it', $italianDescription);
         $ecPoi->setTranslation('description', 'en', $englishDescription);
+        $ecPoi->setTranslation('excerpt', 'it', $italianExcerpt);
+        $ecPoi->setTranslation('excerpt', 'en', $englishExcerpt);
         $ecPoi->save();
 
         //unset the names and descriptions
@@ -233,6 +236,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         unset($ecPoiData['name_en']);
         unset($ecPoiData['description_it']);
         unset($ecPoiData['description_en']);
+        unset($ecPoiData['excerpt_it']);
+        unset($ecPoiData['excerpt_en']);
     }
 
     /**
