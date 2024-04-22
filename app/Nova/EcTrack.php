@@ -266,6 +266,12 @@ class EcTrack extends Resource
                     //     return $gallery;
                     // })->asHtml()
                 ],
+                'Related POIs' => [
+                    Ecpoipopup::make(__('ecPoi'))
+                        ->nullable()
+                        ->onlyOnDetail()
+                        ->feature($geojson ?? []),
+                ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
                     Text::make('Ref'),
