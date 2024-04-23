@@ -34,8 +34,12 @@ class App extends Model
     use ClassificationTrait;
 
     protected $fillable = ['welcome'];
-    public array $translatable = ['welcome', 'tiles_label', 'overlays_label','data_label','pois_data_label','tracks_data_label','page_project','page_disclaimer','page_credits','filter_activity_label', 'filter_theme_label','filter_poi_type_label','filter_track_duration_label','filter_track_distance_label','social_share_text'];
-    protected $casts = ['keywords' => 'array'];
+    public array $translatable = ['welcome', 'tiles_label', 'overlays_label', 'data_label', 'pois_data_label', 'tracks_data_label', 'page_project', 'page_disclaimer', 'page_credits', 'filter_activity_label', 'filter_theme_label', 'filter_poi_type_label', 'filter_track_duration_label', 'filter_track_distance_label', 'social_share_text'];
+    protected $casts = [
+        'keywords' => 'array',
+        'translations_it' => 'array',
+        'translations_en' => 'array',
+    ];
     /**
      * The accessors to append to the model's array form.
      *
@@ -631,16 +635,16 @@ class App extends Model
     }
 
     /**
-    * Returns array of all tracks'id in APP through layers deifinition
-    *  $tracks = [
-    *               t1_id => updated_at,
-    *               t2_id => updated_at,
-    *               ... ,
-    *               tM_id => updated_at,
-    *            ]
-    *
-    * @return array
-    */
+     * Returns array of all tracks'id in APP through layers deifinition
+     *  $tracks = [
+     *               t1_id => updated_at,
+     *               t2_id => updated_at,
+     *               ... ,
+     *               tM_id => updated_at,
+     *            ]
+     *
+     * @return array
+     */
     public function getTracksUpdatedAtFromLayer(): array
     {
         $res = [];
@@ -658,16 +662,16 @@ class App extends Model
     }
 
     /**
-    * Returns array of all tracks'id in APP through layers deifinition
-    *  $tracks = [
-    *               t1_id => updated_at,
-    *               t2_id => updated_at,
-    *               ... ,
-    *               tM_id => updated_at,
-    *            ]
-    *
-    * @return array
-    */
+     * Returns array of all tracks'id in APP through layers deifinition
+     *  $tracks = [
+     *               t1_id => updated_at,
+     *               t2_id => updated_at,
+     *               ... ,
+     *               tM_id => updated_at,
+     *            ]
+     *
+     * @return array
+     */
     public function getPOIsUpdatedAtFromApp(): array
     {
         $themes = $this->taxonomyThemes()->get();
@@ -723,7 +727,7 @@ class App extends Model
         $temp_array = array();
         $i = 0;
         $key_array = array();
-        foreach($array as $val) {
+        foreach ($array as $val) {
             if (!in_array($val[$key], $key_array)) {
                 $key_array[$i] = $val[$key];
                 $temp_array[$i] = $val;

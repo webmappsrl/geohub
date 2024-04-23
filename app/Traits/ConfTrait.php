@@ -27,6 +27,7 @@ trait ConfTrait
 
         $data = array_merge($data, $this->config_section_app());
         $data = array_merge($data, $this->config_section_webapp());
+        $data = array_merge($data, $this->config_section_translations());
         $data = array_merge($data, $this->config_section_home());
         $data = array_merge($data, $this->config_section_languages());
         $data = array_merge($data, $this->config_section_map());
@@ -85,6 +86,7 @@ trait ConfTrait
 
         return $data;
     }
+
     /**
      * @param
      *
@@ -105,6 +107,22 @@ trait ConfTrait
 
         return $data;
     }
+
+
+    private function config_section_translations(): array
+    {
+        $data = [];
+        $data['TRANSLATIONS'] = [];
+        if (!is_null($this->translations_it)) {
+            $data['TRANSLATIONS']['it'] = json_decode($this->translations_it, true);
+        }
+        if (!is_null($this->translations_en)) {
+            $data['TRANSLATIONS']['en'] = json_decode($this->translations_en, true);
+        }
+
+        return $data;
+    }
+
     /**
      * @param
      *

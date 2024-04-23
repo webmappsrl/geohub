@@ -251,6 +251,7 @@ class App extends Resource
     {
         return [
             'APP' => $this->app_tab(),
+            'TRANSLATIONS' => $this->translations_tab(),
             'RELEASE DATA' => $this->app_release_data_tab(),
             'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
@@ -636,7 +637,21 @@ class App extends Resource
 
         ];
     }
+    protected function translations_tab(): array
+    {
+        return [
+            Code::make('Italian Translations', 'translations_it')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('Inserisci qui le traduzioni italiane in formato JSON.'),
 
+            Code::make('English Translations', 'translations_en')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('Inserisci qui le traduzioni inglesi in formato JSON.'),
+
+        ];
+    }
     protected function pois_tab(): array
     {
         return [
