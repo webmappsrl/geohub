@@ -269,6 +269,13 @@ class EcTrack extends Model
         }
     }
 
+    public function setColorAttribute($value)
+    {
+        if (strpos($value, '#') !== false) {
+            $this->attributes['color'] = $this->hexToRgba($value);
+        }
+    }
+
     /**
      * Return the json version of the ec track, avoiding the geometry
      *
@@ -717,12 +724,11 @@ class EcTrack extends Model
     public function bbox($geometry = ''): array
     {
         if ($geometry) {
-            $b = DB::select("SELECT ST_Extent(?) as bbox",[$geometry]);
-            if (!empty($b)){
+            $b = DB::select("SELECT ST_Extent(?) as bbox", [$geometry]);
+            if (!empty($b)) {
                 $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $b[0]->bbox));
             }
-        }
-        else {
+        } else {
             $rawResult = EcTrack::where('id', $this->id)->selectRaw('ST_Extent(geometry) as bbox')->first();
             $bboxString = str_replace(',', ' ', str_replace(['B', 'O', 'X', '(', ')'], '', $rawResult['bbox']));
         }
@@ -1103,10 +1109,16 @@ class EcTrack extends Model
         return $result;
     }
 
+    // This functions is duplicated in the ConfTrait.php
+    // Refactor it in a common place
     public function hexToRgba($hexColor, $opacity = 1.0)
     {
         if (empty($hexColor)) {
             return '';
+        }
+
+        if (strpos($hexColor, '#') === false) {
+            return $hexColor;
         }
 
         $hexColor = ltrim($hexColor, '#');
