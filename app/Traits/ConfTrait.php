@@ -827,8 +827,18 @@ EOT;
         return json_decode($json_string, true);
     }
 
+    // This functions is duplicated in the EcTrack model
+    // Refactor it in a common place
     public function hexToRgba($hexColor, $opacity = 1.0)
     {
+        if (empty($hexColor)) {
+            return '';
+        }
+
+        if (strpos($hexColor, '#') === false) {
+            return $hexColor;
+        }
+
         $hexColor = ltrim($hexColor, '#');
 
         if (strlen($hexColor) === 6) {
