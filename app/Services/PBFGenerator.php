@@ -116,7 +116,7 @@ class PBFGenerator
             ),
             mvtgeom AS (
                 SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom,
-                t.color as strokeColor,
+                t.color as stroke_color,
                 t.layers #> '{" . $this->app_id . "}' AS layers,
                 t.themes #> '{" . $this->app_id . "}' AS themes,
                 t.activities #> '{" . $this->app_id . "}' AS activities,
