@@ -32,8 +32,12 @@ class ConvertUgcToEcPoiAction extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        $already_exists = [];
         foreach ($models as $model) {
-
+            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && !empty(json_decode($model->raw_data)->ec_poi_id)) { 
+                $already_exists[] = $model->id; 
+                continue;
+            }
             if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'share_ugcpoi') && json_decode($model->raw_data)->share_ugcpoi === 'yes') {
                 $ecPoi = new EcPoi();
                 $ecPoi->name = $model->name;
@@ -51,12 +55,12 @@ class ConvertUgcToEcPoiAction extends Action
                         $storage = Storage::disk('public');
                         foreach ($ugcMedia as $count => $media) {
                             try {
-                                $mediaName = $result.'_'.last(explode('/', $media['relative_url']));
-                                $contents = file_get_contents(asset('storage/'.$media['relative_url']));
+                                $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
+                                $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
                                 $storage->put($mediaName, $contents); 
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => $media->url, 'geometry' => $media->geometry]);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/'.$mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
-                                $ecMedia->save();
+                                $result = $ecMedia->save();
                                 if ($count == 0) {
                                     $ecPoi->featureImage()->associate($ecMedia);
                                 } else {
@@ -66,8 +70,6 @@ class ConvertUgcToEcPoiAction extends Action
                                 Log::error("featureImage: create ec media -> " . $e->getMessage());
                             }
                         }
-                        
-                        $ecPoi->featureImage()->associate($ecMedia);
                     }
 
                     // Attach Taxonomy Wheres
@@ -102,7 +104,10 @@ class ConvertUgcToEcPoiAction extends Action
             }
         }
 
-        return $ecPoi;
+        if (count($already_exists) > 0) {
+            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: '.implode(', ', $already_exists));
+        }
+        return Action::message('Conversion completed successfully');
     }
 
     /**
