@@ -59,7 +59,7 @@ class ConvertUgcToEcPoiAction extends Action
                                 $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
                                 $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
                                 $storage->put($mediaName, $contents); 
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/'.$mediaName, 'geometry' => $media->geometry]);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/'.$mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
                                 $result = $ecMedia->save();
                                 if ($count == 0) {
