@@ -571,6 +571,10 @@ trait ConfTrait
         if ($this->page_project) {
             $data['PROJECT']['html'] = $this->getTranslations('page_project');
         }
+        // PROJECT section NEW (v2)
+        if ($this->page_privacy) {
+            $data['PRIVACY']['html'] = $this->getTranslations('page_privacy');
+        }
         // DISCLAIMER section
         if ($this->page_disclaimer) {
             $data['DISCLAIMER']['html'] = $this->getTranslations('page_disclaimer');
@@ -578,6 +582,9 @@ trait ConfTrait
         // CREDITS section
         if ($this->page_credits) {
             $data['CREDITS']['html'] = $this->getTranslations('page_credits');
+        }
+        if ($this->page_privacy) {
+            $data['PRIVACY']['html'] = $this->getTranslations('page_privacy');
         }
 
         return $data;

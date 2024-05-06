@@ -368,6 +368,7 @@ class App extends Resource
                 NovaTinymce5Editor::make('Page Project', 'page_project'),
                 NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
                 NovaTinymce5Editor::make('Page Credits', 'page_credits'),
+                NovaTinymce5Editor::make('Page Privacy', 'page_privacy'),
             ])
         ];
     }
