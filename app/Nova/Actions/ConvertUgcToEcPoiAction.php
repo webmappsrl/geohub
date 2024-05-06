@@ -5,6 +5,7 @@ namespace App\Nova\Actions;
 use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
+use App\Models\TaxonomyPoiType;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -80,9 +81,10 @@ class ConvertUgcToEcPoiAction extends Action
 
                     // Attach Taxonomy poi types
                     if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'waypointtype')) {
-                        $poi_type = json_decode($model->raw_data)->waypointtype;
+                        $poi_type_identifier = json_decode($model->raw_data)->waypointtype;
                     }
-                    if (isset($poi_type)) {
+                    if (isset($poi_type_identifier)) {
+                        $poi_type = TaxonomyPoiType::where('identifier', $poi_type_identifier)->first();
                         $ecPoi->taxonomyPoiTypes()->attach($poi_type);
                     }
 
