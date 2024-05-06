@@ -2,12 +2,14 @@
 
 namespace App\Nova;
 
+use Exception;
+use App\Models\App;
+use App\Nova\Actions\ExportFormDataXLSX;
 use App\Nova\Filters\AppFilter;
-use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
-use App\Nova\Filters\UgcUserFilter;
-use Laravel\Nova\Fields\Code;
+use App\Nova\Filters\SchemaFilter;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
@@ -72,23 +74,126 @@ class UgcPoi extends Resource
     {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
-            Text::make(__('Name'), 'name')->sortable(),
-            BelongsTo::make(__('Creator'), 'user', User::class),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Text::make(__('App ID'), 'app_id')->sortable(),
+            Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('App'),  function ($model) {
+                $app_id = $model->app_id;
+                if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                    $app_id = 'it.netseven.forestecasentinesi';
+                }
+                $app = App::where('app_id', $app_id)->first();
+                if ($app) {
+                    $url = url("/resources/apps/{$app->id}");
+                    return <<<HTML
+                    <a 
+                        href="{$url}" 
+                        target="_blank" 
+                        class="no-underline dim text-primary font-bold">
+                       {$app->name}
+                    </a> <br>
+                    HTML;
+                }
+                return '';
+            })->asHtml(),
+            BelongsTo::make(__('Creator'), 'user', User::class),
             BelongsToMany::make(__('Taxonomy wheres'))->searchable(),
-            Boolean::make(__('Has content'), function ($model) {
-                return isset($model->raw_data);
-            })->onlyOnIndex(),
+            Text::make(__('Form'), function ($model) {
+                $formData = json_decode($model->raw_data, true);
+                $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
+
+                if (isset($formData)) {
+                    $app_id = $model->app_id;
+                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                        $app_id = 'it.netseven.forestecasentinesi';
+                    }
+                    $app = App::where('app_id', $app_id)->first();
+
+                    if (isset($app)) {
+                        $formSchema = json_decode($app->poi_acquisition_form, true);
+                        // Trova lo schema corretto basato sull'ID in $formData
+                        try {
+                            $currentSchema = collect($formSchema)->firstWhere('id', $formData['id']);
+                        } catch (Exception $e) {
+                            $currentSchema = null;
+                        }
+
+                        if ($currentSchema) {
+                            // Aggiungi una riga all'inizio per il tipo di form
+                            $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
+                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
+                            return $html;
+                        }
+                    }
+                }
+            })->onlyOnIndex()->asHtml(),
             Boolean::make(__('Has gallery'), function ($model) {
                 $gallery = $model->ugc_media;
-
                 return count($gallery) > 0;
             })->onlyOnIndex(),
-            Boolean::make(__('Has geometry'), function ($model) {
-                return isset($model->geometry);
-            })->onlyOnIndex(),
-            Code::make(__('Form data'), function ($model) {
+            Text::make(__('Form data'), function ($model) {
+                $formData = json_decode($model->raw_data, true);
+                $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
+
+                if (isset($formData)) {
+                    $app_id = $model->app_id;
+                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                        $app_id = 'it.netseven.forestecasentinesi';
+                    }
+                    $app = App::where('app_id', $app_id)->first();
+
+                    if (isset($app)) {
+                        $formSchema = json_decode($app->poi_acquisition_form, true);
+                        // Trova lo schema corretto basato sull'ID in $formData
+                        try {
+                            $currentSchema = collect($formSchema)->firstWhere('id', $formData['id']);
+                        } catch (Exception $e) {
+                            $currentSchema = null;
+                        }
+
+                        if ($currentSchema) {
+                            // Aggiungi una riga all'inizio per il tipo di form
+                            $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
+                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
+
+                            foreach ($currentSchema['fields'] as $field) {
+                                $fieldLabel = reset($field['label']);
+                                $fieldName = $field['name'];
+                                if ($field['type'] === 'select' && isset($formData[$fieldName])) {
+                                    $selectedValue = $formData[$fieldName];
+                                    $fieldValue = null; // Default se non trovato
+                                    // Trova la label corrispondente al valore selezionato
+                                    foreach ($field['values'] as $option) {
+                                        if ($option['value'] === $selectedValue) {
+                                            $fieldValue = reset($option['label']);
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    $fieldValue = isset($formData[$fieldName]) ? $formData[$fieldName] : null;
+                                }
+
+                                if (isset($fieldValue)) {
+                                    $html .= '<tr>';
+                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
+                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
+                                    $html .= '</tr>';
+                                }
+                            }
+                            $html .= '</table>';
+
+                            return $html;
+                        }
+                    }
+                }
+            })->onlyOnDetail()->asHtml(),
+            WmEmbedmapsField::make(__('Map'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson()
+                ];
+            })->onlyOnDetail(),
+            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
+            Code::make(__('json Form data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);
                 unset($jsonRawData['position']);
                 unset($jsonRawData['displayPosition']);
@@ -116,19 +221,6 @@ class UgcPoi extends Resource
                 $rawData = json_encode(json_decode($model->raw_data, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
             })->onlyOnDetail()->language('json')->rules('json'),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
-                ];
-            })->onlyOnDetail(),
-            BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
-            Text::make(__('Poi Type'), function ($model) {
-                if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'waypointtype')) {
-                    return json_decode($model->raw_data)->waypointtype;
-                }
-                return '';
-            })->onlyOnIndex(),
         ];
     }
 
@@ -159,7 +251,7 @@ class UgcPoi extends Resource
                 ->filterBy('user_id'),
             (new UgcCreationDateFilter()),
             (new AppFilter()),
-
+            (new SchemaFilter()),
         ];
     }
 
@@ -184,6 +276,10 @@ class UgcPoi extends Resource
      */
     public function actions(Request $request): array
     {
-        return [];
+        return [
+            (new ExportFormDataXLSX('ugc_pois'))->canRun(function ($request, $model) {
+                return true;
+            }),
+        ];
     }
 }

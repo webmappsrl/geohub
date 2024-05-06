@@ -6,7 +6,8 @@ use App\Nova\Filters\AppFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
-use App\Nova\Filters\DateRange;
+
+use App\Nova\Filters\SchemaFilter;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\BelongsTo;
@@ -16,6 +17,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
+use App\Nova\Actions\ExportFormDataXLSX;
+use App\Models\App;
+use Exception;
 
 class UgcTrack extends Resource
 {
@@ -76,22 +80,119 @@ class UgcTrack extends Resource
     {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
-            Text::make(__('Name'), 'name')->sortable(),
-            BelongsTo::make(__('Creator'), 'user', User::class),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Text::make(__('App ID'), 'app_id')->sortable(),
+            Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('App'),  function ($model) {
+                $app_id = $model->app_id;
+                if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                    $app_id = 'it.netseven.forestecasentinesi';
+                }
+                $app = App::where('app_id', $app_id)->first();
+                if ($app) {
+                    $url = url("/resources/apps/{$app->id}");
+                    return <<<HTML
+                    <a 
+                        href="{$url}" 
+                        target="_blank" 
+                        class="no-underline dim text-primary font-bold">
+                       {$app->name}
+                    </a> <br>
+                    HTML;
+                }
+                return '';
+            })->asHtml(),
+            BelongsTo::make(__('Creator'), 'user', User::class),
             BelongsToMany::make(__('Taxonomy wheres')),
-            Boolean::make(__('Has content'), function ($model) {
-                return isset($model->raw_data) && $model->raw_data != '[]';
-            })->onlyOnIndex(),
+            Text::make(__('Form'), function ($model) {
+                $formData = json_decode($model->raw_data, true);
+                $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
+
+                if (isset($formData)) {
+                    $app_id = $model->app_id;
+                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                        $app_id = 'it.netseven.forestecasentinesi';
+                    }
+                    $app = App::where('app_id', $app_id)->first();
+
+                    if (isset($app)) {
+                        $formSchema = json_decode($app->track_acquisition_form, true);
+                        // Trova lo schema corretto basato sull'ID in $formData
+                        try {
+                            $currentSchema = collect($formSchema)->firstWhere('id', $formData['id']);
+                        } catch (Exception $e) {
+                            $currentSchema = null;
+                        }
+
+                        if ($currentSchema) {
+                            // Aggiungi una riga all'inizio per il tipo di form
+                            $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
+                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
+                            return $html;
+                        }
+                    }
+                }
+            })->onlyOnIndex()->asHtml(),
             Boolean::make(__('Has gallery'), function ($model) {
                 $gallery = $model->ugc_media;
 
                 return count($gallery) > 0;
             })->onlyOnIndex(),
-            Boolean::make(__('Has geometry'), function ($model) {
-                return isset($model->geometry);
-            })->onlyOnIndex(),
+            Text::make(__('Form data'), function ($model) {
+                $formData = json_decode($model->raw_data, true);
+                $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
+
+                if (isset($formData)) {
+                    $app_id = $model->app_id;
+                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
+                        $app_id = 'it.netseven.forestecasentinesi';
+                    }
+                    $app = App::where('app_id', $app_id)->first();
+
+                    if (isset($app)) {
+                        $formSchema = json_decode($app->track_acquisition_form, true);
+                        // Trova lo schema corretto basato sull'ID in $formData
+                        try {
+                            $currentSchema = collect($formSchema)->firstWhere('id', $formData['id']);
+                        } catch (Exception $e) {
+                            $currentSchema = null;
+                        }
+
+                        if ($currentSchema) {
+                            // Aggiungi una riga all'inizio per il tipo di form
+                            $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
+                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
+
+                            foreach ($currentSchema['fields'] as $field) {
+                                $fieldLabel = reset($field['label']);
+                                $fieldName = $field['name'];
+                                if ($field['type'] === 'select' && isset($formData[$fieldName])) {
+                                    $selectedValue = $formData[$fieldName];
+                                    $fieldValue = null; // Default se non trovato
+                                    // Trova la label corrispondente al valore selezionato
+                                    foreach ($field['values'] as $option) {
+                                        if ($option['value'] === $selectedValue) {
+                                            $fieldValue = reset($option['label']);
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    $fieldValue = isset($formData[$fieldName]) ? $formData[$fieldName] : null;
+                                }
+
+                                if (isset($fieldValue)) {
+                                    $html .= '<tr>';
+                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
+                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
+                                    $html .= '</tr>';
+                                }
+                            }
+                            $html .= '</table>';
+
+                            return $html;
+                        }
+                    }
+                }
+            })->onlyOnDetail()->asHtml(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
@@ -141,7 +242,8 @@ class UgcTrack extends Resource
                 ->fieldAttribute('user')
                 ->filterBy('user_id'),
             (new UgcCreationDateFilter),
-            (new AppFilter)
+            (new AppFilter),
+            (new SchemaFilter('ugc_track')),
 
 
         ];
@@ -168,6 +270,10 @@ class UgcTrack extends Resource
      */
     public function actions(Request $request): array
     {
-        return [];
+        return [
+            (new ExportFormDataXLSX('ugc_tracks'))->canRun(function ($request, $model) {
+                return true;
+            }),
+        ];
     }
 }
