@@ -3,8 +3,8 @@
 namespace App\Nova\Filters;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Filters\Filter;
+use \App\Models\App;
 
 class AppFilter extends Filter
 {
@@ -37,8 +37,18 @@ class AppFilter extends Filter
      */
     public function options(Request $request)
     {
-        $request;
+        $apps = [];
+        $options = [];
+        if ($request->user()->can('Admin')) {
+            $apps = App::all()->toArray();
+        } else {
+            $apps = App::where('user_id', $request->user()->id)->get()->toArray();
+        }
+        foreach ($apps as $app) {
+            $label = $app['name'];
+            $options[$label] = $app['app_id'];
+        }
 
-        return \App\Models\App::where('user_id', $request->user()->id)->get()->pluck('app_id', 'app_id')->toArray();
+        return $options;
     }
 }
