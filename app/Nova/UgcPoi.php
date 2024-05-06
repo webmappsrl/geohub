@@ -6,6 +6,8 @@ use Exception;
 use App\Models\App;
 use App\Nova\Actions\ExportFormDataXLSX;
 use App\Nova\Filters\AppFilter;
+use App\Nova\Filters\DateRange;
+use App\Nova\Filters\ShareUgcPoiFilter;
 use App\Nova\Filters\UgcCreationDateFilter;
 use App\Nova\Filters\SchemaFilter;
 use Illuminate\Http\Request;
@@ -251,6 +253,7 @@ class UgcPoi extends Resource
                 ->filterBy('user_id'),
             (new UgcCreationDateFilter()),
             (new AppFilter()),
+            (new ShareUgcPoiFilter()),
             (new SchemaFilter()),
         ];
     }
@@ -277,6 +280,8 @@ class UgcPoi extends Resource
     public function actions(Request $request): array
     {
         return [
+            (new Actions\ConvertUgcToEcPoiAction())
+                ->confirmText('The current user ID will be used for the new EcPois. Are you sure you want to convert to EcPoi?'),
             (new ExportFormDataXLSX('ugc_pois'))->canRun(function ($request, $model) {
                 return true;
             }),
