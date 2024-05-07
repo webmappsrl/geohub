@@ -1,0 +1,420 @@
+{
+    "poi_type": {
+        "27": {
+            "source_title": {
+                "it": "Acqua Potabile",
+                "en": "Drinking water"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "fountain"
+        },
+        "17": {
+            "source_title": {
+                "it": "Area Pic-Nic",
+                "en": "Pic Nic Area"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "picnic-area"
+        },
+        "256": {
+            "source_title": {
+                "it": "Area picnic con accensione fuochi",
+                "en": "Picnic area with fire lighting"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "equipped-rest-area"
+        },
+        "226": {
+            "source_title": {
+                "it": "Area sosta Camper",
+                "en": "Camper van parking area"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "camper-parking-area"
+        },
+        "24": {
+            "source_title": {
+                "it": "Arrivo",
+                "en": "Arrival"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "arrival"
+        },
+        "294": {
+            "source_title": {
+                "it": "Aspetti selvicolturali",
+                "en": "Silvicultural aspects"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "silvicultural-aspects"
+        },
+        "29": {
+            "source_title": {
+                "it": "Centro Ippico",
+                "en": "Equestrian center"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "paddock"
+        },
+        "22": {
+            "source_title": {
+                "it": "Emergenza naturalistica",
+                "en": "Naturalistic feature",
+                "de": "Naturalistischer Notfall"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "elementi-naturalistici"
+        },
+        "13": {
+            "source_title": {
+                "it": "Emergenza storico-culturale",
+                "en": "Historical-cultural feature",
+                "de": "Emergenza storico-culturale"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "history-and-culture"
+        },
+        "21": {
+            "source_title": {
+                "it": "Geosito - archeologia mineraria",
+                "en": "Geosite - mining archeology",
+                "de": "Geosito &#8211; archeologia mineraria"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "geosito"
+        },
+        "293": {
+            "source_title": {
+                "it": "Paesaggio agrario",
+                "en": "Agricultural landscape"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "landscape"
+        },
+        "18": {
+            "source_title": {
+                "it": "Parcheggio",
+                "en": "Car park"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "988": {
+            "source_title": {
+                "it": "Partenza",
+                "en": "Start point"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "start"
+        },
+        "23": {
+            "source_title": {
+                "it": "Partenza-Arrivo",
+                "en": "Start-End"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "start-end"
+        },
+        "1982": {
+            "source_title": {
+                "it": "Punto intermedio del sentiero",
+                "en": "Midpoint of the trail"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "poi"
+        },
+        "14": {
+            "source_title": {
+                "it": "Punto Panoramico",
+                "en": "Viewpoint",
+                "de": "Punto Panoramico"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "251": {
+            "source_title": {
+                "it": "Riserve naturali - punto di accesso",
+                "en": "Nature reserves - access point"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "natural-park"
+        },
+        "362": {
+            "source_title": {
+                "it": "Stazione ferroviaria",
+                "en": "Train Station"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "train-station"
+        }
+    },
+    "activity": {
+        "115": {
+            "source_title": {
+                "it": "A cavallo",
+                "en": "On Horseback",
+                "de": "Zu Pferd"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "horse"
+        },
+        "113": {
+            "source_title": {
+                "it": "A piedi",
+                "en": "Hiking",
+                "de": "Zu Fu\u00df"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "hiking"
+        },
+        "361": {
+            "source_title": {
+                "it": "Cammini",
+                "en": "Hiking ways",
+                "de": "Pfade"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "walking"
+        },
+        "258": {
+            "source_title": {
+                "it": "In bicicletta - Gravel",
+                "en": "Bicycle - Gravel",
+                "de": "Mit dem Fahrrad - Gravel"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "gravel"
+        },
+        "114": {
+            "source_title": {
+                "it": "In bicicletta - MTB",
+                "en": "Bicycle - MTB",
+                "de": "Mit dem Fahrrad - MTB"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "mtb"
+        },
+        "289": {
+            "source_title": {
+                "it": "In bicicletta - Strada",
+                "en": "Bicycle - Road",
+                "de": "Mit dem Fahrrad - Road"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "road-bike"
+        },
+        "367": {
+            "source_title": {
+                "it": "In bicicletta \u2013 Enduro",
+                "en": "Bicycle \u2013 Enduro",
+                "de": "Mit dem Fahrrad - Enduro"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "cycling"
+        }
+    },
+    "theme": {
+        "206": {
+            "source_title": {
+                "it": "Borghi, ville, pievi e castelli",
+                "en": "Villages, villas, parish churches and castles",
+                "de": "Borghi, ville, pievi e castelli"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "villages-villas-parish-churches-and-castles"
+        },
+        "377": {
+            "source_title": {
+                "it": "Cammino Etrusco",
+                "en": "Etruscan path"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "etruscan-path-vdc"
+        },
+        "376": {
+            "source_title": {
+                "it": "Cammino Francigena Mare",
+                "en": "Francigena Mare Path",
+                "de": "Francigena Mare Pfade"
+            },
+            "source_description": {
+                "it": "Dalla Via Francigena fra Gambassi, Certaldo e San Gimignano, alla costa Tirrenica attraverso Volterra e il cuore caldo della Toscana, immersi in paesaggi straordinari dove i millenari segni della presenza umana dialogano con un contesto naturalistico di raro pregio.\r\n\r\nPercorrere il cammino regala una sorpresa dietro l\u2019altra; lungo fino a 180 km (a seconda dell\u2019itinerario che si intende percorrere) su strade sterrate, sentieri e altra viabilit\u00e0 secondaria si alternano centri storici tra i pi\u00f9 importanti della Toscana, testimonianze delle civilt\u00e0 etrusca, romana e medievale, borghi, rocche, castelli, pievi medievali, oltre a frequenti resti delle attivit\u00e0 minerarie, che oggi sono rivolte essenzialmente all\u2019estrazione del Sale e al peculiare sfruttamento della Geotermia e alla lavorazione dell\u2019Alabastro. Questo patrimonio culturale \u00e8 parte integrante di un complesso mosaico paesaggistico, che offre i tratti tipici della campagna toscana, insieme a colline argillose contrassegnate da calanchi e biancane, estesi affioramenti rocciosi, aspri rilievi e valli profondamente incise, vastissime foreste e corsi d\u2019acqua ad elevata naturalit\u00e0, dove soffermarsi per un bagno indimenticabile.\r\n\r\nIl Cammino \u00e8 percorribile in due sensi e i suoi estremi corrispondono alle stazioni ferroviarie di Certaldo e di Cecina: la raggiungibilit\u00e0 in treno \u00e8 un importante requisito di sostenibilit\u00e0 ambientale.\r\n\r\nSulla fascia costiera il tracciato prevede un doppio braccio che permette il collegamento alla stazione di Bolgheri e lo sbocco sul mare a Marina di Bibbona e di Cecina.\r\n\r\nDai Tomboli di Cecina, con le sue immense pinete, alla trama unica degli oliveti e vigneti di Bolgheri e Bibbona, al crinale della Macchia della Magona e della Riserva naturale di Caselli, da cui si aprono splendidi panorami verso la costa e il paesaggio selvaggio della Val di Cecina interna fino alle crete di Volterra, Montecatini Val di Cecina e Pomarance. Il borgo di Pomarance ci apre le porte verso Larderello, capitale Mondiale della Geotermia, dove il Museo e \u201cl\u2019urlo\u201d di un vecchio pozzo ci mettono in contatto con le viscere della terra.\r\n\r\nSi cammina per chilometri in un vero e proprio selvaggio polmone verde grazie alle foreste delle riserve Naturali di Berignone e Monterufoli-Caselli, senza dimenticare l\u2019importanza storica, culturale, artigianale-artistica ed enogastronomica di centri come Volterra.\r\n\r\nDopo Volterra si entra nella dorsale Medio-Toscana, toccando le riserve naturali di Montenero e di Castelvecchio e ammirando la bellezza dei crinali della Val d'Elsa, disseminati di castelli e abbazie, originati proprio dal passaggio della Via Francigena. La parte finale dell\u2019itinerario permette di visitare i bellissimi centri storici di Gambassi, dove \u00e8 presente anche uno stabilimento termale, San Gimignano e Certaldo il cui territorio bagnato anch\u2019esso dall\u2019Elsa, ospita numerose emergenze di interesse storico, culturale e artistico, completando cos\u00ec un quadro di eccellenze su tutti i fronti dal paesaggio alle straordinarie culture gastronomiche locali.\r\n\r\nSono presenti numerose tipologie di strutture pronte ad accogliervi e a soddisfare ogni esigenza, da un semplice ma genuino ristoro a un soggiorno lungo il cammino. I prodotti della terra e gli agricoltori sono sempre importanti protagonisti di questa calda accoglienza.\r\n\r\nLungo il percorso numerose sono le connessioni con altri itinerari escursionistici che fanno parte della reti di mobilit\u00e0 dolce della Val di Cecina e della Val d\u2019Elsa. Inoltre questo cammino interseca, oltre alla Via Francigena, le Vie Etrusche Volterra-Piombino e Volterra-Fiesole, e ci\u00f2 rende possibile costruire percorsi alternativi di pi\u00f9 giorni a proprio piacimento.",
+                "en": "",
+                "de": "Dalla Via Francigena fra Gambassi, Certaldo e San Gimignano, alla costa Tirrenica attraverso Volterra e il cuore caldo della Toscana, immersi in paesaggi straordinari dove i millenari segni della presenza umana dialogano con un contesto naturalistico di raro pregio.\r\n\r\nPercorrere il cammino regala una sorpresa dietro l\u2019altra; lungo fino a 180 km (a seconda dell\u2019itinerario che si intende percorrere) su strade sterrate, sentieri e altra viabilit\u00e0 secondaria si alternano centri storici tra i pi\u00f9 importanti della Toscana, testimonianze delle civilt\u00e0 etrusca, romana e medievale, borghi, rocche, castelli, pievi medievali, oltre a frequenti resti delle attivit\u00e0 minerarie, che oggi sono rivolte essenzialmente all\u2019estrazione del Sale e al peculiare sfruttamento della Geotermia e alla lavorazione dell\u2019Alabastro. Questo patrimonio culturale \u00e8 parte integrante di un complesso mosaico paesaggistico, che offre i tratti tipici della campagna toscana, insieme a colline argillose contrassegnate da calanchi e biancane, estesi affioramenti rocciosi, aspri rilievi e valli profondamente incise, vastissime foreste e corsi d\u2019acqua ad elevata naturalit\u00e0, dove soffermarsi per un bagno indimenticabile.\r\n\r\nIl Cammino \u00e8 percorribile in due sensi e i suoi estremi corrispondono alle stazioni ferroviarie di Certaldo e di Cecina: la raggiungibilit\u00e0 in treno \u00e8 un importante requisito di sostenibilit\u00e0 ambientale.\r\n\r\nSulla fascia costiera il tracciato prevede un doppio braccio che permette il collegamento alla stazione di Bolgheri e lo sbocco sul mare a Marina di Bibbona e di Cecina.\r\n\r\nDai Tomboli di Cecina, con le sue immense pinete, alla trama unica degli oliveti e vigneti di Bolgheri e Bibbona, al crinale della Macchia della Magona e della Riserva naturale di Caselli, da cui si aprono splendidi panorami verso la costa e il paesaggio selvaggio della Val di Cecina interna fino alle crete di Volterra, Montecatini Val di Cecina e Pomarance. Il borgo di Pomarance ci apre le porte verso Larderello, capitale Mondiale della Geotermia, dove il Museo e \u201cl\u2019urlo\u201d di un vecchio pozzo ci mettono in contatto con le viscere della terra.\r\n\r\nSi cammina per chilometri in un vero e proprio selvaggio polmone verde grazie alle foreste delle riserve Naturali di Berignone e Monterufoli-Caselli, senza dimenticare l\u2019importanza storica, culturale, artigianale-artistica ed enogastronomica di centri come Volterra.\r\n\r\nDopo Volterra si entra nella dorsale Medio-Toscana, toccando le riserve naturali di Montenero e di Castelvecchio e ammirando la bellezza dei crinali della Val d'Elsa, disseminati di castelli e abbazie, originati proprio dal passaggio della Via Francigena. La parte finale dell\u2019itinerario permette di visitare i bellissimi centri storici di Gambassi, dove \u00e8 presente anche uno stabilimento termale, San Gimignano e Certaldo il cui territorio bagnato anch\u2019esso dall\u2019Elsa, ospita numerose emergenze di interesse storico, culturale e artistico, completando cos\u00ec un quadro di eccellenze su tutti i fronti dal paesaggio alle straordinarie culture gastronomiche locali.\r\n\r\nSono presenti numerose tipologie di strutture pronte ad accogliervi e a soddisfare ogni esigenza, da un semplice ma genuino ristoro a un soggiorno lungo il cammino. I prodotti della terra e gli agricoltori sono sempre importanti protagonisti di questa calda accoglienza.\r\n\r\nLungo il percorso numerose sono le connessioni con altri itinerari escursionistici che fanno parte della reti di mobilit\u00e0 dolce della Val di Cecina e della Val d\u2019Elsa. Inoltre questo cammino interseca, oltre alla Via Francigena, le Vie Etrusche Volterra-Piombino e Volterra-Fiesole, e ci\u00f2 rende possibile costruire percorsi alternativi di pi\u00f9 giorni a proprio piacimento."
+            },
+            "geohub_identifier": "francigena-mare-path-vdc"
+        },
+        "76": {
+            "source_title": {
+                "it": "Fiumi e Torrenti",
+                "en": "Rivers and Streams",
+                "de": "Fl\u00fcsse und B\u00e4che"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "rivers-and-streams-vdc"
+        },
+        "207": {
+            "source_title": {
+                "it": "Foresta, flora e fauna",
+                "en": "Forest, flora and fauna",
+                "de": "Foresta, flora e fauna"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "forest-flora-and-fauna-vdc"
+        },
+        "208": {
+            "source_title": {
+                "it": "Geologia, miniere e minerali",
+                "en": "Geology, mines and minerals",
+                "de": "Geologia, miniere e minerali"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "geology-mines-and-minerals-vdc"
+        },
+        "210": {
+            "source_title": {
+                "it": "Geotermia",
+                "en": "Geothermal",
+                "de": "Geothermie"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "geothermal"
+        },
+        "380": {
+            "source_title": {
+                "it": "Le Vie Salaiole",
+                "en": "The Vie Salaiole",
+                "de": "Der Etruskischer Weg"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "the-vie-salaiole"
+        },
+        "209": {
+            "source_title": {
+                "it": "Paesaggio agrario",
+                "en": "Agricultural landscape",
+                "de": "Agrarlandschaft"
+            },
+            "source_description": {
+                "it": "",
+                "en": "",
+                "de": ""
+            },
+            "geohub_identifier": "agricultural-landscape"
+        }
+    }
+}
