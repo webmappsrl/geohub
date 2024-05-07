@@ -194,7 +194,7 @@ class EcMedia extends Resource
         ];
     }
 
-    private function detail()
+    public function fieldsForDetail(Request $request)
     {
         return [
             (new Tabs(
