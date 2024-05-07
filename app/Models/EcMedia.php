@@ -49,18 +49,19 @@ class EcMedia extends Model
         });
 
         static::deleting(function ($ecMedia) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('delete_ec_media_images', ['url' => $ecMedia->url, 'thumbnails' => $ecMedia->thumbnails]);
-            } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
-            }
             if ($ecMedia->ecTracks()->exists()) {
                 throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more tracks.');
             }
             if ($ecMedia->ecPois()->exists()) {
                 throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more pois.');
             }
+            try {
+                $hoquServiceProvider = app(HoquServiceProvider::class);
+                $hoquServiceProvider->store('delete_ec_media_images', ['url' => $ecMedia->url, 'thumbnails' => $ecMedia->thumbnails]);
+            } catch (\Exception $e) {
+                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            }
+
             /**
              * $originalFile = pathinfo($ecMedia->url);
              * $extension = $originalFile['extension'];
