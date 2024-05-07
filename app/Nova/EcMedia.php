@@ -23,13 +23,11 @@ use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
-use DigitalCreative\MegaFilter\MegaFilter;
-use DigitalCreative\MegaFilter\Column;
 use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Laravel\Nova\Fields\Heading;
 use Ncus\InlineIndex\InlineIndex;
-use PosLifestyle\DateRangeFilter\DateRangeFilter;
 use Wm\MapPointNova3\MapPointNova3;
+use Laravel\Nova\Fields\BelongsToMany;
 
 class EcMedia extends Resource
 {
@@ -89,15 +87,15 @@ class EcMedia extends Resource
      */
     public function fields(Request $request): array
     {
-        if(NovaCurrentResourceActionHelper::isIndex($request)) {
+        if (NovaCurrentResourceActionHelper::isIndex($request)) {
             return $this->index();
         }
 
-        if(NovaCurrentResourceActionHelper::isDetail($request)) {
+        if (NovaCurrentResourceActionHelper::isDetail($request)) {
             return $this->detail();
         }
 
-        if(NovaCurrentResourceActionHelper::isForm($request)) {
+        if (NovaCurrentResourceActionHelper::isForm($request)) {
             return $this->form($request);
         }
 
@@ -201,65 +199,67 @@ class EcMedia extends Resource
         return [(new Tabs(
             "Taxnonomy Where Details: {$this->name} ($this->id)",
             [
-            'Main' => [
-                Text::make('Geohub ID', function () {return $this->id;}),
-                BelongsTo::make('Author', 'author', User::class),
-                DateTime::make(__('Created At'), 'created_at'),
-                DateTime::make(__('Updated At'), 'updated_at'),
-                NovaTabTranslatable::make([
-                    Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Excerpt'), 'excerpt'),
-                    Textarea::make(__('Description'), 'description'),
-                ]),
-            ],
-            'Images' => $this->getImages(),
-            'Map' => [
-                MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
-                    'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
-                    'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                    'minZoom' => 7,
-                    'maxZoom' => 16,
-                ])
-            ],
-            'Taxonomies' => [
-                Text::make('Activities', function () {
-                    if($this->taxonomyActivities()->count() > 0) {
-                        return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
-                    }
-                    return 'No activities';
-                }),
-                Text::make('Wheres', function () {
-                    if($this->taxonomyWheres()->count() > 0) {
-                        return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
-                    }
-                    return 'No Wheres';
-                }),
-                Text::make('Themes', function () {
-                    if($this->taxonomyThemes()->count() > 0) {
-                        return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
-                    }
-                    return 'No Themes';
-                }),
-                Text::make('Targets', function () {
-                    if($this->taxonomyTargets()->count() > 0) {
-                        return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
-                    }
-                    return 'No Targets';
-                }),
-                Text::make('Whens', function () {
-                    if($this->taxonomyWhens()->count() > 0) {
-                        return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
-                    }
-                    return 'No Whens';
-                }),
-            ],
-            'Data' => [
-                Heading::make($this->getData())->asHtml(),
-            ],
-
-
-        ]
+                'Main' => [
+                    Text::make('Geohub ID', function () {
+                        return $this->id;
+                    }),
+                    BelongsTo::make('Author', 'author', User::class),
+                    DateTime::make(__('Created At'), 'created_at'),
+                    DateTime::make(__('Updated At'), 'updated_at'),
+                    NovaTabTranslatable::make([
+                        Text::make(__('Name'), 'name'),
+                        Textarea::make(__('Excerpt'), 'excerpt'),
+                        Textarea::make(__('Description'), 'description'),
+                    ]),
+                ],
+                'Images' => $this->getImages(),
+                'Map' => [
+                    MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                        'center' => ["51", "4"],
+                        'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                        'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                        'minZoom' => 7,
+                        'maxZoom' => 16,
+                    ])
+                ],
+                'Taxonomies' => [
+                    Text::make('Activities', function () {
+                        if ($this->taxonomyActivities()->count() > 0) {
+                            return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
+                        }
+                        return 'No activities';
+                    }),
+                    Text::make('Wheres', function () {
+                        if ($this->taxonomyWheres()->count() > 0) {
+                            return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
+                        }
+                        return 'No Wheres';
+                    }),
+                    Text::make('Themes', function () {
+                        if ($this->taxonomyThemes()->count() > 0) {
+                            return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
+                        }
+                        return 'No Themes';
+                    }),
+                    Text::make('Targets', function () {
+                        if ($this->taxonomyTargets()->count() > 0) {
+                            return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
+                        }
+                        return 'No Targets';
+                    }),
+                    Text::make('Whens', function () {
+                        if ($this->taxonomyWhens()->count() > 0) {
+                            return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
+                        }
+                        return 'No Whens';
+                    }),
+                ],
+                'Data' => [
+                    Heading::make($this->getData())->asHtml(),
+                ],
+                BelongsToMany::make('Tracks', 'ecTracks', 'App\Nova\EcTrack')->searchable()->nullable(),
+                BelongsToMany::make('Pois', 'ecPois', 'App\Nova\EcPois')->searchable()->nullable(),
+            ]
         ))->withToolbar()];
     }
     private function form($request)
@@ -273,52 +273,52 @@ class EcMedia extends Resource
 
 
         $tab_title = "New EC Media";
-        if(NovaCurrentResourceActionHelper::isUpdate($request)) {
+        if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Media Edit: {$this->name} ({$this->id})";
         }
 
-        return [(new Tabs(
-            $tab_title,
-            [
-            'Main' => [
-                NovaTabTranslatable::make([
-                    Text::make(__('Name'), 'name'),
-                    Textarea::make(__('Excerpt'), 'excerpt'),
-                    Textarea::make(__('Description'), 'description'),
-                ]),
-                BelongsTo::make('Author', 'author', User::class)
-                    ->searchable()
-                    ->nullable()
-                    ->canSee(function ($request) {
-                        return $request->user()->can('Admin');
-                    }),
-            ],
-            'Images' => [
-                Image::make('Url'),
-            ],
-            'Map' => [
-            ],
-            'Taxonomies' => [
-                AttachMany::make('TaxonomyActivities'),
-                AttachMany::make('TaxonomyTargets'),
-                AttachMany::make('TaxonomyWhens'),
-                AttachMany::make('TaxonomyThemes'),
-                ],
+        return [
+            (new Tabs(
+                $tab_title,
+                [
+                    'Main' => [
+                        NovaTabTranslatable::make([
+                            Text::make(__('Name'), 'name'),
+                            Textarea::make(__('Excerpt'), 'excerpt'),
+                            Textarea::make(__('Description'), 'description'),
+                        ]),
+                        BelongsTo::make('Author', 'author', User::class)
+                            ->searchable()
+                            ->nullable()
+                            ->canSee(function ($request) {
+                                return $request->user()->can('Admin');
+                            }),
+                    ],
+                    'Images' => [
+                        Image::make('Url'),
+                    ],
+                    'Map' => [],
+                    'Taxonomies' => [
+                        AttachMany::make('TaxonomyActivities'),
+                        AttachMany::make('TaxonomyTargets'),
+                        AttachMany::make('TaxonomyWhens'),
+                        AttachMany::make('TaxonomyThemes'),
+                    ],
 
 
-        ]
-        ))->withToolbar(),
-        new Panel('Map / Geographical info', [
-            MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                'center' => ["51", "4"],
-                'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
-                'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
-                'minZoom' => 7,
-                'maxZoom' => 16,
-            ])
-        ]),
+                ]
+            ))->withToolbar(),
+            new Panel('Map / Geographical info', [
+                MapPointNova3::make(__('Map'), 'geometry')->withMeta([
+                    'center' => ["51", "4"],
+                    'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
+                    'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+                    'minZoom' => 7,
+                    'maxZoom' => 16,
+                ])
+            ]),
 
-    ];
+        ];
     }
 
 
@@ -331,7 +331,7 @@ class EcMedia extends Resource
                 $url = Storage::disk('public')->url($url);
             }
 
-            return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
+            return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
         })->asHtml();
 
         $return[] = ExternalImage::make('Image', function () {
@@ -343,14 +343,14 @@ class EcMedia extends Resource
             return $url;
         })->withMeta(['width' => 500]);
 
-        if(isset($this->model()->thumbnails)) {
+        if (isset($this->model()->thumbnails)) {
             $thumbnails = json_decode($this->model()->thumbnails, true);
             $fields = [];
 
             if (isset($thumbnails)) {
                 foreach ($thumbnails as $size => $url) {
                     $return[] = Text::make($size, function () use ($url) {
-                        return '<a href="' . $url . '" target="_blank">' . $url .'</a>';
+                        return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                     })->asHtml();
                 }
             }
@@ -390,8 +390,7 @@ class EcMedia extends Resource
      */
     public function cards(Request $request)
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -486,6 +485,4 @@ tr:nth-child(even) {
 HTML;
         return $text;
     }
-
-
 }
