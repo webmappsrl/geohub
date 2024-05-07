@@ -337,6 +337,7 @@ class EcPoi extends Resource
 
             // Necessary for view
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
+            BelongsToMany::make('Tracks', 'ecTracks', 'App\Nova\EcTrack')->searchable()->nullable(),
         ];
     }
 
@@ -419,10 +420,8 @@ class EcPoi extends Resource
                         Text::make('Stars'),
                         Text::make('Code'),
                     ],
-
                     'Accessibility' => $this->accessibility_tab(),
                     'Reachability' => $this->reachability_tab(),
-
                     'Taxonomies' => [
                         AttachMany::make('TaxonomyPoiTypes')->showPreview(),
                         // AttachMany::make('TaxonomyWheres'),

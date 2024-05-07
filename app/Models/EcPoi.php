@@ -44,7 +44,12 @@ class EcPoi extends Model
 
     protected static function booted()
     {
-        // parent::booted();
+        static::deleting(function ($ecPoi) {
+            if ($ecPoi->ecTracks()->exists()) {
+                throw new \RuntimeException('Cannot delete this POI because it is linked to one or more tracks.');
+            }
+        });
+
         EcPoi::observe(EcPoiObserver::class);
 
         static::creating(function ($ecPoi) {
@@ -62,7 +67,6 @@ class EcPoi extends Model
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
         });
-
         static::updating(function ($ecPoi) {
             $skip_update = $ecPoi->skip_update;
             if (!$skip_update) {
@@ -76,6 +80,7 @@ class EcPoi extends Model
                 $ecPoi->skip_update = false;
             }
         });
+        parent::booted();
     }
 
     public function author(): BelongsTo
