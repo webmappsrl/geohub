@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Exception;
 
 class EcPoi extends Model
@@ -46,7 +46,7 @@ class EcPoi extends Model
     {
         static::deleting(function ($ecPoi) {
             if ($ecPoi->ecTracks()->exists()) {
-                throw new \RuntimeException('Cannot delete this POI because it is linked to one or more tracks.');
+                throw new HttpException(500, 'Cannot delete this POI because it is linked to one or more tracks.');
             }
         });
 

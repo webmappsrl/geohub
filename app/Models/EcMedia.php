@@ -13,6 +13,7 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EcMedia extends Model
 {
@@ -50,10 +51,10 @@ class EcMedia extends Model
 
         static::deleting(function ($ecMedia) {
             if ($ecMedia->ecTracks()->exists()) {
-                throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more tracks.');
+                throw new HttpException(500, 'Cannot delete this MEDIA because it is linked to one or more tracks.');
             }
             if ($ecMedia->ecPois()->exists()) {
-                throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more pois.');
+                throw new HttpException(500, 'Cannot delete this MEDIA because it is linked to one or more pois.');
             }
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
