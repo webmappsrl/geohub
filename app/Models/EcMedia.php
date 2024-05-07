@@ -55,6 +55,12 @@ class EcMedia extends Model
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
+            if ($ecMedia->ecTracks()->exists()) {
+                throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more tracks.');
+            }
+            if ($ecMedia->ecPois()->exists()) {
+                throw new \RuntimeException('Cannot delete this MEDIA because it is linked to one or more pois.');
+            }
             /**
              * $originalFile = pathinfo($ecMedia->url);
              * $extension = $originalFile['extension'];
