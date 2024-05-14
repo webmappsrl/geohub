@@ -87,6 +87,26 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF POI with external ID: '.$this->source_id);
         try{
+            if ($this->endpoint == 'https://www.pnab.it') {
+                $path = parse_url($this->endpoint);
+                $file_name = str_replace('.','-',$path['host']);
+                if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                    $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+    
+                    if (!empty(json_decode($taxonomy_map,true)['poi_type']) && $poi['webmapp_category']) {
+                        foreach ($poi['webmapp_category'] as $tax) {
+                            if (json_decode($taxonomy_map,true)['poi_type'][$tax]['geohub_identifier'] == 'event') {
+                                if ($poi['date'] < '2024-01-01') {
+                                    Log::info('POI is an event and the date is in the past: '.$this->source_id);
+                                    throw new Exception('POI is an event and the date is in the past');
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if (!is_numeric($poi['n7webmap_coord']['lng'])  || !is_numeric($poi['n7webmap_coord']['lat'])) 
                 throw new Exception('POI missing coordinates');
 
@@ -161,12 +181,24 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract {
         }
         $this->tags['from'] = html_entity_decode($track['n7webmap_start']);
         $this->tags['to'] = html_entity_decode($track['n7webmap_end']);
-        $this->tags['ele_from'] = $track['ele:from'];
-        $this->tags['ele_to'] = $track['ele:to'];
-        $this->tags['ele_max'] = $track['ele:max'];
-        $this->tags['ele_min'] = $track['ele:min'];
-        $this->tags['distance'] = $track['distance'];
-        $this->tags['difficulty'] = $track['cai_scale'];
+        if (isset($track['ele:from'])) {
+            $this->tags['ele_from'] = $track['ele:from'];
+        }
+        if (isset($track['ele:to'])) {
+            $this->tags['ele_to'] = $track['ele:to'];
+        }
+        if (isset($track['ele:max'])) {
+            $this->tags['ele_max'] = $track['ele:max'];
+        }
+        if (isset($track['ele:min'])) {
+            $this->tags['ele_min'] = $track['ele:min'];
+        }
+        if (isset($track['distance'])) {
+            $this->tags['distance'] = $track['distance'];
+        }
+        if (isset($track['cai_scale'])) {
+            $this->tags['difficulty'] = $track['cai_scale'];
+        }
 
         // Adds the EcOutSource:poi ID to EcOutSource:track's related_poi tags 
         if (isset($track['n7webmap_related_poi']) && is_array($track['n7webmap_related_poi'])) {

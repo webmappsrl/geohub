@@ -1,0 +1,492 @@
+{
+    "poi_type": {
+        "11043": {
+            "source_title": {
+                "it": "A scuola nel Parco"
+            },
+            "source_description": {
+                "it": "Progetti di educazione ambientale per le scuole del Parco, anno scolastico 2022\/23 - a scuola nel Parco"
+            },
+            "geohub_identifier": "event"
+        },
+        "129": {
+            "source_title": {
+                "it": "Alberghi e Garn\u00ec"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "hotel"
+        },
+        "52": {
+            "source_title": {
+                "it": "Alberi Monumentali"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "monumental-tree"
+        },
+        "208": {
+            "source_title": {
+                "it": "Attivit\u00e0 2021"
+            },
+            "source_description": {
+                "it": "Elenco di tutte le proposte del Parco in programma per l'estate 2021"
+            },
+            "geohub_identifier": "event"
+        },
+        "10902": {
+            "source_title": {
+                "it": "Attivit\u00e0 invernali 2022"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "6169": {
+            "source_title": {
+                "it": "Audioguide"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "131": {
+            "source_title": {
+                "it": "Camping"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "camping"
+        },
+        "53": {
+            "source_title": {
+                "it": "Cascate"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "waterway-waterfall"
+        },
+        "54": {
+            "source_title": {
+                "it": "Case del Parco"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "house"
+        },
+        "1884": {
+            "source_title": {
+                "it": "Cime"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "natural-peak"
+        },
+        "118": {
+            "source_title": {
+                "it": "Comuni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "city"
+        },
+        "145": {
+            "source_title": {
+                "it": "Comunit\u00e0 di Valle"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "valley-community"
+        },
+        "11047": {
+            "source_title": {
+                "it": "Due giorni nel Parco"
+            },
+            "source_description": {
+                "it": "progetti di educazione ambientale - scuole non ricadenti nell'area Parco - Due giorni nel Parco"
+            },
+            "geohub_identifier": "event"
+        },
+        "135": {
+            "source_title": {
+                "it": "Enti: Regole e Asuc"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "public-authority"
+        },
+        "11039": {
+            "source_title": {
+                "it": "Esperienze"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11051": {
+            "source_title": {
+                "it": "Esperienze invernali 2022"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11022": {
+            "source_title": {
+                "it": "Eventi Agenda 2030"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "6705": {
+            "source_title": {
+                "it": "Eventi e iniziative"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "120": {
+            "source_title": {
+                "it": "Foresterie"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "foresteria"
+        },
+        "102": {
+            "source_title": {
+                "it": "Geositi a valenza demo - etno - antropologica"
+            },
+            "source_description": {
+                "it": "In questa categoria sono compresi i siti le cui peculiarit\u00e0 geologico - ambientali hanno avuto un ruolo chiave nello sviluppo socio-culturale ed economico dell\u2019area. Viene posta l\u2019attenzione ai luoghi in cui il \u201cbene geologico\u201d ha rappresentato in passato una risorsa che ha avuto evidenti ricadute sul territorio e sulle attivit\u00e0 svolte dalle popolazioni locali. Tra essi sono comprese le antiche cave, le antiche miniere e i manufatti legati alla lavorazione delle materie prime minerali."
+            },
+            "geohub_identifier": "geosito"
+        },
+        "101": {
+            "source_title": {
+                "it": "Geositi a valenza geologica"
+            },
+            "source_description": {
+                "it": "Questa categoria comprende siti distribuiti omogeneamente nel territorio del Geoparco. Si tratta di emergenze di carattere stratigrafico, sedimentologico, paleontologico, paleogeografico e geomorfologico che non rientrano nei gruppi precedenti. Evidenziano in modo particolarmente significativo i processi geologici che hanno dato vita al territorio del Geoparco, descrivendone cos\u00ec la sua storia ed evoluzione in termini geologici."
+            },
+            "geohub_identifier": "geosito"
+        },
+        "98": {
+            "source_title": {
+                "it": "Geositi Ghiacciai"
+            },
+            "source_description": {
+                "it": "Rientrano in questa categoria i ghiacciai pi\u00f9 rappresentativi dell'Adamello Brenta Geopark. La maggior parte di essi \u00e8 localizzata nel Gruppo dell'Adamello-Presanella, territorio sede delle principali aree glacializzate del Geoparco e di alcuni dei principali ghiacciai dell'Arco Alpino. I ghiacciai del Geoparco sono l\u2019estremo residuo di quella colossale massa di ghiaccio che, tra 18.000 e 20.000 anni fa, ricopriva tutte le Alpi. Oggi il Parco Naturale Adamello Brenta Geopark comprende la maggior superficie glacializzata del Trentino, contando 41 ghiacciai sul proprio territorio. Nel Gruppo di Brenta ci sono 17 piccoli ghiacciai. La parte della Presanella accoglie 7 ghiacciai, mentre il gruppo dell\u2019Adamello trentino ne comprende 17."
+            },
+            "geohub_identifier": "geosito"
+        },
+        "100": {
+            "source_title": {
+                "it": "Geositi Morfologie carsiche"
+            },
+            "source_description": {
+                "it": "Appartengono a questa categoria le emergenze geologiche rappresentative dei processi e delle forme legate al carsismo. Dato l\u2019assetto geologico-stratigrafico del Geoparco, tali siti si trovano nel massiccio carbonatico delle Dolomiti di Brenta e nelle sue propaggini. Particolarmente significativi sono i fenomeni legati al carsismo superficiale che si sono sovraimposti alle preesistenti morfologie glaciali, con esemplari campi carreggiati, pozzi a neve, depressioni glacio-carsiche. Meno diffusi, ma estremamente significativi, sono gli esempi di cavit\u00e0 ipogee, con grotte anche dal notevole sviluppo, e sorgenti carsiche che danno vita a spettacolari cascate."
+            },
+            "geohub_identifier": "geosito"
+        },
+        "99": {
+            "source_title": {
+                "it": "Geositi Morfologie glaciali e periglaciali"
+            },
+            "source_description": {
+                "it": "Rientrano in questa categoria tutti i siti legati ai processi glaciali e periglaciali. Come per i ghiacciai, la maggior parte di essi \u00e8 localizzata nel gruppo dell\u2019Adamello-Presanella. Le caratteristiche geologiche di questo settore hanno permesso la perfetta conservazione delle morfologie glaciali riferibili all'Ultimo Massimo Glaciale pleistocenico (20.000 anni fa), alle successive espansioni tardiglaciali e alla Piccola Et\u00e0 Glaciale (culminata nel 1850): ci\u00f2 ha consentito una ricostruzione del clima del passato andando ad aggiungere un tassello importante agli studi sui cambiamenti climatici."
+            },
+            "geohub_identifier": "geosito"
+        },
+        "61": {
+            "source_title": {
+                "it": "Ghiacciai"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "icebox"
+        },
+        "56": {
+            "source_title": {
+                "it": "Laghi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "water-lake"
+        },
+        "11046": {
+            "source_title": {
+                "it": "Le Case del Parco"
+            },
+            "source_description": {
+                "it": "progetti di educazione ambientale - scuole non ricadenti nell'area Parco - Le Case del Parco"
+            },
+            "geohub_identifier": "house"
+        },
+        "11042": {
+            "source_title": {
+                "it": "Let's Green"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11052": {
+            "source_title": {
+                "it": "LibriAMOci. Pagine di Parco - 2023"
+            },
+            "source_description": {
+                "it": "rassegna di presentazione di libri"
+            },
+            "geohub_identifier": "event"
+        },
+        "10998": {
+            "source_title": {
+                "it": "Marchio Prodotto nel"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "11016": {
+            "source_title": {
+                "it": "Marted\u00ec del Parco"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11044": {
+            "source_title": {
+                "it": "Nel Parco, in punta di piedi"
+            },
+            "source_description": {
+                "it": "Progetti di educazione ambientale per le scuole non inerenti all'area Parco, anno scolastico 2022\/23 - Nel Parco, in punta di piedi"
+            },
+            "geohub_identifier": "event"
+        },
+        "11034": {
+            "source_title": {
+                "it": "ParcOn Air"
+            },
+            "source_description": {
+                "it": "eventi in collaborazione con radio dolomiti"
+            },
+            "geohub_identifier": "event"
+        },
+        "8378": {
+            "source_title": {
+                "it": "PARtiCOlari"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11020": {
+            "source_title": {
+                "it": "Podcast del Parco"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": ""
+        },
+        "119": {
+            "source_title": {
+                "it": "Punti info"
+            },
+            "source_description": {
+                "it": "I punti info sono strutture aperte stagionalmente"
+            },
+            "geohub_identifier": "tourist-information"
+        },
+        "59": {
+            "source_title": {
+                "it": "Rifugi"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "11049": {
+            "source_title": {
+                "it": "Rifugi 100% PLASTIC FREE"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "11050": {
+            "source_title": {
+                "it": "Rifugi VERSO UN FUTURO SENZA PLASTICA MONOUSO"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "11045": {
+            "source_title": {
+                "it": "Rifugiarsi nel Parco"
+            },
+            "source_description": {
+                "it": "progetti di educazione ambientale 2022-2023 - scuole del parco"
+            },
+            "geohub_identifier": "event"
+        },
+        "72": {
+            "source_title": {
+                "it": "Scuole"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "school"
+        },
+        "141": {
+            "source_title": {
+                "it": "Sede"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "visitor-center"
+        },
+        "146": {
+            "source_title": {
+                "it": "Shop"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "shop"
+        },
+        "130": {
+            "source_title": {
+                "it": "Strutture tipiche"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "historical-building"
+        },
+        "11040": {
+            "source_title": {
+                "it": "SuperPark - cinema"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "11041": {
+            "source_title": {
+                "it": "SuperPark - escursioni"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "event"
+        },
+        "167": {
+            "source_title": {
+                "it": "Valli"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "valley-community"
+        }
+    },
+    "theme": {
+        "4885": {
+            "source_title": {
+                "it": "Flora\/Fauna"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "flora-and-fauna"
+        },
+        "4886": {
+            "source_title": {
+                "it": "Natura"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "nature-route"
+        },
+        "4887": {
+            "source_title": {
+                "it": "Paesaggio"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "agricultural-landscape"
+        },
+        "6360": {
+            "source_title": {
+                "it": "Percorsi Family"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "family-routes"
+        },
+        "6340": {
+            "source_title": {
+                "it": "Sentieri guidati"
+            },
+            "source_description": {
+                "it": "I sentieri guidati sono percorsi dedicati alla comprensione dell'ambiente naturale e delle peculiarit\u00e0 culturali del territorio. Percorrendoli, il visitatore incontra elementi espositivi che stimolano all'osservazione e suggeriscono chiavi di interpretazione della realt\u00e0 ambientale: dai semplici pannelli descrittivi agli elementi interattivi, dai giochi didattici alle creazioni artistiche alle guide. I sentieri guidati possono essere incentrati su uno specifico tematismo \u2013 di tipo naturalistico o storico-culturale \u2013 oppure descrivere in dettaglio le caratteristiche del territorio."
+            },
+            "geohub_identifier": ""
+        },
+        "6339": {
+            "source_title": {
+                "it": "Sentieri natura"
+            },
+            "source_description": {
+                "it": "Tra i numerosi sentieri che si intrecciano sui monti del Parco, ce ne sono alcuni \u201cspeciali\u201d, particolarmente indicati per apprezzare al massimo il paesaggio, l'ambiente e la natura dell'area protetta. Il Parco ti invita a frequentarli per compiere passeggiate ed escursioni, alla portata di tutti, ricche di scoperte e gratificazione."
+            },
+            "geohub_identifier": "guided-trails"
+        },
+        "4888": {
+            "source_title": {
+                "it": "trekking"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "trekking-in-the-park"
+        }
+    }
+}
