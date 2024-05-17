@@ -287,6 +287,11 @@ class App extends Resource
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex(),
+            Toggle::make(__('Show splash screen'), 'splash_screen_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex(),
             Text::make(__('Google universal ID'), 'gu_id'),
             Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.')
         ];
