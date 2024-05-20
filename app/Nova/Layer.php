@@ -257,6 +257,8 @@ class Layer extends Resource
                 ->showPreview(),
             AttachMany::make('TaxonomyWhens')
                 ->showPreview(),
+            AttachMany::make('TaxonomyWheres')
+                ->showPreview(),
         ];
 
         $mediaTab =  [
