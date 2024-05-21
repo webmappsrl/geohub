@@ -701,12 +701,14 @@ class EcTrack extends Model
         }
         foreach ($result as $row) {
             $poi = EcPoi::find($row->id);
-            $geojson = $poi->getGeojson();
-            if (isset($geojson)) {
-                if ($poi->featureImage) {
-                    $geojson['properties']['image'] = $poi->featureImage->getJson();
+            if ($poi->author->id === $this->author->id) {
+                $geojson = $poi->getGeojson();
+                if (isset($geojson)) {
+                    if ($poi->featureImage) {
+                        $geojson['properties']['image'] = $poi->featureImage->getJson();
+                    }
+                    $features[] = $geojson;
                 }
-                $features[] = $geojson;
             }
         }
 
