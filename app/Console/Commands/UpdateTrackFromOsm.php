@@ -74,7 +74,7 @@ class UpdateTrackFromOsm extends Command
                     $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
                 } catch (Exception $e) {
                     $this->error('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
-                    $mailErrors[] = $this->formatErrorMessage($track, $e);
+                    $mailErrors[] = $this->formatErrorMessage($track, $e->getMessage());
                 }
 
                 //update the $track name to the $geojson_content name coming from OSM
@@ -130,7 +130,7 @@ class UpdateTrackFromOsm extends Command
         }
     }
 
-    private function formatErrorMessage(EcTrack $track, $errorMessage)
+    private function formatErrorMessage(EcTrack $track, $errorMessage = '')
     {
         return 'Track ' . $track->name . ' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->id . '") "osm:geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->osmid . '") ' . $errorMessage;
     }
