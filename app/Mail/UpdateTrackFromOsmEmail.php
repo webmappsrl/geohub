@@ -29,9 +29,9 @@ class UpdateTrackFromOsmEmail extends Mailable
      */
     public function build()
     {
-        $errorLogs =  $this->errorLogs;
         return $this->from('noreply@webmapp.it', "Tracks not imported")
             ->subject("Geohub - Tracks not imported")
-            ->view('mails.tracks.UpdateTrackFromOsmEmail');
+            ->view('mails.tracks.UpdateTrackFromOsmEmail')
+            ->with(['errorLogs' => $this->errorLogs]);;
     }
 }
