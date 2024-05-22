@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Models\EcTrack;
 use App\Http\Facades\OsmClient;
 use App\Jobs\UpdateEcTrack3DDemJob;
+use App\Mail\UpdateTrackFromOsmEmail;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UpdateTrackFromOsm extends Command
 {
@@ -54,6 +55,7 @@ class UpdateTrackFromOsm extends Command
         $userEmail = $this->argument('user_email');
         $user = User::where('email', $userEmail)->first();
         $tracks = EcTrack::where('user_id', $user->id)->get();
+        $mailErrors[] = [];
 
         $this->info('Updating tracks for user ' . $user->name . ' (' . $user->email . ')' . '...');
 
@@ -70,9 +72,9 @@ class UpdateTrackFromOsm extends Command
                     }
                     $geojson_geometry = json_encode($geojson_content['geometry']);
                     $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
-
                 } catch (Exception $e) {
                     $this->error('ERROR track ' . $track->name . ' (' . $track->osmid . ')' . $e);
+                    $mailErrors[] = $this->formatErrorMessage($track, $e);
                 }
 
                 //update the $track name to the $geojson_content name coming from OSM
@@ -123,6 +125,14 @@ class UpdateTrackFromOsm extends Command
             }
         }
         $this->info('Tracks for user ' . $user->name . ' (' . $user->email . ')' . ' updated!');
+        if (!empty($mailErrors)) {
+            Mail::to('giuseppebonfanti@webmapp.it')->send(new UpdateTrackFromOsmEmail($mailErrors));
+        }
+    }
+
+    private function formatErrorMessage(EcTrack $track, $errorMessage)
+    {
+        return 'Track ' . $track->name . ' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->id . '") "osm:geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->osmid . '") ' . $errorMessage;
     }
 
     // $s =json_decode(App\Http\Facades\OsmClient::getGeojson('relation/8370439'), true)
