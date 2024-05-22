@@ -19,7 +19,7 @@ class UpdateTrackFromOsm extends Command
      *
      * @var string
      */
-    protected $signature = 'geohub:update_track_from_osm {user_email} ';
+    protected $signature = 'geohub:update_track_from_osm {user_email} {emails?}';
 
     /**
      * The console command description.
@@ -125,14 +125,18 @@ class UpdateTrackFromOsm extends Command
             }
         }
         $this->info('Tracks for user ' . $user->name . ' (' . $user->email . ')' . ' updated!');
-        if (!empty($mailErrors)) {
-            Mail::to('giuseppebonfanti@webmapp.it')->send(new UpdateTrackFromOsmEmail($mailErrors));
+        $emails = $this->argument('emails');
+        if (!empty($emails) && !empty($mailErrors)) {
+            $emailList = explode(',', $emails);
+            foreach ($emailList as $email) {
+                Mail::to(trim($email))->send(new UpdateTrackFromOsmEmail($mailErrors));
+            }
         }
     }
 
     private function formatErrorMessage(EcTrack $track, $errorMessage = '')
     {
-        return 'Track ' . $track->name . ' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->id . '") "osm:geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->osmid . '") ' . $errorMessage;
+        return 'Track ' . $track->name . ' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->id . '") "osm:https://www.openstreetmap.org/relation/' . $track->osmid . '") ' . $errorMessage;
     }
 
     // $s =json_decode(App\Http\Facades\OsmClient::getGeojson('relation/8370439'), true)
