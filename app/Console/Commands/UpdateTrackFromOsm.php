@@ -55,7 +55,7 @@ class UpdateTrackFromOsm extends Command
         $userEmail = $this->argument('user_email');
         $user = User::where('email', $userEmail)->first();
         $tracks = EcTrack::where('user_id', $user->id)->get();
-        $mailErrors[] = [];
+        $mailErrors = [];
 
         $this->info('Updating tracks for user ' . $user->name . ' (' . $user->email . ')' . '...');
 

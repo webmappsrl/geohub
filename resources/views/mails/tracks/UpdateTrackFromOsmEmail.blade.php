@@ -11,7 +11,8 @@
     <h1>Error Logs</h1>
     <ul>
         @foreach ($errorLogs as $errorLog)
-        <li>{{ $errorLog }}</li>
+        <li>{{ is_array($errorLog) ? implode(', ', $errorLog) : $errorLog }}</li>
+
         @endforeach
     </ul>
 </body>
