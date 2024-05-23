@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class UgcMedia
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 class UgcMedia extends Model
 {
     use HasFactory, GeometryFeatureTrait;
+    private $beforeCount = 0;
 
     protected $fillable = [
         'user_id',
@@ -43,7 +45,30 @@ class UgcMedia extends Model
     protected static function boot()
     {
         parent::boot();
+        static::creating(function ($media) {
+            $app = App::where('app_id', $media->app_id)->first();
+            if ($app && $app->classification_show) {
+                $media->beforeCount = count($app->getRankedUsersNearPoisQuery($media->user_id));
+            }
+        });
+        static::created(function ($media) {
+            $app = App::where('app_id', $media->app_id)->first();
+            if ($app && $app->classification_show) {
+                $afterCount = count($app->getRankedUsersNearPoisQuery($media->user_id));
+                if ($afterCount > $media->beforeCount) {
+                    $user = User::find($media->user_id);
+                    if (!is_null($user)) {
+                        $position = $app->getRankedUserPositionNearPoisQuery($user->id);
+                        Mail::send('mails.gamification.rankingIncreased', ['user' => $user, 'position' => $position, 'app' =>  $app], function ($message) use ($user, $app) {
+                            $message->to($user->email);
+                            $message->subject($app->name . ': Your Ranking Has Increased');
+                        });
+                    }
+                }
+            }
+        });
         static::saved(function ($media) {
+
             if (!$media->preventHoquSave) {
                 try {
                     $hoquServiceProvider = app(HoquServiceProvider::class);
@@ -96,7 +121,7 @@ class UgcMedia extends Model
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
-    
+
     public function taxonomy_wheres(): BelongsToMany
     {
         return $this->belongsToMany(TaxonomyWhere::class);
@@ -116,11 +141,11 @@ class UgcMedia extends Model
         foreach ($array as $property => $value) {
             if (is_null($value) || in_array($property, $propertiesToClear))
                 unset($array[$property]);
-                
-                if ($property == 'relative_url') {
-                    if (Storage::disk('public')->exists($value))
+
+            if ($property == 'relative_url') {
+                if (Storage::disk('public')->exists($value))
                     $array['url'] = Storage::disk('public')->url($value);
-                    unset($array[$property]);
+                unset($array[$property]);
             }
         }
 

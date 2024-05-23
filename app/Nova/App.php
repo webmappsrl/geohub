@@ -1353,41 +1353,84 @@ class App extends Resource
             ]),
         ];
     }
-
     protected function ugc_media_classification_tab(): array
     {
         $html = 'No results yet! Run the classification action to see the results.';
-        if (!empty(json_decode($this->classification, true))) {
-            // Decode the JSON into an associative array
-            $data = json_decode($this->classification, true);
+        $classification = $this->getRankedUsersNearPois();
+        if (!empty($classification)) {
+            // Decode the JSON into un associative array
 
             // Sort users by the number of POIs
-            uasort($data, function ($a, $b) {
-                return count($b) - count($a); // Descending order
-            });
+
 
             // Start the HTML table
-            $html = '<table border="1">';
-            $html .= '<tr><th>User ID (Email)</th><th>Score</th></tr>';
-
-            foreach ($data as $userId => $pois) {
+            $html = <<<HTML
+                <table border="1" style="border-collapse: collapse; width: 100%;">
+                    <tr>
+                        <th style="padding: 8px; text-align: left;">User ID (Email)</th>
+                        <th style="padding: 8px; text-align: left;">Score</th>
+                    </tr>
+            HTML;
+            $rank = 0;
+            foreach ($classification as $userId => $pois) {
+                $rank++;
                 // Assuming getUserEmailById() is a function that retrieves the user's email by their ID
                 $userEmail = $this->getUserEmailById($userId); // You'll need to define this function
                 $count = count($pois);
-                $html .= "<tr>";
-                $html .= "<td>$userId ($userEmail)</td>"; // Display User ID and Email
-                $html .= "<td>$count</td>"; // Display POI:Media
-                $html .= "</tr>";
+
+                // Row for user info
+                $html .= <<<HTML
+                    <tr style="background-color:yellow">
+                        <td style="font-weight: bold; padding: 8px; text-align: left">{$rank}) {$userId} ({$userEmail})</td>
+                        <td style="padding: 8px; text-align: left">{$count}</td>
+                    </tr>
+                HTML;
+
+                // Rows for POI details
+                foreach ($pois as $index => $poi) {
+                    $name = $poi['ec_poi']['name']; // Assuming 'name' is the field for POI name
+                    $mediaIds = explode(',', $poi['media_ids']);
+                    $position = $index + 1;
+
+                    $html .= <<<HTML
+                    <tr>
+                        <td style="padding: 2px;">
+                            <div style="display: flex; flex-wrap: wrap; align-items: center;">
+                                <div style="margin-bottom: 8px; width: 100%;">{$position}) {$name}</div>
+                    HTML;
+
+                    foreach ($mediaIds as $mediaId) {
+                        $imageUrl = env('APP_URL') . '/storage/media/images/ugc/image_' . $mediaId . '.jpg'; // Assuming 'media_ids' is the ID for the image
+                        $UgcMediaUrl = env('APP_URL') . '/resources/ugc-medias/' . $mediaId;
+                        $html .= <<<HTML
+                                <div style="flex: 0 0 5%; text-align: center;">
+                                    <a href="{$UgcMediaUrl}" target="_blank">
+                                        <img src="{$imageUrl}" style="max-width: 32px; max-height: 32px; display: block; margin: 0 auto;" />
+                                    </a>
+                                </div>
+                        HTML;
+                    }
+
+                    $html .= <<<HTML
+                            </div>
+                        </td>
+                    </tr>
+                    HTML;
+                }
             }
 
             $html .= '</table>';
         }
         return [
-            Text::Make(__('Results'), 'classification', function () use ($html) {
+            Text::make(__('Top ten'), 'classification', function () use ($html) {
                 return $html;
             })->asHtml(),
         ];
     }
+
+
+
+
 
     /**
      * Get the cards available for the request.
@@ -1455,15 +1498,7 @@ class App extends Resource
             })->canRun(function ($request, $zone) {
                 return true;
             }),
-            (new GenerateUgcMediaRankingAction())->canSee(function ($request) {
-                // Nova models are being run two times for some reason, so we need to check if the model is already loaded
-                if (isset($this->id)) {
-                    return $request->user()->hasClassificationShow($this->id);
-                }
-                return true;
-            })->canRun(function ($request, $zone) {
-                return true;
-            }),
+
         ];
     }
 }

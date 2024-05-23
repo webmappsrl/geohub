@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmulateUserController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\RankingController;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,8 @@ Route::prefix('/emulatedUser')->name('emulatedUser.')->group(function () {
 Route::post('import/geojson', [ImportController::class, 'importGeojson'])->name('import');
 Route::post('import/confirm', [ImportController::class, 'saveImport'])->name('save-import');
 
-
+Route::get('/top-ten/{appId}', [RankingController::class, 'showTopTen'])->name('top-ten');
+Route::get('/user-ranking/{appId}/{userId}', [RankingController::class, 'showUserRanking'])->name('user-ranking');
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
     session()->put('locale', $locale);
