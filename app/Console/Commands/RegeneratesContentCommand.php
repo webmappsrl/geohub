@@ -65,7 +65,7 @@ class RegeneratesContentCommand extends Command
                             $hoquServiceProvider = app(HoquServiceProvider::class);
                             $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
                         } catch (\Exception $e) {
-                            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($track->id . ' EcTrack RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
                     }
                 }
@@ -87,7 +87,7 @@ class RegeneratesContentCommand extends Command
                             $hoquServiceProvider = app(HoquServiceProvider::class);
                             $hoquServiceProvider->store('enrich_ec_poi', ['id' => $poi->id]);
                         } catch (\Exception $e) {
-                            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($poi->id . ' EcPoi RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
                     }
                 }
@@ -109,7 +109,7 @@ class RegeneratesContentCommand extends Command
                             $hoquServiceProvider = app(HoquServiceProvider::class);
                             $hoquServiceProvider->store('enrich_ec_media', ['id' => $media->id]);
                         } catch (\Exception $e) {
-                            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($media->id . ' EcMedia RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
                     }
                 }

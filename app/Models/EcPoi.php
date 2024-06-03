@@ -64,7 +64,7 @@ class EcPoi extends Model
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($ecPoi->id . ' created EcPoi: An error occurred during a store operation: ' . $e->getMessage());
             }
         });
         static::updating(function ($ecPoi) {
@@ -74,7 +74,7 @@ class EcPoi extends Model
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error($ecPoi->id . ' updating EcPoi: An error occurred during a store operation: ' . $e->getMessage());
                 }
             } else {
                 $ecPoi->skip_update = false;

@@ -104,7 +104,7 @@ class TaxonomyWhere extends Model
         try {
             $this->hoquServiceProvider->store('update_geomixer_taxonomy_where', ['id' => $this->id]);
         } catch (\Exception $e) {
-            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            Log::error($this->id . ' save TaxonomyWhere: An error occurred during a store operation: ' . $e->getMessage());
         }
     }
 

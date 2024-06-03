@@ -111,7 +111,7 @@ class EcTrack extends Model
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
                 $ecTrack->updateDataChain($ecTrack);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($ecTrack->id . ' created Ectrack: An error occurred during a store operation: ' . $e->getMessage());
             }
         });
 
@@ -127,7 +127,7 @@ class EcTrack extends Model
                     $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                     $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
                 }
             } else {
                 $ecTrack->skip_update = false;

@@ -19,7 +19,7 @@ class RegenerateEcPoi extends Action
     public $showOnDetail = true;
     public $showOnTableRow = false;
 
-    public $name='GEOMIXER';
+    public $name = 'GEOMIXER';
 
     /**
      * Perform the action on the given models.
@@ -35,7 +35,7 @@ class RegenerateEcPoi extends Action
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_poi', ['id' => $model->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($model->id . ' RegenerateEcPoi An error occurred during a store operation: ' . $e->getMessage());
             }
         }
     }

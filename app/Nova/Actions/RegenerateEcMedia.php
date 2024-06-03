@@ -34,7 +34,7 @@ class RegenerateEcMedia extends Action
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_media', ['id' => $model->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($model->id . ' RegenerateEcMedia An error occurred during a store operation: ' . $e->getMessage());
             }
         }
     }

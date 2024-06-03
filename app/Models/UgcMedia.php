@@ -74,7 +74,7 @@ class UgcMedia extends Model
                     $hoquServiceProvider = app(HoquServiceProvider::class);
                     $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
                 } catch (\Exception $e) {
-                    Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error($media->id . ' saved UgcMedia: An error occurred during a store operation: ' . $e->getMessage());
                 }
             }
         });

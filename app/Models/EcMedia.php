@@ -45,7 +45,7 @@ class EcMedia extends Model
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_media', ['id' => $ecMedia->id]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($ecMedia->id . 'created  EcMedia: An error occurred during a store operation: ' . $e->getMessage());
             }
         });
 
@@ -60,7 +60,7 @@ class EcMedia extends Model
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('delete_ec_media_images', ['url' => $ecMedia->url, 'thumbnails' => $ecMedia->thumbnails]);
             } catch (\Exception $e) {
-                Log::error('An error occurred during a store operation: ' . $e->getMessage());
+                Log::error($ecMedia->id . 'deleting EcMedia: An error occurred during a store operation: ' . $e->getMessage());
             }
 
             /**
