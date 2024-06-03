@@ -2,32 +2,29 @@
 
 namespace App\Jobs;
 
+use App\Models\EcTrack;
+use App\Traits\HandlesData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Traits\HandlesData;
 use Illuminate\Support\Facades\Log;
 
-class UpdateEcTrackDemJob implements ShouldQueue
+class UpdateManualDataJob implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-    use HandlesData;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, HandlesData;
 
-    protected $ecTrack;
+    protected $track;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($ecTrack)
+    public function __construct(EcTrack $track)
     {
-        $this->ecTrack = $ecTrack;
+        $this->track = $track;
     }
 
     /**
@@ -38,10 +35,10 @@ class UpdateEcTrackDemJob implements ShouldQueue
     public function handle()
     {
         try {
-            $this->updateDemData($this->ecTrack);
-            Log::info($this->ecTrack->id . ' UpdateEcTrackDemJob: SUCCESS');
+            $this->updateManualData($this->track);
+            Log::info($this->track->id . ' UpdateManualDataJob: SUCCESS');
         } catch (\Exception $e) {
-            Log::error($this->ecTrack->id . 'UpdateEcTrackDemJob: FAILED: ' . $e->getMessage());
+            Log::error($this->track->id . 'UpdateManualDataJob: FAILED: ' . $e->getMessage());
         }
     }
 }

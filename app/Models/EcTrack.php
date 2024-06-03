@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdateCurrentDataJob;
+use App\Jobs\UpdateEcTrack3DDemJob;
+use App\Jobs\UpdateEcTrackDemJob;
+use App\Jobs\UpdateManualDataJob;
+use App\Jobs\UpdateTrackFromOsmJob;
 use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use App\Traits\HandlesData;
 use App\Traits\TrackElasticIndexTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +34,7 @@ class EcTrack extends Model
     use HasTranslations;
     use Favoriteable;
     use TrackElasticIndexTrait;
+    use HandlesData;
 
     protected $fillable = [
         'name',
@@ -50,7 +58,7 @@ class EcTrack extends Model
         'layers',
         'themes',
         'activities',
-        'searchable'
+        'searchable',
     ];
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];
 
@@ -101,6 +109,7 @@ class EcTrack extends Model
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
+                $ecTrack->updateDataChain($ecTrack);
             } catch (\Exception $e) {
                 Log::error('An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -123,6 +132,10 @@ class EcTrack extends Model
             } else {
                 $ecTrack->skip_update = false;
             }
+            $ecTrack->updateCurrentData($ecTrack);
+        });
+        static::updated(function (Ectrack $ecTrack) {
+            $ecTrack->updateDataChain($ecTrack);
         });
     }
 
@@ -199,7 +212,10 @@ class EcTrack extends Model
 
         return $geometry;
     }
-
+    public function updateManualDataField($field, $value)
+    {
+        $this->manual_data[$field] = $value;
+    }
     public function ecMedia(): BelongsToMany
     {
         return $this->belongsToMany(EcMedia::class);
@@ -1203,5 +1219,19 @@ class EcTrack extends Model
             }
         }
         return $layers;
+    }
+
+    public function updateDataChain(EcTrack $track)
+    {
+        $chain = [];
+
+        if ($track->osmid) {
+            $chain[] = new UpdateTrackFromOsmJob($track);
+        }
+        $chain[] = new UpdateEcTrackDemJob($track);
+        $chain[] = new UpdateManualDataJob($track);
+        $chain[] = new UpdateCurrentDataJob($track);
+        $chain[] = new UpdateEcTrack3DDemJob($track);
+        Bus::chain($chain)->dispatch();
     }
 }

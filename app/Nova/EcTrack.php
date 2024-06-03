@@ -11,6 +11,7 @@ use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Actions\ReverseEcTrackGeomtryAction;
 use App\Nova\Actions\UpdateEcTracks3DDEMAction;
 use App\Nova\Actions\UpdateEcTracksDEMAction;
+use App\Nova\Actions\EnrichDataFromDemOsm;
 use App\Nova\Actions\UploadTrackFile;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
@@ -281,15 +282,51 @@ class EcTrack extends Resource
                     NovaTabTranslatable::make([
                         Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
                     ]),
-                    Text::make('Distance', 'distance'),
-                    Text::make('Duration Forward', 'duration_forward'),
-                    Text::make('Duration Backward', 'duration_backward'),
-                    Text::make('Ascent', 'ascent'),
-                    Text::make('Descent', 'descent'),
-                    Text::make('Elevation (From)', 'ele_from'),
-                    Text::make('Elevation (To)', 'ele_to'),
-                    Text::make('Elevation (Min)', 'ele_min'),
-                    Text::make('Elevation (Max)', 'ele_max'),
+                    Text::make('Distance', 'distance')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'distance');
+                        })
+                        ->asHtml(),
+                    Text::make('Duration Forward', 'duration_forward')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'duration_forward');
+                        })
+                        ->asHtml(),
+                    Text::make('Duration Backward', 'duration_backward')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'duration_backward');
+                        })
+                        ->asHtml(),
+                    Text::make('Ascent', 'ascent')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ascent');
+                        })
+                        ->asHtml(),
+                    Text::make('Descent', 'descent')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'descent');
+                        })
+                        ->asHtml(),
+                    Text::make('Elevation (From)', 'ele_from')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_from');
+                        })
+                        ->asHtml(),
+                    Text::make('Elevation (To)', 'ele_to')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_to');
+                        })
+                        ->asHtml(),
+                    Text::make('Elevation (Min)', 'ele_min')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_min');
+                        })
+                        ->asHtml(),
+                    Text::make('Elevation (Max)', 'ele_max')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_max');
+                        })
+                        ->asHtml(),
                 ],
                 'Scale' => [
                     Text::make('Difficulty'),
@@ -640,12 +677,63 @@ class EcTrack extends Resource
             new UpdateEcTracks3DDEMAction(),
             new BulkEditThemesEcResourceAction(),
             new ReverseEcTrackGeomtryAction(),
+            new EnrichDataFromDemOsm(),
             (new DownloadExcelEcTrackAction())->allFields()->except('geometry')->withHeadings(),
             (new CreateTracksWithOSMIDAction())->standalone(),
             (new UploadTrackFile())->standalone(),
         ];
     }
+    protected function generateFieldTable($model, $currentValue, $field)
+    {
+        $demData = json_decode($model->dem_data, true);
+        $osmData = json_decode($model->osm_data, true);
+        $manualData = json_decode($model->manual_data, true);
+        $osmid = $model->osmid;
+        $demValue = $demData[$field] ?? null;
+        $osmValue = $osmData[$field] ?? null;
+        $manualValue = $manualData[$field] ?? null;
+        // Determine the indicator
+        $indicator = 'MANUAL';
+        if (is_null($currentValue)) {
+            $indicator = 'EMPTY';
+        } elseif ($currentValue == $manualValue) {
+            $indicator = 'MANUAL';
+        } elseif ($osmid != null && $currentValue == $osmValue) {
+            $indicator = 'OSM';
+        } elseif ($currentValue == $demValue) {
+            $indicator = 'DEM';
+        }
 
+        // Start table with compact styles and centered text
+        $table = '<table style="border-collapse: collapse; width: auto;min-width:400px; margin: 0 auto;">';
+        $table .= '<tr>';
+        // if ($demValue !== null) {
+        $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">DEM</th>';
+        //}
+        if ($osmid !== null) {
+            $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">OSM</th>';
+        }
+        $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">MANUAL</th>';
+        $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">CURRENT VALUE (' . $indicator . ')</th>';
+        $table .= '</tr>';
+
+        // Data row
+        $table .= '<tr>';
+        //   if ($demValue !== null) {
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $demValue . '</td>';
+        // }
+        if ($osmid !== null) {
+            $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $osmValue . '</td>';
+        }
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $manualValue . '</td>';
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $currentValue . '</td>';
+        $table .= '</tr>';
+
+        // End table
+        $table .= '</table>';
+
+        return $table;
+    }
 
     /**
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)

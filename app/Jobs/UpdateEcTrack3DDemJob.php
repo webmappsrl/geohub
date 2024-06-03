@@ -54,15 +54,16 @@ class UpdateEcTrack3DDemJob implements ShouldQueue
                 if (isset($responseData['geometry']) && !empty($responseData['geometry'])) {
                     $this->ecTrack->geometry = DB::select("SELECT ST_GeomFromGeoJSON('" . json_encode($responseData['geometry']) . "') As wkt")[0]->wkt;
                     $this->ecTrack->saveQuietly();
+                    Log::info($this->ecTrack->id . ' UpdateEcTrack3DDemJob: SUCCESS');
                 }
             } catch (\Exception $e) {
-                Log::error('An error occurred during 3D DEM operation: ' . $e->getMessage());
+                Log::error($this->ecTrack->id . 'UpdateEcTrack3DDemJob: FAILED: ' . $e->getMessage());
             }
         } else {
             // Request failed, handle the error here
             $errorCode = $response->status();
             $errorBody = $response->body();
-            Log::error("Error {$errorCode}: {$errorBody}");
+            Log::error($this->ecTrack->id . "UpdateEcTrack3DDemJob: FAILED: Error {$errorCode}: {$errorBody}");
         }
     }
 }
