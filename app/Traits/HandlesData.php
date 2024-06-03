@@ -163,7 +163,7 @@ trait HandlesData
             $track->manual_data = $manualData;
             $track->saveQuietly();
         } catch (\Exception $e) {
-            Log::error('An error occurred during a store operation: ' . $e->getMessage());
+            Log::error($track->id . ': HandlesData: An error occurred during a store operation: ' . $e->getMessage());
         }
     }
 
