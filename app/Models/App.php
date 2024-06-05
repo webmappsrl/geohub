@@ -77,6 +77,11 @@ class App extends Model
         return $this->hasMany(Layer::class);
     }
 
+    public function associatedLayers()
+    {
+        return $this->morphToMany(Layer::class, 'layerable', 'app_layer', 'layerable_id', 'layer_id');
+    }
+
     public function overlayLayers()
     {
         return $this->hasMany(OverlayLayer::class);

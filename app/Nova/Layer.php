@@ -80,6 +80,7 @@ class Layer extends Resource
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name')
             ]),
+            AttachMany::make('Associated apps', 'associatedApps',  \App\Nova\App::class),
             AttachMany::make('taxonomyActivities'),
             AttachMany::make('TaxonomyThemes'),
             AttachMany::make('TaxonomyTargets'),
@@ -157,6 +158,12 @@ class Layer extends Resource
                     Heading::make('Here are shown rules used to assign data to this layer'),
                     Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
                     Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+                    Text::make('associatedApps', function () {
+                        if ($this->associatedApps()->count() > 0) {
+                            return implode(',', $this->associatedApps()->pluck('name')->toArray());
+                        }
+                        return 'No associated apps';
+                    }),
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
@@ -187,6 +194,7 @@ class Layer extends Resource
                         }
                         return 'No Whens';
                     }),
+
                 ]
 
             ]))->withToolbar(),
@@ -249,6 +257,8 @@ class Layer extends Resource
             Heading::make('Use this interface to define rules to assign data to this layer'),
             Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
             Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+            AttachMany::make('associated apps', 'associatedApps',  \App\Nova\App::class)
+                ->showPreview(),
             AttachMany::make('taxonomyActivities')
                 ->showPreview(),
             AttachMany::make('TaxonomyThemes')

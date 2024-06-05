@@ -26,7 +26,7 @@ class Layer extends Model
         });
     }
 
-    public array $translatable = ['title', 'subtitle', 'description','track_type'];
+    public array $translatable = ['title', 'subtitle', 'description', 'track_type'];
 
     /**
      * The accessors to append to the model's array form.
@@ -39,6 +39,12 @@ class Layer extends Model
     {
         return $this->belongsTo(App::class);
     }
+
+    public function associatedApps()
+    {
+        return $this->morphedByMany(App::class, 'layerable', 'app_layer', 'layer_id', 'layerable_id');
+    }
+
     public function taxonomyWheres()
     {
         return $this->morphToMany(TaxonomyWhere::class, 'taxonomy_whereable');
@@ -95,7 +101,10 @@ class Layer extends Model
                 foreach ($this->$taxonomy as $term) {
 
                     $user_id = $this->getLayerUserID();
+                    $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
+                    $associated_app_track = $term->ecTracks()->whereIn('user_id', $associated_app_users)->orderBy('name')->get();
                     $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
+                    $ecTracks = $ecTracks->merge($associated_app_track);
                     if ($ecTracks->count() > 0) {
                         if ($collection) {
                             return $ecTracks;
@@ -221,19 +230,18 @@ class Layer extends Model
 
             // Find the next tracks
             $nextTrack = EcTrack::whereIn('id', $trackIds)
-            ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
-            ->get();
+                ->where('id', '<>', $track->id)
+                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
+                ->get();
 
             // Find the previous tracks
             $previousTrack = EcTrack::whereIn('id', $trackIds)
-            ->where('id', '<>', $track->id)
-            ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
-            ->get();
+                ->where('id', '<>', $track->id)
+                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
+                ->get();
 
             $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
             $edges[$track->id]['next'] = $nextTrack->pluck('id')->toArray();
-
         }
         return $edges;
     }
