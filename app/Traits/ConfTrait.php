@@ -383,8 +383,12 @@ trait ConfTrait
                 if (!empty($overlay['stroke_width'])) {
                     $array['strokeWidth'] = $overlay['stroke_width'];
                 }
-                if (!empty($overlay['feature_collection'])) {
-                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
+                if (!empty($overlay['geojson_url'])) {
+                    $array['url'] = $overlay['geojson_url'];
+                } else {
+                    if (!empty($overlay['feature_collection'])) {
+                        $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
+                    }
                 }
                 if (!empty($overlay['configuration'])) {
                     $configuration = json_decode($overlay['configuration'], true);

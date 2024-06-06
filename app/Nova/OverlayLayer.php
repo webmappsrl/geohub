@@ -65,6 +65,21 @@ class OverlayLayer extends Resource
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
                 ->hideFromIndex(),
+            Text::make('Geojson_url')->hideFromIndex()->rules('nullable', 'url')->displayUsing(function ($value) {
+                if ($value) {
+                    $output = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
+                } else {
+                    $output = '<span>N/A</span>';
+                }
+                return $output;
+            })->asHtml()
+                ->help('Please insert the correct Geojson URL')
+                ->hideWhenUpdating(function ($request) {
+                    return !is_null($this->feature_collection);
+                })
+                ->hideWhenCreating(function ($request) {
+                    return !is_null($this->feature_collection);
+                }),
             File::make('File', 'feature_collection')
                 ->disk('public')
                 ->path('geojson/' . $app_name)
@@ -73,7 +88,12 @@ class OverlayLayer extends Resource
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
-                ->hideWhenCreating(),
+                ->hideWhenUpdating(function ($request) {
+                    return !is_null($this->geojson_url);
+                })
+                ->hideWhenCreating(function ($request) {
+                    return !is_null($this->geojson_url);
+                })->help('If Geojson URL is provided, no need to upload a Geojson file'),
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
@@ -96,7 +116,7 @@ class OverlayLayer extends Resource
                 ->hideWhenCreating(),
             Text::make('Layers', function () {
                 if (count($this->layers) > 0) {
-                    return $this->layers->pluck('name')->implode("</br>");
+                    return $this->layers->pluck('name')->implode("</;>");
                 } else {
                     return 'No layers';
                 }
