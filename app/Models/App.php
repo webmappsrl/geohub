@@ -275,80 +275,83 @@ class App extends Model
 
         foreach ($themes as $theme) {
             $theme_id = $theme->id;
-
-            // Process 'where' taxonomy
-            $where_ids = DB::select("
-            SELECT DISTINCT taxonomy_where_id 
-            FROM taxonomy_whereables 
-            WHERE taxonomy_whereable_type LIKE '%EcPoi%' 
-            AND taxonomy_whereable_id IN (
-                SELECT taxonomy_themeable_id 
-                FROM taxonomy_themeables 
-                WHERE taxonomy_theme_id = ? 
-                AND taxonomy_themeable_type LIKE '%EcPoi%'
-            );
-        ", [$theme_id]);
-
-            $where_ids_implode = implode(',', collect($where_ids)->pluck('taxonomy_where_id')->toArray());
+            // NEW CODE
             $where_result = [];
-
-            if (!empty($where_ids_implode)) {
-                $where_db = DB::select("SELECT id, identifier, name, color, icon FROM taxonomy_wheres WHERE id IN ($where_ids_implode)");
+            $where_ids = DB::select("select distinct taxonomy_where_id from taxonomy_whereables where taxonomy_whereable_type LIKE '%EcPoi%' AND taxonomy_whereable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
+            if (!empty($where_ids)) {
+                $where_ids_implode = implode(',', collect($where_ids)->pluck('taxonomy_where_id')->toArray());
+                $where_db = DB::select("select id, identifier, name, color, icon from taxonomy_wheres where id in ($where_ids_implode)");
                 $where_array = json_decode(json_encode($where_db), true);
 
-                foreach ($where_array as $aval) {
-                    $new_array = [];
+                foreach ($where_array as $akey => $aval) {
+                    $new_array = array();
                     foreach ($aval as $key => $val) {
                         if ($key == 'name') {
                             $new_array[$key] = json_decode($val, true);
-                        } elseif ($key == 'identifier') {
+                        }
+                        if ($key == 'identifier') {
                             $new_array[$key] = "poi_type_" . $val;
-                        } elseif (!empty($val)) {
+                        }
+                        if (!empty($val) && $key != 'name' && $key != 'identifier') {
                             $new_array[$key] = $val;
                         }
                     }
-                    $where_result[] = $new_array;
+                    array_push($where_result, $new_array);
                 }
             }
 
-            // Process 'poi_type' taxonomy
-            $poi_type_ids = DB::select("
-            SELECT DISTINCT taxonomy_poi_type_id 
-            FROM taxonomy_poi_typeables 
-            WHERE taxonomy_poi_typeable_type LIKE '%EcPoi%' 
-            AND taxonomy_poi_typeable_id IN (
-                SELECT taxonomy_themeable_id 
-                FROM taxonomy_themeables 
-                WHERE taxonomy_theme_id = ? 
-                AND taxonomy_themeable_type LIKE '%EcPoi%'
-            );
-        ", [$theme_id]);
 
-            $poi_type_ids_implode = implode(',', collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
             $poi_result = [];
-
-            if (!empty($poi_type_ids_implode)) {
-                $poi_db = DB::select("SELECT id, identifier, name, color, icon FROM taxonomy_poi_types WHERE id IN ($poi_type_ids_implode)");
+            $poi_type_ids = DB::select("select distinct taxonomy_poi_type_id from taxonomy_poi_typeables where taxonomy_poi_typeable_type LIKE '%EcPoi%' AND taxonomy_poi_typeable_id in (select taxonomy_themeable_id from taxonomy_themeables where taxonomy_theme_id=$theme_id and taxonomy_themeable_type LIKE '%EcPoi%');");
+            if (!empty($poi_type_ids)) {
+                $poi_type_ids_implode = implode(',', collect($poi_type_ids)->pluck('taxonomy_poi_type_id')->toArray());
+                $poi_db = DB::select("select id, identifier, name, color, icon from taxonomy_poi_types where id in ($poi_type_ids_implode)");
                 $poi_array = json_decode(json_encode($poi_db), true);
 
-                foreach ($poi_array as $aval) {
-                    $new_array = [];
+                foreach ($poi_array as $akey => $aval) {
+                    $new_array = array();
                     foreach ($aval as $key => $val) {
                         if ($key == 'name') {
                             $new_array[$key] = json_decode($val, true);
-                        } elseif ($key == 'identifier') {
+                        }
+                        if ($key == 'identifier') {
                             $new_array[$key] = "poi_type_" . $val;
-                        } elseif (!empty($val)) {
+                        }
+                        if (!empty($val) && $key != 'name' && $key != 'identifier') {
                             $new_array[$key] = $val;
                         }
                     }
-                    $poi_result[] = $new_array;
+                    array_push($poi_result, $new_array);
                 }
             }
-
-            $res['where'] = $this->unique_multidim_array(array_merge($res['where'], $where_result), 'id');
-            $res['poi_type'] = $this->unique_multidim_array(array_merge($res['poi_type'], $poi_result), 'id');
+            $res = [
+                'where' => $this->unique_multidim_array(array_merge($res['where'], $where_result), 'id'),
+                'poi_type' => $this->unique_multidim_array(array_merge($res['poi_type'], $poi_result), 'id'),
+            ];
         }
+
+        if (!empty($poi_type_ids_implode)) {
+            $poi_db = DB::select("SELECT id, identifier, name, color, icon FROM taxonomy_poi_types WHERE id IN ($poi_type_ids_implode)");
+            $poi_array = json_decode(json_encode($poi_db), true);
+
+            foreach ($poi_array as $aval) {
+                $new_array = [];
+                foreach ($aval as $key => $val) {
+                    if ($key == 'name') {
+                        $new_array[$key] = json_decode($val, true);
+                    } elseif ($key == 'identifier') {
+                        $new_array[$key] = "poi_type_" . $val;
+                    } elseif (!empty($val)) {
+                        $new_array[$key] = $val;
+                    }
+                }
+                $poi_result[] = $new_array;
+            }
+        }
+
+        $res['where'] = $this->unique_multidim_array(array_merge($res['where'], $where_result), 'id');
+        $res['poi_type'] = $this->unique_multidim_array(array_merge($res['poi_type'], $poi_result), 'id');
+
 
         return $res;
     }
