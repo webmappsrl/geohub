@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use NovaAttachMany\AttachMany;
@@ -65,22 +66,19 @@ class OverlayLayer extends Resource
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
                 ->hideFromIndex(),
-            Text::make('Geojson_url')->hideFromIndex()->rules('nullable', 'url')->displayUsing(function ($value) {
-                if ($value) {
-                    $output = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
-                } else {
-                    $output = '<span>N/A</span>';
-                }
-                return $output;
-            })->asHtml()
-                ->help('Please insert the correct Geojson URL')
-                ->hideWhenUpdating(function ($request) {
-                    return !is_null($this->feature_collection);
+            Text::make('Geojson URL', 'feature_collection')
+                ->hideWhenCreating(function () {
+                    return $this->featureCollectionFileExist();
                 })
-                ->hideWhenCreating(function ($request) {
-                    return !is_null($this->feature_collection);
-                }),
-            File::make('File', 'feature_collection')
+                ->hideWhenUpdating(function () {
+                    return $this->featureCollectionFileExist();
+                })
+                ->hideFromDetail(function () {
+                    return $this->featureCollectionFileExist();
+                })
+                ->rules('nullable', 'url')
+                ->help('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.'),
+            File::make('Geojson File', 'feature_collection')
                 ->disk('public')
                 ->path('geojson/' . $app_name)
                 ->acceptedTypes(['.json', '.geojson'])
@@ -88,12 +86,17 @@ class OverlayLayer extends Resource
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
-                ->hideWhenUpdating(function ($request) {
-                    return !is_null($this->geojson_url);
+                ->hideWhenCreating(function () {
+                    // if the feature_collection is an external url, hide the file field
+                    return $this->getFeatureCollectionType() == 'external';
                 })
-                ->hideWhenCreating(function ($request) {
-                    return !is_null($this->geojson_url);
-                })->help('If Geojson URL is provided, no need to upload a Geojson file'),
+                ->hideWhenUpdating(function () {
+                    return $this->getFeatureCollectionType() == 'external';
+                })
+                ->hideFromDetail(function () {
+                    return $this->getFeatureCollectionType() == 'external';;
+                })
+                ->help('Upload a Geojson file. Alternatively you can delete the existent Geojson file, click on "Update & Continue Editing" below, and insert an external Geojson URL. NOTE: If both fields are filled, the GeoJson File will be used.'),
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
@@ -121,7 +124,7 @@ class OverlayLayer extends Resource
                     return 'No layers';
                 }
             })->onlyOnDetail()->hideWhenCreating()->asHtml(),
-            Code::Make('configuration')->language('json')->rules('json')->default(null)
+            Code::Make('configuration')->language('json')->rules('json', 'nullable')->default(null)
         ];
     }
 
@@ -181,5 +184,38 @@ class OverlayLayer extends Resource
         } catch (\Throwable $th) {
             return $query->where('id', $resourceId);
         }
+    }
+
+
+    /**
+     * Check if the feature_collection field is an external url or a local file path
+     * 
+     * @return string
+     */
+    public function getFeatureCollectionType(): string
+    {
+        $result = '';
+        if (isset($this->feature_collection)) {
+            if (str_starts_with($this->feature_collection, 'http') && str_starts_with($this->feature_collection, 'https')) {
+                $result = 'external';
+            } else {
+                $result = 'local';
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Check if the feature_collection file exist at the given path
+     * 
+     * @return bool
+     */
+    public function featureCollectionFileExist(): bool
+    {
+        $result = false;
+        if ($this->getFeatureCollectionType() == 'local') {
+            $result = Storage::disk('public')->exists($this->feature_collection);
+        }
+        return $result;
     }
 }
