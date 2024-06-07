@@ -19,6 +19,7 @@ class PBFGenerateTilesAndDispatch
         $this->app_id = $app_id;
         $this->author_id = $author_id;
         $this->format = $format;
+        $this->createAndPopulateTemporaryTable();
     }
     private function createTemporaryTable()
     {
@@ -99,8 +100,6 @@ class PBFGenerateTilesAndDispatch
                         // Libera la memoria
                         $trackArrayBatch = [];
                         $batchCounter = 0;
-                        // Reset di Garbage Collection per evitare memory leak
-                        gc_collect_cycles();
                     }
                 } catch (\Throwable $th) {
                     Log::error($th->getMessage());
@@ -123,8 +122,6 @@ class PBFGenerateTilesAndDispatch
 
                 // Libera la memoria
                 $trackArrayBatch = [];
-                // Reset di Garbage Collection per evitare memory leak
-                gc_collect_cycles();
             }
         }
         Log::info('Fine populateTemporaryTable');
@@ -142,9 +139,6 @@ class PBFGenerateTilesAndDispatch
     }
     public function generateTilesAndDispatch($bbox, $min_zoom, $max_zoom)
     {
-        DB::beginTransaction(); // Inizia la transazione qui per mantenere la stessa sessione
-        $this->createAndPopulateTemporaryTable();
-
         try {
             // Iterazione attraverso i livelli di zoom
             for ($zoom = $min_zoom; $zoom <= $max_zoom; $zoom++) {
@@ -155,21 +149,22 @@ class PBFGenerateTilesAndDispatch
                     Log::info($zoom . ' ' . ++$c . '/' . count($tiles));
                 }
             }
-            DB::commit(); // Conferma la transazione dopo che i job sono stati creati
-
+            // Dopo che tutte le tiles sono state generate e le job sono state dispatchate
+            $this->dropTemporaryTable();
         } catch (Exception $e) {
-            DB::rollBack(); // Ripristina la transazione in caso di errore
-            Log::error('ERROR ' . $e->getMessage());
-            throw $e;
-            $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
+            throw new Exception('ERROR ' . $e->getMessage());
+            $this->dropTemporaryTable();
         }
     }
     private function createAndPopulateTemporaryTable()
     {
+        DB::beginTransaction();
         try {
             $this->createTemporaryTable();
             $this->populateTemporaryTable();
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
