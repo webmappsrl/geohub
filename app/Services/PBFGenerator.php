@@ -36,7 +36,17 @@ class PBFGenerator
 
         $env = $this->tileToEnvelope($tile);
         $sql = $this->envelopeToSQL($env);
-        $pbf = DB::select($sql);
+        DB::beginTransaction();
+        try {
+            $this->createTemporaryTable();
+            $this->populateTemporaryTable();
+            $pbf = DB::select($sql);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
             $storage_name = config('geohub.s3_pbf_storage_name');
@@ -100,10 +110,10 @@ class PBFGenerator
     private function envelopeToSQL($env)
     {
         $tbl = array(
-            'table'       => 'ec_tracks',
+            'table'       => 'temp_tracks',
             'srid'        => '4326',
             'geomColumn'  => 'geometry',
-            'attrColumns' => 't.id, t.name, t.ref, t.cai_scale'
+            'attrColumns' => 't.id, t.name, t.ref, t.cai_scale, t.layers, t.themes, t.activities, t.searchable, t.stroke_color'
         );
 
         $tbl['layers'] = $this->getAppLayersIDs($this->app_id);
@@ -116,42 +126,107 @@ class PBFGenerator
             ),
             mvtgeom AS (
                 SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom,
-                t.color as stroke_color,
-                t.layers #> '{" . $this->app_id . "}' AS layers,
-                t.themes #> '{" . $this->app_id . "}' AS themes,
-                t.activities #> '{" . $this->app_id . "}' AS activities,
-                t.searchable #> '{" . $this->app_id . "}' AS searchable,
                 %s
                 FROM
-                    ec_tracks t,
+                    temp_tracks t,
                 bounds
                 WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.%s), 4326), ST_Transform(bounds.geom, %s))
-                AND t.layers IS NOT NULL
-                AND t.user_id = " . $this->author_id . "
                 AND EXISTS (
                     SELECT 1
-                    FROM jsonb_array_elements_text((t.layers::jsonb) #> '{" . $this->app_id . "}') AS elem
+                    FROM jsonb_array_elements_text((t.layers::jsonb)) AS elem
                     WHERE elem::integer = ANY(ARRAY[%s]::integer[])
                 )
             ) 
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
         ";
 
-        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid'],$tbl['layers']);
-
+        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid'], $tbl['layers']);
     }
 
     private function getAppLayersIDs($app_id)
     {
-        $app = App::where('id', $app_id)->first();
+        $app = App::with('layers')->find($app_id);
         if (!$app) {
             return [];
         }
         $layers = $app->layers;
-        $layers = $layers->map(function ($layer) {
-            return $layer->id;
-        });
-        $ids = $layers->toArray();
-        return implode(',',$ids);
+        $layer_ids = $layers->pluck('id')->toArray();
+        return implode(',', $layer_ids);
+    }
+
+    private function createTemporaryTable()
+    {
+        DB::statement("DROP TABLE IF EXISTS temp_tracks");
+        DB::statement("
+            CREATE TEMPORARY TABLE temp_tracks (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255),
+                ref VARCHAR(255),
+                cai_scale VARCHAR(255),
+                geometry GEOMETRY,
+                stroke_color VARCHAR(255),
+                layers JSON,
+                themes JSON,
+                activities JSON,
+                searchable JSON
+            )
+        ");
+    }
+
+    private function populateTemporaryTable()
+    {
+        $app = App::with('layers')->find($this->app_id);
+        foreach ($app->layers as $layer) {
+            $tracks = $layer->getPbfTracks(); // Ottieni tutte le tracce del layer
+            foreach ($tracks as $track) {
+                // Converte le proprietà in un array
+                $trackArray = $track->toArray();
+                $layers = $trackArray['layers'][$this->app_id] ?? [];
+
+                if (!in_array($layer->id, $layers)) {
+                    $layers[] = $layer->id;
+                }
+                $themes = $this->extractFirstValue($track->themes);
+                $activities = $this->extractFirstValue($track->activities);
+                $searchable = $this->extractFirstValue($track->searchable);
+
+                $trackArray = [
+                    'id' => $track->id,
+                    'name' => $track->name,
+                    'ref' => $track->ref,
+                    'cai_scale' => $track->cai_scale,
+                    'geometry' => $track->geometry,
+                    'stroke_color' => $track->color,
+                    'layers' => json_encode($layers),
+                    'themes' => json_encode($themes),
+                    'activities' => json_encode($activities),
+                    'searchable' => json_encode($searchable),
+                ];
+
+                // Utilizza upsert per inserire o aggiornare il record
+                DB::table('temp_tracks')->upsert($trackArray, ['id'], [
+                    'name',
+                    'ref',
+                    'cai_scale',
+                    'geometry',
+                    'stroke_color',
+                    'layers',
+                    'themes',
+                    'activities',
+                    'searchable'
+                ]);
+            }
+        }
+    }
+
+    private function extractFirstValue($array)
+    {
+        if (!is_array($array)) {
+            return [];
+        }
+        foreach ($array as $value) {
+            return $value; // Ritorna il primo valore trovato
+        }
+        return [];
     }
 }

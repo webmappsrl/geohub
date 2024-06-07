@@ -120,6 +120,36 @@ class Layer extends Model
         return $tracks;
     }
 
+    public function getPbfTracks()
+    {
+        $tracks = collect();
+        $taxonomies = ['Themes', 'Activities', 'Wheres'];
+
+        foreach ($taxonomies as $taxonomy) {
+            $taxonomy = 'taxonomy' . $taxonomy;
+
+            if ($this->$taxonomy->count() > 0) {
+                foreach ($this->$taxonomy as $term) {
+                    $user_id = $this->getLayerUserID();
+                    $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
+
+                    // Ottieni le tracce associate
+                    $associated_app_track = $term->ecTracks()->whereIn('user_id', $associated_app_users)->orderBy('name')->get();
+                    $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
+
+                    // Unisci le tracce
+                    $ecTracks = $ecTracks->merge($associated_app_track);
+
+                    if ($ecTracks->count() > 0) {
+                        $tracks = $tracks->merge($ecTracks); // Accumula le tracce trovate
+                    }
+                }
+            }
+        }
+
+        return $tracks->unique('id'); // Restituisci tracce uniche basate sull'ID
+    }
+
     public function getLayerUserID()
     {
         return DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;

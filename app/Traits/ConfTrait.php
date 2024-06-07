@@ -5,11 +5,12 @@ namespace App\Traits;
 use App\Enums\AppTiles;
 use App\Models\App;
 use App\Models\EcMedia;
+use App\Models\EcTrack;
 use App\Models\OverlayLayer;
-use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Exception;
 
 trait ConfTrait
 {
@@ -165,6 +166,68 @@ trait ConfTrait
             $data['LANGUAGES']['available'] = json_decode($this->available_languages, true);
         }
         return $data;
+    }
+    public function get_unique_taxonomies($taxonomy_relation)
+    {
+        $all_taxonomies = collect();
+
+        // Tassonomie dai layer
+        $all_taxonomies = $this->collect_taxonomies_from_layers($all_taxonomies, $taxonomy_relation);
+
+        // Tassonomie dalle tracce
+        $all_taxonomies = $this->collect_taxonomies_from_tracks($all_taxonomies, $taxonomy_relation);
+
+        $unique_taxonomies = $all_taxonomies->unique('id')->values()->all();
+
+        return $unique_taxonomies;
+    }
+
+    private function collect_taxonomies_from_layers(Collection $all_taxonomies, $taxonomy_relation)
+    {
+        foreach ($this->layers as $layer) {
+            if (!method_exists($layer, $taxonomy_relation)) {
+                throw new Exception("The taxonomy relation {$taxonomy_relation} does not exist on the Layer model.");
+            }
+
+            $taxonomies = $layer->$taxonomy_relation->map(function ($taxonomy) {
+                return $this->filter_taxonomy($taxonomy);
+            });
+
+            $all_taxonomies = $all_taxonomies->merge($taxonomies);
+        }
+
+        return $all_taxonomies;
+    }
+
+    private function collect_taxonomies_from_tracks(Collection $all_taxonomies, $taxonomy_relation)
+    {
+        $ec_tracks = EcTrack::where('user_id', $this->user_id)->get();
+
+        foreach ($ec_tracks as $track) {
+            if (!method_exists($track, $taxonomy_relation)) {
+                throw new Exception("The taxonomy relation {$taxonomy_relation} does not exist on the EcTrack model.");
+            }
+
+            $track_taxonomies = $track->$taxonomy_relation->map(function ($taxonomy) {
+                return $this->filter_taxonomy($taxonomy);
+            });
+
+            $all_taxonomies = $all_taxonomies->merge($track_taxonomies);
+        }
+
+        return $all_taxonomies;
+    }
+
+    private function filter_taxonomy($taxonomy)
+    {
+        return array_filter([
+            'id' => $taxonomy->id,
+            'identifier' => $taxonomy->identifier,
+            'name' => $taxonomy->getTranslations('name'),
+            'color' => $taxonomy->color ?? null,
+        ], function ($value) {
+            return !is_null($value);
+        });
     }
 
     /**
@@ -424,21 +487,7 @@ trait ConfTrait
         //  Activity Filter
         if ($this->filter_activity) {
             $app_user_id = $this->user_id;
-            $options = [];
-
-            $activities = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color from taxonomy_activityables as txa inner join ec_tracks as t on t.id=txa.taxonomy_activityable_id inner join taxonomy_activities as a on a.id=taxonomy_activity_id where txa.taxonomy_activityable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
-
-            foreach ($activities as $activity) {
-                $a = array(
-                    'identifier' => $activity->identifier,
-                    'name' => json_decode($activity->name, true),
-                    'id' => $activity->id,
-                );
-                if ($activity->color) {
-                    $a['color'] = $activity->color;
-                }
-                array_push($options, $a);
-            }
+            $options = $this->get_unique_taxonomies('taxonomyActivities');
 
             $data['MAP']['filters']['activities'] = [
                 'type' => 'select',
@@ -450,24 +499,7 @@ trait ConfTrait
         //  Theme Filter
         if ($this->filter_theme) {
             $app_user_id = $this->user_id;
-            $options = [];
-
-            $themes = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_themeables as txa inner join ec_tracks as t on t.id=txa.taxonomy_themeable_id inner join taxonomy_themes as a on a.id=taxonomy_theme_id where txa.taxonomy_themeable_type='App\Models\EcTrack' and t.user_id=$app_user_id ORDER BY a.name ASC;");
-
-            foreach ($themes as $theme) {
-                $a = array(
-                    'identifier' => $theme->identifier,
-                    'name' => json_decode($theme->name, true),
-                    'id' => $theme->id,
-                );
-                if ($theme->color) {
-                    $a['color'] = $theme->color;
-                }
-                if ($theme->icon) {
-                    $a['icon'] = $theme->icon;
-                }
-                array_push($options, $a);
-            }
+            $options = $this->get_unique_taxonomies('taxonomyThemes');
 
             $data['MAP']['filters']['themes'] = [
                 'type' => 'select',
