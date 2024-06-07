@@ -37,7 +37,16 @@ class PBFGenerator
 
         $env = $this->tileToEnvelope($tile);
         $sql = $this->envelopeToSQL($env, $z);
-        $pbf = DB::select($sql);
+        DB::beginTransaction();
+        try {
+            $this->createTemporaryTable();
+            $this->populateTemporaryTable();
+            $pbf = DB::select($sql);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
@@ -159,5 +168,124 @@ class PBFGenerator
             $layer_ids = $layers->pluck('id')->toArray();
             return implode(',', $layer_ids);
         });
+    }
+
+    private function createTemporaryTable()
+    {
+        DB::statement("DROP TABLE IF EXISTS temp_tracks");
+        DB::statement("
+            CREATE TEMPORARY TABLE temp_tracks (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255),
+                ref VARCHAR(255),
+                cai_scale VARCHAR(255),
+                geometry GEOMETRY,
+                stroke_color VARCHAR(255),
+                layers JSON,
+                themes JSON,
+                activities JSON,
+                searchable JSON
+            )
+        ");
+    }
+
+    private function populateTemporaryTable()
+    {
+        ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
+        Log::info('Inizio populateTemporaryTable');
+        $app = App::with('layers')->find($this->app_id);
+        $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
+
+        foreach ($app->layers as $layer) {
+            Log::info("Processing layer: {$layer->id}");
+            $tracks = $layer->getPbfTracks();
+            Log::info("Number of tracks: " . $tracks->count());
+
+            $trackArrayBatch = [];
+            $batchCounter = 0;
+
+            foreach ($tracks as $track) {
+                try {
+                    $trackArray = $track->toArray();
+                    $layers = $trackArray['layers'][$this->app_id] ?? [];
+
+                    if (!in_array($layer->id, $layers)) {
+                        $layers[] = $layer->id;
+                    }
+                    $themes = $this->extractFirstValue($track->themes);
+                    $activities = $this->extractFirstValue($track->activities);
+                    $searchable = $this->extractFirstValue($track->searchable);
+
+                    $trackArrayBatch[] = [
+                        'id' => $track->id,
+                        'name' => $track->name,
+                        'ref' => $track->ref,
+                        'cai_scale' => $track->cai_scale,
+                        'geometry' => $track->geometry,
+                        'stroke_color' => $track->color,
+                        'layers' => json_encode($layers),
+                        'themes' => json_encode($themes),
+                        'activities' => json_encode($activities),
+                        'searchable' => json_encode($searchable),
+                    ];
+
+                    $batchCounter++;
+
+                    // Se il batch ha raggiunto la dimensione desiderata, inserisci i dati nel database
+                    if ($batchCounter >= $batchSize) {
+                        Log::info("Inserting batch into database");
+                        DB::table('temp_tracks')->upsert($trackArrayBatch, ['id'], [
+                            'name',
+                            'ref',
+                            'cai_scale',
+                            'geometry',
+                            'stroke_color',
+                            'layers',
+                            'themes',
+                            'activities',
+                            'searchable'
+                        ]);
+
+                        // Libera la memoria
+                        $trackArrayBatch = [];
+                        $batchCounter = 0;
+                        gc_collect_cycles();
+                    }
+                } catch (\Throwable $th) {
+                    Log::error($th->getMessage());
+                }
+            }
+
+            // Inserisci eventuali rimanenze nel batch
+            if ($batchCounter > 0) {
+                DB::table('temp_tracks')->upsert($trackArrayBatch, ['id'], [
+                    'name',
+                    'ref',
+                    'cai_scale',
+                    'geometry',
+                    'stroke_color',
+                    'layers',
+                    'themes',
+                    'activities',
+                    'searchable'
+                ]);
+
+                // Libera la memoria
+                $trackArrayBatch = [];
+                gc_collect_cycles();
+            }
+        }
+        Log::info('Fine populateTemporaryTable');
+    }
+
+    private function extractFirstValue($array)
+    {
+        if (!is_array($array)) {
+            return [];
+        }
+        foreach ($array as $value) {
+            return $value; // Ritorna il primo valore trovato
+        }
+        return [];
     }
 }
