@@ -126,29 +126,39 @@ class Layer extends Model
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
 
         foreach ($taxonomies as $taxonomy) {
-            $taxonomy = 'taxonomy' . $taxonomy;
+            $taxonomyField = 'taxonomy' . $taxonomy;
 
-            if ($this->$taxonomy->count() > 0) {
-                foreach ($this->$taxonomy as $term) {
+            if ($this->$taxonomyField->count() > 0) {
+                foreach ($this->$taxonomyField as $term) {
                     $user_id = $this->getLayerUserID();
                     $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
 
-                    // Ottieni le tracce associate
-                    $associated_app_track = $term->ecTracks()->whereIn('user_id', $associated_app_users)->orderBy('name')->get();
-                    $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
-
-                    // Unisci le tracce
-                    $ecTracks = $ecTracks->merge($associated_app_track);
-
-                    if ($ecTracks->count() > 0) {
-                        $tracks = $tracks->merge($ecTracks); // Accumula le tracce trovate
+                    // Ottieni le tracce associate in lotti per ridurre il carico di memoria
+                    if (!empty($associated_app_users)) {
+                        $term->ecTracks()->whereIn('user_id', $associated_app_users)
+                            ->orderBy('name')
+                            ->chunk(1000, function ($associated_app_tracks) use ($tracks) {
+                                foreach ($associated_app_tracks as $track) {
+                                    $tracks->push($track);
+                                }
+                            });
                     }
+
+                    $term->ecTracks()->where('user_id', $user_id)
+                        ->orderBy('name')
+                        ->chunk(1000, function ($ecTracks) use ($tracks) {
+                            foreach ($ecTracks as $track) {
+                                $tracks->push($track);
+                            }
+                        });
                 }
             }
         }
 
         return $tracks->unique('id'); // Restituisci tracce uniche basate sull'ID
     }
+
+
 
     public function getLayerUserID()
     {

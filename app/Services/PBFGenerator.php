@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Models\App;
-use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class PBFGenerator
 {
@@ -35,17 +36,8 @@ class PBFGenerator
         }
 
         $env = $this->tileToEnvelope($tile);
-        $sql = $this->envelopeToSQL($env);
-        DB::beginTransaction();
-        try {
-            $this->createTemporaryTable();
-            $this->populateTemporaryTable();
-            $pbf = DB::select($sql);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $sql = $this->envelopeToSQL($env, $z);
+        $pbf = DB::select($sql);
 
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
         if (!empty($pbfContent)) {
@@ -105,9 +97,16 @@ class PBFGenerator
         $sql_tmpl = 'ST_Segmentize(ST_MakeEnvelope(%f, %f, %f, %f, 3857), %f)';
         return sprintf($sql_tmpl, $env['xmin'], $env['ymin'], $env['xmax'], $env['ymax'], $env['segSize']);
     }
-
+    // Funzione per calcolare il fattore di semplificazione in base al livello di zoom
+    private function getSimplificationFactor($zoom)
+    {
+        // Più basso è lo zoom, maggiore è il fattore di semplificazione
+        // Questo esempio usa un fattore di semplificazione inversamente proporzionale al livello di zoom
+        // Puoi regolare la funzione in base alle tue esigenze specifiche
+        return 0.1 / ($zoom + 1); // Fattore di semplificazione inversamente proporzionale al livello di zoom
+    }
     // Generate a SQL query to pull a tile worth of MVT data
-    private function envelopeToSQL($env)
+    private function envelopeToSQL($env, $zoom)
     {
         $tbl = array(
             'table'       => 'temp_tracks',
@@ -118,115 +117,47 @@ class PBFGenerator
 
         $tbl['layers'] = $this->getAppLayersIDs($this->app_id);
         $tbl['env'] = $this->envelopeToBoundsSQL($env);
+        // Calcola il fattore di semplificazione in base al livello di zoom
+        $simplificationFactor = $this->getSimplificationFactor($zoom);
 
-        $sql_tmpl = "
-            WITH 
-            bounds AS (
-                SELECT %s AS geom, %s::box2d AS b2d
-            ),
-            mvtgeom AS (
-                SELECT ST_AsMVTGeom(ST_Transform(ST_Force2D(t.%s), 'EPSG:3857'), bounds.b2d) AS geom,
-                %s
-                FROM
-                    temp_tracks t,
-                bounds
-                WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.%s), 4326), ST_Transform(bounds.geom, %s))
-                AND EXISTS (
-                    SELECT 1
-                    FROM jsonb_array_elements_text((t.layers::jsonb)) AS elem
-                    WHERE elem::integer = ANY(ARRAY[%s]::integer[])
-                )
-            ) 
-            SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
-        ";
+        // Determina se applicare la semplificazione della geometria
+        $geomColumnTransformed = ($zoom < 10) ? "ST_Simplify(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857'), $simplificationFactor)" : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857')";
 
-        return sprintf($sql_tmpl, $tbl['env'], $tbl['env'], $tbl['geomColumn'], $tbl['attrColumns'], $tbl['geomColumn'], $tbl['srid'], $tbl['layers']);
+
+        $sql_tmpl = <<<SQL
+        WITH 
+        bounds AS (
+            SELECT {$tbl['env']} AS geom, {$tbl['env']}::box2d AS b2d
+        ),
+        mvtgeom AS (
+            SELECT ST_AsMVTGeom($geomColumnTransformed, bounds.b2d) AS geom,
+            {$tbl['attrColumns']}
+            FROM
+                temp_tracks t,
+            bounds
+            WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.{$tbl['geomColumn']}), 4326), ST_Transform(bounds.geom, {$tbl['srid']}))
+            AND EXISTS (
+                SELECT 1
+                FROM jsonb_array_elements_text((t.layers::jsonb)) AS elem
+                WHERE elem::integer = ANY(ARRAY[{$tbl['layers']}]::integer[])
+            )
+        ) 
+        SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
+        SQL;
+
+        return $sql_tmpl;
     }
 
     private function getAppLayersIDs($app_id)
     {
-        $app = App::with('layers')->find($app_id);
-        if (!$app) {
-            return [];
-        }
-        $layers = $app->layers;
-        $layer_ids = $layers->pluck('id')->toArray();
-        return implode(',', $layer_ids);
-    }
-
-    private function createTemporaryTable()
-    {
-        DB::statement("DROP TABLE IF EXISTS temp_tracks");
-        DB::statement("
-            CREATE TEMPORARY TABLE temp_tracks (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255),
-                ref VARCHAR(255),
-                cai_scale VARCHAR(255),
-                geometry GEOMETRY,
-                stroke_color VARCHAR(255),
-                layers JSON,
-                themes JSON,
-                activities JSON,
-                searchable JSON
-            )
-        ");
-    }
-
-    private function populateTemporaryTable()
-    {
-        $app = App::with('layers')->find($this->app_id);
-        foreach ($app->layers as $layer) {
-            $tracks = $layer->getPbfTracks(); // Ottieni tutte le tracce del layer
-            foreach ($tracks as $track) {
-                // Converte le proprietà in un array
-                $trackArray = $track->toArray();
-                $layers = $trackArray['layers'][$this->app_id] ?? [];
-
-                if (!in_array($layer->id, $layers)) {
-                    $layers[] = $layer->id;
-                }
-                $themes = $this->extractFirstValue($track->themes);
-                $activities = $this->extractFirstValue($track->activities);
-                $searchable = $this->extractFirstValue($track->searchable);
-
-                $trackArray = [
-                    'id' => $track->id,
-                    'name' => $track->name,
-                    'ref' => $track->ref,
-                    'cai_scale' => $track->cai_scale,
-                    'geometry' => $track->geometry,
-                    'stroke_color' => $track->color,
-                    'layers' => json_encode($layers),
-                    'themes' => json_encode($themes),
-                    'activities' => json_encode($activities),
-                    'searchable' => json_encode($searchable),
-                ];
-
-                // Utilizza upsert per inserire o aggiornare il record
-                DB::table('temp_tracks')->upsert($trackArray, ['id'], [
-                    'name',
-                    'ref',
-                    'cai_scale',
-                    'geometry',
-                    'stroke_color',
-                    'layers',
-                    'themes',
-                    'activities',
-                    'searchable'
-                ]);
+        return Cache::remember("app_layers_{$app_id}", 60, function () use ($app_id) {
+            $app = App::with('layers')->find($app_id);
+            if (!$app) {
+                return [];
             }
-        }
-    }
-
-    private function extractFirstValue($array)
-    {
-        if (!is_array($array)) {
-            return [];
-        }
-        foreach ($array as $value) {
-            return $value; // Ritorna il primo valore trovato
-        }
-        return [];
+            $layers = $app->layers;
+            $layer_ids = $layers->pluck('id')->toArray();
+            return implode(',', $layer_ids);
+        });
     }
 }
