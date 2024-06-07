@@ -161,7 +161,6 @@ class PBFGenerateTilesAndDispatch
             DB::rollBack(); // Ripristina la transazione in caso di errore
             Log::error('ERROR ' . $e->getMessage());
             throw $e;
-        } finally {
             $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
         }
     }
