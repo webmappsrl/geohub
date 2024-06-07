@@ -149,11 +149,8 @@ class PBFGenerateTilesAndDispatch
                     Log::info($zoom . ' ' . ++$c . '/' . count($tiles));
                 }
             }
-            // Dopo che tutte le tiles sono state generate e le job sono state dispatchate
-            $this->dropTemporaryTable();
         } catch (Exception $e) {
             throw new Exception('ERROR ' . $e->getMessage());
-            $this->dropTemporaryTable();
         }
     }
     private function createAndPopulateTemporaryTable()
