@@ -156,9 +156,10 @@ class PBFGenerateTilesAndDispatch
         } catch (Exception $e) {
             Log::error('ERROR ' . $e->getMessage());
             throw $e;
-        } finally {
-            $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
         }
+        // finally {
+        //    $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
+        //}
     }
     private function createAndPopulateTemporaryTable()
     {
