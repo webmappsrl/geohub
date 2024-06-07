@@ -19,7 +19,6 @@ class PBFGenerateTilesAndDispatch
         $this->app_id = $app_id;
         $this->author_id = $author_id;
         $this->format = $format;
-        $this->createAndPopulateTemporaryTable();
     }
     private function createTemporaryTable()
     {
@@ -143,6 +142,9 @@ class PBFGenerateTilesAndDispatch
     }
     public function generateTilesAndDispatch($bbox, $min_zoom, $max_zoom)
     {
+        DB::beginTransaction(); // Inizia la transazione qui per mantenere la stessa sessione
+        $this->createAndPopulateTemporaryTable();
+
         try {
             // Iterazione attraverso i livelli di zoom
             for ($zoom = $min_zoom; $zoom <= $max_zoom; $zoom++) {
@@ -153,23 +155,22 @@ class PBFGenerateTilesAndDispatch
                     Log::info($zoom . ' ' . ++$c . '/' . count($tiles));
                 }
             }
+            DB::commit(); // Conferma la transazione dopo che i job sono stati creati
+
         } catch (Exception $e) {
+            DB::rollBack(); // Ripristina la transazione in caso di errore
             Log::error('ERROR ' . $e->getMessage());
             throw $e;
+        } finally {
+            $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
         }
-        // finally {
-        //    $this->dropTemporaryTable(); // Assicura che la tabella temporanea venga eliminata sia in caso di successo che di errore
-        //}
     }
     private function createAndPopulateTemporaryTable()
     {
-        DB::beginTransaction();
         try {
             $this->createTemporaryTable();
             $this->populateTemporaryTable();
-            DB::commit();
         } catch (Exception $e) {
-            DB::rollBack();
             throw $e;
         }
     }
