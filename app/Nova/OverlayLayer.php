@@ -77,6 +77,13 @@ class OverlayLayer extends Resource
                     return $this->featureCollectionFileExist();
                 })
                 ->rules('nullable', 'url')
+                ->displayUsing(function ($value) {
+                    $html = <<< HTML
+                    <a href="{$value}" target="_blank">{$value}</a>
+                    HTML;
+                    return $html;
+                })->asHtml()
+                ->hideFromIndex()
                 ->help('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.'),
             File::make('Geojson File', 'feature_collection')
                 ->disk('public')
