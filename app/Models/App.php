@@ -330,29 +330,6 @@ class App extends Model
             ];
         }
 
-        if (!empty($poi_type_ids_implode)) {
-            $poi_db = DB::select("SELECT id, identifier, name, color, icon FROM taxonomy_poi_types WHERE id IN ($poi_type_ids_implode)");
-            $poi_array = json_decode(json_encode($poi_db), true);
-
-            foreach ($poi_array as $aval) {
-                $new_array = [];
-                foreach ($aval as $key => $val) {
-                    if ($key == 'name') {
-                        $new_array[$key] = json_decode($val, true);
-                    } elseif ($key == 'identifier') {
-                        $new_array[$key] = "poi_type_" . $val;
-                    } elseif (!empty($val)) {
-                        $new_array[$key] = $val;
-                    }
-                }
-                $poi_result[] = $new_array;
-            }
-        }
-
-        $res['where'] = $this->unique_multidim_array(array_merge($res['where'], $where_result), 'id');
-        $res['poi_type'] = $this->unique_multidim_array(array_merge($res['poi_type'], $poi_result), 'id');
-
-
         return $res;
     }
 
