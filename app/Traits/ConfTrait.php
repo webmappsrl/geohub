@@ -430,26 +430,31 @@ trait ConfTrait
                 if ($overlay['default']) {
                     $array['default'] = $overlay['default'];
                 }
-                if (!empty($overlay['icon'])) {
+                if (isset($overlay['icon'])) {
                     $array['icon'] = $overlay['icon'];
                 }
-                if (!empty($overlay['fill_color'])) {
+                if (isset($overlay['fill_color'])) {
                     $array['fillColor'] = $this->hexToRgba($overlay['fill_color']);
                 } else {
                     $array['fillColor'] = $this->hexToRgba($overlay->app->primary_color);
                 }
-                if (!empty($overlay['stroke_color'])) {
+                if (isset($overlay['stroke_color'])) {
                     $array['strokeColor'] = $this->hexToRgba($overlay['stroke_color']);
                 } else {
                     $array['strokeColor'] = $this->hexToRgba($overlay->app->primary_color);
                 }
-                if (!empty($overlay['stroke_width'])) {
+                if (isset($overlay['stroke_width'])) {
                     $array['strokeWidth'] = $overlay['stroke_width'];
                 }
-                if (!empty($overlay['feature_collection'])) {
-                    $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
+                if (isset($overlay['feature_collection'])) {
+                    //if the feature collection is an external geojson URL then put it in the conf file
+                    if (strpos($overlay['feature_collection'], 'http') === 0 || strpos($overlay['feature_collection'], 'https') === 0) {
+                        $array['url'] = $overlay['feature_collection'];
+                    } else {
+                        $array['url'] = route('api.export.taxonomy.getOverlaysPath', explode('/', $overlay['feature_collection']));
+                    }
                 }
-                if (!empty($overlay['configuration'])) {
+                if (isset($overlay['configuration'])) {
                     $configuration = json_decode($overlay['configuration'], true);
                     if (is_array($configuration)) {
                         $array = array_merge($array, $configuration);
