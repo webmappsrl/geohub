@@ -26,16 +26,13 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required',
                 'name' => 'required|string|max:255',
-                'last_name' => 'nullable|string|max:255',
-                'referrer' => 'nullable|string|max:255',
-                'fiscal_code' => 'nullable|string|size:16'
             ],
             [
+                'email.email' => 'Il campo email deve essere un indirizzo email valido.',
                 'email.unique' => 'Un utente è già stato registrato con questa email.',
                 'email.required' => 'Il campo email è obbligatorio.',
                 'password.required' => 'Il campo password è obbligatorio.',
                 'name.required' => 'Il campo nome è obbligatorio.',
-                'fiscal_code.size' => 'Il codice fiscale deve essere di 16 caratteri.'
             ]
         );
 
@@ -46,7 +43,7 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $credentials = $request->only(['email', 'password', 'name', 'last_name', 'referrer', 'fiscal_code']);
+        $credentials = $request->only(['email', 'password', 'name']);
 
         // Check if user already exists
         if ($token = auth('api')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
@@ -84,7 +81,7 @@ class AuthController extends Controller
                 'password' => 'required|min:6',
             ],
             [
-                'email.required' => 'Il campo email è obbligatorio.',
+                'email.required' => 'Il campo email é obbligatorio.',
                 'email.email' => 'Il campo email deve essere un indirizzo email valido.',
                 'password.required' => 'Il campo password è obbligatorio.',
             ]
@@ -93,8 +90,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()->first(),
-                'code' => 400
-            ], 400);
+                'code' => 401
+            ], 401);
         }
 
         $credentials = $request->only(['email', 'password']);
@@ -243,9 +240,6 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'name' => $data['name'],
-            'last_name' => $data['last_name'] ?? null,
-            'referrer' => $data['referrer'] ?? null,
-            'fiscal_code' => isset($data['fiscal_code']) ? strtoupper($data['fiscal_code']) : null,
             'email_verified_at' => now(),
         ]);
 
