@@ -41,6 +41,9 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'last_name',
+        'referrer',
+        'fiscal_code'
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -233,7 +236,7 @@ class User extends Authenticatable implements JWTSubject
         }
         return $result;
     }
-    
+
     /**
      * defines whether at least one app associated to the user has Classification show true or not
      * @param User|null $user
