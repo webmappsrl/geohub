@@ -268,6 +268,20 @@ class EcPoi extends Model
                 $gallery[] = $media->getJson($allData);
             }
             if (count($gallery)) {
+                // Ensure the feature_image is the first in the gallery and not duplicated
+                if (isset($array['feature_image'])) {
+                    // Remove any duplicate of the feature_image in the gallery
+                    $gallery = array_filter($gallery, function ($image) use ($array) {
+                        return $image['id'] !== $featureImageJson['id'];
+                    });
+
+                    // Add feature_image to the start of the gallery
+                    array_unshift($gallery, $array['feature_image']);
+                } else {
+                    // Set the first image in the gallery as feature_image if it isn't set
+                    $array['feature_image'] = $gallery[0];
+                }
+
                 $array['image_gallery'] = $gallery;
             }
         }
