@@ -272,7 +272,7 @@ class EcPoi extends Model
                 if (isset($array['feature_image'])) {
                     // Remove any duplicate of the feature_image in the gallery
                     $gallery = array_filter($gallery, function ($image) use ($array) {
-                        return $image['id'] !== $featureImageJson['id'];
+                        return $image['id'] != $array['feature_image']['id'];
                     });
 
                     // Add feature_image to the start of the gallery
