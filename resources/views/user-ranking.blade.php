@@ -66,6 +66,7 @@
                             @foreach ($pois as $index => $poi)
                             <div class="col-12 mb-2 d-flex align-items-center">
                                 <div class="font-weight-bold mr-2">{{ $index + 1 }}) {{ $poi['ec_poi']['name'] }}</div>
+                                @if($rankedUserId == $userId)
                                 <div class="d-flex flex-wrap">
                                     @foreach (explode(',', $poi['media_ids']) as $mediaId)
                                     @php
@@ -78,6 +79,7 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                @endif
                             </div>
                             @endforeach
                         </div>

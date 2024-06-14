@@ -65,18 +65,6 @@
                             @foreach ($pois as $index => $poi)
                             <div class="col-12 mb-2 d-flex align-items-center">
                                 <div class="font-weight-bold mr-2">{{ $index + 1 }}) {{ $poi['ec_poi']['name'] }}</div>
-                                <div class="d-flex flex-wrap">
-                                    @foreach (explode(',', $poi['media_ids']) as $mediaId)
-                                    @php
-                                    $imageUrl = url('storage/media/images/ugc/image_' . $mediaId . '.jpg');
-                                    @endphp
-                                    <div class="p-1">
-                                        <a href="{{ $imageUrl }}" target="_blank">
-                                            <img src="{{ $imageUrl }}" alt="POI Image" class="img-thumbnail">
-                                        </a>
-                                    </div>
-                                    @endforeach
-                                </div>
                             </div>
                             @endforeach
                         </div>
