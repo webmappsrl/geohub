@@ -2,53 +2,32 @@
 
 namespace Tests\Feature\Auth;
 
+use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\WithFaker;
 use App\Providers\PartnershipValidationProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
-use Tests\TestCase;
 
-class SignupApiTest extends TestCase {
+class SignupApiTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testNoCredentials() {
+    public function testNoCredentials()
+    {
         $response = $this->post('/api/auth/signup', []);
         $this->assertSame(400, $response->status());
     }
 
-    public function testInvalidCredentials() {
-        $response = $this->post('/api/auth/signup', [
-            'email' => 'test@webmapp.it',
-            'password' => 'test'
-        ]);
-        $this->assertSame(400, $response->status());
-    }
-
-    public function testValidExistingCredentials() {
-        $response = $this->post('/api/auth/signup', [
-            'email' => 'team@webmapp.it',
-            'password' => 'webmapp'
-        ]);
-        $this->assertSame(200, $response->status());
-        $this->assertArrayHasKey('id', $response->json());
-        $this->assertAuthenticated('api');
-        $this->assertAuthenticatedAs(User::find($response->json()['id']), 'api');
-        $this->assertArrayHasKey('access_token', $response->json());
-        $this->assertArrayHasKey('email', $response->json());
-        $this->assertArrayHasKey('name', $response->json());
-        $this->assertArrayHasKey('roles', $response->json());
-        $this->assertArrayHasKey('created_at', $response->json());
-    }
-
-    public function testValidNonExistingCredentials() {
+    public function testValidNonExistingCredentials()
+    {
         $email = 'newemail@webmapp.it';
         $name = 'signup test';
         $response = $this->post('/api/auth/signup', [
             'email' => $email,
             'password' => 'webmapp',
             'name' => $name,
-            'last_name' => $name,
         ]);
         $json = $response->json();
         $this->assertSame(200, $response->status());
@@ -65,89 +44,69 @@ class SignupApiTest extends TestCase {
         $this->assertArrayHasKey('created_at', $json);
     }
 
-    public function testReferrerField() {
-        $email = 'newemail@webmapp.it';
-        $name = 'signup test';
-        $referrer = 'test_referrer';
+    public function testSignupValidationErrors()
+    {
+        // Email mancante
         $response = $this->post('/api/auth/signup', [
-            'email' => $email,
-            'password' => 'webmapp',
-            'name' => $name,
-            'last_name' => $name,
-            'referrer' => $referrer
+            'password' => 'password123',
+            'name' => 'John Doe'
         ]);
-        $json = $response->json();
-        $this->assertSame(200, $response->status());
-        $this->assertArrayHasKey('id', $json);
-        $user = User::find($json['id']);
+        $response->assertStatus(400)
+            ->assertJson([
+                'error' => 'Il campo email è obbligatorio.',
+                'code' => 400
+            ]);
 
-        $this->assertAuthenticatedAs($user, 'api');
-        $this->assertArrayNotHasKey('referrer', $json);
-
-        $this->assertSame($referrer, $user->referrer);
-    }
-
-    public function test_invalid_fiscal_code_field() {
-        $email = 'newemail@webmapp.it';
-        $name = 'signup test';
-        $fiscalCode = '1234567890123456';
-
-        $this->mock(PartnershipValidationProvider::class, function ($mock) {
-            $mock->shouldReceive('cai')
-                ->andReturn(false);
-        });
-
+        // Email non valida
         $response = $this->post('/api/auth/signup', [
-            'email' => $email,
-            'password' => 'webmapp',
-            'name' => $name,
-            'last_name' => $name,
-            'fiscal_code' => $fiscalCode
+            'email' => 'invalid-email',
+            'password' => 'password123',
+            'name' => 'John Doe'
         ]);
-        $json = $response->json();
-        $this->assertSame(200, $response->status());
-        $this->assertArrayHasKey('id', $json);
-        $user = User::find($json['id']);
+        $response->assertStatus(400)
+            ->assertJson([
+                'error' => 'Il campo email deve essere un indirizzo email valido.',
+                'code' => 400
+            ]);
 
-        $this->assertAuthenticatedAs($user, 'api');
+        // Password mancante
+        $response = $this->post('/api/auth/signup', [
+            'email' => 'test@example.com',
+            'name' => 'John Doe'
+        ]);
+        $response->assertStatus(400)
+            ->assertJson([
+                'error' => 'Il campo password è obbligatorio.',
+                'code' => 400
+            ]);
 
-        $this->assertArrayHasKey('fiscal_code', $json);
-        $this->assertEquals($fiscalCode, $json['fiscal_code']);
-        $this->assertSame($fiscalCode, $user->fiscal_code);
-        $this->assertArrayHasKey('partnerships', $json);
-        $this->assertIsArray($json['partnerships']);
-        $this->assertCount(0, $json['partnerships']);
-    }
+        // Nome mancante
+        $response = $this->post('/api/auth/signup', [
+            'email' => 'test@example.com',
+            'password' => 'password123'
+        ]);
+        $response->assertStatus(400)
+            ->assertJson([
+                'error' => 'Il campo nome è obbligatorio.',
+                'code' => 400
+            ]);
 
-    public function test_valid_fiscal_code_field() {
-        $email = 'newemail@webmapp.it';
-        $name = 'signup test';
-        $fiscalCode = '1234567890123456';
-
-        $this->mock(PartnershipValidationProvider::class, function ($mock) {
-            $mock->shouldReceive('cai')
-                ->andReturn(true);
-        });
+        // Email già esistente
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => Hash::make('password123'),
+            'name' => 'John Doe'
+        ]);
 
         $response = $this->post('/api/auth/signup', [
-            'email' => $email,
-            'password' => 'webmapp',
-            'name' => $name,
-            'last_name' => $name,
-            'fiscal_code' => $fiscalCode
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'name' => 'John Doe'
         ]);
-        $json = $response->json();
-        $this->assertSame(200, $response->status());
-        $this->assertArrayHasKey('id', $json);
-        $user = User::find($json['id']);
-
-        $this->assertAuthenticatedAs($user, 'api');
-
-        $this->assertArrayHasKey('fiscal_code', $json);
-        $this->assertEquals($fiscalCode, $json['fiscal_code']);
-        $this->assertSame($fiscalCode, $user->fiscal_code);
-        $this->assertArrayHasKey('partnerships', $json);
-        $this->assertIsArray($json['partnerships']);
-        $this->assertCount(1, $json['partnerships']);
+        $response->assertStatus(400)
+            ->assertJson([
+                'error' => 'Un utente è già stato registrato con questa email.',
+                'code' => 400
+            ]);
     }
 }
