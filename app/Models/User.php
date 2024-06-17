@@ -233,7 +233,7 @@ class User extends Authenticatable implements JWTSubject
         }
         return $result;
     }
-    
+
     /**
      * defines whether at least one app associated to the user has Classification show true or not
      * @param User|null $user
