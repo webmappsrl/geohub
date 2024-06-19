@@ -23,7 +23,8 @@ class UpdatePOIFromOsm extends Command
      */
     protected $signature = 'geohub:update_pois_from_osm
                             {user_email : the mail of the user of which the POIs must be updated}
-                            {--osmid=}';
+                            {--osmid=}
+                            {--ec_poi_id= : the ID of the specific POI to update}';
 
     /**
      * The console command description.
@@ -34,6 +35,7 @@ class UpdatePOIFromOsm extends Command
 
     protected $errorPois = array();
     protected $osmid;
+
 
     /**
      * Create a new command instance.
@@ -54,6 +56,16 @@ class UpdatePOIFromOsm extends Command
     {
         $userEmail = $this->argument('user_email');
         $this->osmid = $this->option('osmid');
+        $ecPoiId = $this->option('ec_poi_id');
+        if ($ecPoiId) {
+            $poi = EcPoi::find($ecPoiId);
+            if (!$poi) {
+                $this->error('Poi not found');
+                return 1;
+            }
+            $this->updatePoiData($poi);
+            return 0;
+        }
         if ($userEmail == null) {
             $this->error('Please provide a user email');
             return 0;
@@ -74,10 +86,7 @@ class UpdatePOIFromOsm extends Command
 
         foreach ($pois as $poi) {
             // Update the data for each poi and save the pois that were not updated
-            if (!empty($poi->osmid) && empty($this->osmid)) {
-                $this->updatePoiData($poi);
-            }
-            if (!empty($this->osmid) && $poi->osmid == $this->osmid) {
+            if ((!empty($poi->osmid) && empty($this->osmid)) || (!empty($this->osmid) && $poi->osmid == $this->osmid)) {
                 $this->updatePoiData($poi);
             }
         }
@@ -94,7 +103,6 @@ class UpdatePOIFromOsm extends Command
     // Update the data for a single poi
     private function updatePoiData(EcPoi $poi)
     {
-
         $this->info('Updating poi ' . $poi->name . ' (' . $poi->osmid . ')...');
 
         try {
@@ -113,47 +121,68 @@ class UpdatePOIFromOsm extends Command
         }
 
         if (array_key_exists('properties', $osmPoi) && array_key_exists('wikimedia_commons', $osmPoi['properties'])) {
-            if (!$poi->feature_image) {
-                $url = 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=timestamp|user|userid|comment|canonicaltitle|url|size|dimensions|sha1|mime|thumbmime|mediatype|bitdepth&format=json&titles=' . $osmPoi['properties']['wikimedia_commons'];
-                try {
-                    $image = http::get($url);
-                    $pages = json_decode($image->body(), true)['query']['pages'];
-                    foreach ($pages as $page) {
-                        $options  = array('http' => array('user_agent' => 'custom user agent string'));
-                        $context  = stream_context_create($options);
-                        $image_content = file_get_contents($page['imageinfo'][0]['url'], false, $context);
+            $wikimediaCommonsTitle = $osmPoi['properties']['wikimedia_commons'];
+            $metadataUrl = 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=timestamp|url|sha1&format=json&titles=' . $wikimediaCommonsTitle;
+
+            try {
+                // First GET request to fetch metadata
+                $metadataResponse = Http::get($metadataUrl);
+                $pages = json_decode($metadataResponse->body(), true)['query']['pages'];
+
+                foreach ($pages as $page) {
+                    $imageUrl = $page['imageinfo'][0]['url'];
+                    $imageUpdatedAt = new \DateTime($page['imageinfo'][0]['timestamp']);
+                    $currentFeatureImage = $poi->featureImage;
+
+                    // Check if the feature image needs to be updated
+                    if ($currentFeatureImage && new \DateTime($currentFeatureImage->updated_at) >= $imageUpdatedAt) {
+                        $this->info('[is up to date] Feature image for poi ' . $poi->name . ' .');
+                        continue;
                     }
+                    $this->info('[updating] Feature image for poi ' . $poi->name);
+                    // Second GET request to fetch the actual image only if necessary
+                    $options  = array('http' => array('user_agent' => 'custom user agent string'));
+                    $context  = stream_context_create($options);
                     $ec_storage_name = config('geohub.ec_media_storage_name');
-                    Log::info('Creating EC Media.');
-                    $tag_description = '';
-                    $ec_media = EcMedia::create(
-                        [
-                            'user_id' => 1,
-                            'name' => $poi->name,
-                            'geometry' => DB::select("SELECT ST_AsText('$poi->geometry') As wkt")[0]->wkt,
-                            'url' => '',
-                            'description' => $tag_description
-                        ]
-                    );
-                    if (Storage::disk($ec_storage_name)->exists('ec_media/' . $page['imageinfo'][0]['canonicaltitle'])) {
-                        $ec_media->url = Storage::disk($ec_storage_name)->url('ec_media/' . $page['imageinfo'][0]['canonicaltitle']);
+                    $image_content = file_get_contents($imageUrl, false, $context);
+                    $media_path = 'ec_media/' . $page['title'];
+                    Storage::disk($ec_storage_name)->put($media_path, $image_content);
+                    Log::info('Updating EC Media.');
+
+                    if ($currentFeatureImage) {
+                        // Update existing media
+                        $currentFeatureImage->geometry = DB::select("SELECT ST_AsText('$poi->geometry') As wkt")[0]->wkt;
+                        $currentFeatureImage->description = ''; // Update description as needed
+                        $currentFeatureImage->url = Storage::disk($ec_storage_name)->url($media_path);
+                        $currentFeatureImage->save();
                     } else {
-                        Storage::disk('public')->put('ec_media/' . $page['imageinfo'][0]['canonicaltitle'], $image_content);
-                        $ec_media->url = 'ec_media/' . $page['imageinfo'][0]['canonicaltitle'];
+                        // Create new media if it doesn't exist
+                        $ec_media = EcMedia::create(
+                            [
+                                'user_id' => 1,
+                                'name' => $poi->name,
+                                'geometry' => DB::select("SELECT ST_AsText('$poi->geometry') As wkt")[0]->wkt,
+                                'url' => '',
+                                'description' => '',
+                            ]
+                        );
+                        $ec_media->url = Storage::disk($ec_storage_name)->url($media_path);
+                        $ec_media->save();
+                        $poi->featureImage()->associate($ec_media);
                     }
-                    $ec_media->save();
-                    $poi->featureImage()->associate($ec_media);
+
                     if ($poi->ecMedia()->count() < 1) {
                         if ($poi->feature_image) {
                             Log::info('Updating: ' . $poi->id);
                             $poi->ecMedia()->sync($poi->featureImage);
                         }
                     }
-                } catch (Exception $e) {
-                    Log::info('Error creating EcMedia with POI id: ' . $poi->id . "\n ERROR: " . $e->getMessage());
                 }
+            } catch (Exception $e) {
+                Log::info('Error updating EcMedia with POI id: ' . $poi->id . "\n ERROR: " . $e->getMessage());
             }
         }
+
         // Update the 'ele' attribute of the poi if it exists in the OSM data
         $this->updatePoiAttribute($poi, $osmPoi, 'ele', 'ele');
         // Update the 'ref' attribute of the poi if it exists in the OSM data
@@ -170,6 +199,8 @@ class UpdatePOIFromOsm extends Command
         $poi->save();
         $this->info('Poi ' . $poi->name . ' (osmid: ' . $poi->osmid . ') updated.');
     }
+
+
 
     // Update attribute of the poi if it exists in the OSM data
     private function updatePoiAttribute(EcPoi $poi, array $osmPoi, string $poiAttributeKey, string $osmPropertyKey)
