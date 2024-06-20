@@ -216,6 +216,7 @@ class EcPoi extends Resource
                     DateTime::make('Created At')->onlyOnDetail(),
                     DateTime::make('Updated At')->onlyOnDetail(),
                     Number::make('OSM ID', 'osmid'),
+                    Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id'),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
@@ -371,6 +372,7 @@ class EcPoi extends Resource
                             }),
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid'),
+                        Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id'),
                         BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
                         }),
