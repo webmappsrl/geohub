@@ -113,7 +113,7 @@ trait HandlesData
             $trackname = str_replace('"', '', $trackname);
 
             $track->name = $track->name ?? $trackname;
-            $track->geometry = $track->geometry ?? $geometry;
+            $track->geometry = $geometry ?? $track->geometry;
             $track->ref = $track->ref ?? $osmData['ref'] ?? null;
 
             // Update additional fields only if they are null
