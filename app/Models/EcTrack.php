@@ -11,7 +11,6 @@ use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
-use App\Traits\HandlesData;
 use App\Traits\TrackElasticIndexTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,7 +33,6 @@ class EcTrack extends Model
     use HasTranslations;
     use Favoriteable;
     use TrackElasticIndexTrait;
-    use HandlesData;
 
     protected $fillable = [
         'name',
@@ -120,21 +118,9 @@ class EcTrack extends Model
         });
 
         static::updating(function ($ecTrack) {
-            $skip_update = $ecTrack->skip_update;
-            if (!$skip_update) {
-                try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                    $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-                } catch (\Exception $e) {
-                    Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
-                }
-            } else {
-                $ecTrack->skip_update = false;
-            }
-            $ecTrack->updateCurrentData($ecTrack);
-        });
-        static::updated(function (Ectrack $ecTrack) {
+            $hoquServiceProvider = app(HoquServiceProvider::class);
+            $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+            $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
             $ecTrack->updateDataChain($ecTrack);
         });
     }
