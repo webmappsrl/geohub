@@ -1220,24 +1220,25 @@ class EcTrack extends Model
     public function updateDataChain(EcTrack $track)
     {
         $chain = [];
-   if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-     
-        if ($track->osmid) {
-            $chain[] = new UpdateTrackFromOsmJob($track);
+        if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+
+            if ($track->osmid) {
+                $chain[] = new UpdateTrackFromOsmJob($track);
+            }
+            $chain[] = new UpdateEcTrackDemJob($track);
+            $chain[] = new UpdateManualDataJob($track);
+            $chain[] = new UpdateCurrentDataJob($track);
+            $chain[] = new UpdateEcTrack3DDemJob($track);
+            if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+                $chain[] = new UpdateTrackPBFInfoJob($track);
+                $chain[] = new UpdateTrackPBFJob($track);
+                $chain[] = new UpdateEcTrackElasticIndexJob($track);
+            }
+            Bus::chain($chain)
+                ->catch(function (Throwable $e) {
+                    // A job within the chain has failed...
+                    Log::error($e->getMessage());
+                })->dispatch();
         }
-        $chain[] = new UpdateEcTrackDemJob($track);
-        $chain[] = new UpdateManualDataJob($track);
-        $chain[] = new UpdateCurrentDataJob($track);
-        $chain[] = new UpdateEcTrack3DDemJob($track);
-        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-        $chain[] = new UpdateTrackPBFInfoJob($track);
-        $chain[] = new UpdateTrackPBFJob($track);
-        $chain[] = new UpdateEcTrackElasticIndexJob($track);
-        }
-        Bus::chain($chain)
-            ->catch(function (Throwable $e) {
-                // A job within the chain has failed...
-                Log::error($e->getMessage());
-            })->dispatch();
     }
 }
