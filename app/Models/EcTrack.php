@@ -5,12 +5,16 @@ namespace App\Models;
 use App\Jobs\UpdateCurrentDataJob;
 use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateEcTrackDemJob;
+use App\Jobs\UpdateEcTrackElasticIndexJob;
 use App\Jobs\UpdateManualDataJob;
 use App\Jobs\UpdateTrackFromOsmJob;
+use App\Jobs\UpdateTrackPBFInfoJob;
+use App\Jobs\UpdateTrackPBFJob;
 use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
+use App\Traits\HandlesData;
 use App\Traits\TrackElasticIndexTrait;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +29,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
+use Throwable;
 
 class EcTrack extends Model
 {
@@ -33,6 +38,7 @@ class EcTrack extends Model
     use HasTranslations;
     use Favoriteable;
     use TrackElasticIndexTrait;
+    use HandlesData;
 
     protected $fillable = [
         'name',
@@ -118,9 +124,13 @@ class EcTrack extends Model
         });
 
         static::updating(function ($ecTrack) {
-            $hoquServiceProvider = app(HoquServiceProvider::class);
-            $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-            $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
+            try {
+                $hoquServiceProvider = app(HoquServiceProvider::class);
+                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
+            } catch (\Exception $e) {
+                Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
+            }
             $ecTrack->updateDataChain($ecTrack);
         });
     }
@@ -1210,7 +1220,8 @@ class EcTrack extends Model
     public function updateDataChain(EcTrack $track)
     {
         $chain = [];
-
+   if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+     
         if ($track->osmid) {
             $chain[] = new UpdateTrackFromOsmJob($track);
         }
@@ -1218,6 +1229,15 @@ class EcTrack extends Model
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
-        Bus::chain($chain)->dispatch();
+        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
+        $chain[] = new UpdateTrackPBFInfoJob($track);
+        $chain[] = new UpdateTrackPBFJob($track);
+        $chain[] = new UpdateEcTrackElasticIndexJob($track);
+        }
+        Bus::chain($chain)
+            ->catch(function (Throwable $e) {
+                // A job within the chain has failed...
+                Log::error($e->getMessage());
+            })->dispatch();
     }
 }

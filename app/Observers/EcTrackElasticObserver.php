@@ -30,20 +30,6 @@ class EcTrackElasticObserver
      */
     public function created(EcTrack $ecTrack)
     {
-        // $this->startElasticIndex($ecTrack);
-        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            // UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
-
-            Bus::chain([
-                // new UpdateEcTrackDemJob($ecTrack),
-                new UpdateTrackPBFInfoJob($ecTrack),
-                new UpdateTrackPBFJob($ecTrack),
-                new UpdateEcTrackElasticIndexJob($ecTrack),
-            ])->catch(function (Throwable $e) {
-                // A job within the chain has failed...
-                Log::error($e->getMessage());
-            })->dispatch($ecTrack);
-        }
     }
 
     /**
@@ -54,23 +40,6 @@ class EcTrackElasticObserver
      */
     public function updated(EcTrack $ecTrack)
     {
-        if (app()->environment('local')) {
-            return;
-        }
-        // $this->startElasticIndex($ecTrack);
-        if ($ecTrack->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            // UpdateEcTrackElasticIndexJob::dispatch($ecTrack);
-
-            Bus::chain([
-                // new UpdateEcTrackDemJob($ecTrack),
-                new UpdateTrackPBFInfoJob($ecTrack),
-                new UpdateTrackPBFJob($ecTrack),
-                new UpdateEcTrackElasticIndexJob($ecTrack),
-            ])->catch(function (Throwable $e) {
-                // A job within the chain has failed...
-                Log::error($e->getMessage());
-            })->dispatch($ecTrack);
-        }
     }
 
     /**
