@@ -189,6 +189,7 @@ class UpdatePOIFromOsm extends Command
         $this->updatePoiAttribute($poi, $osmPoi, 'ref', 'ref');
         // Update the name of the poi if the 'name' key exists in the OSM data
         $this->updatePoiName($poi, $osmPoi);
+        $this->updatePoiGeometry($poi, $osmPoi);
 
         // Set the 'skip_geomixer_tech' field to true if the 'ele' attribute was updated
         if ($poi->isDirty('ele')) {
@@ -214,6 +215,11 @@ class UpdatePOIFromOsm extends Command
                 $poi->$poiAttributeKey = $osmPoi['properties'][$osmPropertyKey];
             }
         }
+    }
+    private function updatePoiGeometry(EcPoi $poi, array $osmPoi)
+    {
+        $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($osmPoi['geometry']) . ")')");
+        $poi->save();
     }
 
     // Update the name of the poi if the 'name' key exists in the OSM data
