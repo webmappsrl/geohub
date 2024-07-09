@@ -39,6 +39,7 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
+use Laravel\Nova\Fields\DateTime;
 use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
@@ -344,7 +345,13 @@ class App extends Resource
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
             Boolean::make(__('Activate dashboard'), 'dashboard_show'),
-            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show')
+            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show'),
+            DateTime::make('Classification Start Date', 'classification_start_date')
+                ->rules('required_if:classification_show,true')
+                ->hideFromIndex(),
+            DateTime::make('Classification End Date', 'classification_end_date')
+                ->rules('required_if:classification_show,true')
+                ->hideFromIndex(),
         ];
     }
 

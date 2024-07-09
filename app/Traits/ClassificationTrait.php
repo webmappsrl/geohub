@@ -13,6 +13,7 @@ trait ClassificationTrait
     {
         $rankings = $this->getRankedUsersNearPoisQuery();
 
+
         $groupedArray = [];
         foreach ($rankings as $item) {
             $userId = $item['ugc_user_id'];
@@ -118,6 +119,10 @@ trait ClassificationTrait
 
         if ($ugcUserId) {
             $query->where('ugc_media.user_id', '=', $ugcUserId);
+        }
+
+        if ($this->classification_start_date && $this->classification_end_date) {
+            $query->whereBetween('ugc_media.created_at', [$this->classification_start_date, $this->classification_end_date]);
         }
 
         $result = $query

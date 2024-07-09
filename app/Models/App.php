@@ -33,12 +33,18 @@ class App extends Model
     use HasTranslationsFixed;
     use ClassificationTrait;
 
-    protected $fillable = ['welcome'];
+    protected $fillable = [
+        'welcome',
+        'classification_start_date',
+        'classification_end_date'
+    ];
     public array $translatable = ['welcome', 'tiles_label', 'overlays_label', 'data_label', 'pois_data_label', 'tracks_data_label', 'page_project', 'page_privacy', 'page_disclaimer', 'page_credits', 'filter_activity_label', 'filter_theme_label', 'filter_poi_type_label', 'filter_track_duration_label', 'filter_track_distance_label', 'social_share_text'];
     protected $casts = [
         'keywords' => 'array',
         'translations_it' => 'array',
         'translations_en' => 'array',
+        'classification_start_date' => 'datetime',
+        'classification_end_date' => 'datetime',
     ];
     /**
      * The accessors to append to the model's array form.
