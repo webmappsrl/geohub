@@ -24,3 +24,5 @@ yarn-error.log
 /storage/debugbar
 dump.sql
 /public/images
+/docker/
+/public/
