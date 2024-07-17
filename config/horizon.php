@@ -56,7 +56,7 @@ return [
 
     'prefix' => env(
         'HORIZON_PREFIX',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_horizon:'
+        Str::slug(env('APP_NAME', 'laravel'), '_') . '_horizon:'
     ),
 
     /*
@@ -166,7 +166,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 256,
 
     /*
     |--------------------------------------------------------------------------
@@ -185,12 +185,12 @@ return [
             'queue' => ['default'],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
-            'maxTime' => 0,
-            'maxJobs' => 0,
-            'memory' => 128,
-            'tries' => 1,
-            'timeout' => 60,
+            'maxProcesses' => 10, // Aumentato il numero massimo di processi
+            'maxTime' => 3600, // Limite di tempo in secondi (1 ora)
+            'maxJobs' => 1000, // Numero massimo di job per processo
+            'memory' => 256, // Aumentato il limite di memoria per i lavoratori
+            'tries' => 3, // Numero di tentativi per i job falliti
+            'timeout' => 120, // Timeout aumentato a 120 secondi
             'nice' => 0,
         ],
     ],
@@ -198,8 +198,8 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
+                'maxProcesses' => 20, // Aumentato il numero massimo di processi
+                'balanceMaxShift' => 3,
                 'balanceCooldown' => 3,
             ],
         ],
