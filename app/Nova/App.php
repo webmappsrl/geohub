@@ -282,7 +282,8 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Enables the draw a track')),
             Toggle::make(__('Show editing inline'), 'editing_inline_show')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -292,9 +293,11 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Show splash screen on startup')),
             Text::make(__('Google universal ID'), 'gu_id'),
-            Code::make(__('Embed Code'), 'embed_code_body')->help('Embed scripts for body section. Include script tag to your code.')
+            Code::make(__('Embed Code'), 'embed_code_body')
+                ->help(__('Embed scripts for body section. Include script tag to your code.'))
         ];
     }
 
@@ -309,7 +312,9 @@ class App extends Resource
                     'webapp' => 'WebApp',
                 ]
             )->required(),
-            Text::make(__('App Id'), 'app_id')->required(),
+            Text::make(__('App Id'), 'app_id')
+                ->required()
+                ->help(__('The package ID must match the one used in stores. It cannot be changed after the first build is uploaded.')),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
             Text::make(__('App Store link (iOS)'), 'ios_store_link'),
             BelongsTo::make('Author', 'author', User::class)
@@ -317,7 +322,8 @@ class App extends Resource
                 ->nullable()
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
-                }),
+                })
+                ->help(__('User author associated')),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
@@ -344,8 +350,10 @@ class App extends Resource
                 Text::make('Social share text', 'social_share_text')
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
-            Boolean::make(__('Activate dashboard'), 'dashboard_show'),
-            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show'),
+            Boolean::make(__('Activate dashboard'), 'dashboard_show')
+                ->help(__('Activate the dashboard for users, you also need to activate authentication in the AUTH tab')),
+            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show')
+                ->help(__('Enable user-generated ranking via UGC media')),
             DateTime::make('Classification Start Date', 'classification_start_date')
                 ->rules('required_if:classification_show,true')
                 ->hideFromIndex(),
@@ -369,7 +377,8 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Activate to show the search bar on the home')),
         ];
     }
 
@@ -391,7 +400,10 @@ class App extends Resource
 
         return [
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels(),
-            Multiselect::make(__('Available Languages'), 'available_languages')->hideFromIndex()->options($this->languages, $availableLanguages)
+            Multiselect::make(__('Available Languages'), 'available_languages')
+                ->hideFromIndex()
+                ->options($this->languages, $availableLanguages)
+                ->help(__('Select languages ​​for app translations'))
         ];
     }
 
@@ -420,16 +432,24 @@ class App extends Resource
                 Text::make('Pois Data Label'),
                 Text::make('Tracks Data Label')
             ]),
-            Boolean::make('Show POIs data by default', 'pois_data_default')->help('Turn this option off if you do not want to show pois by default on the map'),
+            Boolean::make('Show POIs data by default', 'pois_data_default')
+                ->help(__('Turn this option off if you do not want to show pois by default on the map')),
             Text::make('poi Data Icon', 'pois_data_icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->pois_data_icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('Poi Data Icon SVG', 'pois_data_icon')->onlyOnForms()->hideWhenCreating(),
-            Boolean::make('Show Tracks data by default', 'tracks_data_default')->help('Turn this option off if you do not want to show all track layers by default on the map'),
+            Textarea::make('Poi Data Icon SVG', 'pois_data_icon')
+                ->onlyOnForms()
+                ->hideWhenCreating()
+                ->help(__('svg icon shown in the filter')),
+            Boolean::make('Show Tracks data by default', 'tracks_data_default')
+                ->help(__('Turn this option off if you do not want to show all track layers by default on the map')),
             Text::make('Track Data Icon', 'tracks_data_icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->tracks_data_icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Textarea::make('Track Data Icon SVG', 'tracks_data_icon')->onlyOnForms()->hideWhenCreating(),
+            Textarea::make('Track Data Icon SVG', 'tracks_data_icon')
+                ->onlyOnForms()
+                ->hideWhenCreating()
+                ->help(__('svg icon shown in the filter')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(5)
                 ->max(25)
@@ -439,7 +459,7 @@ class App extends Resource
                 ->min(0)
                 ->max(19)
                 ->default(6)
-                ->help('Set max stoke width of line string, the max stroke width is applyed when the app is on max level zoom'),
+                ->help(__('Set max stoke width of line string, the max stroke width is applyed when the app is on max level zoom')),
             NovaSliderField::make(__('Min Zoom'), 'map_min_zoom')
                 ->min(5)
                 ->max(19)
@@ -448,13 +468,14 @@ class App extends Resource
                 ->min(0)
                 ->max(19)
                 ->default(3)
-                ->help('Set min stoke width of line string, the min stroke width is applyed when the app is on min level zoom'),
+                ->help(__('Set min stoke width of line string, the min stroke width is applyed when the app is on min level zoom')),
             NovaSliderField::make(__('Def Zoom'), 'map_def_zoom')
                 ->min(5)
                 ->max(19)
                 ->interval(0.1)
                 ->default(12)
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->help(__('App default zoom')),
             Text::make(__('Bounding BOX'), 'map_bbox')
                 ->nullable()
                 ->onlyOnForms()
@@ -465,30 +486,31 @@ class App extends Resource
                             $fail('The ' . $attribute . ' is invalid. follow the example [9.9456,43.9116,11.3524,45.0186]');
                         }
                     }
-                ]),
+                ])
+                ->help(__('Bounding the map view <a href="https://boundingbox.klokantech.com/" target="_blank">create a bounding box</a>')),
 
             Number::make(__('Max Zoom'), 'map_max_zoom')->onlyOnDetail(),
             Number::make(__('Min Zoom'), 'map_min_zoom')->onlyOnDetail(),
             Number::make(__('Def Zoom'), 'map_def_zoom')->onlyOnDetail(),
             Text::make(__('Bounding BOX'), 'bbox')->onlyOnDetail(),
             Number::make(__('start_end_icons_min_zoom'))->min(10)->max(20)
-                ->help('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)'),
+                ->help(__('Set minimum zoom at which start and end icons are shown in general maps (start_end_icons_show must be true)')),
             Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
-                ->help('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)'),
+                ->help(__('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)')),
             Text::make(__('POIS API'), function () {
                 $url = '/api/v1/app/' . $this->model()->id . '/pois.geojson';
                 return "<a class='btn btn-default btn-primary' href='$url' target='_blank'>POIS API</a>";
             })->asHtml()->onlyOnDetail(),
             Toggle::make('start_end_icons_show')
-                ->help('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.'),
+                ->help(__('Activate this option if you want to show start and end point of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minum zoom at which thi feature is activated.')),
             Toggle::make('ref_on_track_show')
-                ->help('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.'),
+                ->help(__('Activate this option if you want to show ref parameter on tracks line. Use the ref_on_track_min_zoom option to set the minum zoom at which thi feature is activated.')),
             Toggle::make(__('geolocation_record_enable'), 'geolocation_record_enable')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex()
-                ->help('Activate this option if you want enable user track record'),
+                ->help(__('Activate this option if you want enable user track record')),
             Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
                 ->options([
                     '5' => '5 meters',
@@ -498,12 +520,18 @@ class App extends Resource
                 ])
                 ->displayUsingLabels(),
             Toggle::make('alert_poi_show')
-                ->help('Activate this option if you want to show a poi proximity alert'),
-            Number::make(__('alert_poi_radius'))->default(100)->help('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert'),
+                ->help(__('Activate this option if you want to show a poi proximity alert')),
+            Number::make(__('alert_poi_radius'))
+                ->default(100)
+                ->help(__('set the radius(in meters) of the activation circle with center the user position, the nearest poi inside the circle trigger the alert')),
             Toggle::make('flow_line_quote_show')
-                ->help('Activate this option if you want to color track by quote'),
-            Number::make(__('flow_line_quote_orange'))->default(800)->help('defines the elevation by which the track turns orange'),
-            Number::make(__('flow_line_quote_red'))->default(1500)->help('defines the elevation by which the track turns red'),
+                ->help(__('Activate this option if you want to color track by quote')),
+            Number::make(__('flow_line_quote_orange'))
+                ->default(800)
+                ->help(__('defines the elevation by which the track turns orange')),
+            Number::make(__('flow_line_quote_red'))
+                ->default(1500)
+                ->help(__('defines the elevation by which the track turns red')),
             //create a tab for filters fields
 
         ];
@@ -520,26 +548,26 @@ class App extends Resource
                 Text::make('Duration Filter Label', 'filter_track_duration_label'),
                 Text::make('Distance Filter Label', 'filter_track_distance_label')
             ]),
-            Boolean::make('Activity Filter', 'filter_activity')->help('Activate this option if you want to activate "Activity filter" for tracks'),
-            Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help('Insert the activities you want to exclude from the filter, separated by commas'),
+            Boolean::make('Activity Filter', 'filter_activity')->help(__('Activate this option if you want to activate "Activity filter" for tracks')),
+            Text::make('Activity Exclude Filter', 'filter_activity_exclude')->help(__('Insert the activities you want to exclude from the filter, separated by commas')),
 
-            Boolean::make('Theme Filter', 'filter_theme')->help('Activate this option if you want to activate "Theme filter" for tracks'),
-            Text::make('Theme Exclude Filter', 'filter_theme_exclude')->help('Insert the themes you want to exclude from the filter, separated by commas'),
+            Boolean::make('Theme Filter', 'filter_theme')->help(__('Activate this option if you want to activate "Theme filter" for tracks')),
+            Text::make('Theme Exclude Filter', 'filter_theme_exclude')->help(__('Insert the themes you want to exclude from the filter, separated by commas')),
 
-            Boolean::make('Poi Type Filter', 'filter_poi_type')->help('Activate this option if you want to activate "Poi Type filter" for POIs'),
-            Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')->help('Insert the poi types you want to exclude from the filter, separated by commas'),
+            Boolean::make('Poi Type Filter', 'filter_poi_type')->help(__('Activate this option if you want to activate "Poi Type filter" for POIs')),
+            Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')->help(__('Insert the poi types you want to exclude from the filter, separated by commas')),
 
-            Boolean::make('Track Duration Filter', 'filter_track_duration')->help('Activate this option if you want to filter tracks by duration. Make sure that "Show Pois layer on APP" option is turend on under POIS tab!'),
-            Number::make('Track Min Duration Filter', 'filter_track_duration_min')->help('Set the minimum duration of the duration filter'),
-            Number::make('Track Max Duration Filter', 'filter_track_duration_max')->help('Set the maximum duration of the duration filter'),
-            Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')->help('Set the steps of the duration filter'),
+            Boolean::make('Track Duration Filter', 'filter_track_duration')->help(__('Activate this option if you want to filter tracks by duration. Make sure that "Show Pois layer on APP" option is turend on under POIS tab!')),
+            Number::make('Track Min Duration Filter', 'filter_track_duration_min')->help(__('Set the minimum duration of the duration filter')),
+            Number::make('Track Max Duration Filter', 'filter_track_duration_max')->help(__('Set the maximum duration of the duration filter')),
+            Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')->help(__('Set the steps of the duration filter')),
 
-            Boolean::make('Track Distance Filter', 'filter_track_distance')->help('Activate this option if you want to filter tracks by distance'),
-            Number::make('Track Min Distance Filter', 'filter_track_distance_min')->help('Set the minimum distance of the distance filter'),
-            Number::make('Track Max Distance Filter', 'filter_track_distance_max')->help('Set the maximum distance of the distance filter'),
-            Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help('Set the steps of the distance filter'),
+            Boolean::make('Track Distance Filter', 'filter_track_distance')->help(__('Activate this option if you want to filter tracks by distance')),
+            Number::make('Track Min Distance Filter', 'filter_track_distance_min')->help(__('Set the minimum distance of the distance filter')),
+            Number::make('Track Max Distance Filter', 'filter_track_distance_max')->help(__('Set the maximum distance of the distance filter')),
+            Number::make('Track Distance Step Filter', 'filter_track_distance_steps')->help(__('Set the steps of the distance filter')),
 
-            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help('Activate this option if you want to filter tracks by difficulty'),
+            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')->help(__('Activate this option if you want to filter tracks by difficulty')),
         ];
     }
 
@@ -656,12 +684,12 @@ class App extends Resource
             Code::make('Italian Translations', 'translations_it')
                 ->language('json')
                 ->rules('nullable', 'json')
-                ->help('Inserisci qui le traduzioni italiane in formato JSON.'),
+                ->help(_('Enter the Italian translations in JSON format here')),
 
             Code::make('English Translations', 'translations_en')
                 ->language('json')
                 ->rules('nullable', 'json')
-                ->help('Inserisci qui le traduzioni inglesi in formato JSON.'),
+                ->help(__('Enter the Italian translations in JSON format here')),
 
         ];
     }
@@ -716,14 +744,21 @@ class App extends Resource
             Number::make(__('Poi Icon Radius'), 'poi_icon_radius')->onlyOnDetail(),
             Number::make(__('Poi Min Zoom'), 'poi_min_zoom')->onlyOnDetail(),
             Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')->onlyOnDetail(),
-            Select::make(__('Poi Interaction'), 'poi_interaction')->hideFromIndex()->options($this->poi_interactions)->displayUsingLabels()->required(),
+            Select::make(__('Poi Interaction'), 'poi_interaction')
+                ->hideFromIndex()
+                ->options($this->poi_interactions)
+                ->displayUsingLabels()
+                ->required()
+                ->help(__('Click interaction on a poi')),
             AttachMany::make('TaxonomyThemes'),
             Text::make('Themes', function () {
                 if ($this->taxonomyThemes()->count() > 0) {
                     return implode(', ', $this->taxonomyThemes()->pluck('name')->toArray());
                 }
                 return 'No Themes';
-            })->onlyOnDetail(),
+            })
+                ->onlyOnDetail()
+                ->help(__('Select the theme taxonomy to view all poi')),
             Text::make('Download GeoJSON collection', function () {
                 $url = url('/api/v1/app/' . $this->id . '/pois.geojson');
                 return '<a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>';
@@ -738,7 +773,8 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('shows the authentication and registration page for users')),
         ];
     }
 
@@ -861,7 +897,7 @@ class App extends Resource
         return [
             Textarea::make(__('External overlays'), 'external_overlays')
                 ->rows(10)
-                ->hideFromIndex(),
+                ->hideFromIndex()
         ];
     }
 
@@ -889,8 +925,6 @@ class App extends Resource
     protected function icons_tab(): array
     {
         return [
-
-
             Image::make(__('Logo Homepage'), 'logo_homepage')
                 ->rules('image', 'mimes:svg')
                 ->disk('public')
@@ -904,9 +938,10 @@ class App extends Resource
             Text::make('QR Code', 'qr_code', function () {
                 return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
             })->asHtml(),
-            Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')->language('json')->rules('nullable', 'json')->help(
-                'import icoonmoon selection.json file'
-            )
+            Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help(__('Follow this guide: <a href="https://docs.google.com/document/d/1CDYRMTq9Unn545Ug7kYX0Ot1IZ0VLpe5/edit?usp=sharing&ouid=112992720252972804016&rtpof=true&sd=true" target="_blank">Google Docs Guide</a> then upload the Selection.json file'))
         ];
     }
 
@@ -1031,7 +1066,8 @@ class App extends Resource
     protected function layers_tab(): array
     {
         return [
-            Boolean::make('Generate All Layers Edges', 'generate_layers_edges'),
+            Boolean::make('Generate All Layers Edges', 'generate_layers_edges')
+                ->help('Enable the Edge feature on all layers of the app'),
             // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
             Text::make('Layers', function () {
                 if ($this->layers->count() > 0) {
@@ -1043,7 +1079,8 @@ class App extends Resource
                 } else {
                     return 'No Layers';
                 }
-            })->asHtml(),
+            })->asHtml()
+
         ];
     }
 
@@ -1052,6 +1089,7 @@ class App extends Resource
         return [
             NovaTabTranslatable::make([
                 Text::make('Overlays Label', 'overlays_label')
+                    ->help(__('Label displayed in the overlay filter')),
             ]),
             Text::make('Overlay Layer', function () {
                 if ($this->overlayLayers->count() > 0) {
@@ -1063,7 +1101,7 @@ class App extends Resource
                 } else {
                     return 'No Overlay Layers';
                 }
-            })->asHtml(),
+            })->asHtml()
         ];
     }
 
