@@ -456,7 +456,7 @@
                             <span class="workin">**IL PRIMO FIELD DI OGNI FORM DEVE ESSERE SEMPRE COL "name":"title" PERCHè IL RISULTATO SARA' USATO PER DARE IL NOME ALLA TRACCIA**</span><br>
                             <span style="margin-left:10px">
                                 {
-                                "name": "title",// la chiave che verra usata per salvare il dato su laravel<br>
+                                "name": "title",// la chiave che verra usata per salvare il dato su laravel questo campo è obbligatorio<br>
                                 "type": "text",// identifica il campo di tipo testuale<br>
                                 "required": true,// identifica il campo come obbligatorio<br>
                                 "helper": {
