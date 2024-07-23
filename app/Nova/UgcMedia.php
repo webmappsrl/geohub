@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\CopyUgc;
 use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
 use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
@@ -161,6 +162,12 @@ class UgcMedia extends Resource
      */
     public function actions(Request $request): array
     {
-        return [];
+        return [
+            (new CopyUgc())->canSee(function ($request) {
+                return $request->user()->hasRole('Admin');
+            })->canRun(function ($request, $zone) {
+                return $request->user()->hasRole('Admin');
+            }),
+        ];
     }
 }

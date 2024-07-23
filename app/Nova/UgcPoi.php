@@ -6,6 +6,7 @@ use Exception;
 use App\Models\App;
 use App\Nova\Actions\ExportFormDataXLSX;
 use App\Nova\Actions\ConvertUgcToEcPoiAction;
+use App\Nova\Actions\CopyUgc;
 use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\DateRange;
 use App\Nova\Filters\ShareUgcPoiFilter;
@@ -288,6 +289,11 @@ class UgcPoi extends Resource
                 }),
             (new ExportFormDataXLSX('ugc_pois'))->canRun(function ($request, $model) {
                 return true;
+            }),
+            (new CopyUgc())->canSee(function ($request) {
+                return $request->user()->hasRole('Admin');
+            })->canRun(function ($request, $zone) {
+                return $request->user()->hasRole('Admin');
             }),
         ];
     }

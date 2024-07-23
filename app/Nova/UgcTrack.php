@@ -19,6 +19,7 @@ use Titasgailius\SearchRelations\SearchesRelations;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use App\Nova\Actions\ExportFormDataXLSX;
 use App\Models\App;
+use App\Nova\Actions\CopyUgc;
 use Exception;
 
 class UgcTrack extends Resource
@@ -277,6 +278,11 @@ class UgcTrack extends Resource
         return [
             (new ExportFormDataXLSX('ugc_tracks'))->canRun(function ($request, $model) {
                 return true;
+            }),
+            (new CopyUgc())->canSee(function ($request) {
+                return $request->user()->hasRole('Admin');
+            })->canRun(function ($request, $zone) {
+                return $request->user()->hasRole('Admin');
             }),
         ];
     }
