@@ -102,6 +102,10 @@ class UgcTrack extends Resource
                 return '';
             })->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class),
+            Text::make(__('App id'), 'app_id')
+                ->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                })->onlyOnForms(),
             BelongsToMany::make(__('Taxonomy wheres')),
             Text::make(__('Form'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
