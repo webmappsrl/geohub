@@ -258,7 +258,6 @@ class App extends Resource
             'HOME' => $this->home_tab(),
             'PAGES' => $this->pages_tab(),
             'AUTH' => $this->auth_tab(),
-            'OFFLINE' => $this->offline_tab(),
             'ICONS' => $this->icons_tab(),
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
@@ -266,7 +265,6 @@ class App extends Resource
             'SEARCHABLE' => $this->searchable_tab(),
             'OPTIONS' => $this->options_tab(),
             'POIS' => $this->pois_tab(),
-            'ROUTING' => $this->routing_tab(),
             'TABLE' => $this->table_tab(),
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
@@ -288,14 +286,16 @@ class App extends Resource
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Activate the "edit with geohub" button in the track detail')),
             Toggle::make(__('Show splash screen'), 'splash_screen_show')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex()
                 ->help(__('Show splash screen on startup')),
-            Text::make(__('Google universal ID'), 'gu_id'),
+            Text::make(__('Google universal ID'), 'gu_id')
+                ->help(__('The google ID for analytics')),
             Code::make(__('Embed Code'), 'embed_code_body')
                 ->help(__('Embed scripts for body section. Include script tag to your code.'))
         ];
@@ -370,9 +370,11 @@ class App extends Resource
                 NovaTinymce5Editor::make(__('welcome'), 'welcome')
                     ->help(__('is the welcome message displayed as the first element of the home')),
             ]),
-            Code::Make('Config Home')->language('json')->rules('json')->default('{"HOME": []}')->help(
-                view('layers', ['layers' => $this->layers])->render()
-            ),
+            Code::make('Config Home')
+                ->language('json')
+                ->rules('json')
+                ->default('{"HOME": []}')
+                ->help(__('Knowledge of JSON format required.') . view('layers', ['layers' => $this->layers])->render()),
             Toggle::make(__('Show searchbar'), 'show_search')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -381,6 +383,7 @@ class App extends Resource
                 ->help(__('Activate to show the search bar on the home')),
         ];
     }
+
 
     protected function pages_tab(): array
     {
@@ -642,40 +645,24 @@ class App extends Resource
     protected function options_tab(): array
     {
         return [
-            Select::make(__('Start Url'), 'start_url')
-                ->options([
-                    '/main/explore' => 'Home',
-                    '/main/map' => 'Map',
-                ])
-                ->default('/main/explore'),
-            Toggle::make(__('Show Edit Link'), 'show_edit_link')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->onlyOnForms(),
-            Toggle::make(__('Skip Route Index Download'), 'skip_route_index_download')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->onlyOnForms(),
             Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(false)
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Shows the ref on the track (visible by zooming)')),
             Toggle::make(__('download_track_enable'), 'download_track_enable')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
-                ->help(__('Enable download of ever app track in GPX, KML, GEOJSON')),
+                ->help(__('Enable download track in GPX, KML, GEOJSON')),
             Toggle::make(__('print_track_enable'), 'print_track_enable')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable print of ever app track in PDF')),
-
         ];
     }
     protected function translations_tab(): array
@@ -880,45 +867,12 @@ class App extends Resource
         ];
     }
 
-
-    protected function routing_tab(): array
-    {
-        return [
-            Toggle::make(__('Enable Routing'), 'enable_routing')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
-        ];
-    }
-
     protected function overlays_tab(): array
     {
         return [
             Textarea::make(__('External overlays'), 'external_overlays')
                 ->rows(10)
                 ->hideFromIndex()
-        ];
-    }
-
-    protected function offline_tab(): array
-    {
-        return [
-            Toggle::make(__('Enable Offline'), 'offline_enable')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
-            Toggle::make(__('Force Auth'), 'offline_force_auth')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
-            Toggle::make(__('Tracks on payment'), 'tracks_on_payment')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex(),
         ];
     }
 
@@ -934,10 +888,13 @@ class App extends Resource
                 })
                 ->help(__('Required svg image'))
                 ->hideFromIndex(),
-            Text::make('QR Code custom URL', 'qrcode_custom_url')->help('Leave this field empty for default webapp URL'),
+            Text::make('QR Code custom URL', 'qrcode_custom_url')
+                ->help(__('Leave this field empty for default webapp URL')),
             Text::make('QR Code', 'qr_code', function () {
                 return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . "</div>";
-            })->asHtml(),
+            })
+                ->asHtml()
+                ->help(__('This field displays a QR code associated with this record. Ensure the QR code is clearly visible and scannable.')),
             Code::Make(__('iconmoon selection.json'), 'iconmoon_selection')
                 ->language('json')
                 ->rules('nullable', 'json')
@@ -1217,9 +1174,7 @@ class App extends Resource
                     ] 
                 }
             ]`)
-                ->help(
-                    view('poi-forms')->render()
-                ),
+                ->help(__('Knowledge of JSON format required.') . view('poi-forms')->render()),
             Code::Make(__('TRACK acquisition forms'), 'track_acquisition_form')
                 ->language('json')
                 ->rules('json')
@@ -1329,9 +1284,7 @@ class App extends Resource
                     ] 
                 }
             ]`)
-                ->help(
-                    view('track-forms')->render()
-                )
+                ->help(__('Knowledge of JSON format required.') . view('track-forms')->render())
         ];
     }
 
