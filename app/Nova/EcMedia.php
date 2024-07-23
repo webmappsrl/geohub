@@ -295,17 +295,21 @@ class EcMedia extends Resource
                             ->nullable()
                             ->canSee(function ($request) {
                                 return $request->user()->can('Admin');
-                            }),
+                            })
+                            ->help(__("Associate the author of the app that will show the media")),
                     ],
                     'Images' => [
-                        Image::make('Url'),
+                        Image::make('Url')
+                            ->help(__('Choose the image to upload')),
                     ],
                     'Map' => [],
                     'Taxonomies' => [
-                        AttachMany::make('TaxonomyActivities'),
-                        AttachMany::make('TaxonomyTargets'),
-                        AttachMany::make('TaxonomyWhens'),
-                        AttachMany::make('TaxonomyThemes'),
+                        AttachMany::make('TaxonomyActivities')
+                            ->help(__('Associated activity e.g. "MTB" you can select multiple activities')),
+                        AttachMany::make('TaxonomyTargets')
+                            ->help(__('Associated target e.g. "Weekend" you can select multiple targets')),
+                        AttachMany::make('TaxonomyThemes')
+                            ->help(__('Associated theme e.g. "Itinerari a tappe" you can select multiple themes')),
                     ],
 
 
