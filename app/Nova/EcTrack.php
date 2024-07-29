@@ -503,17 +503,21 @@ class EcTrack extends Resource
             Tabs::make($tab_title, [
                 'Main' => [
                     NovaTabTranslatable::make([
-                        Text::make(__('Name'), 'name'),
-                        Textarea::make(__('Excerpt'), 'excerpt'),
-                        NovaTinymce5Editor::make('Description'),
+                        Text::make(__('Name'), 'name')
+                            ->help('Enter the name of the POI. This will be displayed as the main title.'),
+                        Textarea::make(__('Excerpt'), 'excerpt')
+                            ->help('Provide a brief summary or excerpt for the POI. This should be a concise description.'),
+                        NovaTinymce5Editor::make('Description')
+                            ->help('Enter a detailed description of the POI. Use this field to provide comprehensive information.'),
                     ])->onlyOnForms(),
                     BelongsTo::make('Author', 'author', User::class)
                         ->searchable()
                         ->nullable()
                         ->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
-                        }),
-                    Number::make('OSM ID', 'osmid'),
+                        })->help(__('Author who created the track: this affects the publication of the content, which will be available for apps associated with the indicated author')),
+                    Number::make('OSM ID', 'osmid')
+                        ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
                 ],
                 'Media' => [
 
@@ -523,75 +527,105 @@ class EcTrack extends Resource
                     //     return $model->uploadAudio($file);
                     // })->acceptedTypes('audio/*')->onlyOnForms(),
 
-                    FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
+                    FeatureImagePopup::make(__('Feature Image'), 'featureImage')
                         ->onlyOnForms()
                         ->feature($geojson ?? [])
-                        ->apiBaseUrl('/api/ec/track/'),
-
-                    EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
+                        ->apiBaseUrl('/api/ec/track/')
+                        ->help(__('The feature image is displayed in the list of tracks. It is advisable to use a high-quality image in horizontal format 1440 x 500 pixels in jpg or png format. Alternatively, GeoHub will automatically create thumbnails and crop the image to fit. If you have uploaded georeferenced images in the Ec Media section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab.')),
+                    EcMediaPopup::make(__('Gallery'), 'ecMedia')
                         ->onlyOnForms()
                         ->feature($geojson ?? [])
-                        ->apiBaseUrl('/api/ec/track/'),
-                    Boolean::make('Allow print PDF for this track', 'allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
+                        ->apiBaseUrl('/api/ec/track/')
+                        ->help(__('The Gallery can include multiple images of different sizes in jpg or png format. For better visualization, it is advisable to use the same size for all images in the gallery. If you have uploaded georeferenced images in the Ec Media section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab.')),
+                    Boolean::make('Allow print PDF for this track', 'allow_print_pdf')
+                        ->help(__('Enable the option to generate a PDF via the "Print PDF" button, visible in the track detail view.')),
                     KeyValue::make('Related Url')
                         ->keyLabel('Label')
                         ->valueLabel('Url with https://')
                         ->actionText('Add new related url')
-                        ->rules('json'),
+                        ->rules('json')
+                        ->help(__('Here you can enter URLs to be displayed in the track detail view. In the label, you can enter the text to be displayed, e.g., "website.com". In the URL field with https, enter the full URL, e.g., "https://website.com/". It is possible to enter multiple URLs.')),
                 ],
                 'Related POIs' => [
                     Ecpoipopup::make(__('ecPoi'))
                         ->nullable()
                         ->onlyOnForms()
-                        ->feature($geojson ?? []),
+                        ->feature($geojson ?? [])
+                        ->help(__('Here you can associate points of interest (POIs) with the track to be displayed along the entire route. They will be shown both on the map along with the track and in the track detail view. These must be created separately in the "Ec Pois" section. Once created, you can select the georeferenced POIs from this area that are located near the track.')),
                 ],
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
-                    Text::make('Ref'),
-                    Text::make('From'),
-                    Text::make('To'),
-                    Boolean::make('Not Accessible'),
+                    Boolean::make('Skip Geomixer Tech')
+                        ->help(__('Enable this option if you do not want the technical data to be generated automatically. This way, you can enter them manually.')),
+                    Text::make('Ref')
+                        ->help(__('Enter here the label to be shown as the track reference, visible only if "Show Track Ref Label" option is enabled in App -> OPTIONS.')),
+                    Text::make('From')
+                        ->help(__('Enter here the label to be shown for the stage start, visible only if the "Generate All Layers Edges" option is enabled in App -> LAYERS.')),
+                    Text::make('To')
+                        ->help(__('Enter here the label to be shown for the stage end, visible only if the "Generate All Layers Edges" option is enabled in App -> LAYERS.')),
+                    Boolean::make('Not Accessible')
+                        ->help(__('Enable this option if you want to display a red message in the track detail indicating that the track is not accessible. You can modify the content of the message in the box below.')),
                     NovaTabTranslatable::make([
                         Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
                     ]),
-                    Text::make('Distance', 'distance'),
-                    Text::make('Duration Forward', 'duration_forward'),
-                    Text::make('Duration Backward', 'duration_backward'),
-                    Text::make('Ascent', 'ascent'),
-                    Text::make('Descent', 'descent'),
-                    Text::make('Elevation (From)', 'ele_from'),
-                    Text::make('Elevation (To)', 'ele_to'),
-                    Text::make('Elevation (Min)', 'ele_min'),
-                    Text::make('Elevation (Max)', 'ele_max'),
+                    Text::make('Distance', 'distance')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Duration Forward', 'duration_forward')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Duration Backward', 'duration_backward')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Ascent', 'ascent')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Descent', 'descent')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Elevation (From)', 'ele_from')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Elevation (To)', 'ele_to')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Elevation (Min)', 'ele_min')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                    Text::make('Elevation (Max)', 'ele_max')
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
                 ],
                 'Scale' => [
-                    Text::make('Difficulty'),
+                    Text::make('Difficulty')
+                        ->help(__('This field is used to customize the difficulty text in the track detail. If entered, the "Cai Scale" field will be ignored.')),
                     Select::make('Cai Scale')->options([
                         'T' => 'Turistico (T)',
                         'E' => 'Escursionistico (E)',
                         'EE' => 'Per escursionisti esperti (EE)',
                         'EEA' => 'Alpinistico (EEA)'
-                    ]),
+                    ])
+                        ->help(__('Here you can associate one of the indicated CAI difficulty scales to differentiate the required effort for hiking itineraries. This can be viewed in detail via this <a href="https://archivio.cai.it/sezione/vipiteno-c-a-i-a-a/attivita/difficolta/#:~:text=EE%20per%20Escursionisti%20Esperti,o%20di%20roccia%20e%20detriti" target="_blank">link</a>.')),
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
-                    ]),
+                    ])
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    // TODO: Complete the implementation logic for the 'Difficulty I18n' field.
+                    // After the logic is implemented, remove the hide methods to make this field visible.
                 ],
                 'Taxonomies' => [
                     Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();
-                    })->nullable(),
+                    })->nullable()->help(__('Select the first taxonomy "where" to be displayed.')),
                     // AttachMany::make('TaxonomyWheres'),
-                    AttachMany::make('TaxonomyActivities')->showPreview(),
-                    AttachMany::make('TaxonomyTargets')->showPreview(),
+                    AttachMany::make('TaxonomyActivities')->showPreview()
+                        ->help(__('Select one or more activity taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
+                    AttachMany::make('TaxonomyTargets')->showPreview()
+                        ->help(__('Select one or more target taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
                     // AttachMany::make('TaxonomyWhens'),
-                    AttachMany::make('TaxonomyThemes')->showPreview(),
+                    AttachMany::make('TaxonomyThemes')->showPreview()
+                        ->help(__('Select one or more theme taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
                         ->colors('text-advanced')->withProps([
                             'show-fallback' => true,
                             'fallback-type' => 'input',
-                        ]),
+                        ])
+                        ->help(__('Choose a color to associate with the individual track.')),
                 ]
             ]),
             new Panel('Map', [
