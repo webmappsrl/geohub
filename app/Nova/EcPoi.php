@@ -416,6 +416,8 @@ class EcPoi extends Resource
                     'Info' => [
                         Boolean::make('Skip Geomixer Tech')
                             ->help(__('Enable this option if you do not want the Elevation data to be generated automatically. This way, you can enter them manually.')),
+                        Text::make('Adress / complete', 'addr_complete')
+                            ->help(__('Enter the full address.')),
                         Text::make('Address / housenumber', 'addr_housenumber')
                             ->help(__('Enter the house number of the address.')),
                         Text::make('Address / postcode', 'addr_postcode')
