@@ -365,17 +365,22 @@ class EcPoi extends Resource
                         NovaTabTranslatable::make([
                             Text::make(__('Name'), 'name')
                                 ->readonly($isOsmidSet)
-                                ->help($isOsmidSet ? 'Questo campo non è modificabile perché OSM ID è già definito.' : ''),
-                            Textarea::make(__('Excerpt'), 'excerpt'),
+                                ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
+                            Textarea::make(__('Excerpt'), 'excerpt')
+                                ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
                             NovaTinymce5Editor::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
-                            }),
+                            })
+                                ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
                         ])->onlyOnForms(),
-                        Number::make('OSM ID', 'osmid'),
-                        Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id'),
+                        Number::make('OSM ID', 'osmid')
+                            ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
+                        Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id')
+                            ->help(__('If there is data in this field, updates in the various fields will not be processed because they are synchronized from a different API. Remove the data in this field to update the fields.')),
                         BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
-                        }),
+                        })
+                            ->help(__('Author who created the POI: this affects the publication of the content, which will be available for apps associated with the indicated author')),
                     ],
                     'Media' => [
                         // TODO: not working with NovaTabTranslatable
@@ -388,49 +393,77 @@ class EcPoi extends Resource
                         FeatureImagePopup::make(__('Feature Image (by map)'), 'featureImage')
                             ->onlyOnForms()
                             ->feature($geojson ?? [])
-                            ->apiBaseUrl('/api/ec/poi/'),
+                            ->apiBaseUrl('/api/ec/poi/')
+                            ->help(__('The feature image is displayed in the list of POIs. It is advisable to use a high-quality image in horizontal format 1440 x 500 pixels in jpg or png format. Alternatively, GeoHub will automatically create thumbnails and crop the image to fit. If you have uploaded georeferenced images in the Ec Media section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab. If set, the feature image of the POI will be shown as the first image in the gallery.')),
 
 
                         EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
                             ->onlyOnForms()
                             ->feature($geojson ?? [])
-                            ->apiBaseUrl('/api/ec/poi/'),
+                            ->apiBaseUrl('/api/ec/poi/')
+                            ->help(__('The Gallery can include multiple images of different sizes in jpg or png format. For better visualization, it is advisable to use the same size for all images in the gallery. If you have uploaded georeferenced images in the Ec Media section that match the POIS\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab.')),
 
                         KeyValue::make('Related Url')
                             ->keyLabel('Label')
                             ->valueLabel('Url with https://')
                             ->actionText('Add new related url')
-                            ->rules('json'),
+                            ->rules('json')
+                            ->help(__('Here you can enter URLs to be displayed in the POI detail view. In the label, you can enter the text to be displayed, e.g., "website.com". In the URL field with https, enter the full URL, e.g., "https://website.com/". It is possible to enter multiple URLs.')),
                     ],
 
                     'Style' => $this->style_tab(),
 
                     'Info' => [
-                        Boolean::make('Skip Geomixer Tech')->help('Activate this option if the technical information should not be generated automatically.'),
-                        Text::make('Adress / complete', 'addr_complete'),
-                        Text::make('Adress / street', 'addr_street'),
-                        Text::make('Adress / housenumber', 'addr_housenumber'),
-                        Text::make('Adress / postcode', 'addr_postcode'),
-                        Text::make('Adress / locality', 'addr_locality'),
-                        Text::make('Opening Hours'),
-                        Text::make('Contact Phone'),
-                        Text::make('Contact Email'),
-                        Number::Make('Elevation', 'ele')
+                        Boolean::make('Skip Geomixer Tech')
+                            ->help(__('Enable this option if you do not want the Elevation data to be generated automatically. This way, you can enter them manually.')),
+                        Text::make('Address / housenumber', 'addr_housenumber')
+                            ->help(__('Enter the house number of the address.')),
+                        Text::make('Address / postcode', 'addr_postcode')
+                            ->help(__('Enter the postal code of the address.')),
+                        Text::make('Address / locality', 'addr_locality')
+                            ->help(__('Enter the locality of the address.')),
+                        Text::make('Opening Hours')
+                            ->help(__('Enter the opening hours.')),
+                        Text::make('Contact Phone')
+                            ->help(__('Enter the contact phone number.')),
+                        Text::make('Contact Email')
+                            ->help(__('Enter the contact email address.')),
+                        Number::make('Elevation', 'ele')
                             ->readonly($isOsmidSet)
-                            ->help($isOsmidSet ? 'Questo campo non è modificabile perché OSM ID è già definito.' : ''),
-                        Text::make('Capacity'),
-                        Text::make('Stars'),
-                        Text::make('Code'),
+                            ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Elevation data displayed in the POI detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        Text::make('Capacity')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
+                        Text::make('Stars')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
+                        Text::make('Code')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
                     ],
                     'Accessibility' => $this->accessibility_tab(),
                     'Reachability' => $this->reachability_tab(),
                     'Taxonomies' => [
-                        AttachMany::make('TaxonomyPoiTypes')->showPreview(),
+                        AttachMany::make('TaxonomyPoiTypes')
+                            ->showPreview()
+                            ->help(__('Select one or more POI type taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                         // AttachMany::make('TaxonomyWheres'),
-                        AttachMany::make('TaxonomyActivities')->showPreview(),
-                        AttachMany::make('TaxonomyTargets')->showPreview(),
+                        AttachMany::make('TaxonomyActivities')
+                            ->showPreview()
+                            ->help(__('Select one or more activity taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
+                        AttachMany::make('TaxonomyTargets')
+                            ->showPreview()
+                            ->help(__('Select one or more target taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                         // AttachMany::make('TaxonomyWhens'),
-                        AttachMany::make('TaxonomyThemes')->showPreview(),
+                        AttachMany::make('TaxonomyThemes')
+                            ->showPreview()
+                            ->help(__('Select one or more theme taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                     ],
                 ]
             )),
@@ -460,74 +493,152 @@ class EcPoi extends Resource
         return [
             Swatches::make(__('Color'), 'color')
                 ->default('#de1b0d')
-                ->colors(['#f0f8ff', '#faebd7', '#00ffff', '#7fffd4', '#f0ffff', '#f5f5dc', '#ffe4c4', '#000000', '#ffebcd', '#0000ff', '#8a2be2', '#a52a2a', '#deb887', '#5f9ea0', '#7fff00', '#d2691e', '#ff7f50', '#6495ed', '#fff8dc', '#dc143c', '#00008b', '#008b8b', '#b8860b', '#a9a9a9', '#006400', '#bdb76b', '#8b008b', '#556b2f', '#ff8c00', '#9932cc', '#8b0000', '#e9967a', '#8fbc8f', '#483d8b', '#2f4f4f', '#00ced1', '#9400d3', '#ff1493', '#00bfff', '#696969', '#1e90ff', '#b22222', '#fffaf0', '#228b22', '#ff00ff', '#dcdcdc', '#f8f8ff', '#daa520', '#ffd700', '#808080', '#008000', '#adff2f', '#f0fff0', '#ff69b4', '#cd5c5c', '#4b0082', '#fffff0', '#f0e68c', '#fff0f5', '#e6e6fa', '#7cfc00', '#fffacd', '#add8e6', '#f08080', '#e0ffff', '#fafad2', '#d3d3d3', '#90ee90', '#ffb6c1', '#ffa07a', '#20b2aa', '#87cefa', '#778899', '#b0c4de', '#ffffe0', '#00ff00', '#32cd32', '#faf0e6', '#800000', '#66cdaa', '#0000cd', '#ba55d3', '#9370db', '#3cb371', '#7b68ee', '#00fa9a', '#48d1cc', '#c71585', '#191970', '#f5fffa', '#ffe4e1', '#ffe4b5', '#ffdead', '#000080', '#fdf5e6', '#808000', '#6b8e23', '#ffa500', '#ff4500', '#da70d6', '#eee8aa', '#98fb98', '#afeeee', '#db7093', '#ffefd5', '#ffdab9', '#cd853f', '#ffc0cb', '#dda0dd', '#b0e0e6', '#800080', '#663399', '#ff0000', '#bc8f8f', '#4169e1', '#8b4513', '#fa8072', '#f4a460', '#2e8b57', '#fff5ee', '#a0522d', '#c0c0c0', '#87ceeb', '#6a5acd', '#708090', '#fffafa', '#00ff7f', '#4682b4', '#d2b48c', '#008080', '#d8bfd8', '#ff6347', '#40e0d0', '#ee82ee', '#f5deb3', '#ffffff', '#f5f5f5', '#ffff00', '#9acd32'])->hideFromIndex(),
+                ->colors(['#f0f8ff', '#faebd7', '#00ffff', '#7fffd4', '#f0ffff', '#f5f5dc', '#ffe4c4', '#000000', '#ffebcd', '#0000ff', '#8a2be2', '#a52a2a', '#deb887', '#5f9ea0', '#7fff00', '#d2691e', '#ff7f50', '#6495ed', '#fff8dc', '#dc143c', '#00008b', '#008b8b', '#b8860b', '#a9a9a9', '#006400', '#bdb76b', '#8b008b', '#556b2f', '#ff8c00', '#9932cc', '#8b0000', '#e9967a', '#8fbc8f', '#483d8b', '#2f4f4f', '#00ced1', '#9400d3', '#ff1493', '#00bfff', '#696969', '#1e90ff', '#b22222', '#fffaf0', '#228b22', '#ff00ff', '#dcdcdc', '#f8f8ff', '#daa520', '#ffd700', '#808080', '#008000', '#adff2f', '#f0fff0', '#ff69b4', '#cd5c5c', '#4b0082', '#fffff0', '#f0e68c', '#fff0f5', '#e6e6fa', '#7cfc00', '#fffacd', '#add8e6', '#f08080', '#e0ffff', '#fafad2', '#d3d3d3', '#90ee90', '#ffb6c1', '#ffa07a', '#20b2aa', '#87cefa', '#778899', '#b0c4de', '#ffffe0', '#00ff00', '#32cd32', '#faf0e6', '#800000', '#66cdaa', '#0000cd', '#ba55d3', '#9370db', '#3cb371', '#7b68ee', '#00fa9a', '#48d1cc', '#c71585', '#191970', '#f5fffa', '#ffe4e1', '#ffe4b5', '#ffdead', '#000080', '#fdf5e6', '#808000', '#6b8e23', '#ffa500', '#ff4500', '#da70d6', '#eee8aa', '#98fb98', '#afeeee', '#db7093', '#ffefd5', '#ffdab9', '#cd853f', '#ffc0cb', '#dda0dd', '#b0e0e6', '#800080', '#663399', '#ff0000', '#bc8f8f', '#4169e1', '#8b4513', '#fa8072', '#f4a460', '#2e8b57', '#fff5ee', '#a0522d', '#c0c0c0', '#87ceeb', '#6a5acd', '#708090', '#fffafa', '#00ff7f', '#4682b4', '#d2b48c', '#008080', '#d8bfd8', '#ff6347', '#40e0d0', '#ee82ee', '#f5deb3', '#ffffff', '#f5f5f5', '#ffff00', '#9acd32'])
+                ->hideFromIndex()
+                ->help(__('Choose a color to associate with the individual track.')),
             // Swatches::make(__('Color'), 'color')
             //     ->default('#de1b0d')
             //     ->colors('text-advanced')->withProps([
             //         'show-fallback' => true,
             //         'fallback-type' => 'input',
             //     ])->hideFromIndex(),
-            Text::make(__('Z index'), 'zindex'),
+            Text::make(__('Z index'), 'zindex')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Toggle::make(__('No Interaction'), 'noInteraction')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Toggle::make(__('No Details'), 'noDetails')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
         ];
     }
 
     private function accessibility_tab()
     {
         return [
-            DateTime::make(__('Last verification date'), 'accessibility_validity_date'),
+            DateTime::make(__('Last verification date'), 'accessibility_validity_date')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             File::make(__('Accessibility PDF'), 'accessibility_pdf')->disk('public')
-                ->acceptedTypes('.pdf'),
+                ->acceptedTypes('.pdf')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Access Mobility Check'), 'access_mobility_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Select::make(__('Access Mobility Level'), 'access_mobility_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ]),
-            Textarea::make(__('Access Mobility Desription'), 'access_mobility_description'),
+            ])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Access Mobility Description'), 'access_mobility_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Access Hearing Check'), 'access_hearing_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Select::make(__('Access Hearing Level'), 'access_hearing_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ]),
-            Textarea::make(__('Access Hearing Desription'), 'access_hearing_description'),
+            ])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Access Hearing Description'), 'access_hearing_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Access Vision Check'), 'access_vision_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Select::make(__('Access Vision Level'), 'access_vision_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ]),
-            Textarea::make(__('Access Vision Desription'), 'access_vision_description'),
+            ])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Access Vision Description'), 'access_vision_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Access Cognitive Check'), 'access_cognitive_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Select::make(__('Access Cognitive Level'), 'access_cognitive_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
-                'accessible_with_a_guide' => 'Accessible with a guide',
-            ]),
-            Textarea::make(__('Access Cognitive Desription'), 'access_cognitive_description'),
+                'accessible_with a guide' => 'Accessible with a guide',
+            ])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Access Cognitive Description'), 'access_cognitive_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Access Food Check'), 'access_food_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
-            Textarea::make(__('Access Food Desription'), 'access_food_description'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Access Food Description'), 'access_food_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
         ];
     }
 
@@ -536,25 +647,58 @@ class EcPoi extends Resource
         return [
             Toggle::make(__('Reachability by Bike'), 'reachability_by_bike_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
-            Textarea::make(__('Reachability by Bike Description'), 'reachability_by_bike_description'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Reachability by Bike Description'), 'reachability_by_bike_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Reachability on Foot'), 'reachability_on_foot_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
-            Textarea::make(__('Reachability on Foot Description'), 'reachability_on_foot_description'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Reachability on Foot Description'), 'reachability_on_foot_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Reachability by Car'), 'reachability_by_car_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
-            Textarea::make(__('Reachability by Car Description'), 'reachability_by_car_description'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Reachability by Car Description'), 'reachability_by_car_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Toggle::make(__('Reachability by Public Transportation'), 'reachability_by_public_transportation_check')
                 ->trueValue('On')
-                ->falseValue('Off'),
-            Textarea::make(__('Reachability by Public Transportation Description'), 'reachability_by_public_transportation_description'),
+                ->falseValue('Off')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Textarea::make(__('Reachability by Public Transportation Description'), 'reachability_by_public_transportation_description')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
         ];
     }
+
 
     /**
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)

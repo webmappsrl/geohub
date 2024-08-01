@@ -495,6 +495,9 @@ class EcTrack extends Resource
         }
 
         $tab_title = "New EC Track";
+        $osmid = $this->model()->osmid;
+        $isOsmidSet = !is_null($osmid);
+
         if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Track Edit: {$this->name} ({$this->id})";
         }
@@ -504,11 +507,12 @@ class EcTrack extends Resource
                 'Main' => [
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
-                            ->help('Enter the name of the POI. This will be displayed as the main title.'),
+                            ->readonly($isOsmidSet)
+                            ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                         Textarea::make(__('Excerpt'), 'excerpt')
-                            ->help('Provide a brief summary or excerpt for the POI. This should be a concise description.'),
+                            ->help(_('Provide a brief summary or excerpt for the track. This should be a concise description.')),
                         NovaTinymce5Editor::make('Description')
-                            ->help('Enter a detailed description of the POI. Use this field to provide comprehensive information.'),
+                            ->help(__('Enter a detailed description of the track. Use this field to provide comprehensive information.')),
                     ])->onlyOnForms(),
                     BelongsTo::make('Author', 'author', User::class)
                         ->searchable()
@@ -609,7 +613,8 @@ class EcTrack extends Resource
                 'Taxonomies' => [
                     Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();
-                    })->nullable()->help(__('Select the first taxonomy "where" to be displayed.')),
+                    })->nullable()
+                        ->help(__('Select the first taxonomy "where" to be displayed.')),
                     // AttachMany::make('TaxonomyWheres'),
                     AttachMany::make('TaxonomyActivities')->showPreview()
                         ->help(__('Select one or more activity taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
