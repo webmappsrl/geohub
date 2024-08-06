@@ -216,65 +216,152 @@ class Layer extends Resource
             $title = "EDIT LAYER: '{$this->name}' belongs to APP '{$this->app->name} '(LAYER GeohubId: {$this->id})";
         }
         $mainTab = [
-            Text::make('Name')->required(),
+            Text::make('Name')
+                ->required()
+                ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
             NovaTabTranslatable::make([
-                Text::make('Title'),
-                Text::make('Subtitle'),
-                Textarea::make('Description')->alwaysShow(),
-                Text::make('Track Type', 'track_type'),
+                Text::make('Title')
+                    ->help(__('Title of the layer displayed on the app home screen.')),
+                Text::make('Subtitle')
+                    ->hideFromIndex()
+                    ->hideFromDetail()
+                    ->hideWhenCreating()
+                    ->hideWhenUpdating(),
+                Textarea::make('Description')
+                    ->alwaysShow()
+                    ->help(__('Description displayed in the layer details on the app home screen.')),
+                Text::make('Track Type', 'track_type')
+                    ->help(__('Name displayed as the header of the layer\'s track list.')),
             ]),
         ];
 
         $behaviourTab = [
-            Boolean::make('Generate Edges', 'generate_edges'),
-            Boolean::make('No Details', 'noDetails'),
-            Boolean::make('No Interaction', 'noInteraction'),
-            Number::make('Zoom Min', 'minZoom'),
-            Number::make('Zoom Max', 'maxZoom'),
-            Boolean::make('Prevent Filter', 'preventFilter'),
-            Boolean::make('Invert Polygons', 'invertPolygons'),
-            Boolean::make('Alert', 'alert'),
-            Boolean::make('Show Label', 'show_label'),
+            Boolean::make('Generate Edges', 'generate_edges')
+                ->help(__('By enabling the Edge function, you will be able to view the tracks of the layer with the UI of stage itineraries. The function will be active only for the indicated layer. If you want to enable the Edge function for all layers of the app, activate it from App > Layer "Generate All Layers Edges".')),
+            Boolean::make('No Details', 'noDetails')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('No Interaction', 'noInteraction')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Zoom Min', 'minZoom')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Zoom Max', 'maxZoom')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('Prevent Filter', 'preventFilter')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('Invert Polygons', 'invertPolygons')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('Alert', 'alert')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('Show Label', 'show_label')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
         ];
 
         $styleTab = [
-            Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
-            ]),
-            Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
-            ]),
-            Number::make('Fill Opacity', 'fill_opacity'),
-            Number::make('Stroke Width', 'stroke_width'),
-            Number::make('Stroke Opacity', 'stroke_opacity'),
-            Number::make('Zindex', 'zindex'),
+            Swatches::make('Color', 'color')
+                ->default('#de1b0d')
+                ->colors('text-advanced')
+                ->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])->help(__('Choose a color to associate with the Layer. All tracks associated with the layer will have same color.')),
+            Swatches::make('Fill Color', 'fill_color')
+                ->default('#de1b0d')
+                ->colors('text-advanced')
+                ->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Fill Opacity', 'fill_opacity')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Stroke Width', 'stroke_width')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Stroke Opacity', 'stroke_opacity')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Number::make('Zindex', 'zindex')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             Text::make('Line Dash', 'line_dash')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
         ];
 
         $dataTab = [
-            Heading::make('Use this interface to define rules to assign data to this layer'),
-            Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
-            Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
-            AttachMany::make('associated apps', 'associatedApps',  \App\Nova\App::class)
-                ->showPreview(),
+            Boolean::make('Use APP bounding box to limit data', 'data_use_bbox')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            Boolean::make('Use features only created by myself', 'data_use_only_my_data')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            AttachMany::make('Associated Apps', 'associatedApps',  \App\Nova\App::class)
+                ->showPreview()
+                ->help(__('It is possible to share the content of tracks from one app to another. Select the app that shares its track content in this layer. Additional taxonomy filters can be added, for example, if "Activities" and "MTB" are also selected, only the MTB tracks of the associated app will be shown. Click "Preview" to display the selected ones.')),
             AttachMany::make('taxonomyActivities')
-                ->showPreview(),
+                ->showPreview()
+                ->help(__('Select one or more activities taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyThemes')
-                ->showPreview(),
+                ->showPreview()
+                ->help(__('Select one or more themes taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyTargets')
-                ->showPreview(),
+                ->showPreview()
+                ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyWhens')
-                ->showPreview(),
+                ->showPreview()
+                ->help(__('Select one or more whens taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyWheres')
-                ->showPreview(),
+                ->showPreview()
+                ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.'))
         ];
 
         $mediaTab =  [
             BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
                 ->searchable()
                 ->nullable()
+                ->help(__('The feature image is displayed in the list of Layers as the image in the app home screen. You can find the desired image previously uploaded in Ec Medias by searching and clicking on "click to choose".')),
         ];
 
         //if the logged user has role editor only show the main tab

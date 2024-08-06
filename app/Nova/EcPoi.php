@@ -454,18 +454,18 @@ class EcPoi extends Resource
                     'Taxonomies' => [
                         AttachMany::make('TaxonomyPoiTypes')
                             ->showPreview()
-                            ->help(__('Select one or more POI type taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
+                            ->help(__('Select one or more POI types taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                         // AttachMany::make('TaxonomyWheres'),
                         AttachMany::make('TaxonomyActivities')
                             ->showPreview()
-                            ->help(__('Select one or more activity taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
+                            ->help(__('Select one or more activities taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                         AttachMany::make('TaxonomyTargets')
                             ->showPreview()
-                            ->help(__('Select one or more target taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
+                            ->help(__('Select one or more targets taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                         // AttachMany::make('TaxonomyWhens'),
                         AttachMany::make('TaxonomyThemes')
                             ->showPreview()
-                            ->help(__('Select one or more theme taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
+                            ->help(__('Select one or more activities taxonomies to associate with the POI. Click "Preview" to display the selected ones.')),
                     ],
                 ]
             )),

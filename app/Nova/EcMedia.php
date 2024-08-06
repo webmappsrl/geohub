@@ -305,11 +305,14 @@ class EcMedia extends Resource
                     'Map' => [],
                     'Taxonomies' => [
                         AttachMany::make('TaxonomyActivities')
-                            ->help(__('Associated activity e.g. "MTB" you can select multiple activities')),
+                            ->showPreview()
+                            ->help(__('Select one or more activities taxonomies to associate with the media. Click "Preview" to display the selected ones.')),
                         AttachMany::make('TaxonomyTargets')
-                            ->help(__('Associated target e.g. "Weekend" you can select multiple targets')),
+                            ->showPreview()
+                            ->help(__('Select one or more targets taxonomies to associate with the media. Click "Preview" to display the selected ones.')),
                         AttachMany::make('TaxonomyThemes')
-                            ->help(__('Associated theme e.g. "Itinerari a tappe" you can select multiple themes')),
+                            ->showPreview()
+                            ->help(__('Select one or more themes taxonomies to associate with the media. Click "Preview" to display the selected ones.')),
                     ],
 
 

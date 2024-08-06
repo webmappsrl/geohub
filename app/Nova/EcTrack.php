@@ -574,9 +574,9 @@ class EcTrack extends Resource
                     Text::make('Distance', 'distance')
                         ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
                     Text::make('Duration Forward', 'duration_forward')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech". Enter the time in minutes; it will be displayed in hours.')),
                     Text::make('Duration Backward', 'duration_backward')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech". Enter the time in minutes; it will be displayed in hours.')),
                     Text::make('Ascent', 'ascent')
                         ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
                     Text::make('Descent', 'descent')
@@ -616,13 +616,16 @@ class EcTrack extends Resource
                     })->nullable()
                         ->help(__('Select the first taxonomy "where" to be displayed.')),
                     // AttachMany::make('TaxonomyWheres'),
-                    AttachMany::make('TaxonomyActivities')->showPreview()
-                        ->help(__('Select one or more activity taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
-                    AttachMany::make('TaxonomyTargets')->showPreview()
-                        ->help(__('Select one or more target taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
+                    AttachMany::make('TaxonomyActivities')
+                        ->showPreview()
+                        ->help(__('Select one or more activities taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
+                    AttachMany::make('TaxonomyTargets')
+                        ->showPreview()
+                        ->help(__('Select one or more targets taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
                     // AttachMany::make('TaxonomyWhens'),
-                    AttachMany::make('TaxonomyThemes')->showPreview()
-                        ->help(__('Select one or more theme taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
+                    AttachMany::make('TaxonomyThemes')
+                        ->showPreview()
+                        ->help(__('Select one or more themes taxonomies to associate with the track. Click "Preview" to display the selected ones.')),
                 ],
                 'Style' => [
                     Swatches::make('Color', 'color')
