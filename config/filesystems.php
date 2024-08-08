@@ -99,7 +99,7 @@ return [
             'bucket' => env('AWS_FE_CONF_BUCKET'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
-            'root' => 'conf',
+            'root' => 'geohub/conf',
         ],
         's3-osfmedia' => [
             'driver' => 's3',
