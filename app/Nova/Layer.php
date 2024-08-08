@@ -86,7 +86,6 @@ class Layer extends Resource
             AttachMany::make('TaxonomyTargets'),
             AttachMany::make('TaxonomyWhens'),
             AttachMany::make('TaxonomyWheres'),
-            AttachMany::make('taxonomyPoiTypes'),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
         ];
     }
@@ -194,12 +193,6 @@ class Layer extends Resource
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
                         return 'No Whens';
-                    }),
-                    Text::make('poiTypes', function () {
-                        if ($this->taxonomyPoiTypes()->count() > 0) {
-                            return implode(',', $this->taxonomyPoiTypes()->pluck('name')->toArray());
-                        }
-                        return 'No Poi types';
                     }),
 
                 ]
@@ -361,10 +354,7 @@ class Layer extends Resource
                 ->help(__('Select one or more whens taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyWheres')
                 ->showPreview()
-                ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
-            AttachMany::make('taxonomyPoiTypes')
-                ->showPreview()
-                ->help(__('Select one or more poi types taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
+                ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.'))
         ];
 
         $mediaTab =  [
