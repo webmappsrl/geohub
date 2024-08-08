@@ -263,6 +263,7 @@ class App extends Model
         if (!is_null($jidoTime)) {
             $json['JIDO_UPDATE_TIME'] = $jidoTime;
         }
+        Storage::disk('wmfeconf')->put($confUri, json_encode($json));
         Storage::disk('conf')->put($confUri, json_encode($json));
         return $json;
     }
