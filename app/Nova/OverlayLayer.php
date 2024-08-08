@@ -58,14 +58,20 @@ class OverlayLayer extends Resource
         $app_name = $this->app_id;
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('name'),
+            Text::make('name')
+                ->help(__('Name of the overlay in GeoHub. To change the name displayed in the app under the overlay filter menu, modify the label below.')),
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
+                    ->help(__('Name displayed in the overlay layers filter menu.'))
             ]),
-            Boolean::make('Show this overlay by default', 'default')->help('turn this option on if you want to show this overlay by default')->hideFromIndex()->hideWhenCreating(),
+            Boolean::make('Show this overlay by default', 'default')
+                ->hideFromIndex()
+                ->hideWhenCreating()
+                ->help(__('Turn this option on if you want to show this overlay by default on the map')),
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
-                ->hideFromIndex(),
+                ->hideFromIndex()
+                ->help(__('Associated app that will display the overlay.')),
             Text::make('Geojson URL', 'feature_collection')
                 ->hideWhenCreating(function () {
                     return $this->featureCollectionFileExist();
@@ -84,7 +90,7 @@ class OverlayLayer extends Resource
                     return $html;
                 })->asHtml()
                 ->hideFromIndex()
-                ->help('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.'),
+                ->help(__('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.')),
             File::make('Geojson File', 'feature_collection')
                 ->disk('public')
                 ->path('geojson/' . $app_name)
@@ -107,23 +113,39 @@ class OverlayLayer extends Resource
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
             })->asHtml()->onlyOnDetail(),
-            Swatches::make('Fill Color')->default(function () {
-                return $this->app->primary_color;
-            })->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
-            ])->hideWhenCreating(),
-            Swatches::make('Stroke Color')->default(function () {
-                return $this->app->primary_color;
-            })->colors('text-advanced')->withProps([
-                'show-fallback' => true,
-                'fallback-type' => 'input',
-            ])->hideWhenCreating(),
-            Number::make('Stroke width')->hideWhenCreating(),
-            Textarea::make('Icon SVG', 'icon')->onlyOnForms()->hideWhenCreating(),
+            Swatches::make('Fill Color')
+                ->default(function () {
+                    return $this->app->primary_color;
+                })
+                ->colors('text-advanced')
+                ->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])
+                ->hideWhenCreating()
+                ->help(__('Fill color of the overlay.')),
+            Swatches::make('Stroke Color')
+                ->default(function () {
+                    return $this->app->primary_color;
+                })
+                ->colors('text-advanced')
+                ->withProps([
+                    'show-fallback' => true,
+                    'fallback-type' => 'input',
+                ])
+                ->hideWhenCreating()
+                ->help(__('Border color of the overlay.')),
+            Number::make('Stroke width')
+                ->hideWhenCreating()
+                ->help(__('Border thickness.')),
+            Textarea::make('Icon SVG', 'icon')
+                ->onlyOnForms()
+                ->hideWhenCreating()
+                ->help(__('Insert the icon here in SVG format.')),
             AttachMany::make('Layers', 'layers', Layer::class)
                 ->showPreview()
-                ->hideWhenCreating(),
+                ->hideWhenCreating()
+                ->help(__('Select one or more layers to associate with the overlay. Click "Preview" to display the selected ones.')),
             Text::make('Layers', function () {
                 if (count($this->layers) > 0) {
                     return $this->layers->pluck('name')->implode("</;>");
@@ -131,7 +153,11 @@ class OverlayLayer extends Resource
                     return 'No layers';
                 }
             })->onlyOnDetail()->hideWhenCreating()->asHtml(),
-            Code::Make('configuration')->language('json')->rules('json', 'nullable')->default(null)
+            Code::Make('configuration')
+                ->language('json')
+                ->rules('json', 'nullable')
+                ->default(null)
+                ->help(__('Insert the JSON code of type FeatureCollection for the overlay here.')),
         ];
     }
 
