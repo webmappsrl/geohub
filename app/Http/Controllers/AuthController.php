@@ -96,6 +96,7 @@ class AuthController extends Controller
 
         $credentials = $request->only(['email', 'password']);
 
+
         //check if email exists
         $user = User::where('email', $credentials['email'])->first();
         if (!$user) {
@@ -105,6 +106,7 @@ class AuthController extends Controller
             ], 401);
         }
 
+
         // Check if password is correct
         if (!auth('api')->attempt($credentials)) {
             return response()->json([
@@ -112,7 +114,10 @@ class AuthController extends Controller
                 'code' => 401
             ], 401);
         }
-
+        if (($request->input('referrer') != null) && ($request->input('referrer') != $user->referrer)) {
+            $user->referrer = $request->input('referrer');
+            $user->save();
+        }
         $token = auth('api')->attempt($credentials);
 
         return $this->loginResponse($token);
