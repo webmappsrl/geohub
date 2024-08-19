@@ -101,6 +101,16 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'root' => 'geohub/conf',
         ],
+        'wmfepois' => [
+            'driver' => 's3',
+            'key' => env('AWS_DUMPS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_DUMPS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_FE_CONF_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'root' => 'geohub/pois',
+        ],
         's3-osfmedia' => [
             'driver' => 's3',
             'key' => env('AWS_OSFMEDIA_ACCESS_KEY_ID'),

@@ -93,7 +93,10 @@ class AppAPIController extends Controller
         }
 
         $poisUri = $id . ".geojson";
-        if (Storage::disk('pois')->exists($poisUri)) {
+        if (Storage::disk('wmfepois')->exists($poisUri)) {
+            $json = Storage::disk('wmfepois')->get($poisUri);
+            return response()->json(json_decode($json));
+        } else if (Storage::disk('pois')->exists($poisUri)) {
             $json = Storage::disk('pois')->get($poisUri);
             return response()->json(json_decode($json));
         } else {
@@ -101,12 +104,10 @@ class AppAPIController extends Controller
             return response()->json($json);
         }
     }
-    
-    
+
+
     public function all()
     {
         return App::all()->toArray();
     }
-
-
 }

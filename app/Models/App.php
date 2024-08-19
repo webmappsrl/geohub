@@ -251,6 +251,7 @@ class App extends Model
             "type" => "FeatureCollection",
             "features" => $this->getAllPoisGeojson(),
         ];
+        Storage::disk('wmfepois')->put($poisUri, json_encode($json));
         Storage::disk('pois')->put($poisUri, json_encode($json));
         return $json;
     }
