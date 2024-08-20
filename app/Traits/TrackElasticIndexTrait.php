@@ -207,11 +207,7 @@ trait TrackElasticIndexTrait
             )
             ->first()
             ->geom;
-        $track = EcTrack::find($this->id);
-        if (!is_null($track)) {
-            $json = $track->getJson();
-            $geom =  $json['geometry'];
-        }
+
         $index_array = explode('_', $index_name);
         $app_id = end($index_array);
         $params = [
@@ -227,7 +223,6 @@ trait TrackElasticIndexTrait
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'searchable' => $this->getSearchableString($app_id)
         ];
-
 
         $params_update = [
             'index' => 'geohub_' . $index_name,
