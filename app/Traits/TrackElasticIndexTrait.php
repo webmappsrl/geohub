@@ -24,7 +24,7 @@ trait TrackElasticIndexTrait
 
         $geom = EcTrack::where('id', '=', $this->id)
             ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
+                DB::raw("ST_AsGeoJSON(geometry) as geom")
             )
             ->first()
             ->geom;
@@ -252,7 +252,7 @@ trait TrackElasticIndexTrait
      * @param String $index_name
      * @return void
      */
-    public function elasticIndexDelete($index_name,$id): void
+    public function elasticIndexDelete($index_name, $id): void
     {
         $params = ['index' => 'geohub_' . $index_name, 'id' => $id];
 
