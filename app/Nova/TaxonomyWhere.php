@@ -163,7 +163,7 @@ class TaxonomyWhere extends Resource
                         ->help(__('API Identifier. To change the name displayed in the app, modify the label below.')),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
-                            ->help(__('Name displayed in the overlay layers filter menu.')),
+                            ->help(__('Name displayed of the taxonomy')),
                         CKEditor::make(__('Description'), 'description')
                             ->help(__('Enter a detailed description of the taxonomy.')),
                         Textarea::make(__('Excerpt'), 'excerpt')
@@ -175,7 +175,7 @@ class TaxonomyWhere extends Resource
                         ->searchable()
                         ->showCreateRelationButton()
                         ->nullable()
-                        ->help(__('Select an image from Ec Media or upload one by clicking on "Create".')),
+                        ->help(__('Select an image from Ec Medias or upload one by clicking on "Create".')),
                 ],
                 'Map' => [
                     File::make('Geojson')->store(function (Request $request, $model) {

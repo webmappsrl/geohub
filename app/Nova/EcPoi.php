@@ -394,14 +394,14 @@ class EcPoi extends Resource
                             ->onlyOnForms()
                             ->feature($geojson ?? [])
                             ->apiBaseUrl('/api/ec/poi/')
-                            ->help(__('The feature image is displayed in the list of POIs. It is advisable to use a high-quality image in horizontal format 1440 x 500 pixels in jpg or png format. Alternatively, GeoHub will automatically create thumbnails and crop the image to fit. If you have uploaded georeferenced images in the Ec Media section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab. If set, the feature image of the POI will be shown as the first image in the gallery.')),
+                            ->help(__('The feature image is displayed in the list of POIs. It is advisable to use a high-quality image in horizontal format 1440 x 500 pixels in jpg or png format. Alternatively, GeoHub will automatically create thumbnails and crop the image to fit. If you have uploaded georeferenced images in the Ec Medias section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab. If set, the feature image of the POI will be shown as the first image in the gallery.')),
 
 
                         EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
                             ->onlyOnForms()
                             ->feature($geojson ?? [])
                             ->apiBaseUrl('/api/ec/poi/')
-                            ->help(__('The Gallery can include multiple images of different sizes in jpg or png format. For better visualization, it is advisable to use the same size for all images in the gallery. If you have uploaded georeferenced images in the Ec Media section that match the POIS\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab.')),
+                            ->help(__('The Gallery can include multiple images of different sizes in jpg or png format. For better visualization, it is advisable to use the same size for all images in the gallery. If you have uploaded georeferenced images in the Ec Medias section that match the POIS\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab.')),
 
                         KeyValue::make('Related Url')
                             ->keyLabel('Label')
