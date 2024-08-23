@@ -41,16 +41,10 @@ class CreateTracksWithOSMIDAction extends Action
                         [
                             'user_id' => auth()->user()->id,
                             'osmid' => intval($id),
+                            'name' => ''
                         ]
                     );
-                    $result = $this->updateOsmData($track);
-                    if (!$result['success']) {
-                        $this->error('ERROR track ' . $track->name . ' (' . $track->osmid . '): ' . $result['message']);
-                        array_push($errorCount, $id);
-                    } else {
-                        $successCount++;
-                        $this->info('Track ' . $track->name . ' (' . $track->osmid . ') updated!');
-                    }
+                    $track->updateDataChain($track);
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                     array_push($errorCount, $id);
