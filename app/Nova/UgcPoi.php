@@ -41,7 +41,8 @@ class UgcPoi extends Resource
      */
     public static $title = 'id';
     public static $search = [
-        'name', 'raw_data->waypointtype'
+        'name',
+        'raw_data->waypointtype'
     ];
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
@@ -79,7 +80,9 @@ class UgcPoi extends Resource
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('Name'), 'name')
+                ->sortable()
+                ->help(__('Name of the UGC (User-Generated Content).')),
             Text::make(__('App'),  function ($model) {
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
@@ -99,7 +102,8 @@ class UgcPoi extends Resource
                 }
                 return '';
             })->asHtml(),
-            BelongsTo::make(__('Creator'), 'user', User::class),
+            BelongsTo::make(__('Creator'), 'user', User::class)
+                ->help(__('Creator of the UGC (User-Generated Content).')),
             BelongsToMany::make(__('Taxonomy wheres'))->searchable(),
             Text::make(__('Form'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
