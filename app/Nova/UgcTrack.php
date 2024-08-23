@@ -82,7 +82,9 @@ class UgcTrack extends Resource
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Text::make(__('Name'), 'name')->sortable(),
+            Text::make(__('Name'), 'name')
+                ->sortable()
+                ->help(__('Name of the UGC (User-Generated Content).')),
             Text::make(__('App'),  function ($model) {
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
@@ -102,11 +104,14 @@ class UgcTrack extends Resource
                 }
                 return '';
             })->asHtml(),
-            BelongsTo::make(__('Creator'), 'user', User::class),
+            BelongsTo::make(__('Creator'), 'user', User::class)
+                ->help(__('Creator of the UGC (User-Generated Content).')),
             Text::make(__('App id'), 'app_id')
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
-                })->onlyOnForms(),
+                })
+                ->onlyOnForms()
+                ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
             BelongsToMany::make(__('Taxonomy wheres')),
             Text::make(__('Form'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
