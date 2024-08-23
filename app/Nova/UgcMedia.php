@@ -80,7 +80,9 @@ class UgcMedia extends Resource
     {
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
-            Image::make('Image', 'relative_url')->disk('public'),
+            Image::make('Image', 'relative_url')
+                ->disk('public')
+                ->help(__('Image associated with the UGC (User-Generated Content). From here, you can delete or replace it.')),
             Text::make(__('Name'), function ($model) {
                 $relativeUrl = $model->relative_url;
 
@@ -89,7 +91,9 @@ class UgcMedia extends Resource
             BelongsTo::make(__('Creator'), 'user', User::class)->onlyOnIndex(),
             BelongsTo::make(__('Creator'), 'author', User::class)->searchable()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Text::make(__('App ID'), 'app_id')->sortable(),
+            Text::make(__('App ID'), 'app_id')
+                ->sortable()
+                ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
 
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
@@ -107,7 +111,9 @@ class UgcMedia extends Resource
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'minZoom' => 7,
                 'maxZoom' => 16,
-            ])->onlyOnForms(),
+            ])
+                ->onlyOnForms()
+                ->help(__('The map displays the coordinates where the photo was taken. It is possible to modify the coordinates.')),
         ];
     }
 
