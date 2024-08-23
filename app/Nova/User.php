@@ -24,7 +24,8 @@ use Vyuldashev\NovaPermission\Role;
 use Vyuldashev\NovaPermission\RoleBooleanGroup;
 use Vyuldashev\NovaPermission\RoleSelect;
 
-class User extends Resource {
+class User extends Resource
+{
     /**
      * The model the resource corresponds to.
      *
@@ -43,7 +44,9 @@ class User extends Resource {
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email',
+        'id',
+        'name',
+        'email',
     ];
 
     /**
@@ -66,7 +69,8 @@ class User extends Resource {
         }
     }
 
-    public static function group() {
+    public static function group()
+    {
         return __('Admin');
     }
 
@@ -77,9 +81,14 @@ class User extends Resource {
      *
      * @return array
      */
-    public function fields(Request $request): array {
+    public function fields(Request $request): array
+    {
         return [
-            Avatar::make('Avatar')->disk('public'),
+            Avatar::make('Avatar')->disk('public')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             /*Avatar::make('Avatar')->store(function (Request $request, $model) {
                 $content = file_get_contents($request->avatar);
                 $avatar = Storage::disk('public')->put('/avatars/test', $content);
@@ -92,34 +101,41 @@ class User extends Resource {
 
             Text::make('Name')
                 ->sortable()
-                ->rules('required', 'max:255'),
+                ->rules('required', 'max:255')
+                ->help(__('Enter the first name of the user.')),
 
             Text::make('Last Name')
                 ->sortable()
-                ->rules('required', 'max:255'),
+                ->rules('required', 'max:255')
+                ->help(__('Enter the last name of the user.')),
 
             Text::make('Email')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+                ->updateRules('unique:users,email,{{resourceId}}')
+                ->help(__('Enter the user\'s email address.')),
 
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
+                ->updateRules('nullable', 'string', 'min:8')
+                ->help(__('Set the password for the user.')),
 
             Text::make(__('Referrer'))->onlyOnDetail()->sortable(),
 
-            RoleSelect::make('Role', 'roles')->showOnCreating(function () {
-                $user = \App\Models\User::getEmulatedUser();
+            RoleSelect::make('Role', 'roles')
+                ->showOnCreating(function () {
+                    $user = \App\Models\User::getEmulatedUser();
 
-                return $user->hasRole('Admin');
-            })->showOnUpdating(function () {
-                $user = \App\Models\User::getEmulatedUser();
+                    return $user->hasRole('Admin');
+                })
+                ->showOnUpdating(function () {
+                    $user = \App\Models\User::getEmulatedUser();
 
-                return $user->hasRole('Admin');
-            }),
+                    return $user->hasRole('Admin');
+                })
+                ->help(__('Select the role of the user. It is important to select "Contributor" for users who use the apps.')),
             \Laravel\Nova\Fields\HasMany::make('Apps'),
             \Laravel\Nova\Fields\HasMany::make('EcTracks'),
         ];
@@ -132,7 +148,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function cards(Request $request): array {
+    public function cards(Request $request): array
+    {
         return [];
     }
 
@@ -143,7 +160,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function filters(Request $request): array {
+    public function filters(Request $request): array
+    {
         return [];
     }
 
@@ -154,7 +172,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function lenses(Request $request): array {
+    public function lenses(Request $request): array
+    {
         return [];
     }
 
@@ -165,7 +184,8 @@ class User extends Resource {
      *
      * @return array
      */
-    public function actions(Request $request): array {
+    public function actions(Request $request): array
+    {
         return [
             (new DownloadMyUgcMediaAction())->onlyOnDetail(),
             (new EmulateUser())
