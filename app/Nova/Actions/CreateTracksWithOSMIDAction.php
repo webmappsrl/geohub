@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Jobs\UpdateTrackFromOsmJob;
 use App\Models\EcTrack;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -12,6 +13,8 @@ use Laravel\Nova\Fields\ActionFields;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\Textarea;
 use App\Traits\HandlesData;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
 
 class CreateTracksWithOSMIDAction extends Action
 {
@@ -37,14 +40,24 @@ class CreateTracksWithOSMIDAction extends Action
             foreach ($osmids as $id) {
                 try {
                     $id = trim($id);
-                    $track = EcTrack::updateOrCreate(
-                        [
-                            'user_id' => auth()->user()->id,
-                            'osmid' => intval($id),
-                            'name' => ''
-                        ]
-                    );
-                    $track->updateDataChain($track);
+                    $track = EcTrack::where('user_id', auth()->user()->id)
+                        ->where('osmid', intval($id))
+                        ->first();
+
+
+                    if (!$track) {
+                        // Se non esiste, crea una nuova traccia
+                        $track = new EcTrack();
+                        $track->user_id = auth()->user()->id;
+                        $track->osmid = intval($id);
+                        $track->name = '';  // Imposta il nome come stringa vuota o un valore predefinito
+
+                    }
+                    $track->saveQuietly();
+                    UpdateTrackFromOsmJob::dispatchSync($track);
+
+                    $track->save();
+                    $successCount++;  // Incrementa il conteggio delle operazioni riuscite
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                     array_push($errorCount, $id);

@@ -112,7 +112,7 @@ trait HandlesData
             $trackname = !empty($name_array) ? implode(' - ', $name_array) : null;
             $trackname = str_replace('"', '', $trackname);
 
-            $track->name = $track->name ?? $trackname;
+            $track->name = !empty($track->name) ? $track->name : $trackname;
             $track->geometry = $geometry ?? $track->geometry;
             $track->ref = $track->ref ?? $osmData['ref'] ?? null;
 
