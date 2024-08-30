@@ -227,7 +227,11 @@ class EcPoi extends Resource
                     // NovaTabTranslatable::make([
                     //     Text::make(__('Audio'),'audio')->onlyOnDetail(),
                     // ])->onlyOnDetail(),
-                    Text::make(__('Audio'), 'audio')->onlyOnDetail(),
+                    Text::make(__('Audio'), 'audio')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                     Text::make('Related Url', function () {
                         $out = '';
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
@@ -284,9 +288,21 @@ class EcPoi extends Resource
                     Text::make('Adress / locality', 'addr_locality'),
                     Text::make('Opening Hours'),
                     Number::Make('Elevation', 'ele'),
-                    Text::make('Capacity'),
-                    Text::make('Stars'),
-                    Text::make('Code'),
+                    Text::make('Capacity')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Text::make('Stars')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Text::make('Code')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                 ],
 
                 'Accessibility' => $this->accessibility_tab(),

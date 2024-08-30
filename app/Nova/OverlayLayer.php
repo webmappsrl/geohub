@@ -43,7 +43,8 @@ class OverlayLayer extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name'
+        'id',
+        'name'
     ];
 
     /**
@@ -134,7 +135,7 @@ class OverlayLayer extends Resource
                     'fallback-type' => 'input',
                 ])
                 ->hideWhenCreating()
-                ->help(__('Border color of the overlay.')),
+                ->help(__('Border color of the overlay. This color will also be applied when clicking on an overlay.')),
             Number::make('Stroke width')
                 ->hideWhenCreating()
                 ->help(__('Border thickness.')),

@@ -285,6 +285,12 @@ class EcMedia extends Resource
                 $tab_title,
                 [
                     'Main' => [
+                        Heading::make('
+                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
+                                        <p><strong>Name:</strong> Enter the name of the item. This will be the main title displayed.</p>
+                                        <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
+                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
+                                    ')->asHtml(),
                         NovaTabTranslatable::make([
                             Text::make(__('Name'), 'name'),
                             Textarea::make(__('Excerpt'), 'excerpt'),

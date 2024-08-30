@@ -133,14 +133,46 @@ class Layer extends Resource
                 ],
                 'BEHAVIOUR' => [
                     Boolean::make('Generate Edges', 'generate_edges'),
-                    Boolean::make('No Details', 'noDetails'),
-                    Boolean::make('No Interaction', 'noInteraction'),
-                    Number::make('Zoom Min', 'minZoom'),
-                    Number::make('Zoom Max', 'maxZoom'),
-                    Boolean::make('Prevent Filter', 'preventFilter'),
-                    Boolean::make('Invert Polygons', 'invertPolygons'),
-                    Boolean::make('Alert', 'alert'),
-                    Boolean::make('Show Label', 'show_label'),
+                    Boolean::make('No Details', 'noDetails')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('No Interaction', 'noInteraction')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make('Zoom Min', 'minZoom')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make('Zoom Max', 'maxZoom')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Prevent Filter', 'preventFilter')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Invert Polygons', 'invertPolygons')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Alert', 'alert')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Show Label', 'show_label')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                 ],
                 'STYLE' => [
                     Swatches::make('Color', 'color')->colors('text-advanced')->withProps([
@@ -151,16 +183,43 @@ class Layer extends Resource
                         'show-fallback' => true,
                         'fallback-type' => 'input',
                     ]),
-                    Number::make('Fill Opacity', 'fill_opacity'),
-                    Number::make('Stroke Width', 'stroke_width'),
-                    Number::make('Stroke Opacity', 'stroke_opacity'),
-                    Number::make('Zindex', 'zindex'),
+                    Number::make('Fill Opacity', 'fill_opacity')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make('Stroke Width', 'stroke_width')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make('Stroke Opacity', 'stroke_opacity')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make('Zindex', 'zindex')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                     Text::make('Line Dash', 'line_dash')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating()
                 ],
                 'DATA' => [
-                    Heading::make('Here are shown rules used to assign data to this layer'),
-                    Boolean::make('Use APP bounding box to limit data', 'data_use_bbox'),
-                    Boolean::make('Use features only created by myself', 'data_use_only_my_data'),
+                    Boolean::make('Use APP bounding box to limit data', 'data_use_bbox')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Use features only created by myself', 'data_use_only_my_data')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                     Text::make('associatedApps', function () {
                         if ($this->associatedApps()->count() > 0) {
                             return implode(',', $this->associatedApps()->pluck('name')->toArray());
@@ -223,6 +282,12 @@ class Layer extends Resource
                 ->required()
                 ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
             NovaTabTranslatable::make([
+                Heading::make('
+                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
+                                        <p><strong>Title:</strong> Enter the title of the layer. This will be the main title displayed.</p>
+                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
+                                        <p><strong>Track Type:</strong> Text displayed as the header of the column listing the tracks in the app.</p>
+                                    ')->asHtml(),
                 Text::make('Title')
                     ->help(__('Title of the layer displayed on the app home screen.')),
                 Text::make('Subtitle')
@@ -298,10 +363,7 @@ class Layer extends Resource
                     'show-fallback' => true,
                     'fallback-type' => 'input',
                 ])
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->help(__('Choose a fill color to associate with the layer. All tracks associated with the layer will have same fill color.')),
             Number::make('Fill Opacity', 'fill_opacity')
                 ->hideFromIndex()
                 ->hideFromDetail()

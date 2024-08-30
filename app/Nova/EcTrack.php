@@ -71,7 +71,9 @@ class EcTrack extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'ref', 'osmid'
+        'name',
+        'ref',
+        'osmid'
     ];
 
     /**
@@ -232,7 +234,11 @@ class EcTrack extends Resource
                 'Media' => [
                     Text::make('Audio', function () {
                         $this->audio;
-                    }),
+                    })
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                     Boolean::make('Allow print PDF for this track', 'allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     Text::make('Related Url', function () {
                         $out = '';
@@ -334,6 +340,10 @@ class EcTrack extends Resource
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
                     ])
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating()
                 ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
@@ -505,6 +515,12 @@ class EcTrack extends Resource
         return [
             Tabs::make($tab_title, [
                 'Main' => [
+                    Heading::make('
+                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
+                                        <p><strong>Name:</strong> Enter the name of the track. This will be the main title displayed.</p>
+                                        <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
+                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
+                                    ')->asHtml(),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
                             ->readonly($isOsmidSet)
@@ -614,7 +630,7 @@ class EcTrack extends Resource
                     Select::make('First taxonomy where to show', 'taxonomy_wheres_show_first')->options(function () {
                         return $this->taxonomyWheres->pluck('name', 'id')->toArray();
                     })->nullable()
-                        ->help(__('Select the first taxonomy "where" to be displayed.')),
+                        ->help(__('Select the "Where" taxonomy you want to display in the track preview through the list shown by the app.')),
                     // AttachMany::make('TaxonomyWheres'),
                     AttachMany::make('TaxonomyActivities')
                         ->showPreview()
