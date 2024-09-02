@@ -29,7 +29,7 @@ class elasticIndex extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            $model->buildAllRoutine();
+            $model->elasticRoutine();
         }
 
         return Action::message('job executed');
