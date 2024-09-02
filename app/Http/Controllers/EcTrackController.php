@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateEcTrackAwsJob;
 use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
@@ -12,7 +13,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class EcTrackController extends Controller
 {
@@ -27,12 +30,28 @@ class EcTrackController extends Controller
      */
     public function getGeojson(Request $request, int $id, array $headers = []): JsonResponse
     {
+        try {
+            $version = $request->header('Api-Version', 'v1');
+        } catch (Exception $e) {
+            $version = 'v1';
+        }
+        try {
+            $app = $request->header('App-Id', '3');
+        } catch (Exception $e) {
+            $app = null;
+        }
+        $url = $id . ".json";
+        if (Storage::disk('wmfetracks')->exists($url)) {
+            $json = Storage::disk('wmfetracks')->get($url);
+            return response()->json(json_decode($json));
+        }
+
         $track = EcTrack::find($id);
 
         if (is_null($track)) {
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
-
+        UpdateEcTrackAwsJob::dispatch($track);
         return response()->json($track->getGeojson(), 200, $headers);
     }
 

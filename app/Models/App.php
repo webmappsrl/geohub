@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdateEcTrackElasticIndexJob;
 use App\Traits\ClassificationTrait;
 use App\Traits\ConfTrait;
+use App\Traits\ElasticIndexTrait;
 use App\Traits\HasTranslationsFixed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +34,7 @@ class App extends Model
     use ConfTrait;
     use HasTranslationsFixed;
     use ClassificationTrait;
+    use ElasticIndexTrait;
 
     protected $fillable = [
         'welcome',
@@ -414,129 +417,30 @@ class App extends Model
     {
         $tracksFromLayer = $this->getTracksFromLayer();
         if (count($tracksFromLayer) > 0) {
-            $index_name = 'app_' . $this->id;
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
-                $t->elasticIndex($index_name, $layers);
+                UpdateEcTrackElasticIndexJob::dispatch($t);
             }
         } else {
             Log::info('No tracks in APP ' . $this->id);
         }
     }
 
-
-    public function elasticJidoIndex()
+    public function buildAllRoutine()
     {
-        $tracksFromLayer = $this->getTracksFromLayer();
-        if (count($tracksFromLayer) > 0) {
-            $index_low_name = 'app_low_' . $this->id;
-            $index_high_name = 'app_high_' . $this->id;
-            foreach ($tracksFromLayer as $tid => $layers) {
-                $t = EcTrack::find($tid);
-                $tollerance = config('geohub.elastic_low_geom_tollerance');
-                $t->elasticLowIndex($index_low_name, $layers, $tollerance);
-                $t->elasticHighIndex($index_high_name, $layers);
-            }
-        } else {
-            Log::info('No tracks in APP ' . $this->id);
-        }
-    }
-
-    /**
-     * Delete APP INDEX
-     */
-    public function elasticIndexDelete($suffix = '')
-    {
-        Log::info('Deleting Elastic Indexing APP ' . $this->id);
-        if (strlen($suffix) > 0) {
-            $suffix = $suffix . '_';
-        }
-        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
-        Log::info($url);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'DELETE',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
-        if (str_contains(config('services.elastic.host'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-        Log::info($response);
-        curl_close($curl);
-    }
-    /**
-     * Delete APP INDEX
-     */
-    public function elasticIndexCreate($suffix = '')
-    {
-        Log::info('Creating Elastic Indexing APP ' . $this->id);
-        if (strlen($suffix) > 0) {
-            $suffix = $suffix . '_';
-        }
-        // Create Index
-        $url = config('services.elastic.host') . '/geohub_app_' . $suffix . $this->id;
-        $posts = '
-               {
-                  "mappings": {
-                    "properties": {
-                      "id": {
-                          "type": "integer"  
-                      },
-                      "geometry": {
-                        "type": "shape"
-                      }
-                    }
-                  }
-               }';
-        try {
-            $this->_curlExec($url, 'PUT', $posts);
-        } catch (Exception $e) {
-            Log::info("\n ERROR: " . $e);
-        }
-
-        // Settings
-        $urls = $url . '/_settings';
-        $posts = '{"max_result_window": 50000}';
-        $this->_curlExec($urls, 'PUT', $posts);
-    }
-
-    public function elasticRoutine()
-    {
-        $this->elasticInfoRoutine();
-        $this->elasticJidoRoutine();
+        $this->elasticRoutine();
         $this->BuildPoisGeojson();
         $this->BuildConfJson();
     }
-    public function elasticInfoRoutine()
+    public function elasticRoutine()
     {
-        $this->elasticIndexDelete();
-        $this->elasticIndexCreate();
+        $prefix = config('services.elastic.prefix') ?? 'geohub_app';
+        $indexName = $prefix . '_' .  $this->id;
+        $this->deleteElasticIndex($indexName);
+        $this->createElasticIndex($indexName);
         $this->elasticIndex();
     }
-    public function elasticJidoRoutine()
-    {
-        $this->elasticIndexDelete('low');
-        $this->elasticIndexDelete('high');
-        $this->elasticIndexCreate('low');
-        $this->elasticIndexCreate('high');
-        $this->elasticJidoIndex();
-        $this->config_update_jido_time();
-    }
+
 
     public function GenerateAppConfig()
     {
@@ -572,40 +476,6 @@ class App extends Model
         return null;
     }
 
-    /**
-     * @param string $url
-     * @param string $type
-     * @param string $posts
-     */
-    private function _curlExec(string $url, string $type, string $posts): void
-    {
-        Log::info("CURL EXEC TYPE:$type URL:$url");
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => $type,
-            CURLOPT_POSTFIELDS => $posts,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
-        if (str_contains(config('services.elastic.host'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-        curl_close($curl);
-    }
 
     /**
      * Returns array of all tracks'id in APP through layers deifinition
@@ -628,7 +498,12 @@ class App extends Model
                 $layer->computeBB($this->map_bbox);
                 if (count($tracks) > 0) {
                     foreach ($tracks as $track) {
+                        if (!isset($res[$track])) {
+                            $res[$track] = [];
+                        }
                         $res[$track][] = $layer->id;
+                        // Elimina eventuali duplicati
+                        $res[$track] = array_unique($res[$track]);
                     }
                 }
             }

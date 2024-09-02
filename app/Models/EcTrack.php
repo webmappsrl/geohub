@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Jobs\UpdateCurrentDataJob;
 use App\Jobs\UpdateEcTrack3DDemJob;
+use App\Jobs\UpdateEcTrackAwsJob;
 use App\Jobs\UpdateEcTrackDemJob;
 use App\Jobs\UpdateEcTrackElasticIndexJob;
 use App\Jobs\UpdateManualDataJob;
@@ -110,10 +111,10 @@ class EcTrack extends Model
 
         static::created(function ($ecTrack) {
             try {
+                $ecTrack->updateDataChain($ecTrack);
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-                $ecTrack->updateDataChain($ecTrack);
             } catch (\Exception $e) {
                 Log::error($ecTrack->id . ' created Ectrack: An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -672,7 +673,8 @@ class EcTrack extends Model
                     WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_track_media_distance") . ')
                     order by St_Linelocatepoint(St_Geomfromgeojson(St_Asgeojson(?)),St_Geomfromgeojson(St_Asgeojson(geometry)));',
                 [
-                    $this->geometry, $this->geometry,
+                    $this->geometry,
+                    $this->geometry,
                 ]
             );
         } catch (Exception $e) {
@@ -766,271 +768,6 @@ class EcTrack extends Model
             )->first();
 
         return [floatval($rawResult['lon']), floatval($rawResult['lat'])];
-    }
-
-    public function elasticIndex($index = 'ectracks', $layers = [], $requestType = 'POST')
-    {
-        // APP ID for searchable function:
-        if (strpos($index, '_')) {
-            $app_id = explode('_', $index)[1];
-        }
-
-        #REF: https://github.com/elastic/elasticsearch-php/
-        #REF: https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
-
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
-        Log::info($url);
-
-        $geom = EcTrack::where('id', '=', $this->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-            )
-            ->first()
-            ->geom;
-
-        // TODO: converti into array for ELASTIC correct datatype
-        // Refers to: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-        $taxonomy_activities = '[]';
-        if ($this->taxonomyActivities->count() > 0) {
-            $taxonomy_activities = json_encode($this->taxonomyActivities->pluck('identifier')->toArray());
-        }
-        $taxonomy_wheres = '[]';
-        if ($this->taxonomyWheres->count() > 0) {
-            // add tax where first show to the end of taxonomy_wheres array
-            $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
-            if ($this->taxonomy_wheres_show_first && isset($taxonomy_wheres[$this->taxonomy_wheres_show_first])) {
-                $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
-                unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
-                $taxonomy_wheres = array_values($taxonomy_wheres);
-                array_push($taxonomy_wheres, $first_show_name);
-                $taxonomy_wheres = json_encode($taxonomy_wheres);
-            } else {
-                $taxonomy_wheres = json_encode($this->taxonomyWheres->pluck('name')->toArray());
-            }
-        }
-
-        $taxonomy_themes = '[]';
-        if ($this->taxonomyThemes->count() > 0) {
-            $taxonomy_themes = json_encode($this->taxonomyThemes->pluck('name')->toArray());
-        }
-        // FEATURE IMAGE
-        $feature_image = '';
-        if (isset($this->featureImage->thumbnails)) {
-            $sizes = json_decode($this->featureImage->thumbnails, true);
-            // TODO: use proper ecMedia function
-            if (isset($sizes['400x200'])) {
-                $feature_image = $sizes['400x200'];
-            } elseif (isset($sizes['225x100'])) {
-                $feature_image = $sizes['225x100'];
-            }
-        }
-        try {
-            $coordinates = json_decode($geom)->coordinates;
-            $coordinatesCount = count($coordinates);
-            $start = json_encode($coordinates[0]);
-            $end = json_encode($coordinates[$coordinatesCount - 1]);
-        } catch (Exception $e) {
-            $start = '[]';
-            $end = '[]';
-        }
-        try {
-            $json = $this->getJson();
-            unset($json['taxonomy_wheres']);
-            unset($json['sizes']);
-            $json["roundtrip"] = $this->_isRoundtrip(json_decode($geom)->coordinates);
-            $properties = $json;
-        } catch (Exception $e) {
-            $properties = null;
-        }
-
-        $postfields = '{
-                "properties": ' . json_encode($properties) . ',
-                "geometry" : ' . $geom . ',
-                "id": ' . $this->id . ',
-                "ref": "' . $this->ref . '",
-                "start": ' . $start . ',
-                "end": ' . $end . ',
-                "cai_scale": "' . $this->cai_scale . '",
-                "from": "' . $this->getActualOrOSFValue('from') . '",
-                "to": "' . $this->getActualOrOSFValue('to') . '",
-                "name": "' . $this->name . '",
-                "taxonomyActivities": ' . $taxonomy_activities . ',
-                "taxonomyWheres": ' . $taxonomy_wheres . ',
-                "taxonomyThemes": ' . $taxonomy_themes . ',
-                "feature_image": "' . $feature_image . '",
-                "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-                "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-                "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-                "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-                "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-                "layers": ' . json_encode($layers) . ',
-                "searchable": "' . $this->getSearchableString($app_id) . '"
-              }';
-
-        Log::info('');
-        Log::info('INDEX');
-        Log::info('');
-        Log::info($postfields);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => $requestType,
-            CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-
-        Log::info($response);
-
-        curl_close($curl);
-    }
-
-    public function elasticLowIndex($index = 'ectracks', $layers = [], $tollerance = 0.006)
-    {
-        // APP ID for searchable function:
-        if (strpos($index, '_')) {
-            $app_id = explode('_', $index)[2];
-        }
-
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
-        Log::info($url);
-
-        $geom = EcTrack::where('id', '=', $this->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(ST_SimplifyPreserveTopology(geometry,$tollerance))) as geom")
-            )
-            ->first()
-            ->geom;
-
-        $postfields = '{
-            "geometry" : ' . $geom . ',
-            "id": ' . $this->id . ',
-            "ref": "' . $this->ref . '",
-            "strokeColor": "' . $this->hexToRgba($this->color) . '",
-            "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString($app_id) . '"
-          }';
-        Log::info('');
-        Log::info('LOW');
-        Log::info('');
-        Log::info($postfields);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-
-        Log::info($response);
-
-        curl_close($curl);
-    }
-    public function elasticHighIndex($index = 'ectracks', $layers = [], $tollerance = 0.01)
-    {
-        // APP ID for searchable function:
-        if (strpos($index, '_')) {
-            $app_id = explode('_', $index)[2];
-        }
-
-        Log::info('Elastic Indexing track ' . $this->id);
-        $url = config('services.elastic.host') . '/geohub_' . $index . '/_doc/' . $this->id;
-        Log::info($url);
-
-        $geom = EcTrack::where('id', '=', $this->id)
-            ->select(
-                DB::raw("ST_AsGeoJSON(ST_Force2D(geometry)) as geom")
-            )
-            ->first()
-            ->geom;
-
-
-        $postfields = '{
-            "geometry" : ' . $geom . ',
-            "id": ' . $this->id . ',
-            "ref": "' . $this->ref . '",
-            "strokeColor": "' . $this->hexToRgba($this->color) . '",
-            "layers": ' . json_encode($layers) . ',
-            "distance": ' . $this->setEmptyValueToZero($this->distance) . ',
-            "duration_forward": ' . $this->setEmptyValueToZero($this->duration_forward) . ',
-            "ascent": ' . $this->setEmptyValueToZero($this->ascent) . ',
-            "activities": ' . json_encode($this->taxonomyActivities->pluck('identifier')->toArray()) . ',
-            "themes": ' . json_encode($this->taxonomyThemes->pluck('identifier')->toArray()) . ',
-            "searchable": "' . $this->getSearchableString($app_id) . '"
-          }';
-
-        Log::info('');
-        Log::info('HIGH');
-        Log::info('');
-        Log::info($postfields);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postfields,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Authorization: Basic ' . config('services.elastic.key')
-            ),
-        ));
-        if (str_contains(env('ELASTIC_HOST'), 'localhost')) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        $response = curl_exec($curl);
-        if ($response === false) {
-            throw new Exception(curl_error($curl), curl_errno($curl));
-        }
-
-        Log::info($response);
-
-        curl_close($curl);
     }
 
     public function setEmptyValueToZero($value)
@@ -1204,9 +941,20 @@ class EcTrack extends Model
             foreach ($sortedLayers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
-                    // Here we assume that there is only one category in each taxonomy type that is associated with the Layer
-                    if (array_key_exists($t_tax, $layers_ids) && in_array($layers_ids[$t_tax][0], $t_ids)) {
-                        $layers[$app->id][] = $layer->id;
+                    try {
+                        // Here we assume that there is only one category in each taxonomy type that is associated with the Layer
+                        if (
+                            is_array($layers_ids) &&
+                            array_key_exists($t_tax, $layers_ids) &&
+                            is_array($layers_ids[$t_tax]) &&
+                            isset($layers_ids[$t_tax][0]) &&
+                            is_array($t_ids) &&
+                            in_array($layers_ids[$t_tax][0], $t_ids)
+                        ) {
+                            $layers[$app->id][] = $layer->id;
+                        }
+                    } catch (Exception $e) {
+                        Log::error($e->getMessage());
                     }
                 }
             }
@@ -1229,13 +977,14 @@ class EcTrack extends Model
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
-
+        $chain[] = new UpdateEcTrackAwsJob($track);
         if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
             $chain[] = new UpdateTrackPBFInfoJob($track);
             $chain[] = new UpdateTrackPBFJob($track);
             $chain[] = new UpdateEcTrackElasticIndexJob($track);
         }
-
+        //$chain2[] = new UpdateEcTrackElasticIndexJob($track);
+        //$chain2[] = new UpdateEcTrackAwsJob($track);
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...

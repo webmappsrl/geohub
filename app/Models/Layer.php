@@ -253,31 +253,49 @@ class Layer extends Model
     public function generateLayerEdges()
     {
         $tracks = $this->getTracks(true);
-        $trackIds = $tracks->pluck('id')->toArray();
 
         if (empty($tracks)) {
             return null;
         }
 
+        $trackIds = $tracks->pluck('id')->toArray();
         $edges = [];
 
         foreach ($tracks as $track) {
 
             $geometry = $track->geometry;
 
-            $start_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
-            $end_point = DB::select("SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('" . $geometry . "')), 4326)) As wkt")[0]->wkt;
+            $start_point = DB::select(
+                <<<SQL
+                    SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_StartPoint('$geometry')), 4326)) As wkt
+                SQL
+            )[0]->wkt;
+
+
+            $end_point = DB::select(
+                <<<SQL
+                    SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('$geometry')), 4326)) As wkt
+                SQL
+            )[0]->wkt;
 
             // Find the next tracks
             $nextTrack = EcTrack::whereIn('id', $trackIds)
                 ->where('id', '<>', $track->id)
-                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)")
+                ->whereRaw(
+                    <<<SQL
+                        ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$end_point}', 0.001)
+                    SQL
+                )
                 ->get();
 
             // Find the previous tracks
             $previousTrack = EcTrack::whereIn('id', $trackIds)
                 ->where('id', '<>', $track->id)
-                ->whereRaw("ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)")
+                ->whereRaw(
+                    <<<SQL
+                        ST_DWithin(ST_SetSRID(geometry, 4326), 'SRID=4326;{$start_point}', 0.001)
+                    SQL
+                )
                 ->get();
 
             $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();

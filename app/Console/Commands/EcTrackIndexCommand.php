@@ -67,13 +67,10 @@ class EcTrackIndexCommand extends Command
             $app->BuildConfJson();
         } else if ($this->option('info-elastic')) {
             Log::info('Only info elastic');
-            $app->elasticInfoRoutine();
-        } else if ($this->option('jido-elastic')) {
-            Log::info('Only jido elastic');
-            $app->elasticJidoRoutine();
+            $app->elasticRoutine();
         } else {
             Log::info('Complete index elastic+files');
-            $app->elasticRoutine();
+            $app->buildAllRoutine();
         }
         Log::info('===========================');
         Log::info('DONE !!');

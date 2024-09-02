@@ -26,7 +26,7 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($ecTrackLayers,$id)
+    public function __construct($ecTrackLayers, $id)
     {
         $this->ecTrackLayers = $ecTrackLayers;
         $this->id = $id;
@@ -40,12 +40,12 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
     public function handle()
     {
         $this->ecTrack = new EcTrack();
+        $prefix = config('services.elastic.prefix') ?? 'geohub_app';
 
         if (!empty($this->ecTrackLayers)) {
             foreach ($this->ecTrackLayers as $app_id => $layer_ids) {
-                $this->ecTrack->elasticIndexDelete('app_' . $app_id,$this->id);
-                $this->ecTrack->elasticIndexDelete('app_low_' . $app_id,$this->id);
-                $this->ecTrack->elasticIndexDelete('app_high_' . $app_id,$this->id);
+                $indexName = $prefix . '_' . $app_id;
+                $this->ecTrack->elasticIndexDelete($indexName, $this->id);
             }
         }
     }
