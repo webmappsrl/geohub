@@ -17,7 +17,7 @@ trait ElasticIndexTrait
             $client = ClientBuilder::create()
                 ->setHosts([$host])
                 ->setBasicAuthentication($username, $password)
-                ->setSSLVerification(env('APP_ENV') == 'production')
+                ->setSSLVerification(false)
                 ->build();
 
             if ($client->ping()) {
