@@ -55,6 +55,7 @@ trait ElasticIndexTrait
                             'mapping' => [
                                 'total_fields' => [
                                     'limit' => '50000', // Aumenta il limite dei campi a 50000
+                                    'ignore_dynamic_beyond_limit' => true
                                 ]
                             ],
                             'max_result_window' => '50000' // Imposta il massimo numero di risultati
