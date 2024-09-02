@@ -978,10 +978,10 @@ class EcTrack extends Model
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
-        $chain[] = new UpdateEcTrackElasticIndexJob($track);
         if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
             $chain[] = new UpdateTrackPBFInfoJob($track);
             $chain[] = new UpdateTrackPBFJob($track);
+            $chain[] = new UpdateEcTrackElasticIndexJob($track);
         }
         //$chain2[] = new UpdateEcTrackElasticIndexJob($track);
         //$chain2[] = new UpdateEcTrackAwsJob($track);
