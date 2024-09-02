@@ -37,7 +37,6 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
     {
         Log::info('UpdateEcTrackElasticIndexJob: ' . $this->ecTrack->id);
         $ecTrackLayers = $this->ecTrack->getLayersByApp();
-        Log::info('UpdateEcTrackElasticIndexJob-> ecTrackLayers: ' . $ecTrackLayers);
         $prefix = config('services.elastic.prefix') ?? 'geohub_app';
         if (!empty($ecTrackLayers)) {
             foreach ($ecTrackLayers as $app_id => $layer_ids) {
