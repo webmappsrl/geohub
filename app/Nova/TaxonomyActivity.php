@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\MorphedByMany;
 use Laravel\Nova\Fields\Number;
@@ -64,17 +65,28 @@ class TaxonomyActivity extends Resource
                 Text::make(__('Name'), 'name')
                     ->sortable()
                     ->help(__('Name displayed of the taxonomy')),
+                Heading::make('<p>Name: This is the name displayed throughout the app.</p>')->asHtml(),
                 CKEditor::make(__('Description'), 'description')
                     ->hideFromIndex()
-                    ->help(__('Enter a detailed description of the taxonomy.')),
+                    ->help(__('Enter a detailed description of the taxonomy.'))
+                    ->hideFromIndex()
+                    ->hideFromDetail()
+                    ->hideWhenCreating()
+                    ->hideWhenUpdating(),
                 Textarea::make(__('Excerpt'), 'excerpt')->hideFromIndex()->withMeta(['maxlength' => '255'])
-                    ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.')),
+                    ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.'))
+                    ->hideFromIndex()
+                    ->hideFromDetail()
+                    ->hideWhenCreating()
+                    ->hideWhenUpdating(),
             ]),
 
             Text::make(__('Identifier'), 'identifier')
                 ->updateRules('unique:taxonomy_activities,identifier,{{resourceId}}')
                 ->help(__('API Identifier')),
+            Heading::make('<p>Identifier: This is the API identifier for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            Heading::make('<p>Author: The user who created this taxonomy.</p>')->asHtml()->onlyOnDetail(),
             Swatches::make('Color')
                 ->colors('text-advanced')->withProps([
                     'show-fallback' => true,
@@ -84,6 +96,7 @@ class TaxonomyActivity extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
+
             Number::make('Zindex')
                 ->hideFromIndex()
                 ->hideFromDetail()
@@ -95,7 +108,12 @@ class TaxonomyActivity extends Resource
             NovaIconSelect::make("Icon Label", 'icon')
                 ->setIconProvider(WebmappAppIconProvider::class)
                 ->help(__('Select an icon from the list to display for the activity.')),
-            Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
+            Heading::make('<p>Icon Label: Icon selected for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
+            Text::make(__('Source'), 'source')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)
                 ->nullable()
                 ->searchable()
@@ -109,10 +127,13 @@ class TaxonomyActivity extends Resource
 
                 return $url;
             })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating()->hideFromIndex(),
+            Heading::make('<p>Feature Image: The main image associated with this taxonomy.</p>')->asHtml()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Heading::make('<p>Created At: The date and time when this taxonomy was created.</p>')->asHtml()->onlyOnDetail(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Heading::make('<p>Updated At: The date and time when this taxonomy was last updated.</p>')->asHtml()->onlyOnDetail(),
 
-            new Panel('UX/UI', $this->ux_ui_panel()),
+            // new Panel('UX/UI', $this->ux_ui_panel()),
             //show relation with ecTracks (morphedByMany)
             MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class)
                 ->searchable()

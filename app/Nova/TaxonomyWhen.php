@@ -17,6 +17,7 @@ use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
+use Laravel\Nova\Fields\Heading;
 
 class TaxonomyWhen extends Resource
 {
@@ -62,18 +63,31 @@ class TaxonomyWhen extends Resource
                 Text::make(__('Name'), 'name')
                     ->sortable()
                     ->help(__('Name displayed of the taxonomy')),
+                Heading::make('
+                                <p>Name* displayed through the app.</p>
+                            ')->asHtml(),
                 CKEditor::make(__('Description'), 'description')
                     ->hideFromIndex()
-                    ->help(__('Enter a detailed description of the taxonomy.')),
+                    ->help(__('Enter a detailed description of the taxonomy.'))
+                    ->hideFromIndex()
+                    ->hideFromDetail()
+                    ->hideWhenCreating()
+                    ->hideWhenUpdating(),
                 Textarea::make(__('Excerpt'), 'excerpt')
                     ->hideFromIndex()
                     ->withMeta(['maxlength' => '255'])
-                    ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.')),
+                    ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.'))
+                    ->hideFromIndex()
+                    ->hideFromDetail()
+                    ->hideWhenCreating()
+                    ->hideWhenUpdating(),
             ]),
 
             Text::make(__('Identifier'), 'identifier')
                 ->help(__('API Identifier')),
+            Heading::make('<p>Identifier: This is the API identifier for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
             BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
+            Heading::make('<p>Author: The user who created this taxonomy.</p>')->asHtml()->onlyOnDetail(),
             Swatches::make('Color')
                 ->colors('text-advanced')->withProps([
                     'show-fallback' => true,
@@ -94,7 +108,12 @@ class TaxonomyWhen extends Resource
             NovaIconSelect::make("Icon Label", 'icon')
                 ->setIconProvider(WebmappAppIconProvider::class)
                 ->help(__('Select an icon from the list to display for the taxonomy.')),
-            Text::make(__('Source'), 'source')->hideWhenCreating()->hideWhenUpdating(),
+            Heading::make('<p>Icon Label: Icon selected for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
+            Text::make(__('Source'), 'source')
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             BelongsTo::make(__('Feature Image'), 'featureImage', EcMedia::class)
                 ->nullable()
                 ->searchable()
@@ -110,11 +129,18 @@ class TaxonomyWhen extends Resource
                 }
 
                 return $url;
-            })->withMeta(['width' => 200])->hideWhenCreating()->hideWhenUpdating()->hideFromIndex(),
+            })
+                ->withMeta(['width' => 200])
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Heading::make('<p>Created At: The date and time when this taxonomy was created.</p>')->asHtml()->onlyOnDetail(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Heading::make('<p>Updated At: The date and time when this taxonomy was last updated.</p>')->asHtml()->onlyOnDetail(),
 
-            new Panel('UX/UI', $this->ux_ui_panel()),
+            // new Panel('UX/UI', $this->ux_ui_panel()),
         ];
     }
 

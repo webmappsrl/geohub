@@ -23,6 +23,7 @@ use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
 use Tsungsoft\ErrorMessage\ErrorMessage;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
+use Laravel\Nova\Fields\Heading;
 
 class TaxonomyWhere extends Resource
 {
@@ -93,20 +94,36 @@ class TaxonomyWhere extends Resource
     private function detail()
     {
         return [(new Tabs(
-            "Taxnonomy Where Details: {$this->name} ($this->id)",
+            "Taxonomy Where Details: {$this->name} ({$this->id})",
             [
                 'Main' => [
                     Text::make('Geohub ID', function () {
                         return $this->id;
                     }),
+                    Heading::make('<p>Geohub ID: The unique identifier for the track in Geohub.</p>')->asHtml(),
                     Text::make(__('Identifier'), 'identifier'),
+                    Heading::make('<p>Identifier: Api identifier.</p>')->asHtml(),
                     BelongsTo::make('Author', 'author', User::class),
+                    Heading::make('<p>Author: The user who created the taxonomy.</p>')->asHtml(),
                     DateTime::make(__('Created At'), 'created_at'),
+                    Heading::make('<p>Created At: The date and time when the track was created.</p>')->asHtml(),
                     DateTime::make(__('Updated At'), 'updated_at'),
+                    Heading::make('<p>Updated At: The date and time when the track was last modified.</p>')->asHtml(),
                     NovaTabTranslatable::make([
-                        Text::make(__('Name'), 'name'),
-                        CKEditor::make(__('Description'), 'description'),
-                        Textarea::make(__('Excerpt'), 'excerpt'),
+                        Text::make(__('Name'), 'name')
+                            ->sortable()
+                            ->help(__('Name displayed of the taxonomy')),
+                        Heading::make('<p>Name: This is the name displayed for the taxonomy.</p>')->asHtml(),
+                        CKEditor::make(__('Description'), 'description')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
+                        Textarea::make(__('Excerpt'), 'excerpt')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
                     ]),
                 ],
                 'Media' => [
@@ -118,6 +135,7 @@ class TaxonomyWhere extends Resource
 
                         return $url;
                     })->withMeta(['width' => 200]),
+                    Heading::make('<p>Feature Image: The main image representing the taxonomy.</p>')->asHtml(),
                 ],
                 'Map' => [
                     WmEmbedmapsField::make(__('Map'), function ($model) {
@@ -125,17 +143,55 @@ class TaxonomyWhere extends Resource
                             'feature' => $model->getGeojson(),
                         ];
                     }),
+                    Heading::make('<p>Map: The geometry of taxonomy content that define the area on the map.</p>')->asHtml(),
                 ],
                 'Style' => [
-                    Number::make(__('Stroke Width'), 'stroke_width'),
-                    Number::make(__('Stroke Opacity'), 'stroke_opacity'),
-                    Text::make(__('Line Dash'), 'line_dash')->help('IMPORTANT : Write numbers with " , " separator'),
-                    Number::make(__('Min Visible Zoom'), 'min_visible_zoom'),
-                    Number::make(__('Max Size Zoom'), 'min_size_zoom'),
-                    Number::make(__('Min Size'), 'min_size'),
-                    Number::make(__('Max Size'), 'max_size'),
-                    Number::make(__('Icon Zoom'), 'icon_zoom'),
-                    Number::make(__('Icon Size'), 'icon_size'),
+                    Number::make(__('Stroke Width'), 'stroke_width')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Stroke Opacity'), 'stroke_opacity')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Text::make(__('Line Dash'), 'line_dash')
+                        ->help('IMPORTANT : Write numbers with " , " separator')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Min Visible Zoom'), 'min_visible_zoom')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Max Size Zoom'), 'min_size_zoom')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Min Size'), 'min_size')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Max Size'), 'max_size')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Icon Zoom'), 'icon_zoom')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Number::make(__('Icon Size'), 'icon_size')
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                 ]
             ]
         ))->withToolbar()];
@@ -162,12 +218,21 @@ class TaxonomyWhere extends Resource
                     Text::make(__('Identifier'), 'identifier')
                         ->help(__('API Identifier. To change the name displayed in the app, modify the label below.')),
                     NovaTabTranslatable::make([
+                        Heading::make('
+                                <p>Name* displayed through the app.</p>
+                            ')->asHtml(),
                         Text::make(__('Name'), 'name')
                             ->help(__('Name displayed of the taxonomy')),
                         CKEditor::make(__('Description'), 'description')
-                            ->help(__('Enter a detailed description of the taxonomy.')),
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
                         Textarea::make(__('Excerpt'), 'excerpt')
-                            ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.')),
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
                     ]),
                 ],
                 'Media' => [
