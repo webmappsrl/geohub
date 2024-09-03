@@ -56,32 +56,42 @@ class OverlayLayer extends Resource
      */
     public function fields(Request $request)
     {
+        // $app_name = str_replace(' ','-',strtolower($this->app->name));
         $app_name = $this->app_id;
 
         return [
+
             ID::make(__('ID'), 'id')->sortable(),
 
             Text::make('name')
                 ->help(__('Name of the overlay in GeoHub. To change the name displayed in the app under the overlay filter menu, modify the label below.')),
-            Heading::make('<p>Name: This is the name of the overlay as it appears in GeoHub. To change the display name in the app’s overlay filter menu, you need to modify the "Label" field.</p>')->asHtml(),
+            Heading::make('<p>Name: The name of the overlay as it appears in GeoHub. To change the display name in the app’s overlay filter menu, you need to modify the "Label" field.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             NovaTabTranslatable::make([
                 Text::make(__('Label'), 'label')
                     ->help(__('Name displayed in the overlay layers filter menu.'))
             ]),
-            Heading::make('<p>Label: The name displayed in the overlay layers filter menu.</p>')->asHtml(),
+            Heading::make('<p>Label: The name displayed in the overlay layers filter menu.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Boolean::make('Show this overlay by default', 'default')
                 ->hideFromIndex()
                 ->hideWhenCreating()
-                ->help(__('Enable this option to show the overlay by default on the map.')),
-            Heading::make('<p>Show this overlay by default: This setting enables the overlay to be displayed by default on the map.</p>')->asHtml(),
+                ->help(__('Turn this option on if you want to show this overlay by default on the map')),
+            Heading::make('<p>Show this overlay by default: This setting enables the overlay to be displayed by default on the map.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             BelongsTo::make('App', 'app', App::class)
                 ->searchable()
                 ->hideFromIndex()
-                ->help(__('This indicates the app that will display the overlay.')),
-            Heading::make('<p>App: The app associated with this overlay, which will display it.</p>')->asHtml(),
+                ->help(__('Associated app that will display the overlay.')),
+            Heading::make('<p>App: The associated app that will display this overlay.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Text::make('Geojson URL', 'feature_collection')
                 ->hideWhenCreating(function () {
@@ -95,34 +105,43 @@ class OverlayLayer extends Resource
                 })
                 ->rules('nullable', 'url')
                 ->displayUsing(function ($value) {
-                    return '<a href="' . $value . '" target="_blank">' . $value . '</a>';
+                    $html = <<<HTML
+                    <a href="{$value}" target="_blank">{$value}</a>
+                HTML;
+                    return $html;
                 })->asHtml()
                 ->hideFromIndex()
-                ->help(__('Enter the GeoJson URL. Alternatively, you can delete the existing GeoJson URL, click on "Update & Continue Editing," and upload an external GeoJson file. NOTE: If both fields are filled, the GeoJson File will be used.')),
-            Heading::make('<p>Geojson URL: This is the URL for the GeoJson file associated with the overlay. If both this URL and a file are provided, the file will be used instead.</p>')->asHtml(),
+                ->help(__('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.')),
+            Heading::make('<p>Geojson URL: The URL for the GeoJson file associated with the overlay. If both this URL and a file are provided, the file will be used instead.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             File::make('Geojson File', 'feature_collection')
                 ->disk('public')
                 ->path('geojson/' . $app_name)
                 ->acceptedTypes(['.json', '.geojson'])
+                //rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
                 ->hideWhenCreating(function () {
+                    // if the feature_collection is an external url, hide the file field
                     return $this->getFeatureCollectionType() == 'external';
                 })
                 ->hideWhenUpdating(function () {
                     return $this->getFeatureCollectionType() == 'external';
                 })
                 ->hideFromDetail(function () {
-                    return $this->getFeatureCollectionType() == 'external';
+                    return $this->getFeatureCollectionType() == 'external';;
                 })
-                ->help(__('Upload a GeoJson file. Alternatively, you can delete the existing GeoJson file, click on "Update & Continue Editing," and insert an external GeoJson URL. NOTE: If both fields are filled, the GeoJson File will be used.')),
+                ->help('Upload a Geojson file. Alternatively you can delete the existent Geojson file, click on "Update & Continue Editing" below, and insert an external Geojson URL. NOTE: If both fields are filled, the GeoJson File will be used.'),
 
             Text::make('Icon', 'icon', function () {
                 return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
-            })->asHtml(),
-            Heading::make('<p>Icon: The SVG icon associated with this overlay.</p>')->asHtml(),
+            })->asHtml()->onlyOnDetail(),
+            Heading::make('<p>Icon: The SVG icon associated with this overlay.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Swatches::make('Fill Color')
                 ->default(function () {
@@ -134,8 +153,10 @@ class OverlayLayer extends Resource
                     'fallback-type' => 'input',
                 ])
                 ->hideWhenCreating()
-                ->help(__('This is the fill color of the overlay.')),
-            Heading::make('<p>Fill Color: The color used to fill the overlay on the map.</p>')->asHtml(),
+                ->help(__('Fill color of the overlay.')),
+            Heading::make('<p>Fill Color: The color used to fill the overlay on the map.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Swatches::make('Stroke Color')
                 ->default(function () {
@@ -147,13 +168,17 @@ class OverlayLayer extends Resource
                     'fallback-type' => 'input',
                 ])
                 ->hideWhenCreating()
-                ->help(__('This is the border color of the overlay. It will also be applied when clicking on the overlay.')),
-            Heading::make('<p>Stroke Color: The border color of the overlay, which is also applied on click.</p>')->asHtml(),
+                ->help(__('Border color of the overlay. This color will also be applied when clicking on an overlay.')),
+            Heading::make('<p>Stroke Color: The border color of the overlay, which is also applied on click.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Number::make('Stroke width')
                 ->hideWhenCreating()
-                ->help(__('This field determines the border thickness of the overlay.')),
-            Heading::make('<p>Stroke Width: The thickness of the overlay’s border.</p>')->asHtml(),
+                ->help(__('Border thickness.')),
+            Heading::make('<p>Stroke Width: The thickness of the overlay’s border.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Textarea::make('Icon SVG', 'icon')
                 ->onlyOnForms()
@@ -171,20 +196,21 @@ class OverlayLayer extends Resource
                 } else {
                     return 'No layers';
                 }
-            })->asHtml(),
-            Heading::make('<p>Layers: The layers associated with this overlay.</p>')->asHtml(),
+            })->onlyOnDetail()->hideWhenCreating()->asHtml(),
+            Heading::make('<p>Layers: The layers associated with this overlay.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
 
             Code::Make('configuration')
                 ->language('json')
                 ->rules('json', 'nullable')
                 ->default(null)
                 ->help(__('Insert the JSON code of type FeatureCollection for the overlay here.')),
-            Heading::make('<p>Configuration: JSON code of type FeatureCollection for the overlay.</p>')->asHtml(),
+            Heading::make('<p>Configuration: JSON code of type FeatureCollection for the overlay.</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
         ];
     }
-
-
-
 
     /**
      * Get the cards available for the request.
@@ -243,7 +269,6 @@ class OverlayLayer extends Resource
             return $query->where('id', $resourceId);
         }
     }
-
 
     /**
      * Check if the feature_collection field is an external url or a local file path

@@ -259,6 +259,9 @@ class EcPoi extends Resource
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
+                    // NovaTabTranslatable::make([
+                    //     Text::make(__('Audio'),'audio')->onlyOnDetail(),
+                    // ])->onlyOnDetail(),
                     Text::make(__('Audio'), 'audio')
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -291,9 +294,22 @@ class EcPoi extends Resource
 
                         return $url;
                     })->withMeta(['width' => 400])->onlyOnDetail(),
+
                     Heading::make('
                     <p>Feature Image: The main image representing the POI, ideally in horizontal format (1440 x 500 pixels).</p>
                 ')->asHtml(),
+                    // Text::make('Gallery',function(){
+                    //     if (count($this->ecMedia) == 0) {
+                    //         return 'No gallery';
+                    //     }
+
+                    //     $gallery = '';
+                    //     foreach ($this->ecMedia as $media) {
+                    //         $thumbnail = $media->thumbnail('150x150');
+                    //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                    //     }
+                    //     return $gallery;
+                    // })->asHtml(),
                 ],
                 'Map' => [
                     MapPointNova3::make(__('Map'), 'geometry')->withMeta([
@@ -373,10 +389,6 @@ class EcPoi extends Resource
                         ->hideWhenUpdating(),
 
                     Text::make('Code')
-                        ->hideFromIndex()
-                        ->hideFromDetail()
-                        ->hideWhenCreating()
-                        ->hideWhenUpdating(),
                 ],
 
                 'Accessibility' => $this->accessibility_tab(),
@@ -477,6 +489,12 @@ class EcPoi extends Resource
                 [
                     'Main' => [
                         NovaTabTranslatable::make([
+                            Heading::make('
+                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
+                                        <p><strong>Name:</strong> Enter the name of the POI. This will be the main title displayed.</p>
+                                        <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
+                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
+                                    ')->asHtml(),
                             Text::make(__('Name'), 'name')
                                 ->readonly($isOsmidSet)
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),

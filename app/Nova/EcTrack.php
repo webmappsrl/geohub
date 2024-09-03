@@ -263,6 +263,15 @@ class EcTrack extends Resource
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
+                    Text::make('Audio', function () {
+                        $this->audio;
+                    })
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
+                    Boolean::make('Allow print PDF for this track', 'allow_print_pdf')
+                        ->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                         if ('' !== $url && substr($url, 0, 4) !== 'http') {
@@ -274,7 +283,18 @@ class EcTrack extends Resource
                     Heading::make('
                     <p>Feature Image: The main image representing the track, ideally in horizontal format (1440 x 500 pixels).</p>
                 ')->asHtml(),
+                    // Text::make('Gallery',function(){
+                    //     if (count($this->ecMedia) == 0) {
+                    //         return 'No gallery';
+                    //     }
 
+                    //     $gallery = '';
+                    //     foreach ($this->ecMedia as $media) {
+                    //         $thumbnail = $media->thumbnail('150x150');
+                    //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
+                    //     }
+                    //     return $gallery;
+                    // })->asHtml()
                     Text::make('Related Url', function () {
                         $out = '';
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
@@ -294,7 +314,7 @@ class EcTrack extends Resource
                     Ecpoipopup::make(__('ecPoi'))
                         ->nullable()
                         ->onlyOnDetail()
-                        ->feature([]),
+                        ->feature($geojson ?? []),
                     Heading::make('
                     <p>Related POIs: Points of interest associated with the track, displayed on the map and in the track details.</p>
                 ')->asHtml(),
@@ -395,7 +415,11 @@ class EcTrack extends Resource
 
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
-                    ])->hideFromIndex()->hideFromDetail()->hideWhenCreating()->hideWhenUpdating(),
+                    ])
+                        ->hideFromIndex()
+                        ->hideFromDetail()
+                        ->hideWhenCreating()
+                        ->hideWhenUpdating(),
                 ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
@@ -569,6 +593,7 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>";
                     })->asHtml(),
+                    //show a link to the track-pdf.blade.php
                     Heading::make('
                     <p>Widget: Simple: Link to the simple widget for this track.</p>
                 ')->asHtml(),
@@ -609,7 +634,7 @@ class EcTrack extends Resource
                     'maxZoom' => 16,
                 ])
             ]),
-
+            // Necessary for view
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
