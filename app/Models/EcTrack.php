@@ -943,21 +943,21 @@ class EcTrack extends Model
 
             foreach ($sortedLayers as $layer) {
                 $layerTaxonomies = $layer->getLayerTaxonomyIDs();
-                $matchesAllCriteria = true; // Assume che il layer corrisponda a tutte le tassonomie
+                $hasAtLeastOneMatch = false; // Assume che nessuna tassonomia corrisponda
 
                 foreach ($trackTaxonomies as $taxonomyType => $requiredIds) {
-                    // Verifica solo se il layer contiene questa tassonomia
+                    // Verifica se il layer contiene la tassonomia corrente
                     if (isset($layerTaxonomies[$taxonomyType])) {
-                        // Controlla se c'è almeno una corrispondenza tra le tassonomie della traccia e quelle del layer
-                        if (!array_intersect($layerTaxonomies[$taxonomyType], $requiredIds)) {
-                            $matchesAllCriteria = false;
-                            break; // Se una tassonomia non corrisponde, interrompe il controllo
+                        // Controlla se c'è almeno una corrispondenza tra le tassonomie del layer e quelle della traccia
+                        if (array_intersect($layerTaxonomies[$taxonomyType], $requiredIds)) {
+                            $hasAtLeastOneMatch = true;
+                            break; // Esce dal loop appena trova una corrispondenza
                         }
                     }
                 }
 
-                // Se il layer corrisponde a tutte le tassonomie applicabili, lo aggiunge all'array dei layers
-                if ($matchesAllCriteria) {
+                // Se il layer non ha alcuna corrispondenza, non lo includiamo
+                if ($hasAtLeastOneMatch) {
                     $layers[$app->id][] = $layer->id;
                 }
             }
@@ -970,6 +970,7 @@ class EcTrack extends Model
 
         return $layers;
     }
+
 
 
     public function updateDataChain(EcTrack $track)
