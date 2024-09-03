@@ -56,7 +56,10 @@ class Layer extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'title', 'subtitle'
+        'id',
+        'name',
+        'title',
+        'subtitle'
     ];
 
 
@@ -140,11 +143,11 @@ class Layer extends Resource
                     Boolean::make('Show Label', 'show_label'),
                 ],
                 'STYLE' => [
-                    Swatches::make('Color', 'color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                    Swatches::make('Color', 'color')->colors('text-advanced')->withProps([
                         'show-fallback' => true,
                         'fallback-type' => 'input',
                     ]),
-                    Swatches::make('Fill Color', 'fill_color')->default('#de1b0d')->colors('text-advanced')->withProps([
+                    Swatches::make('Fill Color', 'fill_color')->colors('text-advanced')->withProps([
                         'show-fallback' => true,
                         'fallback-type' => 'input',
                     ]),
