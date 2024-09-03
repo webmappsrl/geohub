@@ -915,22 +915,24 @@ class EcTrack extends Model
     {
         $layers = [];
 
-        $trackTaxonomies = [];
-
+        // Estrazione delle tassonomie per il filtro
         $taxonomyActivities = $this->taxonomyActivities->pluck('id')->toArray();
-        $taxonomywheres = $this->taxonomywheres->pluck('id')->toArray();
-        $taxonomythemes = $this->taxonomythemes->pluck('id')->toArray();
+        $taxonomyWheres = $this->taxonomyWheres->pluck('id')->toArray();
+        $taxonomyThemes = $this->taxonomyThemes->pluck('id')->toArray();
+
+        $trackTaxonomies = [];
 
         if (!empty($taxonomyActivities)) {
             $trackTaxonomies['activities'] = $taxonomyActivities;
         }
-        if (!empty($taxonomywheres)) {
-            $trackTaxonomies['wheres'] =  $taxonomywheres;
+        if (!empty($taxonomyWheres)) {
+            $trackTaxonomies['wheres'] =  $taxonomyWheres;
         }
-        if (!empty($taxonomythemes)) {
-            $trackTaxonomies['themes'] = $taxonomythemes;
+        if (!empty($taxonomyThemes)) {
+            $trackTaxonomies['themes'] = $taxonomyThemes;
         }
 
+        // Verifica se ci sono app associate
         if (is_null($this->trackHasApps())) {
             return $layers;
         }
@@ -940,44 +942,27 @@ class EcTrack extends Model
             $sortedLayers = $layersCollection->sortBy('rank');
 
             foreach ($sortedLayers as $layer) {
-                $layers_ids = $layer->getLayerTaxonomyIDs();
-                $matchesAllTaxonomies = true; // Assume the layer matches all taxonomies
+                $layerTaxonomies = $layer->getLayerTaxonomyIDs();
+                $matchesAllCriteria = true; // Assume che il layer corrisponda a tutte le tassonomie
 
-                foreach ($trackTaxonomies as $t_tax => $t_ids) {
-                    try {
-                        // Check if there is at least one match in the current taxonomy
-                        $hasMatch = false;
-
-                        if (
-                            is_array($layers_ids) &&
-                            array_key_exists($t_tax, $layers_ids) &&
-                            is_array($layers_ids[$t_tax])
-                        ) {
-                            // Check if there is at least one matching ID
-                            foreach ($t_ids as $id) {
-                                if (in_array($id, $layers_ids[$t_tax])) {
-                                    $hasMatch = true;
-                                    break; // Stop as soon as we find a match
-                                }
-                            }
+                foreach ($trackTaxonomies as $taxonomyType => $requiredIds) {
+                    // Verifica solo se il layer contiene questa tassonomia
+                    if (isset($layerTaxonomies[$taxonomyType])) {
+                        // Controlla se c'è almeno una corrispondenza tra le tassonomie della traccia e quelle del layer
+                        if (!array_intersect($layerTaxonomies[$taxonomyType], $requiredIds)) {
+                            $matchesAllCriteria = false;
+                            break; // Se una tassonomia non corrisponde, interrompe il controllo
                         }
-
-                        if (!$hasMatch) {
-                            $matchesAllTaxonomies = false;
-                            break; // If any taxonomy doesn't match, stop checking
-                        }
-                    } catch (Exception $e) {
-                        Log::error($e->getMessage());
-                        $matchesAllTaxonomies = false;
                     }
                 }
 
-                if ($matchesAllTaxonomies) {
+                // Se il layer corrisponde a tutte le tassonomie applicabili, lo aggiunge all'array dei layers
+                if ($matchesAllCriteria) {
                     $layers[$app->id][] = $layer->id;
                 }
             }
 
-            // Ensure there is an entry for the app even if no layers match
+            // Se non ci sono layers corrispondenti, crea comunque un array vuoto per l'app
             if (empty($layers[$app->id])) {
                 $layers[$app->id] = [];
             }
