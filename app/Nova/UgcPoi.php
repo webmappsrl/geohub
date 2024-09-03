@@ -23,6 +23,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
+use Laravel\Nova\Fields\Heading;
 
 class UgcPoi extends Resource
 {
@@ -78,11 +79,18 @@ class UgcPoi extends Resource
     public function fields(Request $request): array
     {
         return [
+
             //            ID::make(__('ID'), 'id')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            Heading::make('
+                            <p>Creation date of the UGC</p>
+                        ')->asHtml(),
             Text::make(__('Name'), 'name')
                 ->sortable()
-                ->help(__('Name of the UGC (User-Generated Content).')),
+                ->help(__('Name entered by the user.')),
+            Heading::make('
+                            <p>Name entered by the user</p>
+                        ')->asHtml(),
             Text::make(__('App'),  function ($model) {
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
@@ -102,8 +110,14 @@ class UgcPoi extends Resource
                 }
                 return '';
             })->asHtml(),
+            Heading::make('
+                            <p>App from which the UGC was submitted</p>
+                        ')->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class)
                 ->help(__('Creator of the UGC (User-Generated Content).')),
+            Heading::make('
+                            <p>Creator of the UGC</p>
+                        ')->asHtml(),
             BelongsToMany::make(__('Taxonomy wheres'))->searchable(),
             Text::make(__('Form'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
@@ -194,12 +208,18 @@ class UgcPoi extends Resource
                     }
                 }
             })->onlyOnDetail()->asHtml(),
+            Heading::make('
+                            <p>Type of form submitted, and data entered within it</p>
+                        ')->asHtml(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
+            Heading::make('
+                            <p>Geolocated point where the UGC was submitted</p>
+                        ')->asHtml(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Code::make(__('json Form data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);

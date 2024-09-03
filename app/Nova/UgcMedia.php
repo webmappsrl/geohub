@@ -19,6 +19,7 @@ use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Wm\MapPointNova3\MapPointNova3;
+use Laravel\Nova\Fields\Heading;
 
 class UgcMedia extends Resource
 {
@@ -42,7 +43,8 @@ class UgcMedia extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'app_id'
+        'name',
+        'app_id'
     ];
 
     public static array $searchRelations = [
@@ -83,18 +85,32 @@ class UgcMedia extends Resource
             Image::make('Image', 'relative_url')
                 ->disk('public')
                 ->help(__('Image associated with the UGC (User-Generated Content). From here, you can delete or replace it.')),
+            Heading::make('
+                            <p>Image associated with the UGC</p>
+                        ')->asHtml(),
             Text::make(__('Name'), function ($model) {
                 $relativeUrl = $model->relative_url;
 
                 return last(explode('/', $relativeUrl));
             }),
+            Heading::make('
+                            <p>Name of the uploaded file</p>
+                        ')->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class)->onlyOnIndex(),
             BelongsTo::make(__('Creator'), 'author', User::class)->searchable()->onlyOnDetail(),
+            Heading::make('
+                            <p>Creator of the UGC</p>
+                        ')->asHtml(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            Heading::make('
+                            <p>Creation date of the UGC</p>
+                        ')->asHtml(),
             Text::make(__('App ID'), 'app_id')
                 ->sortable()
                 ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
-
+            Heading::make('
+                <p>Reference ID of the app SKU</p>
+            ')->asHtml(),
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })->onlyOnIndex(),
@@ -105,6 +121,9 @@ class UgcMedia extends Resource
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
+            Heading::make('
+                            <p>Geolocated track created by the user</p>
+                        ')->asHtml(),
             MapPointNova3::make(__('Map'), 'geometry')->withMeta([
                 'center' => ["51", "4"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
@@ -113,7 +132,7 @@ class UgcMedia extends Resource
                 'maxZoom' => 16,
             ])
                 ->onlyOnForms()
-                ->help(__('The map displays the coordinates where the photo was taken. It is possible to modify the coordinates.')),
+                ->help(__('Geolocated point where the media was uploaded')),
         ];
     }
 

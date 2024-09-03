@@ -21,6 +21,7 @@ use App\Nova\Actions\ExportFormDataXLSX;
 use App\Models\App;
 use App\Nova\Actions\CopyUgc;
 use Exception;
+use Laravel\Nova\Fields\Heading;
 
 class UgcTrack extends Resource
 {
@@ -82,9 +83,15 @@ class UgcTrack extends Resource
         return [
             //            ID::make(__('ID'), 'id')->sortable(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
+            Heading::make('
+                            <p>Creation date of the UGC</p>
+                        ')->asHtml(),
             Text::make(__('Name'), 'name')
                 ->sortable()
                 ->help(__('Name of the UGC (User-Generated Content).')),
+            Heading::make('
+                            <p>Name entered by the user</p>
+                        ')->asHtml(),
             Text::make(__('App'),  function ($model) {
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
@@ -104,8 +111,14 @@ class UgcTrack extends Resource
                 }
                 return '';
             })->asHtml(),
+            Heading::make('
+                            <p>App from which the UGC was submitted</p>
+                        ')->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class)
                 ->help(__('Creator of the UGC (User-Generated Content).')),
+            Heading::make('
+                            <p>Creator of the UGC</p>
+                        ')->asHtml(),
             Text::make(__('App id'), 'app_id')
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
@@ -203,12 +216,18 @@ class UgcTrack extends Resource
                     }
                 }
             })->onlyOnDetail()->asHtml(),
+            Heading::make('
+                            <p>Type of form submitted, and data entered within it</p>
+                        ')->asHtml(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
+            Heading::make('
+                            <p>Geolocated track created by the user</p>
+                        ')->asHtml(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Code::Make(__('metadata'), 'metadata')->language('json')->rules('nullable', 'json')->help(
                 'metadata of track'
