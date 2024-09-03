@@ -35,19 +35,37 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('UpdateEcTrackElasticIndexJob: ' . $this->ecTrack->id);
+        $trackId = $this->ecTrack->id;
+        Log::info("Inizio UpdateEcTrackElasticIndexJob per ecTrack ID: {$trackId}");
+
+        // Recupera i layer associati al track per applicazione
         $ecTrackLayers = $this->ecTrack->getLayersByApp();
+        Log::debug("Layer recuperati per ecTrack ID: {$trackId}", ['layers' => $ecTrackLayers]);
+
         $prefix = config('services.elastic.prefix') ?? 'geohub_app';
+        Log::debug("Prefisso dell'indice Elasticsearch utilizzato: {$prefix}");
+
         if (!empty($ecTrackLayers)) {
             foreach ($ecTrackLayers as $app_id => $layer_ids) {
                 if (!empty($layer_ids)) {
                     $indexName = $prefix . '_' . $app_id;
-                    Log::info('UpdateEcTrackElasticIndexJob-> indexName: ' . $indexName);
+                    Log::info("Indicizzazione dei layer per app ID: {$app_id} sotto l'indice: {$indexName}", ['layer_ids' => $layer_ids]);
+
+                    // Esegui l'effettiva indicizzazione
                     $this->ecTrack->elasticIndex($indexName, $layer_ids);
+
+                    Log::info("Indicizzazione completata con successo per ecTrack ID: {$trackId} sotto l'indice: {$indexName}");
                 } else {
-                    //    DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers, $this->ecTrack->id);
+                    Log::warning("Nessun layer trovato per app ID: {$app_id} sotto ecTrack ID: {$trackId}. Considera l'eliminazione dell'indice.");
+
+                    // Scommenta questo codice se desideri avviare il job per eliminare l'indice quando non si trovano layer
+                    // DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers, $trackId);
                 }
             }
+        } else {
+            Log::warning("Nessun layer disponibile per ecTrack ID: {$trackId}. Nessuna azione eseguita.");
         }
+
+        Log::info("UpdateEcTrackElasticIndexJob completato per ecTrack ID: {$trackId}");
     }
 }
