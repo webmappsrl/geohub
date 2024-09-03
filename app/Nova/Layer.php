@@ -113,13 +113,27 @@ class Layer extends Resource
             (new Tabs("LAYER Details: {$this->name} (GeohubId: {$this->id})", [
                 'MAIN' => [
                     BelongsTo::make('App'),
+                    Heading::make('<p>App: The app to which this layer belongs.</p>')->asHtml(),
+
                     Text::make('Name')->required(),
+                    Heading::make('<p>Name: The name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.</p>')->asHtml(),
+
                     NovaTabTranslatable::make([
                         Text::make('Title'),
-                        Text::make('Subtitle'),
+                        Heading::make('<p>Title: The title of the layer displayed on the app home screen.</p>')->asHtml(),
+
+                        Text::make('Subtitle')
+                            ->hideFromIndex()
+                            ->hideFromDetail()
+                            ->hideWhenCreating()
+                            ->hideWhenUpdating(),
+
                         Textarea::make('Description')->alwaysShow(),
+                        Heading::make('<p>Description: The description displayed in the layer details on the app home screen.</p>')->asHtml(),
+
                         Text::make('Track Type', 'track_type'),
-                    ])
+                        Heading::make('<p>Track Type: The name displayed as the header of the layer\'s track list.</p>')->asHtml(),
+                    ]),
                 ],
                 'MEDIA' => [
                     ExternalImage::make(__('Feature Image'), function () {
@@ -127,47 +141,56 @@ class Layer extends Resource
                         if ('' !== $url && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
-
                         return $url;
                     })->withMeta(['width' => 400])->onlyOnDetail(),
+                    Heading::make('<p>Feature Image: The main image representing the layer, displayed in the app home screen.</p>')->asHtml(),
                 ],
                 'BEHAVIOUR' => [
                     Boolean::make('Generate Edges', 'generate_edges'),
+                    Heading::make('<p>Generate Edges: Enable this function to view the tracks of the layer with the UI of stage itineraries.</p>')->asHtml(),
+
                     Boolean::make('No Details', 'noDetails')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('No Interaction', 'noInteraction')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Number::make('Zoom Min', 'minZoom')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Number::make('Zoom Max', 'maxZoom')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('Prevent Filter', 'preventFilter')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('Invert Polygons', 'invertPolygons')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('Alert', 'alert')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('Show Label', 'show_label')
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -175,39 +198,53 @@ class Layer extends Resource
                         ->hideWhenUpdating(),
                 ],
                 'STYLE' => [
-                    Swatches::make('Color', 'color')->colors('text-advanced')->withProps([
-                        'show-fallback' => true,
-                        'fallback-type' => 'input',
-                    ]),
-                    Swatches::make('Fill Color', 'fill_color')->colors('text-advanced')->withProps([
-                        'show-fallback' => true,
-                        'fallback-type' => 'input',
-                    ]),
+                    Swatches::make('Color', 'color')
+                        ->default('#de1b0d')
+                        ->colors('text-advanced')
+                        ->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
+                    Heading::make('<p>Color: Choose a color to associate with the Layer. All tracks associated with the layer will have the same color.</p>')->asHtml(),
+
+                    Swatches::make('Fill Color', 'fill_color')
+                        ->default('#de1b0d')
+                        ->colors('text-advanced')
+                        ->withProps([
+                            'show-fallback' => true,
+                            'fallback-type' => 'input',
+                        ]),
+                    Heading::make('<p>Fill Color: Choose a fill color to associate with the Layer. All tracks associated with the layer will have the same fill color.</p>')->asHtml(),
+
                     Number::make('Fill Opacity', 'fill_opacity')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Number::make('Stroke Width', 'stroke_width')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Number::make('Stroke Opacity', 'stroke_opacity')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Number::make('Zindex', 'zindex')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Text::make('Line Dash', 'line_dash')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
-                        ->hideWhenUpdating()
+                        ->hideWhenUpdating(),
                 ],
                 'DATA' => [
                     Boolean::make('Use APP bounding box to limit data', 'data_use_bbox')
@@ -215,53 +252,66 @@ class Layer extends Resource
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Boolean::make('Use features only created by myself', 'data_use_only_my_data')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
+
                     Text::make('associatedApps', function () {
                         if ($this->associatedApps()->count() > 0) {
                             return implode(',', $this->associatedApps()->pluck('name')->toArray());
                         }
                         return 'No associated apps';
                     }),
+                    Heading::make('<p>Associated Apps: Displays the apps associated with this layer.</p>')->asHtml(),
+
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
                         return 'No activities';
                     }),
+                    Heading::make('<p>Activities: Displays the activities associated with the Layer.</p>')->asHtml(),
+
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
                         return 'No Wheres';
                     }),
+                    Heading::make('<p>Wheres: Displays the locations associated with the Layer.</p>')->asHtml(),
+
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
                         return 'No Themes';
                     }),
+                    Heading::make('<p>Themes: Displays the themes associated with the Layer.</p>')->asHtml(),
+
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
                         return 'No Targets';
                     }),
+                    Heading::make('<p>Targets: Displays the targets associated with the Layer.</p>')->asHtml(),
+
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
                         return 'No Whens';
                     }),
-
+                    Heading::make('<p>Whens: Displays the time periods or seasons associated with the Layer.</p>')->asHtml(),
                 ]
 
             ]))->withToolbar(),
         ];
     }
+
     public function fieldsForCreate(Request $request)
     {
         return [
@@ -355,7 +405,8 @@ class Layer extends Resource
                 ->withProps([
                     'show-fallback' => true,
                     'fallback-type' => 'input',
-                ])->help(__('Choose a color to associate with the Layer. All tracks associated with the layer will have same color.')),
+                ])
+                ->help(__('Choose a color to associate with the Layer. All tracks associated with the layer will have same color.')),
             Swatches::make('Fill Color', 'fill_color')
                 ->default('#de1b0d')
                 ->colors('text-advanced')

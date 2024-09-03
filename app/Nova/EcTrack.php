@@ -219,27 +219,62 @@ class EcTrack extends Resource
                     Text::make('Geohub ID', function () {
                         return $this->id;
                     }),
+                    Heading::make('
+                    <p>Geohub ID: The unique identifier for the track in Geohub.</p>
+                ')->asHtml(),
+
                     Text::make('Author', function () {
                         return $this->user->name;
                     }),
+                    Heading::make('
+                    <p>Author: The user who created the track, affecting the content publication for associated apps.</p>
+                ')->asHtml(),
+
                     DateTime::make('Created At'),
+                    Heading::make('
+                    <p>Created At: The date and time when the track was created.</p>
+                ')->asHtml(),
+
                     DateTime::make('Updated At'),
+                    Heading::make('
+                    <p>Updated At: The date and time when the track was last modified.</p>
+                ')->asHtml(),
+
                     Number::make('OSM ID', 'osmid'),
+                    Heading::make('
+                    <p>OSM ID: The OpenStreetMap ID associated with the track. This ID cannot be modified once set, as the data will synchronize with OSM.</p>
+                ')->asHtml(),
+
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
+                        Heading::make('
+                        <p>Name: The name of the track, also known as the title.</p>
+                    ')->asHtml(),
+
                         Textarea::make(__('Excerpt'), 'excerpt'),
+                        Heading::make('
+                        <p>Excerpt: A brief summary or introduction for the track, displayed in lists or previews.</p>
+                    ')->asHtml(),
+
                         Textarea::make('Description'),
+                        Heading::make('
+                        <p>Description: A detailed description of the track, providing comprehensive information.</p>
+                    ')->asHtml(),
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
-                    Text::make('Audio', function () {
-                        $this->audio;
-                    })
-                        ->hideFromIndex()
-                        ->hideFromDetail()
-                        ->hideWhenCreating()
-                        ->hideWhenUpdating(),
-                    Boolean::make('Allow print PDF for this track', 'allow_print_pdf')->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
+                    ExternalImage::make(__('Feature Image'), function () {
+                        $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
+                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                            $url = Storage::disk('public')->url($url);
+                        }
+
+                        return $url;
+                    })->withMeta(['width' => 400]),
+                    Heading::make('
+                    <p>Feature Image: The main image representing the track, ideally in horizontal format (1440 x 500 pixels).</p>
+                ')->asHtml(),
+
                     Text::make('Related Url', function () {
                         $out = '';
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
@@ -251,99 +286,116 @@ class EcTrack extends Resource
                         }
                         return $out;
                     })->asHtml(),
-                    ExternalImage::make(__('Feature Image'), function () {
-                        $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
-                            $url = Storage::disk('public')->url($url);
-                        }
-
-                        return $url;
-                    })->withMeta(['width' => 400]),
-
-                    // Text::make('Gallery',function(){
-                    //     if (count($this->ecMedia) == 0) {
-                    //         return 'No gallery';
-                    //     }
-
-                    //     $gallery = '';
-                    //     foreach ($this->ecMedia as $media) {
-                    //         $thumbnail = $media->thumbnail('150x150');
-                    //         $gallery .= "<div class='w-3/4 py-4 break-words'><div><img src='$thumbnail' class='external-image-thumbnail'></div></div>";
-                    //     }
-                    //     return $gallery;
-                    // })->asHtml()
+                    Heading::make('
+                    <p>Related Url: List of URLs associated with the track, each with a label for display.</p>
+                ')->asHtml(),
                 ],
                 'Related POIs' => [
                     Ecpoipopup::make(__('ecPoi'))
                         ->nullable()
                         ->onlyOnDetail()
-                        ->feature($geojson ?? []),
+                        ->feature([]),
+                    Heading::make('
+                    <p>Related POIs: Points of interest associated with the track, displayed on the map and in the track details.</p>
+                ')->asHtml(),
                 ],
                 'Info' => [
                     Boolean::make('Skip Geomixer Tech'),
+                    Heading::make('
+                    <p>Skip Geomixer Tech: Enable this option to manually enter technical data instead of auto-generation.</p>
+                ')->asHtml(),
+
                     Text::make('Ref'),
+                    Heading::make('
+                    <p>Ref: The reference number or code for the track, typically found on signs.</p>
+                ')->asHtml(),
+
                     Text::make('From'),
+                    Heading::make('
+                    <p>From: Label for the starting point of the track, visible if the related option is enabled in the app configuration.</p>
+                ')->asHtml(),
+
                     Text::make('To'),
+                    Heading::make('
+                    <p>To: Label for the endpoint of the track, visible if the related option is enabled in the app configuration.</p>
+                ')->asHtml(),
+
                     Boolean::make('Not Accessible'),
+                    Heading::make('
+                    <p>Not Accessible: Enable this option to indicate that the track is not accessible. The reason can be specified below.</p>
+                ')->asHtml(),
+
                     NovaTabTranslatable::make([
                         Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
                     ]),
-                    Text::make('Distance', 'distance')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'distance');
-                        })
-                        ->asHtml(),
-                    Text::make('Duration Forward', 'duration_forward')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'duration_forward');
-                        })
-                        ->asHtml(),
-                    Text::make('Duration Backward', 'duration_backward')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'duration_backward');
-                        })
-                        ->asHtml(),
-                    Text::make('Ascent', 'ascent')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'ascent');
-                        })
-                        ->asHtml(),
-                    Text::make('Descent', 'descent')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'descent');
-                        })
-                        ->asHtml(),
-                    Text::make('Elevation (From)', 'ele_from')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'ele_from');
-                        })
-                        ->asHtml(),
-                    Text::make('Elevation (To)', 'ele_to')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'ele_to');
-                        })
-                        ->asHtml(),
-                    Text::make('Elevation (Min)', 'ele_min')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'ele_min');
-                        })
-                        ->asHtml(),
-                    Text::make('Elevation (Max)', 'ele_max')
-                        ->resolveUsing(function ($value, $model) {
-                            return $this->generateFieldTable($model, $value, 'ele_max');
-                        })
-                        ->asHtml(),
+                    Heading::make('
+                    <p>Not Accessible Message: The reason why the track is not accessible, displayed when the "Not Accessible" option is enabled.</p>
+                ')->asHtml(),
+
+                    Text::make('Distance', 'distance'),
+                    Heading::make('
+                    <p>Distance: The length of the track, displayed in the track details. Can be manually edited if "Skip Geomixer Tech" is enabled.</p>
+                ')->asHtml(),
+
+                    Text::make('Duration Forward', 'duration_forward'),
+                    Heading::make('
+                    <p>Duration Forward: The estimated time to complete the track from the start to the endpoint. Displayed in hours.</p>
+                ')->asHtml(),
+
+                    Text::make('Duration Backward', 'duration_backward'),
+                    Heading::make('
+                    <p>Duration Backward: The estimated time to complete the track from the endpoint to the start. Displayed in hours.</p>
+                ')->asHtml(),
+
+                    Text::make('Ascent', 'ascent'),
+                    Heading::make('
+                    <p>Ascent: The total elevation gain for the track, displayed in the track details.</p>
+                ')->asHtml(),
+
+                    Text::make('Descent', 'descent'),
+                    Heading::make('
+                    <p>Descent: The total elevation loss for the track, displayed in the track details.</p>
+                ')->asHtml(),
+
+                    Text::make('Elevation (From)', 'ele_from'),
+                    Heading::make('
+                    <p>Elevation (From): The starting elevation of the track, displayed in the track details.</p>
+                ')->asHtml(),
+
+                    Text::make('Elevation (To)', 'ele_to'),
+                    Heading::make('
+                    <p>Elevation (To): The ending elevation of the track, displayed in the track details.</p>
+                ')->asHtml(),
+
+                    Text::make('Elevation (Min)', 'ele_min'),
+                    Heading::make('
+                    <p>Elevation (Min): The minimum elevation reached on the track, displayed in the track details.</p>
+                ')->asHtml(),
+
+                    Text::make('Elevation (Max)', 'ele_max'),
+                    Heading::make('
+                    <p>Elevation (Max): The maximum elevation reached on the track, displayed in the track details.</p>
+                ')->asHtml(),
                 ],
                 'Scale' => [
                     Text::make('Difficulty'),
-                    Text::make('Cai Scale'),
+                    Heading::make('
+                    <p>Difficulty: Custom text for the track difficulty, overriding the "Cai Scale" if set.</p>
+                ')->asHtml(),
+
+                    Select::make('Cai Scale')->options([
+                        'T' => 'Turistico (T)',
+                        'E' => 'Escursionistico (E)',
+                        'EE' => 'Per escursionisti esperti (EE)',
+                        'EEA' => 'Alpinistico (EEA)'
+                    ]),
+                    Heading::make('
+                    <p>CAI Scale: The official CAI difficulty scale for the track, differentiating the required effort for hiking.</p>
+                ')->asHtml(),
+
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
-                    ])
-                        ->hideFromIndex()
-                        ->hideFromDetail()
-                        ->hideWhenCreating()
-                        ->hideWhenUpdating()
+                    ])->hideFromIndex()->hideFromDetail()->hideWhenCreating()->hideWhenUpdating(),
                 ],
                 'Taxonomies' => [
                     Text::make('Activities', function () {
@@ -352,36 +404,59 @@ class EcTrack extends Resource
                         }
                         return 'No activities';
                     }),
+                    Heading::make('
+                    <p>Activities: The taxonomy activities associated with the track.</p>
+                ')->asHtml(),
+
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
                         return 'No Wheres';
                     }),
+                    Heading::make('
+                    <p>Wheres: The taxonomy locations associated with the track.</p>
+                ')->asHtml(),
+
                     Text::make('First where to show', function () {
                         if ($this->taxonomy_wheres_show_first) {
                             return TaxonomyWhere::find($this->taxonomy_wheres_show_first)->name;
                         }
                         return 'Nothing selected';
                     }),
+                    Heading::make('
+                    <p>First where to show: The first "Where" taxonomy to display in the track preview list.</p>
+                ')->asHtml(),
+
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
                         return 'No Themes';
                     }),
+                    Heading::make('
+                    <p>Themes: The taxonomy themes associated with the track.</p>
+                ')->asHtml(),
+
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
                         return 'No Targets';
                     }),
+                    Heading::make('
+                    <p>Targets: The taxonomy targets associated with the track.</p>
+                ')->asHtml(),
+
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
                         return 'No Whens';
                     }),
+                    Heading::make('
+                    <p>Whens: The taxonomy periods associated with the track.</p>
+                ')->asHtml(),
                 ],
                 'Out Source' => [
                     Text::make('Out Source Feature ID', function () {
@@ -391,6 +466,10 @@ class EcTrack extends Resource
                             return 'No Out Source Feature associated';
                         }
                     })->onlyOnDetail(),
+                    Heading::make('
+                    <p>Out Source Feature ID: The identifier for the associated external source feature.</p>
+                ')->asHtml(),
+
                     Text::make('External Source ID', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
@@ -399,6 +478,10 @@ class EcTrack extends Resource
                             return 'No External Source associated';
                         }
                     })->onlyOnDetail(),
+                    Heading::make('
+                    <p>External Source ID: The identifier for the associated external source.</p>
+                ')->asHtml(),
+
                     Text::make('Endpoint', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
@@ -407,6 +490,10 @@ class EcTrack extends Resource
                             return 'No endpoint associated';
                         }
                     })->onlyOnDetail(),
+                    Heading::make('
+                    <p>Endpoint: The endpoint associated with the external source feature.</p>
+                ')->asHtml(),
+
                     Text::make('Endpoint slug', 'endpoint_slug', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
@@ -415,6 +502,10 @@ class EcTrack extends Resource
                             return 'No endpoint slug associated';
                         }
                     })->onlyOnDetail(),
+                    Heading::make('
+                    <p>Endpoint slug: The slug for the endpoint associated with the external source feature.</p>
+                ')->asHtml(),
+
                     Text::make('Public Page', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
@@ -423,8 +514,10 @@ class EcTrack extends Resource
                         } else {
                             return "No Out Source Feature.";
                         }
-                    })
-                        ->asHtml(),
+                    })->asHtml(),
+                    Heading::make('
+                    <p>Public Page: Link to the public page of the external source feature.</p>
+                ')->asHtml(),
 
                     Text::make('Base API', function () {
                         if (!is_null($this->out_source_feature_id)) {
@@ -435,6 +528,10 @@ class EcTrack extends Resource
                             return "No Out Source Feature.";
                         }
                     })->asHtml(),
+                    Heading::make('
+                    <p>Base API: Link to the base API of the external source feature.</p>
+                ')->asHtml(),
+
                     Text::make('Widget: Simple', function () {
                         if (!is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
@@ -444,6 +541,9 @@ class EcTrack extends Resource
                             return "No Out Source Feature.";
                         }
                     })->asHtml(),
+                    Heading::make('
+                    <p>Widget: Simple: Link to the simple widget of the external source feature.</p>
+                ')->asHtml(),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
@@ -451,36 +551,55 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_pubblic}'>View Public Page</a>";
                     })->asHtml(),
+                    Heading::make('
+                    <p>Public Page: Link to the public page of this track.</p>
+                ')->asHtml(),
+
                     Text::make('Base API', function () {
                         $url_base_api = request()->root() . '/api/ec/track/' . $this->id;
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>";
                     })->asHtml(),
+                    Heading::make('
+                    <p>Base API: Link to the base API of this track.</p>
+                ')->asHtml(),
+
                     Text::make('Widget: Simple', function () {
                         $url_widget_simple = request()->root() . '/w/simple/' . $this->id;
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>";
                     })->asHtml(),
-                    //show a link to the track-pdf.blade.php
+                    Heading::make('
+                    <p>Widget: Simple: Link to the simple widget for this track.</p>
+                ')->asHtml(),
+
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
                             return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">Generate PDF</a>';
                         })
                         ->asHtml()
-                        ->onlyOnDetail()
+                        ->onlyOnDetail(),
+                    Heading::make('
+                    <p>PDF: Link to generate a PDF for this track.</p>
+                ')->asHtml(),
                 ],
 
                 'Data' => [
                     Heading::make($this->getData())->asHtml(),
                 ],
+
                 'Style' => [
                     Swatches::make('Color', 'color')
                         ->colors('text-advanced')->withProps([
                             'show-fallback' => true,
                             'fallback-type' => 'input',
                         ]),
+                    Heading::make('
+                    <p>Color: Select a color to associate with this track.</p>
+                ')->asHtml(),
                 ]
             ]))->withToolbar(),
+
             new Panel('Map', [
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
                     'center' => ["51", "4"],
@@ -490,10 +609,11 @@ class EcTrack extends Resource
                     'maxZoom' => 16,
                 ])
             ]),
-            // Necessary for view
+
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
+
 
     public function fieldsForUpdate(Request $request)
     {
