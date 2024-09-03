@@ -946,12 +946,12 @@ class EcTrack extends Model
                 $matchesAllCriteria = true; // Assume che il layer corrisponda a tutte le tassonomie
 
                 foreach ($trackTaxonomies as $taxonomyType => $requiredIds) {
-                    // Verifica solo se il layer contiene questa tassonomia
-                    if (isset($layerTaxonomies[$taxonomyType])) {
-                        // Controlla se c'è almeno una corrispondenza tra le tassonomie della traccia e quelle del layer
-                        if (!array_intersect($layerTaxonomies[$taxonomyType], $requiredIds)) {
+                    // Verifica se la traccia richiede una tassonomia e il layer ha quella tassonomia
+                    if (isset($trackTaxonomies[$taxonomyType]) && !empty($trackTaxonomies[$taxonomyType])) {
+                        if (!isset($layerTaxonomies[$taxonomyType]) || !array_intersect($layerTaxonomies[$taxonomyType], $requiredIds)) {
+                            // Se la tassonomia è richiesta dalla traccia, ma il layer non la soddisfa, escludi il layer
                             $matchesAllCriteria = false;
-                            break; // Se una tassonomia non corrisponde, interrompe il controllo
+                            break;
                         }
                     }
                 }
@@ -970,6 +970,7 @@ class EcTrack extends Model
 
         return $layers;
     }
+
 
 
     public function updateDataChain(EcTrack $track)
