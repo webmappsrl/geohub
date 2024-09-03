@@ -938,32 +938,54 @@ class EcTrack extends Model
         foreach ($this->trackHasApps() as $app) {
             $layersCollection = collect($app->layers);
             $sortedLayers = $layersCollection->sortBy('rank');
+
             foreach ($sortedLayers as $layer) {
                 $layers_ids = $layer->getLayerTaxonomyIDs();
+                $matchesAllTaxonomies = true; // Assume the layer matches all taxonomies
+
                 foreach ($trackTaxonomies as $t_tax => $t_ids) {
                     try {
-                        // Here we assume that there is only one category in each taxonomy type that is associated with the Layer
+                        // Check if there is at least one match in the current taxonomy
+                        $hasMatch = false;
+
                         if (
                             is_array($layers_ids) &&
                             array_key_exists($t_tax, $layers_ids) &&
-                            is_array($layers_ids[$t_tax]) &&
-                            isset($layers_ids[$t_tax][0]) &&
-                            is_array($t_ids) &&
-                            in_array($layers_ids[$t_tax][0], $t_ids)
+                            is_array($layers_ids[$t_tax])
                         ) {
-                            $layers[$app->id][] = $layer->id;
+                            // Check if there is at least one matching ID
+                            foreach ($t_ids as $id) {
+                                if (in_array($id, $layers_ids[$t_tax])) {
+                                    $hasMatch = true;
+                                    break; // Stop as soon as we find a match
+                                }
+                            }
+                        }
+
+                        if (!$hasMatch) {
+                            $matchesAllTaxonomies = false;
+                            break; // If any taxonomy doesn't match, stop checking
                         }
                     } catch (Exception $e) {
                         Log::error($e->getMessage());
+                        $matchesAllTaxonomies = false;
                     }
                 }
+
+                if ($matchesAllTaxonomies) {
+                    $layers[$app->id][] = $layer->id;
+                }
             }
-            if (empty($layers)) {
+
+            // Ensure there is an entry for the app even if no layers match
+            if (empty($layers[$app->id])) {
                 $layers[$app->id] = [];
             }
         }
+
         return $layers;
     }
+
 
     public function updateDataChain(EcTrack $track)
     {
