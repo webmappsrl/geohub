@@ -89,25 +89,29 @@ class User extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
+            Heading::make('<p>Avatar: Upload an avatar for the user. This field is hidden in most views.</p>')->asHtml()->onlyOnDetail(),
+
             /*Avatar::make('Avatar')->store(function (Request $request, $model) {
-                $content = file_get_contents($request->avatar);
-                $avatar = Storage::disk('public')->put('/avatars/test', $content);
-                return $avatar ? [
-                    'avatar' => $avatar,
-                ] : function () {
-                    throw new Exception(__("Il file caricato non è valido."));
-                };
-            }),*/
+            $content = file_get_contents($request->avatar);
+            $avatar = Storage::disk('public')->put('/avatars/test', $content);
+            return $avatar ? [
+                'avatar' => $avatar,
+            ] : function () {
+                throw new Exception(__("Il file caricato non è valido."));
+            };
+        }),*/
 
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255')
                 ->help(__('Enter the first name of the user.')),
+            Heading::make('<p>Name: Enter the first name of the user.</p>')->asHtml()->onlyOnDetail(),
 
             Text::make('Last Name')
                 ->sortable()
                 ->rules('required', 'max:255')
                 ->help(__('Enter the last name of the user.')),
+            Heading::make('<p>Last Name: Enter the last name of the user.</p>')->asHtml()->onlyOnDetail(),
 
             Text::make('Email')
                 ->sortable()
@@ -115,6 +119,7 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}')
                 ->help(__('Enter the user\'s email address.')),
+            Heading::make('<p>Email: Enter the user\'s email address.</p>')->asHtml()->onlyOnDetail(),
 
             Password::make('Password')
                 ->onlyOnForms()
@@ -123,23 +128,25 @@ class User extends Resource
                 ->help(__('Set the password for the user.')),
 
             Text::make(__('Referrer'))->onlyOnDetail()->sortable(),
+            Heading::make('<p>Referrer: This is the referrer information, displayed only on the detail view.</p>')->asHtml()->onlyOnDetail(),
 
             RoleSelect::make('Role', 'roles')
                 ->showOnCreating(function () {
                     $user = \App\Models\User::getEmulatedUser();
-
                     return $user->hasRole('Admin');
                 })
                 ->showOnUpdating(function () {
                     $user = \App\Models\User::getEmulatedUser();
-
                     return $user->hasRole('Admin');
                 })
                 ->help(__('Select the role of the user. It is important to select "Contributor" for users who use the apps.')),
+            Heading::make('<p>Role: Select the user\'s role, ensuring "Contributor" is selected for app users.</p>')->asHtml()->onlyOnDetail(),
+
             \Laravel\Nova\Fields\HasMany::make('Apps'),
             \Laravel\Nova\Fields\HasMany::make('EcTracks'),
         ];
     }
+
 
     /**
      * Get the cards available for the request.

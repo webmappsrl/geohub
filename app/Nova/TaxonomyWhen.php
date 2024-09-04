@@ -64,7 +64,7 @@ class TaxonomyWhen extends Resource
                     ->sortable()
                     ->help(__('Name displayed of the taxonomy')),
                 Heading::make('
-                                <p>Name* displayed through the app.</p>
+                                <p>Name: displayed through the app.</p>
                             ')->asHtml(),
                 CKEditor::make(__('Description'), 'description')
                     ->hideFromIndex()

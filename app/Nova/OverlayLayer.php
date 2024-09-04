@@ -70,8 +70,9 @@ class OverlayLayer extends Resource
                 ->onlyOnDetail(),
 
             NovaTabTranslatable::make([
-                Text::make(__('Label'), 'label')
-                    ->help(__('Name displayed in the overlay layers filter menu.'))
+                Text::make(__('Label'), 'label'),
+                Heading::make('<p>Label: Name displayed in the overlay layers filter menu.</p>')->asHtml()->onlyOnForms(),
+
             ]),
             Heading::make('<p>Label: The name displayed in the overlay layers filter menu.</p>')
                 ->asHtml()

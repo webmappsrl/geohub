@@ -332,14 +332,9 @@ class Layer extends Resource
                 ->required()
                 ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
             NovaTabTranslatable::make([
-                Heading::make('
-                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
-                                        <p><strong>Title:</strong> Enter the title of the layer. This will be the main title displayed.</p>
-                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
-                                        <p><strong>Track Type:</strong> Text displayed as the header of the column listing the tracks in the app.</p>
-                                    ')->asHtml(),
                 Text::make('Title')
                     ->help(__('Title of the layer displayed on the app home screen.')),
+                Heading::make('<p>Title: Enter the title of the layer. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                 Text::make('Subtitle')
                     ->hideFromIndex()
                     ->hideFromDetail()
@@ -348,8 +343,10 @@ class Layer extends Resource
                 Textarea::make('Description')
                     ->alwaysShow()
                     ->help(__('Description displayed in the layer details on the app home screen.')),
+                Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.</p>')->asHtml()->onlyOnForms(),
                 Text::make('Track Type', 'track_type')
                     ->help(__('Name displayed as the header of the layer\'s track list.')),
+                Heading::make('<p>Track Type: Text displayed as the header of the column listing the tracks in the app</p>')->asHtml()->onlyOnForms(),
             ]),
         ];
 

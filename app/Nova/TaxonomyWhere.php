@@ -218,11 +218,9 @@ class TaxonomyWhere extends Resource
                     Text::make(__('Identifier'), 'identifier')
                         ->help(__('API Identifier. To change the name displayed in the app, modify the label below.')),
                     NovaTabTranslatable::make([
-                        Heading::make('
-                                <p>Name* displayed through the app.</p>
-                            ')->asHtml(),
                         Text::make(__('Name'), 'name')
                             ->help(__('Name displayed of the taxonomy')),
+                        Heading::make('<p>Name: displayed through the app.</p>')->asHtml(),
                         CKEditor::make(__('Description'), 'description')
                             ->hideFromIndex()
                             ->hideFromDetail()

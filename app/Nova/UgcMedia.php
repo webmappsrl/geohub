@@ -95,16 +95,16 @@ class UgcMedia extends Resource
             }),
             Heading::make('
                             <p>Name of the uploaded file</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             BelongsTo::make(__('Creator'), 'user', User::class)->onlyOnIndex(),
             BelongsTo::make(__('Creator'), 'author', User::class)->searchable()->onlyOnDetail(),
             Heading::make('
                             <p>Creator of the UGC</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             Heading::make('
                             <p>Creation date of the UGC</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             Text::make(__('App ID'), 'app_id')
                 ->sortable()
                 ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
@@ -123,7 +123,7 @@ class UgcMedia extends Resource
             })->onlyOnDetail(),
             Heading::make('
                             <p>Geolocated track created by the user</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             MapPointNova3::make(__('Map'), 'geometry')->withMeta([
                 'center' => ["51", "4"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',

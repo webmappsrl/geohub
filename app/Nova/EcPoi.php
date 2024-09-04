@@ -489,21 +489,18 @@ class EcPoi extends Resource
                 [
                     'Main' => [
                         NovaTabTranslatable::make([
-                            Heading::make('
-                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
-                                        <p><strong>Name:</strong> Enter the name of the POI. This will be the main title displayed.</p>
-                                        <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
-                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
-                                    ')->asHtml(),
                             Text::make(__('Name'), 'name')
                                 ->readonly($isOsmidSet)
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
+                            Heading::make('<p>Name: Enter the name of the POI. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
+                            Heading::make('<p>Excerpt: Provide a brief summary or introduction. This will be shown in lists or previews.</p>')->asHtml()->onlyOnForms(),
                             NovaTinymce5Editor::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
+                            Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.</p>')->asHtml()->onlyOnForms(),
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid')
                             ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),

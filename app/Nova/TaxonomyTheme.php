@@ -63,22 +63,19 @@ class TaxonomyTheme extends Resource
             ErrorMessage::make('Error'),
 
             NovaTabTranslatable::make([
-                Heading::make('
-                                <h4>Instructions for Name, Excerpt, and Description Fields</h4>
-                                <p><strong>Name:</strong> Enter the name of the item. This will be the main title displayed.</p>
-                                <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
-                                <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
-                            ')->asHtml(),
                 Text::make(__('Name'), 'name')
                     ->sortable()
                     ->help(__('Name displayed of the taxonomy')),
+                Heading::make('<p>Name: Enter the name of the item. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                 CKEditor::make(__('Description'), 'description')
                     ->hideFromIndex()
                     ->help(__('Enter a detailed description of the taxonomy.')),
+                Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see..</p>')->asHtml()->onlyOnForms(),
                 Textarea::make(__('Excerpt'), 'excerpt')
                     ->hideFromIndex()
                     ->withMeta(['maxlength' => '255'])
                     ->help(__('Provide a brief summary or excerpt for the taxonomy. This should be a concise description.')),
+                Heading::make('<p>Excerpt: Provide a brief summary or introduction. This will be shown in lists or previews.</p>')->asHtml()->onlyOnForms(),
             ]),
 
             Text::make(__('Identifier'), 'identifier')
@@ -130,7 +127,6 @@ class TaxonomyTheme extends Resource
             Heading::make('<p>Created At: The date and time when this taxonomy was created.</p>')->asHtml()->onlyOnDetail(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
             Heading::make('<p>Updated At: The date and time when this taxonomy was last updated.</p>')->asHtml()->onlyOnDetail(),
-
 
             // new Panel('UX/UI', $this->ux_ui_panel()),
 

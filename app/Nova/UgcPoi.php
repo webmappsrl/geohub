@@ -112,7 +112,7 @@ class UgcPoi extends Resource
             })->asHtml(),
             Heading::make('
                             <p>App from which the UGC was submitted</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             BelongsTo::make(__('Creator'), 'user', User::class)
                 ->help(__('Creator of the UGC (User-Generated Content).')),
             Heading::make('
@@ -210,7 +210,7 @@ class UgcPoi extends Resource
             })->onlyOnDetail()->asHtml(),
             Heading::make('
                             <p>Type of form submitted, and data entered within it</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
@@ -219,7 +219,7 @@ class UgcPoi extends Resource
             })->onlyOnDetail(),
             Heading::make('
                             <p>Geolocated point where the UGC was submitted</p>
-                        ')->asHtml(),
+                        ')->asHtml()->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Code::make(__('json Form data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);

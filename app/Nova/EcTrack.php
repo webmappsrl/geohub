@@ -272,6 +272,7 @@ class EcTrack extends Resource
                         ->hideWhenUpdating(),
                     Boolean::make('Allow print PDF for this track', 'allow_print_pdf')
                         ->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
+                    Heading::make('<p>Feature Image: The main image representing the track, ideally in horizontal format (1440 x 500 pixels).</p>')->asHtml()->onlyOnDetail(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                         if ('' !== $url && substr($url, 0, 4) !== 'http') {
@@ -280,9 +281,7 @@ class EcTrack extends Resource
 
                         return $url;
                     })->withMeta(['width' => 400]),
-                    Heading::make('
-                    <p>Feature Image: The main image representing the track, ideally in horizontal format (1440 x 500 pixels).</p>
-                ')->asHtml(),
+                    Heading::make('<p>Feature Image: The main image representing the track, ideally in horizontal format (1440 x 500 pixels).</p>')->asHtml(),
                     // Text::make('Gallery',function(){
                     //     if (count($this->ecMedia) == 0) {
                     //         return 'No gallery';
@@ -660,20 +659,17 @@ class EcTrack extends Resource
         return [
             Tabs::make($tab_title, [
                 'Main' => [
-                    Heading::make('
-                                        <h4>Instructions for Name, Excerpt, and Description Fields</h4>
-                                        <p><strong>Name:</strong> Enter the name of the track. This will be the main title displayed.</p>
-                                        <p><strong>Excerpt:</strong> Provide a brief summary or introduction. This will be shown in lists or previews.</p>
-                                        <p><strong>Description:</strong> Add a detailed description. This field is for the full content that users will see.</p>
-                                    ')->asHtml(),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
                             ->readonly($isOsmidSet)
                             ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
+                        Heading::make('<p>Name: Enter the name of the track. This will be the main title displayed')->asHtml()->onlyOnForms(),
                         Textarea::make(__('Excerpt'), 'excerpt')
                             ->help(_('Provide a brief summary or excerpt for the track. This should be a concise description.')),
+                        Heading::make('<p>Excerpt: Provide a brief summary or introduction. This will be shown in lists or previews.')->asHtml()->onlyOnForms(),
                         NovaTinymce5Editor::make('Description')
                             ->help(__('Enter a detailed description of the track. Use this field to provide comprehensive information.')),
+                        Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.')->asHtml()->onlyOnForms(),
                     ])->onlyOnForms(),
                     BelongsTo::make('Author', 'author', User::class)
                         ->searchable()
