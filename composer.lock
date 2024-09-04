@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "baab3d7878ba7080ffb2212f13be7eed",
+    "content-hash": "6a3284a844d80cdc2d93a7d63e4efef5",
     "packages": [
         {
             "name": "ampeco/nova-date-range-filter",
@@ -2529,6 +2529,65 @@
             ],
             "abandoned": true,
             "time": "2022-02-23T14:25:13+00:00"
+        },
+        {
+            "name": "gabrieliuga/laravel-nova-sidebar-links",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gabrieliuga/laravel-nova-sidebar-links.git",
+                "reference": "f4b7ccb1b181f15cd1718440b92e133fd387dfaa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gabrieliuga/laravel-nova-sidebar-links/zipball/f4b7ccb1b181f15cd1718440b92e133fd387dfaa",
+                "reference": "f4b7ccb1b181f15cd1718440b92e133fd387dfaa",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=6.2",
+                "laravel/nova": ">=2.9",
+                "php": ">=7.4.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Giuga\\LaravelNovaSidebar\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Giuga\\LaravelNovaSidebar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Iuga",
+                    "email": "me@iuga.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Allow definition of custom links on Laravel Nova sidebar.",
+            "homepage": "https://github.com/gabrieliuga/laravel-nova-sidebar-links",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/gabrieliuga/laravel-nova-sidebar-links/issues",
+                "source": "https://github.com/gabrieliuga/laravel-nova-sidebar-links/tree/master"
+            },
+            "time": "2020-04-06T21:25:10+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -10451,7 +10510,7 @@
         },
         {
             "name": "webmapp/ecmediapopup",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "nova-components/EcMediaPopup",
@@ -10487,7 +10546,7 @@
         },
         {
             "name": "webmapp/ecpoipopup",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Ecpoipopup",
@@ -10523,7 +10582,7 @@
         },
         {
             "name": "webmapp/featureimagepopup",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "nova-components/FeatureImagePopup",
@@ -10559,7 +10618,7 @@
         },
         {
             "name": "webmapp/import",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/Import",
@@ -10595,7 +10654,7 @@
         },
         {
             "name": "webmapp/wm-embedmaps-field",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/WmEmbedmapsField",
@@ -10734,7 +10793,7 @@
         },
         {
             "name": "wm/map-multi-purpose-nova3",
-            "version": "dev-docker",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./nova-components/MapMultiPurposeNova3",
@@ -13444,5 +13503,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

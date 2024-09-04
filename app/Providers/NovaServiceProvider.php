@@ -3,36 +3,41 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Nova\Dashboards\MainDashboard;
-use App\Nova\Metrics\NewUgcMediaPerDay;
-use App\Nova\Metrics\NewUgcMediaByLoggedUser;
-use App\Nova\Metrics\NewUgcPoisPerDay;
-use App\Nova\Metrics\NewUgcPoisByLoggedUser;
-use App\Nova\Metrics\NewUgcTracksPerDay;
-use App\Nova\Metrics\NewUgcTracksByLoggedUser;
+use Laravel\Nova\Nova;
+use Webmapp\Import\Import;
+use App\Policies\RolePolicy;
 use App\Nova\Metrics\NewUsers;
 use App\Nova\Metrics\TotalUgc;
+use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\TotalUsers;
 use App\Nova\Metrics\NewUgcMedia;
-use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\NewUgcTracks;
-use App\Nova\Metrics\UserReferrers;
 use App\Policies\PermissionPolicy;
-use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\DB;
+use App\Nova\Metrics\UserReferrers;
 use Illuminate\Support\Facades\Gate;
-use Laravel\Nova\Nova;
+use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcTracksPerDay;
+use Giuga\LaravelNovaSidebar\NovaSidebar;
+use Giuga\LaravelNovaSidebar\SidebarLink;
+use Giuga\LaravelNovaSidebar\SidebarGroup;
+use App\Nova\Metrics\NewUgcPoisByLoggedUser;
+use App\Nova\Metrics\NewUgcMediaByLoggedUser;
+use App\Nova\Metrics\NewUgcTracksByLoggedUser;
 use Laravel\Nova\NovaApplicationServiceProvider;
-use Silvanite\NovaToolPermissions\NovaToolPermissions;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
-use Webmapp\Import\Import;
-class NovaServiceProvider extends NovaApplicationServiceProvider {
+use Illuminate\Support\Facades\Auth;
+
+class NovaServiceProvider extends NovaApplicationServiceProvider
+{
     /**
      * Bootstrap any application services.
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         parent::boot();
     }
 
@@ -41,7 +46,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function routes() {
+    protected function routes()
+    {
         Nova::routes()
             ->withAuthenticationRoutes()
             ->withPasswordResetRoutes()
@@ -55,7 +61,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    protected function gate() {
+    protected function gate()
+    {
         Gate::define('viewNova', function ($user) {
             $usersEmails = DB::select('
                 SELECT DISTINCT users.email as email
@@ -83,7 +90,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function cards(): array {
+    protected function cards(): array
+    {
         $cards = [];
         $currentUser = User::getEmulatedUser();
 
@@ -100,8 +108,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
             $cards[] = new NewUgcMediaPerDay();
         }
 
-        if ($currentUser->hasRole('Admin') ||
-            $currentUser->hasRole('Editor')) {
+        if (
+            $currentUser->hasRole('Admin') ||
+            $currentUser->hasRole('Editor')
+        ) {
             $cards[] = new NewUgcTracksByLoggedUser();
             $cards[] = new NewUgcPoisByLoggedUser();
             $cards[] = new NewUgcMediaByLoggedUser();
@@ -115,7 +125,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    protected function dashboards() {
+    protected function dashboards()
+    {
         return [];
     }
 
@@ -124,12 +135,21 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return array
      */
-    public function tools(): array {
+    public function tools(): array
+    {
+        $tools = [
+            ['Horizon', url('/horizon')],
+        ];
+
         return [
+            (new NovaSidebar())->hydrate([
+                'Tools' => $tools,
+            ]),
             NovaPermissionTool::make()
                 ->rolePolicy(RolePolicy::class)
                 ->permissionPolicy(PermissionPolicy::class),
             new Import,
+
         ];
     }
 
@@ -138,7 +158,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         Nova::sortResourcesBy(function ($resource) {
             return $resource::$priority ?? 99999;
         });

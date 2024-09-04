@@ -29,6 +29,7 @@
         "eminiarts/nova-tabs": "^1.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "gabrieliuga/laravel-nova-sidebar-links": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/agent": "^2.6",
         "khalin/nova-link-field": "^1.2",
