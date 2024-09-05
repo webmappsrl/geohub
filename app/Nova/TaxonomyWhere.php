@@ -99,21 +99,21 @@ class TaxonomyWhere extends Resource
                 'Main' => [
                     Text::make('Geohub ID', function () {
                         return $this->id;
-                    }),
-                    Heading::make('<p>Geohub ID: The unique identifier for the track in Geohub.</p>')->asHtml(),
-                    Text::make(__('Identifier'), 'identifier'),
-                    Heading::make('<p>Identifier: Api identifier.</p>')->asHtml(),
-                    BelongsTo::make('Author', 'author', User::class),
-                    Heading::make('<p>Author: The user who created the taxonomy.</p>')->asHtml(),
-                    DateTime::make(__('Created At'), 'created_at'),
-                    Heading::make('<p>Created At: The date and time when the track was created.</p>')->asHtml(),
-                    DateTime::make(__('Updated At'), 'updated_at'),
-                    Heading::make('<p>Updated At: The date and time when the track was last modified.</p>')->asHtml(),
+                    })
+                        ->help('The unique identifier for the track in Geohub'),
+                    Text::make(__('Identifier'), 'identifier')
+                        ->help(__('API Identifier. To change the name displayed in the app, modify the label below.')),
+                    BelongsTo::make('Author', 'author', User::class)
+                        ->help(__('Author: The user who created the taxonomy.')),
+                    DateTime::make(__('Created At'), 'created_at')
+                        ->help(__('Created At: The date and time when the track was created.')),
+                    DateTime::make(__('Updated At'), 'updated_at')
+                        ->help(__('Updated At: The date and time when the track was last modified.')),
+                    Heading::make('<p>Name: This is the name displayed for the taxonomy.</p>')->asHtml(),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
                             ->sortable()
                             ->help(__('Name displayed of the taxonomy')),
-                        Heading::make('<p>Name: This is the name displayed for the taxonomy.</p>')->asHtml(),
                         CKEditor::make(__('Description'), 'description')
                             ->hideFromIndex()
                             ->hideFromDetail()
@@ -132,18 +132,18 @@ class TaxonomyWhere extends Resource
                         if ('' !== $url && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
-
                         return $url;
-                    })->withMeta(['width' => 200]),
-                    Heading::make('<p>Feature Image: The main image representing the taxonomy.</p>')->asHtml(),
+                    })
+                        ->withMeta(['width' => 200])
+                        ->help(__('Feature Image: The main image representing the taxonomy.')),
                 ],
                 'Map' => [
+                    Heading::make('<p>Map: The geometry of taxonomy content that define the area on the map.</p>')->asHtml(),
                     WmEmbedmapsField::make(__('Map'), function ($model) {
                         return [
                             'feature' => $model->getGeojson(),
                         ];
                     }),
-                    Heading::make('<p>Map: The geometry of taxonomy content that define the area on the map.</p>')->asHtml(),
                 ],
                 'Style' => [
                     Number::make(__('Stroke Width'), 'stroke_width')
@@ -220,7 +220,6 @@ class TaxonomyWhere extends Resource
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name')
                             ->help(__('Name displayed of the taxonomy')),
-                        Heading::make('<p>Name: displayed through the app.</p>')->asHtml(),
                         CKEditor::make(__('Description'), 'description')
                             ->hideFromIndex()
                             ->hideFromDetail()

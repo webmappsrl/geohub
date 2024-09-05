@@ -112,27 +112,24 @@ class Layer extends Resource
         return [
             (new Tabs("LAYER Details: {$this->name} (GeohubId: {$this->id})", [
                 'MAIN' => [
-                    BelongsTo::make('App'),
-                    Heading::make('<p>App: The app to which this layer belongs.</p>')->asHtml(),
-
-                    Text::make('Name')->required(),
-                    Heading::make('<p>Name: The name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.</p>')->asHtml(),
-
+                    BelongsTo::make('App')
+                        ->help(__('The app to which this layer belongs.')),
+                    Text::make('Name')
+                        ->required()
+                        ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
                     NovaTabTranslatable::make([
-                        Text::make('Title'),
-                        Heading::make('<p>Title: The title of the layer displayed on the app home screen.</p>')->asHtml(),
-
+                        Text::make('Title')
+                            ->help(__('Title of the layer displayed on the app home screen.')),
                         Text::make('Subtitle')
                             ->hideFromIndex()
                             ->hideFromDetail()
                             ->hideWhenCreating()
                             ->hideWhenUpdating(),
-
-                        Textarea::make('Description')->alwaysShow(),
-                        Heading::make('<p>Description: The description displayed in the layer details on the app home screen.</p>')->asHtml(),
-
-                        Text::make('Track Type', 'track_type'),
-                        Heading::make('<p>Track Type: The name displayed as the header of the layer\'s track list.</p>')->asHtml(),
+                        Textarea::make('Description')
+                            ->alwaysShow()
+                            ->help(__('Description displayed in the layer details on the app home screen.')),
+                        Text::make('Track Type', 'track_type')
+                            ->help(__('Name displayed as the header of the layer\'s track list.')),
                     ]),
                 ],
                 'MEDIA' => [
@@ -142,55 +139,49 @@ class Layer extends Resource
                             $url = Storage::disk('public')->url($url);
                         }
                         return $url;
-                    })->withMeta(['width' => 400])->onlyOnDetail(),
-                    Heading::make('<p>Feature Image: The main image representing the layer, displayed in the app home screen.</p>')->asHtml(),
+                    })
+                        ->withMeta(['width' => 400])
+                        ->onlyOnDetail()
+                        ->help(__('The feature image is displayed in the list of Layers as the image in the app home screen. You can find the desired image previously uploaded in Ec Medias by searching and clicking on "click to choose".')),
                 ],
                 'BEHAVIOUR' => [
-                    Boolean::make('Generate Edges', 'generate_edges'),
-                    Heading::make('<p>Generate Edges: Enable this function to view the tracks of the layer with the UI of stage itineraries.</p>')->asHtml(),
-
+                    Boolean::make('Generate Edges', 'generate_edges')
+                        ->help(__('By enabling the Edge function, you will be able to view the tracks of the layer with the UI of stage itineraries. The function will be active only for the indicated layer. If you want to enable the Edge function for all layers of the app, activate it from App > Layer "Generate All Layers Edges".')),
                     Boolean::make('No Details', 'noDetails')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('No Interaction', 'noInteraction')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Number::make('Zoom Min', 'minZoom')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Number::make('Zoom Max', 'maxZoom')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('Prevent Filter', 'preventFilter')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('Invert Polygons', 'invertPolygons')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('Alert', 'alert')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('Show Label', 'show_label')
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -204,42 +195,36 @@ class Layer extends Resource
                         ->withProps([
                             'show-fallback' => true,
                             'fallback-type' => 'input',
-                        ]),
-                    Heading::make('<p>Color: Choose a color to associate with the Layer. All tracks associated with the layer will have the same color.</p>')->asHtml(),
-
+                        ])
+                        ->help(__('Color: Choose a color to associate with the Layer. All tracks associated with the layer will have the same color.')),
                     Swatches::make('Fill Color', 'fill_color')
                         ->default('#de1b0d')
                         ->colors('text-advanced')
                         ->withProps([
                             'show-fallback' => true,
                             'fallback-type' => 'input',
-                        ]),
-                    Heading::make('<p>Fill Color: Choose a fill color to associate with the Layer. All tracks associated with the layer will have the same fill color.</p>')->asHtml(),
-
+                        ])
+                        ->help(__('Fill Color: Choose a fill color to associate with the Layer. All tracks associated with the layer will have the same fill color.')),
                     Number::make('Fill Opacity', 'fill_opacity')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Number::make('Stroke Width', 'stroke_width')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Number::make('Stroke Opacity', 'stroke_opacity')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Number::make('Zindex', 'zindex')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Text::make('Line Dash', 'line_dash')
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -252,60 +237,53 @@ class Layer extends Resource
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Boolean::make('Use features only created by myself', 'data_use_only_my_data')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Text::make('associatedApps', function () {
                         if ($this->associatedApps()->count() > 0) {
                             return implode(',', $this->associatedApps()->pluck('name')->toArray());
                         }
                         return 'No associated apps';
-                    }),
-                    Heading::make('<p>Associated Apps: Displays the apps associated with this layer.</p>')->asHtml(),
-
+                    })
+                        ->help(__('It is possible to share the content of tracks from one app to another. Select the app that shares its track content in this layer. Additional taxonomy filters can be added, for example, if "Activities" and "MTB" are also selected, only the MTB tracks of the associated app will be shown. Click "Preview" to display the selected ones.')),
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
                         return 'No activities';
-                    }),
-                    Heading::make('<p>Activities: Displays the activities associated with the Layer.</p>')->asHtml(),
-
+                    })
+                        ->help(__('Select one or more activities taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
                         return 'No Wheres';
-                    }),
-                    Heading::make('<p>Wheres: Displays the locations associated with the Layer.</p>')->asHtml(),
-
+                    })
+                        ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
                         return 'No Themes';
-                    }),
-                    Heading::make('<p>Themes: Displays the themes associated with the Layer.</p>')->asHtml(),
-
+                    })
+                        ->help(__('Select one or more themes taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
                         return 'No Targets';
-                    }),
-                    Heading::make('<p>Targets: Displays the targets associated with the Layer.</p>')->asHtml(),
-
+                    })
+                        ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
                         return 'No Whens';
-                    }),
-                    Heading::make('<p>Whens: Displays the time periods or seasons associated with the Layer.</p>')->asHtml(),
+                    })
+                        ->help(__('Select one or more whens taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
                 ]
 
             ]))->withToolbar(),
@@ -331,10 +309,20 @@ class Layer extends Resource
             Text::make('Name')
                 ->required()
                 ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
+            Heading::make(
+                <<<HTML
+                    <ul>
+                        <li><p><strong>Title</strong>: Enter the title of the layer. This will be the main title displayed.</p></li>
+                        <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
+                        <li><p><strong>Track Type</strong>: Text displayed as the header of the column listing the tracks in the app.</p></li>
+                    </ul>
+                    HTML
+            )
+                ->asHtml()
+                ->onlyOnForms(),
             NovaTabTranslatable::make([
                 Text::make('Title')
                     ->help(__('Title of the layer displayed on the app home screen.')),
-                Heading::make('<p>Title: Enter the title of the layer. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                 Text::make('Subtitle')
                     ->hideFromIndex()
                     ->hideFromDetail()
@@ -343,10 +331,8 @@ class Layer extends Resource
                 Textarea::make('Description')
                     ->alwaysShow()
                     ->help(__('Description displayed in the layer details on the app home screen.')),
-                Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.</p>')->asHtml()->onlyOnForms(),
                 Text::make('Track Type', 'track_type')
                     ->help(__('Name displayed as the header of the layer\'s track list.')),
-                Heading::make('<p>Track Type: Text displayed as the header of the column listing the tracks in the app</p>')->asHtml()->onlyOnForms(),
             ]),
         ];
 

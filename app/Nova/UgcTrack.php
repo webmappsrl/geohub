@@ -81,18 +81,16 @@ class UgcTrack extends Resource
     public function fields(Request $request): array
     {
         return [
-            //            ID::make(__('ID'), 'id')->sortable(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Heading::make('
-                            <p>Creation date of the UGC</p>
-                        ')->asHtml(),
+            DateTime::make(__('Created At'), 'created_at')
+                ->sortable()
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->help(__('Creation date of the UGC (User-Generated Content).')),
             Text::make(__('Name'), 'name')
                 ->sortable()
                 ->help(__('Name of the UGC (User-Generated Content).')),
-            Heading::make('
-                            <p>Name entered by the user</p>
-                        ')->asHtml(),
             Text::make(__('App'),  function ($model) {
+                $help = __('App from which the UGC was submitted.');
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
                     $app_id = 'it.netseven.forestecasentinesi';
@@ -107,18 +105,13 @@ class UgcTrack extends Resource
                         class="no-underline dim text-primary font-bold">
                        {$app->name}
                     </a> <br>
+                    $help
                     HTML;
                 }
-                return '';
+                return $help;
             })->asHtml(),
-            Heading::make('
-                            <p>App from which the UGC was submitted</p>
-                        ')->asHtml()->onlyOnDetail(),
             BelongsTo::make(__('Creator'), 'user', User::class)
                 ->help(__('Creator of the UGC (User-Generated Content).')),
-            Heading::make('
-                            <p>Creator of the UGC</p>
-                        ')->asHtml(),
             Text::make(__('App id'), 'app_id')
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
@@ -154,7 +147,9 @@ class UgcTrack extends Resource
                         }
                     }
                 }
-            })->onlyOnIndex()->asHtml(),
+            })
+                ->onlyOnIndex()
+                ->asHtml(),
             Boolean::make(__('Has gallery'), function ($model) {
                 $gallery = $model->ugc_media;
 
@@ -163,7 +158,7 @@ class UgcTrack extends Resource
             Text::make(__('Form data'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
-
+                $help = '<p>Type of form submitted, and data entered within it</p>';
                 if (isset($formData)) {
                     $app_id = $model->app_id;
                     if ($app_id === 'it.net7.parcoforestecasentinesi') {
@@ -211,27 +206,28 @@ class UgcTrack extends Resource
                             }
                             $html .= '</table>';
 
-                            return $html;
+                            return $html . $help;
                         }
                     }
                 }
-            })->onlyOnDetail()->asHtml(),
-            Heading::make('
-                            <p>Type of form submitted, and data entered within it</p>
-                        ')->asHtml()->onlyOnDetail(),
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
+            Heading::make('<p>Geolocated track created by the user</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
-            Heading::make('
-                            <p>Geolocated track created by the user</p>
-                        ')->asHtml()->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
-            Code::Make(__('metadata'), 'metadata')->language('json')->rules('nullable', 'json')->help(
-                'metadata of track'
-            )->onlyOnDetail(),
+            Code::Make(__('metadata'), 'metadata')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail(),
             Text::make(__('Raw data'), function ($model) {
                 $rawData = json_decode($model->raw_data, true);
                 $result = [];
@@ -241,7 +237,9 @@ class UgcTrack extends Resource
                 }
 
                 return join('<br>', $result);
-            })->onlyOnDetail()->asHtml(),
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
         ];
     }
 

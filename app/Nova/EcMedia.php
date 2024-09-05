@@ -203,27 +203,16 @@ class EcMedia extends Resource
                     'Main' => [
                         Text::make('Geohub ID', function () {
                             return $this->id;
-                        }),
-                        Heading::make('
-                            <p>Geohub ID: Unique identifier for the media content in Geohub.</p>
-                        ')->asHtml(),
-                        BelongsTo::make('Author', 'author', User::class),
-                        Heading::make('
-                            <p>Author: The author of the media content, associated via foreign key with the users table.</p>
-                        ')->asHtml(),
-                        DateTime::make(__('Created At'), 'created_at'),
-                        Heading::make('
-                            <p>Created At: The date and time when the media content was created.</p>
-                        ')->asHtml(),
-                        DateTime::make(__('Updated At'), 'updated_at'),
-                        Heading::make('
-                            <p>Updated At: The last date and time when the media content was modified.</p>
-                        ')->asHtml(),
+                        })->help('Unique identifier for the media content in Geohub.'),
+                        BelongsTo::make('Author', 'author', User::class)
+                            ->help(__('The author of the media content, associated via foreign key with the users table.')),
+                        DateTime::make(__('Created At'), 'created_at')
+                            ->help(__('The date and time when the media content was created.')),
+                        DateTime::make(__('Updated At'), 'updated_at')
+                            ->help(__('The last date and time when the media content was modified.')),
                         NovaTabTranslatable::make([
-                            Text::make(__('Name'), 'name'),
-                            Heading::make('
-                                <p>Name: The name of the media content, also known as the title.</p>
-                            ')->asHtml(),
+                            Text::make(__('Name'), 'name')
+                                ->help(__('The name of the media content, also known as the title.')),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->hideFromIndex()
                                 ->hideFromDetail()
@@ -238,6 +227,9 @@ class EcMedia extends Resource
                     ],
                     'Images' => $this->getImages(),
                     'Map' => [
+                        Heading::make('
+                            <p>Map: The geometry of the media content (geographical point).</p>
+                        ')->asHtml(),
                         MapPointNova3::make(__('Map'), 'geometry')->withMeta([
                             'center' => ["51", "4"],
                             'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
@@ -245,9 +237,6 @@ class EcMedia extends Resource
                             'minZoom' => 7,
                             'maxZoom' => 16,
                         ]),
-                        Heading::make('
-                            <p>Map: The geometry of the media content (geographical point).</p>
-                        ')->asHtml(),
                     ],
                     'Taxonomies' => [
                         Text::make('Activities', function () {
@@ -255,46 +244,31 @@ class EcMedia extends Resource
                                 return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                             }
                             return 'No activities';
-                        }),
-                        Heading::make('
-                            <p>Activities: The taxonomy activities associated with the media content.</p>
-                        ')->asHtml(),
+                        })->help(__('The taxonomy activities associated with the media content.')),
                         Text::make('Wheres', function () {
                             if ($this->taxonomyWheres()->count() > 0) {
                                 return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                             }
                             return 'No Wheres';
-                        }),
-                        Heading::make('
-                            <p>Wheres: The taxonomy locations associated with the media content.</p>
-                        ')->asHtml(),
+                        })->help(__('The taxonomy locations associated with the media content.')),
                         Text::make('Themes', function () {
                             if ($this->taxonomyThemes()->count() > 0) {
                                 return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                             }
                             return 'No Themes';
-                        }),
-                        Heading::make('
-                            <p>Themes: The taxonomy themes associated with the media content.</p>
-                        ')->asHtml(),
+                        })->help(__('The taxonomy themes associated with the media content.')),
                         Text::make('Targets', function () {
                             if ($this->taxonomyTargets()->count() > 0) {
                                 return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                             }
                             return 'No Targets';
-                        }),
-                        Heading::make('
-                            <p>Targets: The taxonomy targets associated with the media content.</p>
-                        ')->asHtml(),
+                        })->help(__('The taxonomy targets associated with the media content.')),
                         Text::make('Whens', function () {
                             if ($this->taxonomyWhens()->count() > 0) {
                                 return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                             }
                             return 'No Whens';
-                        }),
-                        Heading::make('
-                            <p>Whens: The taxonomy periods associated with the media content.</p>
-                        ')->asHtml(),
+                        })->help(__('The taxonomy periods associated with the media content.')),
                     ],
                     'Data' => [
                         Heading::make($this->getData())->asHtml(),
@@ -328,13 +302,19 @@ class EcMedia extends Resource
                 $tab_title,
                 [
                     'Main' => [
+                        Heading::make(
+                            <<<HTML
+                            <ul>
+                                <li><p><strong>Name</strong>: Enter the name of the item. This will be the main title displayed.</p></li>
+                                <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
+                                <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
+                            </ul>
+                            HTML
+                        )->asHtml()->onlyOnForms(),
                         NovaTabTranslatable::make([
                             Text::make(__('Name'), 'name'),
-                            Heading::make('<p>Name: Enter the name of the item. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                             Textarea::make(__('Excerpt'), 'excerpt'),
-                            Heading::make('<p>Excerpt: Provide a brief summary or introduction. This will be shown in lists or previews.</p>')->asHtml()->onlyOnForms(),
                             Textarea::make(__('Description'), 'description'),
-                            Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.</p>')->asHtml()->onlyOnForms(),
                         ]),
                         BelongsTo::make('Author', 'author', User::class)
                             ->searchable()

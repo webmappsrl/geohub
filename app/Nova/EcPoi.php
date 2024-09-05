@@ -209,53 +209,33 @@ class EcPoi extends Resource
                 'Main' => [
                     Text::make('Geohub ID', function () {
                         return $this->id;
-                    }),
-                    Heading::make('
-                    <p>Geohub ID: The unique identifier for the POI in Geohub.</p>
-                ')->asHtml(),
-
+                    })->help(__('The unique identifier for the POI in Geohub.')),
                     Text::make('Author', function () {
                         return $this->author->name;
-                    }),
-                    Heading::make('
-                    <p>Author: The user who created the POI, affecting the content publication for associated apps.</p>
-                ')->asHtml(),
-
-                    DateTime::make('Created At')->onlyOnDetail(),
-                    Heading::make('
-                    <p>Created At: The date and time when the POI was created.</p>
-                ')->asHtml(),
-
-                    DateTime::make('Updated At')->onlyOnDetail(),
-                    Heading::make('
-                    <p>Updated At: The date and time when the POI was last modified.</p>
-                ')->asHtml(),
-
-                    Number::make('OSM ID', 'osmid'),
-                    Heading::make('
-                    <p>OSM ID: The OpenStreetMap ID associated with the POI. This ID cannot be modified once set, as the data will synchronize with OSM.</p>
-                ')->asHtml(),
-
-                    Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id'),
-                    Heading::make('
-                    <p>OUS SOURCE FEATURE ID: If this field contains data, updates to various fields will not be processed as they are synchronized from a different API. Remove the data in this field to update the fields.</p>
-                ')->asHtml(),
-
+                    })->help(__('The user who created the POI, affecting the content publication for associated apps.')),
+                    DateTime::make('Created At')
+                        ->onlyOnDetail()
+                        ->help(__('The date and time when the POI was created.')),
+                    DateTime::make('Updated At')
+                        ->onlyOnDetail()
+                        ->help(__('The date and time when the POI was last modified.')),
+                    Number::make('OSM ID', 'osmid')
+                        ->help(__('The OpenStreetMap ID associated with the POI. This ID cannot be modified once set, as the data will synchronize with OSM.')),
+                    Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id')
+                        ->help(__('If this field contains data, updates to various fields will not be processed as they are synchronized from a different API. Remove the data in this field to update the fields.')),
+                    Heading::make(
+                        <<<HTML
+                            <ul>
+                                <li><p><strong>Name</strong>: The name of the POI, also known as the title.</p></li>
+                                <li><p><strong>Excerpt</strong>: A brief summary or introduction for the POI, displayed in lists or previews.</p></li>
+                                <li><p><strong>Description</strong>: A detailed description of the POI, providing comprehensive information.</p></li>
+                            </ul>
+                            HTML
+                    )->asHtml(),
                     NovaTabTranslatable::make([
                         Text::make(__('Name'), 'name'),
-                        Heading::make('
-                        <p>Name: The name of the POI, also known as the title.</p>
-                    ')->asHtml(),
-
                         Textarea::make(__('Excerpt'), 'excerpt'),
-                        Heading::make('
-                        <p>Excerpt: A brief summary or introduction for the POI, displayed in lists or previews.</p>
-                    ')->asHtml(),
-
                         Textarea::make('Description'),
-                        Heading::make('
-                        <p>Description: A detailed description of the POI, providing comprehensive information.</p>
-                    ')->asHtml(),
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
@@ -266,13 +246,11 @@ class EcPoi extends Resource
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
-                        ->hideWhenUpdating(),
-                    Heading::make('
-                    <p>Audio: The audio file associated with the POI, typically used for text-to-speech descriptions.</p>
-                ')->asHtml(),
-
+                        ->hideWhenUpdating()
+                        ->help(__('The audio file associated with the POI, typically used for text-to-speech descriptions.')),
                     Text::make('Related Url', function () {
                         $out = '';
+                        $help = __('<p>Related Url: List of URLs associated with the POI, each with a label for display.</p>');
                         if (is_array($this->related_url) && count($this->related_url) > 0) {
                             foreach ($this->related_url as $label => $url) {
                                 $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
@@ -280,24 +258,18 @@ class EcPoi extends Resource
                         } else {
                             $out = "No related Url";
                         }
-                        return $out;
+                        return $out . $help;
                     })->asHtml(),
-                    Heading::make('
-                    <p>Related Url: List of URLs associated with the POI, each with a label for display.</p>
-                ')->asHtml(),
-
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
                         if ('' !== $url && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
-
                         return $url;
-                    })->withMeta(['width' => 400])->onlyOnDetail(),
-
-                    Heading::make('
-                    <p>Feature Image: The main image representing the POI, ideally in horizontal format (1440 x 500 pixels).</p>
-                ')->asHtml(),
+                    })
+                        ->withMeta(['width' => 400])
+                        ->onlyOnDetail()
+                        ->help(__('Feature Image: The main image representing the POI, ideally in horizontal format (1440 x 500 pixels).')),
                     // Text::make('Gallery',function(){
                     //     if (count($this->ecMedia) == 0) {
                     //         return 'No gallery';
@@ -312,6 +284,7 @@ class EcPoi extends Resource
                     // })->asHtml(),
                 ],
                 'Map' => [
+                    Heading::make('<p>Map: The geographical representation of the POI on the map.</p>')->asHtml(),
                     MapPointNova3::make(__('Map'), 'geometry')->withMeta([
                         'center' => ["51", "4"],
                         'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
@@ -319,142 +292,85 @@ class EcPoi extends Resource
                         'minZoom' => 7,
                         'maxZoom' => 16,
                     ]),
-                    Heading::make('
-                    <p>Map: The geographical representation of the POI on the map.</p>
-                ')->asHtml(),
                 ],
                 'Style' => $this->style_tab(),
-
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech'),
-                    Heading::make('
-                    <p>Skip Geomixer Tech: Enable this option if you do not want the Elevation data to be generated automatically. This way, you can enter them manually.</p>
-                ')->asHtml(),
-
-                    Text::make('Contact Phone'),
-                    Heading::make('
-                    <p>Contact Phone: The contact phone number associated with the POI.</p>
-                ')->asHtml(),
-
-                    Text::make('Contact Email'),
-                    Heading::make('
-                    <p>Contact Email: The contact email address associated with the POI.</p>
-                ')->asHtml(),
-
-                    Text::make('Adress / complete', 'addr_complete'),
-                    Heading::make('
-                    <p>Adress / complete: The complete address for the POI.</p>
-                ')->asHtml(),
-
-                    Text::make('Adress / street', 'addr_street'),
-                    Heading::make('
-                    <p>Adress / street: The street part of the address.</p>
-                ')->asHtml(),
-
-                    Text::make('Adress / housenumber', 'addr_housenumber'),
-                    Heading::make('
-                    <p>Adress / housenumber: The house number part of the address.</p>
-                ')->asHtml(),
-
-                    Text::make('Adress / postcode', 'addr_postcode'),
-                    Heading::make('
-                    <p>Adress / postcode: The postal code part of the address.</p>
-                ')->asHtml(),
-
-                    Text::make('Adress / locality', 'addr_locality'),
-                    Heading::make('
-                    <p>Adress / locality: The locality part of the address.</p>
-                ')->asHtml(),
-
-                    Text::make('Opening Hours'),
-                    Heading::make('
-                    <p>Opening Hours: The opening hours of the POI, following OSM syntax.</p>
-                ')->asHtml(),
-
-                    Number::Make('Elevation', 'ele'),
-                    Heading::make('
-                    <p>Elevation: The elevation of the POI in meters, displayed in the POI detail. To modify it manually, enable the "Skip Geomixer Tech" option.</p>
-                ')->asHtml(),
-
+                    Boolean::make('Skip Geomixer Tech')
+                        ->help(__('Enable this option if you do not want the Elevation data to be generated automatically. This way, you can enter them manually.')),
+                    Text::make('Contact Phone')
+                        ->help(__('The contact phone number associated with the POI.')),
+                    Text::make('Contact Email')
+                        ->help(__('The contact email address associated with the POI.')),
+                    Text::make('Adress / complete', 'addr_complete')
+                        ->help(__('Adress / complete: The complete address for the POI.')),
+                    Text::make('Adress / street', 'addr_street')
+                        ->help(__('Adress / street: The street part of the address.')),
+                    Text::make('Adress / housenumber', 'addr_housenumber')
+                        ->help(__('Adress / housenumber: The house number part of the address.')),
+                    Text::make('Adress / postcode', 'addr_postcode')
+                        ->help(__('Adress / postcode: The postal code part of the address.')),
+                    Text::make('Adress / locality', 'addr_locality')
+                        ->help(__('Adress / locality: The locality part of the address.')),
+                    Text::make('Opening Hours')
+                        ->help(__('Opening Hours: The opening hours of the POI, following OSM syntax.')),
+                    Number::Make('Elevation', 'ele')
+                        ->help(__('The elevation of the POI in meters, displayed in the POI detail. To modify it manually, enable the "Skip Geomixer Tech" option')),
                     Text::make('Capacity')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Text::make('Stars')
                         ->hideFromIndex()
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-
                     Text::make('Code')
                 ],
-
                 'Accessibility' => $this->accessibility_tab(),
-
                 'Reachability' => $this->reachability_tab(),
-
                 'Taxonomies' => [
                     Text::make('Poi Types', function () {
                         if ($this->taxonomyPoiTypes()->count() > 0) {
                             return implode(',', $this->taxonomyPoiTypes()->pluck('name')->toArray());
                         }
                         return 'No Poi Types';
-                    }),
-                    Heading::make('
-                    <p>Poi Types: The taxonomy types associated with the POI.</p>
-                ')->asHtml(),
-
+                    })->help(__('The taxonomy types associated with the POI')),
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
                         return 'No activities';
-                    }),
-                    Heading::make('
-                    <p>Activities: The taxonomy activities associated with the POI.</p>
-                ')->asHtml(),
-
+                    })
+                        ->help(__('The taxonomy activities associated with the POI')),
                     Text::make('Wheres', function () {
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
                         return 'No Wheres';
-                    }),
-                    Heading::make('
-                    <p>Wheres: The taxonomy locations associated with the POI.</p>
-                ')->asHtml(),
-
+                    })
+                        ->help(__('The taxonomy locations associated with the POI')),
                     Text::make('Themes', function () {
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
                         return 'No Themes';
-                    }),
-                    Heading::make('
-                    <p>Themes: The taxonomy themes associated with the POI.</p>
-                ')->asHtml(),
-
+                    })
+                        ->help(__('The taxonomy themes associated with the POI')),
                     Text::make('Targets', function () {
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
                         return 'No Targets';
-                    }),
-                    Heading::make('
-                    <p>Targets: The taxonomy targets associated with the POI.</p>
-                ')->asHtml(),
-
+                    })
+                        ->help(__('The taxonomy targets associated with the POI')),
                     Text::make('Whens', function () {
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
                         return 'No Whens';
-                    }),
-                    Heading::make('
-                    <p>Whens: The taxonomy periods associated with the POI.</p>
-                ')->asHtml(),
+                    })
+                        ->help(__('The taxonomy periods associated with the POI')),
                 ],
                 'Data' => [
                     Heading::make($this->getData())->asHtml(),
@@ -488,19 +404,25 @@ class EcPoi extends Resource
                 $tab_title,
                 [
                     'Main' => [
+                        Heading::make(
+                            <<<HTML
+                            <ul>
+                                <li><p><strong>Name</strong>: Enter the name of the POI. This will be the main title displayed.</p></li>
+                                <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
+                                <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
+                            </ul>
+                            HTML
+                        )->asHtml()->onlyOnForms(),
                         NovaTabTranslatable::make([
                             Text::make(__('Name'), 'name')
                                 ->readonly($isOsmidSet)
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
-                            Heading::make('<p>Name: Enter the name of the POI. This will be the main title displayed.</p>')->asHtml()->onlyOnForms(),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
-                            Heading::make('<p>Excerpt: Provide a brief summary or introduction. This will be shown in lists or previews.</p>')->asHtml()->onlyOnForms(),
                             NovaTinymce5Editor::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
-                            Heading::make('<p>Description: Add a detailed description. This field is for the full content that users will see.</p>')->asHtml()->onlyOnForms(),
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid')
                             ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),

@@ -85,45 +85,38 @@ class UgcMedia extends Resource
             Image::make('Image', 'relative_url')
                 ->disk('public')
                 ->help(__('Image associated with the UGC (User-Generated Content). From here, you can delete or replace it.')),
-            Heading::make('
-                            <p>Image associated with the UGC</p>
-                        ')->asHtml(),
             Text::make(__('Name'), function ($model) {
                 $relativeUrl = $model->relative_url;
-
                 return last(explode('/', $relativeUrl));
-            }),
-            Heading::make('
-                            <p>Name of the uploaded file</p>
-                        ')->asHtml()->onlyOnDetail(),
-            BelongsTo::make(__('Creator'), 'user', User::class)->onlyOnIndex(),
-            BelongsTo::make(__('Creator'), 'author', User::class)->searchable()->onlyOnDetail(),
-            Heading::make('
-                            <p>Creator of the UGC</p>
-                        ')->asHtml()->onlyOnDetail(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Heading::make('
-                            <p>Creation date of the UGC</p>
-                        ')->asHtml()->onlyOnDetail(),
+            })
+                ->help(__('Name of the uploaded file')),
+            BelongsTo::make(__('Creator'), 'user', User::class)
+                ->onlyOnIndex(),
+            BelongsTo::make(__('Creator'), 'author', User::class)
+                ->searchable()
+                ->onlyOnDetail()
+                ->help(__('User who uploaded the UGC (User-Generated Content)')),
+            DateTime::make(__('Created At'), 'created_at')
+                ->sortable()
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->help(__('Creation date of the UGC')),
             Text::make(__('App ID'), 'app_id')
                 ->sortable()
                 ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
-            Heading::make('
-                <p>Reference ID of the app SKU</p>
-            ')->asHtml(),
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
-            })->onlyOnIndex(),
+            })
+                ->onlyOnIndex(),
             BelongsToMany::make(__('Taxonomy wheres')),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                     'related' => $model->getRelatedUgcGeojson()
                 ];
-            })->onlyOnDetail(),
-            Heading::make('
-                            <p>Geolocated track created by the user</p>
-                        ')->asHtml()->onlyOnDetail(),
+            })
+                ->onlyOnDetail()
+                ->help(__('Map with the UGC (User-Generated Content) location')),
             MapPointNova3::make(__('Map'), 'geometry')->withMeta([
                 'center' => ["51", "4"],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',

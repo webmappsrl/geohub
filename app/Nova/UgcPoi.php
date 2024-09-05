@@ -79,19 +79,16 @@ class UgcPoi extends Resource
     public function fields(Request $request): array
     {
         return [
-
-            //            ID::make(__('ID'), 'id')->sortable(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
-            Heading::make('
-                            <p>Creation date of the UGC</p>
-                        ')->asHtml(),
+            DateTime::make(__('Created At'), 'created_at')
+                ->sortable()
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->help(__('Creation date of the UGC.')),
             Text::make(__('Name'), 'name')
                 ->sortable()
                 ->help(__('Name entered by the user.')),
-            Heading::make('
-                            <p>Name entered by the user</p>
-                        ')->asHtml(),
             Text::make(__('App'),  function ($model) {
+                $help = '<p>App from which the UGC was submitted</p>';
                 $app_id = $model->app_id;
                 if ($app_id === 'it.net7.parcoforestecasentinesi') {
                     $app_id = 'it.netseven.forestecasentinesi';
@@ -106,19 +103,16 @@ class UgcPoi extends Resource
                         class="no-underline dim text-primary font-bold">
                        {$app->name}
                     </a> <br>
+                    $help
                     HTML;
                 }
-                return '';
-            })->asHtml(),
-            Heading::make('
-                            <p>App from which the UGC was submitted</p>
-                        ')->asHtml()->onlyOnDetail(),
+                return $help;
+            })
+                ->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class)
                 ->help(__('Creator of the UGC (User-Generated Content).')),
-            Heading::make('
-                            <p>Creator of the UGC</p>
-                        ')->asHtml(),
-            BelongsToMany::make(__('Taxonomy wheres'))->searchable(),
+            BelongsToMany::make(__('Taxonomy wheres'))
+                ->searchable(),
             Text::make(__('Form'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
@@ -147,7 +141,9 @@ class UgcPoi extends Resource
                         }
                     }
                 }
-            })->onlyOnIndex()->asHtml(),
+            })
+                ->onlyOnIndex()
+                ->asHtml(),
             Boolean::make(__('Has gallery'), function ($model) {
                 $gallery = $model->ugc_media;
                 return count($gallery) > 0;
@@ -155,6 +151,7 @@ class UgcPoi extends Resource
             Text::make(__('Form data'), function ($model) {
                 $formData = json_decode($model->raw_data, true);
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
+                $help = '<p>Type of form submitted, and data entered within it</p>';
 
                 if (isset($formData)) {
                     $app_id = $model->app_id;
@@ -203,23 +200,20 @@ class UgcPoi extends Resource
                             }
                             $html .= '</table>';
 
-                            return $html;
+                            return $html . $help;
                         }
                     }
                 }
             })->onlyOnDetail()->asHtml(),
-            Heading::make('
-                            <p>Type of form submitted, and data entered within it</p>
-                        ')->asHtml()->onlyOnDetail(),
+            Heading::make('<p>Geolocated point where the UGC was submitted</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
                     'related' => $model->getRelatedUgcGeojson()
                 ];
             })->onlyOnDetail(),
-            Heading::make('
-                            <p>Geolocated point where the UGC was submitted</p>
-                        ')->asHtml()->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Code::make(__('json Form data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);
@@ -230,7 +224,10 @@ class UgcPoi extends Resource
                 unset($jsonRawData['nominatim']);
                 $rawData = json_encode($jsonRawData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
-            })->onlyOnDetail()->language('json')->rules('json'),
+            })
+                ->onlyOnDetail()
+                ->language('json')
+                ->rules('json'),
             Code::make(__('Device data'), function ($model) {
                 $jsonRawData = json_decode($model->raw_data, true);
                 $jsonData['position'] = $jsonRawData['position'];
@@ -239,16 +236,25 @@ class UgcPoi extends Resource
                 $jsonData['date'] = $jsonRawData['date'];
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
-            })->onlyOnDetail()->language('json')->rules('json'),
+            })
+                ->onlyOnDetail()
+                ->language('json')
+                ->rules('json'),
             Code::make(__('Nominatim'), function ($model) {
                 $jsonData = json_decode($model->raw_data, true)['nominatim'];
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
-            })->onlyOnDetail()->language('json')->rules('json'),
+            })
+                ->onlyOnDetail()
+                ->language('json')
+                ->rules('json'),
             Code::make(__('Raw data'), function ($model) {
                 $rawData = json_encode(json_decode($model->raw_data, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
-            })->onlyOnDetail()->language('json')->rules('json'),
+            })
+                ->onlyOnDetail()
+                ->language('json')
+                ->rules('json'),
         ];
     }
 

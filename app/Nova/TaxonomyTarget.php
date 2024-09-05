@@ -85,12 +85,15 @@ class TaxonomyTarget extends Resource
             ]),
 
             Text::make(__('Identifier'), 'identifier')
-                ->help(__('API Identifier')),
-            Heading::make('<p>Identifier: This is the API identifier for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
-            BelongsTo::make('Author', 'author', User::class)->sortable()->hideWhenCreating()->hideWhenUpdating(),
-            Heading::make('<p>Author: The user who created this taxonomy.</p>')->asHtml()->onlyOnDetail(),
+                ->help(__('This is the API identifier for the taxonomy')),
+            BelongsTo::make('Author', 'author', User::class)
+                ->sortable()
+                ->hideWhenCreating()
+                ->hideWhenUpdating()
+                ->help(__('Author: The user who created this taxonomy.')),
             Swatches::make('Color')
-                ->colors('text-advanced')->withProps([
+                ->colors('text-advanced')
+                ->withProps([
                     'show-fallback' => true,
                     'fallback-type' => 'input',
                 ])
@@ -105,11 +108,12 @@ class TaxonomyTarget extends Resource
                 ->hideWhenUpdating(),
             Text::make('Icon', function () {
                 return $this->icon;
-            })->asHtml()->onlyOnIndex(),
+            })
+                ->asHtml()
+                ->onlyOnIndex(),
             NovaIconSelect::make("Icon Label", 'icon')
                 ->setIconProvider(WebmappAppIconProvider::class)
                 ->help(__('Select an icon from the list to display for the taxonomy.')),
-            Heading::make('<p>Icon Label: Icon selected for the taxonomy.</p>')->asHtml()->onlyOnDetail(),
             Text::make(__('Source'), 'source')
                 ->hideFromIndex()
                 ->hideFromDetail()
@@ -128,7 +132,6 @@ class TaxonomyTarget extends Resource
                 if ('' !== $url && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
-
                 return $url;
             })
                 ->withMeta(['width' => 200])
@@ -136,12 +139,18 @@ class TaxonomyTarget extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
-            DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Heading::make('<p>Created At: The date and time when this taxonomy was created.</p>')->asHtml()->onlyOnDetail(),
-            DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Heading::make('<p>Updated At: The date and time when this taxonomy was last updated.</p>')->asHtml()->onlyOnDetail(),
-
-            // new Panel('UX/UI', $this->ux_ui_panel()),
+            DateTime::make(__('Created At'), 'created_at')
+                ->sortable()
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex()
+                ->help(__('Created At: The date and time when this taxonomy was created.')),
+            DateTime::make(__('Updated At'), 'updated_at')
+                ->sortable()
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex()
+                ->help(__('Updated At: The date and time when this taxonomy was last updated.')),
         ];
     }
 
@@ -230,15 +239,38 @@ class TaxonomyTarget extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
-
-            Number::make(__('Stroke Width'), 'stroke_width')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Stroke Opacity'), 'stroke_opacity')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Min Visible Zoom'), 'min_visible_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Max Size Zoom'), 'min_size_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Min Size'), 'min_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Max Size'), 'max_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Icon Zoom'), 'icon_zoom')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
-            Number::make(__('Icon Size'), 'icon_size')->hideWhenUpdating()->hideWhenCreating()->hideFromIndex(),
+            Number::make(__('Stroke Width'), 'stroke_width')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Stroke Opacity'), 'stroke_opacity')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Min Visible Zoom'), 'min_visible_zoom')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Max Size Zoom'), 'min_size_zoom')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Min Size'), 'min_size')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Max Size'), 'max_size')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Icon Zoom'), 'icon_zoom')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
+            Number::make(__('Icon Size'), 'icon_size')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->hideFromIndex(),
         ];
     }
 
