@@ -137,20 +137,22 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools(): array
     {
+        $currentUser = User::getEmulatedUser();
+        $isAdmin =   $currentUser->hasRole('Admin');
         $tools = [
             ['Horizon', url('/horizon')],
         ];
-
-        return [
-            (new NovaSidebar())->hydrate([
-                'Tools' => $tools,
-            ]),
-            NovaPermissionTool::make()
-                ->rolePolicy(RolePolicy::class)
-                ->permissionPolicy(PermissionPolicy::class),
-            new Import,
-
-        ];
+        $horizonLink = (new SidebarLink())->setName('Horizon')->setUrl(url('/horizon'));
+        $toolSidebar = (new NovaSidebar())->addLink($horizonLink);
+        $res = [];
+        if ($isAdmin) {
+            $res[] = $toolSidebar;
+        }
+        $res[] = NovaPermissionTool::make()
+            ->rolePolicy(RolePolicy::class)
+            ->permissionPolicy(PermissionPolicy::class);
+        $res[] = new Import;
+        return $res;
     }
 
     /**
