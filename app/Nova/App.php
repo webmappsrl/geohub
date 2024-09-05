@@ -8,6 +8,7 @@ use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
+use App\Nova\Actions\GeneratePBF;
 use App\Nova\Actions\generateQrCodeAction;
 use App\Nova\Actions\GenerateUgcMediaRankingAction;
 use App\Rules\AppImagesRule;
@@ -1643,26 +1644,35 @@ class App extends Resource
     public function actions(Request $request)
     {
         return [
-            (new elasticIndex())->canSee(function ($request) {
-                return true;
-            })->canRun(function ($request, $zone) {
-                return true;
-            }),
-            (new GenerateAppConfigAction())->canSee(function ($request) {
-                return true;
-            })->canRun(function ($request, $zone) {
-                return true;
-            }),
-            (new GenerateAppPoisAction())->canSee(function ($request) {
-                return true;
-            })->canRun(function ($request, $zone) {
-                return true;
-            }),
+            (new elasticIndex())
+                ->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
+            (new GenerateAppConfigAction())
+                ->canSee(function ($request) {
+                    return true;
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
+            (new GenerateAppPoisAction())
+                ->canSee(function ($request) {
+                    return true;
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
+            (new GeneratePBF())
+                ->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
             (new generateQrCodeAction())->canSee(function ($request) {
                 return true;
             })->canRun(function ($request, $zone) {
                 return true;
-            }),
+            })->onlyOnDetail(),
 
         ];
     }

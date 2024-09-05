@@ -15,7 +15,7 @@ class elasticIndex extends Action
 
     public function name(): string
     {
-        return __("Elastic Index");
+        return __("Generate Index");
     }
 
 
