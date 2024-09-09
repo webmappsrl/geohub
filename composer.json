@@ -49,6 +49,7 @@
         "optimistdigital/nova-multiselect-field": "2.4.3",
         "pos-lifestyle/laravel-nova-date-range-filter": "^1.3",
         "predis/predis": "^2.2",
+        "rap2hpoutre/laravel-log-viewer": "^2.4",
         "robertboes/nova-slider-field": "^0.1.1",
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/db-dumper": "^2.21",

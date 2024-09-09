@@ -218,7 +218,8 @@ return [
         /**
          * A PHP desktop/mobile user agent parser
          */
-        Jenssegers\Agent\AgentServiceProvider::class
+        Jenssegers\Agent\AgentServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 
     ],
 

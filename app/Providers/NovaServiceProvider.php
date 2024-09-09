@@ -139,11 +139,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         $currentUser = User::getEmulatedUser();
         $isAdmin =   $currentUser->hasRole('Admin');
-        $tools = [
-            ['Horizon', url('/horizon')],
-        ];
+
         $horizonLink = (new SidebarLink())->setName('Horizon')->setUrl(url('/horizon'));
-        $toolSidebar = (new NovaSidebar())->addLink($horizonLink);
+        $logsLink = (new SidebarLink())->setName('Logs')->setUrl(url('/logs'));
+        $toolSidebar = (new NovaSidebar())->addLink($horizonLink)->addLink($logsLink);
         $res = [];
         if ($isAdmin) {
             $res[] = $toolSidebar;

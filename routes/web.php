@@ -121,3 +121,4 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoi
         'type' => $osf_type . '.' . $type,
     ]);
 });
+Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware('auth')->name('logs');
