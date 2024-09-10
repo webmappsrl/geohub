@@ -6,6 +6,7 @@ use App\Enums\AppTiles;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
+use App\Nova\Actions\GenerateAllAwsTracks;
 use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
 use App\Nova\Actions\GeneratePBF;
@@ -1663,6 +1664,12 @@ class App extends Resource
                     return true;
                 })->onlyOnDetail(),
             (new GeneratePBF())
+                ->canSee(function ($request) {
+                    return $request->user()->can('Admin', $this);
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
+            (new GenerateAllAwsTracks())
                 ->canSee(function ($request) {
                     return $request->user()->can('Admin', $this);
                 })->canRun(function ($request, $zone) {
