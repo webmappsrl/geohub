@@ -322,11 +322,13 @@ class EcTrack extends Resource
                         ->resolveUsing(function ($value, $model) {
                             return $this->generateFieldTable($model, $value, 'duration_forward');
                         })
+                        ->asHtml()
                         ->help('The estimated time to complete the track from the start to the endpoint. Displayed in hours.'),
                     Text::make('Duration Backward', 'duration_backward')
                         ->resolveUsing(function ($value, $model) {
                             return $this->generateFieldTable($model, $value, 'duration_backward');
                         })
+                        ->asHtml()
                         ->help('The estimated time to complete the track from the endpoint to the start. Displayed in hours.'),
                     Text::make('Ascent', 'ascent')
                         ->resolveUsing(function ($value, $model) {
