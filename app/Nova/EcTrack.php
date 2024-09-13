@@ -313,33 +313,62 @@ class EcTrack extends Resource
                         Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
                     ]),
                     Text::make('Distance', 'distance')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'distance');
+                        })
+                        ->asHtml()
                         ->help('The length of the track, displayed in the track details. Can be manually edited if "Skip Geomixer Tech" is enabled.'),
                     Text::make('Duration Forward', 'duration_forward')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'duration_forward');
+                        })
                         ->help('The estimated time to complete the track from the start to the endpoint. Displayed in hours.'),
                     Text::make('Duration Backward', 'duration_backward')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'duration_backward');
+                        })
                         ->help('The estimated time to complete the track from the endpoint to the start. Displayed in hours.'),
                     Text::make('Ascent', 'ascent')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ascent');
+                        })
+                        ->asHtml()
                         ->help('The total elevation gain for the track, displayed in the track details.'),
                     Text::make('Descent', 'descent')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'descent');
+                        })
+                        ->asHtml()
                         ->help('The total elevation loss for the track, displayed in the track details.'),
                     Text::make('Elevation (From)', 'ele_from')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_from');
+                        })
+                        ->asHtml()
                         ->help('The starting elevation of the track, displayed in the track details.'),
                     Text::make('Elevation (To)', 'ele_to')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_to');
+                        })
+                        ->asHtml()
                         ->help('The ending elevation of the track, displayed in the track details.'),
                     Text::make('Elevation (Min)', 'ele_min')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_min');
+                        })
+                        ->asHtml()
                         ->help('The minimum elevation reached on the track, displayed in the track details.'),
                     Text::make('Elevation (Max)', 'ele_max')
+                        ->resolveUsing(function ($value, $model) {
+                            return $this->generateFieldTable($model, $value, 'ele_max');
+                        })
+                        ->asHtml()
                         ->help('The maximum elevation reached on the track, displayed in the track details.'),
                 ],
                 'Scale' => [
                     Text::make('Difficulty')
                         ->help('Custom text for the track difficulty, overriding the "Cai Scale" if set.'),
-                    Select::make('Cai Scale')->options([
-                        'T' => 'Turistico (T)',
-                        'E' => 'Escursionistico (E)',
-                        'EE' => 'Per escursionisti esperti (EE)',
-                        'EEA' => 'Alpinistico (EEA)'
-                    ])
+                    Text::make('Cai Scale')
                         ->help('The official CAI difficulty scale for the track, differentiating the required effort for hiking.'),
                     NovaTabTranslatable::make([
                         Text::make('Difficulty I18n')
