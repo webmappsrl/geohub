@@ -298,8 +298,6 @@ class EcTrack extends Resource
                         ->feature($geojson ?? []),
                 ],
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech')
-                        ->help('Enable this option to manually enter technical data instead of auto-generation.'),
                     Text::make('Ref')
                         ->help('The reference number or code for the track, typically found on signs.'),
                     Text::make('From')
@@ -317,7 +315,7 @@ class EcTrack extends Resource
                             return $this->generateFieldTable($model, $value, 'distance');
                         })
                         ->asHtml()
-                        ->help('The length of the track, displayed in the track details. Can be manually edited if "Skip Geomixer Tech" is enabled.'),
+                        ->help('The length of the track, displayed in the track details.'),
                     Text::make('Duration Forward', 'duration_forward')
                         ->resolveUsing(function ($value, $model) {
                             return $this->generateFieldTable($model, $value, 'duration_forward');
@@ -634,8 +632,6 @@ class EcTrack extends Resource
                         ->help(__('Here you can associate points of interest (POIs) with the track to be displayed along the entire route. They will be shown both on the map along with the track and in the track detail view. These must be created separately in the "Ec Pois" section. Once created, you can select the georeferenced POIs from this area that are located near the track.')),
                 ],
                 'Info' => [
-                    Boolean::make('Skip Geomixer Tech')
-                        ->help(__('Enable this option if you do not want the technical data to be generated automatically. This way, you can enter them manually.')),
                     Text::make('Ref')
                         ->help(__('Enter here the label to be shown as the track reference, visible only if "Show Track Ref Label" option is enabled in App -> OPTIONS.')),
                     Text::make('From')
@@ -648,23 +644,23 @@ class EcTrack extends Resource
                         Textarea::make(__('Not Accessible Message'), 'not_accessible_message')->alwaysShow(),
                     ]),
                     Text::make('Distance', 'distance')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Duration Forward', 'duration_forward')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech". Enter the time in minutes; it will be displayed in hours.')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually Enter the time in minutes; it will be displayed in hours.')),
                     Text::make('Duration Backward', 'duration_backward')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech". Enter the time in minutes; it will be displayed in hours.')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually Enter the time in minutes; it will be displayed in hours.')),
                     Text::make('Ascent', 'ascent')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Descent', 'descent')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Elevation (From)', 'ele_from')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Elevation (To)', 'ele_to')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Elevation (Min)', 'ele_min')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                     Text::make('Elevation (Max)', 'ele_max')
-                        ->help(__('Technical data displayed in the track detail. To modify it manually, enable the option at the top of this page "Skip Geomixer Tech".')),
+                        ->help(__('Technical data displayed in the track detail. To modify it manually')),
                 ],
                 'Scale' => [
                     Text::make('Difficulty')
