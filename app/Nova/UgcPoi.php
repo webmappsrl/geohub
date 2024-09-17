@@ -205,9 +205,6 @@ class UgcPoi extends Resource
                     }
                 }
             })->onlyOnDetail()->asHtml(),
-            Heading::make('<p>Geolocated point where the UGC was submitted</p>')
-                ->asHtml()
-                ->onlyOnDetail(),
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
