@@ -648,6 +648,7 @@ trait ConfTrait
         $data['OPTIONS']['download_track_enable'] = $this->download_track_enable;
         $data['OPTIONS']['print_track_enable'] = $this->print_track_enable;
         $data['OPTIONS']['show_searchbar'] = $this->show_search;
+        $data['OPTIONS']['show_favorites'] = $this->show_favorites;
 
 
         return $data;

@@ -783,6 +783,12 @@ class App extends Resource
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable print of ever app track in PDF')),
+            Toggle::make(__('show_favorites_tab'), 'show_favorites')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Show favorites tab')),
         ];
     }
 
