@@ -109,10 +109,11 @@ class PBFGenerator
     // Funzione per calcolare il fattore di semplificazione in base al livello di zoom
     private function getSimplificationFactor($zoom)
     {
-        // Più basso è lo zoom, maggiore è il fattore di semplificazione
-        // Questo esempio usa un fattore di semplificazione inversamente proporzionale al livello di zoom
-        // Puoi regolare la funzione in base alle tue esigenze specifiche
-        return 0.1 / ($zoom + 1); // Fattore di semplificazione inversamente proporzionale al livello di zoom
+        if ($zoom <= 10) {
+            // Maggiore semplificazione per zoom <= 8
+            return 0.8;  // Puoi regolare questo valore in base alle tue esigenze
+        }
+        return 0.1 / ($zoom + 1);  // Semplificazione inversamente proporzionale per altri zoom
     }
     // Generate a SQL query to pull a tile worth of MVT data
     private function envelopeToSQL($env, $zoom)
@@ -130,8 +131,9 @@ class PBFGenerator
         $simplificationFactor = $this->getSimplificationFactor($zoom);
 
         // Determina se applicare la semplificazione della geometria
-        $geomColumnTransformed = ($zoom < 10) ? "ST_Simplify(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857'), $simplificationFactor)" : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857')";
-
+        $geomColumnTransformed = ($zoom <= 10)
+            ? "ST_SimplifyPreserveTopology(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857'), $simplificationFactor)"
+            : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857')";
 
         $sql_tmpl = <<<SQL
         WITH 
