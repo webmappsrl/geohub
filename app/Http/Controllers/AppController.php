@@ -388,6 +388,16 @@ EOF;
     }
   }
 
+  public function baseConfig(int $id)
+  {
+    $app = App::find($id);
+    if (is_null($app)) {
+      return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+    }
+    $json = $app->BuildConfJson($id);
+    return response()->json($json);
+  }
+
   public function tracksList(int $id)
   {
     $app = App::find($id);

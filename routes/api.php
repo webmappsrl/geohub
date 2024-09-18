@@ -244,6 +244,7 @@ Route::name('api.')->group(function () {
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
             Route::get("/{id}/config.json", [AppController::class, 'config'])->name('config');
+            Route::get("/{id}/base-config.json", [AppController::class, 'baseConfig'])->name('baseConfig');
             Route::get("/{id}/classification/ranked_users_near_pois.json", [ClassificationController::class, 'getRankedUsersNearPois'])->name('getRankedUsersNearPois');
             Route::get("/{id}/resources/icon.png", [AppController::class, 'icon'])->name('icon');
             Route::get("/{id}/resources/splash.png", [AppController::class, 'splash'])->name('splash');
