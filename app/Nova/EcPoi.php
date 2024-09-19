@@ -221,7 +221,10 @@ class EcPoi extends Resource
                         ->help(__('The date and time when the POI was last modified.')),
                     Number::make('OSM ID', 'osmid')
                         ->help(__('The OpenStreetMap ID associated with the POI. This ID cannot be modified once set, as the data will synchronize with OSM.')),
-                    Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id')
+                    Number::make('OUT SOURCE FEATURE ID', 'out_source_feature_id')
+                        ->canSee(function ($request) {
+                            return $request->user()->can('Admin', $this);
+                        })
                         ->help(__('If this field contains data, updates to various fields will not be processed as they are synchronized from a different API. Remove the data in this field to update the fields.')),
                     Heading::make(
                         <<<HTML
@@ -427,6 +430,9 @@ class EcPoi extends Resource
                         Number::make('OSM ID', 'osmid')
                             ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
                         Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id')
+                            ->canSee(function ($request) {
+                                return $request->user()->can('Admin', $this);
+                            })
                             ->help(__('If there is data in this field, updates in the various fields will not be processed because they are synchronized from a different API. Remove the data in this field to update the fields.')),
                         BelongsTo::make('Author', 'author', User::class)->searchable()->canSee(function ($request) {
                             return $request->user()->can('Admin', $this);
