@@ -218,11 +218,7 @@ class EcMedia extends Resource
                                 ->hideFromDetail()
                                 ->hideWhenCreating()
                                 ->hideWhenUpdating(),
-                            Textarea::make(__('Description'), 'description')
-                                ->hideFromIndex()
-                                ->hideFromDetail()
-                                ->hideWhenCreating()
-                                ->hideWhenUpdating(),
+                            Textarea::make(__('Description'), 'description'),
                         ]),
                     ],
                     'Images' => $this->getImages(),
@@ -307,7 +303,7 @@ class EcMedia extends Resource
                             <ul>
                                 <li><p><strong>Name</strong>: Enter the name of the item. This will be the main title displayed.</p></li>
                                 <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
-                                <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
+                                <li><p><strong>Description</strong>: Add a detailed description. This field will be visible as the image caption via the web app.</p></li>
                             </ul>
                             HTML
                         )->asHtml()->onlyOnForms(),
