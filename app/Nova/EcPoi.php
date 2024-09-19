@@ -429,7 +429,7 @@ class EcPoi extends Resource
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid')
                             ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
-                        Number::make('OUS SOURCE FEATURE ID', 'out_source_feature_id')
+                        Number::make('OUT SOURCE FEATURE ID', 'out_source_feature_id')
                             ->canSee(function ($request) {
                                 return $request->user()->can('Admin', $this);
                             })
