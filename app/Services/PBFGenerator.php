@@ -39,8 +39,8 @@ class PBFGenerator
         $sql = $this->envelopeToSQL($env, $z);
         DB::beginTransaction();
         try {
-            $this->createTemporaryTable();
-            $this->populateTemporaryTable();
+            $this->createTemporaryTable($z);
+            $this->populateTemporaryTable($z);
             $pbf = DB::select($sql);
             DB::commit();
         } catch (Exception $e) {
@@ -118,46 +118,87 @@ class PBFGenerator
     // Generate a SQL query to pull a tile worth of MVT data
     private function envelopeToSQL($env, $zoom)
     {
-        $tbl = array(
-            'table'       => 'temp_tracks',
-            'srid'        => '4326',
-            'geomColumn'  => 'geometry',
-            'attrColumns' => 't.id, t.name, t.ref, t.cai_scale, t.layers, t.themes, t.activities, t.searchable, t.stroke_color'
-        );
+        if ($zoom <= 10) {
+            $tbl = array(
+                'table'       => 'temp_layers',
+                'srid'        => '4326',
+                'geomColumn'  => 'geometry',
+                'attrColumns' => 't.id, t.layers, t.stroke_color'
+            );
+        } else {
+            $tbl = array(
+                'table'       => 'temp_tracks',
+                'srid'        => '4326',
+                'geomColumn'  => 'geometry',
+                'attrColumns' => 't.id, t.name, t.ref, t.cai_scale, t.layers, t.themes, t.activities, t.searchable, t.stroke_color'
+            );
+        }
 
         $tbl['layers'] = $this->getAppLayersIDs($this->app_id);
         $tbl['env'] = $this->envelopeToBoundsSQL($env);
+
         // Calcola il fattore di semplificazione in base al livello di zoom
         $simplificationFactor = $this->getSimplificationFactor($zoom);
 
-        // Determina se applicare la semplificazione della geometria
-        $geomColumnTransformed = ($zoom <= 10)
-            ? "ST_SimplifyPreserveTopology(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857'), $simplificationFactor)"
-            : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 'EPSG:3857')";
-
-        $sql_tmpl = <<<SQL
-        WITH 
-        bounds AS (
-            SELECT {$tbl['env']} AS geom, {$tbl['env']}::box2d AS b2d
-        ),
-        mvtgeom AS (
-            SELECT ST_AsMVTGeom($geomColumnTransformed, bounds.b2d) AS geom,
-            {$tbl['attrColumns']}
-            FROM
-                temp_tracks t,
-            bounds
-            WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.{$tbl['geomColumn']}), 4326), ST_Transform(bounds.geom, {$tbl['srid']}))
-            AND EXISTS (
-                SELECT 1
-                FROM jsonb_array_elements_text((t.layers::jsonb)) AS elem
-                WHERE elem::integer = ANY(ARRAY[{$tbl['layers']}]::integer[])
+        if ($zoom <= 10) {
+            // Per zoom <= 10, unisci le tracce per layer
+            $sql_tmpl = <<<SQL
+            WITH 
+            bounds AS (
+                SELECT {$tbl['env']} AS geom, {$tbl['env']}::box2d AS b2d
+            ),
+            mvtgeom AS (
+                SELECT 
+                    ST_AsMVTGeom(
+                        ST_SimplifyPreserveTopology(
+                            ST_Transform(t.{$tbl['geomColumn']}, 3857),
+                            $simplificationFactor
+                        ), 
+                        bounds.b2d
+                    ) AS geom,
+                    {$tbl['attrColumns']}
+                FROM
+                    {$tbl['table']} t,
+                    bounds
+                WHERE ST_Intersects(
+                    ST_Transform(t.{$tbl['geomColumn']}, 3857),
+                    bounds.geom
+                )
+                AND t.id::integer = ANY(ARRAY[{$tbl['layers']}]::integer[])
             )
-        ) 
-        SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
-        SQL;
+            SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
+            SQL;
+        } else {
+            // Per zoom > 10, mantieni il comportamento originale
+            $geomColumnTransformed = ($zoom <= 10)
+                ? "ST_SimplifyPreserveTopology(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 3857), $simplificationFactor)"
+                : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 3857)";
+
+            $sql_tmpl = <<<SQL
+            WITH 
+            bounds AS (
+                SELECT {$tbl['env']} AS geom, {$tbl['env']}::box2d AS b2d
+            ),
+            mvtgeom AS (
+                SELECT ST_AsMVTGeom($geomColumnTransformed, bounds.b2d) AS geom,
+                {$tbl['attrColumns']}
+                FROM
+                    temp_tracks t,
+                bounds
+                WHERE ST_Intersects(ST_SetSRID(ST_Force2D(t.{$tbl['geomColumn']}), 4326), ST_Transform(bounds.geom, {$tbl['srid']}))
+                AND EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements_text((t.layers::jsonb)) AS elem
+                    WHERE elem::integer = ANY(ARRAY[{$tbl['layers']}]::integer[])
+                )
+            ) 
+            SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
+            SQL;
+        }
 
         return $sql_tmpl;
     }
+
 
     private function getAppLayersIDs($app_id)
     {
@@ -172,7 +213,16 @@ class PBFGenerator
         });
     }
 
-    private function createTemporaryTable()
+    private function createTemporaryTable($zoom)
+    {
+        if ($zoom <= 10) {
+            $this->createTemporaryLayerTable();
+        } else {
+            $this->createTemporaryTrackTable();
+        }
+    }
+
+    private function createTemporaryTrackTable()
     {
         DB::statement("DROP TABLE IF EXISTS temp_tracks");
         DB::statement("
@@ -190,11 +240,31 @@ class PBFGenerator
             )
         ");
     }
+    private function createTemporaryLayerTable()
+    {
+        DB::statement("DROP TABLE IF EXISTS temp_layers");
+        DB::statement("
+        CREATE TEMPORARY TABLE temp_layers (
+            id SERIAL PRIMARY KEY,
+            layers JSON,
+            geometry GEOMETRY,
+            stroke_color VARCHAR(255)
+        )
+    ");
+    }
 
-    private function populateTemporaryTable()
+    private function populateTemporaryTable($zoom)
+    {
+        if ($zoom <= 10) {
+            $this->populateTemporaryLayerTable();
+        } else {
+            $this->populateTemporaryTrackTable();
+        }
+    }
+    private function populateTemporaryTrackTable()
     {
         ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
-        Log::info('Inizio populateTemporaryTable');
+        Log::info('Inizio populateTemporaryTrackTable');
         $app = App::with('layers')->find($this->app_id);
         $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
 
@@ -277,8 +347,58 @@ class PBFGenerator
                 gc_collect_cycles();
             }
         }
-        Log::info('Fine populateTemporaryTable');
+        Log::info('Fine populateTemporaryTrackTable');
     }
+    private function populateTemporaryLayerTable()
+    {
+        ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
+        Log::info('Inizio populateTemporaryLayerTable');
+        $app = App::with('layers')->find($this->app_id);
+
+        foreach ($app->layers as $layer) {
+            Log::info("Processing layer: {$layer->id}");
+            $tracks = $layer->getPbfTracks();
+            Log::info("Number of tracks: " . $tracks->count());
+
+            // Ottieni gli ID delle tracce
+            $trackIds = $tracks->pluck('id')->toArray();
+
+            if (!empty($trackIds)) {
+                // Converti gli ID delle tracce in una stringa separata da virgole
+                $trackIdsStr = implode(',', $trackIds);
+
+                // Prepara i parametri
+                $layerId = $layer->id;
+                $layersJson = json_encode([$layer->id]);
+                $strokeColor = $layer->stroke_color;
+
+                // Esegui l'inserimento direttamente nel database utilizzando una query SQL raw
+                $insertSql = "
+                    INSERT INTO temp_layers (id, layers, geometry, stroke_color)
+                    SELECT
+                        :layerId AS id,
+                        :layersJson::jsonb AS layers,
+                        ST_Union(geometry) AS geometry,
+                        :strokeColor AS stroke_color
+                    FROM ec_tracks
+                    WHERE id IN ({$trackIdsStr})
+                ";
+
+                // Esegui la query con i parametri
+                DB::statement($insertSql, [
+                    'layerId' => $layerId,
+                    'layersJson' => $layersJson,
+                    'strokeColor' => $strokeColor,
+                ]);
+            } else {
+                Log::info("No tracks found for layer: {$layer->id}");
+            }
+        }
+
+        Log::info('Fine populateTemporaryLayerTable');
+    }
+
+
 
     private function extractFirstValue($array)
     {
