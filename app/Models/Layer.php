@@ -136,6 +136,8 @@ class Layer extends Model
                     // Ottieni le tracce associate in lotti per ridurre il carico di memoria
                     if (!empty($associated_app_users)) {
                         $term->ecTracks()->whereIn('user_id', $associated_app_users)
+                            ->whereNotNull('geometry')
+                            ->whereRaw('ST_Dimension(geometry) = 1')
                             ->orderBy('name')
                             ->chunk(1000, function ($associated_app_tracks) use ($tracks) {
                                 foreach ($associated_app_tracks as $track) {
@@ -145,6 +147,8 @@ class Layer extends Model
                     }
 
                     $term->ecTracks()->where('user_id', $user_id)
+                        ->whereNotNull('geometry')
+                        ->whereRaw('ST_Dimension(geometry) = 1')
                         ->orderBy('name')
                         ->chunk(1000, function ($ecTracks) use ($tracks) {
                             foreach ($ecTracks as $track) {

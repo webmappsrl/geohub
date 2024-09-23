@@ -385,7 +385,8 @@ class PBFGenerator
                 FROM ec_tracks
                 WHERE id IN ({$trackIdsStr})
                 AND NOT ST_IsEmpty(geometry)
-                AND ST_Dimension(geometry) > 0
+                AND ST_Dimension(geometry) = 1
+                AND (GeometryType(geometry) = 'LINESTRING' OR GeometryType(geometry) = 'MULTILINESTRING')
                 AND geometry IS NOT NULL
             ";
 
