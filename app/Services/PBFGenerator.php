@@ -391,6 +391,7 @@ class PBFGenerator
 
                 // Esegui la query con i parametri
                 DB::statement($insertSql, [
+                    'layerId' => $layerId,
                     'layersJson' => $layersJson,
                     'strokeColor' => $strokeColor,
                 ]);
