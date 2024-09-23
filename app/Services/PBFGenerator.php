@@ -377,9 +377,10 @@ class PBFGenerator
 
                 // Esegui l'inserimento direttamente nel database utilizzando una query SQL raw
                 $insertSql = "
-                INSERT INTO temp_layers (layers, geometry, stroke_color)
+                INSERT INTO temp_layers (id, layers, geometry, stroke_color)
                 SELECT
-                    :layers::json AS layers,
+                    :layerId  AS id,
+                    :layersJson::jsonb AS layers,
                     ST_Union(geometry) AS geometry,
                     :strokeColor AS stroke_color
                 FROM ec_tracks
