@@ -142,7 +142,6 @@ class PBFGenerator
         $simplificationFactor = $this->getSimplificationFactor($zoom);
 
         if ($zoom <= $this->zoomTreshold) {
-            // Per zoom <= 10, unisci le tracce per layer
             $sql_tmpl = <<<SQL
             WITH 
             bounds AS (
@@ -173,8 +172,7 @@ class PBFGenerator
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
             SQL;
         } else {
-            // Per zoom > 10, mantieni il comportamento originale
-            $geomColumnTransformed = ($zoom <= 10)
+            $geomColumnTransformed = ($zoom <= $this->zoomTreshold)
                 ? "ST_SimplifyPreserveTopology(ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 3857), $simplificationFactor)"
                 : "ST_Transform(ST_Force2D(t.{$tbl['geomColumn']}), 3857)";
 
@@ -219,7 +217,7 @@ class PBFGenerator
 
     private function createTemporaryTable($zoom)
     {
-        if ($zoom <= 10) {
+        if ($zoom <= $this->zoomTreshold) {
             $this->createTemporaryLayerTable();
         } else {
             $this->createTemporaryTrackTable();
