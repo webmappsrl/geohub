@@ -259,7 +259,7 @@ class PBFGenerator
 
     private function populateTemporaryTable($zoom)
     {
-        if ($zoom <= 10) {
+        if ($zoom <= $this->zoomTreshold) {
             $this->populateTemporaryLayerTable();
         } else {
             $this->populateTemporaryTrackTable();
