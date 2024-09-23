@@ -14,6 +14,7 @@ class PBFGenerator
     protected $app_id;
     protected $author_id;
     protected $format;
+    protected $zoomTreshold = 6;
 
     public function __construct($app_id, $author_id, $format = 'pbf')
     {
@@ -109,16 +110,16 @@ class PBFGenerator
     // Funzione per calcolare il fattore di semplificazione in base al livello di zoom
     private function getSimplificationFactor($zoom)
     {
-        if ($zoom <= 10) {
+        if ($zoom <= $this->zoomTreshold) {
             // Maggiore semplificazione per zoom <= 8
-            return 0.8;  // Puoi regolare questo valore in base alle tue esigenze
+            return 4;  // Puoi regolare questo valore in base alle tue esigenze
         }
         return 0.1 / ($zoom + 1);  // Semplificazione inversamente proporzionale per altri zoom
     }
     // Generate a SQL query to pull a tile worth of MVT data
     private function envelopeToSQL($env, $zoom)
     {
-        if ($zoom <= 10) {
+        if ($zoom <= $this->zoomTreshold) {
             $tbl = array(
                 'table'       => 'temp_layers',
                 'srid'        => '4326',
@@ -140,7 +141,7 @@ class PBFGenerator
         // Calcola il fattore di semplificazione in base al livello di zoom
         $simplificationFactor = $this->getSimplificationFactor($zoom);
 
-        if ($zoom <= 10) {
+        if ($zoom <= $this->zoomTreshold) {
             // Per zoom <= 10, unisci le tracce per layer
             $sql_tmpl = <<<SQL
             WITH 
