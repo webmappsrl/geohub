@@ -165,6 +165,9 @@ class PBFGenerator
                     bounds.geom
                 )
                 AND t.id::integer = ANY(ARRAY[{$tbl['layers']}]::integer[])
+                AND ST_Dimension(t.{$tbl['geomColumn']}) > 0
+                AND NOT ST_IsEmpty(t.{$tbl['geomColumn']})
+                AND t.{$tbl['geomColumn']} IS NOT NULL
             )
             SELECT ST_AsMVT(mvtgeom.*, 'ec_tracks') FROM mvtgeom
             SQL;
@@ -374,15 +377,16 @@ class PBFGenerator
 
                 // Esegui l'inserimento direttamente nel database utilizzando una query SQL raw
                 $insertSql = "
-                    INSERT INTO temp_layers (id, layers, geometry, stroke_color)
-                    SELECT
-                        :layerId AS id,
-                        :layersJson::jsonb AS layers,
-                        ST_Union(geometry) AS geometry,
-                        :strokeColor AS stroke_color
-                    FROM ec_tracks
-                    WHERE id IN ({$trackIdsStr})
-                ";
+                INSERT INTO temp_layers (layers, geometry, stroke_color)
+                SELECT
+                    :layers::json AS layers,
+                    ST_Union(geometry) AS geometry,
+                    :strokeColor AS stroke_color
+                FROM ec_tracks
+                WHERE id IN ({$trackIdsStr})
+                AND NOT ST_IsEmpty(geometry)
+            ";
+
 
                 // Esegui la query con i parametri
                 DB::statement($insertSql, [
