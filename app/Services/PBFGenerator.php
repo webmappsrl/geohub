@@ -369,14 +369,16 @@ class PBFGenerator
             if (!empty($trackIds)) {
                 // Converti gli ID delle tracce in una stringa separata da virgole
                 $trackIdsStr = implode(',', $trackIds);
-
+                // Prepara i parametri
+                $layerId = $layer->id;
                 $layersJson = json_encode([$layer->id]);
                 $strokeColor = $layer->stroke_color;
 
                 // Esegui l'inserimento direttamente nel database utilizzando una query SQL raw
                 $insertSql = "
-                INSERT INTO temp_layers (layers, geometry, stroke_color)
+                INSERT INTO temp_layers (id, layers, geometry, stroke_color)
                 SELECT
+                    :layerId AS id,
                     :layersJson::jsonb AS layers,
                     ST_Union(geometry) AS geometry,
                     :strokeColor AS stroke_color
