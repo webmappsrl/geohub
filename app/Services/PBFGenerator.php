@@ -381,10 +381,10 @@ class PBFGenerator
                     ST_Union(geometry) AS geometry,
                     :strokeColor AS stroke_color
                 FROM ec_tracks
-   WHERE id IN ({$trackIdsStr})
-    AND NOT ST_IsEmpty(geometry)
-    AND ST_Dimension(geometry) > 0
-    AND geometry IS NOT NULL
+                WHERE id IN ({$trackIdsStr})
+                AND NOT ST_IsEmpty(geometry)
+                AND ST_Dimension(geometry) > 0
+                AND geometry IS NOT NULL
             ";
 
                 // Esegui la query con i parametri
