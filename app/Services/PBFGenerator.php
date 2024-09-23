@@ -380,7 +380,7 @@ class PBFGenerator
                 SELECT
                     :layerId AS id,
                     :layersJson::jsonb AS layers,
-                    ST_Union(geometry) AS geometry,
+                    ST_Union(ST_Force2D(geometry)) AS geometry,
                     :strokeColor AS stroke_color
                 FROM ec_tracks
                 WHERE id IN ({$trackIdsStr})
