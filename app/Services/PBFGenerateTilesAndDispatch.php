@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\GenerateLayerPBFJob;
 use App\Jobs\GeneratePBFJob;
 use App\Models\App;
 use Exception;
@@ -29,7 +30,11 @@ class PBFGenerateTilesAndDispatch
                 $tiles = $this->generateTiles($bbox, $zoom);
                 foreach ($tiles as $c => $tile) {
                     list($x, $y, $z) = $tile;
-                    GeneratePBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id);
+                    if ($z <= 6) {
+                        GenerateLayerPBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id);
+                    } else {
+                        GeneratePBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id);
+                    }
                     Log::info($zoom . ' ' . ++$c . '/' . count($tiles));
                 }
             }
