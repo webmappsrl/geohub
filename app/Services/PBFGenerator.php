@@ -353,7 +353,6 @@ class PBFGenerator
     }
     private function populateTemporaryLayerTable()
     {
-        ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
         Log::info('Inizio populateTemporaryLayerTable');
         $app = App::with('layers')->find($this->app_id);
 
@@ -379,7 +378,7 @@ class PBFGenerator
                 SELECT
                     :layerId AS id,
                     :layersJson::jsonb AS layers,
-                    ST_Union(ST_Force2D(geometry)) AS geometry,
+                    ST_Collect(ST_Force2D(geometry)) AS geometry,
                     :strokeColor AS stroke_color
                 FROM ec_tracks
                 WHERE id IN ({$trackIdsStr})
