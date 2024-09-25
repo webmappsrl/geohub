@@ -374,19 +374,19 @@ class PBFGenerator
 
                 // Esegui l'inserimento direttamente nel database utilizzando una query SQL raw
                 $insertSql = "
-                INSERT INTO temp_layers (id, layers, geometry, stroke_color)
-                SELECT
-                    :layerId AS id,
-                    :layersJson::jsonb AS layers,
-                    ST_Collect(ST_Force2D(geometry)) AS geometry,
-                    :strokeColor AS stroke_color
-                FROM ec_tracks
-                WHERE id IN ({$trackIdsStr})
-                AND NOT ST_IsEmpty(geometry)
-                AND ST_Dimension(geometry) = 1
-                AND (GeometryType(geometry) = 'LINESTRING' OR GeometryType(geometry) = 'MULTILINESTRING')
-                AND geometry IS NOT NULL
-            ";
+                    INSERT INTO temp_layers (id, layers, geometry, stroke_color)
+                    SELECT
+                        :layerId AS id,
+                        :layersJson::jsonb AS layers,
+                        ST_Collect(ST_Force2D(geometry)) AS geometry,
+                        :strokeColor AS stroke_color
+                    FROM ec_tracks
+                    WHERE id IN ({$trackIdsStr})
+                    AND NOT ST_IsEmpty(geometry)
+                    AND ST_Dimension(geometry) = 1
+                    AND (GeometryType(geometry) = 'LINESTRING' OR GeometryType(geometry) = 'MULTILINESTRING')
+                    AND geometry IS NOT NULL
+                ";
 
                 // Esegui la query con i parametri
                 DB::statement($insertSql, [
@@ -394,13 +394,26 @@ class PBFGenerator
                     'layersJson' => $layersJson,
                     'strokeColor' => $strokeColor,
                 ]);
+
+                // Libera la memoria associata alle tracce e agli ID delle tracce
+                unset($tracks);
+                unset($trackIds);
+                unset($layerId);
+                unset($layersJson);
+                unset($strokeColor);
+                gc_collect_cycles();
             } else {
                 Log::info("No tracks found for layer: {$layer->id}");
+                // Libera la memoria associata al layer anche se non ci sono tracce
+                unset($tracks);
+                unset($layer);
+                gc_collect_cycles();
             }
         }
 
         Log::info('Fine populateTemporaryLayerTable');
     }
+
 
 
 
