@@ -82,12 +82,11 @@ class ConditionalWithoutOverlapping
 
     public function handle($job, $next)
     {
-        // Supponendo che $job->z contenga il livello di zoom
         if (isset($job->z) && $job->z <= $this->zoomThreshold) {
-            // Applica il middleware WithoutOverlapping
+            Log::info("Applying WithoutOverlapping middleware for job with z={$job->z}");
             return (new WithoutOverlapping($this->key))->handle($job, $next);
         } else {
-            // Procede senza limitazione
+            Log::info("Proceeding without overlapping for job with z={$job->z}");
             return $next($job);
         }
     }
