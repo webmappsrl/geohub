@@ -31,7 +31,7 @@ class PBFGenerateTilesAndDispatch
                 foreach ($tiles as $c => $tile) {
                     list($x, $y, $z) = $tile;
                     if ($z <= 6) {
-                        GenerateLayerPBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id)->onQueue('max_2_processes';
+                        GenerateLayerPBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id)->onQueue('max_2_processes');
                     } else {
                         GeneratePBFJob::dispatch($z, $x, $y, $this->app_id, $this->author_id);
                     }
