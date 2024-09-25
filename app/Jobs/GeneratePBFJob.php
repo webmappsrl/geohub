@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
@@ -60,6 +61,34 @@ class GeneratePBFJob implements ShouldQueue
             Log::error("Errore durante la generazione del PBF: " . $e->getMessage());
             // Opzionalmente, puoi reintrodurre l'eccezione per far fallire il job
             throw $e;
+        }
+    }
+
+    public function middleware()
+    {
+        return [new ConditionalWithoutOverlapping('generate-pbf-job')];
+    }
+}
+class ConditionalWithoutOverlapping
+{
+    protected $key;
+    protected $zoomThreshold;
+
+    public function __construct($key, $zoomThreshold = 6)
+    {
+        $this->key = $key;
+        $this->zoomThreshold = $zoomThreshold;
+    }
+
+    public function handle($job, $next)
+    {
+        // Supponendo che $job->z contenga il livello di zoom
+        if (isset($job->z) && $job->z <= $this->zoomThreshold) {
+            // Applica il middleware WithoutOverlapping
+            return (new WithoutOverlapping($this->key))->handle($job, $next);
+        } else {
+            // Procede senza limitazione
+            return $next($job);
         }
     }
 }
