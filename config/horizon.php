@@ -193,6 +193,19 @@ return [
             'timeout' => 120, // Timeout aumentato a 120 secondi
             'nice' => 0,
         ],
+        // Nuovo supervisore per la coda 'pbf_generation_low_zoom'
+        'supervisor-layer-pbf' => [
+            'connection' => 'redis',
+            'queue' => ['max_2_processes'],
+            'balance' => 'simple',
+            'maxProcesses' => 2, // Limita a 2 worker
+            'maxTime' => 3600,
+            'maxJobs' => 1000,
+            'memory' => 256,
+            'tries' => 3,
+            'timeout' => 120,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [
