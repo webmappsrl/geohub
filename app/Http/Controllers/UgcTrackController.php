@@ -27,10 +27,18 @@ class UgcTrackController extends Controller
     {
         $user = auth('api')->user();
         if (isset($user)) {
-            
+
             if (!empty($request->header('app-id'))) {
-                $app = App::find($request->header('app-id'));
-                $tracks = UgcTrack::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $appId = $request->header('app-id');
+                if (is_numeric($appId)) {
+                    $app = App::where('id', $appId)->first();
+                } else {
+                    $app = App::where('app_id', $appId)->first();
+                }
+                $tracks = UgcTrack::where([
+                    ['user_id', $user->id],
+                    ['app_id', $app->id]
+                ])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($tracks);
             }
 
@@ -87,11 +95,20 @@ class UgcTrackController extends Controller
         $track->user_id = $user->id;
 
         if (isset($data['properties']['app_id'])) {
-            $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            if (isset($app) && !is_null($app))
-                $track->app_id = $app->app_id;
-            else
-                $track->app_id = $data['properties']['app_id'];
+            $app_id = $data['properties']['app_id'];
+            if (is_numeric($app_id)) {
+                $app = App::where('id', '=', $app_id)->first();
+                if ($app != null) {
+                    $track->app_id = $app_id;
+                    $track->sku = $app->app_id;
+                }
+            } else {
+                $app = App::where('app_id', '=', $app_id)->first();
+                if ($app != null) {
+                    $track->app_id = $app->id;
+                    $track->sku = $app_id;
+                }
+            }
         }
         if (isset($data['properties']['metadata'])) {
             $track->metadata = json_encode(json_decode(json_encode($data['properties']['metadata'])), JSON_PRETTY_PRINT);

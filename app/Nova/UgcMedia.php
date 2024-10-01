@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\App;
 use App\Nova\Actions\CopyUgc;
 use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
 use App\Nova\Filters\AppFilter;
@@ -101,9 +102,23 @@ class UgcMedia extends Resource
                 ->hideWhenUpdating()
                 ->hideWhenCreating()
                 ->help(__('Creation date of the UGC')),
-            Text::make(__('App ID'), 'app_id')
-                ->sortable()
-                ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
+            Text::make(__('App'),  function ($model) {
+                $help = '<p>App from which the UGC was submitted</p>';
+                $app_id = $model->app_id;
+                $app = App::where('id', $app_id)->first();
+                if ($app) {
+                    $url = url("/resources/apps/{$app->id}");
+                    return <<<HTML
+                        <a 
+                            href="{$url}" 
+                            target="_blank" 
+                            class="no-underline dim text-primary font-bold">
+                           {$app->name}
+                        </a> <br>
+                        HTML;
+                }
+                return $help;
+            })->asHtml(),
             Boolean::make(__('Has geometry'), function ($model) {
                 return isset($model->geometry);
             })

@@ -24,13 +24,14 @@ class UgcPoiController extends Controller
      *
      * @return Response
      */
-       public function index(Request $request) {
+    public function index(Request $request)
+    {
         $user = auth('api')->user();
         if (isset($user)) {
-            
+
             if (!empty($request->header('app-id'))) {
                 $app = App::find($request->header('app-id'));
-                $pois = UgcPoi::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $pois = UgcPoi::where([['user_id', $user->id], ['app_id', $app->app_id]])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($pois);
             }
 
@@ -39,7 +40,7 @@ class UgcPoiController extends Controller
         } else {
             return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
         }
-       }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -85,11 +86,20 @@ class UgcPoiController extends Controller
         $poi->user_id = $user->id;
 
         if (isset($data['properties']['app_id'])) {
-            $app = App::where('app_id', '=', $data['properties']['app_id'])->first();
-            if (!is_null($app))
-                $poi->app_id = $app->app_id;
-            else
-                $poi->app_id = $data['properties']['app_id'];
+            $app_id = $data['properties']['app_id'];
+            if (is_numeric($app_id)) {
+                $app = App::where('id', '=', $app_id)->first();
+                if ($app != null) {
+                    $poi->app_id = $app_id;
+                    $poi->sku = $app->app_id;
+                }
+            } else {
+                $app = App::where('app_id', '=', $app_id)->first();
+                if ($app != null) {
+                    $poi->app_id = $app->id;
+                    $poi->sku = $app_id;
+                }
+            }
         }
 
         unset($data['properties']['name']);

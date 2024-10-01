@@ -29,10 +29,10 @@ class UgcMediaController extends Controller
     {
         $user = auth('api')->user();
         if (isset($user)) {
-            
+
             if (!empty($request->header('app-id'))) {
                 $app = App::find($request->header('app-id'));
-                $medias = UgcMedia::where([['user_id', $user->id],['app_id',$app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $medias = UgcMedia::where([['user_id', $user->id], ['app_id', $app->app_id]])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($medias);
             }
 
@@ -106,11 +106,20 @@ class UgcMediaController extends Controller
             $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . "')");
 
         if (isset($geojson['properties']['app_id'])) {
-            $app = App::where('app_id', '=', $geojson['properties']['app_id'])->first();
-            if (isset($app))
-                $media->app_id = $app->app_id;
-            else
-                $media->app_id = $geojson['properties']['app_id'];
+            $app_id = $geojson['properties']['app_id'];
+            if (is_numeric($app_id)) {
+                $app = App::where('id', '=', $app_id)->first();
+                if ($app != null) {
+                    $media->app_id = $app_id;
+                    $media->sku = $app->app_id;
+                }
+            } else {
+                $app = App::where('app_id', '=', $app_id)->first();
+                if ($app != null) {
+                    $media->app_id = $app->id;
+                    $media->sku = $app_id;
+                }
+            }
         }
 
         unset($geojson['properties']['name']);

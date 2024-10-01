@@ -92,10 +92,8 @@ class UgcTrack extends Resource
             Text::make(__('App'),  function ($model) {
                 $help = __('App from which the UGC was submitted.');
                 $app_id = $model->app_id;
-                if ($app_id === 'it.net7.parcoforestecasentinesi') {
-                    $app_id = 'it.netseven.forestecasentinesi';
-                }
-                $app = App::where('app_id', $app_id)->first();
+
+                $app = App::where('id', $app_id)->first();
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
                     return <<<HTML
@@ -105,7 +103,6 @@ class UgcTrack extends Resource
                         class="no-underline dim text-primary font-bold">
                        {$app->name}
                     </a> <br>
-                    $help
                     HTML;
                 }
                 return $help;
