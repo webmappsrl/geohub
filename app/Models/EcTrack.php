@@ -939,7 +939,17 @@ class EcTrack extends Model
 
         foreach ($this->trackHasApps() as $app) {
             $layersCollection = collect($app->layers);
-            $sortedLayers = $layersCollection->sortBy('rank');
+            // Ottieni gli ID dei layer associati tramite la tabella app_layer
+            $associatedLayerIds = DB::table('app_layer')
+                ->where('layerable_id', $app->id)
+                ->where('layerable_type', 'App\\Models\\App')
+                ->pluck('layer_id'); // Ottiene solo gli ID
+
+            // Recupera i Layer associati tramite gli ID
+            $associatedLayers = Layer::whereIn('id', $associatedLayerIds)->get();
+            // Unisci le due collection e rimuovi eventuali duplicati
+            $mergedLayers = $layersCollection->merge($associatedLayers)->unique();
+            $sortedLayers = $mergedLayers->sortBy('rank');
 
             foreach ($sortedLayers as $layer) {
                 $layerTaxonomies = $layer->getLayerTaxonomyIDs();
@@ -958,13 +968,13 @@ class EcTrack extends Model
 
                 // Se il layer non ha alcuna corrispondenza, non lo includiamo
                 if ($hasAtLeastOneMatch) {
-                    $layers[$app->id][] = $layer->id;
+                    $layers[$layer->app_id][] = $layer->id;
                 }
             }
 
             // Se non ci sono layers corrispondenti, crea comunque un array vuoto per l'app
             if (empty($layers[$app->id])) {
-                $layers[$app->id] = [];
+                $layers[$layer->app_id] = [];
             }
         }
 
