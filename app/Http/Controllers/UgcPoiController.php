@@ -30,8 +30,16 @@ class UgcPoiController extends Controller
         if (isset($user)) {
 
             if (!empty($request->header('app-id'))) {
-                $app = App::find($request->header('app-id'));
-                $pois = UgcPoi::where([['user_id', $user->id], ['app_id', $app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $appId = $request->header('app-id');
+                if (is_numeric($appId)) {
+                    $app = App::where('id', $appId)->first();
+                } else {
+                    $app = App::where('app_id', $appId)->first();
+                }
+                $pois = UgcPoi::where([
+                    ['user_id', $user->id],
+                    ['app_id', $app->id]
+                ])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($pois);
             }
 
