@@ -96,21 +96,17 @@ return [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
         ],
-
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
         ],
-
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
         ],
-
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-
         'osm2cai' => [
             'driver' => 'single',
             'days' => '1',
@@ -118,14 +114,18 @@ return [
             'path'   => storage_path('logs/osm2cai.log'),
             'bubble' => false
         ],
-        
         'euma' => [
             'driver' => 'single',
             'days' => '1',
             'level'  => 'debug',
             'path'   => storage_path('logs/euma.log'),
             'bubble' => false
-        ]
+        ],
+        'layer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/layer.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];

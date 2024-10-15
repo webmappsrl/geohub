@@ -93,31 +93,85 @@ class Layer extends Model
 
     public function getTracks($collection = false)
     {
-        $tracks = [];
         $taxonomies = ['Themes', 'Activities', 'Wheres'];
+
+        // Estrazione dei dati che possono essere elaborati fuori dal foreach
+        $user_id = $this->getLayerUserID();
+        $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
+
+        // Aggiungi l'utente corrente all'array degli utenti associati
+        array_push($associated_app_users, $user_id);
+
+        // Logga gli utenti associati
+        Log::channel('layer')->info("*************getTracks*****************");
+        Log::channel('layer')->info("id: " . $this->id);
+        Log::channel('layer')->info("layer: " . $this->name);
+        Log::channel('layer')->info("Utenti associati per il layer: ", ['associated_users' => $associated_app_users]);
+
+        // Partiamo recuperando tutte le tracce
+        $allEcTracks = collect();
+
+        // Utilizza il metodo chunk per processare i dati in blocchi più piccoli
+        EcTrack::whereIn('user_id', $associated_app_users)
+            ->orderBy('id')
+            ->chunk(1000, function ($chunk) use (&$allEcTracks) {
+                $allEcTracks = $allEcTracks->merge($chunk);
+                unset($chunk);  // Libera la memoria usata dal chunk attuale
+                gc_collect_cycles();  // Forza la garbage collection
+            });
+
+        // Logga il numero di tracce iniziali
+        Log::channel('layer')->info("Numero iniziale di tracce: " . $allEcTracks->count());
+
+        // Per ogni tassonomia, applichiamo un filtro sulle tracce
         foreach ($taxonomies as $taxonomy) {
-            $taxonomy = 'taxonomy' . $taxonomy;
-            if ($this->$taxonomy->count() > 0) {
-                foreach ($this->$taxonomy as $term) {
+            $taxonomyField = 'taxonomy' . $taxonomy;
 
-                    $user_id = $this->getLayerUserID();
-                    $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
-                    $associated_app_track = $term->ecTracks()->whereIn('user_id', $associated_app_users)->orderBy('name')->get();
-                    $ecTracks = $term->ecTracks()->where('user_id', $user_id)->orderBy('name')->get();
-                    $ecTracks = $ecTracks->merge($associated_app_track);
-                    if ($ecTracks->count() > 0) {
-                        if ($collection) {
-                            return $ecTracks;
-                        }
+            Log::channel('layer')->info("Inizio processamento tassonomia: $taxonomyField");
 
-                        foreach ($ecTracks as $track) {
-                            array_push($tracks, $track->id);
-                        }
-                    }
+            if ($this->$taxonomyField->count() > 0) {
+                // Variabile per accumulare i termini della tassonomia corrente
+                $taxonomyTerms = $this->$taxonomyField;
+
+                // Filtra le tracce per mantenere solo quelle che sono associate ai termini della tassonomia corrente
+                $allEcTracks = $allEcTracks->filter(function ($track) use ($taxonomyTerms, $taxonomyField) {
+                    // Controlla se la traccia ha almeno un termine della tassonomia corrente
+                    return $track->$taxonomyField->intersect($taxonomyTerms)->isNotEmpty();
+                });
+
+                // Logga il numero di tracce rimanenti dopo il filtro per questa tassonomia
+                Log::channel('layer')->info("Tracce rimanenti dopo il filtro di $taxonomyField: " . $allEcTracks->count());
+
+                // Se non ci sono più tracce comuni, restituisci subito un array vuoto
+                if ($allEcTracks->isEmpty()) {
+                    Log::channel('layer')->info("Nessuna traccia comune trovata dopo l'applicazione di $taxonomyField. Restituzione array vuoto.");
+                    return [];
                 }
+            } else {
+                Log::channel('layer')->info("Nessun termine disponibile per la tassonomia $taxonomyField.");
             }
+
+            unset($taxonomyTerms);  // Libera la memoria usata per i termini della tassonomia
+            gc_collect_cycles();  // Forza la garbage collection
         }
-        return $tracks;
+
+        // Se collection è true, ritorna direttamente tutte le tracce raccolte
+        if ($collection) {
+            Log::channel('layer')->info("Ritorno tutte le tracce come collezione. Totale tracce: " . $allEcTracks->count());
+            return $allEcTracks;
+        }
+
+        // Popola l'array dei track IDs fuori dal loop
+        $trackIds = $allEcTracks->pluck('id')->toArray();
+
+        // Logga il numero finale di track IDs raccolti
+        Log::channel('layer')->info("Numero totale di track IDs raccolti: " . count($trackIds));
+
+        // Libera la memoria utilizzata dalla collezione di tracce
+        unset($allEcTracks);
+        gc_collect_cycles();  // Forza la garbage collection
+
+        return $trackIds;
     }
 
     public function getPbfTracks()
@@ -143,6 +197,9 @@ class Layer extends Model
                                 foreach ($associated_app_tracks as $track) {
                                     $tracks->push($track);
                                 }
+                                // Liberare memoria non necessaria
+                                unset($associated_app_tracks);
+                                gc_collect_cycles();
                             });
                     }
 
@@ -154,6 +211,9 @@ class Layer extends Model
                             foreach ($ecTracks as $track) {
                                 $tracks->push($track);
                             }
+                            // Liberare memoria non necessaria
+                            unset($ecTracks);
+                            gc_collect_cycles();
                         });
                 }
             }
@@ -194,7 +254,7 @@ class Layer extends Model
             $this->bbox = $bbox;
             $this->save();
         } catch (Exception $e) {
-            Log::error("computeBB of layer with id: " . $this->id);
+            Log::channel('layer')->error("computeBB of layer with id: " . $this->id);
         }
     }
 

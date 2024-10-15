@@ -419,7 +419,7 @@ class App extends Model
         if (count($tracksFromLayer) > 0) {
             foreach ($tracksFromLayer as $tid => $layers) {
                 $t = EcTrack::find($tid);
-                UpdateEcTrackElasticIndexJob::dispatch($t);
+                UpdateEcTrackElasticIndexJob::dispatch($t, $this->id, $layers);
             }
         } else {
             Log::info('No tracks in APP ' . $this->id);

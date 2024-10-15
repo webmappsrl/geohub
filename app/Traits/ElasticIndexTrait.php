@@ -113,6 +113,8 @@ trait ElasticIndexTrait
 
     public function elasticIndexDoc($indexName, $id, $doc)
     {
+        ini_set('memory_limit', '1024M');
+
         try {
             $client = $this->getClient();
 
