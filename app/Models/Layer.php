@@ -113,7 +113,10 @@ class Layer extends Model
 
         // Utilizza il metodo chunk per processare i dati in blocchi più piccoli
         EcTrack::whereIn('user_id', $associated_app_users)
+            ->whereNotNull('geometry')  // Controlla che la geometria non sia null
+            ->whereRaw('ST_Dimension(geometry) = 1')  // Assicura che la geometria sia di dimensione 1 (linea)
             ->orderBy('id')
+            ->orderBy('name')
             ->chunk(1000, function ($chunk) use (&$allEcTracks) {
                 $allEcTracks = $allEcTracks->merge($chunk);
                 unset($chunk);  // Libera la memoria usata dal chunk attuale
@@ -176,50 +179,20 @@ class Layer extends Model
 
     public function getPbfTracks()
     {
-        $tracks = collect();
-        $taxonomies = ['Themes', 'Activities', 'Wheres'];
+        // Chiamata a getTracks per ottenere la collection delle tracce filtrate
+        $allEcTracks = $this->getTracks(true); // Passiamo true per ottenere una collection
 
-        foreach ($taxonomies as $taxonomy) {
-            $taxonomyField = 'taxonomy' . $taxonomy;
-
-            if ($this->$taxonomyField->count() > 0) {
-                foreach ($this->$taxonomyField as $term) {
-                    $user_id = $this->getLayerUserID();
-                    $associated_app_users = $this->associatedApps()->pluck('user_id')->toArray();
-
-                    // Ottieni le tracce associate in lotti per ridurre il carico di memoria
-                    if (!empty($associated_app_users)) {
-                        $term->ecTracks()->whereIn('user_id', $associated_app_users)
-                            ->whereNotNull('geometry')
-                            ->whereRaw('ST_Dimension(geometry) = 1')
-                            ->orderBy('name')
-                            ->chunk(1000, function ($associated_app_tracks) use ($tracks) {
-                                foreach ($associated_app_tracks as $track) {
-                                    $tracks->push($track);
-                                }
-                                // Liberare memoria non necessaria
-                                unset($associated_app_tracks);
-                                gc_collect_cycles();
-                            });
-                    }
-
-                    $term->ecTracks()->where('user_id', $user_id)
-                        ->whereNotNull('geometry')
-                        ->whereRaw('ST_Dimension(geometry) = 1')
-                        ->orderBy('name')
-                        ->chunk(1000, function ($ecTracks) use ($tracks) {
-                            foreach ($ecTracks as $track) {
-                                $tracks->push($track);
-                            }
-                            // Liberare memoria non necessaria
-                            unset($ecTracks);
-                            gc_collect_cycles();
-                        });
-                }
-            }
+        // Verifica che ci siano tracce disponibili
+        if ($allEcTracks->isEmpty()) {
+            Log::channel('layer')->info("Nessuna traccia trovata da getTracks.");
+            return collect(); // Restituisci una collezione vuota
         }
 
-        return $tracks->unique('id'); // Restituisci tracce uniche basate sull'ID
+        // Logga il numero di tracce filtrate dalla geometria e dalle tassonomie
+        Log::channel('layer')->info("Numero di tracce finali filtrate da getTracks: " . $allEcTracks->count());
+
+        // Restituisci tracce uniche in base all'ID
+        return $allEcTracks->unique('id');
     }
 
 
