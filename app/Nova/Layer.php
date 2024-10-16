@@ -87,7 +87,6 @@ class Layer extends Resource
             AttachMany::make('taxonomyActivities'),
             AttachMany::make('TaxonomyThemes'),
             AttachMany::make('TaxonomyTargets'),
-            AttachMany::make('TaxonomyWhens'),
             AttachMany::make('TaxonomyWheres'),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
         ];
@@ -277,13 +276,8 @@ class Layer extends Resource
                         return 'No Targets';
                     })
                         ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
-                    Text::make('Whens', function () {
-                        if ($this->taxonomyWhens()->count() > 0) {
-                            return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
-                        }
-                        return 'No Whens';
-                    })
-                        ->help(__('Select one or more whens taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
+
+                    BelongsToMany::make('EcTracks'),
                 ]
 
             ]))->withToolbar(),
@@ -448,9 +442,6 @@ class Layer extends Resource
             AttachMany::make('TaxonomyTargets')
                 ->showPreview()
                 ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
-            AttachMany::make('TaxonomyWhens')
-                ->showPreview()
-                ->help(__('Select one or more whens taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyWheres')
                 ->showPreview()
                 ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.'))

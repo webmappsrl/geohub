@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdateLayerTracksJob;
 use Exception;
 use App\Models\OverlayLayer;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Cache;
 
 class Layer extends Model
 {
@@ -23,6 +25,9 @@ class Layer extends Model
         parent::booted();
         static::creating(function ($l) {
             $l->rank = DB::select(DB::raw('SELECT max(rank) from layers'))[0]->max + 1;
+        });
+        static::saved(function ($layer) {
+            dispatch(new UpdateLayerTracksJob($layer));
         });
     }
 
@@ -180,7 +185,7 @@ class Layer extends Model
     public function getPbfTracks()
     {
         // Chiamata a getTracks per ottenere la collection delle tracce filtrate
-        $allEcTracks = $this->getTracks(true); // Passiamo true per ottenere una collection
+        $allEcTracks =  $this->ecTracks;
 
         // Verifica che ci siano tracce disponibili
         if ($allEcTracks->isEmpty()) {
@@ -195,6 +200,12 @@ class Layer extends Model
         return $allEcTracks->unique('id');
     }
 
+    public static function getTaxonomyWheres()
+    {
+        return Cache::remember('taxonomy_wheres', 3600, function () {
+            return self::all(); // Recupera tutti i TaxonomyWheres
+        });
+    }
 
 
     public function getLayerUserID()
@@ -205,7 +216,7 @@ class Layer extends Model
     public function computeBB($defaultBBOX)
     {
         $bbox = $defaultBBOX;
-        $tracks = $this->getTracks();
+        $tracks = $this->ecTracks->pluck('id')->toArray();
         if (count($tracks) > 0) {
             $q = "select ST_Extent(geometry::geometry)
              as bbox from ec_tracks where id IN (" . implode(',', array_map('intval', $tracks)) . ");";
@@ -280,7 +291,10 @@ class Layer extends Model
 
         return $ids;
     }
-
+    public function ecTracks(): BelongsToMany
+    {
+        return $this->belongsToMany(EcTrack::class, 'ec_track_layer');
+    }
 
     /**
      * Determines next and previous stage of each track inside the layer
@@ -289,7 +303,7 @@ class Layer extends Model
      */
     public function generateLayerEdges()
     {
-        $tracks = $this->getTracks(true);
+        $tracks = $this->ecTracks;
 
         if (empty($tracks)) {
             return null;

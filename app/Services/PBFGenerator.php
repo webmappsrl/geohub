@@ -280,8 +280,7 @@ class PBFGenerator
 
             foreach ($tracks as $track) {
                 try {
-                    $trackArray = $track->toArray();
-                    $layers = $trackArray['layers'][$this->app_id] ?? [];
+                    $layers = $track->associatedLayers->pluck('id')->toArray();
 
                     if (!in_array($layer->id, $layers)) {
                         $layers[] = $layer->id;

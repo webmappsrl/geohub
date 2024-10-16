@@ -135,6 +135,10 @@ class EcTrack extends Model
             $ecTrack->updateDataChain($ecTrack);
         });
     }
+    public function associatedLayers(): BelongsToMany
+    {
+        return $this->belongsToMany(Layer::class, 'ec_track_layer');
+    }
 
     public function author()
     {

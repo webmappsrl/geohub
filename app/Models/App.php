@@ -494,7 +494,7 @@ class App extends Model
         $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                $tracks = $layer->getTracks();
+                $tracks = $layer->ecTracks->pluck('id')->toArray();
                 $layer->computeBB($this->map_bbox);
                 if (count($tracks) > 0) {
                     foreach ($tracks as $track) {
@@ -527,7 +527,7 @@ class App extends Model
         $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                $tracks = $layer->getTracks(true);
+                $tracks = $layer->ecTracks;
                 if (count($tracks) > 0) {
                     foreach ($tracks as $track) {
                         $res[$track->id] = $track->updated_at;
