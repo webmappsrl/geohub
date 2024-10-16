@@ -438,7 +438,7 @@ EOF;
     if ($layer->feature_image) {
       $json['featureImage'] = $layer->featureImage->getJson();
     }
-    $tracks = $layer->getTracks(true);
+    $tracks = $layer->ecTracks;
     $tracks = $tracks->map(function ($track) {
       if ($track->feature_image) {
         $track['featureImage'] = $track->featureImage->getJson();
