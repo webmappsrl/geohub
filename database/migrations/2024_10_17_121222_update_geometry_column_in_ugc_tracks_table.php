@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+class UpdateGeometryColumnInUgcTracksTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $sql = 'ALTER TABLE ugc_tracks
+                ALTER COLUMN geometry TYPE geometry(LineStringZ)
+                USING ST_force3D(geometry::geometry);';
+        DB::statement($sql);
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $sql = 'ALTER TABLE ugc_tracks
+                ALTER COLUMN geometry TYPE geometry(LineString)
+                USING ST_force2D(geometry);';
+        DB::statement($sql);
+    }
+}
