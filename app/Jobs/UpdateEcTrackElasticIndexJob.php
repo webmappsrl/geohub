@@ -25,7 +25,7 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($ecTrack, $app_id, $layer_ids)
+    public function __construct($ecTrack, $app_id = null, $layer_ids = null)
     {
         $this->ecTrack = $ecTrack;
         $this->app_id = $app_id;
