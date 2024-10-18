@@ -112,7 +112,7 @@ class EcTrack extends Model
 
         static::created(function ($ecTrack) {
             try {
-                $apps = $ecTrack->trackHasApps;
+                $apps = $ecTrack->trackHasApps();
                 // Verifica se ci sono app associate
                 if ($apps && $apps->count() > 0) {
                     foreach ($apps as $app) {
