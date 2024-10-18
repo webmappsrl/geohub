@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -111,6 +112,17 @@ class EcTrack extends Model
 
         static::created(function ($ecTrack) {
             try {
+                $apps = $ecTrack->trackHasApps;
+                // Verifica se ci sono app associate
+                if ($apps && $apps->count() > 0) {
+                    foreach ($apps as $app) {
+                        // Esegui il comando Artisan per aggiornare i layer di ogni app
+                        Artisan::call('layers:update', ['app_id' => $app->id]);
+                        Log::info('Comando Artisan layers:update eseguito con successo per app_id ' . $app->id);
+                    }
+                } else {
+                    Log::info('Nessuna app associata trovata per l\'EcTrack con ID: ' . $ecTrack->id);
+                }
                 $ecTrack->updateDataChain($ecTrack);
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
