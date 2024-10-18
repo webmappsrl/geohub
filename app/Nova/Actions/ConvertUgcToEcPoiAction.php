@@ -22,7 +22,7 @@ class ConvertUgcToEcPoiAction extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    public $name='Convert To EcPoi';
+    public $name = 'Convert To EcPoi';
 
     /**
      * Perform the action on the given models.
@@ -35,8 +35,8 @@ class ConvertUgcToEcPoiAction extends Action
     {
         $already_exists = [];
         foreach ($models as $model) {
-            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && !empty(json_decode($model->raw_data)->ec_poi_id)) { 
-                $already_exists[] = $model->id; 
+            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && !empty(json_decode($model->raw_data)->ec_poi_id)) {
+                $already_exists[] = $model->id;
                 continue;
             }
             if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'share_ugcpoi') && json_decode($model->raw_data)->share_ugcpoi === 'yes') {
@@ -46,7 +46,7 @@ class ConvertUgcToEcPoiAction extends Action
                 $ecPoi->user_id = auth()->user()->id;
 
                 $result = $ecPoi->save();
-    
+
                 if ($result) {
 
                     // Attach Medias
@@ -56,10 +56,10 @@ class ConvertUgcToEcPoiAction extends Action
                         $storage = Storage::disk('public');
                         foreach ($ugcMedia as $count => $media) {
                             try {
-                                $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
-                                $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
-                                $storage->put('ec_media/' .$mediaName, $contents); 
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/'.$mediaName, 'geometry' => $media->geometry]);
+                                $mediaName = $ecPoi->id . '_' . last(explode('/', $media['relative_url']));
+                                $contents = file_get_contents(public_path('storage/' . $media['relative_url']));
+                                $storage->put('ec_media/' . $mediaName, $contents);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/' . $mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
                                 $result = $ecMedia->save();
                                 if ($count == 0) {
@@ -90,8 +90,8 @@ class ConvertUgcToEcPoiAction extends Action
                     }
 
                     // attach taxonomy theme
-                    if ($model->app_id) {
-                        $app = App::where('app_id', $model->app_id)->first();
+                    if ($model->sku) {
+                        $app = App::where('sku', $model->sku)->first();
                         if ($app) {
                             if ($app->taxonomyThemes()->count() > 0) {
                                 foreach ($app->taxonomyThemes as $theme) {
@@ -108,7 +108,7 @@ class ConvertUgcToEcPoiAction extends Action
         }
 
         if (count($already_exists) > 0) {
-            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: '.implode(', ', $already_exists));
+            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: ' . implode(', ', $already_exists));
         }
         return Action::message('Conversion completed successfully');
     }

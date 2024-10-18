@@ -45,7 +45,7 @@ class UgcMedia extends Resource
      */
     public static $search = [
         'name',
-        'app_id'
+        'sku'
     ];
 
     public static array $searchRelations = [
@@ -69,7 +69,7 @@ class UgcMedia extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
+        return $query->whereIn('sku', $request->user()->apps->pluck('sku')->toArray());
     }
 
     /**
@@ -104,8 +104,8 @@ class UgcMedia extends Resource
                 ->help(__('Creation date of the UGC')),
             Text::make(__('App'),  function ($model) {
                 $help = '<p>App from which the UGC was submitted</p>';
-                $app_id = $model->app_id;
-                $app = App::where('id', $app_id)->first();
+                $sku = $model->sku;
+                $app = App::where('sku', $sku)->first();
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
                     return <<<HTML

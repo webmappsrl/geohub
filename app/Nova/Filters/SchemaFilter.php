@@ -45,8 +45,8 @@ class SchemaFilter extends Filter
         if ($request->user()->can('Admin')) {
             $allApps = App::all();
         } else {
-            $appIds = $request->user()->apps->pluck('app_id')->toArray();
-            $allApps = App::whereIn('app_id', $appIds)->get();
+            $appIds = $request->user()->apps->pluck('sku')->toArray();
+            $allApps = App::whereIn('sku', $appIds)->get();
         }
         foreach ($allApps as $app) {
             $acquisition_form = $this->type == 'ugc_pois' ? $app->poi_acquisition_form : $app->track_acquisition_form;

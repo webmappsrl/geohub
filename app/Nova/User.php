@@ -62,7 +62,7 @@ class User extends Resource
             return $query;
         }
         if ($request->user()->apps->count() > 0 && $request->user()->apps[0]->dashboard_show == true) {
-            $referrers = $request->user()->apps->pluck('app_id')->toArray();
+            $referrers = $request->user()->apps->pluck('sku')->toArray();
             return $query->whereIn('referrer', $referrers);
         } else {
             return $query->where('id', $request->user()->id);

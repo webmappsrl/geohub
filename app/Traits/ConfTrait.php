@@ -55,7 +55,7 @@ trait ConfTrait
         $data = [];
 
         $data['APP']['name'] = $this->name;
-        $data['APP']['id'] = $this->app_id;
+        $data['APP']['sku'] = $this->sku;
         $data['APP']['customerName'] = $this->customer_name;
         $data['APP']['geohubId'] = $this->id;
 
@@ -292,7 +292,7 @@ trait ConfTrait
                 }
                 unset($item['created_at']);
                 unset($item['updated_at']);
-                unset($item['app_id']);
+                unset($item['sku']);
                 unset($item['generate_edges']);
 
 

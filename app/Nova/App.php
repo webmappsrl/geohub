@@ -233,7 +233,7 @@ class App extends Resource
                     'webapp' => 'WebApp',
                 ]
             )->required(),
-            Text::make(__('App Id'), 'app_id')->required(),
+            Text::make(__('Sku'), 'sku')->required(),
             Text::make(__('Name'), 'name')->sortable()->required(),
             Text::make(__('Customer Name'), 'customer_name')->sortable()->required(),
             Select::make(__('Default Language'), 'default_language')->hideFromIndex()->options($this->languages)->displayUsingLabels()->required(),
@@ -326,7 +326,7 @@ class App extends Resource
             )
                 ->required()
                 ->help(__('Type of API used by the app.')),
-            Text::make(__('App Id'), 'app_id')
+            Text::make(__('Sku'), 'sku')
                 ->required()
                 ->help(__('The package ID must match the one used in stores. It cannot be changed after the first build is uploaded.')),
             Text::make(__('Play Store link (android)'), 'android_store_link'),
@@ -1511,9 +1511,9 @@ class App extends Resource
 
     protected function map_analytics_tab(): array
     {
-        $poigeojson = $this->model()->getUGCPoiGeojson($this->model()->app_id);
-        $mediageojson = $this->model()->getUGCMediaGeojson($this->model()->app_id);
-        $trackgeojson = $this->model()->getiUGCTrackGeojson($this->model()->app_id);
+        $poigeojson = $this->model()->getUGCPoiGeojson($this->model()->sku);
+        $mediageojson = $this->model()->getUGCMediaGeojson($this->model()->sku);
+        $trackgeojson = $this->model()->getiUGCTrackGeojson($this->model()->sku);
         return [
             MapMultiPurposeNova3::make('All user created contents')->withMeta([
                 'center' => ["43", "12"],

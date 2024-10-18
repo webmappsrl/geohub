@@ -40,11 +40,11 @@ class ExportFormDataXLSX extends Action
     }
     public function handle(ActionFields $fields, Collection $models): array
     {
-        $modelsGoupedByApp = $models->groupBy('app_id');
+        $modelsGoupedByApp = $models->groupBy('sku');
         $sheets = [];
         foreach ($modelsGoupedByApp as $appId => $modelsInGroup) {
 
-            $app = App::where('app_id', $appId)->first();
+            $app = App::where('sku', $appId)->first();
             $acquisition_form = $this->type === 'ugc_pois' ? $app->poi_acquisition_form : $app->track_acquisition_form;
             $formSchemas = json_decode($acquisition_form, true);
             $dataSheets = [];

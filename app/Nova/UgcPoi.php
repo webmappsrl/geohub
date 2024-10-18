@@ -66,7 +66,9 @@ class UgcPoi extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
-        return $query->whereIn('app_id', $request->user()->apps->pluck('app_id')->toArray());
+        $user = $request->user();
+        $apps = $user->apps->pluck('id')->toArray();
+        return $query->whereIn('app_id', $apps);
     }
 
     /**
@@ -89,8 +91,8 @@ class UgcPoi extends Resource
                 ->help(__('Name entered by the user.')),
             Text::make(__('App'),  function ($model) {
                 $help = '<p>App from which the UGC was submitted</p>';
-                $app_id = $model->app_id;
-                $app = App::where('id', $app_id)->first();
+                $sku = $model->sku;
+                $app = App::where('sku', $sku)->first();
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
                     return <<<HTML
@@ -114,11 +116,11 @@ class UgcPoi extends Resource
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
 
                 if (isset($formData)) {
-                    $app_id = $model->app_id;
-                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
-                        $app_id = 'it.netseven.forestecasentinesi';
+                    $sku = $model->sku;
+                    if ($sku === 'it.net7.parcoforestecasentinesi') {
+                        $sku = 'it.netseven.forestecasentinesi';
                     }
-                    $app = App::where('app_id', $app_id)->first();
+                    $app = App::where('sku', $sku)->first();
 
                     if (isset($app)) {
                         $formSchema = json_decode($app->poi_acquisition_form, true);
@@ -150,11 +152,11 @@ class UgcPoi extends Resource
                 $help = '<p>Type of form submitted, and data entered within it</p>';
 
                 if (isset($formData)) {
-                    $app_id = $model->app_id;
-                    if ($app_id === 'it.net7.parcoforestecasentinesi') {
-                        $app_id = 'it.netseven.forestecasentinesi';
+                    $sku = $model->sku;
+                    if ($sku === 'it.net7.parcoforestecasentinesi') {
+                        $sku = 'it.netseven.forestecasentinesi';
                     }
-                    $app = App::where('app_id', $app_id)->first();
+                    $app = App::where('sku', $sku)->first();
 
                     if (isset($app)) {
                         $formSchema = json_decode($app->poi_acquisition_form, true);

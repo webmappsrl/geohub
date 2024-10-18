@@ -25,8 +25,8 @@ class AppFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        //return the models where the app_id value contains the digited value
-        return $query->where('app_id', $value);
+        //return the models where the sku value contains the digited value
+        return $query->where('sku', $value);
     }
 
     /**
@@ -46,7 +46,7 @@ class AppFilter extends Filter
         }
         foreach ($apps as $app) {
             $label = $app['name'];
-            $options[$label] = $app['app_id'];
+            $options[$label] = $app['sku'];
         }
 
         return $options;

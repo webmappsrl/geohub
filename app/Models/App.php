@@ -162,9 +162,9 @@ class App extends Model
         }
     }
 
-    public function getUGCPoiGeojson($app_id)
+    public function getUGCPoiGeojson($sku)
     {
-        $pois = UgcPoi::where('app_id', $app_id)->get();
+        $pois = UgcPoi::where('sku', $sku)->get();
 
         if ($pois->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];
@@ -183,9 +183,9 @@ class App extends Model
         }
     }
 
-    public function getUGCMediaGeojson($app_id)
+    public function getUGCMediaGeojson($sku)
     {
-        $medias = UgcMedia::where('app_id', $app_id)->get();
+        $medias = UgcMedia::where('sku', $sku)->get();
 
         if ($medias->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];
@@ -204,9 +204,9 @@ class App extends Model
         }
     }
 
-    public function getiUGCTrackGeojson($app_id)
+    public function getiUGCTrackGeojson($sku)
     {
-        $tracks = UgcTrack::where('app_id', $app_id)->get();
+        $tracks = UgcTrack::where('sku', $sku)->get();
 
         if ($tracks->count() > 0) {
             $geoJson = ["type" => "FeatureCollection"];

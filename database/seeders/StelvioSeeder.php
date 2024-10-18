@@ -49,48 +49,56 @@ class StelvioSeeder extends Seeder
      */
     public function run()
     {
-        $app_id = 'it.webmapp.pnstelvio';
-        $users = User::factory(10)->create(['referrer'=>$app_id]);
+        $sku = 'it.webmapp.pnstelvio';
+        $users = User::factory(10)->create(['referrer' => $sku]);
         foreach ($users as $user) {
             // 10 UGC POIS
             $ugc = UgcPoi::factory(10)->create(
-                ['user_id'=>$user->id,
-                 'app_id'=>$app_id,
-                 'geometry'=>$this->getPoiGeometry()
-                ]);
+                [
+                    'user_id' => $user->id,
+                    'sku' => $sku,
+                    'geometry' => $this->getPoiGeometry()
+                ]
+            );
             // 10 UGC MEDIA
             $ugc = UgcMedia::factory(10)->create(
-                ['user_id'=>$user->id,
-                 'app_id'=>$app_id,
-                 'geometry'=>$this->getPoiGeometry()
-                ]);
+                [
+                    'user_id' => $user->id,
+                    'sku' => $sku,
+                    'geometry' => $this->getPoiGeometry()
+                ]
+            );
             // 1 TRACK
             $ugc = UgcTrack::factory()->create(
-                ['user_id'=>$user->id,
-                 'app_id'=>$app_id,
-                 'geometry'=>$this->getTrackGeometry()
-                ]);
+                [
+                    'user_id' => $user->id,
+                    'sku' => $sku,
+                    'geometry' => $this->getTrackGeometry()
+                ]
+            );
         }
     }
 
-    private function getPoiGeometry() {
+    private function getPoiGeometry()
+    {
         // [10.2858,46.0319,10.6344,46.5595]
-        $lon = $this->faker->randomFloat(5,10.2858,10.6344);
-        $lat = $this->faker->randomFloat(5,46.0319,46.5595);
+        $lon = $this->faker->randomFloat(5, 10.2858, 10.6344);
+        $lat = $this->faker->randomFloat(5, 46.0319, 46.5595);
         $geometry = DB::raw("(ST_GeomFromText('POINT($lon $lat)'))");
         return $geometry;
     }
 
-    private function getTrackGeometry() {
+    private function getTrackGeometry()
+    {
         // [10.2858,46.0319,10.6344,46.5595]
         $line = [];
-        for ($i=0;$i<20;$i++) {
-            $lon = $this->faker->randomFloat(5,10.2858,10.6344);
-            $lat = $this->faker->randomFloat(5,46.0319,46.5595);
-            $line[$lat*100000]="$lon $lat";   
+        for ($i = 0; $i < 20; $i++) {
+            $lon = $this->faker->randomFloat(5, 10.2858, 10.6344);
+            $lat = $this->faker->randomFloat(5, 46.0319, 46.5595);
+            $line[$lat * 100000] = "$lon $lat";
         }
         ksort($line);
-        $linestring = implode(',',$line);
+        $linestring = implode(',', $line);
         $geometry = DB::raw("(ST_GeomFromText('LINESTRING($linestring)'))");
         return $geometry;
     }

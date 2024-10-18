@@ -23,7 +23,7 @@ class UgcTrackFactory extends Factory
      */
     public function definition()
     {
-        if(User::count()==0) {
+        if (User::count() == 0) {
             User::factory()->create(100);
         }
 
@@ -38,7 +38,7 @@ class UgcTrackFactory extends Factory
             'name' => $this->faker->name(),
             'created_at' => $this->faker->dateTime('-1 month'),
             'updated_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
-            'app_id' => 'it.webmapp.' . strtolower($this->faker->word()),
+            'sku' => 'it.webmapp.' . strtolower($this->faker->word()),
             'geometry' => $geometry,
             'raw_data' => json_encode($rawData),
             'user_id' => User::all()->random(1)->first()->id,

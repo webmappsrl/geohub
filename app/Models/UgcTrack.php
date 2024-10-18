@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @package App\Models
  *
  * @property int    id
- * @property string app_id
+ * @property string sku
  * @property string relative_url
  * @property string geometry
  * @property string name
@@ -27,7 +27,7 @@ class UgcTrack extends Model
 
     protected $fillable = [
         'user_id',
-        'app_id',
+        'sku',
         'name',
         'description',
         'geometry',
@@ -59,7 +59,7 @@ class UgcTrack extends Model
     {
         return $this->belongsTo("\App\Models\User", "user_id", "id");
     }
-    
+
     public function taxonomy_wheres(): BelongsToMany
     {
         return $this->belongsToMany(TaxonomyWhere::class);
