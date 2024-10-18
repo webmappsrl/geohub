@@ -142,7 +142,14 @@ class EcTrack extends Model
             } catch (\Exception $e) {
                 Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
             }
-            $ecTrack->updateDataChain($ecTrack);
+            $apps = $ecTrack->trackHasApps();
+            // Verifica se ci sono app associate
+            if ($apps && $apps->count() > 0) {
+                foreach ($apps as $app) {
+                    $chain[] = new UpdateLayersForAppJob($app->id);
+                }
+            }
+            $ecTrack->updateDataChain($ecTrack, $chain);
         });
     }
     public function associatedLayers(): BelongsToMany
