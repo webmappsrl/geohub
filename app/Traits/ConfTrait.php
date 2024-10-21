@@ -648,10 +648,6 @@ trait ConfTrait
         $data['OPTIONS']['download_track_enable'] = $this->download_track_enable;
         $data['OPTIONS']['print_track_enable'] = $this->print_track_enable;
         $data['OPTIONS']['show_searchbar'] = $this->show_search;
-        $data['OPTIONS']['show_favorites'] = $this->show_favorites;
-        $data['OPTIONS']['showGpxDownload'] = $this->table_details_show_gpx_download;
-        $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
-        $data['OPTIONS']['showRelatedPoi'] = $this->table_details_show_related_poi;
         $data['OPTIONS']['show_duration:forward'] = $this->table_details_show_duration_forward;
         $data['OPTIONS']['show_duration:backward'] = $this->table_details_show_duration_backward;
         $data['OPTIONS']['show_distance'] = $this->table_details_show_distance;
@@ -662,10 +658,8 @@ trait ConfTrait
         $data['OPTIONS']['show_ele:from'] = $this->table_details_show_ele_from;
         $data['OPTIONS']['show_ele:to'] = $this->table_details_show_ele_to;
         $data['OPTIONS']['show_scale'] = $this->table_details_show_scale;
-        $data['OPTIONS']['show_cai_scale'] = $this->table_details_show_cai_scale;
-        $data['OPTIONS']['show_mtb_scale'] = $this->table_details_show_mtb_scale;
-        $data['OPTIONS']['show_ref'] = $this->table_details_show_ref;
-        $data['OPTIONS']['show_surface'] = $this->table_details_show_surface;
+        $data['OPTIONS']['showGpxDownload'] = $this->table_details_show_gpx_download;
+        $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
         $data['OPTIONS']['showGeojsonDownload'] = !!$this->table_details_show_geojson_download;
         $data['OPTIONS']['showShapefileDownload'] = !!$this->table_details_show_shapefile_download;
 
