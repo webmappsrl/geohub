@@ -273,7 +273,6 @@ class App extends Resource
             'SEARCHABLE' => $this->searchable_tab(),
             'OPTIONS' => $this->options_tab(),
             'POIS' => $this->pois_tab(),
-            'TABLE' => $this->table_tab(),
             'THEME' => $this->theme_tab(),
             'LAYERS' => $this->layers_tab(),
             'OVERLAYS' => $this->overlayLayers_tab(),
@@ -765,6 +764,7 @@ class App extends Resource
     protected function options_tab(): array
     {
         return [
+            Heading::make('<p>This information is displayed in the technical details through the app.</p>')->asHtml(),
             Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -789,6 +789,120 @@ class App extends Resource
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Show favorites tab')),
+            Toggle::make(__('Show GPX Download'), 'table_details_show_gpx_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the GPX download option.')),
+            Toggle::make(__('Show KML Download'), 'table_details_show_kml_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the KML download option.')),
+            Toggle::make(__('Show Related POI'), 'table_details_show_related_poi')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display related POIs.')),
+            Toggle::make(__('Show Duration'), 'table_details_show_duration_forward')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the duration forward.')),
+            Toggle::make(__('Show Duration Backward'), 'table_details_show_duration_backward')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the duration backward.')),
+            Toggle::make(__('Show Distance'), 'table_details_show_distance')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the distance.')),
+            Toggle::make(__('Show Ascent'), 'table_details_show_ascent')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the ascent.')),
+            Toggle::make(__('Show Descent'), 'table_details_show_descent')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the descent.')),
+            Toggle::make(__('Show Ele Max'), 'table_details_show_ele_max')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the maximum elevation.')),
+            Toggle::make(__('Show Ele Min'), 'table_details_show_ele_min')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the minimum elevation.')),
+            Toggle::make(__('Show Ele From'), 'table_details_show_ele_from')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the starting elevation.')),
+            Toggle::make(__('Show Ele To'), 'table_details_show_ele_to')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the ending elevation.')),
+            Toggle::make(__('Show Scale'), 'table_details_show_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the scale.')),
+            Toggle::make(__('Show Cai Scale'), 'table_details_show_cai_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the CAI scale.')),
+            Toggle::make(__('Show Mtb Scale'), 'table_details_show_mtb_scale')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the MTB scale.')),
+            Toggle::make(__('Show Ref'), 'table_details_show_ref')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the reference.')),
+            Toggle::make(__('Show Surface'), 'table_details_show_surface')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the surface type.')),
+            Toggle::make(__('Show Geojson Download'), 'table_details_show_geojson_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the GeoJSON download option.')),
+            Toggle::make(__('Show Shapefile Download'), 'table_details_show_shapefile_download')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable to display the Shapefile download option.')),
         ];
     }
 
@@ -916,126 +1030,6 @@ class App extends Resource
         ];
     }
 
-    protected function table_tab(): array
-    {
-        return [
-            Heading::make('<p>This information is displayed in the technical details through the app.</p>')->asHtml(),
-            Toggle::make(__('Show Related POI'), 'table_details_show_related_poi')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display related POIs.')),
-            Toggle::make(__('Show Duration'), 'table_details_show_duration_forward')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the duration forward.')),
-            Toggle::make(__('Show Duration Backward'), 'table_details_show_duration_backward')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the duration backward.')),
-            Toggle::make(__('Show Distance'), 'table_details_show_distance')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the distance.')),
-            Toggle::make(__('Show Ascent'), 'table_details_show_ascent')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the ascent.')),
-            Toggle::make(__('Show Descent'), 'table_details_show_descent')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the descent.')),
-            Toggle::make(__('Show Ele Max'), 'table_details_show_ele_max')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the maximum elevation.')),
-            Toggle::make(__('Show Ele Min'), 'table_details_show_ele_min')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the minimum elevation.')),
-            Toggle::make(__('Show Ele From'), 'table_details_show_ele_from')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the starting elevation.')),
-            Toggle::make(__('Show Ele To'), 'table_details_show_ele_to')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the ending elevation.')),
-            Toggle::make(__('Show Scale'), 'table_details_show_scale')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the scale.')),
-            Toggle::make(__('Show Cai Scale'), 'table_details_show_cai_scale')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the CAI scale.')),
-            Toggle::make(__('Show Mtb Scale'), 'table_details_show_mtb_scale')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the MTB scale.')),
-            Toggle::make(__('Show Ref'), 'table_details_show_ref')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable to display the reference.')),
-            Toggle::make(__('Show Surface'), 'table_details_show_surface')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display the surface type.')),
-            Toggle::make(__('Show GPX Download'), 'table_details_show_gpx_download')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display the GPX download option.')),
-            Toggle::make(__('Show KML Download'), 'table_details_show_kml_download')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display the KML download option.')),
-            Toggle::make(__('Show Geojson Download'), 'table_details_show_geojson_download')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display the GeoJSON download option.')),
-            Toggle::make(__('Show Shapefile Download'), 'table_details_show_shapefile_download')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display the Shapefile download option.')),
-        ];
-    }
 
     protected function overlays_tab(): array
     {
