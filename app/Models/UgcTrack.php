@@ -102,7 +102,7 @@ class UgcTrack extends Model
      *
      * @return array
      */
-    public function getGeojson($verion): ?array
+    public function getGeojson($verion = 'v1'): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
