@@ -37,7 +37,7 @@ class UgcMediaController extends Controller
                 } else {
                     $app = App::where('app_id', $appId)->first();
                 }
-                $medias = UgcMedia::where([['user_id', $user->id], ['app_id', $app->app_id]])->orderByRaw('updated_at DESC')->get();
+                $medias = UgcMedia::where([['user_id', $user->id], ['sku', $app->sku]])->orderByRaw('updated_at DESC')->get();
                 return $this->getUGCFeatureCollection($medias);
             }
 
