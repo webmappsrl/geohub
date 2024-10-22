@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 /**
  * Class UgcMedia
@@ -147,6 +148,13 @@ class UgcMedia extends Model
                     $array['url'] = Storage::disk('public')->url($value);
                 unset($array[$property]);
             }
+            if (is_string($value)) {
+                $decodedValue = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
+                    $array[Str::camel($property)] = $decodedValue;
+                }
+            }
         }
 
         return $array;
@@ -167,7 +175,5 @@ class UgcMedia extends Model
         } else return null;
     }
 
-    public function setGeometry(array $geometry)
-    {
-    }
+    public function setGeometry(array $geometry) {}
 }

@@ -75,7 +75,9 @@ class UgcTrack extends Model
     public function getJson($verion = "v1"): array
     {
         $array = $this->toArray();
-        $array['media'] = $this->ugc_media->toArray();
+        $array['media'] = $this->ugc_media->map(function ($media) {
+            return $media->getJson();
+        })->toArray();
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
