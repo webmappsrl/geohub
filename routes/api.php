@@ -82,6 +82,7 @@ Route::name('api.')->group(function () {
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store", [UgcTrackController::class, 'store'])->name('store');
                 Route::get("index", [UgcTrackController::class, 'index'])->name('index');
+                Route::get("index/{version}", [UgcTrackController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('media')->name('media.')->group(function () {

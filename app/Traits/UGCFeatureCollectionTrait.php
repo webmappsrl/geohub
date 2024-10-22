@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 trait UGCFeatureCollectionTrait
 {
 
-    public function getUGCFeatureCollection($features)
+    public function getUGCFeatureCollection($features, $version = 'v1')
     {
         $featureCollection = [
             "type" => "FeatureCollection",
@@ -23,7 +23,7 @@ trait UGCFeatureCollectionTrait
 
         if ($features) {
             foreach ($features as $feature) {
-                $featureCollection["features"][] = $feature->getGeojson();
+                $featureCollection["features"][] = $feature->getGeojson($version);
             }
         }
 

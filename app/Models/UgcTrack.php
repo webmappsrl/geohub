@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 /**
  * Class UgcTrack
@@ -71,15 +72,27 @@ class UgcTrack extends Model
      *
      * @return array
      */
-    public function getJson(): array
+    public function getJson($verion = "v1"): array
     {
         $array = $this->toArray();
+        $array['media'] = $this->ugc_media->toArray();
 
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
             if (is_null($value) || in_array($property, $propertiesToClear))
                 unset($array[$property]);
+            if ($verion == 'v2') {
+                // Controlla se il valore è una stringa JSON e converti in oggetto se possibile
+                if (is_string($value)) {
+                    $decodedValue = json_decode($value, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
+                        $array[Str::camel($property)] = $decodedValue;
+                    }
+                }
+            }
         }
+
 
         return $array;
     }
@@ -89,11 +102,11 @@ class UgcTrack extends Model
      *
      * @return array
      */
-    public function getGeojson(): ?array
+    public function getGeojson($verion): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+            $feature["properties"] = $this->getJson($verion);
             return $feature;
         } else return null;
     }

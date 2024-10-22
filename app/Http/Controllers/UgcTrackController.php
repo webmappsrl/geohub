@@ -23,7 +23,7 @@ class UgcTrackController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $version = 'v1')
     {
         $user = auth('api')->user();
         if (isset($user)) {
@@ -39,11 +39,11 @@ class UgcTrackController extends Controller
                     ['user_id', $user->id],
                     ['app_id', $app->id]
                 ])->orderByRaw('updated_at DESC')->get();
-                return $this->getUGCFeatureCollection($tracks);
+                return $this->getUGCFeatureCollection($tracks, $version);
             }
 
             $tracks = UgcTrack::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
-            return $this->getUGCFeatureCollection($tracks);
+            return $this->getUGCFeatureCollection($tracks, $version);
         } else {
             return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
         }
