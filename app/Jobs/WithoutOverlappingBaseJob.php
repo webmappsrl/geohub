@@ -14,6 +14,11 @@ abstract class WithoutOverlappingBaseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Specify the job middleware.
+     *
+     * @return array
+     */
     public function middleware()
     {
         $lockKey = $this->getLockKey();
@@ -21,6 +26,11 @@ abstract class WithoutOverlappingBaseJob implements ShouldQueue
         return [new WithoutOverlapping($lockKey)];
     }
 
+    /**
+     * Get the lock key that will be used to prevent overlapping jobs.
+     *
+     * @return string
+     */
     protected function getLockKey()
     {
         $serializable = $this->getSerializableProperties();
@@ -28,6 +38,11 @@ abstract class WithoutOverlappingBaseJob implements ShouldQueue
         return $lockKey;
     }
 
+    /**
+     * Get the properties of the job that can be serialized.
+     *
+     * @return array
+     */
     protected function getSerializableProperties()
     {
         $reflection = new \ReflectionClass($this);
@@ -45,5 +60,10 @@ abstract class WithoutOverlappingBaseJob implements ShouldQueue
         return $serializable;
     }
 
+    /**
+     * Handle the job.
+     *
+     * @return void
+     */
     abstract public function handle();
 }

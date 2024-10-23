@@ -4,13 +4,12 @@ namespace App\Jobs;
 
 use App\Services\PBFGenerateTilesAndDispatch;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Jobs\WithoutOverlappingBaseJob;
 
-class DeleteTrackPBFJob implements ShouldQueue
+class DeleteTrackPBFJob extends WithoutOverlappingBaseJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

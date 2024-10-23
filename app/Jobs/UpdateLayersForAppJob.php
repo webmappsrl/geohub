@@ -3,15 +3,14 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Layer;
 use App\Models\App;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\WithoutOverlappingBaseJob;
 
-class UpdateLayersForAppJob implements ShouldQueue
+class UpdateLayersForAppJob extends WithoutOverlappingBaseJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

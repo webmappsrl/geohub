@@ -10,7 +10,7 @@ use App\Jobs\WithoutOverlappingBaseJob;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class TestJob extends WithoutOverlappingBaseJob
+class TestJob2 extends WithoutOverlappingBaseJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,10 +31,10 @@ class TestJob extends WithoutOverlappingBaseJob
      */
     public function handle()
     {
-        Log::info('TestJob is executed');
-        Redis::set('test_key', 'test_value');
-        $value = Redis::get('test_key');
-        Log::info('Redis value: ' . $value);
+        Log::info('TestJob2 is executed');
+        Redis::set('test_key_2', 'test_value_2');
+        $value = Redis::get('test_key_2');
+        Log::info('Redis value_2: ' . $value);
 
         sleep(10);
     }

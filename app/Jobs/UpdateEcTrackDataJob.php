@@ -4,12 +4,12 @@ namespace App\Jobs;
 
 use App\Models\EcTrack;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Jobs\WithoutOverlappingBaseJob;
 
-class UpdateEcTrackDataJob implements ShouldQueue
+class UpdateEcTrackDataJob extends WithoutOverlappingBaseJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $track;

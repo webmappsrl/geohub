@@ -2,16 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Services\PBFGenerator;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use App\Services\PBFGenerator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\SerializesModels;
+use App\Jobs\WithoutOverlappingBaseJob;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 
-class GeneratePBFJob implements ShouldQueue
+
+class GeneratePBFJob extends WithoutOverlappingBaseJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     // Numero massimo di tentativi

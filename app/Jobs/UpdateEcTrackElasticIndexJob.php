@@ -3,13 +3,13 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\SerializesModels;
+use App\Jobs\WithoutOverlappingBaseJob;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateEcTrackElasticIndexJob implements ShouldQueue
+class UpdateEcTrackElasticIndexJob extends WithoutOverlappingBaseJob
 {
     use Dispatchable;
     use InteractsWithQueue;
