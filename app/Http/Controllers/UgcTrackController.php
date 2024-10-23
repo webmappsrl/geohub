@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\UgcTrackCollection;
 use App\Traits\UGCFeatureCollectionTrait;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class UgcTrackController extends Controller
 {
@@ -69,7 +70,10 @@ class UgcTrackController extends Controller
     public function store(Request $request): Response
     {
         $data = $request->all();
-
+        Log::channel('ugc')->info("*************store ugc track*****************");
+        $dataProperties = $data['properties'];
+        Log::channel('ugc')->info('ugc poi store properties name:', $dataProperties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id(sku):', $dataProperties['app_id']);
         $validator = Validator::make($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -80,14 +84,18 @@ class UgcTrackController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
+            Log::channel('ugc')->info('Validazione fallita:', $validator->errors()->toArray());
             return response(['error' => $validator->errors(), 'Validation Error']);
+        }
 
         $user = auth('api')->user();
         if (is_null($user))
             return response(['error' => 'User not authenticated'], 403);
 
         $track = new UgcTrack();
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
         $track->name = $data['properties']['name'];
         if (isset($data['properties']['description']))
             $track->description = $data['properties']['description'];
@@ -97,13 +105,15 @@ class UgcTrackController extends Controller
         if (isset($data['properties']['app_id'])) {
             $app_id = $data['properties']['app_id'];
             if (is_numeric($app_id)) {
+                Log::channel('ugc')->info('numeric');
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $track->app_id = $app_id;
                     $track->sku = $app->app_id;
                 }
             } else {
-                $app = App::where('app_id', '=', $app_id)->first();
+                Log::channel('ugc')->info('sku');
+                $app = App::where('sku', '=', $app_id)->first();
                 if ($app != null) {
                     $track->app_id = $app->id;
                     $track->sku = $app_id;
@@ -116,7 +126,12 @@ class UgcTrackController extends Controller
         }
 
         $track->raw_data = json_encode($data['properties']);
-        $track->save();
+        try {
+            $track->save();
+        } catch (\Exception $e) {
+            Log::channel('ugc')->info('Errore nel salvataggio del poi:' . $e->getMessage());
+            return response(['error' => 'Error saving Track'], 500);
+        }
 
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
             foreach ($data['properties']['image_gallery'] as $imageId) {

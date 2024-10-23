@@ -68,7 +68,10 @@ class UgcMediaController extends Controller
     public function store(Request $request): Response
     {
         $data = $request->all();
-
+        Log::channel('ugc')->info("*************store ugc media*****************");
+        $dataGeojson = $data['geojson'];
+        $dataProperties = $data['properties'];
+        Log::channel('ugc')->info('ugc poi store properties app_id(sku):', $dataProperties['app_id']);
         $validator = Validator::make($data, [
             'geojson' => 'required',
             'image' => 'required'
@@ -99,7 +102,8 @@ class UgcMediaController extends Controller
         }
 
         $user = auth('api')->user();
-
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
         $media = new UgcMedia();
         $media->name = $geojson['properties']['name'] ?? 'placeholder_name';
         if (isset($geojson['properties']['description']))
@@ -113,13 +117,15 @@ class UgcMediaController extends Controller
         if (isset($geojson['properties']['app_id'])) {
             $app_id = $geojson['properties']['app_id'];
             if (is_numeric($app_id)) {
+                Log::channel('ugc')->info('numeric');
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $media->app_id = $app_id;
                     $media->sku = $app->app_id;
                 }
             } else {
-                $app = App::where('app_id', '=', $app_id)->first();
+                Log::channel('ugc')->info('sku');
+                $app = App::where('sku', '=', $app_id)->first();
                 if ($app != null) {
                     $media->app_id = $app->id;
                     $media->sku = $app_id;
