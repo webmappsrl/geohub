@@ -135,6 +135,7 @@ class EcTrack extends Model
         });
 
         static::updating(function ($ecTrack) {
+            $chain[] = [];
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
