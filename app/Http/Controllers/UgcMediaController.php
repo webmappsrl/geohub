@@ -70,8 +70,7 @@ class UgcMediaController extends Controller
         $data = $request->all();
         Log::channel('ugc')->info("*************store ugc media*****************");
         $dataGeojson = $data['geojson'];
-        $dataProperties = $dataGeojson['properties'];
-        Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
+        Log::channel('ugc')->info('geojson', $dataGeojson);
         $validator = Validator::make($data, [
             'geojson' => 'required',
             'image' => 'required'

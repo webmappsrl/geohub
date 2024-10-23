@@ -129,7 +129,7 @@ class UgcTrackController extends Controller
         try {
             $track->save();
         } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio del poi:' . $e->getMessage());
+            Log::channel('ugc')->info('Errore nel salvataggio della track:' . $e->getMessage());
             return response(['error' => 'Error saving Track'], 500);
         }
 
