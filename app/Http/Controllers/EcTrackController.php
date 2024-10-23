@@ -264,9 +264,9 @@ class EcTrackController extends Controller
         ];
 
         $bboxParam = $data['bbox'];
-        $appId = $data['app_id'];
+        $sku = $data['app_id'];
 
-        $app = App::where('app_id', '=', $appId)->first();
+        $app = App::where('sku', '=', $sku)->first();
 
         if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
@@ -316,9 +316,9 @@ class EcTrackController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $appId = $data['app_id'];
+        $sku = $data['app_id'];
 
-        $app = App::where('app_id', '=', $appId)->first();
+        $app = App::where('sku', '=', $sku)->first();
 
         if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
@@ -360,9 +360,9 @@ class EcTrackController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $appId = $data['app_id'];
+        $sku = $data['app_id'];
 
-        $app = App::where('app_id', '=', $appId)->first();
+        $app = App::where('sku', '=', $sku)->first();
 
         if (!isset($app->id)) {
             return response()->json(['error' => 'Unknown reference app'], 400);
