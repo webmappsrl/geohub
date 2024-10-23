@@ -126,6 +126,11 @@ return [
             'path' => storage_path('logs/layer.log'),
             'level' => 'debug',
         ],
+        'ugc' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/ugc.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];

@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class UgcPoiController extends Controller
 {
@@ -68,7 +69,8 @@ class UgcPoiController extends Controller
     public function store(Request $request): Response
     {
         $data = $request->all();
-
+        Log::channel('ugc')->info("*************store ugcPoi*****************");
+        Log::channel('ugc')->info('ugc poi store data:', $data);
         $validator = Validator::make($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -79,12 +81,17 @@ class UgcPoiController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
+            Log::channel('ugc')->info('Validazione fallita:', $validator->errors()->toArray());
             return response(['error' => $validator->errors(), 'Validation Error'], 400);
+        }
 
         $user = auth('api')->user();
-        if (is_null($user))
+        if (is_null($user)) {
+            Log::channel('ugc')->info('Utente non autenticato');
             return response(['error' => 'User not authenticated'], 403);
+        }
+
 
         $poi = new UgcPoi();
         $poi->name = $data['properties']['name'];
