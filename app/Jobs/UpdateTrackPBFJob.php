@@ -3,10 +3,19 @@
 namespace App\Jobs;
 
 use App\Services\PBFGenerateTilesAndDispatch;
-use App\Jobs\WithoutOverlappingBaseJob;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class UpdateTrackPBFJob extends WithoutOverlappingBaseJob
+class UpdateTrackPBFJob implements ShouldQueue
 {
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     protected $track;
 
     /**
@@ -35,7 +44,7 @@ class UpdateTrackPBFJob extends WithoutOverlappingBaseJob
                 // Min and Max zoom levels can be obtained prom APP configuration
                 // $min_zoom = $app->map_min_zoom;
                 // $max_zoom = $app->map_max_zoom;
-
+                
                 $min_zoom = config('geohub.pbf_min_zoom');
                 $max_zoom = config('geohub.pbf_max_zoom');
 
