@@ -87,6 +87,8 @@ class UgcPoiController extends Controller
         }
 
         $user = auth('api')->user();
+        Log::channel('ugc')->info('user name:', $user->name);
+        Log::channel('ugc')->info('user id:', $user->id);
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
             return response(['error' => 'User not authenticated'], 403);
@@ -102,14 +104,17 @@ class UgcPoiController extends Controller
 
         if (isset($data['properties']['app_id'])) {
             $app_id = $data['properties']['app_id'];
+            Log::channel('ugc')->info('app id:', $app_id);
             if (is_numeric($app_id)) {
+                Log::channel('ugc')->info('numeric');
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $poi->app_id = $app_id;
                     $poi->sku = $app->app_id;
                 }
             } else {
-                $app = App::where('app_id', '=', $app_id)->first();
+                Log::channel('ugc')->info('sku');
+                $app = App::where('sku', '=', $app_id)->first();
                 if ($app != null) {
                     $poi->app_id = $app->id;
                     $poi->sku = $app_id;
@@ -121,7 +126,12 @@ class UgcPoiController extends Controller
         unset($data['properties']['description']);
         unset($data['properties']['app_id']);
         $poi->raw_data = json_encode($data['properties']);
-        $poi->save();
+        try {
+            $poi->save();
+        } catch (\Exception $e) {
+            Log::channel('ugc')->info('Errore nel salvataggio del poi:' . $e->getMessage());
+            return response(['error' => 'Error saving POI'], 500);
+        }
 
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
             foreach ($data['properties']['image_gallery'] as $imageId) {
