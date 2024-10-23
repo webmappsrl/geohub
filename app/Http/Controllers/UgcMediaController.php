@@ -120,7 +120,7 @@ class UgcMediaController extends Controller
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $media->app_id = $app_id;
-                    $media->sku = $app->app_id;
+                    $media->sku = $app->sku;
                 }
             } else {
                 Log::channel('ugc')->info('sku');

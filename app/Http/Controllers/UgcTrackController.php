@@ -109,7 +109,7 @@ class UgcTrackController extends Controller
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $track->app_id = $app_id;
-                    $track->sku = $app->app_id;
+                    $track->sku = $app->sku;
                 }
             } else {
                 Log::channel('ugc')->info('sku');

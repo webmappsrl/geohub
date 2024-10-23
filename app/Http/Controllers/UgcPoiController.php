@@ -111,7 +111,7 @@ class UgcPoiController extends Controller
                 $app = App::where('id', '=', $app_id)->first();
                 if ($app != null) {
                     $poi->app_id = $app_id;
-                    $poi->sku = $app->app_id;
+                    $poi->sku = $app->sku;
                 }
             } else {
                 Log::channel('ugc')->info('sku');
