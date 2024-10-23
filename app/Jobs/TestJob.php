@@ -2,12 +2,19 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use App\Jobs\WithoutOverlappingBaseJob;
 
-class TestJob extends WithoutOverlappingBaseJob
+class TestJob implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * Create a new job instance.
      *
@@ -29,7 +36,5 @@ class TestJob extends WithoutOverlappingBaseJob
         Redis::set('test_key', 'test_value');
         $value = Redis::get('test_key');
         Log::info('Redis value: ' . $value);
-
-        sleep(10);
     }
 }
