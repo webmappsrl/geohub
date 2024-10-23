@@ -34,7 +34,7 @@ class UgcTrackController extends Controller
                 if (is_numeric($appId)) {
                     $app = App::where('id', $appId)->first();
                 } else {
-                    $app = App::where('app_id', $appId)->first();
+                    $app = App::where('sku', $appId)->first();
                 }
                 $tracks = UgcTrack::where([
                     ['user_id', $user->id],

@@ -47,13 +47,13 @@ class UgcMedia extends Model
     {
         parent::boot();
         static::creating(function ($media) {
-            $app = App::where('app_id', $media->app_id)->first();
+            $app = App::where('id', $media->app_id)->first();
             if ($app && $app->classification_show) {
                 $media->beforeCount = count($app->getRankedUsersNearPoisQuery($media->user_id));
             }
         });
         static::created(function ($media) {
-            $app = App::where('app_id', $media->app_id)->first();
+            $app = App::where('id', $media->app_id)->first();
             if ($app && $app->classification_show) {
                 $afterCount = count($app->getRankedUsersNearPoisQuery($media->user_id));
                 if ($afterCount > $media->beforeCount) {
