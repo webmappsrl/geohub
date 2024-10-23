@@ -992,7 +992,7 @@ class EcTrack extends Model
 
     public function updateDataChain(EcTrack $track)
     {
-        $chain[] = [];
+        $chain = [];
         if ($track->osmid) {
             $chain[] = new UpdateTrackFromOsmJob($track);
         }
