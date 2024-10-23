@@ -112,16 +112,8 @@ class EcTrack extends Model
         });
 
         static::created(function ($ecTrack) {
-            $chain = [];
             try {
-                $apps = $ecTrack->trackHasApps();
-                // Verifica se ci sono app associate
-                if ($apps && $apps->count() > 0) {
-                    foreach ($apps as $app) {
-                        $chain[] = new UpdateLayersForAppJob($app->id);
-                    }
-                }
-                $ecTrack->updateDataChain($ecTrack, $chain);
+                $ecTrack->updateDataChain($ecTrack);
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
@@ -135,7 +127,6 @@ class EcTrack extends Model
         });
 
         static::updating(function ($ecTrack) {
-            $chain[] = [];
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
                 $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
@@ -143,14 +134,8 @@ class EcTrack extends Model
             } catch (\Exception $e) {
                 Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
             }
-            $apps = $ecTrack->trackHasApps();
-            // Verifica se ci sono app associate
-            if ($apps && $apps->count() > 0) {
-                foreach ($apps as $app) {
-                    $chain[] = new UpdateLayersForAppJob($app->id);
-                }
-            }
-            $ecTrack->updateDataChain($ecTrack, $chain);
+
+            $ecTrack->updateDataChain($ecTrack);
         });
     }
     public function associatedLayers(): BelongsToMany
@@ -1005,12 +990,19 @@ class EcTrack extends Model
 
 
 
-    public function updateDataChain(EcTrack $track, $chain = [])
+    public function updateDataChain(EcTrack $track)
     {
+        $chain[] = [];
         if ($track->osmid) {
             $chain[] = new UpdateTrackFromOsmJob($track);
         }
-
+        $apps = $track->trackHasApps();
+        // Verifica se ci sono app associate
+        if ($apps && $apps->count() > 0) {
+            foreach ($apps as $app) {
+                $chain[] = new UpdateLayersForAppJob($app->id);
+            }
+        }
         $chain[] = new UpdateEcTrackDemJob($track);
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
