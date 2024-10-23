@@ -99,7 +99,7 @@ class UgcTrackController extends Controller
         $track->name = $data['properties']['name'];
         if (isset($data['properties']['description']))
             $track->description = $data['properties']['description'];
-        $track->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . ")')");
+        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($data['geometry']) . "'))");
         $track->user_id = $user->id;
 
         if (isset($data['properties']['app_id'])) {
