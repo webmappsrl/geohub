@@ -4,16 +4,12 @@ namespace App\Jobs;
 
 use App\Models\EcTrack;
 use App\Traits\HandlesData;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateManualDataJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, HandlesData;
+    use HandlesData;
 
     protected $track;
 

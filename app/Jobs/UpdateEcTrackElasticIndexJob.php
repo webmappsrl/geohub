@@ -2,20 +2,11 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\SerializesModels;
 use App\Jobs\WithoutOverlappingBaseJob;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 
 class UpdateEcTrackElasticIndexJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     protected $ecTrack;
     protected $layer_ids;
     protected $app_id;

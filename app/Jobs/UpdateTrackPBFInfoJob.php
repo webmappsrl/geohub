@@ -2,15 +2,10 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateTrackPBFInfoJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $track;
 

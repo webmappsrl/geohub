@@ -2,16 +2,11 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateEcTrackAwsJob extends WithoutOverlappingBaseJob
 {
-    use Queueable;
-    use SerializesModels;
-
     protected $ecTrack;
 
     /**

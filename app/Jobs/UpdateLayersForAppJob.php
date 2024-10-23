@@ -2,17 +2,12 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Models\App;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateLayersForAppJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $appId;
 

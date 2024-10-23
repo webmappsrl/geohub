@@ -3,16 +3,10 @@
 namespace App\Jobs;
 
 use App\Services\PBFGenerateTilesAndDispatch;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class DeleteTrackPBFJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     protected $apps;
     protected $author_id;
     protected $bbox;

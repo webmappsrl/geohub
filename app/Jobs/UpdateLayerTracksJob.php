@@ -3,16 +3,10 @@
 namespace App\Jobs;
 
 use App\Models\Layer;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateLayerTracksJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     protected $layer;
 
     /**

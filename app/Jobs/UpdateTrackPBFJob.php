@@ -3,19 +3,10 @@
 namespace App\Jobs;
 
 use App\Services\PBFGenerateTilesAndDispatch;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Jobs\WithoutOverlappingBaseJob;
 
 class UpdateTrackPBFJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
     protected $track;
 
     /**
