@@ -70,7 +70,7 @@ class UgcPoiController extends Controller
     {
         $data = $request->all();
         Log::channel('ugc')->info("*************store ugc poi*****************");
-        Log::channel('ugc')->info('ugc poi store data:', $data);
+        Log::channel('ugc')->info('ugc poi store data:', $data['properties']);
         $validator = Validator::make($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -87,8 +87,8 @@ class UgcPoiController extends Controller
         }
 
         $user = auth('api')->user();
-        Log::channel('ugc')->info('user email:', $user->email);
-        Log::channel('ugc')->info('user id:', $user->id);
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
             return response(['error' => 'User not authenticated'], 403);
@@ -104,7 +104,7 @@ class UgcPoiController extends Controller
 
         if (isset($data['properties']['app_id'])) {
             $app_id = $data['properties']['app_id'];
-            Log::channel('ugc')->info('app id:', $app_id);
+            Log::channel('ugc')->info('app id:' . $app_id);
             if (is_numeric($app_id)) {
                 Log::channel('ugc')->info('numeric');
                 $app = App::where('id', '=', $app_id)->first();
