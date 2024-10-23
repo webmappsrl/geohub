@@ -3,17 +3,12 @@
 namespace App\Jobs;
 
 use App\Services\PBFGenerator;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\WithoutOverlappingBaseJob;
 
-class GeneratePBFJob implements ShouldQueue
+
+class GeneratePBFJob extends WithoutOverlappingBaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     // Numero massimo di tentativi
     public $tries = 5;
     // Tempo massimo di esecuzione in secondi
