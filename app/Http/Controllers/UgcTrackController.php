@@ -72,8 +72,8 @@ class UgcTrackController extends Controller
         $data = $request->all();
         Log::channel('ugc')->info("*************store ugc track*****************");
         $dataProperties = $data['properties'];
-        Log::channel('ugc')->info('ugc poi store properties name:', $dataProperties['name']);
-        Log::channel('ugc')->info('ugc poi store properties app_id(sku):', $dataProperties['app_id']);
+        Log::channel('ugc')->info('ugc poi store properties name:' . $dataProperties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
         $validator = Validator::make($data, [
             'type' => 'required',
             'properties' => 'required|array',
