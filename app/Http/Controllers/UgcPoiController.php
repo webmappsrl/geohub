@@ -69,7 +69,7 @@ class UgcPoiController extends Controller
     public function store(Request $request): Response
     {
         $data = $request->all();
-        Log::channel('ugc')->info("*************store ugcPoi*****************");
+        Log::channel('ugc')->info("*************store ugc poi*****************");
         Log::channel('ugc')->info('ugc poi store data:', $data);
         $validator = Validator::make($data, [
             'type' => 'required',
@@ -87,7 +87,7 @@ class UgcPoiController extends Controller
         }
 
         $user = auth('api')->user();
-        Log::channel('ugc')->info('user name:', $user->name);
+        Log::channel('ugc')->info('user email:', $user->email);
         Log::channel('ugc')->info('user id:', $user->id);
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
