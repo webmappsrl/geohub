@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
+use function PHPUnit\Framework\isNull;
+
 class EcTrackController extends Controller
 {
     /**
@@ -537,15 +539,10 @@ class EcTrackController extends Controller
         }
 
         $ectrack_id = collect(DB::select("select id from ec_tracks where out_source_feature_id='$osf_id[0]'"))->pluck('id')->toArray();
-
-        return $ectrack_id[0];
-        $headers = [];
-
-        if (is_null($track)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
+        if (count($ectrack_id) == 0) {
+            return response()->json(['code' => 404, 'error' => "getEcTrackFromSourceID Not Found"], 404);
         }
-
-        return response()->json($track->getGeojson(), 200, $headers);
+        return $ectrack_id[0];
     }
 
     /**
@@ -558,6 +555,7 @@ class EcTrackController extends Controller
     public function getTrackGeojsonFromSourceID($endpoint_slug, $source_id)
     {
         $track_id = $this->getEcTrackFromSourceID($endpoint_slug, $source_id);
+
         $track = EcTrack::find($track_id);
         $headers = [];
 
