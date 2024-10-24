@@ -14,23 +14,19 @@ class AddNewOptionsToAppsTable extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $columns = [
-                'table_details_show_duration_forward' => true,
-                'table_details_show_duration_backward' => true,
-                'table_details_show_distance' => true,
-                'table_details_show_ascent' => true,
-                'table_details_show_descent' => true,
-                'table_details_show_ele_max' => true,
-                'table_details_show_ele_min' => true,
-                'table_details_show_ele_from' => true,
-                'table_details_show_ele_to' => true,
+            $default = [
+                'show_duration_forward' => true,
+                'show_duration_backward' => true,
+                'show_distance' => true,
+                'show_ascent' => true,
+                'show_descent' => true,
+                'show_ele_max' => true,
+                'show_ele_min' => true,
+                'show_ele_from' => true,
+                'show_ele_to' => true,
             ];
 
-            foreach ($columns as $column => $default) {
-                if (!Schema::hasColumn('apps', $column)) {
-                    $table->boolean($column)->default($default);
-                }
-            }
+            $table->jsonb('track_technical_details')->nullable()->default(json_encode($default));
         });
     }
 
@@ -39,5 +35,10 @@ class AddNewOptionsToAppsTable extends Migration
      *
      * @return void
      */
-    public function down() {}
+    public function down()
+    {
+        Schema::table('apps', function (Blueprint $table) {
+            $table->dropColumn('track_technical_details');
+        });
+    }
 }

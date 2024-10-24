@@ -764,76 +764,52 @@ class App extends Resource
     protected function options_tab(): array
     {
         return [
-            Heading::make('<p>This information is displayed in the technical details through the app.</p>')->asHtml(),
+            Heading::make(__('<p>This information is displayed in the technical details through the app.</p>'))->asHtml(),
             Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
-                ->trueValue('On')
-                ->falseValue('Off')
                 ->default(false)
                 ->hideFromIndex()
                 ->help(__('Shows the ref on the track (visible by zooming)')),
             Toggle::make(__('Download Track'), 'download_track_enable')
-                ->trueValue('On')
-                ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable download track in GPX, KML, GEOJSON')),
             Toggle::make(__('Print Track'), 'print_track_enable')
-                ->trueValue('On')
-                ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable print of ever app track in PDF')),
-            Toggle::make(__('Show Duration'), 'table_details_show_duration_forward')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Duration Forward'), 'track_technical_details->show_duration_forward')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the duration forward.')),
-            Toggle::make(__('Show Duration Backward'), 'table_details_show_duration_backward')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Duration Backward'), 'track_technical_details->show_duration_backward')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the duration backward.')),
-            Toggle::make(__('Show Distance'), 'table_details_show_distance')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Distance'), 'track_technical_details->show_distance')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the distance.')),
-            Toggle::make(__('Show Ascent'), 'table_details_show_ascent')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Ascent'), 'track_technical_details->show_ascent')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the ascent.')),
-            Toggle::make(__('Show Descent'), 'table_details_show_descent')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Descent'), 'track_technical_details->show_descent')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the descent.')),
-            Toggle::make(__('Show Ele Max'), 'table_details_show_ele_max')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Ele Max'), 'track_technical_details->show_ele_max')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the maximum elevation.')),
-            Toggle::make(__('Show Ele Min'), 'table_details_show_ele_min')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Ele Min'), 'track_technical_details->show_ele_min')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the minimum elevation.')),
-            Toggle::make(__('Show Ele From'), 'table_details_show_ele_from')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Ele From'), 'track_technical_details->show_ele_from')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the starting elevation.')),
-            Toggle::make(__('Show Ele To'), 'table_details_show_ele_to')
-                ->trueValue('On')
-                ->falseValue('Off')
+            Toggle::make(__('Show Ele To'), 'track_technical_details->show_ele_to')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Enable to display the ending elevation.')),
