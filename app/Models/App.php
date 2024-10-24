@@ -48,6 +48,7 @@ class App extends Model
         'translations_en' => 'array',
         'classification_start_date' => 'datetime',
         'classification_end_date' => 'datetime',
+        'track_technical_details' => 'array'
     ];
     /**
      * The accessors to append to the model's array form.
