@@ -29,9 +29,12 @@ class UgcPoiController extends Controller
     {
         $user = auth('api')->user();
         if (isset($user)) {
+            Log::channel('ugc')->info('*************index ugc poi*****************');
+            Log::channel('ugc')->info('user email:' . $user->email);
 
             if (!empty($request->header('app-id'))) {
                 $appId = $request->header('app-id');
+                Log::channel('ugc')->info('request app id:' . $appId);
                 if (is_numeric($appId)) {
                     $app = App::where('id', $appId)->first();
                 } else {
