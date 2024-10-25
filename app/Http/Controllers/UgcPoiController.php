@@ -35,7 +35,8 @@ class UgcPoiController extends Controller
 
             if (!empty($request->header('app-id'))) {
                 $appId = $request->header('app-id');
-                Log::channel('ugc')->info('request app id:' . $appId);
+                Log::channel('ugc')->info('request app-id' . $appId);
+                Log::channel('ugc')->info('request App-id' . $request->header('App-id'));
                 if (is_numeric($appId)) {
                     $app = App::where('id', $appId)->first();
                 } else {
