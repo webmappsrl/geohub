@@ -673,7 +673,25 @@ trait ConfTrait
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // TABLES section
-
+            $data['TABLES']['details']['showGpxDownload'] = !!$this->table_details_show_gpx_download;
+            $data['TABLES']['details']['showKmlDownload'] = !!$this->table_details_show_kml_download;
+            $data['TABLES']['details']['showRelatedPoi'] = !!$this->table_details_show_related_poi;
+            $data['TABLES']['details']['hide_duration:forward'] = !$this->table_details_show_duration_forward;
+            $data['TABLES']['details']['hide_duration:backward'] = !$this->table_details_show_duration_backward;
+            $data['TABLES']['details']['hide_distance'] = !$this->table_details_show_distance;
+            $data['TABLES']['details']['hide_ascent'] = !$this->table_details_show_ascent;
+            $data['TABLES']['details']['hide_descent'] = !$this->table_details_show_descent;
+            $data['TABLES']['details']['hide_ele:max'] = !$this->table_details_show_ele_max;
+            $data['TABLES']['details']['hide_ele:min'] = !$this->table_details_show_ele_min;
+            $data['TABLES']['details']['hide_ele:from'] = !$this->table_details_show_ele_from;
+            $data['TABLES']['details']['hide_ele:to'] = !$this->table_details_show_ele_to;
+            $data['TABLES']['details']['hide_scale'] = !$this->table_details_show_scale;
+            $data['TABLES']['details']['hide_cai_scale'] = !$this->table_details_show_cai_scale;
+            $data['TABLES']['details']['hide_mtb_scale'] = !$this->table_details_show_mtb_scale;
+            $data['TABLES']['details']['hide_ref'] = !$this->table_details_show_ref;
+            $data['TABLES']['details']['hide_surface'] = !$this->table_details_show_surface;
+            $data['TABLES']['details']['showGeojsonDownload'] = !!$this->table_details_show_geojson_download;
+            $data['TABLES']['details']['showShapefileDownload'] = !!$this->table_details_show_shapefile_download;
         }
 
         return $data;
