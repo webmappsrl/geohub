@@ -25,7 +25,7 @@ class UgcPoiController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $version = 'v1')
     {
         $user = auth('api')->user();
         if (isset($user)) {
@@ -41,11 +41,11 @@ class UgcPoiController extends Controller
                     ['user_id', $user->id],
                     ['app_id', $app->id]
                 ])->orderByRaw('updated_at DESC')->get();
-                return $this->getUGCFeatureCollection($pois);
+                return $this->getUGCFeatureCollection($pois, $version);
             }
 
             $pois = UgcPoi::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
-            return $this->getUGCFeatureCollection($pois);
+            return $this->getUGCFeatureCollection($pois, $version);
         } else {
             return new UgcPoiCollection(UgcPoi::currentUser()->paginate(10));
         }
