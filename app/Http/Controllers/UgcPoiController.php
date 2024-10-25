@@ -30,6 +30,7 @@ class UgcPoiController extends Controller
         $user = auth('api')->user();
         if (isset($user)) {
             Log::channel('ugc')->info('*************index ugc poi*****************');
+            Log::channel('ugc')->info('version:' . $version);
             Log::channel('ugc')->info('user email:' . $user->email);
 
             if (!empty($request->header('app-id'))) {
@@ -44,6 +45,7 @@ class UgcPoiController extends Controller
                     ['user_id', $user->id],
                     ['app_id', $app->id]
                 ])->orderByRaw('updated_at DESC')->get();
+                Log::channel('ugc')->info('pois count:' . count($pois));
                 return $this->getUGCFeatureCollection($pois, $version);
             }
 
