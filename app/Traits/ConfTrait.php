@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Str;
 
 trait ConfTrait
 {
@@ -649,8 +650,16 @@ trait ConfTrait
         $data['OPTIONS']['print_track_enable'] = $this->print_track_enable;
         $data['OPTIONS']['show_searchbar'] = $this->show_search;
         $data['OPTIONS']['show_favorites'] = $this->show_favorites;
+        $data['OPTIONS']['show_scale'] = $this->table_details_show_scale;
+        $data['OPTIONS']['showGpxDownload'] = $this->table_details_show_gpx_download;
+        $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
+        $data['OPTIONS']['showGeojsonDownload'] = !!$this->table_details_show_geojson_download;
+        $data['OPTIONS']['showShapefileDownload'] = !!$this->table_details_show_shapefile_download;
 
-
+        foreach ($this->track_technical_details as $label => $value) {
+            $label = Str::camel($label);
+            $data['OPTIONS'][$label] = $value;
+        }
         return $data;
     }
 
