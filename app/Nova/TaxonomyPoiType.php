@@ -21,6 +21,8 @@ use Robertboes\NovaSliderField\NovaSliderField;
 use Tsungsoft\ErrorMessage\ErrorMessage;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
+use App\Nova\Actions\BulkMergePoiType;
+
 
 class TaxonomyPoiType extends Resource
 {
@@ -257,6 +259,8 @@ class TaxonomyPoiType extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new BulkMergePoiType()
+        ];
     }
 }
