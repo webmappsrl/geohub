@@ -23,7 +23,7 @@ class AlignDuplicateTaxonomyPoiTypeCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Align duplicate POI in taxonomy by merging IDs and removing unnecessary duplicates';
+    protected $description = 'Align duplicate taxonomy Poi Type by merging IDs and removing unnecessary duplicates';
 
     /**
      * Create a new command instance.
@@ -53,8 +53,16 @@ class AlignDuplicateTaxonomyPoiTypeCommand extends Command
             return 1;
         }
 
-        // Ottieni il nome normalizzato del record principale
+        // Verifica se il duplicateId esiste
+        $duplicateRecord = TaxonomyPoiType::find($duplicateId);
+        if (!$duplicateRecord) {
+            $this->info("No duplicate taxonomy found with ID $duplicateId. Nothing to do.");
+            return 0;
+        }
+
+        // Ottieni il nome e l'identificatore del record principale
         $mainName = is_array($mainRecord->name) && isset($mainRecord->name['it']) ? $mainRecord->name['it'] : $mainRecord->name;
+        $mainIdentifier = $mainRecord->identifier;
         $mainNameNormalized = $this->normalizeName($mainName);
 
         // Trova tutti i possibili duplicati (senza utilizzare regexp_replace)
@@ -74,58 +82,66 @@ class AlignDuplicateTaxonomyPoiTypeCommand extends Command
             return 0;
         }
 
-        // Modalità Dry-run
+        // Stampa l'anteprima delle modifiche
+        $this->info("Running in " . ($this->option('dry-run') ? "dry run" : "real") . " mode.\n");
+        $this->info("The following updates would be made:");
+        foreach ($duplicates as $duplicate) {
+            $relatedRowsCount = DB::table('taxonomy_poi_typeables')
+                ->where('taxonomy_poi_type_id', $duplicate->id)
+                ->count();
+
+            $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
+            $identifier = $duplicate->identifier;
+
+            $this->info(" - ID: {$duplicate->id} (Name: {$name}, Identifier: {$identifier})");
+            $this->info("   => to $mainId (Name: {$mainName}, Identifier: {$mainIdentifier}) for $relatedRowsCount entries.");
+        }
+
+        $this->info("\nThe following taxonomy_poi_type IDs would be deleted:");
+        foreach ($duplicates as $duplicate) {
+            $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
+            $identifier = $duplicate->identifier;
+            $this->info(" - ID: {$duplicate->id} (Name: {$name}, Identifier: {$identifier})");
+        }
+
+        // Se è in modalità dry-run, termina qui senza fare modifiche
         if ($this->option('dry-run')) {
-            $this->info("Dry run mode: no changes will be made.");
-
-            // Conta gli ID `taxonomy_poi_typeable_id` che verrebbero aggiornati per ciascun duplicato
-            foreach ($duplicates as $duplicate) {
-                $relatedRowsCount = DB::table('taxonomy_poi_typeables')
-                    ->where('taxonomy_poi_type_id', $duplicate->id)
-                    ->count();
-
-                // Recupera il nome e l'identificatore del duplicate
-                $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
-                $identifier = $duplicate->identifier;
-
-                $this->info("Would update taxonomy_poi_type_id {$duplicate->id} (Name: {$name}, Identifier: {$identifier}) to $mainId for $relatedRowsCount entries.");
-            }
-
-            // Lista degli ID duplicati che verrebbero eliminati (incluso `duplicateId`)
-            $this->info("The following taxonomy_poi_type IDs would be deleted:");
-            foreach ($duplicates as $duplicate) {
-                $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
-                $identifier = $duplicate->identifier;
-                $this->info(" - ID: {$duplicate->id} (Name: {$name}, Identifier: {$identifier})");
-            }
-
             return 0;
         }
 
-        // Disabilita i trigger
-        DB::statement('ALTER TABLE taxonomy_poi_typeables DISABLE TRIGGER ALL;');
+        // Conferma per procedere con le modifiche in real mode
+        if (!$this->confirm("Do you want to proceed with these changes?")) {
+            $this->info("Operation cancelled.");
+            return 0;
+        }
 
-        // Aggiorna tutte le relazioni dal duplicato al principale
+        // Stampa le informazioni strutturate nuovamente durante l'esecuzione delle modifiche
+        $this->info("\nApplying the following updates:");
         foreach ($duplicates as $duplicate) {
-            $updatedRows = DB::table('taxonomy_poi_typeables')
+            $relatedRowsCount = DB::table('taxonomy_poi_typeables')
                 ->where('taxonomy_poi_type_id', $duplicate->id)
                 ->update(['taxonomy_poi_type_id' => $mainId]);
-            $this->info("Updated $updatedRows rows from taxonomy_poi_type_id {$duplicate->id} to $mainId.");
+
+            $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
+            $identifier = $duplicate->identifier;
+
+            $this->info(" - Updated {$relatedRowsCount} rows from ID: {$duplicate->id} (Name: {$name}, Identifier: {$identifier})");
+            $this->info("   => to $mainId (Name: {$mainName}, Identifier: {$mainIdentifier})");
         }
 
-        // Riabilita i trigger
-        DB::statement('ALTER TABLE taxonomy_poi_typeables ENABLE TRIGGER ALL;');
-
-        // Elimina i record duplicati (incluso `duplicateId`)
+        $this->info("\nDeleting the following duplicate taxonomy_poi_type IDs:");
         foreach ($duplicates as $duplicate) {
+            $name = is_array($duplicate->name) && isset($duplicate->name['it']) ? $duplicate->name['it'] : $duplicate->name;
+            $identifier = $duplicate->identifier;
             $duplicate->delete();
-            $this->info("Deleted duplicate taxonomy with ID {$duplicate->id}.");
+            $this->info(" - Deleted ID: {$duplicate->id} (Name: {$name}, Identifier: {$identifier})");
         }
 
-        $this->info("Successfully completed alignment of duplicate POIs for '{$mainNameNormalized}'.");
+        $this->info("Successfully completed");
 
         return 0;
     }
+
 
     /**
      * Normalizza un nome rimuovendo numeri e mettendo tutto in minuscolo
