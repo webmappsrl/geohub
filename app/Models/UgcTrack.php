@@ -72,18 +72,18 @@ class UgcTrack extends Model
      *
      * @return array
      */
-    public function getJson($verion = "v1"): array
+    public function getJson(): array
     {
         $array = $this->toArray();
         $array['media'] = $this->ugc_media->map(function ($media) {
             return $media->getJson();
         })->toArray();
 
-        $propertiesToClear = ['geometry'];
+        $propertiesToClear = ['geometry', 'properties'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-            if ($verion == 'v2') {
+            } else {
                 // Controlla se il valore è una stringa JSON e converti in oggetto se possibile
                 if (is_string($value)) {
                     $decodedValue = json_decode($value, true);
@@ -104,11 +104,11 @@ class UgcTrack extends Model
      *
      * @return array
      */
-    public function getGeojson($verion = 'v1'): ?array
+    public function getGeojson($version = 'v1'): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson($verion);
+            $feature["properties"] = $this->getJson($version);
             return $feature;
         } else return null;
     }

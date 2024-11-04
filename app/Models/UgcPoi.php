@@ -37,6 +37,12 @@ class UgcPoi extends Model
         'name',
         'description',
         'geometry',
+        'properties'
+    ];
+
+
+    protected $casts = [
+        'properties' => 'array',
     ];
 
     /**
@@ -77,16 +83,15 @@ class UgcPoi extends Model
      *
      * @return array
      */
-    public function getJson($verion = "v1"): array
+    public function getJson(): array
     {
         $array = $this->toArray();
 
-        $propertiesToClear = ['geometry'];
+        $propertiesToClear = ['geometry', 'properties'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-            if ($verion == 'v2') {
-                // Controlla se il valore è una stringa JSON e converti in oggetto se possibile
+            } else {
                 if (is_string($value)) {
                     $decodedValue = json_decode($value, true);
                     if (json_last_error() === JSON_ERROR_NONE) {
@@ -105,11 +110,11 @@ class UgcPoi extends Model
      *
      * @return array
      */
-    public function getGeojson($verion = 'v1'): ?array
+    public function getGeojson(): ?array
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson($verion);
+            $feature["properties"] = $this->getJson();
 
             return $feature;
         } else return null;

@@ -138,21 +138,22 @@ class UgcMedia extends Model
     {
         $array = $this->toArray();
 
-        $propertiesToClear = ['geometry'];
+        $propertiesToClear = ['geometry', 'properties'];
         foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear))
+            if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-
-            if ($property == 'relative_url') {
-                if (Storage::disk('public')->exists($value))
-                    $array['url'] = Storage::disk('public')->url($value);
-                unset($array[$property]);
-            }
-            if (is_string($value)) {
-                $decodedValue = json_decode($value, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
-                    $array[Str::camel($property)] = $decodedValue;
+            } else {
+                if ($property == 'relative_url') {
+                    if (Storage::disk('public')->exists($value))
+                        $array['url'] = Storage::disk('public')->url($value);
+                    unset($array[$property]);
+                }
+                if (is_string($value)) {
+                    $decodedValue = json_decode($value, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
+                        $array[Str::camel($property)] = $decodedValue;
+                    }
                 }
             }
         }
@@ -169,7 +170,7 @@ class UgcMedia extends Model
     {
         $feature = $this->getEmptyGeojson();
         if (isset($feature["properties"])) {
-            $feature["properties"] = $this->getJson();
+            $feature["properties"] = array_merge($this->getJson(), $feature["properties"],);
 
             return $feature;
         } else return null;

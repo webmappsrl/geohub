@@ -58,27 +58,16 @@ class UgcPoiController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    //    public function create() {
-    //    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function store(Request $request): Response
+    public function storeV1(Request $request): Response
     {
+        Log::channel('ugc')->info('api version V1');
         $data = $request->all();
-        Log::channel('ugc')->info("*************store ugc poi*****************");
-        $dataProperties = $data['properties'];
-        Log::channel('ugc')->info('ugc poi store properties name:' . $dataProperties['name']);
-        Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
         $validator = Validator::make($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -157,6 +146,31 @@ class UgcPoiController extends Controller
         } catch (\Exception $e) {
         }
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
+    }
+    public function storeV2(Request $request): Response {}
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function store(Request $request, $version = 'v1'): Response
+    {
+
+        Log::channel('ugc')->info("*************store ugc poi*****************");
+        $data = $request->all();
+        $dataProperties = $data['properties'];
+        Log::channel('ugc')->info('ugc poi store properties name:' . $dataProperties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
+
+        switch ($version) {
+            case 'v1':
+            default:
+                return $this->storeV1($request);
+            case 'v2':
+                return $this->storeV2($request);
+        }
     }
 
     /**
