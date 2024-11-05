@@ -69,6 +69,7 @@ class Feature extends Model
     public function populateProperties(): void
     {
         $properties = [];
+        $propertiesToClear = ['key'];
         if (isset($this->name)) {
             $properties['name'] = $this->name;
         }
@@ -77,6 +78,9 @@ class Feature extends Model
         }
         if (!empty($this->raw_data)) {
             $properties = array_merge($properties, (array) json_decode($this->raw_data, true));
+        }
+        foreach ($propertiesToClear as $property) {
+            unset($properties[$property]);
         }
         $this->properties = json_encode($properties);
         $this->saveQuietly();
@@ -104,6 +108,10 @@ class Feature extends Model
                 if ($currentSchema) {
                     // Rimuove i campi del form da `properties` e li aggiunge sotto la chiave `form`
                     $formFields = [];
+                    if (isset($properties['index'])) {
+                        $formFields['index'] = $properties['index'];
+                        unset($properties['index']); // Rimuovi `index` da `properties`
+                    }
                     if (isset($properties['id'])) {
                         $formFields['id'] = $properties['id'];
                         unset($properties['id']); // Rimuovi `id` da `properties`
