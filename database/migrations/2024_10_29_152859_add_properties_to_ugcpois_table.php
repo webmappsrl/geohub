@@ -35,6 +35,7 @@ class AddPropertiesToUgcpoisTable extends Migration
         });
         UgcMedia::all()->each(function ($ugcmedia) {
             $ugcmedia->populateProperties();
+            $ugcmedia->populatePropertyMedia();
         });
 
         UgcTrack::all()->each(function ($ugctrack) {

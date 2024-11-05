@@ -270,7 +270,6 @@ class UgcMediaController extends Controller
             Storage::disk('public')->deleteDirectory("$basePath$imageName");
             $media->relative_url = $basePath . $imageName . '.' . $ext;
             $properties = json_decode($media->properties, true);
-            $properties['photo']['webPath'] = Storage::disk('public')->url($media->relative_url);
             $media->properties = json_encode($properties);
 
             if ($media->name == 'placeholder_name')

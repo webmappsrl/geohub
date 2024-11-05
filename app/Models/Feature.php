@@ -5,6 +5,7 @@ namespace App\Models;
 use Hamcrest\Type\IsString;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Feature extends Model
@@ -107,29 +108,41 @@ class Feature extends Model
 
                 if ($currentSchema) {
                     // Rimuove i campi del form da `properties` e li aggiunge sotto la chiave `form`
-                    $formFields = [];
+                    $form = [];
                     if (isset($properties['index'])) {
-                        $formFields['index'] = $properties['index'];
+                        $form['index'] = $properties['index'];
                         unset($properties['index']); // Rimuovi `index` da `properties`
                     }
                     if (isset($properties['id'])) {
-                        $formFields['id'] = $properties['id'];
+                        $form['id'] = $properties['id'];
                         unset($properties['id']); // Rimuovi `id` da `properties`
                     }
                     foreach ($currentSchema['fields'] as $field) {
                         $label = $field['name'] ?? 'unknown';
                         if (isset($properties[$label])) {
-                            $formFields[$label] = $properties[$label];
+                            $form[$label] = $properties[$label];
                             unset($properties[$label]); // Rimuove il campo da `properties`
                         }
                     }
 
-                    $properties['form'] = $formFields; // Aggiunge i campi del form sotto `form`
+                    $properties['form'] = $form; // Aggiunge i campi del form sotto `form`
                     $properties['id'] = $this->id;
                     $this->properties = json_encode($properties);
                     $this->saveQuietly();
                 }
             }
         }
+    }
+
+    public function populatePropertyMedia(): void
+    {
+        $media = [];
+        $properties = json_decode($this->properties, true);
+        if (isset($this->relative_url)) {
+            $media['webPath'] = Storage::disk('public')->url($this->relative_url);
+        }
+        $properties['photo'] = $media;
+        $this->properties = json_encode($properties);
+        $this->saveQuietly();
     }
 }
