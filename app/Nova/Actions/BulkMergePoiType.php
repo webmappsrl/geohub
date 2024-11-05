@@ -38,14 +38,14 @@ class BulkMergePoiType extends Action
 
         try {
             // Iterate over each selected POI Type
-            foreach ($models as $duplicate) {
+            foreach ($models as $model) {
                 // Update all records associated with the duplicated POI Type to point to the Main POI Type
                 DB::table('taxonomy_poi_typeables')
-                    ->where('taxonomy_poi_type_id', $duplicate->id)
+                    ->where('taxonomy_poi_type_id', $model->id)
                     ->update(['taxonomy_poi_type_id' => $mainId]);
 
                 // Delete the duplicated POI Type
-                $duplicate->delete();
+                $model->delete();
             }
 
             // Commit the transaction if all operations were successful
