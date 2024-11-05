@@ -10,8 +10,6 @@ use Illuminate\Support\Str;
 class Feature extends Model
 {
 
-
-
     public function getJson(): array
     {
         $array = $this->toArray();
@@ -63,12 +61,10 @@ class Feature extends Model
             ];
     }
 
-
     public function getGeojson(): ?array
     {
         return $this->getFeature();
     }
-
 
     public function populateProperties(): void
     {
@@ -84,5 +80,48 @@ class Feature extends Model
         }
         $this->properties = json_encode($properties);
         $this->saveQuietly();
+    }
+
+
+    public function populatePropertyForm($acqisitionForm): void
+    {
+        if (is_numeric($this->app_id)) {
+            $app = App::where('id', $this->app_id)->first();
+        } else {
+            $sku = $this->app_id;
+            if ($sku === 'it.net7.parcoforestecasentinesi') {
+                $sku = 'it.netseven.forestecasentinesi';
+            }
+            $app = App::where('sku', $this->app_id)->first();
+        }
+        if ($app && $app->$acqisitionForm) {
+            $formSchema = json_decode($app->$acqisitionForm, true);
+            $properties = json_decode($this->properties, true);
+            // Trova lo schema corretto basato sull'ID, se esiste in `raw_data`
+            if (isset($properties['id'])) {
+                $currentSchema = collect($formSchema)->firstWhere('id', $properties['id']);
+
+                if ($currentSchema) {
+                    // Rimuove i campi del form da `properties` e li aggiunge sotto la chiave `form`
+                    $formFields = [];
+                    if (isset($properties['id'])) {
+                        $formFields['id'] = $properties['id'];
+                        unset($properties['id']); // Rimuovi `id` da `properties`
+                    }
+                    foreach ($currentSchema['fields'] as $field) {
+                        $label = $field['name'] ?? 'unknown';
+                        if (isset($properties[$label])) {
+                            $formFields[$label] = $properties[$label];
+                            unset($properties[$label]); // Rimuove il campo da `properties`
+                        }
+                    }
+
+                    $properties['form'] = $formFields; // Aggiunge i campi del form sotto `form`
+                    $properties['id'] = $this->id;
+                    $this->properties = json_encode($properties);
+                    $this->saveQuietly();
+                }
+            }
+        }
     }
 }
