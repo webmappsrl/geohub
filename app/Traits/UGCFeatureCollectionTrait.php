@@ -23,7 +23,7 @@ trait UGCFeatureCollectionTrait
 
         if ($features) {
             foreach ($features as $feature) {
-                $featureCollection["features"][] = $feature->getGeojson($version);
+                $featureCollection["features"][] = $feature->getGeojson();
             }
         }
 

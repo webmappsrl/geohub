@@ -5,13 +5,10 @@ namespace App\Models;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 /**
  * Class UgcMedia
@@ -26,7 +23,7 @@ use Illuminate\Support\Str;
  * @property string description
  * @property string raw_data
  */
-class UgcMedia extends Model
+class UgcMedia extends Feature
 {
     use HasFactory, GeometryFeatureTrait;
     private $beforeCount = 0;
@@ -126,54 +123,6 @@ class UgcMedia extends Model
     public function taxonomy_wheres(): BelongsToMany
     {
         return $this->belongsToMany(TaxonomyWhere::class);
-    }
-
-    /**
-     * Return the json version of the ugc media, avoiding the geometry
-     * TODO: unit TEST
-     *
-     * @return array
-     */
-    public function getJson(): array
-    {
-        $array = $this->toArray();
-
-        $propertiesToClear = ['geometry', 'properties'];
-        foreach ($array as $property => $value) {
-            if (is_null($value) || in_array($property, $propertiesToClear)) {
-                unset($array[$property]);
-            } else {
-                if ($property == 'relative_url') {
-                    if (Storage::disk('public')->exists($value))
-                        $array['url'] = Storage::disk('public')->url($value);
-                    unset($array[$property]);
-                }
-                if (is_string($value)) {
-                    $decodedValue = json_decode($value, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
-                        $array[Str::camel($property)] = $decodedValue;
-                    }
-                }
-            }
-        }
-
-        return $array;
-    }
-
-    /**
-     * Create a geojson from the ec track
-     *
-     * @return array
-     */
-    public function getGeojson(): ?array
-    {
-        $feature = $this->getEmptyGeojson();
-        if (isset($feature["properties"])) {
-            $feature["properties"] = array_merge($this->getJson(), $feature["properties"],);
-
-            return $feature;
-        } else return null;
     }
 
     public function setGeometry(array $geometry) {}

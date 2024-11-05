@@ -20,7 +20,6 @@ use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Wm\MapPointNova3\MapPointNova3;
-use Laravel\Nova\Fields\Heading;
 
 class UgcMedia extends Resource
 {

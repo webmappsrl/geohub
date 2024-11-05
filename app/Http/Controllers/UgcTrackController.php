@@ -143,6 +143,7 @@ class UgcTrackController extends Controller
         unset($data['properties']['image_gallery']);
         $track->raw_data = json_encode($data['properties']);
         $track->save();
+        $track->populateProperties();
 
         $hoquService = app(HoquServiceProvider::class);
         try {

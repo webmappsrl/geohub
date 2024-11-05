@@ -139,6 +139,7 @@ class UgcPoiController extends Controller
         unset($data['properties']['image_gallery']);
         $poi->raw_data = json_encode($data['properties']);
         $poi->save();
+        $poi->populateProperties();
 
         $hoquService = app(HoquServiceProvider::class);
         try {

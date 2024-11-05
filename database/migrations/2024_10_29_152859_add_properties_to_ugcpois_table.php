@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\App;
+use App\Models\UgcMedia;
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -21,17 +24,14 @@ class AddPropertiesToUgcpoisTable extends Migration
         Schema::table('ugc_media', function (Blueprint $table) {
             $table->jsonb('properties')->nullable();
         });
+        Schema::table('ugc_tracks', function (Blueprint $table) {
+            $table->jsonb('properties')->nullable();
+        });
 
         // Popola il campo 'properties' con 'name' e 'description' per ogni record esistente
-        DB::table('ugc_pois')->get()->each(function ($ugcpoi) {
-            $properties = [
-                'name' => $ugcpoi->name,
-                'description' => $ugcpoi->description,
-            ];
-
-            if (!empty($ugcpoi->raw_data)) {
-                $properties = array_merge($properties, (array) json_decode($ugcpoi->raw_data, true));
-            }
+        UgcPoi::all()->each(function ($ugcpoi) {
+            $ugcpoi->populateProperties();
+            $properties = $ugcpoi->properties;
             // Trova l'applicazione associata e ottieni lo schema `poi_acquisition_form`
             if (is_numeric($ugcpoi->app_id)) {
 
@@ -68,32 +68,13 @@ class AddPropertiesToUgcpoisTable extends Migration
                     }
                 }
             }
-
-            DB::table('ugc_pois')
-                ->where('id', $ugcpoi->id)
-                ->update([
-                    'properties' => json_encode($properties),
-                ]);
+        });
+        UgcMedia::all()->each(function ($ugcmedia) {
+            $ugcmedia->populateProperties();
         });
 
-        DB::table('ugc_media')->get()->each(function ($ugcmedia) {
-            $properties = [];
-            if (isset($ugcmedia->name)) {
-                $properties['name'] = $ugcmedia->name;
-            }
-            if (isset($ugcmedia->description)) {
-                $properties['description'] = $ugcmedia->description;
-            }
-
-            if (!empty($ugcmedia->raw_data)) {
-                $properties = array_merge($properties, (array) json_decode($ugcmedia->raw_data, true));
-            }
-
-            DB::table('ugc_media')
-                ->where('id', $ugcmedia->id)
-                ->update([
-                    'properties' => json_encode($properties),
-                ]);
+        UgcTrack::all()->each(function ($ugctrack) {
+            $ugctrack->populateProperties();
         });
     }
 
@@ -105,6 +86,12 @@ class AddPropertiesToUgcpoisTable extends Migration
     public function down()
     {
         Schema::table('ugc_pois', function (Blueprint $table) {
+            $table->dropColumn('properties');
+        });
+        Schema::table('ugc_media', function (Blueprint $table) {
+            $table->dropColumn('properties');
+        });
+        Schema::table('ugc_tracks', function (Blueprint $table) {
             $table->dropColumn('properties');
         });
     }

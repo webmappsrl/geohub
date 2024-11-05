@@ -164,6 +164,7 @@ class UgcMediaController extends Controller
         }
         $media->properties = json_encode($properties);
         $media->save();
+        $media->populateProperties();
         $this->addImageToMedia($media, $data['image']);
         return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
