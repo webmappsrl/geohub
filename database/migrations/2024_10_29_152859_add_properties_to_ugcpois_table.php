@@ -7,6 +7,7 @@ use App\Models\UgcTrack;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class AddPropertiesToUgcpoisTable extends Migration
@@ -41,6 +42,29 @@ class AddPropertiesToUgcpoisTable extends Migration
         UgcTrack::all()->each(function ($ugctrack) {
             $ugctrack->populateProperties();
             $ugctrack->populatePropertyForm('track_acquisition_form');
+            $properties = $ugctrack->properties;
+            $locations = $properties['locations'] ?? [];
+
+            // Verifica che ci siano location valide
+            if (!empty($locations)) {
+                // Verifica che ci siano location valide con altitudine
+                $coordinates = array_filter(array_map(function ($location) use ($ugctrack) {
+                    if (isset($location['longitude'], $location['latitude'], $location['altitude'])) {
+                        return "{$location['longitude']} {$location['latitude']} {$location['altitude']}";
+                    } else {
+                        Log::warning("Manca l'altitudine per una location nella traccia con ID {$ugctrack->id}");
+                        return null;
+                    }
+                }, $locations));
+                if (!empty($coordinates) && count($coordinates) > 1) {
+                    // Crea una stringa WKT per la geometria 3D (LINESTRING o MULTIPOINT)
+                    $wkt = 'LINESTRING Z(' . implode(', ', $coordinates) . ')';
+
+                    // Salva la geometria 3D utilizzando ST_GeomFromText
+                    $ugctrack->geometry = DB::raw("ST_GeomFromText('$wkt', 4326)");
+                    $ugctrack->saveQuietly();
+                }
+            }
         });
     }
 

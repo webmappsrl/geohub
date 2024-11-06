@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 
 class Feature extends Model
 {
+    protected $casts = [
+        'properties' => 'array',
+    ];
 
     public function getJson(): array
     {
@@ -36,10 +39,7 @@ class Feature extends Model
     public function getFeature(): ?array
     {
         $model = get_class($this);
-        $properties = [];
-        if (isset($this->properties)) {
-            $properties = is_string($this->properties) ? json_decode($this->properties, true) : $this->properties;
-        }
+        $properties = $this->properties;
         $properties['id']   = $this->id;
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -77,13 +77,17 @@ class Feature extends Model
         if (isset($this->description)) {
             $properties['description'] = $this->description;
         }
+        if (isset($this->metadata)) {
+            $metadata = json_decode($this->metadata, true);
+            $properties = array_merge($properties, $metadata);
+        }
         if (!empty($this->raw_data)) {
             $properties = array_merge($properties, (array) json_decode($this->raw_data, true));
         }
         foreach ($propertiesToClear as $property) {
             unset($properties[$property]);
         }
-        $this->properties = json_encode($properties);
+        $this->properties = $properties;
         $this->saveQuietly();
     }
 
@@ -101,7 +105,7 @@ class Feature extends Model
         }
         if ($app && $app->$acqisitionForm) {
             $formSchema = json_decode($app->$acqisitionForm, true);
-            $properties = json_decode($this->properties, true);
+            $properties = $this->properties;
             // Trova lo schema corretto basato sull'ID, se esiste in `raw_data`
             if (isset($properties['id'])) {
                 $currentSchema = collect($formSchema)->firstWhere('id', $properties['id']);
@@ -127,7 +131,7 @@ class Feature extends Model
 
                     $properties['form'] = $form; // Aggiunge i campi del form sotto `form`
                     $properties['id'] = $this->id;
-                    $this->properties = json_encode($properties);
+                    $this->properties = $properties;
                     $this->saveQuietly();
                 }
             }
@@ -137,12 +141,12 @@ class Feature extends Model
     public function populatePropertyMedia(): void
     {
         $media = [];
-        $properties = json_decode($this->properties, true);
+        $properties = $this->properties;
         if (isset($this->relative_url)) {
             $media['webPath'] = Storage::disk('public')->url($this->relative_url);
         }
         $properties['photo'] = $media;
-        $this->properties = json_encode($properties);
+        $this->properties = $properties;
         $this->saveQuietly();
     }
 }

@@ -162,7 +162,7 @@ class UgcMediaController extends Controller
                 }
             }
         }
-        $media->properties = json_encode($properties);
+        $media->properties = $properties
         $media->save();
         $media->populateProperties();
         $this->addImageToMedia($media, $data['image']);
@@ -270,7 +270,7 @@ class UgcMediaController extends Controller
             Storage::disk('public')->deleteDirectory("$basePath$imageName");
             $media->relative_url = $basePath . $imageName . '.' . $ext;
             $properties = json_decode($media->properties, true);
-            $media->properties = json_encode($properties);
+            $media->properties = $properties
 
             if ($media->name == 'placeholder_name')
                 $media->name = $imageName;
