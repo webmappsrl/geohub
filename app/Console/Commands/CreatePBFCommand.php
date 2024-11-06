@@ -73,8 +73,8 @@ class CreatePBFCommand extends Command
             $this->error('App with id ' . $this->argument('app_id') . ' not found!');
             return;
         }
-        if (!$app->app_id) {
-            $this->error('This app does not have app_id! Please add app_id. (e.g. it.webmapp.webmapp)');
+        if (!$app->id) {
+            $this->error('This app does not have app_id! Please add app_id. (e.g. 3)');
             return;
         }
         $this->app_id = $app->id;
