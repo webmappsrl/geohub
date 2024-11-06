@@ -162,7 +162,7 @@ class UgcMediaController extends Controller
                 }
             }
         }
-        $media->properties = $properties
+        $media->properties = $properties;
         $media->save();
         $media->populateProperties();
         $this->addImageToMedia($media, $data['image']);
