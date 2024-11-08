@@ -117,10 +117,11 @@ class UgcPoi extends Resource
 
                 if (isset($formData)) {
                     $sku = $model->sku;
-                    if ($sku === 'it.net7.parcoforestecasentinesi') {
-                        $sku = 'it.netseven.forestecasentinesi';
-                    }
+                    $pnfcSku = ['it.net7.parcoforestecasentinesi', 'it.netseven.forestecasentinesi'];
                     $app = App::where('sku', $sku)->first();
+                    if (in_array($sku, $pnfcSku)) {
+                        $app = App::whereIn('sku', $pnfcSku)->first();
+                    }
 
                     if (isset($app)) {
                         $formSchema = json_decode($app->poi_acquisition_form, true);
