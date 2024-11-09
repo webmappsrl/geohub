@@ -27,7 +27,7 @@ class Layer extends Model
             $l->rank = DB::select(DB::raw('SELECT max(rank) from layers'))[0]->max + 1;
         });
         static::saved(function ($layer) {
-            dispatch(new UpdateLayerTracksJob($layer));
+            dispatch(new UpdateLayerTracksJob($layer))->onQueue('max_2_processes');
         });
     }
 
