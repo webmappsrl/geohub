@@ -8,17 +8,17 @@ use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\User;
 use App\Traits\UGCFeatureCollectionTrait;
+use App\Traits\ValidationTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class UgcMediaController extends Controller
 {
-    use UGCFeatureCollectionTrait;
+    use UGCFeatureCollectionTrait, ValidationTrait;
     /**
      * Display a listing of the resource.
      *
@@ -164,7 +164,6 @@ class UgcMediaController extends Controller
         }
         $media->properties = $properties;
         $media->save();
-        $media->populateProperties();
         $this->addImageToMedia($media, $data['image']);
         return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
@@ -229,25 +228,11 @@ class UgcMediaController extends Controller
         $media->raw_data = json_encode($geojson['properties']);
         $media->save();
 
+        $media->populateProperties();
+
         $this->addImageToMedia($media, $data['image']);
         return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
-
-    public function checkValidation($data, $rules)
-    {
-        $validator = Validator::make($data, $rules);
-
-        if ($validator->fails()) {
-            $currentErrors = json_decode($validator->errors(), true);
-            $errors = [];
-            foreach ($currentErrors as $key => $error) {
-                $errors[$key] = $error;
-            }
-
-            return response(['error' => $errors], 400);
-        }
-    }
-
 
     public function addImageToMedia($media, $image)
     {
@@ -774,13 +759,10 @@ class UgcMediaController extends Controller
 
         $data = $request->all();
 
-        $validator = Validator::make($data, [
+        $this->checkValidation($data, [
             'geojson' => 'required',
             'geojson.type' => 'required'
         ]);
-
-        if ($validator->fails())
-            return response(['error' => $validator->errors()], 400);
 
         $geojson = $data['geojson'];
 
