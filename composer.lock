@@ -4,8 +4,55 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "149aeab6ccd663a9f81ccb90811f74ad",
+    "content-hash": "27fa20f5b811020197d9b212cfa89722",
     "packages": [
+        {
+            "name": "alfonsobries/nova-trumbowyg",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alfonsobries/nova-trumbowyg.git",
+                "reference": "c1d1f11ef9585ec43e16595b85a2875fd7d0c17d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alfonsobries/nova-trumbowyg/zipball/c1d1f11ef9585ec43e16595b85a2875fd7d0c17d",
+                "reference": "c1d1f11ef9585ec43e16595b85a2875fd7d0c17d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Alfonsobries\\NovaTrumbowyg\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Alfonsobries\\NovaTrumbowyg\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Trumbowyg Nova field.",
+            "keywords": [
+                "laravel",
+                "nova",
+                "trumbowyg"
+            ],
+            "support": {
+                "issues": "https://github.com/alfonsobries/nova-trumbowyg/issues",
+                "source": "https://github.com/alfonsobries/nova-trumbowyg/tree/1.0.1"
+            },
+            "abandoned": true,
+            "time": "2018-08-25T17:51:32+00:00"
+        },
         {
             "name": "ampeco/nova-date-range-filter",
             "version": "0.1.3",
