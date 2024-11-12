@@ -334,7 +334,7 @@ class App extends Resource
                 $url = route('api.app.webmapp.config', ['id' => $this->id]);
                 return <<<HTML
                 <ul>
-                    <a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">CONF</a>
+                <a class="btn btn-default btn-primary" href="{$url}" target="_blank">CONF</a>
                     <p>Click here to view the app configuration JSON.</p>
                 </ul>
                 HTML;
