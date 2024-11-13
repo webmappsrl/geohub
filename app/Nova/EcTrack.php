@@ -39,7 +39,6 @@ use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 use Titasgailius\SearchRelations\SearchesRelations;
-use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -47,6 +46,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Wm\MapMultiLinestringNova3\MapMultiLinestringNova3;
 use Yna\NovaSwatches\Swatches;
+use App\Nova\Fields\NovaWyswyg;
 
 class EcTrack extends Resource
 {
@@ -584,7 +584,7 @@ class EcTrack extends Resource
                             ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                         Textarea::make(__('Excerpt'), 'excerpt')
                             ->help(_('Provide a brief summary or excerpt for the track. This should be a concise description.')),
-                        NovaTinymce5Editor::make('Description')
+                        NovaWyswyg::make('Description', 'description')
                             ->help(__('Enter a detailed description of the track. Use this field to provide comprehensive information.')),
                     ])
                         ->onlyOnForms(),

@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Enums\AppTiles;
-use App\Helpers\NovaCurrentResourceActionHelper;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAllAwsTracks;
@@ -11,44 +10,31 @@ use App\Nova\Actions\GenerateAppConfigAction;
 use App\Nova\Actions\GenerateAppPoisAction;
 use App\Nova\Actions\GeneratePBF;
 use App\Nova\Actions\generateQrCodeAction;
-use App\Nova\Actions\GenerateUgcMediaRankingAction;
-use App\Rules\AppImagesRule;
+use App\Nova\Fields\NovaWyswyg;
 use Davidpiesse\NovaToggle\Toggle;
-use Eminiarts\Tabs\ActionsInTabs;
-use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
-use HTML5;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\Code;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use Nova\Multiselect\Multiselect;
 use NovaAttachMany\AttachMany;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Yna\NovaSwatches\Swatches;
-use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Laravel\Nova\Fields\DateTime;
 use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
 use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\Line;
-use Laravel\Nova\Fields\Stack;
 
 /**
  * Refers to official CONFIG documentation: https://github.com/webmappsrl/wm-app/blob/develop/docs/config/config.md
@@ -348,7 +334,7 @@ class App extends Resource
                 $url = route('api.app.webmapp.config', ['id' => $this->id]);
                 return <<<HTML
                 <ul>
-                    <a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">CONF</a>
+                <a class="btn btn-default btn-primary" href="{$url}" target="_blank">CONF</a>
                     <p>Click here to view the app configuration JSON.</p>
                 </ul>
                 HTML;
@@ -395,7 +381,7 @@ class App extends Resource
                 HTML
             )->asHtml()->onlyOnForms(),
             NovaTabTranslatable::make([
-                NovaTinymce5Editor::make(__('welcome'), 'welcome')
+                NovaWyswyg::make(__('welcome'), 'welcome')
                     ->help(__('is the welcome message displayed as the first element of the home')),
             ])->help(__('is the welcome message displayed as the first element of the home')),
 
@@ -430,10 +416,10 @@ class App extends Resource
                 HTML
             )->asHtml()->onlyOnDetail(),
             NovaTabTranslatable::make([
-                NovaTinymce5Editor::make('Page Project', 'page_project'),
-                NovaTinymce5Editor::make('Page Disclaimer', 'page_disclaimer'),
-                NovaTinymce5Editor::make('Page Credits', 'page_credits'),
-                NovaTinymce5Editor::make('Page Privacy', 'page_privacy'),
+                NovaWyswyg::make('Page Project', 'page_project'),
+                NovaWyswyg::make('Page Disclaimer', 'page_disclaimer'),
+                NovaWyswyg::make('Page Credits', 'page_credits'),
+                NovaWyswyg::make('Page Privacy', 'page_privacy'),
             ])
         ];
     }
@@ -991,7 +977,7 @@ class App extends Resource
                 ->hideFromIndex()
                 ->rules('max:80')
                 ->help(__('Max 80 characters. To be used as a promotional message also.')),
-            NovaTinymce5Editor::make(__('Long Description'), 'long_description')
+            NovaWyswyg::make(__('Long Description'), 'long_description')
                 ->hideFromIndex()
                 ->rules('max:4000')
                 ->help(__('Max 4000 characters.'))

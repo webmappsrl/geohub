@@ -39,9 +39,9 @@ use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
 use App\Nova\Actions\UploadPoiFile;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Kraftbit\NovaTinymce5Editor\NovaTinymce5Editor;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use App\Nova\Fields\NovaWyswyg;
 
 class EcPoi extends Resource
 {
@@ -422,7 +422,7 @@ class EcPoi extends Resource
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
-                            NovaTinymce5Editor::make('Description')->canSee(function () use ($osmid) {
+                            NovaWyswyg::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
