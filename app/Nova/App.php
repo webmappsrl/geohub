@@ -251,7 +251,6 @@ class App extends Resource
             'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
             'PAGES' => $this->pages_tab(),
-            'AUTH' => $this->auth_tab(),
             'ICONS' => $this->icons_tab(),
             'LANGUAGES' => $this->languages_tab(),
             'MAP' => $this->map_tab(),
@@ -269,24 +268,6 @@ class App extends Resource
     protected function webapp_tab(): array
     {
         return [
-            Toggle::make(__('Show draw track'), 'draw_track_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enables the draw track feature in the web app.')),
-            Toggle::make(__('Show editing inline'), 'editing_inline_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Activates the "edit with geohub" button in the track detail.')),
-            Toggle::make(__('Show splash screen'), 'splash_screen_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Displays the splash screen when the web app starts.')),
             Text::make(__('Google universal ID'), 'gu_id')
                 ->help(__('Google Analytics ID used for tracking.')),
             Code::make(__('Embed Code'), 'embed_code_body')
@@ -357,10 +338,6 @@ class App extends Resource
                 Text::make('Social share text', 'social_share_text')
                     ->help(__('This is shown when a Track is being shared via mobile apps.')),
             ]),
-            Boolean::make(__('Activate dashboard'), 'dashboard_show')
-                ->help(__('Enable this box to activate the dashboard for user consultation data analysis. You also need to activate authentication in the AUTH tab.')),
-            Boolean::make(__('Activate classificationon Ugc Media'), 'classification_show')
-                ->help(__('Enable user-generated ranking via UGC media')),
             DateTime::make('Classification Start Date', 'classification_start_date')
                 ->rules('required_if:classification_show,true')
                 ->hideFromIndex()
@@ -369,6 +346,219 @@ class App extends Resource
                 ->rules('required_if:classification_show,true')
                 ->hideFromIndex()
                 ->help(__('Select a start date')),
+            // Configuration
+            Heading::make('Configuration')
+                ->asHtml()
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Activate dashboard'), 'dashboard_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable this box to activate the dashboard for user consultation data analysis. You also need to activate authentication in the AUTH tab.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Activate classification on Ugc Media'), 'classification_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable user-generated ranking via UGC media'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show webapp splash screen'), 'splash_screen_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Displays the splash screen when the web app starts.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show searchbar'), 'show_search')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Activate to show the search bar on the home'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show editing inline'), 'editing_inline_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Activates the "edit with geohub" button in the track detail.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Draw Track'), 'draw_track_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables the draw track feature in the web app.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Shows the authentication and registration page for users'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Start/End Icons Show'), 'start_end_icons_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Displays start and end icons on the map'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Ref on Track Show'), 'ref_on_track_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Displays reference labels on tracks'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Geolocation Record Enable'), 'geolocation_record_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables user geolocation recording on tracks'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Alert POI Show'), 'alert_poi_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Shows alerts for points of interest (POI)'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Flow Line Quote Show'), 'flow_line_quote_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables elevation-based track coloring'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Activity Filter'), 'filter_activity')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Activates the activity filter for tracks'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Theme Filter'), 'filter_theme')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Activates the theme filter for tracks'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('POI Type Filter'), 'filter_poi_type')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Activates the POI type filter for points of interest'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Track Duration Filter'), 'filter_track_duration')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables filtering of tracks by duration'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Track Distance Filter'), 'filter_track_distance')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables filtering of tracks by distance'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Track Difficulty Filter'), 'filter_track_difficulty')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables filtering of tracks by difficulty level'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Shows the ref on the track (visible by zooming)'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Download Track'), 'download_track_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable download track in GPX, KML, GEOJSON'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Print Track'), 'print_track_enable')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enable print of ever app track in PDF'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show POIs Layer on APP'), 'app_pois_api_layer')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables the display of POI layers in the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Generate All Layers Edges'), 'generate_layers_edges')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable the Edge feature on all layers of the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                })
         ];
     }
 
@@ -390,13 +580,6 @@ class App extends Resource
                 ->rules('json')
                 ->default('{"HOME": []}')
                 ->help(__('This code in JSON format organizes the elements on the app\'s home. Knowledge of JSON format required.') . view('layers', ['layers' => $this->layers])->render()),
-
-            Toggle::make(__('Show searchbar'), 'show_search')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Activate to show the search bar on the home')),
         ];
     }
 
@@ -575,16 +758,6 @@ class App extends Resource
                     <p>Link to download the POIs in GeoJSON format.</p>
                     HTML;
             })->asHtml()->onlyOnDetail(),
-            Toggle::make('start_end_icons_show')
-                ->help(__('Activate this option if you want to show start and end points of all tracks in the general maps. Use the start_end_icons_min_zoom option to set the minimum zoom at which this feature is activated.')),
-            Toggle::make('ref_on_track_show')
-                ->help(__('Activate this option if you want to show the ref parameter on tracks. Use the ref_on_track_min_zoom option to set the minimum zoom at which this feature is activated.')),
-            Toggle::make(__('geolocation_record_enable'), 'geolocation_record_enable')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Activate this option if you want to enable user track record')),
             Select::make(__('GPS Accuracy Default'), 'gps_accuracy_default')
                 ->options([
                     '5' => '5 meters',
@@ -594,13 +767,9 @@ class App extends Resource
                 ])
                 ->help(__('Set the default GPS accuracy level for tracking.'))
                 ->displayUsingLabels(),
-            Toggle::make('alert_poi_show')
-                ->help(__('Activate this option if you want to show a POI proximity alert')),
             Number::make(__('alert_poi_radius'))
                 ->default(100)
                 ->help(__('Set the radius (in meters) of the activation circle with the center as the user position. The nearest POI inside the circle triggers the alert')),
-            Toggle::make('flow_line_quote_show')
-                ->help(__('Activate this option if you want to color the track by elevation quote')),
             Number::make(__('flow_line_quote_orange'))
                 ->default(800)
                 ->help(__('Defines the elevation by which the track turns orange')),
@@ -633,36 +802,24 @@ class App extends Resource
                 Text::make('Distance Filter Label', 'filter_track_distance_label'),
             ]),
 
-            Boolean::make('Activity Filter', 'filter_activity')
-                ->help(__('Activate this option if you want to activate "Activity filter" for tracks')),
             Text::make('Activity Exclude Filter', 'filter_activity_exclude')
                 ->help(__('Insert the activities you want to exclude from the filter, separated by commas')),
-            Boolean::make('Theme Filter', 'filter_theme')
-                ->help(__('Activate this option if you want to activate "Theme filter" for tracks')),
             Text::make('Theme Exclude Filter', 'filter_theme_exclude')
                 ->help(__('Insert the themes you want to exclude from the filter, separated by commas')),
-            Boolean::make('Poi Type Filter', 'filter_poi_type')
-                ->help(__('Activate this option if you want to activate "Poi Type filter" for POIs')),
             Text::make('Poi Type Exclude Filter', 'filter_poi_type_exclude')
                 ->help(__('Insert the poi types you want to exclude from the filter, separated by commas')),
-            Boolean::make('Track Duration Filter', 'filter_track_duration')
-                ->help(__('Activate this option if you want to filter tracks by duration. Make sure that "Show Pois layer on APP" option is turned on under POIS tab!')),
             Number::make('Track Min Duration Filter', 'filter_track_duration_min')
                 ->help(__('Set the minimum duration of the duration filter')),
             Number::make('Track Max Duration Filter', 'filter_track_duration_max')
                 ->help(__('Set the maximum duration of the duration filter')),
             Number::make('Track Duration Steps Filter', 'filter_track_duration_steps')
                 ->help(__('Set the steps of the duration filter')),
-            Boolean::make('Track Distance Filter', 'filter_track_distance')
-                ->help(__('Activate this option if you want to filter tracks by distance')),
             Number::make('Track Min Distance Filter', 'filter_track_distance_min')
                 ->help(__('Set the minimum distance of the distance filter')),
             Number::make('Track Max Distance Filter', 'filter_track_distance_max')
                 ->help(__('Set the maximum distance of the distance filter')),
             Number::make('Track Distance Step Filter', 'filter_track_distance_steps')
                 ->help(__('Set the steps of the distance filter')),
-            Boolean::make('Track Difficulty Filter', 'filter_track_difficulty')
-                ->help(__('Activate this option if you want to filter tracks by difficulty')),
         ];
     }
 
@@ -751,18 +908,6 @@ class App extends Resource
     {
         return [
             Heading::make(__('<p>This information is displayed in the technical details through the app.</p>'))->asHtml(),
-            Toggle::make(__('Show Track Ref Label'), 'show_track_ref_label')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Shows the ref on the track (visible by zooming)')),
-            Toggle::make(__('Download Track'), 'download_track_enable')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable download track in GPX, KML, GEOJSON')),
-            Toggle::make(__('Print Track'), 'print_track_enable')
-                ->default(true)
-                ->hideFromIndex()
-                ->help(__('Enable print of ever app track in PDF')),
             Toggle::make(__('Show Duration Forward'), 'track_technical_details->show_duration_forward')
                 ->default(true)
                 ->hideFromIndex()
@@ -819,12 +964,6 @@ class App extends Resource
     protected function pois_tab(): array
     {
         return [
-            Toggle::make(__('Show Pois Layer on APP'), 'app_pois_api_layer')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enable to display POIs in the app.')),
             NovaSliderField::make(__('Poi Min Radius'), 'poi_min_radius')
                 ->min(0.1)
                 ->max(3.5)
@@ -912,20 +1051,6 @@ class App extends Resource
             })->asHtml()->onlyOnDetail(),
         ];
     }
-
-
-    protected function auth_tab(): array
-    {
-        return [
-            Toggle::make(__('Show Auth at startup'), 'auth_show_at_startup')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('shows the authentication and registration page for users')),
-        ];
-    }
-
 
     protected function overlays_tab(): array
     {
@@ -1087,8 +1212,6 @@ class App extends Resource
     protected function layers_tab(): array
     {
         return [
-            Boolean::make('Generate All Layers Edges', 'generate_layers_edges')
-                ->help('Enable the Edge feature on all layers of the app'),
             // TODO: passare a hasMany ... attualmente ha un bug che non fa funzionare la tab stessa
             Text::make('Layers', function () {
                 $help = '<p>Layers: Layers associated with the app.</p>';
