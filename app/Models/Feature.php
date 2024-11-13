@@ -22,24 +22,24 @@ class Feature extends Model
         foreach ($array as $property => $value) {
             if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-            } else {
-                if (is_string($value)) {
-                    $decodedValue = json_decode($value, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        // Se il valore è un JSON valido, lo sostituisci con l'oggetto decodificato
-                        $array[Str::camel($property)] = $decodedValue;
-                    }
-                }
+            } else if ($property == 'relative_url') {
+                if (Storage::disk('public')->exists($value))
+                    $array['url'] = Storage::disk('public')->url($value);
+                unset($array[$property]);
             }
         }
 
         return $array;
     }
 
-    public function getFeature(): ?array
+    public function getFeature($version = 'v1'): ?array
     {
         $model = get_class($this);
-        $properties = $this->properties;
+        if ($version === 'v1') {
+            $properties = $this->getJson();
+        } else {
+            $properties = $this->properties;
+        }
         $properties['id']   = $this->id;
         $geom = $model::where('id', '=', $this->id)
             ->select(
@@ -62,9 +62,9 @@ class Feature extends Model
             ];
     }
 
-    public function getGeojson(): ?array
+    public function getGeojson($version = 'v1'): ?array
     {
-        return $this->getFeature();
+        return $this->getFeature($version);
     }
 
     public function populateProperties(): void
