@@ -39,10 +39,6 @@ class UgcPoi extends Feature
     ];
 
 
-    protected $casts = [
-        'properties' => 'array',
-    ];
-
     /**
      * Scope a query to only include current user EcPois.
      *
