@@ -15,10 +15,11 @@ use App\Http\Resources\UgcTrackCollection;
 use App\Traits\UGCFeatureCollectionTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Traits\ValidationTrait;
 
 class UgcTrackController extends Controller
 {
-    use UGCFeatureCollectionTrait;
+    use UGCFeatureCollectionTrait, ValidationTrait;
     /**
      * Display a listing of the resource.
      *
@@ -67,14 +68,26 @@ class UgcTrackController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request): Response
+    public function store(Request $request, $version = 'v1'): Response
+    {
+        Log::channel('ugc')->info("*************store ugc track*****************");
+        Log::channel('ugc')->info('version:' . $version);
+        switch ($version) {
+            case 'v1':
+            default:
+                return $this->storeV1($request);
+            case 'v2':
+                return $this->storeV2($request);
+        }
+    }
+    public function storeV1(Request $request): Response
     {
         $data = $request->all();
-        Log::channel('ugc')->info("*************store ugc track*****************");
+        Log::channel('ugc')->info("*************store v1 ugc track*****************");
         $dataProperties = $data['properties'];
         Log::channel('ugc')->info('ugc poi store properties name:' . $dataProperties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
-        $validator = Validator::make($data, [
+        $this->checkValidation($data, [
             'type' => 'required',
             'properties' => 'required|array',
             'properties.name' => 'required|max:255',
@@ -83,11 +96,6 @@ class UgcTrackController extends Controller
             'geometry.type' => 'required',
             'geometry.coordinates' => 'required|array',
         ]);
-
-        if ($validator->fails()) {
-            Log::channel('ugc')->info('Validazione fallita:', $validator->errors()->toArray());
-            return response(['error' => $validator->errors(), 'Validation Error']);
-        }
 
         $user = auth('api')->user();
         if (is_null($user))
@@ -142,6 +150,83 @@ class UgcTrackController extends Controller
 
         unset($data['properties']['image_gallery']);
         $track->raw_data = json_encode($data['properties']);
+        $track->save();
+        $track->populateProperties();
+        $track->populatePropertyForm('track_acquisition_form');
+
+        $hoquService = app(HoquServiceProvider::class);
+        try {
+            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
+        } catch (\Exception $e) {
+        }
+
+        return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
+    }
+    public function storeV2(Request $request): Response
+    {
+        $user = auth('api')->user();
+        $data = $request->all();
+        Log::channel('ugc')->info("*************store v2 ugc track*****************");
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
+        $properties = $data['properties'];
+        Log::channel('ugc')->info('ugc poi store properties name:' . $properties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id:' . $properties['app_id']);
+        $this->checkValidation($data, [
+            'type' => 'required',
+            'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255',
+            'geometry' => 'required|array',
+            'geometry.type' => 'required',
+            'geometry.coordinates' => 'required|array',
+        ]);
+
+        $user = auth('api')->user();
+        if (is_null($user))
+            return response(['error' => 'User not authenticated'], 403);
+
+        $track = new UgcTrack();
+
+        $track->name = $properties['name'];
+        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($data['geometry']) . "'))");
+        $track->properties = $properties;
+        $track->user_id = $user->id;
+
+        if (isset($properties['app_id'])) {
+            $app_id = $properties['app_id'];
+            if (is_numeric($app_id)) {
+                Log::channel('ugc')->info('numeric');
+                $app = App::where('id', '=', $app_id)->first();
+                if ($app != null) {
+                    $track->app_id = $app_id;
+                    $track->sku = $app->sku;
+                }
+            } else {
+                Log::channel('ugc')->info('sku');
+                $app = App::where('sku', '=', $app_id)->first();
+                if ($app != null) {
+                    $track->app_id = $app->id;
+                    $track->sku = $app_id;
+                }
+            }
+        }
+
+        try {
+            $track->save();
+        } catch (\Exception $e) {
+            Log::channel('ugc')->info('Errore nel salvataggio della track:' . $e->getMessage());
+            return response(['error' => 'Error saving Track'], 500);
+        }
+
+        if (isset($properties['image_gallery']) && is_array($properties['image_gallery']) && count($properties['image_gallery']) > 0) {
+            foreach ($properties['image_gallery'] as $imageId) {
+                if (!!UgcMedia::find($imageId))
+                    $track->ugc_media()->attach($imageId);
+            }
+        }
+
+        unset($properties['image_gallery']);
         $track->save();
 
         $hoquService = app(HoquServiceProvider::class);

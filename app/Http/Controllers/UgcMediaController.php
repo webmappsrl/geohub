@@ -8,28 +8,38 @@ use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\User;
 use App\Traits\UGCFeatureCollectionTrait;
+use App\Traits\ValidationTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class UgcMediaController extends Controller
 {
-    use UGCFeatureCollectionTrait;
+    use UGCFeatureCollectionTrait, ValidationTrait;
     /**
      * Display a listing of the resource.
      *
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $version = 'v1')
+    {
+        switch ($version) {
+            case 'v1':
+            default:
+                return $this->indexV1($request);
+            case 'v2':
+                return $this->indexV2($request);
+        }
+    }
+
+    public function indexV1(Request $request)
     {
         $user = auth('api')->user();
         if (isset($user)) {
-
             if (!empty($request->header('app-id'))) {
                 $appId = $request->header('app-id');
                 if (is_numeric($appId)) {
@@ -48,6 +58,29 @@ class UgcMediaController extends Controller
         }
     }
 
+    public function indexV2(Request $request)
+    {
+        $user = auth('api')->user();
+        if (isset($user)) {
+            if (!empty($request->header('app-id'))) {
+                $appId = $request->header('app-id');
+                if (is_numeric($appId)) {
+                    $app = App::where('id', $appId)->first();
+                } else {
+                    $app = App::where('sku', $appId)->first();
+                }
+                $medias = UgcMedia::where([['user_id', $user->id], ['sku', $app->sku]])->orderByRaw('updated_at DESC')->get();
+                return $this->getUGCFeatureCollection($medias);
+            } else {
+                $medias = UgcMedia::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+            }
+
+
+            return $this->getUGCFeatureCollection($medias);
+        } else {
+            return new UgcMediaCollection(UgcMedia::currentUser()->paginate(10));
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -65,40 +98,97 @@ class UgcMediaController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request): Response
+    public function store(Request $request, $version = 'v1'): Response
+    {
+        Log::channel('ugc')->info("*************store ugc media*****************");
+        Log::channel('ugc')->info('version:' . $version);
+        switch ($version) {
+            case 'v1':
+            default:
+                return $this->storeV1($request);
+            case 'v2':
+                return $this->storeV2($request);
+        }
+    }
+    public function storeV2(Request $request): Response
+    {
+
+        $user = auth('api')->user();
+        $data = $request->all();
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
+        $this->checkValidation($data, [
+            'feature' => 'required',
+            'image' => 'required'
+        ]);
+        $feature = @json_decode($data['feature'], true);
+
+        $this->checkValidation($feature, [
+            'geometry' => 'required|array',
+            'geometry.type' => 'required',
+            'geometry.coordinates' => 'required|array',
+            'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:255',
+            'properties.media' => 'required'
+        ]);
+
+
+        $properties = $feature['properties'];
+        $media = new UgcMedia();
+        $media->relative_url = '';
+        $media->name = $properties['name'] ?? 'placeholder_name';
+        if (isset($properties['description']))
+            $media->description = $properties['description'];
+        $media->user_id = $user->id;
+        if (isset($feature['geometry']))
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($feature['geometry']) . "')");
+
+        if (isset($properties['app_id'])) {
+            $app_id = $properties['app_id'];
+            if (is_numeric($app_id)) {
+                Log::channel('ugc')->info('numeric');
+                $app = App::where('id', '=', $app_id)->first();
+                if ($app != null) {
+                    $media->app_id = $app_id;
+                    $media->sku = $app->sku;
+                }
+            } else {
+                Log::channel('ugc')->info('sku');
+                $app = App::where('sku', '=', $app_id)->first();
+                if ($app != null) {
+                    $media->app_id = $app->id;
+                    $media->sku = $app_id;
+                }
+            }
+        }
+        $media->properties = $properties;
+        $media->save();
+        $this->addImageToMedia($media, $data['image']);
+        return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
+    }
+    public function storeV1(Request $request): Response
     {
         $data = $request->all();
-        Log::channel('ugc')->info("*************store ugc media*****************");
         $dataGeojson = $data['geojson'];
         Log::channel('ugc')->info('geojson' . $dataGeojson);
-        $validator = Validator::make($data, [
+
+        $this->checkValidation($data, [
             'geojson' => 'required',
             'image' => 'required'
         ]);
-
-        if ($validator->fails())
-            return response(['error' => $validator->errors()], 400);
 
         $geojson = @json_decode($data['geojson'], true);
 
         if (is_null($geojson))
             return response(['error' => ['geojson' => 'validation.required.json']], 400);
 
-        $validator = Validator::make($geojson, [
+        $this->checkValidation($geojson, [
             'type' => 'required',
             'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
             'properties.app_id' => 'required|max:255'
         ]);
-
-        if ($validator->fails()) {
-            $currentErrors = json_decode($validator->errors(), true);
-            $errors = [];
-            foreach ($currentErrors as $key => $error) {
-                $errors['geojson.' . $key] = $error;
-            }
-
-            return response(['error' => $errors], 400);
-        }
 
         $user = auth('api')->user();
         Log::channel('ugc')->info('user email:' . $user->email);
@@ -138,13 +228,21 @@ class UgcMediaController extends Controller
         $media->raw_data = json_encode($geojson['properties']);
         $media->save();
 
+        $media->populateProperties();
+
+        $this->addImageToMedia($media, $data['image']);
+        return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
+    }
+
+    public function addImageToMedia($media, $image)
+    {
         try {
             $id = $media->id;
             $imageName = "image_$id";
             $basePath = "media/images/ugc/";
             if (Storage::disk('public')->exists("$basePath$imageName"))
                 Storage::disk('public')->delete("$basePath$imageName");
-            Storage::disk('public')->put("$basePath$imageName", $data['image']);
+            Storage::disk('public')->put("$basePath$imageName", $image);
 
             $savedPath = Storage::disk('public')->files("$basePath$imageName/")[0];
             $split = explode('/', $savedPath);
@@ -164,11 +262,8 @@ class UgcMediaController extends Controller
             $media->save();
         } catch (Exception $e) {
             Log::error($e);
-
             return response(['message' => 'An error occurred while creating the new image'], 500);
         }
-
-        return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
@@ -662,13 +757,10 @@ class UgcMediaController extends Controller
 
         $data = $request->all();
 
-        $validator = Validator::make($data, [
+        $this->checkValidation($data, [
             'geojson' => 'required',
             'geojson.type' => 'required'
         ]);
-
-        if ($validator->fails())
-            return response(['error' => $validator->errors()], 400);
 
         $geojson = $data['geojson'];
 
