@@ -7,12 +7,11 @@ use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateEcTrackAwsJob;
 use App\Jobs\UpdateEcTrackDemJob;
 use App\Jobs\UpdateEcTrackElasticIndexJob;
-use App\Jobs\UpdateLayersForAppJob;
+use App\Jobs\UpdateLayerTracksJob;
 use App\Jobs\UpdateManualDataJob;
 use App\Jobs\UpdateTrackFromOsmJob;
 use App\Jobs\UpdateTrackPBFInfoJob;
 use App\Jobs\UpdateTrackPBFJob;
-use Exception;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
@@ -23,7 +22,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -33,6 +31,7 @@ use Spatie\Translatable\HasTranslations;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Symm\Gisconverter\Gisconverter;
 use Throwable;
+use Exception;
 
 class EcTrack extends Model
 {
@@ -994,11 +993,11 @@ class EcTrack extends Model
         if ($track->osmid) {
             $chain[] = new UpdateTrackFromOsmJob($track);
         }
-        $apps = $track->trackHasApps();
-        // Verifica se ci sono app associate
-        if ($apps && $apps->count() > 0) {
-            foreach ($apps as $app) {
-                $chain[] = new UpdateLayersForAppJob($app->id);
+        $layers = $track->associatedLayers;
+        // Verifica se ci sono layers associati
+        if ($layers && $layers->count() > 0) {
+            foreach ($layers as $layer) {
+                $chain[] = new UpdateLayerTracksJob($layer);
             }
         }
         $chain[] = new UpdateEcTrackDemJob($track);
@@ -1011,8 +1010,6 @@ class EcTrack extends Model
             $chain[] = new UpdateTrackPBFInfoJob($track);
             $chain[] = new UpdateTrackPBFJob($track);
         }
-        //$chain2[] = new UpdateEcTrackElasticIndexJob($track);
-        //$chain2[] = new UpdateEcTrackAwsJob($track);
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...

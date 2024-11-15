@@ -206,6 +206,18 @@ return [
             'timeout' => 120,
             'nice' => 0,
         ],
+        'supervisor-layers' => [
+            'connection' => 'redis',
+            'queue' => ['layers'],
+            'balance' => 'simple', // Non bilanciamento complesso
+            'maxProcesses' => 5, // Massimo 5 processi
+            'maxTime' => 3600, // 1 ora di tempo massimo
+            'maxJobs' => 500, // Limite di job per ogni processo
+            'memory' => 256, // Limite di memoria per processo
+            'tries' => 3, // Tentativi per job falliti
+            'timeout' => 120, // Timeout massimo di 2 minuti
+            'nice' => 0, // Priorità normale
+        ],
     ],
 
     'environments' => [
@@ -215,11 +227,17 @@ return [
                 'balanceMaxShift' => 3,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-layers' => [
+                'maxProcesses' => 5,
+            ],
         ],
 
         'local' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,
+            ],
+            'supervisor-layers' => [
+                'maxProcesses' => 2, // Ad esempio, limita a 2 processi in locale
             ],
         ],
     ],
