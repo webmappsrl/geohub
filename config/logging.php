@@ -131,6 +131,12 @@ return [
             'path' => storage_path('logs/ugc.log'),
             'level' => 'debug',
         ],
+        'pbf' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/pbf.log'),
+            'level' => 'debug',
+            'days' => '1',
+        ],
     ],
 
 ];
