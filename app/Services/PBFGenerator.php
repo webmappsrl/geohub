@@ -38,7 +38,7 @@ class PBFGenerator
 
         // Controlla se il tile corrente è in un quadrante vuoto a un livello di zoom inferiore
         if ($this->isTileInEmptyParent($z, $x, $y)) {
-            Log::info("Saltato quadrante vuoto per Zoom {$z}, X {$x}, Y {$y}");
+            Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> JUMP PARENT EMPTY');
             return '';
         }
 
