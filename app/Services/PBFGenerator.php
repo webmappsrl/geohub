@@ -356,9 +356,9 @@ class PBFGenerator
         $app = App::with('layers')->find($this->app_id);
 
         foreach ($app->layers as $layer) {
-            Log::info("Processing layer: {$layer->id}");
+            // Log::info("Processing layer: {$layer->id}");
             $tracks = $layer->getPbfTracks();
-            Log::info("Number of tracks: " . $tracks->count());
+            // Log::info("Number of tracks: " . $tracks->count());
 
             // Ottieni gli ID delle tracce
             $trackIds = $tracks->pluck('id')->toArray();
