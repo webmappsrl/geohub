@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateEcTrackAwsJob implements ShouldQueue
@@ -37,6 +38,10 @@ class UpdateEcTrackAwsJob implements ShouldQueue
     {
         $geojson = $this->ecTrack->getGeojson();
         $trackUri = $this->ecTrack->id . '.json';
-        Storage::disk('wmfetracks')->put($trackUri, json_encode($geojson));
+        try {
+            Storage::disk('wmfetracks')->put($trackUri, json_encode($geojson));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

@@ -17,7 +17,7 @@ trait GeometryFeatureTrait
     public function getEmptyGeojson(): ?array
     {
         $model = get_class($this);
-        $properties = $this->properties;
+        $properties = $this->properties ?? [];
         $geom = $model::where('id', '=', $this->id)
             ->select(
                 DB::raw("ST_AsGeoJSON(geometry) as geom")

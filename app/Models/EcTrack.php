@@ -542,10 +542,8 @@ class EcTrack extends Model
             //     }
             // }
 
-            return $feature;
-        } else {
-            return null;
         }
+        return $feature;
     }
     /**
      * Create only the Geometry and track id from the ec track as getGeojsonGeojson
