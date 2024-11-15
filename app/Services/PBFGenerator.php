@@ -36,6 +36,12 @@ class PBFGenerator
             throw new Exception('ERROR Invalid Tile Path');
         }
 
+        // Controlla se il tile corrente è in un quadrante vuoto a un livello di zoom inferiore
+        if ($this->isTileInEmptyParent($z, $x, $y)) {
+            Log::info("Saltato quadrante vuoto per Zoom {$z}, X {$x}, Y {$y}");
+            return '';
+        }
+
         $env = $this->tileToEnvelope($tile);
         $sql = $this->envelopeToSQL($env, $z);
         DB::beginTransaction();
@@ -57,8 +63,35 @@ class PBFGenerator
             Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf');
             return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
         }
+        $this->markTileAsEmpty($z, $x, $y);
         Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> EMPTY');
         return '';
+    }
+
+    // Verifica se un tile è all'interno di un quadrante vuoto a un livello inferiore usando la cache
+    private function isTileInEmptyParent($zoom, $x, $y)
+    {
+        // Controlla i quadranti vuoti a livelli inferiori
+        for ($z = $zoom - 1; $z >= $this->zoomTreshold; $z--) {
+            $factor = 2 ** ($zoom - $z);
+            $parentX = intdiv($x, $factor);
+            $parentY = intdiv($y, $factor);
+
+            // Chiave della cache per il quadrante vuoto
+            $cacheKey = "empty_tile_{$this->app_id}_{$z}_{$parentX}_{$parentY}";
+
+            if (Cache::has($cacheKey)) {
+                return true; // Il tile è in un quadrante vuoto
+            }
+        }
+        return false; // Il tile non è in un quadrante vuoto
+    }
+
+    // Marca il tile come vuoto nella cache per evitare generazioni future nei livelli superiori
+    private function markTileAsEmpty($zoom, $x, $y)
+    {
+        $cacheKey = "empty_tile_{$this->app_id}_{$zoom}_{$x}_{$y}";
+        Cache::put($cacheKey, true, now()->addHours(2)); // Imposta la durata della cache secondo necessità
     }
 
     // Check if the tile is valid
