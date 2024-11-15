@@ -266,7 +266,7 @@ class PBFGenerator
     private function populateTemporaryTrackTable()
     {
         ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
-        Log::info('Inizio populateTemporaryTrackTable');
+        //Log::info('Inizio populateTemporaryTrackTable');
         $app = App::with('layers')->find($this->app_id);
         $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
 
@@ -348,11 +348,11 @@ class PBFGenerator
                 gc_collect_cycles();
             }
         }
-        Log::info('Fine populateTemporaryTrackTable');
+        //Log::info('Fine populateTemporaryTrackTable');
     }
     private function populateTemporaryLayerTable()
     {
-        Log::info('Inizio populateTemporaryLayerTable');
+        // Log::info('Inizio populateTemporaryLayerTable');
         $app = App::with('layers')->find($this->app_id);
 
         foreach ($app->layers as $layer) {
@@ -410,7 +410,7 @@ class PBFGenerator
             }
         }
 
-        Log::info('Fine populateTemporaryLayerTable');
+        //Log::info('Fine populateTemporaryLayerTable');
     }
 
 
