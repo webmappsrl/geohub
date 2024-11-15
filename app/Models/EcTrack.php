@@ -978,7 +978,7 @@ class EcTrack extends Model
 
             // Se non ci sono layers corrispondenti, crea comunque un array vuoto per l'app
             if (empty($layers[$app->id])) {
-                $layers[$layer->app_id] = [];
+                $layers[$app->id] = [];
             }
         }
 

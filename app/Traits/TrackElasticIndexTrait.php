@@ -58,21 +58,19 @@ trait TrackElasticIndexTrait
     {
         try {
             $updates = null;
-            $ecTrackLayers = $this->getLayersByApp();
-            if (is_array($ecTrackLayers)) {
-                foreach ($ecTrackLayers as $app_id => $layer) {
-                    if (!empty($layer)) {
-                        $updates['layers'][$app_id] = $layer;
-                        $updates['activities'][$app_id] = $this->getTaxonomyArray($this->taxonomyActivities);
-                        $updates['themes'][$app_id] = $this->getTaxonomyArray($this->taxonomyThemes);
-                        $updates['searchable'][$app_id] = $this->getSearchableString($app_id);
-                    }
+            $ecTrackLayers = $this->associatedLayers()->get();
+            foreach ($ecTrackLayers as $layer) {
+                if (!empty($layer)) {
+                    $updates['layers'][$layer->app_id] = $layer->id;
+                    $updates['activities'][$layer->app_id] = $this->getTaxonomyArray($this->taxonomyActivities);
+                    $updates['themes'][$layer->app_id] = $this->getTaxonomyArray($this->taxonomyThemes);
+                    $updates['searchable'][$layer->app_id] = $this->getSearchableString($layer->app_id);
                 }
-                if ($updates) {
-                    EcTrack::withoutEvents(function () use ($updates) {
-                        $this->update($updates);
-                    });
-                }
+            }
+            if ($updates) {
+                EcTrack::withoutEvents(function () use ($updates) {
+                    $this->update($updates);
+                });
             }
         } catch (Exception $e) {
             throw new Exception('ERROR ' . $e->getMessage());
