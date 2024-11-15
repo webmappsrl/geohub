@@ -271,9 +271,9 @@ class PBFGenerator
         $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
 
         foreach ($app->layers as $layer) {
-            Log::info("Processing layer: {$layer->id}");
+            //Log::info("Processing layer: {$layer->id}");
             $tracks = $layer->getPbfTracks();
-            Log::info("Number of tracks: " . $tracks->count());
+            //Log::info("Number of tracks: " . $tracks->count());
 
             $trackArrayBatch = [];
             $batchCounter = 0;
