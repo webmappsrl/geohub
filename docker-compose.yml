@@ -1,7 +1,7 @@
 services:
   phpfpm:
     extra_hosts:
-        - host.docker.internal:host-gateway
+      - host.docker.internal:host-gateway
     # user: root
     build: ./docker/configs/phpfpm
     restart: always
@@ -12,12 +12,15 @@ services:
       - ${DOCKER_SERVE_PORT}:8000
     volumes:
       - ".:/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
-    working_dir: '/var/www/html/${DOCKER_PROJECT_DIR_NAME}'
+    working_dir: "/var/www/html/${DOCKER_PROJECT_DIR_NAME}"
     depends_on:
       - db
       - redis
+      - elasticsearch
+    networks:
+      - geohub
   db:
-    image: postgis/postgis:16-3.4
+    image: postgis/postgis:14-3.4
     container_name: "postgres_${APP_NAME}"
     restart: always
     environment:
@@ -29,24 +32,33 @@ services:
       - "./docker/volumes/postgresql/data:/var/lib/postgresql/data"
     ports:
       - ${DOCKER_PSQL_PORT}:5432
-
+    networks:
+      - geohub
   redis:
     image: redis:latest
     container_name: "redis_${APP_NAME}"
     restart: always
     ports:
       - 6379:6379
+    networks:
+      - geohub
 
   elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-        container_name: "${APP_NAME}-elasticsearch"
-        environment:
-            - node.name=elasticsearch
-            - cluster.name=elasticsearch-cluster
-            - discovery.type=single-node
-            - bootstrap.memory_lock=true
-            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        ulimits:
-            memlock:
-                soft: -1
-                hard: -1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: "${APP_NAME}-elasticsearch"
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=elasticsearch-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - geohub
+
+networks:
+  geohub:
+    driver: bridge
