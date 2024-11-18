@@ -16,8 +16,6 @@ services:
     depends_on:
       - db
       - redis
-    networks:
-      - laravel
   db:
     image: postgis/postgis:16-3.4
     container_name: "postgres_${APP_NAME}"
@@ -31,16 +29,13 @@ services:
       - "./docker/volumes/postgresql/data:/var/lib/postgresql/data"
     ports:
       - ${DOCKER_PSQL_PORT}:5432
-    networks:
-      - laravel
+
   redis:
     image: redis:latest
     container_name: "redis_${APP_NAME}"
     restart: always
     ports:
       - 6379:6379
-    networks:
-      - laravel
 
   elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
@@ -55,9 +50,3 @@ services:
             memlock:
                 soft: -1
                 hard: -1
-        networks:
-            - laravel
-
-networks:
-  laravel:
-    driver: bridge
