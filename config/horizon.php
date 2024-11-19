@@ -60,14 +60,18 @@ return [
         ],
         'supervisor-pbf' => [
             'connection' => 'redis',
-            'queue' => ['pbf'], // Entrambe le code gestite da un supervisore
-            'balance' => 'simple',
-            'maxProcesses' => 5, // Massimo 5 processi
+            'queue' => ['pbf'],
+            'balance' => 'auto', // Usa il bilanciamento automatico
+            'autoScalingStrategy' => 'time',
+            'maxProcesses' => 15, // Massimo 10 processi disponibili
+            'minProcesses' => 5, // Assicurati di avere almeno 1 processo sempre attivo
+            'balanceMaxShift' => 10, // Massimo incremento o riduzione di processi
+            'balanceCooldown' => 3, // Tempo di raffreddamento prima di cambiare processi
             'maxTime' => 3600,
             'maxJobs' => 1000,
             'memory' => 256,
             'tries' => 5,
-            'timeout' => 180, // Timeout aumentato a 180 secondi
+            'timeout' => 180,
             'nice' => 0,
         ],
         'supervisor-layers' => [
