@@ -155,7 +155,7 @@ class TrackPBFJob implements ShouldQueue
         $s3Disk = Storage::disk($storageName);
         $filePath = "{$this->app_id}/{$this->z}/{$this->x}/{$this->y}.pbf";
 
-        //   $s3Disk->put($filePath, $pbfContent);
+        $s3Disk->put($filePath, $pbfContent);
         Log::channel('pbf')->info("$filePath" . "-> STORED.");
     }
 
