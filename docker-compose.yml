@@ -5,7 +5,7 @@ services:
     # user: root
     build: ./docker/configs/phpfpm
     restart: always
-    container_name: "php81_${APP_NAME}"
+    container_name: "php_${APP_NAME}"
     image: wm-phpfpm:7.4-fpm
     ports:
       - ${DOCKER_PHP_PORT}:9000
