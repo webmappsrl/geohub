@@ -141,6 +141,14 @@ class EcTrack extends Model
     {
         return $this->belongsToMany(Layer::class, 'ec_track_layer');
     }
+    public function getLayersAttribute()
+    {
+        // Recupera i layer associati tramite la relazione
+        $associatedLayers = $this->associatedLayers()->pluck('id')->toArray();
+
+        // Ritorna l'elenco dei layer associati come array
+        return $associatedLayers;
+    }
 
     public function author()
     {

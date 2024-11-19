@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTrackPBFJob implements ShouldQueue
 {
@@ -41,17 +42,18 @@ class UpdateTrackPBFJob implements ShouldQueue
                 $app_id = $app->id;
                 $author_id = $this->track->user->id;
 
-                // Min and Max zoom levels can be obtained prom APP configuration
-                // $min_zoom = $app->map_min_zoom;
-                // $max_zoom = $app->map_max_zoom;
-                
-                $min_zoom = config('geohub.pbf_min_zoom');
-                $max_zoom = config('geohub.pbf_max_zoom');
+                $min_zoom = 7;
+                $max_zoom = 14;
 
                 $bbox = $this->track->bbox();
                 $format = 'pbf';
                 $generator = new PBFGenerateTilesAndDispatch($app_id, $author_id, $format);
                 $generator->generateTilesAndDispatch($bbox, $min_zoom, $max_zoom);
+
+                for ($zoom = $min_zoom; $zoom <= $max_zoom; $zoom++) {
+                    Log::info("$app_id/$zoom" . ' -> START');
+                    ZoomPBFJob::dispatch($bbox, $zoom, $app_id, $author_id);
+                }
             }
         }
     }
