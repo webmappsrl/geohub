@@ -96,9 +96,10 @@ return [
                 'balanceCooldown' => 3,
             ],
             'supervisor-pbf' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 3,
-                'balanceCooldown' => 3,
+                'maxProcesses' => 15, // Massimo 10 processi disponibili
+                'minProcesses' => 5, // Assicurati di avere almeno 1 processo sempre attivo
+                'balanceMaxShift' => 10, // Massimo incremento o riduzione di processi
+                'balanceCooldown' => 3, // Tempo di raffreddamento prima di cambiare processi
             ],
             'supervisor-layers' => [
                 'maxProcesses' => 5,
