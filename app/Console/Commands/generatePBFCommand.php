@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ZoomPBFJob;
+use App\Jobs\GeneratePBFByZoomJob;
 use App\Models\App;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -96,7 +96,7 @@ class GeneratePBFCommand extends Command
     {
         for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
             Log::info("$this->app_id/$zoom" . ' -> START');
-            ZoomPBFJob::dispatch($bbox, $zoom, $this->app_id, $this->author_id);
+            GeneratePBFByZoomJob::dispatch($bbox, $zoom, $this->app_id, $this->author_id);
         }
     }
 }

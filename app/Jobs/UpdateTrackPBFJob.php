@@ -52,7 +52,7 @@ class UpdateTrackPBFJob implements ShouldQueue
 
                 for ($zoom = $min_zoom; $zoom <= $max_zoom; $zoom++) {
                     Log::info("$app_id/$zoom" . ' -> START');
-                    ZoomPBFJob::dispatch($bbox, $zoom, $app_id, $author_id);
+                    GeneratePBFByZoomJob::dispatch($bbox, $zoom, $app_id, $author_id);
                 }
             }
         }
