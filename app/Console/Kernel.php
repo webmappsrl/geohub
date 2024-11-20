@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
 
         // Import and Sync OSM2CAI
         $schedule->exec('bash /root/geohub.webmapp.it/scripts/import_sync_osm2cai_all.sh')->mondays()->at('1:00');
-        $schedule->exec('bash /root/scripts/osm2cai_hoqu_script.sh')->tuesdays('1:00');
+        //$schedule->exec('bash /root/scripts/osm2cai_hoqu_script.sh')->tuesdays('1:00');
         $schedule->command('geohub:index-tracks 15')->wednesdays()->at('1:00');
         $schedule->command('geohub:index-tracks 26')->thursdays()->at('1:00');
         $schedule->command('geohub:generate_dem 26 dem')->fridays()->at('1:00');
@@ -68,9 +68,8 @@ class Kernel extends ConsoleKernel
         // Sync Itinera Romanica Plus (se serve, rimuovi il commento)
         // $schedule->exec('bash /root/scripts/ir_import_sync_hoqu.sh')->dailyAt('23:00');
 
-        // EUMA 
+        // EUMA
         $schedule->exec('bash /root/scripts/euma_sync_updated_at.sh')->mondays()->at('4:00');
-
     }
 
 
