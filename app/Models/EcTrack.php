@@ -110,25 +110,13 @@ class EcTrack extends Model
             }
         });
 
-        static::created(function ($ecTrack) {
-            try {
-                $ecTrack->updateDataChain($ecTrack);
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-            } catch (\Exception $e) {
-                Log::error($ecTrack->id . ' created Ectrack: An error occurred during a store operation: ' . $e->getMessage());
-            }
-        });
 
+        # https://laravel.com/docs/8.x/eloquent#events
         static::saving(function ($ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
-        });
-
-        static::updating(function ($ecTrack) {
             try {
                 $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+                //$hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
                 $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
             } catch (\Exception $e) {
                 Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());

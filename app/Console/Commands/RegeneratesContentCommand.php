@@ -62,8 +62,9 @@ class RegeneratesContentCommand extends Command
                     foreach ($tracks as $track) {
                         $this->info('Hoqu Store for track: ' . $track->id);
                         try {
-                            $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
+                            // $hoquServiceProvider = app(HoquServiceProvider::class);
+                            // $hoquServiceProvider->store('enrich_ec_track', ['id' => $track->id]);
+                            $track->updateDataChain($track);
                         } catch (\Exception $e) {
                             Log::error($track->id . ' EcTrack RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
