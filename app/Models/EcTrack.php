@@ -144,7 +144,7 @@ class EcTrack extends Model
     public function getLayersAttribute()
     {
         // Recupera i layer associati tramite la relazione
-        $associatedLayers = $this->associatedLayers()->pluck('id')->toArray();
+        $associatedLayers = $this->associatedLayers->pluck('id')->toArray();
 
         // Ritorna l'elenco dei layer associati come array
         return $associatedLayers;
