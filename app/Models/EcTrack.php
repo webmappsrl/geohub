@@ -1006,10 +1006,10 @@ class EcTrack extends Model
         $chain[] = new UpdateEcTrack3DDemJob($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
-        if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            $chain[] = new UpdateTrackPBFInfoJob($track);
-            $chain[] = new UpdateTrackPBFJob($track);
-        }
+
+        $chain[] = new UpdateTrackPBFInfoJob($track);
+        $chain[] = new UpdateTrackPBFJob($track);
+
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...
