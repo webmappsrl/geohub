@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\GeneratePBFByZoomJob;
 use App\Models\App;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Bus;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
@@ -94,9 +93,10 @@ class GeneratePBFCommand extends Command
 
     private function dispatchBatches($bbox)
     {
+        $chain = [];
         for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
-            Log::info("$this->app_id/$zoom" . ' -> START');
-            GeneratePBFByZoomJob::dispatch($bbox, $zoom, $this->app_id, $this->author_id);
+            $chain[] = new GeneratePBFByZoomJob($bbox, $zoom, $this->app_id, $this->author_id);
         }
+        Bus::chain($chain)->onConnection('redis')->onQueue('pbf')->dispatch();
     }
 }

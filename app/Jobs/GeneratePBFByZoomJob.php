@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +15,7 @@ use Throwable;
 
 class GeneratePBFByZoomJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
 
     // Numero massimo di tentativi
@@ -56,12 +57,12 @@ class GeneratePBFByZoomJob implements ShouldQueue
                     $jobs[] = new TrackPBFJob($z, $x, $y, $this->app_id, $this->author_id);
                 }
             }
-
             // Dispatch del batch
+            sleep(8); // Aspetta 5 secondi prima di avviare il batch per via del balanceCooldown
             $batch = Bus::batch($jobs)
                 ->name("PBF batch: {$this->app_id}/$this->zoom")
                 ->onConnection('redis')->onQueue('pbf')->dispatch();
-
+            sleep(5); // Aspetta 5 secondi prima di avviare il batch per via del balanceCooldown
             if ($batch) {
                 //   Log::channel('pbf')->info("Batch: $batch->name/$this->zoom started");
             } else {
