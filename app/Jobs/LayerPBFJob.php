@@ -57,7 +57,9 @@ class LayerPBFJob extends TrackPBFJob
         mvtgeom AS (
             SELECT 
                 ST_AsMVTGeom(
-                    ST_SimplifyPreserveTopology(ST_Transform(ec.{$tbl['geomColumn']}, 3857),4), 
+                    ST_SimplifyPreserveTopology(
+                        ST_Transform(ST_Force2D(ec.{$tbl['geomColumn']}), 3857), 4
+                    ), 
                     bounds.b2d
                 ) AS geom,
                 {$tbl['attrColumns']}
@@ -68,7 +70,7 @@ class LayerPBFJob extends TrackPBFJob
             WHERE l.id IN ({$layerIdsSQL}) -- Filtra per i layer associati all'app
                 AND 
                 ST_Intersects(
-                    ST_Transform(ec.{$tbl['geomColumn']}, 3857),
+                    ST_Transform(ST_Force2D(ec.{$tbl['geomColumn']}), 3857),
                     bounds.geom
                 )
                 AND ST_IsValid(ec.{$tbl['geomColumn']}) 
