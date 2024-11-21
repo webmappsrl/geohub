@@ -71,6 +71,7 @@ class LayerPBFJob extends TrackPBFJob
                     ST_Transform(ec.{$tbl['geomColumn']}, 3857),
                     bounds.geom
                 )
+                AND ST_IsValid(ec.{$tbl['geomColumn']}) 
                 AND ST_Dimension(ec.{$tbl['geomColumn']}) > 0
                 AND NOT ST_IsEmpty(ec.{$tbl['geomColumn']})
                 AND ec.{$tbl['geomColumn']} IS NOT NULL
