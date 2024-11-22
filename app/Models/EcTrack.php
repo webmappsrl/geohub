@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\GeneratePBFByTrackJob;
 use App\Jobs\UpdateCurrentDataJob;
 use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateEcTrackAwsJob;
@@ -11,7 +12,6 @@ use App\Jobs\UpdateLayerTracksJob;
 use App\Jobs\UpdateManualDataJob;
 use App\Jobs\UpdateTrackFromOsmJob;
 use App\Jobs\UpdateTrackPBFInfoJob;
-use App\Jobs\UpdateTrackPBFJob;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
@@ -1012,12 +1012,10 @@ class EcTrack extends Model
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
-        $chain[] = new UpdateEcTrackAwsJob($track);
+        //  $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
-        if ($track->user_id != 17482) { // TODO: Delete these 3 ifs after implementing osm2cai updated_ay sync
-            $chain[] = new UpdateTrackPBFInfoJob($track);
-            $chain[] = new UpdateTrackPBFJob($track);
-        }
+        $chain[] = new UpdateTrackPBFInfoJob($track);
+        $chain[] = new GeneratePBFByTrackJob($track);
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...
