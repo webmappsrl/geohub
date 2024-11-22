@@ -27,18 +27,20 @@ class GeneratePBFByZoomJob implements ShouldQueue
     private $app_id;
     private $author_id;
     private $zoomTreshold = 6;
+    private $no_pbf_layer = false;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($bbox, $zoom, $app_id, $author_id)
+    public function __construct($bbox, $zoom, $app_id, $author_id, $no_pbf_layer = false)
     {
         $this->bbox = $bbox;
         $this->zoom = $zoom;
         $this->app_id = $app_id;
         $this->author_id = $author_id;
+        $this->no_pbf_layer = $no_pbf_layer;
     }
 
     public function handle()
@@ -51,7 +53,7 @@ class GeneratePBFByZoomJob implements ShouldQueue
 
             foreach ($tiles as $tile) {
                 list($x, $y, $z) = $tile;
-                if ($z <= $this->zoomTreshold) {
+                if ($z <= $this->zoomTreshold && !$this->no_pbf_layer) {
                     $jobs[] = new LayerPBFJob($z, $x, $y, $this->app_id, $this->author_id);
                 } else {
                     $jobs[] = new TrackPBFJob($z, $x, $y, $this->app_id, $this->author_id);

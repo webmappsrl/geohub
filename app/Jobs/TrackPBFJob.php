@@ -225,7 +225,8 @@ class TrackPBFJob implements ShouldQueue
             JSON_AGG(DISTINCT etl.layer_id) AS layers,
             ec.activities -> '{$this->app_id}' AS activities, -- Usa $this->app_id per searchable
             ec.themes -> '{$this->app_id}' AS themes, -- Usa $this->app_id per themes
-            ec.searchable -> '{$this->app_id}' AS searchable -- Usa $this->app_id per searchable
+            ec.searchable -> '{$this->app_id}' AS searchable, -- Usa $this->app_id per searchable
+            ec.color as stroke_color
         FROM ec_tracks ec
         JOIN ec_track_layer etl ON ec.id = etl.ec_track_id
         JOIN layers l ON etl.layer_id = l.id
@@ -248,7 +249,8 @@ class TrackPBFJob implements ShouldQueue
             track_layers.layers,
             track_layers.themes,
             track_layers.activities,
-            track_layers.searchable
+            track_layers.searchable,
+            track_layers.stroke_color
         FROM track_layers
         CROSS JOIN bounds
         WHERE 

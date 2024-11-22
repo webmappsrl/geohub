@@ -29,7 +29,7 @@ class GeneratePBFCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'pbf:generate {app_id} {--min= : custom min_zoom} {--max= : custom max_zoom}';
+    protected $signature = 'pbf:generate {app_id} {--min= : custom min_zoom} {--max= : custom max_zoom} {--no_pbf_layer : do not generate pbf layer}';
 
     /**
      * The console command description.
@@ -43,6 +43,7 @@ class GeneratePBFCommand extends Command
     protected $min_zoom;
     protected $max_zoom;
     protected $app_id;
+    protected $no_pbf_layer = false;
     /**
      * Create a new command instance.
      *
@@ -74,6 +75,7 @@ class GeneratePBFCommand extends Command
 
         $this->min_zoom = (int)($this->option('min') ? $this->option('min') : config('geohub.pbf_min_zoom'));
         $this->max_zoom = (int)($this->option('max') ? $this->option('max') : config('geohub.pbf_max_zoom'));
+        $this->no_pbf_layer = ($this->option('no_pbf_layer') ? true : false);
 
         $bbox = $app->getTracksBBOX();
         if (empty($bbox)) {
@@ -95,7 +97,7 @@ class GeneratePBFCommand extends Command
     {
         $chain = [];
         for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
-            $chain[] = new GeneratePBFByZoomJob($bbox, $zoom, $this->app_id, $this->author_id);
+            $chain[] = new GeneratePBFByZoomJob($bbox, $zoom, $this->app_id, $this->author_id, $this->no_pbf_layer);
         }
         Bus::chain($chain)->onConnection('redis')->onQueue('pbf')->dispatch();
     }
