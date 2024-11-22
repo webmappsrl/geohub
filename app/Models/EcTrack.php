@@ -1012,7 +1012,7 @@ class EcTrack extends Model
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
-        //  $chain[] = new UpdateEcTrackAwsJob($track);
+        $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
         $chain[] = new UpdateTrackPBFInfoJob($track);
         $chain[] = new GeneratePBFByTrackJob($track);
