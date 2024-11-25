@@ -163,9 +163,9 @@ class EcTrackController extends Controller
             return response()->json(['code' => 404, 'error' => "Not Found"], 404);
         }
 
-        if (!empty($request->where_ids)) {
-            $ecTrack->taxonomyWheres()->sync($request->where_ids);
-        }
+        // if (!empty($request->where_ids)) {
+        //     $ecTrack->taxonomyWheres()->sync($request->where_ids);
+        // }
 
         // NO
         // if (!empty($request->duration)) {
