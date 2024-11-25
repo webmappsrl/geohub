@@ -25,3 +25,5 @@ yarn-error.log
 dump.sql
 /public/images
 /public/vendor
+
+/docker/volumes/*

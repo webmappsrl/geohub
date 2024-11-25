@@ -39,12 +39,12 @@
     },
     "dependencies": {
         "alpinejs": "^3.9.0",
+        "chart.js": "^2.9.4",
+        "chartjs-node-canvas": "^3.2.0",
         "cypress": "^7.1.0",
         "jquery": "^3.6.0",
         "leaflet": "^1.7.1",
         "portal-vue": "^2.1.7",
-        "swiper": "^8.0.6",
-        "chart.js": "^2.9.4",
-        "chartjs-node-canvas": "^3.2.0"
+        "swiper": "^8.0.6"
     }
 }

@@ -10,6 +10,8 @@ ADD php.ini /usr/local/etc/php/php.ini
 
 ENV TZ 'Europe/Rome'
 
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+
 RUN chown -R www-data:www-data /var/www \
     && chown  www-data:www-data /usr/local/etc/php-fpm.d/www.conf \
     && chown -R www-data:www-data /usr/local/etc/php-fpm.d/zz-docker.conf \
@@ -50,6 +52,7 @@ RUN chown -R www-data:www-data /var/www \
     gdal-bin \
     zip \
     postgresql-client \
+    nodejs npm \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
