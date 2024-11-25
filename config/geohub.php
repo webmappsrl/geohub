@@ -14,4 +14,5 @@ return [
     'elastic_low_geom_tollerance' => env('ELASTIC_LOW_GEOM_TOLLERANCE', 0.006),
     'pbf_min_zoom' => env('PBF_MIN_ZOOM', 5),
     'pbf_max_zoom' => env('PBF_MAX_ZOOM', 13),
+    'node_executable' => '/usr/bin/node'
 ];
