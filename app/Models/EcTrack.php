@@ -30,6 +30,7 @@ use App\Observers\EcTrackElasticObserver;
 use App\Jobs\UpdateEcTrackElasticIndexJob;
 use Symm\Gisconverter\Exceptions\InvalidText;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Jobs\UpdateEcTrackGenerateElevationChartImage;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -1002,10 +1003,12 @@ class EcTrack extends Model
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
         $chain[] = new UpdateEcTrackSlopeValues($track);
+        $chain[] = new UpdateEcTrackGenerateElevationChartImage($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
         $chain[] = new UpdateTrackPBFInfoJob($track);
         $chain[] = new GeneratePBFByTrackJob($track);
+
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...
