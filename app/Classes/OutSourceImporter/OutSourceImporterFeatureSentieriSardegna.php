@@ -462,7 +462,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
             Log::info('Saved OSF Media with name: ' . $basename);
             $tags['url'] = ($s3_osfmedia->exists($fullPathName)) ? $fullPathName : '';
-            $tags['name']['it'] = $basename_explode[0];
+            $tags['name']['it'] = urldecode($basename_explode[0]);
             $caption = '';
             if (isset($image['autore']) && !empty($image['autore'])) {
                 $caption = $image['autore'];

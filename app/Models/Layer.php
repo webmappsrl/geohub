@@ -27,7 +27,7 @@ class Layer extends Model
             $l->rank = DB::select(DB::raw('SELECT max(rank) from layers'))[0]->max + 1;
         });
         static::saved(function ($layer) {
-            dispatch(new UpdateLayerTracksJob($layer))->onQueue('supervisor-layers');
+            dispatch(new UpdateLayerTracksJob($layer))->onQueue('layers');
         });
     }
 
@@ -143,12 +143,18 @@ class Layer extends Model
 
                 // Filtra le tracce per mantenere solo quelle che sono associate ai termini della tassonomia corrente
                 $allEcTracks = $allEcTracks->filter(function ($track) use ($taxonomyTerms, $taxonomyField) {
-                    // Verifica se la traccia ha la tassonomia corrente; se non ha tassonomia, la scarta
-                    if ($track->$taxonomyField->isEmpty()) {
+                    try {
+
+                        // Verifica se la traccia ha la tassonomia corrente; se non ha tassonomia, la scarta
+                        if ($track->$taxonomyField->isEmpty()) {
+                            return false;
+                        }
+                        // Controlla se la traccia ha almeno un termine della tassonomia corrente
+                        return $track->$taxonomyField->intersect($taxonomyTerms)->isNotEmpty();
+                    } catch (Exception $e) {
+                        Log::channel('layer')->error("Errore durante il filtraggio delle tracce per la tassonomia $taxonomyField: " . $e->getMessage());
                         return false;
                     }
-                    // Controlla se la traccia ha almeno un termine della tassonomia corrente
-                    return $track->$taxonomyField->intersect($taxonomyTerms)->isNotEmpty();
                 });
 
                 // Logga il numero di tracce rimanenti dopo il filtro per questa tassonomia

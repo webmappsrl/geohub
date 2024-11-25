@@ -583,7 +583,7 @@ class EcTrack extends Resource
                             ->readonly($isOsmidSet)
                             ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                         Textarea::make(__('Excerpt'), 'excerpt')
-                            ->help(_('Provide a brief summary or excerpt for the track. This should be a concise description.')),
+                            ->help(__('Provide a brief summary or excerpt for the track. This should be a concise description.')),
                         NovaWyswyg::make('Description', 'description')
                             ->help(__('Enter a detailed description of the track. Use this field to provide comprehensive information.')),
                     ])

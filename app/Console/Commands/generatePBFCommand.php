@@ -2,17 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\GeneratePBFJob;
+use App\Jobs\GeneratePBFByZoomJob;
 use App\Models\App;
-use App\Models\EcTrack;
-use App\Models\User;
-use App\Services\PBFGenerateTilesAndDispatch;
-use App\Services\PBFGenerator;
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Bus;
 
 /**
  * MBTILES Specs documentation: https://github.com/mapbox/mbtiles-spec/blob/master/1.3/spec.md
@@ -25,19 +18,18 @@ use Illuminate\Support\Facades\Storage;
  * - activities
  * - searchable
  * This is done by following command:
- * php artisan geohub:update-tracks-for-pbf {app_id} {author}
  *
  * And also the geometry of all EcTracks should have been transformed to EPSG:4326 ('UPDATE ec_tracks SET geometry = ST_SetSRID(geometry, 4326);')
  *
  */
-class CreatePBFCommand extends Command
+class GeneratePBFCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'geohub:create_pbf {app_id} {--min= : custom min_zoom} {--max= : custom max_zoom}';
+    protected $signature = 'pbf:generate {app_id} {--min= : custom min_zoom} {--max= : custom max_zoom} {--no_pbf_layer : do not generate pbf layer}';
 
     /**
      * The console command description.
@@ -51,6 +43,7 @@ class CreatePBFCommand extends Command
     protected $min_zoom;
     protected $max_zoom;
     protected $app_id;
+    protected $no_pbf_layer = false;
     /**
      * Create a new command instance.
      *
@@ -80,12 +73,9 @@ class CreatePBFCommand extends Command
         $this->app_id = $app->id;
         $this->author_id = $app->user_id;
 
-        // Min and Max zoom levels can be obtained prom APP configuration or command optional parameters
-        // $this->min_zoom = $this->option('min') ?? $app->map_min_zoom;
-        // $this->max_zoom = $this->option('max') ?? $app->map_max_zoom;
-
-        $this->min_zoom = $this->option('min') ? $this->option('min') : config('geohub.pbf_min_zoom');
-        $this->max_zoom = $this->option('max') ? $this->option('max') : config('geohub.pbf_max_zoom');
+        $this->min_zoom = (int)($this->option('min') ? $this->option('min') : config('geohub.pbf_min_zoom'));
+        $this->max_zoom = (int)($this->option('max') ? $this->option('max') : config('geohub.pbf_max_zoom'));
+        $this->no_pbf_layer = ($this->option('no_pbf_layer') ? true : false);
 
         $bbox = $app->getTracksBBOX();
         if (empty($bbox)) {
@@ -97,7 +87,18 @@ class CreatePBFCommand extends Command
         }
         $this->format = 'pbf';
 
-        $generator = new PBFGenerateTilesAndDispatch($this->app_id, $this->author_id);
-        $generator->generateTilesAndDispatch($bbox, $this->min_zoom, $this->max_zoom);
+        // Dispatch the generation process using batches
+        $this->dispatchBatches($bbox);
+
+        return 0;
+    }
+
+    private function dispatchBatches($bbox)
+    {
+        $chain = [];
+        for ($zoom = $this->min_zoom; $zoom <= $this->max_zoom; $zoom++) {
+            $chain[] = new GeneratePBFByZoomJob($bbox, $zoom, $this->app_id, $this->author_id, $this->no_pbf_layer);
+        }
+        Bus::chain($chain)->onConnection('redis')->onQueue('pbf')->dispatch();
     }
 }

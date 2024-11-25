@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\GeneratePBFByTrackJob;
 use App\Jobs\UpdateCurrentDataJob;
 use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateEcTrackAwsJob;
@@ -11,7 +12,6 @@ use App\Jobs\UpdateLayerTracksJob;
 use App\Jobs\UpdateManualDataJob;
 use App\Jobs\UpdateTrackFromOsmJob;
 use App\Jobs\UpdateTrackPBFInfoJob;
-use App\Jobs\UpdateTrackPBFJob;
 use App\Observers\EcTrackElasticObserver;
 use App\Providers\HoquServiceProvider;
 use App\Traits\GeometryFeatureTrait;
@@ -128,6 +128,14 @@ class EcTrack extends Model
     public function associatedLayers(): BelongsToMany
     {
         return $this->belongsToMany(Layer::class, 'ec_track_layer');
+    }
+    public function getLayersAttribute()
+    {
+        // Recupera i layer associati tramite la relazione
+        $associatedLayers = $this->associatedLayers->pluck('id')->toArray();
+
+        // Ritorna l'elenco dei layer associati come array
+        return $associatedLayers;
     }
 
     public function author()
@@ -994,10 +1002,8 @@ class EcTrack extends Model
         $chain[] = new UpdateEcTrack3DDemJob($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
-
         $chain[] = new UpdateTrackPBFInfoJob($track);
-        $chain[] = new UpdateTrackPBFJob($track);
-
+        $chain[] = new GeneratePBFByTrackJob($track);
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...

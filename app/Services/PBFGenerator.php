@@ -36,6 +36,12 @@ class PBFGenerator
             throw new Exception('ERROR Invalid Tile Path');
         }
 
+        // Controlla se il tile corrente è in un quadrante vuoto a un livello di zoom inferiore
+        if ($this->isTileInEmptyParent($z, $x, $y)) {
+            Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> JUMP PARENT EMPTY');
+            return '';
+        }
+
         $env = $this->tileToEnvelope($tile);
         $sql = $this->envelopeToSQL($env, $z);
         DB::beginTransaction();
@@ -54,11 +60,38 @@ class PBFGenerator
             $storage_name = config('geohub.s3_pbf_storage_name');
             $s3_osfmedia = Storage::disk($storage_name);
             $s3_osfmedia->put($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf', $pbfContent);
-            Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf');
+            Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf');
             return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
         }
-        Log::info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> EMPTY');
+        $this->markTileAsEmpty($z, $x, $y);
+        Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> EMPTY');
         return '';
+    }
+
+    // Verifica se un tile è all'interno di un quadrante vuoto a un livello inferiore usando la cache
+    private function isTileInEmptyParent($zoom, $x, $y)
+    {
+        // Controlla i quadranti vuoti a livelli inferiori
+        for ($z = $zoom - 1; $z >= $this->zoomTreshold; $z--) {
+            $factor = 2 ** ($zoom - $z);
+            $parentX = intdiv($x, $factor);
+            $parentY = intdiv($y, $factor);
+
+            // Chiave della cache per il quadrante vuoto
+            $cacheKey = "empty_tile_{$this->app_id}_{$z}_{$parentX}_{$parentY}";
+
+            if (Cache::has($cacheKey)) {
+                return true; // Il tile è in un quadrante vuoto
+            }
+        }
+        return false; // Il tile non è in un quadrante vuoto
+    }
+
+    // Marca il tile come vuoto nella cache per evitare generazioni future nei livelli superiori
+    private function markTileAsEmpty($zoom, $x, $y)
+    {
+        $cacheKey = "empty_tile_{$this->app_id}_{$zoom}_{$x}_{$y}";
+        Cache::put($cacheKey, true, now()->addHours(2)); // Imposta la durata della cache secondo necessità
     }
 
     // Check if the tile is valid
@@ -266,14 +299,14 @@ class PBFGenerator
     private function populateTemporaryTrackTable()
     {
         ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
-        //Log::info('Inizio populateTemporaryTrackTable');
+        //Log::channel('pbf')->info('Inizio populateTemporaryTrackTable');
         $app = App::with('layers')->find($this->app_id);
         $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
 
         foreach ($app->layers as $layer) {
-            //Log::info("Processing layer: {$layer->id}");
+            //Log::channel('pbf')->info("Processing layer: {$layer->id}");
             $tracks = $layer->getPbfTracks();
-            //Log::info("Number of tracks: " . $tracks->count());
+            //Log::channel('pbf')->info("Number of tracks: " . $tracks->count());
 
             $trackArrayBatch = [];
             $batchCounter = 0;
@@ -306,7 +339,7 @@ class PBFGenerator
 
                     // Se il batch ha raggiunto la dimensione desiderata, inserisci i dati nel database
                     if ($batchCounter >= $batchSize) {
-                        Log::info("Inserting batch into database");
+                        // Log::channel('pbf')->info("Inserting batch into database");
                         DB::table('temp_tracks')->upsert($trackArrayBatch, ['id'], [
                             'name',
                             'ref',
@@ -348,17 +381,17 @@ class PBFGenerator
                 gc_collect_cycles();
             }
         }
-        //Log::info('Fine populateTemporaryTrackTable');
+        //Log::channel('pbf')->info('Fine populateTemporaryTrackTable');
     }
     private function populateTemporaryLayerTable()
     {
-        // Log::info('Inizio populateTemporaryLayerTable');
+        // Log::channel('pbf')->info('Inizio populateTemporaryLayerTable');
         $app = App::with('layers')->find($this->app_id);
 
         foreach ($app->layers as $layer) {
-            // Log::info("Processing layer: {$layer->id}");
+            // Log::channel('pbf')->info("Processing layer: {$layer->id}");
             $tracks = $layer->getPbfTracks();
-            // Log::info("Number of tracks: " . $tracks->count());
+            // Log::channel('pbf')->info("Number of tracks: " . $tracks->count());
 
             // Ottieni gli ID delle tracce
             $trackIds = $tracks->pluck('id')->toArray();
@@ -402,7 +435,7 @@ class PBFGenerator
                 unset($strokeColor);
                 gc_collect_cycles();
             } else {
-                Log::info("No tracks found for layer: {$layer->id}");
+                Log::channel('pbf')->info("No tracks found for layer: {$layer->id}");
                 // Libera la memoria associata al layer anche se non ci sono tracce
                 unset($tracks);
                 unset($layer);
@@ -410,7 +443,7 @@ class PBFGenerator
             }
         }
 
-        //Log::info('Fine populateTemporaryLayerTable');
+        //Log::channel('pbf')->info('Fine populateTemporaryLayerTable');
     }
 
 
