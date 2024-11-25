@@ -77,7 +77,7 @@ class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
         $src = $localDisk->path("geojson/$id.geojson");
         $dest = $localDisk->path("elevation_charts/$id.svg");
 
-        $cmd = config('geomixer.node_executable') . " node/jobs/build-elevation-chart.js --geojson=$src --dest=$dest --type=svg";
+        $cmd = config('geohub.node_executable') . " node/jobs/build-elevation-chart.js --geojson=$src --dest=$dest --type=svg";
 
         Log::info("Running node command: {$cmd}");
 
