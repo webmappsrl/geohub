@@ -187,7 +187,6 @@ Route::name('api.')->group(function () {
             Route::get("/nearest/{lon}/{lat}", [EcTrackController::class, 'nearestToLocation'])->name('nearest_to_location');
             Route::get("/most_viewed", [EcTrackController::class, 'mostViewed'])->name('most_viewed');
             Route::get("/multiple", [EcTrackController::class, 'multiple'])->name('multiple');
-            Route::put("/update/{id}", [EcTrackController::class, 'updateComputedData'])->name('update');
             Route::get("/pdf/{id}", [EcTrackController::class, 'getFeatureCollectionForTrackPdf'])->name('feature_collection_for_pdf');
             Route::middleware('auth.jwt')
                 ->prefix('favorite')->name('favorite.')->group(function () {
