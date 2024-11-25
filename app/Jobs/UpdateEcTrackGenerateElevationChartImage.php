@@ -61,7 +61,7 @@ class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
             throw new Exception('The geojson id is not defined');
 
         $localDisk = Storage::disk('local');
-        $ecMediaDisk = Storage::disk('ecmedia');
+        $ecMediaDisk = Storage::disk('s3');
 
         if (!$localDisk->exists('elevation_charts')) {
             $localDisk->makeDirectory('elevation_charts');
