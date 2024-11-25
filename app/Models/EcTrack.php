@@ -32,6 +32,7 @@ use Symm\Gisconverter\Exceptions\InvalidText;
 use App\Jobs\UpdateEcTrackAssociateTaxonomyWhere;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Jobs\UpdateEcTrackGenerateElevationChartImage;
+use App\Jobs\UpdateEcTrackOrderRelatedPoi;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -115,15 +116,15 @@ class EcTrack extends Model
 
 
         # https://laravel.com/docs/8.x/eloquent#events
-        static::saving(function ($ecTrack) {
+        static::saving(function (EcTrack $ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                //$hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-            } catch (\Exception $e) {
-                Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
-            }
+            // try {
+            //     $hoquServiceProvider = app(HoquServiceProvider::class);
+            //     //$hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
+            //     // $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
+            // } catch (\Exception $e) {
+            //     Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
+            // }
 
             $ecTrack->updateDataChain($ecTrack);
         });
@@ -1010,6 +1011,7 @@ class EcTrack extends Model
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
         $chain[] = new UpdateTrackPBFInfoJob($track);
         $chain[] = new GeneratePBFByTrackJob($track);
+        $chain[] = new UpdateEcTrackOrderRelatedPoi($track);
 
 
         Bus::chain($chain)
