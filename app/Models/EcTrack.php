@@ -29,6 +29,7 @@ use Spatie\Translatable\HasTranslations;
 use App\Observers\EcTrackElasticObserver;
 use App\Jobs\UpdateEcTrackElasticIndexJob;
 use Symm\Gisconverter\Exceptions\InvalidText;
+use App\Jobs\UpdateEcTrackAssociateTaxonomyWhere;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Jobs\UpdateEcTrackGenerateElevationChartImage;
 use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
@@ -1003,11 +1004,13 @@ class EcTrack extends Model
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
         $chain[] = new UpdateEcTrackSlopeValues($track);
+        $chain[] = new UpdateEcTrackAssociateTaxonomyWhere($track);
         $chain[] = new UpdateEcTrackGenerateElevationChartImage($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
         $chain[] = new UpdateTrackPBFInfoJob($track);
         $chain[] = new GeneratePBFByTrackJob($track);
+
 
         Bus::chain($chain)
             ->catch(function (Throwable $e) {

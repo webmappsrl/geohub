@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -12,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
+class UpdateEcTrackAssociateTaxonomyWhere implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -26,7 +27,7 @@ class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($ecTrack)
+    public function __construct(EcTrack $ecTrack)
     {
         $this->ecTrack = $ecTrack;
     }
@@ -38,9 +39,8 @@ class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
      */
     public function handle()
     {
-        $geojson = $this->ecTrack->getTrackGeometryGeojson();
 
-        $ids = $this->associateWhere($geojson);
+        $ids = $this->associateWhere();
 
         if (!empty($ids)) {
             $this->ecTrack->taxonomyWheres()->sync($ids);
@@ -50,18 +50,14 @@ class UpdateEcTrackGenerateElevationChartImage implements ShouldQueue
     /**
      * Imported from geomixer
      *
-     * @param array $geometry
-     *
      * @return array the ids of associate Wheres
      */
-    public function associateWhere(array $geojson)
+    public function associateWhere()
     {
         $ids = TaxonomyWhere::whereRaw(
             'public.ST_Intersects('
                 . 'public.ST_Force2D('
-                . "public.ST_GeomFromGeojson('"
-                . json_encode($geojson)
-                . "')"
+                . "(SELECT geometry from ec_tracks where id = {$this->ecTrack->id})"
                 . ")"
                 . ', geometry)'
         )->get()->pluck('id')->toArray();
