@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,12 +33,7 @@ class RegenerateEcTrack extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         foreach ($models as $model) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $model->id]);
-            } catch (\Exception $e) {
-                Log::error($model->id . ' RegenerateEcTrack: An error occurred during a store operation: ' . $e->getMessage());
-            }
+            $model->updateDataChain($model);
         }
     }
 

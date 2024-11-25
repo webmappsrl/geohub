@@ -118,14 +118,6 @@ class EcTrack extends Model
         # https://laravel.com/docs/8.x/eloquent#events
         static::saving(function (EcTrack $ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
-            // try {
-            //     $hoquServiceProvider = app(HoquServiceProvider::class);
-            //     //$hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-            //     // $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-            // } catch (\Exception $e) {
-            //     Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
-            // }
-
             $ecTrack->updateDataChain($ecTrack);
         });
     }

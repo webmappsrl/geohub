@@ -13,7 +13,7 @@ class HoquStoreCommand extends Command
      * @var string
      */
     protected $signature = 'geohub:hoqu_store
-                            {job : Name of the GEOMIXER job that must be executed. E.g. enrich_ec_track}
+                            {job : Name of the GEOMIXER job that must be executed}
                             {id : feature ID}';
 
     /**

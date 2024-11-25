@@ -145,12 +145,6 @@ class GenerateHoquScriptsCommand extends Command
         // TRACKS
         if ($tracks->count() > 0) {
             foreach ($tracks as $track) {
-                // if($this->option('mbtiles')) {
-                //     $script_content .= "php artisan geohub:hoqu_store ec_track_generate_mbtiles {$track->id}\n";
-                // }
-                // else {
-                //     $script_content .= "php artisan geohub:hoqu_store enrich_ec_track {$track->id}\n";
-                // }
                 $track->updateDataChain($track);
             }
         }
