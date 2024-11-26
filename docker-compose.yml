@@ -51,7 +51,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-    container_name: "${APP_NAME}_elasticsearch"
+    container_name: "${APP_NAME}-elasticsearch"
     environment:
       - node.name=elasticsearch
       - cluster.name=elasticsearch-cluster

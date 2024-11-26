@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
-use App\Providers\HoquServiceProvider;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use App\Jobs\UpdateEcMedia;
+use Throwable;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Providers\HoquServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use App\Jobs\UpdateModelWithGeometryTaxonomyWhere;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EcMedia extends Model
@@ -42,8 +46,7 @@ class EcMedia extends Model
 
         static::created(function ($ecMedia) {
             try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_media', ['id' => $ecMedia->id]);
+                $ecMedia->updateDataChain($ecMedia);
             } catch (\Exception $e) {
                 Log::error($ecMedia->id . 'created  EcMedia: An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -204,5 +207,29 @@ class EcMedia extends Model
             "properties" => $this->getJson(),
             "coordinates" => []
         ];
+    }
+
+
+    public function getPathAttribute()
+    {
+        return parse_url($this->url)['path'];
+    }
+
+
+    public function updateDataChain(EcMedia $model)
+    {
+
+
+        $chain = [
+            new UpdateEcMedia($model), //it updates: geometry(if available on exif), thumbnails and url
+            new UpdateModelWithGeometryTaxonomyWhere($model) //it relates where taxonomy terms to the ecMedia model based on geometry attribute
+        ];
+
+
+        Bus::chain($chain)
+            ->catch(function (Throwable $e) {
+                // A job within the chain has failed...
+                Log::error($e->getMessage());
+            })->dispatch();
     }
 }

@@ -153,7 +153,7 @@ class EcMedia extends Resource
                 $url = '';
                 if ($thumbnails) {
                     $thumbnails = json_decode($thumbnails, true);
-                    if ($thumbnails[array_key_first($thumbnails)]) {
+                    if (count($thumbnails) > 0 && $thumbnails[array_key_first($thumbnails)]) {
                         $url = $thumbnails[array_key_first($thumbnails)];
                     }
                 }

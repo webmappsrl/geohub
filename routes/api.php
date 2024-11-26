@@ -163,7 +163,6 @@ Route::name('api.')->group(function () {
     Route::prefix('ec')->name('ec.')->group(function () {
         Route::prefix('media')->name('media.')->group(function () {
             Route::get("/image/{id}", [EditorialContentController::class, 'getEcImage'])->name('image');
-            Route::put("/update/{id}", [EditorialContentController::class, 'updateEcMedia'])->name('update');
             Route::get("/{id}", [EditorialContentController::class, 'viewEcGeojson'])->name('geojson');
         });
         Route::prefix('poi')->name('poi.')->group(function () {

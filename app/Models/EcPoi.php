@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use Exception;
+use Throwable;
+use App\Jobs\UpdateEcPoiDemJob;
 use App\Observers\EcPoiObserver;
-use App\Providers\HoquServiceProvider;
-use App\Traits\GeometryFeatureTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use App\Traits\GeometryFeatureTrait;
+use App\Providers\HoquServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use App\Jobs\UpdateModelWithGeometryTaxonomyWhere;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Exception;
 
 class EcPoi extends Model
 {
@@ -59,27 +63,7 @@ class EcPoi extends Model
             }
         });
 
-        static::created(function ($ecPoi) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
-            } catch (\Exception $e) {
-                Log::error($ecPoi->id . ' created EcPoi: An error occurred during a store operation: ' . $e->getMessage());
-            }
-        });
-        static::updating(function ($ecPoi) {
-            $skip_update = $ecPoi->skip_update;
-            if (!$skip_update) {
-                try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('enrich_ec_poi', ['id' => $ecPoi->id]);
-                } catch (\Exception $e) {
-                    Log::error($ecPoi->id . ' updating EcPoi: An error occurred during a store operation: ' . $e->getMessage());
-                }
-            } else {
-                $ecPoi->skip_update = false;
-            }
-        });
+
         parent::booted();
     }
 
@@ -176,11 +160,13 @@ class EcPoi extends Model
         $features = [];
         try {
             $result = DB::select(
-                'SELECT id,St_Distance(geometry,?) as dist 
+                'SELECT id,St_Distance(geometry,?) as dist
                  FROM ec_media
                  WHERE St_DWithin(geometry, ?, ' . config("geohub.ec_poi_media_distance") . ') ORDER by St_Distance(geometry,?);',
                 [
-                    $this->geometry, $this->geometry, $this->geometry,
+                    $this->geometry,
+                    $this->geometry,
+                    $this->geometry,
                 ]
             );
         } catch (Exception $e) {
@@ -598,5 +584,24 @@ class EcPoi extends Model
             }
         }
         return $result;
+    }
+
+
+    public function updateDataChain(EcPoi $model)
+    {
+
+
+        $chain = [
+
+            new UpdateModelWithGeometryTaxonomyWhere($model), //it relates where taxonomy terms to the ecMedia model based on geometry attribute
+            new UpdateEcPoiDemJob($model)
+        ];
+
+
+        Bus::chain($chain)
+            ->catch(function (Throwable $e) {
+                // A job within the chain has failed...
+                Log::error($e->getMessage());
+            })->dispatch();
     }
 }

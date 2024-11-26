@@ -83,8 +83,7 @@ class RegeneratesContentCommand extends Command
                     foreach ($pois as $poi) {
                         $this->info('Hoqu Store for poi: ' . $poi->id);
                         try {
-                            $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_poi', ['id' => $poi->id]);
+                            $poi->updateDataChain($poi);
                         } catch (\Exception $e) {
                             Log::error($poi->id . ' EcPoi RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
@@ -105,8 +104,7 @@ class RegeneratesContentCommand extends Command
                     foreach ($medias as $media) {
                         $this->info('Hoqu Store for media: ' . $media->id);
                         try {
-                            $hoquServiceProvider = app(HoquServiceProvider::class);
-                            $hoquServiceProvider->store('enrich_ec_media', ['id' => $media->id]);
+                            $media->updateDataChain($media);
                         } catch (\Exception $e) {
                             Log::error($media->id . ' EcMedia RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
                         }
