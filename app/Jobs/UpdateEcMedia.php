@@ -59,9 +59,14 @@ class UpdateEcMedia implements ShouldQueue
     {
         $thumbnailList = [];
 
-        $imagePath = Storage::disk('public')->path($this->ecMedia->path);
+        $localImage = strpos($this->ecMedia->url, 'http') !== 0;
+        if (! $localImage) {
+            Storage::disk('public')->put($this->ecMedia->path, file_get_contents($this->ecMedia->url));
+        }
 
-        $exif = $this->getImageExif($imagePath);
+        $localImagePath = Storage::disk('public')->path($this->ecMedia->path);
+
+        $exif = $this->getImageExif($localImagePath);
 
         if (isset($exif['coordinates'])) {;
             $geojson = [
@@ -72,22 +77,25 @@ class UpdateEcMedia implements ShouldQueue
             $this->ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($geojson) . "'))");
         }
 
-
-        $imageCloudUrl = $this->uploadEcMediaImage($imagePath);
-        if (is_null($imageCloudUrl)) {
-            throw new Exception("Missing mandatory parameter: URL");
+        if ($localImage) {
+            $imageCloudUrl = $this->uploadEcMediaImage($localImagePath);
+            if (is_null($imageCloudUrl)) {
+                throw new Exception("Missing mandatory parameter: URL");
+            }
+            $this->ecMedia->url = $imageCloudUrl;
         }
+
 
         $sizes = config('geohub.ec_media.thumbnail_sizes');
 
         foreach ($sizes as $size) {
             try {
                 if ($size['width'] == 0) {
-                    $imageResize = $this->imgResizeSingleDimension($imagePath, $size['height'], 'height');
+                    $imageResize = $this->imgResizeSingleDimension($localImagePath, $size['height'], 'height');
                 } elseif ($size['height'] == 0) {
-                    $imageResize = $this->imgResizeSingleDimension($imagePath, $size['width'], 'width');
+                    $imageResize = $this->imgResizeSingleDimension($localImagePath, $size['width'], 'width');
                 } else {
-                    $imageResize = $this->imgResize($imagePath, $size['width'], $size['height']);
+                    $imageResize = $this->imgResize($localImagePath, $size['width'], $size['height']);
                 }
                 if (file_exists($imageResize)) {
                     $thumbnailUrl = $this->uploadEcMediaImageResize($imageResize, $size['width'], $size['height']);
@@ -105,10 +113,13 @@ class UpdateEcMedia implements ShouldQueue
             }
         }
 
-        $this->ecMedia->url = $imageCloudUrl;
+
         $this->ecMedia->thumbnails = $thumbnailList;
         //persists changes on the database
         $this->ecMedia->saveQuietly();
+
+
+        $test = Storage::disk('public')->delete($this->ecMedia->path);
     }
 
     /**
