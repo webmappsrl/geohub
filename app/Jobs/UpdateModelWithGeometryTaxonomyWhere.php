@@ -11,25 +11,28 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UpdateEcTrackAssociateTaxonomyWhere implements ShouldQueue
+class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
-    protected $ecTrack;
+    protected $model;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(EcTrack $ecTrack)
+    public function __construct(Model $model)
     {
-        $this->ecTrack = $ecTrack;
+        //TODO: add validation about geometry attribute existence
+        //TODO: add validation about where taxonomy relation existence
+        $this->model = $model;
     }
 
     /**
@@ -43,7 +46,7 @@ class UpdateEcTrackAssociateTaxonomyWhere implements ShouldQueue
         $ids = $this->associateWhere();
 
         if (!empty($ids)) {
-            $this->ecTrack->taxonomyWheres()->sync($ids);
+            $this->model->taxonomyWheres()->sync($ids);
         }
     }
 
@@ -57,7 +60,7 @@ class UpdateEcTrackAssociateTaxonomyWhere implements ShouldQueue
         $ids = TaxonomyWhere::whereRaw(
             'public.ST_Intersects('
                 . 'public.ST_Force2D('
-                . "(SELECT geometry from ec_tracks where id = {$this->ecTrack->id})"
+                . "(SELECT geometry from {$this->model->getTable()} where id = {$this->model->id})"
                 . ")"
                 . ', geometry)'
         )->get()->pluck('id')->toArray();

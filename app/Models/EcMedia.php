@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-use App\Providers\HoquServiceProvider;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Throwable;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use App\Traits\GeometryFeatureTrait;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Providers\HoquServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use App\Jobs\UpdateModelWithGeometryTaxonomyWhere;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EcMedia extends Model
@@ -204,5 +207,20 @@ class EcMedia extends Model
             "properties" => $this->getJson(),
             "coordinates" => []
         ];
+    }
+
+
+    public function updateDataChain(EcMedia $model)
+    {
+        $chain = [];
+
+        $chain[] = new UpdateModelWithGeometryTaxonomyWhere($model);
+
+
+        Bus::chain($chain)
+            ->catch(function (Throwable $e) {
+                // A job within the chain has failed...
+                Log::error($e->getMessage());
+            })->dispatch();
     }
 }
