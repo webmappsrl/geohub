@@ -118,7 +118,6 @@ class EcTrack extends Model
         # https://laravel.com/docs/8.x/eloquent#events
         static::saving(function (EcTrack $ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
-            $ecTrack->updateDataChain($ecTrack);
         });
     }
     public function associatedLayers(): BelongsToMany

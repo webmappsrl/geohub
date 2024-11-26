@@ -23,13 +23,14 @@ class EcTrackElasticObserver
     public $afterCommit = true;
 
     /**
-     * Handle the EcTrack "created" event.
+     * Handle the EcTrack "saved" event.
      *
      * @param  \App\Models\EcTrack  $ecTrack
      * @return void
      */
-    public function created(EcTrack $ecTrack)
+    public function saved(EcTrack $ecTrack)
     {
+        $ecTrack->updateDataChain($ecTrack);
     }
 
     /**
@@ -38,9 +39,7 @@ class EcTrackElasticObserver
      * @param  \App\Models\EcTrack  $ecTrack
      * @return void
      */
-    public function updated(EcTrack $ecTrack)
-    {
-    }
+    public function updated(EcTrack $ecTrack) {}
 
     /**
      * Handle the EcTrack "deleted" event.
