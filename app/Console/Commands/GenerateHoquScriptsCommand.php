@@ -131,7 +131,7 @@ class GenerateHoquScriptsCommand extends Command
         // MEDIA (skip with --mbtiles)
         if (!$this->option('mbtiles') && count($media) > 0) {
             foreach ($media as $item) {
-                $script_content .= "php artisan geohub:hoqu_store enrich_ec_media {$item->id}\n";
+                $item->updateDataChain($item);
             }
         }
 

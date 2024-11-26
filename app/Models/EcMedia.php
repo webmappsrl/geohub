@@ -46,8 +46,7 @@ class EcMedia extends Model
 
         static::created(function ($ecMedia) {
             try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_media', ['id' => $ecMedia->id]);
+                $ecMedia->updateDataChain($ecMedia);
             } catch (\Exception $e) {
                 Log::error($ecMedia->id . 'created  EcMedia: An error occurred during a store operation: ' . $e->getMessage());
             }
@@ -222,8 +221,8 @@ class EcMedia extends Model
 
 
         $chain = [
-            new UpdateEcMedia($model),
-            new UpdateModelWithGeometryTaxonomyWhere($model)
+            new UpdateEcMedia($model), //it updates: geometry(if available on exif), thumbnails and url
+            new UpdateModelWithGeometryTaxonomyWhere($model) //it relates where taxonomy terms to the ecMedia model based on geometry attribute
         ];
 
 
