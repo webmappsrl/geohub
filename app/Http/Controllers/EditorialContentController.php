@@ -85,7 +85,7 @@ class EditorialContentController extends Controller
             Log::info($url);
             return Storage::disk('s3')->download($url, 'name' . '.jpg');
         }*/
-        $pathInfo = pathinfo(parse_url($ec->url)['path']);
+        $pathInfo = pathinfo($ec->path);
         if (substr($ec->url, 0, 4) === 'http') {
             header("Content-disposition:attachment; filename=name." . $pathInfo['extension']);
             header('Content-Type:' . CONTENT_TYPE_IMAGE_MAPPING[$pathInfo['extension']]);
@@ -100,56 +100,7 @@ class EditorialContentController extends Controller
         }
     }
 
-    /** Update the ec media with new data from Geomixer
-     *
-     * @param Request $request the request with data from geomixer POST
-     * @param int     $id      the id of the EcMedia
-     */
-    public function updateEcMedia(Request $request, $id)
-    {
-        $ecMedia = EcMedia::find($id);
 
-        if (is_null($ecMedia)) {
-            return response()->json(['code' => 404, 'error' => "Not Found"], 404);
-        }
-        $actualUrl = $ecMedia->url;
-        if (is_null($request->url)) {
-            return response()->json(['code' => 400, 'error' => "Missing mandatory parameter: URL"], 400);
-        }
-        $ecMedia->url = $request->url;
-
-        if (
-            !is_null($request->geometry)
-            && is_array($request->geometry)
-            && isset($request->geometry['type'])
-            && isset($request->geometry['coordinates'])
-        ) {
-            $ecMedia->geometry = DB::raw("public.ST_Force2D(public.ST_GeomFromGeojson('" . json_encode($request->geometry) . "'))");
-        }
-
-        if (!empty($request->where_ids)) {
-            $ecMedia->taxonomyWheres()->sync($request->where_ids);
-        }
-
-        if (!empty($request->thumbnail_urls)) {
-            $ecMedia->thumbnails = $request->thumbnail_urls;
-        }
-
-        $ecMedia->save();
-
-        try {
-            $url = $request->url;
-            if (isset($url) && substr($url, 0, 4) === 'http') {
-                $headers = get_headers($request->url);
-
-                if (stripos($headers[0], "200 OK") >= 0) {
-                    Storage::disk('public')->delete($actualUrl);
-                }
-            }
-        } catch (Exception $e) {
-            Log::warning($e->getMessage());
-        }
-    }
 
     /** Update the ec media with new data from Geomixer
      *

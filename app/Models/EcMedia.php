@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdateEcMedia;
 use Throwable;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
@@ -210,11 +211,20 @@ class EcMedia extends Model
     }
 
 
+    public function getPathAttribute()
+    {
+        return parse_url($this->url)['path'];
+    }
+
+
     public function updateDataChain(EcMedia $model)
     {
-        $chain = [];
 
-        $chain[] = new UpdateModelWithGeometryTaxonomyWhere($model);
+
+        $chain = [
+            new UpdateEcMedia($model),
+            new UpdateModelWithGeometryTaxonomyWhere($model)
+        ];
 
 
         Bus::chain($chain)

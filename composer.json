@@ -70,7 +70,8 @@
         "wm/map-multi-linestring-nova3": "0.0.9",
         "wm/map-multi-purpose-nova3": "*",
         "wm/map-point-nova3": "0.0.9",
-        "ynacorp/nova-swatches": "^1.0"
+        "ynacorp/nova-swatches": "^1.0",
+        "intervention/image": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
