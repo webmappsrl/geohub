@@ -23,7 +23,8 @@
         "build-map-multi-purpose-nova3": "cd nova-components/MapMultiPurposeNova3 && npm run dev",
         "build-map-multi-purpose-nova3-prod": "cd nova-components/MapMultiPurposeNova3 && npm run prod",
         "build-map-multi-linestring-nova3": "cd nova-components/MapMultiLinestringNova3 && npm run dev",
-        "build-map-multi-linestring-nova3-prod": "cd nova-components/MapMultiLinestringNova3 && npm run prod"
+        "build-map-multi-linestring-nova3-prod": "cd nova-components/MapMultiLinestringNova3 && npm run prod",
+        "build-elevation-chart-job": "cd node/jobs && node build-elevation-chart.js"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.4",
@@ -38,6 +39,8 @@
     },
     "dependencies": {
         "alpinejs": "^3.9.0",
+        "chart.js": "^2.9.4",
+        "chartjs-node-canvas": "^3.2.0",
         "cypress": "^7.1.0",
         "jquery": "^3.6.0",
         "leaflet": "^1.7.1",

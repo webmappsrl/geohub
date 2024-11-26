@@ -2,36 +2,40 @@
 
 namespace App\Models;
 
-use App\Jobs\GeneratePBFByTrackJob;
-use App\Jobs\UpdateCurrentDataJob;
-use App\Jobs\UpdateEcTrack3DDemJob;
+use Exception;
+use Throwable;
+use App\Traits\HandlesData;
 use App\Jobs\UpdateEcTrackAwsJob;
 use App\Jobs\UpdateEcTrackDemJob;
-use App\Jobs\UpdateEcTrackElasticIndexJob;
-use App\Jobs\UpdateLayerTracksJob;
 use App\Jobs\UpdateManualDataJob;
+use App\Jobs\UpdateCurrentDataJob;
+use App\Jobs\UpdateLayerTracksJob;
+use Illuminate\Support\Facades\DB;
+use App\Jobs\GeneratePBFByTrackJob;
+use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateTrackFromOsmJob;
 use App\Jobs\UpdateTrackPBFInfoJob;
-use App\Observers\EcTrackElasticObserver;
-use App\Providers\HoquServiceProvider;
-use App\Traits\GeometryFeatureTrait;
-use App\Traits\HandlesData;
-use App\Traits\TrackElasticIndexTrait;
-use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Symm\Gisconverter\Gisconverter;
+use App\Traits\GeometryFeatureTrait;
+use Illuminate\Support\Facades\Gate;
+use App\Jobs\UpdateEcTrackSlopeValues;
+use App\Providers\HoquServiceProvider;
+use App\Traits\TrackElasticIndexTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
+use App\Observers\EcTrackElasticObserver;
+use App\Jobs\UpdateEcTrackElasticIndexJob;
 use Symm\Gisconverter\Exceptions\InvalidText;
-use Symm\Gisconverter\Gisconverter;
-use Throwable;
-use Exception;
+use App\Jobs\UpdateEcTrackAssociateTaxonomyWhere;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Jobs\UpdateEcTrackGenerateElevationChartImage;
+use App\Jobs\UpdateEcTrackOrderRelatedPoi;
+use ChristianKuri\LaravelFavorite\Traits\Favoriteable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EcTrack extends Model
 {
@@ -110,30 +114,10 @@ class EcTrack extends Model
             }
         });
 
-        static::created(function ($ecTrack) {
-            try {
-                $ecTrack->updateDataChain($ecTrack);
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-            } catch (\Exception $e) {
-                Log::error($ecTrack->id . ' created Ectrack: An error occurred during a store operation: ' . $e->getMessage());
-            }
-        });
 
-        static::saving(function ($ecTrack) {
+        # https://laravel.com/docs/8.x/eloquent#events
+        static::saving(function (EcTrack $ecTrack) {
             $ecTrack->excerpt = substr($ecTrack->excerpt, 0, 255);
-        });
-
-        static::updating(function ($ecTrack) {
-            try {
-                $hoquServiceProvider = app(HoquServiceProvider::class);
-                $hoquServiceProvider->store('enrich_ec_track', ['id' => $ecTrack->id]);
-                $hoquServiceProvider->store('order_related_poi', ['id' => $ecTrack->id]);
-            } catch (\Exception $e) {
-                Log::error($ecTrack->id . ' updateing Ectrack:An error occurred during a store operation: ' . $e->getMessage());
-            }
-
             $ecTrack->updateDataChain($ecTrack);
         });
     }
@@ -1012,10 +996,16 @@ class EcTrack extends Model
         $chain[] = new UpdateManualDataJob($track);
         $chain[] = new UpdateCurrentDataJob($track);
         $chain[] = new UpdateEcTrack3DDemJob($track);
+        $chain[] = new UpdateEcTrackSlopeValues($track);
+        $chain[] = new UpdateEcTrackAssociateTaxonomyWhere($track);
+        $chain[] = new UpdateEcTrackGenerateElevationChartImage($track);
         $chain[] = new UpdateEcTrackAwsJob($track);
         $chain[] = new UpdateEcTrackElasticIndexJob($track);
         $chain[] = new UpdateTrackPBFInfoJob($track);
         $chain[] = new GeneratePBFByTrackJob($track);
+        $chain[] = new UpdateEcTrackOrderRelatedPoi($track);
+
+
         Bus::chain($chain)
             ->catch(function (Throwable $e) {
                 // A job within the chain has failed...
