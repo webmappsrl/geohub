@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
+
 class RestoreDbCommand extends Command
 {
     /**
@@ -56,24 +57,29 @@ class RestoreDbCommand extends Command
         }
 
         $db_name = config('database.connections.pgsql.database');
+        $db_user = config('database.connections.pgsql.username');
+        $db_password = config('database.connections.pgsql.password');
+        $db_host = config('database.connections.pgsql.host');
+
+        $psqlBaseCommand = "PGPASSWORD={$db_password} psql -U {$db_user} -h {$db_host}";
 
         // psql -c "DROP DATABASE geohub"
-        $drop_cmd = 'psql -c "DROP DATABASE '.$db_name.'"';
+        $drop_cmd = $psqlBaseCommand . ' -c "DROP DATABASE ' . $db_name . '"';
         Log::info("db:restore -> $drop_cmd");
         exec($drop_cmd);
-        
+
         // psql -c "CREATE DATABASE geohub"
-        $create_cmd = 'psql -c "CREATE DATABASE '.$db_name.'"';
+        $create_cmd = $psqlBaseCommand . ' -c "CREATE DATABASE ' . $db_name . '"';
         Log::info("db:restore -> $create_cmd");
         exec($create_cmd);
 
         // psql -d geohub -c "create extension postgis"
-        $postgis_cmd = 'psql -d '.$db_name.' -c "create extension postgis";';
+        $postgis_cmd = $psqlBaseCommand . ' -d ' . $db_name . ' -c "create extension postgis";';
         Log::info("db:restore -> $postgis_cmd");
         exec($postgis_cmd);
 
         // psql geohub < last-dump.sql
-        $restore_cmd = "psql $db_name < $AbsolutePath";
+        $restore_cmd = $psqlBaseCommand . " $db_name < $AbsolutePath";
         Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 
