@@ -19,7 +19,7 @@ class RegenerateEcPoi extends Action
     public $showOnDetail = true;
     public $showOnTableRow = false;
 
-    public $name = 'GEOMIXER';
+    public $name = 'Enrich Ec Poi';
 
     /**
      * Perform the action on the given models.
