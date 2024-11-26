@@ -7,29 +7,17 @@ use App\Models\EcPoi;
 
 class EcPoiObserver
 {
+    //https://laravel.com/docs/11.x/eloquent#events
     /**
-     * Handle the EcPoi "created" event.
+     * Handle the EcPoi "saved" event.
      *
      * @param  \App\Models\EcPoi  $ecPoi
      * @return void
      */
-    public function created(EcPoi $ecPoi)
+    public function saved(EcPoi $ecPoi)
     {
         if (!$ecPoi->skip_geomixer_tech && !empty($ecPoi->geometry)) {
-            UpdateEcPoiDemJob::dispatch($ecPoi);
-        }
-    }
-
-    /**
-     * Handle the EcPoi "updated" event.
-     *
-     * @param  \App\Models\EcPoi  $ecPoi
-     * @return void
-     */
-    public function updated(EcPoi $ecPoi)
-    {
-        if (!$ecPoi->skip_geomixer_tech && !empty($ecPoi->geometry)) {
-            UpdateEcPoiDemJob::dispatch($ecPoi);
+            $ecPoi->updateDataChain($ecPoi);
         }
     }
 

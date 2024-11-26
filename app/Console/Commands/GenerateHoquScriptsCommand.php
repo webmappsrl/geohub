@@ -138,7 +138,7 @@ class GenerateHoquScriptsCommand extends Command
         // POI (skip with --mbtiles)
         if (!$this->option('mbtiles') && count($pois) > 0) {
             foreach ($pois as $item) {
-                $script_content .= "php artisan geohub:hoqu_store enrich_ec_poi {$item->id}\n";
+                $item->updateDataChain($item);
             }
         }
 
