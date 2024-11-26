@@ -228,7 +228,7 @@ class UpdateEcMedia implements ShouldQueue
      */
     public function uploadEcMediaImageResize(string $imagePath, int $width, int $height): string
     {
-        Log::info("Uploading Image to " . STORAGE);
+        Log::info("Uploading Image to " . $this->getStorageDisk());
         if (!file_exists($imagePath))
             throw new Exception("The image $imagePath does not exists");
 
