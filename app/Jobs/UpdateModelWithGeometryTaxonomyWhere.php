@@ -61,7 +61,7 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
             'public.ST_Intersects('
                 . 'public.ST_Force2D('
                 . "(SELECT geometry from {$this->model->getTable()} where id = {$this->model->id})"
-                . ")"
+                . "::geometry)"
                 . ', geometry)'
         )->get()->pluck('id')->toArray();
 
