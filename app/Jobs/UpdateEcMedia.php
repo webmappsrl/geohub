@@ -62,8 +62,7 @@ class UpdateEcMedia implements ShouldQueue
         $imagePath = Storage::disk('public')->path($this->ecMedia->path);
 
         $exif = $this->getImageExif($imagePath);
-        $ids = [];
-        $ecMediaCoordinatesJson = [];
+
         if (isset($exif['coordinates'])) {;
             $geojson = [
                 'type' => 'Point',
@@ -210,7 +209,7 @@ class UpdateEcMedia implements ShouldQueue
 
 
         $disk = $this->getStorageDisk();
-        Storage::disk()->put('EcMedia/' . $filename, file_get_contents($imagePath));
+        Storage::disk($disk)->put('EcMedia/' . $filename, file_get_contents($imagePath));
 
         return Storage::disk($disk)->url($cloudPath);
     }
