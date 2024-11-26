@@ -14,7 +14,7 @@ npm-debug.log
 yarn-error.log
 .editorconfig
 .idea
-.vscode
+.vscode/launch.json
 .history
 *.code-workspace
 /geodata
