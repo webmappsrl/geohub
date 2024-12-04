@@ -50,7 +50,7 @@ class StelvioSeeder extends Seeder
     public function run()
     {
         $sku = 'it.webmapp.pnstelvio';
-        $users = User::factory(10)->create(['referrer' => $sku]);
+        $users = User::factory(10)->create(['sku' => $sku]);
         foreach ($users as $user) {
             // 10 UGC POIS
             $ugc = UgcPoi::factory(10)->create(

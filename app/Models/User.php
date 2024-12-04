@@ -24,7 +24,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string password
  * @property string email_verified_at
  * @property string last_name
- * @property string referrer
+ * @property string app_id
+ * @property string sku
  * @property string fiscal_code
  * @property float  balance
  */
@@ -41,6 +42,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'sku',
+        'app_id'
     ];
     /**
      * The attributes that should be hidden for arrays.
