@@ -2,16 +2,17 @@
 
 namespace App\Observers;
 
-use App\Jobs\DeleteEcTrackElasticIndexJob;
-use App\Jobs\DeleteTrackPBFJob;
-use App\Jobs\UpdateEcTrackDemJob;
-use App\Jobs\UpdateEcTrackElasticIndexJob;
-use App\Jobs\UpdateTrackPBFInfoJob;
-use App\Jobs\UpdateTrackPBFJob;
+use Throwable;
 use App\Models\EcTrack;
+use App\Services\UserService;
+use App\Jobs\DeleteTrackPBFJob;
+use App\Jobs\UpdateTrackPBFJob;
+use App\Jobs\UpdateEcTrackDemJob;
+use App\Jobs\UpdateTrackPBFInfoJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
-use Throwable;
+use App\Jobs\DeleteEcTrackElasticIndexJob;
+use App\Jobs\UpdateEcTrackElasticIndexJob;
 
 class EcTrackElasticObserver
 {
@@ -31,6 +32,8 @@ class EcTrackElasticObserver
     public function saved(EcTrack $ecTrack)
     {
         $ecTrack->updateDataChain($ecTrack);
+
+        UserService::getService()->assigUserSkuAndAppIdIfNeeded($ecTrack->user, $ecTrack->sku, $ecTrack->app_id);
     }
 
     /**

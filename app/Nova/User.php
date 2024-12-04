@@ -62,8 +62,8 @@ class User extends Resource
             return $query;
         }
         if ($request->user()->apps->count() > 0 && $request->user()->apps[0]->dashboard_show == true) {
-            $referrers = $request->user()->apps->pluck('sku')->toArray();
-            return $query->whereIn('referrer', $referrers);
+            $skus = $request->user()->apps->pluck('sku')->toArray();
+            return $query->whereIn('sku', $skus);
         } else {
             return $query->where('id', $request->user()->id);
         }
@@ -109,7 +109,7 @@ class User extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8')
                 ->help(__('Set the password for the user.')),
-            Text::make(__('Referrer'))
+            Text::make(__('Sku'))
                 ->onlyOnDetail()
                 ->sortable(),
             RoleSelect::make('Role', 'roles')
