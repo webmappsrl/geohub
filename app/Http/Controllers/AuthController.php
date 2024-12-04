@@ -243,7 +243,7 @@ class AuthController extends Controller
     protected function loginResponse(string $token): JsonResponse
     {
         $tokenArray = $this->respondWithToken($token);
-        return response()->json(array_merge($this->me()->getData(true), $tokenArray->getData(true)));
+        return response()->json(array_merge($this->me(request())->getData(true), $tokenArray->getData(true)));
     }
 
     /**
