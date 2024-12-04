@@ -7,7 +7,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Partition;
 use Laravel\Nova\Metrics\PartitionResult;
 
-class UserReferrers extends Partition {
+class UserSkus extends Partition
+{
     /**
      * Calculate the value of the metric.
      *
@@ -15,8 +16,9 @@ class UserReferrers extends Partition {
      *
      * @return PartitionResult
      */
-    public function calculate(NovaRequest $request): PartitionResult {
-        return $this->count($request, User::class, 'referrer')
+    public function calculate(NovaRequest $request): PartitionResult
+    {
+        return $this->count($request, User::class, 'sku')
             ->label(function ($value) {
                 if ($value == null)
                     return 'None';
@@ -38,7 +40,8 @@ class UserReferrers extends Partition {
      *
      * @return  \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -47,7 +50,8 @@ class UserReferrers extends Partition {
      *
      * @return string
      */
-    public function uriKey(): string {
-        return 'user-referrers';
+    public function uriKey(): string
+    {
+        return 'user-skus';
     }
 }

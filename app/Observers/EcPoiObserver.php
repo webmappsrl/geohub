@@ -2,8 +2,9 @@
 
 namespace App\Observers;
 
-use App\Jobs\UpdateEcPoiDemJob;
 use App\Models\EcPoi;
+use App\Services\UserService;
+use App\Jobs\UpdateEcPoiDemJob;
 
 class EcPoiObserver
 {
@@ -19,6 +20,8 @@ class EcPoiObserver
         if (!$ecPoi->skip_geomixer_tech && !empty($ecPoi->geometry)) {
             $ecPoi->updateDataChain($ecPoi);
         }
+
+        UserService::getService()->assigUserSkuAndAppIdIfNeeded($ecPoi->user, $ecPoi->sku, $ecPoi->app_id);
     }
 
     /**

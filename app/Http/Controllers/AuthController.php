@@ -2,21 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Partnership;
-use App\Models\User;
-use App\Providers\PartnershipValidationProvider;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use App\Models\User;
+use App\Models\Partnership;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
+use App\Providers\PartnershipValidationProvider;
 
 class AuthController extends Controller
 {
-    /** * Signup and get a JWT 
+    /**
      *
-     *  @param Request $request 
-     *  @return JsonResponse 
+     * @var \App\Services\UserService
+     */
+    protected $userService;
+
+    function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+    /** * Signup and get a JWT
+     *
+     *  @param Request $request
+     *  @return JsonResponse
      */
     public function signup(Request $request): JsonResponse
     {
@@ -51,7 +62,7 @@ class AuthController extends Controller
         }
 
         try {
-            $user = $this->createUser($credentials);
+            $user = $this->createUser($credentials, $request);
         } catch (Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
@@ -114,10 +125,11 @@ class AuthController extends Controller
                 'code' => 401
             ], 401);
         }
-        if (($request->input('referrer') != null) && ($request->input('referrer') != $user->referrer)) {
-            $user->referrer = $request->input('referrer');
-            $user->save();
+
+        if ($request->input('referrer') != null) {
+            $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('referrer'));
         }
+
         $token = auth('api')->attempt($credentials);
 
         return $this->loginResponse($token);
@@ -174,10 +186,11 @@ class AuthController extends Controller
 
         $result = array_merge($user->toArray(), [
             'roles' => $roles,
-            'partnerships' => $partnerships
+            'partnerships' => $partnerships,
+            'referrer' => $user->sku
         ]);
 
-        unset($result['referrer'], $result['password']);
+        unset($result['password']);
 
         return response()->json($result);
     }
@@ -235,10 +248,12 @@ class AuthController extends Controller
      * Create a new user and handle partnerships
      *
      * @param array $data
+     * @param Illuminate\Http\Request $request
+     *
      * @return User
      * @throws Exception
      */
-    private function createUser(array $data): User
+    private function createUser(array $data, Request $request): User
     {
         $user = new User();
         $user->fill([
@@ -247,6 +262,8 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email_verified_at' => now(),
         ]);
+
+        $user = $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('referrer'), null, false);
 
         try {
             $user->save();
@@ -257,6 +274,8 @@ class AuthController extends Controller
         $this->assignRole($user);
 
         $this->assignPartnerships($user);
+
+        $user->referrer = $user->sku;
 
         return $user;
     }

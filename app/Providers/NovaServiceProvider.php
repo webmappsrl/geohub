@@ -14,7 +14,7 @@ use App\Nova\Metrics\NewUgcMedia;
 use App\Nova\Metrics\NewUgcTracks;
 use App\Policies\PermissionPolicy;
 use Illuminate\Support\Facades\DB;
-use App\Nova\Metrics\UserReferrers;
+use App\Nova\Metrics\UserSkus;
 use Illuminate\Support\Facades\Gate;
 use App\Nova\Metrics\NewUgcPoisPerDay;
 use App\Nova\Metrics\NewUgcMediaPerDay;
@@ -98,7 +98,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         if ($currentUser->hasRole('Admin')) {
             $cards[] = new TotalUsers();
             $cards[] = new NewUsers();
-            $cards[] = new UserReferrers();
+            $cards[] = new UserSkus();
             $cards[] = new TotalUgc();
             $cards[] = new NewUgcTracks();
             $cards[] = new NewUgcPois();
