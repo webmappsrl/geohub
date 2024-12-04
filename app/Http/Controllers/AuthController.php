@@ -178,11 +178,13 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function me(): JsonResponse
+    public function me(Request $request): JsonResponse
     {
         $user = auth('api')->user();
         $roles = array_map('strtolower', $user->roles->pluck('name')->toArray());
         $partnerships = $user->partnerships->pluck('name')->toArray();
+
+        $user = $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('referrer'), null);
 
         $result = array_merge($user->toArray(), [
             'roles' => $roles,
