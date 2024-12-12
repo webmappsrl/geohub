@@ -65,7 +65,8 @@ class UpdateUgcPropertiesWithDateCommand extends Command
                 $properties['createdAt'] = $item->created_at;
                 $properties['updatedAt'] = $item->created_at;
                 $item->properties = $properties;
-                $item->save();
+                $item->timestamps = false;
+                $item->saveQuietly();
             }
         }
     }
