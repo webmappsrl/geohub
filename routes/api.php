@@ -78,11 +78,13 @@ Route::name('api.')->group(function () {
                 Route::post("store/{version?}", [UgcPoiController::class, 'store'])->name('store');
                 Route::get("index/{version?}", [UgcPoiController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcPoiController::class, 'destroy'])->name('destroy');
+                Route::post("edit", [UgcPoiController::class, 'edit'])->name('edit');
             });
             Route::prefix('track')->name('track.')->group(function () {
                 Route::post("store/{version?}", [UgcTrackController::class, 'store'])->name('store');
                 Route::get("index/{version?}", [UgcTrackController::class, 'index'])->name('index');
                 Route::get("delete/{id}", [UgcTrackController::class, 'destroy'])->name('destroy');
+                Route::post("edit", [UgcTrackController::class, 'edit'])->name('edit');
             });
             Route::prefix('media')->name('media.')->group(function () {
                 // TODO: riabilitare quando fixato il bug

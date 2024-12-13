@@ -169,7 +169,8 @@ class UgcPoiController extends Controller
         }
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
-    public function storeV2(Request $request): Response {
+    public function storeV2(Request $request): Response
+    {
         $user = auth('api')->user();
         $data = $request->all();
         Log::channel('ugc')->info("*************store v2 ugc poi*****************");
@@ -263,8 +264,74 @@ class UgcPoiController extends Controller
      *
      * @return Response
      */
-    //    public function edit(UgcPoi $ugcPoi) {
-    //    }
+    public function edit(Request $request): Response
+    {
+        Log::channel('ugc')->info("*************edit ugc poi*****************");
+
+        $data = $request->all();
+
+        if (!isset($data['properties']['id'])) {
+            Log::channel('ugc')->info('ID non presente nelle properties del GeoJSON');
+            return response(['error' => 'ID is required in properties'], 400);
+        }
+
+        $id = $data['properties']['id'];
+        $properties = $data['properties'];
+
+        Log::channel('ugc')->info('Modifica del POI con ID: ' . $id);
+
+        // Validazione dei dati
+        $this->checkValidation($data, [
+            'type' => 'required',
+            'properties' => 'required|array',
+            'properties.name' => 'required|max:255',
+            'properties.app_id' => 'required|max:10',
+            'properties.id' => 'required',
+            'geometry' => 'required|array',
+            'geometry.type' => 'required',
+            'geometry.coordinates' => 'required|array',
+        ]);
+
+        $user = auth('api')->user();
+        if (is_null($user)) {
+            Log::channel('ugc')->info('Utente non autenticato');
+            return response(['error' => 'User not authenticated'], 403);
+        }
+
+        // Recupero del POI esistente
+        $ugcPoi = UgcPoi::find($id);
+        if (!$ugcPoi || $ugcPoi->user_id !== $user->id) {
+            Log::channel('ugc')->info('POI non trovato o accesso non autorizzato');
+            return response(['error' => 'POI not found or unauthorized access'], 404);
+        }
+
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
+
+        // Aggiornamento dei campi principali
+        $ugcPoi->name = $properties['name'] ?? $ugcPoi->name;
+        if (isset($properties['description'])) {
+            $ugcPoi->description = $properties['description'];
+        }
+        $ugcPoi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($data['geometry']) . "')");
+        $ugcPoi->properties = $properties;
+
+        // Salvataggio del POI
+        try {
+            $ugcPoi->save();
+        } catch (Exception $e) {
+            Log::channel('ugc')->info('Errore nel salvataggio del POI: ' . $e->getMessage());
+            return response(['error' => 'Error updating POI'], 500);
+        }
+
+        // Gestione image_gallery
+        if (isset($properties['image_gallery']) && is_array($properties['image_gallery'])) {
+            $ugcPoi->ugc_media()->sync($properties['image_gallery']);
+        }
+
+        return response(['id' => $ugcPoi->id, 'message' => 'Updated successfully'], 200);
+    }
+
 
     /**
      * Update the specified resource in storage.
