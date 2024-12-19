@@ -42,8 +42,7 @@ class UgcPoi extends Resource
      */
     public static $title = 'id';
     public static $search = [
-        'name',
-        'raw_data->waypointtype'
+        "name"
     ];
     public static array $searchRelations = [
         'taxonomy_wheres' => ['name']
@@ -96,9 +95,9 @@ class UgcPoi extends Resource
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
                     return <<<HTML
-                    <a 
-                        href="{$url}" 
-                        target="_blank" 
+                    <a
+                        href="{$url}"
+                        target="_blank"
                         class="no-underline dim text-primary font-bold">
                        {$app->name}
                     </a> <br>
@@ -112,7 +111,7 @@ class UgcPoi extends Resource
             BelongsToMany::make(__('Taxonomy wheres'))
                 ->searchable(),
             Text::make(__('Form'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+                $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
 
                 if (isset($formData)) {
@@ -148,7 +147,7 @@ class UgcPoi extends Resource
                 return count($gallery) > 0;
             })->onlyOnIndex(),
             Text::make(__('Form data'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+                $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
                 $help = '<p>Type of form submitted, and data entered within it</p>';
 
@@ -212,7 +211,7 @@ class UgcPoi extends Resource
             })->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
             Code::make(__('json Form data'), function ($model) {
-                $jsonRawData = json_decode($model->raw_data, true);
+                $jsonRawData = $model->properties['form'] ?? [];
                 unset($jsonRawData['position']);
                 unset($jsonRawData['displayPosition']);
                 unset($jsonRawData['city']);
@@ -225,7 +224,7 @@ class UgcPoi extends Resource
                 ->language('json')
                 ->rules('json'),
             Code::make(__('Device data'), function ($model) {
-                $jsonRawData = json_decode($model->raw_data, true);
+                $jsonRawData = $model->properties ?? [];
                 $jsonData['position'] = $jsonRawData['position'];
                 $jsonData['displayPosition'] = $jsonRawData['displayPosition'];
                 $jsonData['city'] = $jsonRawData['city'];
@@ -237,7 +236,7 @@ class UgcPoi extends Resource
                 ->language('json')
                 ->rules('json'),
             Code::make(__('Nominatim'), function ($model) {
-                $jsonData = json_decode($model->raw_data, true)['nominatim'];
+                $jsonData = $model->properties['nominatim'] ?? '{}';
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 return  $rawData;
             })
