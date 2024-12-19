@@ -98,9 +98,9 @@ class UgcTrack extends Resource
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
                     return <<<HTML
-                    <a 
-                        href="{$url}" 
-                        target="_blank" 
+                    <a
+                        href="{$url}"
+                        target="_blank"
                         class="no-underline dim text-primary font-bold">
                        {$app->name}
                     </a> <br>
@@ -229,6 +229,10 @@ class UgcTrack extends Resource
                 ->onlyOnDetail(),
             Text::make(__('Raw data'), function ($model) {
                 $rawData = json_decode($model->raw_data, true);
+
+                if (! is_array($rawData))
+                    return 'Invalid raw data';
+
                 $result = [];
 
                 foreach ($rawData as $key => $value) {
