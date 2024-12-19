@@ -118,7 +118,7 @@ class UgcTrack extends Resource
                 ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
             BelongsToMany::make(__('Taxonomy wheres')),
             Text::make(__('Form'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+                $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
 
                 if (isset($formData)) {
@@ -155,7 +155,9 @@ class UgcTrack extends Resource
                 return count($gallery) > 0;
             })->onlyOnIndex(),
             Text::make(__('Form data'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+
+                $formData = $model->properties['form'] ?? [];
+
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
                 $help = '<p>Type of form submitted, and data entered within it</p>';
                 if (isset($formData)) {
