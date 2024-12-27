@@ -45,7 +45,7 @@ return [
         ],
         'ecPois' =>
         [
-            'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'excerpt_it', 'excerpt_en', 'poi_type', 'theme', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url', 'feature_image']
+            'validHeaders' => ['id', 'name_it', 'name_en', 'description_it', 'description_en', 'excerpt_it', 'excerpt_en', 'poi_type', 'lat', 'lng', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url', 'feature_image']
         ]
     ],
 

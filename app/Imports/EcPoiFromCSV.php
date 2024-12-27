@@ -2,11 +2,13 @@
 
 namespace App\Imports;
 
-use App\Models\EcMedia;
 use Schema;
-use App\Models\EcPoi;
-use App\Models\TaxonomyPoiType;
 use Exception;
+use App\Models\User;
+use App\Models\EcPoi;
+use App\Models\EcMedia;
+use App\Models\TaxonomyTheme;
+use App\Models\TaxonomyPoiType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -30,15 +32,15 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         //Check if the poi belongs to the user
         try {
             if (!isset($ecPoiData['id'])) {
-                $this->buildEcPoi($ecPoiData);
+                $this->buildEcPoi($ecPoiData, $user);
                 return;
             }
             if (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
                 throw new \Exception('The poi with ID ' . $ecPoiData['id'] . ' is already in the database but it is not in your list. Please check the file and try again.');
             } elseif (in_array($ecPoiData['id'], $userPois)) {
-                $this->updateEcPoi($ecPoiData);
+                $this->updateEcPoi($ecPoiData, $user);
             } else {
-                $this->buildEcPoi($ecPoiData);
+                $this->buildEcPoi($ecPoiData, $user);
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -180,11 +182,11 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      *
      * @param array $ecPoiData
      */
-    private function buildEcPoi(array $ecPoiData): void
+    private function buildEcPoi(array $ecPoiData, $user): void
     {
         $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it']]);
         $this->setTranslations($ecPoi, $ecPoiData);
-        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
+        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData, $user);
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
         }
@@ -196,7 +198,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      *
      * @param array $ecPoiData
      */
-    private function updateEcPoi(array $ecPoiData): void
+    private function updateEcPoi(array $ecPoiData, $user): void
     {
         $ecPoi = EcPoi::find($ecPoiData['id']);
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
@@ -204,7 +206,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         }
         $ecPoi->update($ecPoiData);
         $this->setTranslations($ecPoi, $ecPoiData);
-        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
+        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData, $user);
         $ecPoi->save();
     }
 
@@ -246,11 +248,12 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
      * @param EcPoi $ecPoi
      * @param array $ecPoiData
      */
-    private function syncPoiTypesAndThemes(EcPoi $ecPoi, array $ecPoiData): void
+    private function syncPoiTypesAndThemes(EcPoi $ecPoi, array $ecPoiData, User $user): void
     {
         $poiTypes = $this->getTaxonomyIds($ecPoiData['poi_type'], 'taxonomy_poi_types');
-        $poiThemes = $this->getTaxonomyIds($ecPoiData['theme'], 'taxonomy_themes');
-
+        //get the app from the auth user
+        $themeName = strtolower(str_replace(' ', '-', $user->app->name)) . '-pois';
+        $poiThemes = TaxonomyTheme::where('identifier', $themeName)->pluck('id')->toArray();
         if (count($poiTypes) > 0) {
             $ecPoi->taxonomyPoiTypes()->sync($poiTypes);
         } else {
@@ -263,9 +266,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
             throw new \Exception('Invalid Poi theme found. Please check the file and try again.');
         }
 
-        //unset the poi_type and theme
+        //unset the poi_type
         unset($ecPoiData['poi_type']);
-        unset($ecPoiData['theme']);
     }
 
     /**
