@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Storage;
 use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use App\Nova\Fields\NovaWyswyg;
+
 
 class Layer extends Resource
 {
@@ -322,13 +324,13 @@ class Layer extends Resource
                     ->hideFromDetail()
                     ->hideWhenCreating()
                     ->hideWhenUpdating(),
-                Textarea::make('Description')
-                    ->alwaysShow()
+                NovaWyswyg::make('Description')
                     ->help(__('Description displayed in the layer details on the app home screen.')),
-                Text::make('Track Type', 'track_type')
-                    ->help(__('Name displayed as the header of the layer\'s track list.')),
             ]),
+            Text::make('Track Type', 'track_type')
+                ->help(__('Name displayed as the header of the layer\'s track list.')),
         ];
+
 
         $behaviourTab = [
             Boolean::make('Generate Edges', 'generate_edges')
