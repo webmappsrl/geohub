@@ -64,7 +64,11 @@ class Layer extends Resource
         'subtitle'
     ];
 
-
+    public function authorizedToDelete(Request $request)
+    {
+        // Permetti la cancellazione solo agli utenti con ruolo di "Admin"
+        return $request->user()->hasRole('Admin');
+    }
 
     /**
      * Get the fields displayed by the resource.
