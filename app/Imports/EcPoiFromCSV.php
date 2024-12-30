@@ -25,11 +25,10 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     public function __construct()
     {
         $this->poiTypes = DB::table('taxonomy_poi_types')->pluck('identifier')->toArray();
-        $loggedInUser = auth()->user();
 
         $poiThemes = [];
 
-        foreach ($loggedInUser->apps as $app) {
+        foreach (auth()->user()->apps as $app) {
             $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
             $poiThemes = array_merge($poiThemes, $themes);
         }
@@ -38,6 +37,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     }
 
     /**
+     * Necessary when multiple sheets are used (like in this case we have a support sheet), we only import from the first sheet
+     * 
      * @return array
      */
     public function sheets(): array
@@ -141,6 +142,12 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             //if the poi type is not inside the poiTypes array, throw an error
             if (!in_array($value, $this->poiTypes)) {
                 $this->errors[] = ['row' => $this->currentRow, 'message' => 'Invalid Poi type found: ' . $value . '. Please check the support sheet for valid Poi types and try again.'];
+            }
+        }
+
+        if ($key == 'theme') {
+            if (!in_array($value, $this->poiThemes)) {
+                $this->errors[] = ['row' => $this->currentRow, 'message' => 'Invalid theme found: ' . $value . '. Please check the support sheet for valid themes and try again.'];
             }
         }
 
