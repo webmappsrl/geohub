@@ -138,7 +138,7 @@ class UploadPoiFile extends Action
         $errorColumn = null;
         $lastColumn = $worksheet->getHighestColumn(1);
 
-        //search for the error column
+        // search for the error column
         for ($col = 'A'; $col <= $lastColumn; $col++) {
             if ($worksheet->getCell($col . '1')->getValue() === self::ERROR_COLUMN_NAME) {
                 $errorColumn = $col;
@@ -146,13 +146,35 @@ class UploadPoiFile extends Action
             }
         }
 
-        //if the error column does not exist, create a new one
+        // if the error column does not exist, create a new one
         if (!$errorColumn) {
             $errorColumn = ++$lastColumn;
             $worksheet->setCellValue($errorColumn . '1', self::ERROR_COLUMN_NAME);
         }
 
-        //add the errors in the error column
+        // Get the maximum number of rows
+        $highestRow = $worksheet->getHighestRow();
+
+        // Clear previous errors and highlighting
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $hasCurrentError = false;
+            foreach ($errors as $error) {
+                if ($error['row'] == $row) {
+                    $hasCurrentError = true;
+                    break;
+                }
+            }
+
+            if (!$hasCurrentError) {
+                // Remove the error if it is no longer present
+                $worksheet->setCellValue($errorColumn . $row, '');
+                // Remove the highlighting
+                $range = "A{$row}:{$lastColumn}{$row}";
+                $worksheet->getStyle($range)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE);
+            }
+        }
+
+        // Add the new errors
         foreach ($errors as $error) {
             $worksheet->setCellValue($errorColumn . $error['row'], $error['message']);
             $this->highlightErrorRow($worksheet, $error['row'], $lastColumn);
@@ -183,12 +205,13 @@ class UploadPoiFile extends Action
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
         // Get or create the reference sheet
-        try {
-            $referenceSheet = $spreadsheet->getSheetByName('Available References');
-        } catch (\Exception $e) {
+        if (!$spreadsheet->getSheetByName('Available References')) {
             $referenceSheet = $spreadsheet->createSheet();
             $referenceSheet->setTitle('Available References');
+        } else {
+            $referenceSheet = $spreadsheet->getSheetByName('Available References');
         }
+
 
         // Set the headers
         $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers');
@@ -274,7 +297,8 @@ class UploadPoiFile extends Action
             '',
             'Mandatory fields are: <strong>name_it, poi_type (at least one, referenced by Geohub identifier), theme(at least one, referenced by Geohub identifier), lat, lng. (use "." to indicate float: 43.1234).</strong>',
             'Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).',
-            'Please follow this example: <a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>'
+            'Please follow this example: <a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>',
+            'If the import fails, the file will be downloaded with the errors highlighted.'
         ]);
     }
 }
