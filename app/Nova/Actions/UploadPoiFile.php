@@ -60,8 +60,8 @@ class UploadPoiFile extends Action
             $updatedFile = $this->saveUpdatedSpreadsheet($spreadsheet);
 
             return Action::download(
-                Storage::url('updated-poi-file.xlsx'),
-                'updated-poi-file.xlsx'
+                Storage::url('poi-file-errors.xlsx'),
+                'poi-file-errors.xlsx'
             );
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -182,33 +182,50 @@ class UploadPoiFile extends Action
      */
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
-        //add a new sheet for the poi types
-        $poiTypesSheet = $spreadsheet->createSheet();
-        $poiTypesSheet->setTitle('Available POI Types');
-
-        //set the header
-        $poiTypesSheet->setCellValue('A1', 'Available POI Type Identifiers');
-        $poiTypesSheet->getStyle('A1')->getFont()->setBold(true);
-
-        //get the poi types from the importer
-        $poiTypes = (new \App\Imports\EcPoiFromCSV())->getPoiTypes();
-
-        //insert the poi types in the sheet
-        foreach ($poiTypes as $index => $poiType) {
-            $poiTypesSheet->setCellValue('A' . ($index + 2), $poiType);
+        // Get or create the reference sheet
+        try {
+            $referenceSheet = $spreadsheet->getSheetByName('Available References');
+        } catch (\Exception $e) {
+            $referenceSheet = $spreadsheet->createSheet();
+            $referenceSheet->setTitle('Available References');
         }
 
-        //adjust the column width
-        $poiTypesSheet->getColumnDimension('A')->setAutoSize(true);
+        // Set the headers
+        $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers');
+        $referenceSheet->setCellValue('B1', 'Available POI Theme Identifiers');
+        $referenceSheet->getStyle('A1:B1')->getFont()->setBold(true);
 
-        //return to the first sheet
+        // Get the POI types and themes from the importer
+        $importer = new \App\Imports\EcPoiFromCSV();
+        $poiTypes = $importer->getPoiTypes();
+        $poiThemes = $importer->getPoiThemes();
+
+        // Insert the POI types and themes in the sheet
+        $maxRows = max(count($poiTypes), count($poiThemes));
+        for ($i = 0; $i < $maxRows; $i++) {
+            if (isset($poiTypes[$i])) {
+                $referenceSheet->setCellValue('A' . ($i + 2), $poiTypes[$i]);
+            }
+            if (isset($poiThemes[$i])) {
+                $referenceSheet->setCellValue('B' . ($i + 2), $poiThemes[$i]);
+            }
+        }
+
+        // Adjust the column width
+        $referenceSheet->getColumnDimension('A')->setAutoSize(true);
+        $referenceSheet->getColumnDimension('B')->setAutoSize(true);
+
+        // Return to the first active sheet
         $spreadsheet->setActiveSheetIndex(0);
 
+        // Save the file
+        $filePath = storage_path('app/public/poi-file-errors.xlsx');
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filePath = storage_path('app/public/updated-poi-file.xlsx');
         $writer->save($filePath);
+
         return $filePath;
     }
+
 
     /**
      * Get the fields available on the action.

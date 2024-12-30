@@ -13,17 +13,41 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class EcPoiFromCSV implements ToModel, WithHeadingRow
+class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 {
     public $errors = [];
     private $currentRow = 2;
     private $poiTypes = [];
+    private $poiThemes = [];
 
     public function __construct()
     {
         $this->poiTypes = DB::table('taxonomy_poi_types')->pluck('identifier')->toArray();
+        $loggedInUser = auth()->user();
+
+        $poiThemes = [];
+
+        foreach ($loggedInUser->apps as $app) {
+            $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
+            $poiThemes = array_merge($poiThemes, $themes);
+        }
+
+        $this->poiThemes = $poiThemes;
     }
+
+    /**
+     * @return array
+     */
+    public function sheets(): array
+    {
+        return [
+            0 => $this
+        ];
+    }
+
+
     /**
      * @param array $row
      *
@@ -274,7 +298,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
         if (count($poiThemes) > 0) {
             $ecPoi->taxonomyThemes()->sync($poiThemes);
         } else {
-            throw new \Exception('Invalid Poi theme found. Please check the file and try again.');
+            throw new \Exception('Invalid Poi theme found: ' . $ecPoiData['theme'] . '. Please check the file and try again.');
         }
 
         //unset the poi_type and theme
@@ -323,5 +347,15 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow
     public function getPoiTypes()
     {
         return $this->poiTypes;
+    }
+
+    /**
+     * Get the array of POI themes collected during import.
+     * 
+     * @return array Array of POI theme identifiers found in the imported data
+     */
+    public function getPoiThemes()
+    {
+        return $this->poiThemes;
     }
 }
