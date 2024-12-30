@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 
 class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
 {
@@ -33,37 +34,54 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
             ->where('id', $this->source_id)
             ->select([
                 'id',
-                'ref',
-                'name',
-                'cai_scale',
-                'from',
-                'to',
-                'geometry',
-                'duration_forward',
-                'description',
-                'note',
-                'website',
-                'distance',
+                //'ref',
+                //'name',
+                //'cai_scale',
+                //'from',
+                //'to',
+                'osmfeatures_data',
+                //'duration_forward',
+                //'description',
+                //'note',
+                //'website',
+                //'distance',
                 'osm2cai_status',
                 'issues_status',
                 'issues_description',
                 'issues_last_update'
             ])
+            ->selectRaw("ST_AsText(ST_Force2D(ST_LineMerge(geometry::geometry))) as geometry")
             ->first();
 
+        if (!$track) {
+            Log::error('Unable to find an hiking route on connection out_source_osm with ID: ' . $this->source_id);
+            return 0;
+        }
+
+
+        $osmData = json_decode($track->osmfeatures_data, true)['properties'] ?? [];
+        unset($track->osmfeatures_data);
+        foreach ($osmData as $key => $value) {
+            $track->$key = $value;
+        }
+
+        // dd($track);
+
         // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF Track with external ID: '.$this->source_id);
-        $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_Force2D(ST_LineMerge('$track->geometry')))")[0]->st_astext;
+        Log::info('Preparing OSF Track with external ID: ' . $this->source_id);
+        $this->params['geometry'] = $track->geometry;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
-        $this->params['raw_data'] = json_encode($track);
+        $trackJson = json_encode($track);
+        $this->params['raw_data'] = $trackJson;
+        $this->params['properties'] = $trackJson;
 
         // prepare the value of tags data
-        Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+        Log::info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
         $this->prepareTrackTagsJson($track);
         $this->params['tags'] = $this->tags;
-        Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
-        Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+        Log::info('Finished preparing OSF Track with external ID: ' . $this->source_id);
+        Log::info('Starting creating OSF Track with external ID: ' . $this->source_id);
         return $this->create_or_update_feature($this->params);
     }
 
@@ -110,29 +128,29 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
-        Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
-        if ($track->name) {
+        Log::info('Preparing OSF Track TRANSLATIONS with external ID: ' . $this->source_id);
+        if (isset($track->name)) {
             $this->tags['name']['it'] = $track->name;
         }
         $this->tags['description']['it'] = '';
-        if ($track->description) {
-            $this->tags['description']['it'] = $track->description .'<br>';
+        if (isset($track->description)) {
+            $this->tags['description']['it'] = $track->description . '<br>';
         }
-        if ($track->osm2cai_status) {
+        if (isset($track->osm2cai_status)) {
             $this->tags['sda'] = $track->osm2cai_status;
-            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' .$track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
+            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' . $track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status)  . ')<br>';
         }
         $this->tags['description']['it'] .= "<a href='https://osm2cai.cai.it/resources/hiking-routes/$track->id' target='_blank'>Modifica questo percorso</a>";
-        if ($track->note) {
+        if (isset($track->note)) {
             $this->tags['excerpt']['it'] = $track->note;
         }
-        if ($track->from) {
+        if (isset($track->from)) {
             $this->tags['from'] = $track->from;
         }
-        if ($track->to) {
+        if (isset($track->to)) {
             $this->tags['to'] = $track->to;
         }
-        if ($track->cai_scale) {
+        if (isset($track->cai_scale)) {
             $this->tags['cai_scale'] = $track->cai_scale;
         }
         if (isset($track->website) && $track->website) {
@@ -143,10 +161,9 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
             }
             $this->tags['related_url'][$host] = $track->website;
         }
-        if ($track->ref) {
+        if (isset($track->ref)) {
             $this->tags['ref'] = $track->ref;
         }
-
     }
 
     /**
