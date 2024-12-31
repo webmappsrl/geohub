@@ -238,7 +238,11 @@ class UploadPoiFile extends Action
         $idColumn = $this->findOrCreateColumn($worksheet, 'id', $lastColumn);
 
         foreach ($poiIds as $poiId) {
-            $worksheet->setCellValue($idColumn . $poiId['row'], $poiId['id']);
+            $worksheet->getCell($idColumn . $poiId['row'])
+                ->setValueExplicit(
+                    (string)$poiId['id'],
+                    \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+                );
         }
     }
 
