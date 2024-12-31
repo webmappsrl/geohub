@@ -81,7 +81,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             } elseif (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
                 throw new \Exception(__('The poi with ID ') . $ecPoiData['id'] . __(' is already in the database but it is not in your list. Please check the file and try again.'));
             } else {
-                $this->updateEcPoi($ecPoiData, $this->user);
+                $this->updateEcPoi($ecPoiData);
             }
         } catch (\Exception $e) {
             $this->errors[] = ['row' => $this->currentRow, 'message' => $e->getMessage()];
