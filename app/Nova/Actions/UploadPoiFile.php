@@ -305,7 +305,7 @@ class UploadPoiFile extends Action
 
         return [
             File::make('Upload File', 'file')
-                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . $this->buildHelpText($validHeaders))
+                ->help('<strong>' . __('Read the instruction below') . '</strong>' . '</br>' . '</br>' . $this->buildHelpText($validHeaders))
         ];
     }
 
@@ -331,16 +331,17 @@ class UploadPoiFile extends Action
     private function buildHelpText(string $validHeaders): string
     {
         return implode('</br>', [
-            'Please upload a valid .xlsx file.',
-            '<strong>The first row should contain the headers.',
-            'Starting from the second row, the file should contain pois data.',
-            'The file must contain the following headers: ' . $validHeaders . '</strong>',
-            'Please provide ID only if the poi already exist in the database.',
+            __('Please upload a valid .xlsx file.'),
+            '<strong>' . __('The first row should contain the headers.'),
+            __('Starting from the second row, the file should contain pois data.'),
+            __('The file must contain the following headers: ') . $validHeaders . '</strong>',
+            __('Please provide ID only if the poi already exist in the database.'),
             '',
-            'Mandatory fields are: <strong>name_it, poi_type (at least one, referenced by Geohub identifier), theme(at least one, referenced by Geohub identifier), lat, lng. (use "." to indicate float: 43.1234).</strong>',
-            'Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).',
-            'Please follow this example: <a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">Example</a>',
-            'If the import fails, the file will be downloaded with the errors highlighted.'
+            __('Mandatory fields are: ') . '<strong>name_it, poi_type (' . __('at least one, referenced by Geohub identifier') . '), theme(' . __('at least one, referenced by Geohub identifier') . '), lat, lng. (' . __('use "." to indicate float: 43.1234') . ').</strong>',
+            __('Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).'),
+            __('Please follow this example: ') . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">' . __('Example') . '</a>',
+            __('If the import fails, the file will be downloaded with the errors highlighted.'),
+            __('For more information, please check the ') . '<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">' . __('documentation') . '</a>'
         ]);
     }
 }
