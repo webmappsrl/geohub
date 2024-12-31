@@ -2,12 +2,9 @@
 
 namespace App\Imports;
 
-use Schema;
 use Exception;
-use App\Models\User;
 use App\Models\EcPoi;
 use App\Models\EcMedia;
-use App\Models\TaxonomyTheme;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -18,13 +15,17 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 {
     public $errors = [];
+    public $poiIds = [];
     private $currentRow = 2;
-    private $poiTypes = [];
-    private $poiThemes = [];
+    public $poiTypes = [];
+    public $poiThemes = [];
+    private $user;
+
 
     public function __construct()
     {
         $this->poiTypes = DB::table('taxonomy_poi_types')->pluck('identifier')->toArray();
+        $this->user = auth()->user();
 
         $poiThemes = [];
 
@@ -62,22 +63,20 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             return null;
         }
 
-        $user = auth()->user();
-        $userPois = $user->ecPois()->pluck('id')->toArray();
+        $userPois = $this->user->ecPois()->pluck('id')->toArray();
         $allPois = DB::table('ec_pois')->pluck('id')->toArray();
         $ecPoiData = $this->processRow($row);
 
         //Check if the poi belongs to the user
         try {
             if (!isset($ecPoiData['id'])) {
-                $this->buildEcPoi($ecPoiData, $user);
-            }
-            if (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
-                throw new \Exception('The poi with ID ' . $ecPoiData['id'] . ' is already in the database but it is not in your list. Please check the file and try again.');
-            } elseif (in_array($ecPoiData['id'], $userPois)) {
-                $this->updateEcPoi($ecPoiData, $user);
+                $id = $this->buildEcPoi($ecPoiData);
+                //if the poi is new we need to add the id to the excel file.
+                $this->poiIds[] = ['row' => $this->currentRow, 'id' => $id];
+            } elseif (!in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
+                throw new \Exception(__('The poi with ID ') . $ecPoiData['id'] . __(' is already in the database but it is not in your list. Please check the file and try again.'));
             } else {
-                $this->buildEcPoi($ecPoiData, $user);
+                $this->updateEcPoi($ecPoiData, $user);
             }
         } catch (\Exception $e) {
             $this->errors[] = ['row' => $this->currentRow, 'message' => $e->getMessage()];
@@ -104,7 +103,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         });
 
         if (!empty($invalidHeaders)) {
-            $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeaders) . ". Please check the file and try again.";
+            $errorMessage = __("Invalid headers found:") . implode(', ', $invalidHeaders) . __(". Please check the file and try again.");
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
@@ -132,27 +131,27 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     private function validatePoiData(string $key, $value): void
     {
         if ($key == 'name_it' && empty(trim($value))) {
-            $this->errors[] = ['row' => $this->currentRow, 'message' => 'Poi name is mandatory. Please check the file and try again.'];
+            $this->errors[] = ['row' => $this->currentRow, 'message' => __('Poi name is mandatory. Please check the file and try again.')];
         }
 
         if ($key == 'poi_type') {
             if (empty(trim($value))) {
-                $this->errors[] = ['row' => $this->currentRow, 'message' => 'At least one Poi type is mandatory. Please check the file and try again.'];
+                $this->errors[] = ['row' => $this->currentRow, 'message' => __('At least one Poi type is mandatory. Please check the file and try again.')];
             }
             //if the poi type is not inside the poiTypes array, throw an error
             if (!in_array($value, $this->poiTypes)) {
-                $this->errors[] = ['row' => $this->currentRow, 'message' => 'Invalid Poi type found: ' . $value . '. Please check the support sheet for valid Poi types and try again.'];
+                $this->errors[] = ['row' => $this->currentRow, 'message' => __('Invalid Poi type found: ') . $value . __('. Please check the support sheet for valid Poi types and try again.')];
             }
         }
 
         if ($key == 'theme') {
             if (!in_array($value, $this->poiThemes)) {
-                $this->errors[] = ['row' => $this->currentRow, 'message' => 'Invalid theme found: ' . $value . '. Please check the support sheet for valid themes and try again.'];
+                $this->errors[] = ['row' => $this->currentRow, 'message' => __('Invalid theme found: ') . $value . __('. Please check the support sheet for valid themes and try again.')];
             }
         }
 
         if (($key == 'lat' || $key == 'lng') && empty(trim($value))) {
-            $this->errors[] = ['row' => $this->currentRow, 'message' => 'Invalid coordinates found. Please check the file and try again.'];
+            $this->errors[] = ['row' => $this->currentRow, 'message' => __('Invalid coordinates found. Please check the file and try again.')];
         }
 
         if ($key == 'related_url' && !empty(trim($value))) {
@@ -169,7 +168,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     private function validateUrl($value): void
     {
         if (strpos($value, 'http://') === false && strpos($value, 'https://') === false) {
-            throw new \Exception('Invalid URL found. Please check the file and try again.');
+            throw new \Exception(__('Invalid URL found. Please check the file and try again.'));
         }
     }
 
@@ -205,7 +204,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             $ecMedia = new EcMedia(['name' => $ecPoiData['name_it'], 'url' => $url, 'geometry' => $ecPoiData['geometry']]);
             $ecMedia->save();
         } catch (Exception $e) {
-            Log::error("featureImage: create ec media -> " . $e->getMessage());
+            Log::error(__("featureImage: create ec media -> ") . $e->getMessage());
         }
         $ecPoi->featureImage()->associate($ecMedia);
         unset($ecPoiData['feature_image']);
@@ -226,17 +225,19 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
      * Create EcPoi.
      *
      * @param array $ecPoiData
+     * @return int The ID of the created EcPoi
      */
-    private function buildEcPoi(array $ecPoiData, $user): void
+    private function buildEcPoi(array $ecPoiData): int
     {
         $ecPoi = EcPoi::Create(['name' => $ecPoiData['name_it']]);
         $this->setTranslations($ecPoi, $ecPoiData);
-        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData, $user);
+        $this->syncPoiTypesAndThemes($ecPoi, $ecPoiData);
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
         }
         $ecPoi->update($ecPoiData);
         $ecPoi->save();
+        return $ecPoi->id;
     }
 
     /** Update EcPoi
@@ -305,7 +306,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         if (count($poiThemes) > 0) {
             $ecPoi->taxonomyThemes()->sync($poiThemes);
         } else {
-            throw new \Exception('Invalid Poi theme found: ' . $ecPoiData['theme'] . '. Please check the file and try again.');
+            throw new \Exception(__('Invalid Poi theme found: ') . $ecPoiData['theme'] . __('. Please check the file and try again.'));
         }
 
         //unset the poi_type and theme
@@ -339,30 +340,10 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
                 ->pluck('id')
                 ->toArray() ?? [];
         } catch (\Illuminate\Database\QueryException $e) {
-            \Log::error("A database error occurred: {$e->getMessage()}");
-            throw new \Exception($name . ' not found in the database. Please check the file and try again.');
+            \Log::error(__("A database error occurred: ") . $e->getMessage());
+            throw new \Exception($name . __(' not found in the database. Please check the file and try again.'));
         }
 
         return $modelsId;
-    }
-
-    /**
-     * Get the array of POI types collected during import.
-     * 
-     * @return array Array of POI type identifiers found in the imported data
-     */
-    public function getPoiTypes()
-    {
-        return $this->poiTypes;
-    }
-
-    /**
-     * Get the array of POI themes collected during import.
-     * 
-     * @return array Array of POI theme identifiers found in the imported data
-     */
-    public function getPoiThemes()
-    {
-        return $this->poiThemes;
     }
 }
