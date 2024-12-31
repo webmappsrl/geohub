@@ -33,7 +33,7 @@ class UploadPoiFile extends Action
         $file = $fields->file;
 
         if (!$this->isValidFile($file)) {
-            return Action::danger('Please upload a valid file.');
+            return Action::danger(__('Please upload a valid file.'));
         }
 
         try {
@@ -41,31 +41,28 @@ class UploadPoiFile extends Action
             $worksheet = $spreadsheet->getActiveSheet();
 
             if (!$this->hasHeaders($worksheet)) {
-                return Action::danger('The first row must contain column headers. Please read the instructions and check the file before trying again.');
+                return Action::danger(__('The first row must contain column headers. Please read the instructions and check the file before trying again.'));
             }
 
             if (!$this->hasValidData($worksheet)) {
-                return Action::danger('The second row cannot be empty. Please read the instructions and check the file before trying again.');
+                return Action::danger(__('The second row cannot be empty. Please read the instructions and check the file before trying again.'));
             }
-
 
             $importer = new \App\Imports\EcPoiFromCSV();
             Excel::import($importer, $file);
 
-            if (empty($importer->errors)) {
-                return Action::message('File imported successfully.');
-            }
-
             $this->processImportErrors($worksheet, $importer->errors);
-            $updatedFile = $this->saveUpdatedSpreadsheet($spreadsheet);
+            $this->populatePoiIds($worksheet, $importer->poiIds);
+
+            $filePath = $this->saveUpdatedSpreadsheet($spreadsheet);
 
             return Action::download(
-                Storage::url('poi-file-errors.xlsx'),
-                'poi-file-errors.xlsx'
+                Storage::url('poi-file-updated.xlsx'),
+                $this->determineFileName($importer->errors)
             );
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return Action::danger('Si è verificato un errore durante l\'elaborazione del file: ' . $e->getMessage());
+            return Action::danger(__('Si è verificato un errore durante l\'elaborazione del file: ') . $e->getMessage());
         }
     }
 
@@ -89,6 +86,17 @@ class UploadPoiFile extends Action
     private function loadSpreadsheet($file): Spreadsheet
     {
         return IOFactory::load($file);
+    }
+
+    /**
+     * Determine the file name based on the import errors.
+     *
+     * @param array $importerErrors The import errors
+     * @return string The file name
+     */
+    private function determineFileName(array $importerErrors): string
+    {
+        return !empty($importerErrors) ? 'poi-file-errors-' . now()->format('Y-m-d') . '.xlsx' : 'poi-file-imported-' . now()->format('Y-m-d') . '.xlsx';
     }
 
     /**
@@ -135,49 +143,102 @@ class UploadPoiFile extends Action
      */
     private function processImportErrors(Worksheet $worksheet, array $errors): void
     {
-        $errorColumn = null;
         $lastColumn = $worksheet->getHighestColumn(1);
-
-        // search for the error column
-        for ($col = 'A'; $col <= $lastColumn; $col++) {
-            if ($worksheet->getCell($col . '1')->getValue() === self::ERROR_COLUMN_NAME) {
-                $errorColumn = $col;
-                break;
-            }
-        }
-
-        // if the error column does not exist, create a new one
-        if (!$errorColumn) {
-            $errorColumn = ++$lastColumn;
-            $worksheet->setCellValue($errorColumn . '1', self::ERROR_COLUMN_NAME);
-        }
-
-        // Get the maximum number of rows
+        $errorColumn = $this->findOrCreateColumn($worksheet, self::ERROR_COLUMN_NAME, $lastColumn);
         $highestRow = $worksheet->getHighestRow();
 
-        // Clear previous errors and highlighting
-        for ($row = 2; $row <= $highestRow; $row++) {
-            $hasCurrentError = false;
-            foreach ($errors as $error) {
-                if ($error['row'] == $row) {
-                    $hasCurrentError = true;
-                    break;
-                }
-            }
+        $this->clearPreviousErrors($worksheet, $errorColumn, $lastColumn, $highestRow, $errors);
+        $this->addNewErrors($worksheet, $errorColumn, $lastColumn, $errors);
+    }
 
-            if (!$hasCurrentError) {
-                // Remove the error if it is no longer present
-                $worksheet->setCellValue($errorColumn . $row, '');
-                // Remove the highlighting
-                $range = "A{$row}:{$lastColumn}{$row}";
-                $worksheet->getStyle($range)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE);
+    /**
+     * Find or create a column for the given header.
+     *
+     * @param Worksheet $worksheet The worksheet to modify
+     * @param string $header The header to find
+     * @param string $lastColumn The last column reference
+     * @return string The column letter
+     */
+    private function findOrCreateColumn(Worksheet $worksheet, string $header, string &$lastColumn): string
+    {
+        for ($col = 'A'; $col <= $lastColumn; $col++) {
+            if ($worksheet->getCell($col . '1')->getValue() === $header) {
+                return $col;
             }
         }
 
-        // Add the new errors
+        $newColumn = ++$lastColumn;
+        $worksheet->setCellValue($newColumn . '1', $header);
+        return $newColumn;
+    }
+
+    /**
+     * Clear previous errors and highlighting.
+     *
+     * @param Worksheet $worksheet The worksheet to modify
+     * @param string $errorColumn The error column letter
+     * @param string $lastColumn The last column reference
+     * @param int $highestRow The highest row number
+     * @param array $errors Array of error messages with row numbers
+     */
+    private function clearPreviousErrors(Worksheet $worksheet, string $errorColumn, string $lastColumn, int $highestRow, array $errors): void
+    {
+        for ($row = 2; $row <= $highestRow; $row++) {
+            if (!$this->hasError($row, $errors)) {
+                $worksheet->setCellValue($errorColumn . $row, '');
+                $worksheet->getStyle("A{$row}:{$lastColumn}{$row}")->getFill()
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE);
+            }
+        }
+    }
+
+    /**
+     * Check if a row has an error.
+     *
+     * @param int $row The row number
+     * @param array $errors Array of error messages with row numbers
+     * @return bool Returns true if the row has an error
+     */
+    private function hasError(int $row, array $errors): bool
+    {
+        foreach ($errors as $error) {
+            if ($error['row'] == $row) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Add new errors to the worksheet.
+     *
+     * @param Worksheet $worksheet The worksheet to modify
+     * @param string $errorColumn The error column letter
+     * @param string $lastColumn The last column reference
+     * @param array $errors Array of error messages with row numbers
+     */
+    private function addNewErrors(Worksheet $worksheet, string $errorColumn, string $lastColumn, array $errors): void
+    {
         foreach ($errors as $error) {
             $worksheet->setCellValue($errorColumn . $error['row'], $error['message']);
             $this->highlightErrorRow($worksheet, $error['row'], $lastColumn);
+        }
+    }
+
+    /**
+     * Populate POI IDs in the worksheet.
+     * 
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet The worksheet to modify
+     * @param array<array{row: int|string, id: int|string}> $poiIds Array of POI IDs with row numbers
+     * @return void
+     */
+    private function populatePoiIds(Worksheet $worksheet, array $poiIds): void
+    {
+        $lastColumn = $worksheet->getHighestColumn(1);
+        $idColumn = $this->findOrCreateColumn($worksheet, 'id', $lastColumn);
+
+        foreach ($poiIds as $poiId) {
+            $worksheet->setCellValue($idColumn . $poiId['row'], $poiId['id']);
         }
     }
 
@@ -190,8 +251,7 @@ class UploadPoiFile extends Action
      */
     private function highlightErrorRow(Worksheet $worksheet, $row, string $lastColumn): void
     {
-        $range = "A{$row}:{$lastColumn}{$row}";
-        $worksheet->getStyle($range)->getFill()
+        $worksheet->getStyle("A{$row}:{$lastColumn}{$row}")->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setRGB(self::ERROR_HIGHLIGHT_COLOR);
     }
@@ -204,51 +264,35 @@ class UploadPoiFile extends Action
      */
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
-        // Get or create the reference sheet
-        if (!$spreadsheet->getSheetByName('Available References')) {
-            $referenceSheet = $spreadsheet->createSheet();
-            $referenceSheet->setTitle('Available References');
-        } else {
-            $referenceSheet = $spreadsheet->getSheetByName('Available References');
-        }
+        $referenceSheet = $spreadsheet->getSheetByName('Available References')
+            ?? $spreadsheet->createSheet()->setTitle('Available References');
 
+        $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers')
+            ->setCellValue('B1', 'Available POI Theme Identifiers')
+            ->getStyle('A1:B1')->getFont()->setBold(true);
 
-        // Set the headers
-        $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers');
-        $referenceSheet->setCellValue('B1', 'Available POI Theme Identifiers');
-        $referenceSheet->getStyle('A1:B1')->getFont()->setBold(true);
-
-        // Get the POI types and themes from the importer
         $importer = new \App\Imports\EcPoiFromCSV();
-        $poiTypes = $importer->getPoiTypes();
-        $poiThemes = $importer->getPoiThemes();
+        $maxRows = max(count($importer->poiTypes), count($importer->poiThemes));
 
-        // Insert the POI types and themes in the sheet
-        $maxRows = max(count($poiTypes), count($poiThemes));
         for ($i = 0; $i < $maxRows; $i++) {
-            if (isset($poiTypes[$i])) {
-                $referenceSheet->setCellValue('A' . ($i + 2), $poiTypes[$i]);
+            if (isset($importer->poiTypes[$i])) {
+                $referenceSheet->setCellValue('A' . ($i + 2), $importer->poiTypes[$i]);
             }
-            if (isset($poiThemes[$i])) {
-                $referenceSheet->setCellValue('B' . ($i + 2), $poiThemes[$i]);
+            if (isset($importer->poiThemes[$i])) {
+                $referenceSheet->setCellValue('B' . ($i + 2), $importer->poiThemes[$i]);
             }
         }
 
-        // Adjust the column width
         $referenceSheet->getColumnDimension('A')->setAutoSize(true);
         $referenceSheet->getColumnDimension('B')->setAutoSize(true);
 
-        // Return to the first active sheet
         $spreadsheet->setActiveSheetIndex(0);
 
-        // Save the file
-        $filePath = storage_path('app/public/poi-file-errors.xlsx');
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($filePath);
+        $filePath = storage_path('app/public/poi-file-updated.xlsx');
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save($filePath);
 
         return $filePath;
     }
-
 
     /**
      * Get the fields available on the action.
@@ -258,11 +302,10 @@ class UploadPoiFile extends Action
     public function fields(): array
     {
         $validHeaders = $this->getValidHeaders();
-        $rules = $this->buildHelpText($validHeaders);
 
         return [
             File::make('Upload File', 'file')
-                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . $rules)
+                ->help('<strong> Read the instruction below </strong>' . '</br>' . '</br>' . $this->buildHelpText($validHeaders))
         ];
     }
 
@@ -273,11 +316,10 @@ class UploadPoiFile extends Action
      */
     private function getValidHeaders(): string
     {
-        $headers = array_filter(
+        return implode(', ', array_filter(
             config('services.importers.ecPois.validHeaders'),
             fn($header) => $header !== self::ERROR_COLUMN_NAME
-        );
-        return implode(', ', $headers);
+        ));
     }
 
     /**
