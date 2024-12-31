@@ -19,6 +19,17 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
     protected array $tags;
     protected string $mediaGeom;
 
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false)
+    {
+        //needed only for the migration from old to new source_id
+        //this is important because the OutSourceFeature has a tuple as identifier with source_id and endpoint
+        //currently all osm2cai tracks have osm2cai.cai.it as endpoint domain
+        //once the migration is done, this has to be removed after a proper update of import_sync_osm2cai_all.sh script
+        //restoring the osm2cai.cai.it domain 
+        $endpoint = str_replace('https://osm2cai.maphub.it', 'https://osm2cai.cai.it', $endpoint);
+        parent::__construct($type, $endpoint, $source_id, $only_related_url);
+    }
+
     /**
      * It imports each track of the given list to the out_source_features table.
      *
@@ -31,9 +42,10 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         // Curl request to get the feature information from external source
         $db = DB::connection('out_source_osm');
         $track = $db->table('hiking_routes')
-            ->where('id', $this->source_id)
+            ->where('osmfeatures_id', $this->source_id)
             ->select([
                 'id',
+                'osmfeatures_id',
                 //'ref',
                 //'name',
                 //'cai_scale',
@@ -74,7 +86,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $this->params['type'] = $this->type;
         $trackJson = json_encode($track);
         $this->params['raw_data'] = $trackJson;
-        $this->params['properties'] = $trackJson;
+        $this->params['endpoint_slug'] = 'osm2cai';
 
         // prepare the value of tags data
         Log::info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
@@ -109,6 +121,8 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
      */
     protected function create_or_update_feature(array $params)
     {
+        //TODO: use the endpoint_slug column identifier instead (it should be a not null column) and set only the endpoint path into the endpoint column
+        //      this will allow to have multiple domains for the same source_id
 
         $feature = OutSourceFeature::updateOrCreate(
             [

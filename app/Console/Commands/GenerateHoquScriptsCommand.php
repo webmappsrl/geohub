@@ -102,9 +102,13 @@ class GenerateHoquScriptsCommand extends Command
 
         // OPTION OSF_ENDPOINT
         else if (!empty($this->option('osf_endpoint'))) {
-            $osfs = OutSourceFeature::where('endpoint', $this->option('osf_endpoint'))->get();
+            //currently all osm2cai tracks have osm2cai.cai.it as endpoint domain
+            //once the migration is done, this has to be removed after a proper update of import_sync_osm2cai_all.sh script
+            //restoring the osm2cai.cai.it domain
+            $endpoint = str_replace('https://osm2cai.maphub.it', 'https://osm2cai.cai.it', $this->option('osf_endpoint'));
+            $osfs = OutSourceFeature::where('endpoint', $endpoint)->get();
             if ($osfs->count() == 0) {
-                $this->info("No OSF found with endpoint {$this->option('osf_endpoint')}");
+                $this->info("No OSF found with endpoint {$endpoint}");
                 return 0;
             }
             $ids = $osfs->pluck('id')->toArray();
@@ -117,7 +121,7 @@ class GenerateHoquScriptsCommand extends Command
                 $pois->count() == 0 &&
                 $media->count() == 0
             ) {
-                $this->info("No feature found corresponding to endpoint {$this->option('osf_endpoint')}");
+                $this->info("No feature found corresponding to endpoint {$endpoint}");
                 return 0;
             }
         } else {
