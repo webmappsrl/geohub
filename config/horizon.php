@@ -107,7 +107,7 @@ return [
         ],
         'local' => [
             'supervisor-default' => [
-                'maxProcesses' => 8,
+                'maxProcesses' => 6,
                 'balance' => 'simple',
             ],
             'supervisor-pbf' => [
