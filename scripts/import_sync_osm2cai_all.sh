@@ -1,163 +1,143 @@
 #!/bin/bash
 
-echo "import Friuli Venezia Giulia ..."
+echo "load external features for Friuli Venezia Giulia ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/a/1,2,3,4" OSM2CAI
-echo "sync Friuli Venezia Giulia ..."
+echo "handle entities on geohub with the loaded external features - Friuli Venezia Giulia ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/a/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Friuli Venezia Giulia ..."
+echo "generate queue jobs for all needed calculations -  Friuli Venezia Giulia ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/a/1,2,3,4" osm2cai_a
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/a/1,2,3,4" --mbtiles osm2cai_a_mbtiles
 
-echo "import Veneto ..."
+echo "load external features for Veneto ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/b/1,2,3,4" OSM2CAI
-echo "sync Veneto ..."
+echo "handle entities on geohub with the loaded external features - Veneto ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/b/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Veneto ..."
+echo "generate queue jobs for all needed calculations -  Veneto ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/b/1,2,3,4" osm2cai_b
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/b/1,2,3,4" --mbtiles osm2cai_b_mbtiles
 
-echo "import Trentino Alto Adige ..."
+echo "load external features for Trentino Alto Adige ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/c/1,2,3,4" OSM2CAI
-echo "sync Trentino Alto Adige ..."
+echo "handle entities on geohub with the loaded external features - Trentino Alto Adige ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/c/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Trentino Alto Adige ..."
+echo "generate queue jobs for all needed calculations -  Trentino Alto Adige ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/c/1,2,3,4" osm2cai_c
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/c/1,2,3,4" --mbtiles osm2cai_c_mbtiles
 
-echo "import Lombardia ..."
+echo "load external features for Lombardia ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/d/1,2,3,4" OSM2CAI
-echo "sync Lombardia ..."
+echo "handle entities on geohub with the loaded external features - Lombardia ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/d/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Lombardia ..."
+echo "generate queue jobs for all needed calculations -  Lombardia ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/d/1,2,3,4" osm2cai_d
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/d/1,2,3,4" --mbtiles osm2cai_d_mbtiles
 
-echo "import Piemonte ..."
+echo "load external features for Piemonte ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/e/1,2,3,4" OSM2CAI
-echo "sync Piemonte ..."
+echo "handle entities on geohub with the loaded external features - Piemonte ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/e/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Piemonte ..."
+echo "generate queue jobs for all needed calculations -  Piemonte ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/e/1,2,3,4" osm2cai_e
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/e/1,2,3,4" --mbtiles osm2cai_e_mbtiles
 
-echo "import Val d'Aosta ..."
+echo "load external features for Val d'Aosta ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/f/1,2,3,4" OSM2CAI
-echo "sync Val d'Aosta ..."
+echo "handle entities on geohub with the loaded external features - Val d'Aosta ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/f/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Val d'Aosta ..."
+echo "generate queue jobs for all needed calculations -  Val d'Aosta ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/f/1,2,3,4" osm2cai_f
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/f/1,2,3,4" --mbtiles osm2cai_f_mbtiles
 
-echo "import Liguria ..."
+echo "load external features for Liguria ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/g/1,2,3,4" OSM2CAI
-echo "sync Liguria ..."
+echo "handle entities on geohub with the loaded external features - Liguria ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/g/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Liguria ..."
+echo "generate queue jobs for all needed calculations -  Liguria ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/g/1,2,3,4" osm2cai_g
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/g/1,2,3,4" --mbtiles osm2cai_g_mbtiles
 
-echo "import Emilia Romagna ..."
+echo "load external features for Emilia Romagna ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/h/1,2,3,4" OSM2CAI
-echo "sync Emilia Romagna ..."
+echo "handle entities on geohub with the loaded external features - Emilia Romagna ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/h/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Emilia Romagna ..."
+echo "generate queue jobs for all needed calculations -  Emilia Romagna ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/h/1,2,3,4" osm2cai_h
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/h/1,2,3,4" --mbtiles osm2cai_h_mbtiles
 
-echo "import Toscana ..."
+echo "load external features for Toscana ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/l/1,2,3,4" OSM2CAI
-echo "sync Toscana ..."
+echo "handle entities on geohub with the loaded external features - Toscana ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/l/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Toscana ..."
+echo "generate queue jobs for all needed calculations -  Toscana ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/l/1,2,3,4" osm2cai_l
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/l/1,2,3,4" --mbtiles osm2cai_l_mbtiles
 
-echo "import Marche ..."
+echo "load external features for Marche ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/m/1,2,3,4" OSM2CAI
-echo "sync Marche ..."
+echo "handle entities on geohub with the loaded external features - Marche ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/m/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Marche ..."
+echo "generate queue jobs for all needed calculations -  Marche ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/m/1,2,3,4" osm2cai_m
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/m/1,2,3,4" --mbtiles osm2cai_m_mbtiles
 
-echo "import Umbria ..."
+echo "load external features for Umbria ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/n/1,2,3,4" OSM2CAI
-echo "sync Umbria ..."
+echo "handle entities on geohub with the loaded external features - Umbria ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/n/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Umbria ..."
+echo "generate queue jobs for all needed calculations -  Umbria ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/n/1,2,3,4" osm2cai_n
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/n/1,2,3,4" --mbtiles osm2cai_n_mbtiles
 
-echo "import Lazio ..."
+echo "load external features for Lazio ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/o/1,2,3,4" OSM2CAI
-echo "sync Lazio ..."
+echo "handle entities on geohub with the loaded external features - Lazio ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/o/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Lazio ..."
+echo "generate queue jobs for all needed calculations -  Lazio ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/o/1,2,3,4" osm2cai_o
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/o/1,2,3,4" --mbtiles osm2cai_o_mbtiles
 
-echo "import Abruzzo ..."
+echo "load external features for Abruzzo ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/p/1,2,3,4" OSM2CAI
-echo "sync Abruzzo ..."
+echo "handle entities on geohub with the loaded external features - Abruzzo ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/p/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Abruzzo ..."
+echo "generate queue jobs for all needed calculations -  Abruzzo ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/p/1,2,3,4" osm2cai_p
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/p/1,2,3,4" --mbtiles osm2cai_p_mbtiles
 
-echo "import Molise ..."
+echo "load external features for Molise ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/q/1,2,3,4" OSM2CAI
-echo "sync Molise ..."
+echo "handle entities on geohub with the loaded external features - Molise ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/q/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Molise ..."
+echo "generate queue jobs for all needed calculations -  Molise ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/q/1,2,3,4" osm2cai_q
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/q/1,2,3,4" --mbtiles osm2cai_q_mbtiles
 
-echo "import Campania ..."
+echo "load external features for Campania ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/s/1,2,3,4" OSM2CAI
-echo "sync Campania ..."
+echo "handle entities on geohub with the loaded external features - Campania ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/s/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Campania ..."
+echo "generate queue jobs for all needed calculations -  Campania ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/s/1,2,3,4" osm2cai_s
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/s/1,2,3,4" --mbtiles osm2cai_s_mbtiles
 
-echo "import Puglia ..."
+echo "load external features for Puglia ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/r/1,2,3,4" OSM2CAI
-echo "sync Puglia ..."
+echo "handle entities on geohub with the loaded external features - Puglia ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/r/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Puglia ..."
+echo "generate queue jobs for all needed calculations -  Puglia ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/r/1,2,3,4" osm2cai_r
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/r/1,2,3,4" --mbtiles osm2cai_r_mbtiles
 
-echo "import Basilicata ..."
+echo "load external features for Basilicata ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/t/1,2,3,4" OSM2CAI
-echo "sync Basilicata ..."
+echo "handle entities on geohub with the loaded external features - Basilicata ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/t/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Basilicata ..."
+echo "generate queue jobs for all needed calculations -  Basilicata ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/t/1,2,3,4" osm2cai_t
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/t/1,2,3,4" --mbtiles osm2cai_t_mbtiles
 
-echo "import Calabria ..."
+echo "load external features for Calabria ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/u/1,2,3,4" OSM2CAI
-echo "sync Calabria ..."
+echo "handle entities on geohub with the loaded external features - Calabria ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/u/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Calabria ..."
+echo "generate queue jobs for all needed calculations -  Calabria ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/u/1,2,3,4" osm2cai_u
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/u/1,2,3,4" --mbtiles osm2cai_u_mbtiles
 
-echo "import Sicilia ..."
+echo "load external features for Sicilia ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/v/1,2,3,4" OSM2CAI
-echo "sync Sicilia ..."
+echo "handle entities on geohub with the loaded external features - Sicilia ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/v/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Sicilia ..."
+echo "generate queue jobs for all needed calculations -  Sicilia ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/v/1,2,3,4" osm2cai_v
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/v/1,2,3,4" --mbtiles osm2cai_v_mbtiles
 
-echo "import Sardegna ..."
+echo "load external features for Sardegna ..."
 php artisan geohub:out_source_importer track "https://osm2cai.maphub.it/api/v1/hiking-routes/region/z/1,2,3,4" OSM2CAI
-echo "sync Sardegna ..."
+echo "handle entities on geohub with the loaded external features - Sardegna ..."
 php artisan geohub:sync-ec-from-out-source track osm2cai@webmapp.it --endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/z/1,2,3,4" --provider="OutSourceImporterFeatureOSM2CAI"  --activity=hiking --name_format="{ref} - {from} - {to}"
-echo "generate script Sardegna ..."
+echo "generate queue jobs for all needed calculations -  Sardegna ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/z/1,2,3,4" osm2cai_z
-php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.maphub.it/api/v1/hiking-routes/region/z/1,2,3,4" --mbtiles osm2cai_z_mbtiles
 
-echo "finished OSM2CAI all regones"
+echo "finished OSM2CAI all regioni"

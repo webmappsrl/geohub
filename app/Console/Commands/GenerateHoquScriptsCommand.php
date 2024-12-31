@@ -19,12 +19,12 @@ class GenerateHoquScriptsCommand extends Command
      * @var string
      */
     protected $signature = 'geohub:generate_hoqu_script
-                            {name : unique file name (.sh extention will be automatically added)}
+                            {name : deprecated but mandatory ... we are working on it}
                             {--user_id= : All tracks belonging to user identified by id user_id will be stored with ec_track_enrich command}
                             {--user_email= : All tracks belonging to user identified by email user_email will be stored with ec_track_enrich command}
                             {--app_id= : All tracks belonging to app identified by id app_id will be stored with ec_track_enrich command}
                             {--osf_endpoint= : All tracks, pois and media referring to any osf belonging to endpoint are generated with enrich command}
-                            {--mbtiles : Use this option to add ec_track_generate_mbtiles job instead of enrich_ec_track, POI and MEDIA skipped}
+                            {--mbtiles : deprecated}
                             ';
 
     /**
@@ -32,9 +32,7 @@ class GenerateHoquScriptsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'It generates a bash scripts with proper single tasks to be executed.
-    It saves file in storage/app/hoqu_scripts dir (created if not existing).
-    Once it has been generated it can be exceuted.';
+    protected $description = 'It generates queue jobs with proper single tasks and chaining to be executed by laravel queue workers';
 
     /**
      * Create a new command instance.
@@ -53,8 +51,6 @@ class GenerateHoquScriptsCommand extends Command
      */
     public function handle()
     {
-        // Mandatory parameter name used for file name
-        $script_name = $this->argument('name');
 
         // Build tracks / poi / media collections
         $tracks = $pois = $media = [];
@@ -130,39 +126,29 @@ class GenerateHoquScriptsCommand extends Command
             return 0;
         }
 
-        // Creates Script content
-        $script_content = "#!/bin/bash \n";
         // MEDIA (skip with --mbtiles)
-        if (!$this->option('mbtiles') && count($media) > 0) {
+        if (!$this->option('mbtiles') && ($c = count($media)) > 0) {
             foreach ($media as $item) {
                 $item->updateDataChain($item);
             }
+            $this->info("Queued {$c} media into the update data chain");
         }
 
         // POI (skip with --mbtiles)
-        if (!$this->option('mbtiles') && count($pois) > 0) {
+        if (!$this->option('mbtiles') && ($c = count($pois)) > 0) {
             foreach ($pois as $item) {
                 $item->updateDataChain($item);
             }
+            $this->info("Queued {$c} poi into the update data chain");
         }
 
         // TRACKS
-        if ($tracks->count() > 0) {
+        if (($c = $tracks->count()) > 0) {
             foreach ($tracks as $track) {
                 $track->updateDataChain($track);
             }
+            $this->info("Queued {$c} tracks into the update data chain");
         }
-
-        // WRITE TO FILE
-        $dir = storage_path('app/hoqu_scripts');
-        if (!file_exists($dir)) {
-            $this->info("Directory $dir does not exist: creating;");
-            system("mkdir -p $dir");
-        }
-
-        $path = "{$dir}/{$script_name}.sh";
-        $this->info("Writing file $path");
-        file_put_contents($path, $script_content);
 
         return 0;
     }
