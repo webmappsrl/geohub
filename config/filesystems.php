@@ -91,7 +91,7 @@ return [
             'bucket' => env('AWS_DUMPS_BUCKET'),
             'url' => env('AWS_DUMPS_URL', env('AWS_URL')),
             'endpoint' => env('AWS_DUMPS_ENDPOINT', env('AWS_ENDPOINT')),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false)
+            'use_path_style_endpoint' => env('AWS_DUMPS_USE_PATH_STYLE_ENDPOINT', env('AWS_USE_PATH_STYLE_ENDPOINT', false))
         ],
         'wmfeconf' => [
             'driver' => 's3',
