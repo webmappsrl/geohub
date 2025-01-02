@@ -59,7 +59,7 @@ class Osm2CaiOutSourceIdUpdateCommand extends Command
             try {
                 $hr = $this->getOldHikingRouteByColAndValue('id', $osf->source_id);
                 $osf->source_id = 'R' . $hr->relation_id;
-                $this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai2 ' . $osf->source_id . ' source id');
+                //$this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai2 ' . $osf->source_id . ' source id');
                 $osf->save();
             } catch (Exception $e) {
                 $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with ID: ' . $osf->source_id);
@@ -81,7 +81,7 @@ class Osm2CaiOutSourceIdUpdateCommand extends Command
                 $relation_id = substr($osf->source_id, 1);
                 $hr = $this->getOldHikingRouteByColAndValue('relation_id', $relation_id);
                 $osf->source_id = $hr->id;
-                $this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai1 ' . $hr->id  . ' source id');
+                //$this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai1 ' . $hr->id  . ' source id');
                 $osf->save();
             } catch (Exception $e) {
                 $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with relation id: ' . $relation_id);
