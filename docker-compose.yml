@@ -20,7 +20,7 @@ services:
     networks:
       - geohub
   db:
-    image: postgis/postgis:14-11
+    image: postgis/postgis:14-3.2
     container_name: "postgres_${APP_NAME}"
     restart: always
     environment:
