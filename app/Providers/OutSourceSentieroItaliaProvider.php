@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+
 /**
  * TABLE:
  *      Column      |              Type               | Collation | Nullable |                         Default
@@ -62,7 +63,6 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
         $this->app->singleton(OutSourceSentieroItaliaProvider::class, function ($app) {
             return new OutSourceSentieroItaliaProvider($app);
         });
-
     }
 
     /**
@@ -70,9 +70,7 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-    }
+    public function boot() {}
 
     /**
      * Get id lists from Sentiero Italia DB
@@ -84,8 +82,9 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
      *
      * @return array
      */
-    public function getTrackList():array {
-        $db = DB::connection('out_source_sentiero_italia');
+    public function getTrackList(): array
+    {
+        $db = DB::connection('out_source_sicai');
         $ids = $db->table('sentiero_italia.SI_Tappe')
             ->select('id_2')
             ->get()
@@ -101,11 +100,12 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
      * @param string $id
      * @return array
      */
-    public function getItem(string $id): array {
+    public function getItem(string $id): array
+    {
         $data = [];
-        $db = DB::connection('out_source_sentiero_italia');
+        $db = DB::connection('out_source_sicai');
         $item = $db->table('sentiero_italia.SI_Tappe')
-            ->where('id_2',$id)
+            ->where('id_2', $id)
             ->select([
                 'tappa',
                 'descrizione_sito',
@@ -114,19 +114,19 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
                 'arrivo',
             ])
             ->first();
-        if(!is_null($item)) {
+        if (!is_null($item)) {
             // ADD Geometry
             $geometry = null;
-            $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2='.$id));
-            if(isset($res[0]->geometry)) {
-                $geometry=$res[0]->geometry;
+            $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2=' . $id));
+            if (isset($res[0]->geometry)) {
+                $geometry = $res[0]->geometry;
             }
 
-            $data=[
+            $data = [
                 'provider' => get_class($this),
-                'source_id'=> $id,
+                'source_id' => $id,
                 'tags' => [
-                    'name' => [ 'it' => "Sentiero Italia CAI: tappa {$item->tappa}, da {$item->partenza} a {$item->arrivo}" ],
+                    'name' => ['it' => "Sentiero Italia CAI: tappa {$item->tappa}, da {$item->partenza} a {$item->arrivo}"],
                     'description' => ['it' => $item->descrizione_sito],
                     'cai_scale' => $item->difficolta,
                     'from' => $item->partenza,

@@ -70,6 +70,9 @@ class Kernel extends ConsoleKernel
 
         // EUMA
         $schedule->exec('bash /root/scripts/euma_sync_updated_at.sh')->mondays()->at('4:00');
+
+        //HORIZON
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
 

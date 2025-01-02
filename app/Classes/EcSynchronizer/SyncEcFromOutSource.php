@@ -90,7 +90,6 @@ class SyncEcFromOutSource
                 $user = User::where('email', strtolower($this->author))->first();
 
                 $this->author_id = $user->id;
-
             } catch (Exception $e) {
                 throw new Exception('No User found with this email ' . $this->author);
             }
@@ -98,7 +97,8 @@ class SyncEcFromOutSource
 
         // Check the type
         Log::info('Checking paramtere TYPE');
-        if (strtolower($this->type) == 'track' ||
+        if (
+            strtolower($this->type) == 'track' ||
             strtolower($this->type) == 'poi' ||
             strtolower($this->type) == 'media' ||
             strtolower($this->type) == 'taxonomy'
@@ -128,12 +128,19 @@ class SyncEcFromOutSource
         }
 
         // Check the endpoint
-        Log::info('Checking paramtere ENDPOINT');
+        Log::info('Checking paramter ENDPOINT');
         if (!empty($this->endpoint)) {
             $all_endpoints = DB::table('out_source_features')->select('endpoint')->distinct()->get();
             $mapped_endpoints = array_map(function ($e) {
                 if (!is_null($e)) {
-                    if (strpos($e, $this->endpoint) || $e == $this->endpoint) {
+                    if (
+                        strpos($e, $this->endpoint)
+                        || $e == $this->endpoint
+                        // needed for the migration from osm2cai1 to osm2cai2
+                        // once the migration is done, update the import_sync_osm2cai_all.sh script
+                        // restoring the old https://osm2cai.cai.it and remove this line
+                        || strpos($this->endpoint, 'https://osm2cai.maphub.it') === 0
+                    ) {
                         $this->endpoint = $e;
                         return true;
                     } else {
@@ -168,7 +175,7 @@ class SyncEcFromOutSource
                 );
             }
             if (is_array($matches[0])) {
-                foreach($matches[0] as $m) {
+                foreach ($matches[0] as $m) {
                     if (!in_array($m, $available_name_formats)) {
                         throw new Exception('The value of parameter ' . $m . ' can not be found');
                     }
@@ -245,13 +252,13 @@ class SyncEcFromOutSource
     public function getList()
     {
         $features = OutSourceFeature::where('type', $this->type)
-        ->when($this->provider, function ($query) {
-            return $query->where('provider', $this->provider);
-        })
-        ->when($this->endpoint, function ($query) {
-            return $query->where('endpoint', $this->endpoint);
-        })
-        ->get();
+            ->when($this->provider, function ($query) {
+                return $query->where('provider', $this->provider);
+            })
+            ->when($this->endpoint, function ($query) {
+                return $query->where('endpoint', $this->endpoint);
+            })
+            ->get();
 
         return $features->pluck('id')->toArray();
     }
@@ -264,13 +271,13 @@ class SyncEcFromOutSource
     public function getOSFListWithUpdatedAt()
     {
         $features = OutSourceFeature::where('type', $this->type)
-        ->when($this->provider, function ($query) {
-            return $query->where('provider', $this->provider);
-        })
-        ->when($this->endpoint, function ($query) {
-            return $query->where('endpoint', $this->endpoint);
-        })
-        ->get();
+            ->when($this->provider, function ($query) {
+                return $query->where('provider', $this->provider);
+            })
+            ->when($this->endpoint, function ($query) {
+                return $query->where('endpoint', $this->endpoint);
+            })
+            ->get();
 
         return $features->pluck('updated_at', 'id')->toArray();
     }
@@ -307,16 +314,16 @@ class SyncEcFromOutSource
     public function getOSFFromSingleFeature($single_feature)
     {
         $features = OutSourceFeature::where('type', $this->type)
-        ->when($this->provider, function ($query) {
-            return $query->where('provider', $this->provider);
-        })
-        ->when($this->endpoint, function ($query) {
-            return $query->where('endpoint', $this->endpoint);
-        })
-        ->when($single_feature, function ($query, $single_feature) {
-            return $query->where('source_id', $single_feature);
-        })
-        ->get();
+            ->when($this->provider, function ($query) {
+                return $query->where('provider', $this->provider);
+            })
+            ->when($this->endpoint, function ($query) {
+                return $query->where('endpoint', $this->endpoint);
+            })
+            ->when($single_feature, function ($query, $single_feature) {
+                return $query->where('source_id', $single_feature);
+            })
+            ->get();
 
         return $features->pluck('id')->toArray();
     }
@@ -497,8 +504,8 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track RELATED_POI.');
                         foreach ($out_source->tags['related_poi'] as $OSD_poi_id) {
                             $EcPoi = EcPoi::where('out_source_feature_id', $OSD_poi_id)
-                                            ->where('user_id', $this->author_id)
-                                            ->first();
+                                ->where('user_id', $this->author_id)
+                                ->first();
 
                             if ($EcPoi && !is_null($EcPoi)) {
                                 $ec_track->ecPois()->syncWithoutDetaching($EcPoi);
@@ -533,8 +540,8 @@ class SyncEcFromOutSource
                     if (!empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                         Log::info('Attaching EC Track FEATURE_IMAGE.');
                         $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
-                                        ->where('user_id', $this->author_webmapp)
-                                        ->first();
+                            ->where('user_id', $this->author_webmapp)
+                            ->first();
 
                         if ($EcMedia && !is_null($EcMedia)) {
                             $ec_track->featureImage()->associate($EcMedia);
@@ -546,8 +553,8 @@ class SyncEcFromOutSource
                         Log::info('Attaching EC Track IMAGE_GALLERY.');
                         foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                             $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
-                                            ->where('user_id', $this->author_webmapp)
-                                            ->first();
+                                ->where('user_id', $this->author_webmapp)
+                                ->first();
 
                             if ($EcMedia && !is_null($EcMedia)) {
                                 $ec_track->ecMedia()->syncWithoutDetaching($EcMedia);
@@ -665,8 +672,8 @@ class SyncEcFromOutSource
                         if (!empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                             Log::info('Attaching EC POI FEATURE_IMAGE.');
                             $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
-                                            ->where('user_id', $this->author_webmapp)
-                                            ->first();
+                                ->where('user_id', $this->author_webmapp)
+                                ->first();
 
                             if ($EcMedia && !is_null($EcMedia)) {
                                 $ec_poi->featureImage()->associate($EcMedia);
@@ -700,8 +707,8 @@ class SyncEcFromOutSource
                             Log::info('Attaching EC POI IMAGE_GALLERY.');
                             foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                                 $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
-                                                ->where('user_id', $this->author_webmapp)
-                                                ->first();
+                                    ->where('user_id', $this->author_webmapp)
+                                    ->first();
 
                                 if ($EcMedia && !is_null($EcMedia)) {
                                     $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
@@ -794,12 +801,12 @@ class SyncEcFromOutSource
     {
         $name = [];
 
-        $languages = ['it','en'];
+        $languages = ['it', 'en'];
         foreach ($languages as $language) {
             $format = $this->name_format;
             preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
             if (is_array($matches[0])) {
-                foreach($matches[0] as $m) {
+                foreach ($matches[0] as $m) {
                     $field = str_replace('{', '', $m);
                     $field = str_replace('}', '', $field);
 
