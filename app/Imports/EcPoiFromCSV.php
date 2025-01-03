@@ -252,8 +252,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
         }
-        $ecPoi->update($ecPoiData);
-        $ecPoi->save();
+        $this->handleRelatedUrl($ecPoiData);
+        $ecPoi->updateQuietly($ecPoiData);
         return $ecPoi->id;
     }
 
@@ -329,6 +329,13 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         //unset the poi_type and theme
         unset($ecPoiData['poi_type']);
         unset($ecPoiData['theme']);
+    }
+    private function handleRelatedUrl(array &$ecPoiData): void
+    {
+        if (isset($ecPoiData['related_url']) && !empty($ecPoiData['related_url'])) {
+            $url = $ecPoiData['related_url'];
+            $ecPoiData['related_url'] = json_encode([$url => $url]);
+        }
     }
 
     /**
