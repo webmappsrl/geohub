@@ -334,7 +334,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     {
         if (isset($ecPoiData['related_url']) && !empty($ecPoiData['related_url'])) {
             $url = $ecPoiData['related_url'];
-            $ecPoiData['related_url'] = json_encode([$url => $url]);
+            $ecPoiData['related_url'] = [$url => $url];
         }
     }
 
