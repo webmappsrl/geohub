@@ -64,12 +64,12 @@ class RestoreDbCommand extends Command
         $psqlBaseCommand = "PGPASSWORD={$db_password} psql -U {$db_user} -h {$db_host}";
 
         // psql -c "DROP DATABASE geohub"
-        $drop_cmd = $psqlBaseCommand . ' -c "DROP DATABASE ' . $db_name . '"';
+        $drop_cmd = $psqlBaseCommand . ' -d postgres -c "DROP DATABASE ' . $db_name . '"';
         Log::info("db:restore -> $drop_cmd");
         exec($drop_cmd);
 
         // psql -c "CREATE DATABASE geohub"
-        $create_cmd = $psqlBaseCommand . ' -c "CREATE DATABASE ' . $db_name . '"';
+        $create_cmd = $psqlBaseCommand . ' -d postgres -c "CREATE DATABASE ' . $db_name . '"';
         Log::info("db:restore -> $create_cmd");
         exec($create_cmd);
 

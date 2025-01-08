@@ -107,15 +107,16 @@ return [
         ],
         'local' => [
             'supervisor-default' => [
-                'maxProcesses' => 20,
+                'maxProcesses' => 5,
+                'balance' => 'simple',
             ],
             'supervisor-pbf' => [
-                'maxProcesses' => 20,
-                'balanceMaxShift' => 3,
-                'balanceCooldown' => 3,
+                'maxProcesses' => 1,
+                'balance' => 'simple',
             ],
             'supervisor-layers' => [
-                'maxProcesses' => 1, // Limitato a 2 processi in ambiente locale
+                'maxProcesses' => 1,
+                'balance' => 'simple',
             ],
         ],
     ],

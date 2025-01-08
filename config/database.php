@@ -78,21 +78,6 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'out_source_sentiero_italia' => [
-            'driver' => 'pgsql',
-            'url' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_URL'),
-            'host' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_HOST', '127.0.0.1'),
-            'port' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_PORT', '5432'),
-            'database' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_DATABASE', ''),
-            'username' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_USERNAME', ''),
-            'password' => env('OUT_SOURCE_SENTIERO_ITALIA_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'schema' => 'public',
-            'sslmode' => 'prefer',
-        ],
-
         'out_source_osm' => [
             'driver' => 'pgsql',
             'url' => env('OUT_SOURCE_OSM_DB_URL'),
@@ -101,6 +86,21 @@ return [
             'database' => env('OUT_SOURCE_OSM_DB_DATABASE', ''),
             'username' => env('OUT_SOURCE_OSM_DB_USERNAME', ''),
             'password' => env('OUT_SOURCE_OSM_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+        //temporary connection to old osm2cai db
+        'out_source_osm2cai_old' => [
+            'driver' => 'pgsql',
+            'url' => env('OUT_SOURCE_OSM_DB_URL'),
+            'host' => env('OUT_SOURCE_OSM2CAI_OLD_DB_HOST', '116.203.180.132'),
+            'port' => env('OUT_SOURCE_OSM_DB_PORT', '5432'),
+            'database' => env('OUT_SOURCE_OSM2CAI_OLD_DB_DATABASE', env('OUT_SOURCE_OSM_DB_DATABASE', '')),
+            'username' => env('OUT_SOURCE_OSM2CAI_OLD_DB_USERNAME', env('OUT_SOURCE_OSM_DB_USERNAME', '')),
+            'password' => env('OUT_SOURCE_OSM2CAI_OLD_DB_PASSWORD', env('OUT_SOURCE_OSM_DB_PASSWORD', '')),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
