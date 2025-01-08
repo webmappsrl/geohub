@@ -85,7 +85,10 @@ class UploadPoiFile extends Action
      */
     private function loadSpreadsheet($file): Spreadsheet
     {
-        return IOFactory::load($file);
+        $reader = IOFactory::createReader('Xlsx');
+        $reader->setReadDataOnly(true);
+        $reader->setReadEmptyCells(false);
+        return $reader->load($file);
     }
 
     /**
@@ -126,7 +129,7 @@ class UploadPoiFile extends Action
      */
     private function hasValidData(Worksheet $worksheet): bool
     {
-        for ($col = 'B'; $col <= $worksheet->getHighestColumn(2); $col++) {
+        for ($col = 'B'; $col <= $worksheet->getHighestDataColumn(2); $col++) {
             if ($worksheet->getCell($col . '2')->getValue() !== null) {
                 return true;
             }
