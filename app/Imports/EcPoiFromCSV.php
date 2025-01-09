@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Illuminate\Support\Facades\Hash;
 
 class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 {
@@ -202,17 +203,63 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         $ecMedia = null;
         $storage = Storage::disk('public');
         try {
-            $url = $ecPoiData['name_it'] . '.png';
-            $contents = file_get_contents($ecPoiData['feature_image']);
-            $storage->put($url, $contents); // salvo l'image sullo storage come concatenazione nome estensione
+            $featureImage = trim($ecPoiData['feature_image']);
+            $filename = uniqid('media_', true) . '.png';
+            $fileurl = hash('sha256', $featureImage) . '.png';
+            $contents = file_get_contents($featureImage);
+            if (!$storage->exists($fileurl)) {
+                $storage->put($fileurl, $contents); // salvo l'image sullo storage come concatenazione nome estensione
+            }
 
-            $ecMedia = new EcMedia(['name' => $ecPoiData['name_it'], 'url' => $url, 'geometry' => $ecPoiData['geometry']]);
-            $ecMedia->save();
+            $ecMedia = EcMedia::where('url', $fileurl)->first();
+            if (!$ecMedia) {
+                $ecMedia = new EcMedia(['name' => $filename, 'url' => $fileurl, 'geometry' => $ecPoiData['geometry']]);
+                $ecMedia->save();
+            }
         } catch (Exception $e) {
             Log::error(__("featureImage: create ec media -> ") . $e->getMessage());
         }
         $ecPoi->featureImage()->associate($ecMedia);
         unset($ecPoiData['feature_image']);
+    }
+
+
+    /**
+     * Add Gallery to Poi data.
+     *
+     * @param array $ecPoiData
+     */
+    private function addGalleryImage(array &$ecPoiData, $ecPoi)
+    {
+        $galleryToSave = [];
+        $storage = Storage::disk('public');
+        try {
+            $galleryToIterate = explode(',', $ecPoiData['gallery']);
+            foreach ($galleryToIterate as $imagePath) {
+                $imagePath = trim($imagePath);
+                $contents = file_get_contents($imagePath);
+                $filename = uniqid('media_', true) . '.png';
+                $fileurl = hash('sha256', $imagePath) . '.png';
+
+                //check if the image already exists
+                if (!$storage->exists($fileurl)) {
+                    $storage->put($fileurl, $contents);
+                }
+
+                $ecMedia = EcMedia::where('url', $fileurl)->first();
+                if (!$ecMedia) {
+                    $ecMedia = new EcMedia(['name' => $filename, 'url' => $fileurl, 'geometry' => $ecPoiData['geometry']]);
+                    $ecMedia->save();
+                }
+                $galleryToSave[] = $ecMedia->id;
+            }
+        } catch (Exception $e) {
+            Log::error(__("Gallery: create ec media -> ") . $e->getMessage());
+        }
+        if (!empty($galleryToSave)) {
+            $ecPoi->ecMedia()->sync($galleryToSave);
+        }
+        unset($ecPoiData['gallery']);
     }
 
     /**
@@ -252,6 +299,9 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
         }
+        if (isset($ecPoiData['gallery']) && !empty($ecPoiData['gallery'])) {
+            $this->addGalleryImage($ecPoiData, $ecPoi);
+        }
         $this->handleRelatedUrl($ecPoiData);
         $ecPoi->updateQuietly($ecPoiData);
         return $ecPoi->id;
@@ -266,6 +316,9 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         $ecPoi = EcPoi::find($ecPoiData['id']);
         if (isset($ecPoiData['feature_image']) && !empty($ecPoiData['feature_image'])) {
             $this->addFeatureImage($ecPoiData, $ecPoi);
+        }
+        if (isset($ecPoiData['gallery']) && !empty($ecPoiData['gallery'])) {
+            $this->addGalleryImage($ecPoiData, $ecPoi);
         }
         $ecPoi->update($ecPoiData);
         $this->setTranslations($ecPoi, $ecPoiData);
