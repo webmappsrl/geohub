@@ -69,7 +69,14 @@ class Kernel extends ConsoleKernel
         // $schedule->exec('bash /root/scripts/ir_import_sync_hoqu.sh')->dailyAt('23:00');
 
         // EUMA
+
         $schedule->exec('bash /root/geohub.webmapp.it/scripts/euma_sync_updated_at.sh')->mondays()->at('4:00');
+
+        $schedule->exec('bash /root/scripts/euma_sync_updated_at.sh')->mondays()->at('4:00');
+
+        //HORIZON
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
     }
 
 
