@@ -352,8 +352,8 @@ class ActionEvent extends Model
     {
         return static::where('batch_id', $batchId)
             ->whereNotIn('status', ['finished', 'failed'])->update([
-                        'status' => 'running',
-                    ]);
+                'status' => 'running',
+            ]);
     }
 
     /**
@@ -366,8 +366,8 @@ class ActionEvent extends Model
     {
         return static::where('batch_id', $batchId)
             ->whereNotIn('status', ['finished', 'failed'])->update([
-                        'status' => 'finished',
-                    ]);
+                'status' => 'finished',
+            ]);
     }
 
     /**
@@ -393,9 +393,9 @@ class ActionEvent extends Model
     {
         return static::where('batch_id', $batchId)
             ->whereNotIn('status', ['finished', 'failed'])->update([
-                        'status' => 'failed',
-                        'exception' => $e ? (string) $e : '',
-                    ]);
+                'status' => 'failed',
+                'exception' => $e ? (string) $e : '',
+            ]);
     }
 
     /**

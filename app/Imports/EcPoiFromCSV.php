@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Illuminate\Support\Facades\Hash;
 
 class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 {
@@ -218,11 +217,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         unset($ecPoiData['feature_image']);
     }
 
-
     /**
      * Add Gallery to Poi data.
-     *
-     * @param array $ecPoiData
      */
     private function addGalleryImage(array &$ecPoiData, $ecPoi)
     {
@@ -233,25 +229,25 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             foreach ($galleryToIterate as $imagePath) {
                 $imagePath = trim($imagePath);
                 $contents = file_get_contents($imagePath);
-                $filename = uniqid('media_', true) . '.png';
-                $fileurl = hash('sha256', $imagePath) . '.png';
+                $filename = uniqid('media_', true).'.png';
+                $fileurl = hash('sha256', $imagePath).'.png';
 
-                //check if the image already exists
-                if (!$storage->exists($fileurl)) {
+                // check if the image already exists
+                if (! $storage->exists($fileurl)) {
                     $storage->put($fileurl, $contents);
                 }
 
                 $ecMedia = EcMedia::where('url', $fileurl)->first();
-                if (!$ecMedia) {
+                if (! $ecMedia) {
                     $ecMedia = new EcMedia(['name' => $filename, 'url' => $fileurl, 'geometry' => $ecPoiData['geometry']]);
                     $ecMedia->save();
                 }
                 $galleryToSave[] = $ecMedia->id;
             }
         } catch (Exception $e) {
-            Log::error(__("Gallery: create ec media -> ") . $e->getMessage());
+            Log::error(__('Gallery: create ec media -> ').$e->getMessage());
         }
-        if (!empty($galleryToSave)) {
+        if (! empty($galleryToSave)) {
             $ecPoi->ecMedia()->sync($galleryToSave);
         }
         unset($ecPoiData['gallery']);
