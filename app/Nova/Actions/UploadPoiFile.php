@@ -133,6 +133,7 @@ class UploadPoiFile extends Action
     private function hasValidData(Worksheet $worksheet): bool
     {
         for ($col = 'B'; $col <= $worksheet->getHighestDataColumn(2); $col++) {
+
             if ($worksheet->getCell($col.'2')->getValue() !== null) {
                 return true;
             }
