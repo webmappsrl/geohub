@@ -21,9 +21,9 @@ class CreateUserGeneratedDataTable extends Migration
             $table->geometry('geometry')->nullable();
             $table->jsonb('raw_data')->nullable();
             $table->jsonb('raw_gallery')->nullable();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 

@@ -4,29 +4,24 @@ namespace App\Nova\Actions;
 
 use App\Jobs\UpdateTrackFromOsmJob;
 use App\Models\EcTrack;
-use Exception;
+use App\Traits\HandlesData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\Textarea;
-use App\Traits\HandlesData;
-use Illuminate\Support\Facades\Bus;
-use Throwable;
 
 class CreateTracksWithOSMIDAction extends Action
 {
+    use HandlesData;
     use InteractsWithQueue;
     use Queueable;
-    use HandlesData;
 
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -44,10 +39,9 @@ class CreateTracksWithOSMIDAction extends Action
                         ->where('osmid', intval($id))
                         ->first();
 
-
-                    if (!$track) {
+                    if (! $track) {
                         // Se non esiste, crea una nuova traccia
-                        $track = new EcTrack();
+                        $track = new EcTrack;
                         $track->user_id = auth()->user()->id;
                         $track->osmid = intval($id);
                         $track->name = '';  // Imposta il nome come stringa vuota o un valore predefinito
@@ -64,9 +58,9 @@ class CreateTracksWithOSMIDAction extends Action
                 }
             }
 
-            $message = 'Processed ' . $successCount . ' OSM IDs successfully';
-            if (!empty($errorCount)) {
-                $message .= ', but encountered errors for ' . implode(", ", $errorCount);
+            $message = 'Processed '.$successCount.' OSM IDs successfully';
+            if (! empty($errorCount)) {
+                $message .= ', but encountered errors for '.implode(', ', $errorCount);
             }
 
             return Action::message($message);

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\App;
-use App\Models\EcTrack;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -45,9 +44,9 @@ class EcTrackIndexCommand extends Command
     {
         $app_id = $this->argument('app_id');
 
-        if (!isset($app_id)) {
+        if (! isset($app_id)) {
             $this->defaultIndex();
-        } else if (isset($app_id)) {
+        } elseif (isset($app_id)) {
             $this->appIndex($app_id);
         }
 
@@ -60,12 +59,12 @@ class EcTrackIndexCommand extends Command
         Log::info('===========================');
         Log::info('===========================');
         Log::info('===========================');
-        Log::info('Indexing app ' . $app->id);
+        Log::info('Indexing app '.$app->id);
         if ($this->option('no-elastic')) {
             Log::info('Only config and pois file');
             $app->BuildPoisGeojson();
             $app->BuildConfJson();
-        } else if ($this->option('info-elastic')) {
+        } elseif ($this->option('info-elastic')) {
             Log::info('Only info elastic');
             $app->elasticRoutine();
         } else {

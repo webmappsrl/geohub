@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Hamcrest\Type\IsString;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class Feature extends Model
 {
@@ -22,9 +20,10 @@ class Feature extends Model
         foreach ($array as $property => $value) {
             if (is_null($value) || in_array($property, $propertiesToClear)) {
                 unset($array[$property]);
-            } else if ($property == 'relative_url') {
-                if (Storage::disk('public')->exists($value))
+            } elseif ($property == 'relative_url') {
+                if (Storage::disk('public')->exists($value)) {
                     $array['url'] = Storage::disk('public')->url($value);
+                }
                 unset($array[$property]);
             }
         }
@@ -40,26 +39,27 @@ class Feature extends Model
         } else {
             $properties = $this->properties;
         }
-        $properties['id']   = $this->id;
+        $properties['id'] = $this->id;
         $geom = $model::where('id', '=', $this->id)
             ->select(
-                DB::raw("ST_AsGeoJSON(geometry) as geom")
+                DB::raw('ST_AsGeoJSON(geometry) as geom')
             )
             ->first()
             ->geom;
 
         if (isset($geom)) {
             return [
-                "type" => "Feature",
-                "properties" => $properties,
-                "geometry" => json_decode($geom, true)
+                'type' => 'Feature',
+                'properties' => $properties,
+                'geometry' => json_decode($geom, true),
             ];
-        } else
+        } else {
             return [
-                "type" => "Feature",
-                "properties" => $properties,
-                "geometry" => null
+                'type' => 'Feature',
+                'properties' => $properties,
+                'geometry' => null,
             ];
+        }
     }
 
     public function getGeojson($version = 'v1'): ?array
@@ -81,7 +81,7 @@ class Feature extends Model
             $metadata = json_decode($this->metadata, true);
             $properties = array_merge($properties, $metadata);
         }
-        if (!empty($this->raw_data)) {
+        if (! empty($this->raw_data)) {
             $properties = array_merge($properties, (array) json_decode($this->raw_data, true));
         }
         foreach ($propertiesToClear as $property) {
@@ -90,7 +90,6 @@ class Feature extends Model
         $this->properties = $properties;
         $this->saveQuietly();
     }
-
 
     public function populatePropertyForm($acqisitionForm): void
     {

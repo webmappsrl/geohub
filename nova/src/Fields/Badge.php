@@ -11,10 +11,9 @@ class Badge extends Field
      *
      * @param  string  $name
      * @param  string|callable|null  $attribute
-     * @param  callable|null  $resolveCallback
      * @return void
      */
-    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    public function __construct($name, $attribute = null, ?callable $resolveCallback = null)
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
@@ -71,7 +70,6 @@ class Badge extends Field
     /**
      * Add badge types and their corresponding CSS classes to the built-in ones.
      *
-     * @param  array  $types
      * @return $this
      */
     public function addTypes(array $types)
@@ -84,7 +82,6 @@ class Badge extends Field
     /**
      * Set the badge types and their corresponding CSS classes.
      *
-     * @param  array  $types
      * @return $this
      */
     public function types(array $types)
@@ -97,7 +94,6 @@ class Badge extends Field
     /**
      * Set the labels for each possible field value.
      *
-     * @param  array  $labels
      * @return $this
      */
     public function labels(array $labels)
@@ -110,7 +106,6 @@ class Badge extends Field
     /**
      * Set the callback to be used to determine the field's displayable label.
      *
-     * @param  callable  $labelCallback
      * @return $this
      */
     public function label(callable $labelCallback)
@@ -123,7 +118,6 @@ class Badge extends Field
     /**
      * Map the possible field values to the built-in badge types.
      *
-     * @param  array  $map
      * @return $this
      */
     public function map(array $map)

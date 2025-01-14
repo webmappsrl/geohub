@@ -103,7 +103,6 @@ class TrendResult implements JsonSerializable
     /**
      * Set the trend of data for the metric.
      *
-     * @param  array  $trend
      * @return $this
      */
     public function trend(array $trend)

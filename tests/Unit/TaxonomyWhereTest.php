@@ -26,36 +26,35 @@ class TaxonomyWhereTest extends TestCase
      *
      * @return void
      */
-
-    public function testIsEditableByUserInterface()
+    public function test_is_editable_by_user_interface()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake']);
         $this->assertTrue($where->isEditableByUserInterface());
     }
 
-    public function testIsNotEditableByUserInterface()
+    public function test_is_not_editable_by_user_interface()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake', 'import_method' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake', 'import_method' => 'fake']);
         $this->assertFalse($where->isEditableByUserInterface());
     }
 
-    public function testIsImportedByExternalData()
+    public function test_is_imported_by_external_data()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake', 'import_method' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake', 'import_method' => 'fake']);
         $this->assertTrue($where->isImportedByExternalData());
     }
 
-    public function testIsNotImportedByExternalData()
+    public function test_is_not_imported_by_external_data()
     {
         $this->_getHoquServiceProviderMock();
-        $where = new TaxonomyWhere(array('name' => 'fake'));
+        $where = new TaxonomyWhere(['name' => 'fake']);
         $this->assertFalse($where->isImportedByExternalData());
     }
 
-    public function testSaveTaxonomyWhereOk()
+    public function test_save_taxonomy_where_ok()
     {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -63,22 +62,22 @@ class TaxonomyWhereTest extends TestCase
                 ->with('update_geomixer_taxonomy_where', ['id' => 1])
                 ->andReturn(201);
         });
-        $where = new TaxonomyWhere();
+        $where = new TaxonomyWhere;
         $where->id = 1;
         $where->save();
     }
 
-    public function testSaveTaxonomyWhereError()
+    public function test_save_taxonomy_where_error()
     {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
                 ->with('update_geomixer_taxonomy_where', ['id' => 1])
-                ->andThrows(new Exception());
+                ->andThrows(new Exception);
         });
         Log::shouldReceive('error')
             ->once();
-        $where = new TaxonomyWhere();
+        $where = new TaxonomyWhere;
         $where->id = 1;
         $where->save();
     }

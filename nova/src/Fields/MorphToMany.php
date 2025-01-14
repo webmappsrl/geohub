@@ -117,7 +117,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Determine if the field should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)
@@ -142,7 +141,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Get the validation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getRules(NovaRequest $request)
@@ -159,7 +157,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Get the creation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getCreationRules(NovaRequest $request)
@@ -172,7 +169,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Build an attachable query for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  bool  $withTrashed
      * @return \Laravel\Nova\Contracts\QueryBuilder
      */
@@ -185,9 +181,9 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
         $request->first === 'true'
                         ? $query->whereKey($model->newQueryWithoutScopes(), $request->current)
                         : $query->search(
-                                $request, $model->newQuery(), $request->search,
-                                [], [], TrashedStatus::fromBoolean($withTrashed)
-                          );
+                            $request, $model->newQuery(), $request->search,
+                            [], [], TrashedStatus::fromBoolean($withTrashed)
+                        );
 
         return $query->tap(function ($query) use ($request, $model) {
             forward_static_call($this->attachableQueryCallable($request, $model), $request, $query, $this);
@@ -197,7 +193,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Get the attachable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return array
      */
@@ -211,7 +206,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Get the attachable query method name.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return string
      */
@@ -227,7 +221,6 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
     /**
      * Format the given attachable resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  mixed  $resource
      * @return array
      */
@@ -304,7 +297,7 @@ class MorphToMany extends Field implements DeletableContract, ListableField, Piv
             'debounce' => $this->debounce,
             'listable' => true,
             'morphToManyRelationship' => $this->manyToManyRelationship,
-            'perPage'=> $this->resourceClass::$perPageViaRelationship,
+            'perPage' => $this->resourceClass::$perPageViaRelationship,
             'resourceName' => $this->resourceName,
             'searchable' => $this->searchable,
             'withSubtitles' => $this->withSubtitles,

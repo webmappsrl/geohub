@@ -9,7 +9,6 @@ trait FillsFields
     /**
      * Fill a new model instance using the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return array
      */
@@ -24,7 +23,6 @@ trait FillsFields
     /**
      * Fill a new model instance using the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return array
      */
@@ -39,7 +37,6 @@ trait FillsFields
     /**
      * Fill a new pivot model instance using the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  \Illuminate\Database\Eloquent\Relations\Pivot  $pivot
      * @return array
@@ -57,7 +54,6 @@ trait FillsFields
     /**
      * Fill a new pivot model instance using the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  \Illuminate\Database\Eloquent\Relations\Pivot  $pivot
      * @return array
@@ -75,7 +71,6 @@ trait FillsFields
     /**
      * Fill the given fields for the model.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  \Illuminate\Support\Collection  $fields
      * @return array

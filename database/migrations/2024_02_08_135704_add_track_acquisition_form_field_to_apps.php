@@ -2,14 +2,13 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AddTrackAcquisitionFormFieldToApps extends Migration
 {
-
     public $default_json =
-    '[
+        '[
         {
             "id" : "track",
             "label" : 
@@ -110,7 +109,6 @@ class AddTrackAcquisitionFormFieldToApps extends Migration
      */
     public function up()
     {
-
 
         Schema::table('apps', function (Blueprint $table) {
             $table->text('track_acquisition_form')->default($this->default_json);

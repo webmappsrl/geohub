@@ -35,7 +35,7 @@ class AddFieldsToAppsTable extends Migration
                 'long_description',
                 'privacy_url',
                 'website_url',
-                'keywords'
+                'keywords',
             ]);
         });
     }

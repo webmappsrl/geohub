@@ -56,7 +56,6 @@ class AddSkuToUgcTables extends Migration
     /**
      * Funzione helper per aggiornare la colonna SKU in una tabella specifica
      *
-     * @param string $tableName
      * @return void
      */
     protected function updateTableWithSku(string $tableName)

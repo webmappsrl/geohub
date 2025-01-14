@@ -2,28 +2,24 @@
 
 namespace App\Jobs;
 
-
 class LayerPBFJob extends TrackPBFJob
 {
-
     public function __construct($z, $x, $y, $app_id, $author_id)
     {
         parent::__construct($z, $x, $y, $app_id, $author_id);
     }
 
-
     /**
      * Override di generateSQL per creare un'unica geometria per layer.
      *
-     * @param array $boundingBox
-     * @param array $associatedLayerMap
-     * @return string
+     * @param  array  $boundingBox
+     * @param  array  $associatedLayerMap
      */
     protected function generateSQL($boundingBox): string
     {
         // Recupera l'app con i layer associati
         $app = \App\Models\App::with('layers')->find($this->app_id);
-        if (!$app) {
+        if (! $app) {
             throw new \Exception("App not found: {$this->app_id}");
         }
 

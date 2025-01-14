@@ -3,7 +3,6 @@
 namespace App\Nova\Actions;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,6 @@ class ReverseEcTrackGeomtryAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -33,11 +30,11 @@ class ReverseEcTrackGeomtryAction extends Action
                 }
 
                 $reversedGeometry = DB::select(" SELECT ST_Reverse('$model->geometry') as geometry")[0]->geometry;
-        
+
                 $model->geometry = $reversedGeometry;
                 $model->save();
             } catch (\Exception $e) {
-                Log::error('An error occurred during Reverse operation: ' . $e->getMessage());
+                Log::error('An error occurred during Reverse operation: '.$e->getMessage());
             }
         }
     }

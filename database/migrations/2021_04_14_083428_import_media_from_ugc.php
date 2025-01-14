@@ -6,21 +6,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
-class ImportMediaFromUGC extends Migration {
+class ImportMediaFromUGC extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         foreach (['ugc_track', 'ugc_poi'] as $tableName) {
-            $associations = $this->importMediaFromTable($tableName . 's');
+            $associations = $this->importMediaFromTable($tableName.'s');
             $this->updateSchema($tableName);
             $this->insertAssociations($tableName, $associations);
         }
     }
 
-    private function importMediaFromTable(string $tableName): array {
+    private function importMediaFromTable(string $tableName): array
+    {
         $result = [];
         $baseImageName = 'media/images/ugc/image_';
         $collection = DB::table($tableName)->get();
@@ -29,18 +32,20 @@ class ImportMediaFromUGC extends Migration {
                 $gallery = json_decode($row->raw_gallery, true);
                 foreach ($gallery as $imageRaw) {
                     $maxId = DB::table('ugc_media')->max('id');
-                    if (is_null($maxId)) $maxId = 0;
+                    if (is_null($maxId)) {
+                        $maxId = 0;
+                    }
                     $maxId++;
                     preg_match("/data:image\/(.*?);/", $imageRaw, $imageExtension);
                     $image = preg_replace('/data:image\/(.*?);base64,/', '', $imageRaw); // remove the type part
                     $image = str_replace(' ', '+', $image);
                     while (Storage::disk('public')->exists(
-                        $baseImageName . $maxId . '.' . $imageExtension[1]
+                        $baseImageName.$maxId.'.'.$imageExtension[1]
                     )) {
                         $maxId++;
                     }
 
-                    $imageName = $baseImageName . $maxId . '.' . $imageExtension[1];
+                    $imageName = $baseImageName.$maxId.'.'.$imageExtension[1];
                     Storage::disk('public')->put(
                         $imageName,
                         base64_decode($image)
@@ -58,10 +63,12 @@ class ImportMediaFromUGC extends Migration {
                         'user_id' => $row->user_id,
                         'app_id' => $row->app_id,
                         'relative_url' => $imageName,
-                        'geometry' => strtolower($geometry->geom) === 'st_point' ? $row->geometry : null
+                        'geometry' => strtolower($geometry->geom) === 'st_point' ? $row->geometry : null,
                     ]);
 
-                    if (!isset($result[$row->id])) $result[$row->id] = [];
+                    if (! isset($result[$row->id])) {
+                        $result[$row->id] = [];
+                    }
                     $result[$row->id][] = $id;
                 }
             }
@@ -70,27 +77,29 @@ class ImportMediaFromUGC extends Migration {
         return $result;
     }
 
-    private function updateSchema(string $tableName) {
-        Schema::dropColumns($tableName . 's', ['raw_gallery']);
-        Schema::create('ugc_media_' . $tableName, function (Blueprint $table) use ($tableName) {
+    private function updateSchema(string $tableName)
+    {
+        Schema::dropColumns($tableName.'s', ['raw_gallery']);
+        Schema::create('ugc_media_'.$tableName, function (Blueprint $table) use ($tableName) {
             $table->id();
             $table->unsignedBigInteger('ugc_media_id');
             $table->foreign('ugc_media_id')
                 ->references('id')
                 ->on('ugc_media');
-            $table->unsignedBigInteger($tableName . '_id');
-            $table->foreign($tableName . '_id')
+            $table->unsignedBigInteger($tableName.'_id');
+            $table->foreign($tableName.'_id')
                 ->references('id')
-                ->on($tableName . 's');
+                ->on($tableName.'s');
         });
     }
 
-    private function insertAssociations(string $tableName, array $associations) {
+    private function insertAssociations(string $tableName, array $associations)
+    {
         foreach ($associations as $tableId => $mediaIds) {
             foreach ($mediaIds as $mediaId) {
-                DB::table('ugc_media_' . $tableName)->insert([
+                DB::table('ugc_media_'.$tableName)->insert([
                     'ugc_media_id' => $mediaId,
-                    $tableName . '_id' => $tableId
+                    $tableName.'_id' => $tableId,
                 ]);
             }
         }
@@ -101,7 +110,8 @@ class ImportMediaFromUGC extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::table('ugc_pois', function ($table) {
             $table->jsonb('raw_gallery')->nullable();
         });

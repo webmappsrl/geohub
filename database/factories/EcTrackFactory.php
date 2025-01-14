@@ -29,10 +29,10 @@ class EcTrackFactory extends Factory
         $lng2 = $this->faker->randomFloat(2, 42, 45);
 
         // Build related_url
-        $num = $this->faker->numberBetween(1,3);
-        $related_url=[];
-        for ($i=1;$i<=$num;$i++) {
-            $related_url[$this->faker->slug()]=$this->faker->url();
+        $num = $this->faker->numberBetween(1, 3);
+        $related_url = [];
+        for ($i = 1; $i <= $num; $i++) {
+            $related_url[$this->faker->slug()] = $this->faker->url();
         }
 
         return [
@@ -50,8 +50,8 @@ class EcTrackFactory extends Factory
             ],
             'from' => $this->faker->city(),
             'to' => $this->faker->city(),
-            'ref' => $this->faker->numberBetween(100,999),
-            'cai_scale' => $this->faker->randomElement(['T','E','EE','EEA']),
+            'ref' => $this->faker->numberBetween(100, 999),
+            'cai_scale' => $this->faker->randomElement(['T', 'E', 'EE', 'EEA']),
             'related_url' => $related_url,
             'not_accessible' => $this->faker->boolean(),
             'not_accessible_message' => $this->faker->text(100),
@@ -61,8 +61,8 @@ class EcTrackFactory extends Factory
             'import_method' => $this->faker->name(),
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING($lat1 $lng1 0, $lat2 $lng1 0, $lat2 $lng2 0, $lat1 $lng2 0)'))"),
             'difficulty' => [
-                'it' => $this->faker->randomElement(['bassa','media','alta']),
-                'en' => $this->faker->randomElement(['low','medium','high'])
+                'it' => $this->faker->randomElement(['bassa', 'media', 'alta']),
+                'en' => $this->faker->randomElement(['low', 'medium', 'high']),
             ],
             'distance' => $this->faker->randomFloat(1, 10, 25),
             'ascent' => $this->faker->randomFloat(0, 300, 1000),

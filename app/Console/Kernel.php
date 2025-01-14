@@ -19,7 +19,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -53,14 +52,13 @@ class Kernel extends ConsoleKernel
         // Index FIE
         $schedule->command('geohub:index-tracks 29 --no-elastic')->dailyAt('05:20');
 
-
         // ###########################################################
         // # SPECIAL PROJECT
         // ###########################################################
 
         // Import and Sync OSM2CAI
         $schedule->exec('bash /root/geohub.webmapp.it/scripts/import_sync_osm2cai_all.sh')->mondays()->at('1:00');
-        //$schedule->exec('bash /root/scripts/osm2cai_hoqu_script.sh')->tuesdays('1:00');
+        // $schedule->exec('bash /root/scripts/osm2cai_hoqu_script.sh')->tuesdays('1:00');
         $schedule->command('geohub:index-tracks 15')->wednesdays()->at('1:00');
         $schedule->command('geohub:index-tracks 26')->thursdays()->at('1:00');
         $schedule->command('geohub:generate_dem 26 dem')->fridays()->at('1:00');
@@ -74,11 +72,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->exec('bash /root/scripts/euma_sync_updated_at.sh')->mondays()->at('4:00');
 
-        //HORIZON
+        // HORIZON
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
     }
-
 
     /**
      * Register the commands for the application.
@@ -87,7 +84,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
     }

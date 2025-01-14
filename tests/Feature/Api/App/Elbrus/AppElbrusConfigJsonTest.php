@@ -2,19 +2,20 @@
 
 namespace Tests\Feature\Api\App;
 
+use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\App;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class AppElbrusConfigJsonTest extends TestCase {
+class AppElbrusConfigJsonTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -26,7 +27,8 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test 404 with not found app onject
      */
-    public function testNoIdReturnCode404() {
+    public function test_no_id_return_code404()
+    {
         $result = $this->getJson('/api/app/elbrus/0/config.json', []);
         $this->assertEquals(404, $result->getStatusCode());
     }
@@ -34,9 +36,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test code 200 for existing app
      */
-    public function testExistingAppReturns200() {
+    public function test_existing_app_returns200()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
     }
 
@@ -44,9 +47,10 @@ class AppElbrusConfigJsonTest extends TestCase {
      * Test name, id, customerName API
      * config.json example https://k.webmapp.it/caipontedera/config.json
      */
-    public function testSectionApp() {
+    public function test_section_app()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -59,9 +63,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test minZoom, maxZoom, defZoom in MAP section
      */
-    public function testSectionMapZoom() {
+    public function test_section_map_zoom()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -74,9 +79,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test layers in MAP section
      */
-    public function testSectionMapLayers() {
+    public function test_section_map_layers()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -126,9 +132,10 @@ class AppElbrusConfigJsonTest extends TestCase {
      * ]
      * }
      */
-    public function testSectionReports() {
+    public function test_section_reports()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -151,9 +158,10 @@ class AppElbrusConfigJsonTest extends TestCase {
      * }
      * }
      */
-    public function testSectionGeolocation() {
+    public function test_section_geolocation()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -171,11 +179,11 @@ class AppElbrusConfigJsonTest extends TestCase {
      * "enable": true,
      * "loginToGeohub": true
      * }
-     *
      */
-    public function testSectionAuth() {
+    public function test_section_auth()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -187,9 +195,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test THEME section
      */
-    public function testSectionTheme() {
+    public function test_section_theme()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -203,9 +212,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test OPTIONS section
      */
-    public function testSectionOptions() {
+    public function test_section_options()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -220,15 +230,16 @@ class AppElbrusConfigJsonTest extends TestCase {
         foreach ($fields as $key => $field) {
             $this->assertEquals($app->$key, $json->OPTIONS->$field);
         }
-        $this->assertEquals('https://geohub.webmapp.it/api/app/elbrus/' . $app->id . '/', $json->OPTIONS->baseUrl);
+        $this->assertEquals('https://geohub.webmapp.it/api/app/elbrus/'.$app->id.'/', $json->OPTIONS->baseUrl);
     }
 
     /**
      * Test TABLES section
      */
-    public function testSectionTables() {
+    public function test_section_tables()
+    {
         $app = App::factory()->create();
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -239,7 +250,7 @@ class AppElbrusConfigJsonTest extends TestCase {
             'table_details_show_kml_download' => 'showKmlDownload',
             'table_details_show_related_poi' => 'showRelatedPoi',
             'table_details_show_geojson_download' => 'showGeojsonDownload',
-            'table_details_show_shapefile_download' => 'showShapefileDownload'
+            'table_details_show_shapefile_download' => 'showShapefileDownload',
         ];
         $invertedFields = [
             'table_details_show_duration_forward' => 'hide_duration:forward',
@@ -261,16 +272,17 @@ class AppElbrusConfigJsonTest extends TestCase {
             $this->assertEquals($app->$modelField, $json->TABLES->details->$field);
         }
         foreach ($invertedFields as $modelField => $field) {
-            $this->assertEquals($app->$modelField, !$json->TABLES->details->$field);
+            $this->assertEquals($app->$modelField, ! $json->TABLES->details->$field);
         }
     }
 
     /**
      * Test ROUTING section enabled
      */
-    public function testRoutingSectionEnabled() {
+    public function test_routing_section_enabled()
+    {
         $app = App::factory()->create(['enable_routing' => true]);
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -281,9 +293,10 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * Test ROUTING section disabled
      */
-    public function testRoutingSectionDisabled() {
+    public function test_routing_section_disabled()
+    {
         $app = App::factory()->create(['enable_routing' => false]);
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -291,7 +304,8 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertFalse($json->ROUTING->enable);
     }
 
-    public function testBBoxWithOneTrackSquare() {
+    public function test_b_box_with_one_track_square()
+    {
         $user = User::factory()->create();
         $app = App::factory()->create();
         $app->user_id = $user->id;
@@ -300,7 +314,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $track->user_id = $user->id;
         $track->save();
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -311,7 +325,8 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertEquals(10, $json->MAP->bbox[3]);
     }
 
-    public function testBBoxWithOneTrackRectangle() {
+    public function test_b_box_with_one_track_rectangle()
+    {
         $user = User::factory()->create();
         $app = App::factory()->create();
         $app->user_id = $user->id;
@@ -320,7 +335,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $track->user_id = $user->id;
         $track->save();
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -331,7 +346,8 @@ class AppElbrusConfigJsonTest extends TestCase {
         $this->assertEquals(4, $json->MAP->bbox[3]);
     }
 
-    public function testBBoxWithTwoTrack() {
+    public function test_b_box_with_two_track()
+    {
         $user = User::factory()->create();
         $app = App::factory()->create();
         $app->user_id = $user->id;
@@ -343,7 +359,7 @@ class AppElbrusConfigJsonTest extends TestCase {
         $track1->user_id = $user->id;
         $track1->save();
 
-        $result = $this->getJson('/api/app/elbrus/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/elbrus/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -357,8 +373,9 @@ class AppElbrusConfigJsonTest extends TestCase {
     /**
      * @test
      */
-    public function check_if_section_external_overlays_exists() {
-        $external_overlays = <<<EXTERNAL_OVERLAYS
+    public function check_if_section_external_overlays_exists()
+    {
+        $external_overlays = <<<'EXTERNAL_OVERLAYS'
 [
     {
         "id": "punti_acqua",
@@ -388,14 +405,14 @@ EXTERNAL_OVERLAYS;
         $user = User::factory()->create();
         $app = App::factory()->create([
             'user_id' => $user->id,
-            'external_overlays' => $external_overlays
+            'external_overlays' => $external_overlays,
         ]);
 
         $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0 0, 3 4 0)'))")]);
         $track->user_id = $user->id;
         $track->save();
 
-        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $response = $this->get(route('api.app.elbrus.config', ['id' => $app->id]));
         $this->assertEquals(200, $response->getStatusCode());
         $json = json_decode($response->getContent());
 
@@ -407,17 +424,18 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_languages_section_with_only_default_set() {
+    public function check_languages_section_with_only_default_set()
+    {
         $user = User::factory()->create();
         $app = App::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0 0, 3 4 0)'))")]);
         $track->user_id = $user->id;
         $track->save();
 
-        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $response = $this->get(route('api.app.elbrus.config', ['id' => $app->id]));
         $this->assertEquals(200, $response->getStatusCode());
         $json = json_decode($response->getContent());
 
@@ -431,19 +449,20 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_languages_section_with_available_languages_set() {
+    public function check_languages_section_with_available_languages_set()
+    {
         $user = User::factory()->create();
         $app = App::factory()->create([
             'user_id' => $user->id,
             'default_language' => 'en',
-            'available_languages' => json_encode(['it', 'en'])
+            'available_languages' => json_encode(['it', 'en']),
         ]);
 
         $track = EcTrack::factory()->create(['geometry' => DB::raw("(ST_GeomFromText('LINESTRING(1 0 0, 3 4 0)'))")]);
         $track->user_id = $user->id;
         $track->save();
 
-        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $response = $this->get(route('api.app.elbrus.config', ['id' => $app->id]));
         $this->assertEquals(200, $response->getStatusCode());
         $json = json_decode($response->getContent());
 
@@ -458,12 +477,13 @@ EXTERNAL_OVERLAYS;
         $this->assertTrue(in_array('en', $json->LANGUAGES->available));
     }
 
-    private function _getJsonfromAPP($app) {
+    private function _getJsonfromAPP($app)
+    {
         $user = User::factory()->create();
         $app = App::factory()->create($app);
         $app->user_id = $user->id;
         $app->save();
-        $response = $this->get(route("api.app.elbrus.config", ['id' => $app->id]));
+        $response = $this->get(route('api.app.elbrus.config', ['id' => $app->id]));
         $this->assertEquals(200, $response->getStatusCode());
 
         return json_decode($response->getContent());
@@ -472,7 +492,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_auth_show_at_startup_when_field_is_true() {
+    public function check_auth_show_at_startup_when_field_is_true()
+    {
         $json = $this->_getJsonfromAPP(['auth_show_at_startup' => true]);
         $this->assertSame(true, $json->AUTH->showAtStartup);
     }
@@ -480,7 +501,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_auth_show_at_startup_when_field_is_false() {
+    public function check_auth_show_at_startup_when_field_is_false()
+    {
         $json = $this->_getJsonfromAPP(['auth_show_at_startup' => false]);
         $this->assertSame(false, $json->AUTH->showAtStartup);
     }
@@ -488,7 +510,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_offline_enable_when_field_is_true() {
+    public function check_offline_enable_when_field_is_true()
+    {
         $json = $this->_getJsonfromAPP(['offline_enable' => true]);
         $this->assertSame(true, $json->OFFLINE->enable);
     }
@@ -496,7 +519,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_offline_enable_when_field_is_false() {
+    public function check_offline_enable_when_field_is_false()
+    {
         $json = $this->_getJsonfromAPP(['offline_enable' => false]);
         $this->assertSame(false, $json->OFFLINE->enable);
     }
@@ -504,7 +528,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_offline_force_auth_when_field_is_true() {
+    public function check_offline_force_auth_when_field_is_true()
+    {
         $json = $this->_getJsonfromAPP(['offline_force_auth' => true]);
         $this->assertSame(true, $json->OFFLINE->forceAuth);
     }
@@ -512,7 +537,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_offline_force_auth_when_field_is_false() {
+    public function check_offline_force_auth_when_field_is_false()
+    {
         $json = $this->_getJsonfromAPP(['offline_force_auth' => false]);
         $this->assertSame(false, $json->OFFLINE->forceAuth);
     }
@@ -520,7 +546,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_geolocation_record_enable_when_field_is_true() {
+    public function check_geolocation_record_enable_when_field_is_true()
+    {
         $json = $this->_getJsonfromAPP(['geolocation_record_enable' => true]);
         $this->assertSame(true, $json->GEOLOCATION->record->enable);
     }
@@ -528,7 +555,8 @@ EXTERNAL_OVERLAYS;
     /**
      * @test
      */
-    public function check_geolocation_record_enable_when_field_is_false() {
+    public function check_geolocation_record_enable_when_field_is_false()
+    {
         $json = $this->_getJsonfromAPP(['geolocation_record_enable' => false]);
         $this->assertSame(false, $json->GEOLOCATION->record->enable);
     }

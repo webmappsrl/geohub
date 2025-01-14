@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\TaxonomyTarget;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TaxonomyTargetFactory extends Factory
 {
@@ -24,6 +22,7 @@ class TaxonomyTargetFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

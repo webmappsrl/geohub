@@ -7,12 +7,13 @@ use App\Models\TaxonomyWhere;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
 use App\Nova\Actions\CreateTracksWithOSMIDAction;
 use App\Nova\Actions\DownloadExcelEcTrackAction;
+use App\Nova\Actions\EnrichDataFromDemOsm;
 use App\Nova\Actions\RegenerateEcTrack;
 use App\Nova\Actions\ReverseEcTrackGeomtryAction;
 use App\Nova\Actions\UpdateEcTracks3DDEMAction;
 use App\Nova\Actions\UpdateEcTracksDEMAction;
-use App\Nova\Actions\EnrichDataFromDemOsm;
 use App\Nova\Actions\UploadTrackFile;
+use App\Nova\Fields\NovaWyswyg;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
 use App\Nova\Filters\SearchableFromOSMID;
@@ -20,6 +21,8 @@ use App\Nova\Filters\SelectFromActivities;
 use App\Nova\Filters\SelectFromThemesTrack;
 use App\Nova\Filters\SelectFromWheresTrack;
 use Chaseconey\ExternalImage\ExternalImage;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -28,43 +31,40 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use NovaAttachMany\AttachMany;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\EcMediaPopup\EcMediaPopup;
 use Webmapp\Ecpoipopup\Ecpoipopup;
 use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\TabsOnEdit;
-use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Textarea;
-use Titasgailius\SearchRelations\SearchesRelations;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Panel;
 use Wm\MapMultiLinestringNova3\MapMultiLinestringNova3;
 use Yna\NovaSwatches\Swatches;
-use App\Nova\Fields\NovaWyswyg;
 
 class EcTrack extends Resource
 {
-    use TabsOnEdit;
     use SearchesRelations;
+    use TabsOnEdit;
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\EcTrack::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -73,7 +73,7 @@ class EcTrack extends Resource
     public static $search = [
         'name',
         'ref',
-        'osmid'
+        'osmid',
     ];
 
     /**
@@ -98,7 +98,6 @@ class EcTrack extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -107,15 +106,12 @@ class EcTrack extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->where('user_id', $request->user()->id);
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -123,7 +119,7 @@ class EcTrack extends Resource
         return [
             ID::make('id'),
             NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')
+                Text::make(__('Name'), 'name'),
             ]),
             AttachMany::make('TaxonomyActivities'),
             AttachMany::make('TaxonomyTargets'),
@@ -132,7 +128,6 @@ class EcTrack extends Resource
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
-
 
     public function fieldsForIndex(Request $request)
     {
@@ -151,7 +146,7 @@ class EcTrack extends Resource
                 //     return '<a href="' . route('api.ec.track.json', ['id' => $this->id]) . '" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/track/' . $this->id . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/track/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -185,6 +180,7 @@ class EcTrack extends Resource
                     if ($this->taxonomyActivities()->count() > 0) {
                         return implode('<br/>', $this->taxonomyActivities()->pluck('name')->toArray());
                     }
+
                     return 'No activities';
                 })->asHtml(),
 
@@ -192,10 +188,11 @@ class EcTrack extends Resource
                     if ($this->taxonomyThemes()->count() > 0) {
                         return implode('<br/>', $this->taxonomyThemes()->pluck('name')->toArray());
                     }
+
                     return 'No themes';
                 })->asHtml(),
 
-                Number::make('osmid')
+                Number::make('osmid'),
 
                 // Text::make('Wheres', function () {
                 //     if ($this->taxonomyWheres()->count() > 0) {
@@ -231,7 +228,7 @@ class EcTrack extends Resource
                     Number::make('OSM ID', 'osmid')
                         ->help(__('The OpenStreetMap ID associated with the track. This ID cannot be modified once set, as the data will synchronize with OSM.')),
                     Heading::make(
-                        <<<HTML
+                        <<<'HTML'
                             <ul>
                                 <li><p><strong>Name</strong>: The name of the track, also known as the title.</p></li>
                                 <li><p><strong>Excerpt</strong>: A brief summary or introduction for the track, displayed in lists or previews.</p></li>
@@ -257,7 +254,7 @@ class EcTrack extends Resource
                         ->help('This option works if the "General print PDF button" option is activated prom the APP configuration. For more details please contact the amministrators!'),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
 
@@ -285,9 +282,10 @@ class EcTrack extends Resource
                                 $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
                             }
                         } else {
-                            $out = "No related Url";
+                            $out = 'No related Url';
                         }
-                        return $out . $help;
+
+                        return $out.$help;
                     })->asHtml(),
                 ],
                 'Related POIs' => [
@@ -371,7 +369,7 @@ class EcTrack extends Resource
                     Text::make('Cai Scale')
                         ->help('The official CAI difficulty scale for the track, differentiating the required effort for hiking.'),
                     NovaTabTranslatable::make([
-                        Text::make('Difficulty I18n')
+                        Text::make('Difficulty I18n'),
                     ])
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -383,6 +381,7 @@ class EcTrack extends Resource
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
+
                         return 'No activities';
                     })
                         ->help('The taxonomy activities associated with the track.'),
@@ -390,6 +389,7 @@ class EcTrack extends Resource
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
+
                         return 'No Wheres';
                     })
                         ->help('The taxonomy locations associated with the track.'),
@@ -397,6 +397,7 @@ class EcTrack extends Resource
                         if ($this->taxonomy_wheres_show_first) {
                             return TaxonomyWhere::find($this->taxonomy_wheres_show_first)->name;
                         }
+
                         return 'Nothing selected';
                     })
                         ->help('The first "Where" taxonomy to display in the track preview list.'),
@@ -404,6 +405,7 @@ class EcTrack extends Resource
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
+
                         return 'No Themes';
                     })
                         ->help('The taxonomy themes associated with the track.'),
@@ -411,6 +413,7 @@ class EcTrack extends Resource
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
+
                         return 'No Targets';
                     })
                         ->help('The taxonomy targets associated with the track.'),
@@ -418,13 +421,14 @@ class EcTrack extends Resource
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
+
                         return 'No Whens';
                     })
                         ->help('The taxonomy periods associated with the track.'),
                 ],
                 'Out Source' => [
                     Text::make('Out Source Feature ID', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             return $this->out_source_feature_id;
                         } else {
                             return 'No Out Source Feature associated';
@@ -433,8 +437,9 @@ class EcTrack extends Resource
                         ->onlyOnDetail()
                         ->help('The identifier for the associated external source feature.'),
                     Text::make('External Source ID', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->source_id;
                         } else {
                             return 'No External Source associated';
@@ -443,8 +448,9 @@ class EcTrack extends Resource
                         ->onlyOnDetail()
                         ->help('The identifier for the associated external source.'),
                     Text::make('Endpoint', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->endpoint;
                         } else {
                             return 'No endpoint associated';
@@ -453,8 +459,9 @@ class EcTrack extends Resource
                         ->onlyOnDetail()
                         ->help('The endpoint associated with the external source feature.'),
                     Text::make('Endpoint slug', 'endpoint_slug', function () {
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
+
                             return $t->endpoint_slug;
                         } else {
                             return 'No endpoint slug associated';
@@ -464,59 +471,65 @@ class EcTrack extends Resource
                         ->help('The slug for the endpoint associated with the external source feature.'),
                     Text::make('Public Page', function () {
                         $help = '<p>Public Page: Link to the public page of the external source feature.</p>';
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/osf/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Public Page</a>" . $help;
+                            $url_base_api = request()->root().'/osf/'.$t->endpoint_slug.'/'.$t->source_id;
+
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Public Page</a>".$help;
                         } else {
-                            return "No Out Source Feature." . $help;
+                            return 'No Out Source Feature.'.$help;
                         }
                     })
                         ->asHtml(),
                     Text::make('Base API', function () {
                         $help = '<p>Link to the base API of the external source feature.</p>';
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/api/osf/track/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base Api</a>" . $help;
+                            $url_base_api = request()->root().'/api/osf/track/'.$t->endpoint_slug.'/'.$t->source_id;
+
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base Api</a>".$help;
                         } else {
-                            return "No Out Source Feature." . $help;
+                            return 'No Out Source Feature.'.$help;
                         }
                     })
                         ->asHtml(),
                     Text::make('Widget: Simple', function () {
                         $help = '<p>Simple: Link to the simple widget of the external source feature.</p>';
-                        if (!is_null($this->out_source_feature_id)) {
+                        if (! is_null($this->out_source_feature_id)) {
                             $t = $this->outSourceTrack;
-                            $url_base_api = request()->root() . '/w/osf/simple/' . $t->endpoint_slug . '/' . $t->source_id;
-                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Widget Simple</a>" . $help;
+                            $url_base_api = request()->root().'/w/osf/simple/'.$t->endpoint_slug.'/'.$t->source_id;
+
+                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Widget Simple</a>".$help;
                         } else {
-                            return "No Out Source Feature." . $help;
+                            return 'No Out Source Feature.'.$help;
                         }
                     })->asHtml(),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
                         $help = '<p>Link to the public page of this track.</p>';
-                        $url_pubblic = request()->root() . '/track/' . $this->id;
-                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_pubblic}'>View Public Page</a>" . $help;
+                        $url_pubblic = request()->root().'/track/'.$this->id;
+
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_pubblic}'>View Public Page</a>".$help;
                     })->asHtml(),
                     Text::make('Base API', function () {
                         $help = '<p>Link to the base API of this track.</p>';
-                        $url_base_api = request()->root() . '/api/ec/track/' . $this->id;
+                        $url_base_api = request()->root().'/api/ec/track/'.$this->id;
 
-                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>" . $help;
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>".$help;
                     })->asHtml(),
                     Text::make('Widget: Simple', function () {
                         $help = '<p>Link to the simple widget for this track.</p>';
-                        $url_widget_simple = request()->root() . '/w/simple/' . $this->id;
-                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>" . $help;
+                        $url_widget_simple = request()->root().'/w/simple/'.$this->id;
+
+                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>".$help;
                     })->asHtml(),
-                    //show a link to the track-pdf.blade.php
+                    // show a link to the track-pdf.blade.php
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
                             $help = '<p>Link to generate a PDF for this track.</p>';
-                            return '<a target="_blank" style="color:#3aadcc;" href="' . route('track.pdf', ['id' => $resource->id]) . '">Generate PDF</a>' . $help;
+
+                            return '<a target="_blank" style="color:#3aadcc;" href="'.route('track.pdf', ['id' => $resource->id]).'">Generate PDF</a>'.$help;
                         })
                         ->asHtml()
                         ->onlyOnDetail(),
@@ -532,22 +545,21 @@ class EcTrack extends Resource
                             'fallback-type' => 'input',
                         ])
                         ->help('Select a color to associate with this track'),
-                ]
+                ],
             ]))->withToolbar(),
             new Panel('Map', [
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
             // Necessary for view
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
         ];
     }
-
 
     public function fieldsForUpdate(Request $request)
     {
@@ -558,9 +570,9 @@ class EcTrack extends Resource
             $geojson = [];
         }
 
-        $tab_title = "New EC Track";
+        $tab_title = 'New EC Track';
         $osmid = $this->model()->osmid;
-        $isOsmidSet = !is_null($osmid);
+        $isOsmidSet = ! is_null($osmid);
 
         if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Track Edit: {$this->name} ({$this->id})";
@@ -570,7 +582,7 @@ class EcTrack extends Resource
             Tabs::make($tab_title, [
                 'Main' => [
                     Heading::make(
-                        <<<HTML
+                        <<<'HTML'
                         <ul>
                             <li><p><strong>Name</strong>: Enter the name of the track. This will be the main title displayed.</p></li>
                             <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
@@ -669,11 +681,11 @@ class EcTrack extends Resource
                         'T' => 'Turistico (T)',
                         'E' => 'Escursionistico (E)',
                         'EE' => 'Per escursionisti esperti (EE)',
-                        'EEA' => 'Alpinistico (EEA)'
+                        'EEA' => 'Alpinistico (EEA)',
                     ])
                         ->help(__('Here you can associate one of the indicated CAI difficulty scales to differentiate the required effort for hiking itineraries. This can be viewed in detail via this <a href="https://archivio.cai.it/sezione/vipiteno-c-a-i-a-a/attivita/difficolta/#:~:text=EE%20per%20Escursionisti%20Esperti,o%20di%20roccia%20e%20detriti" target="_blank">link</a>.')),
                     NovaTabTranslatable::make([
-                        Text::make('Difficulty I18n')
+                        Text::make('Difficulty I18n'),
                     ])
                         ->hideFromIndex()
                         ->hideFromDetail()
@@ -706,21 +718,20 @@ class EcTrack extends Resource
                             'fallback-type' => 'input',
                         ])
                         ->help(__('Choose a color to associate with the individual track.')),
-                ]
+                ],
             ]),
             new Panel('Map', [
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
 
             // Do not remove below code, necessary for Edit mode
             BelongsToMany::make('Gallery', 'ecMedia', 'App\Nova\EcMedia')->searchable()->nullable(),
-
 
         ];
     }
@@ -732,10 +743,6 @@ class EcTrack extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -744,32 +751,25 @@ class EcTrack extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
         if ($request->user()->hasRole('Editor')) {
             return [
-                new SearchableFromOSMID(),
-                new HasFeatureImage(),
-                new HasImageGallery(),
-                new SelectFromActivities(),
-                new SelectFromThemesTrack(),
-                new SelectFromWheresTrack(),
+                new SearchableFromOSMID,
+                new HasFeatureImage,
+                new HasImageGallery,
+                new SelectFromActivities,
+                new SelectFromThemesTrack,
+                new SelectFromWheresTrack,
             ];
         }
+
         return [];
     }
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -778,25 +778,22 @@ class EcTrack extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {
         return [
-            new RegenerateEcTrack(),
-            new UpdateEcTracksDEMAction(),
-            new UpdateEcTracks3DDEMAction(),
-            new BulkEditThemesEcResourceAction(),
-            new ReverseEcTrackGeomtryAction(),
-            new EnrichDataFromDemOsm(),
-            (new DownloadExcelEcTrackAction())->allFields()->except('geometry')->withHeadings(),
-            (new CreateTracksWithOSMIDAction())->standalone(),
-            (new UploadTrackFile())->standalone(),
+            new RegenerateEcTrack,
+            new UpdateEcTracksDEMAction,
+            new UpdateEcTracks3DDEMAction,
+            new BulkEditThemesEcResourceAction,
+            new ReverseEcTrackGeomtryAction,
+            new EnrichDataFromDemOsm,
+            (new DownloadExcelEcTrackAction)->allFields()->except('geometry')->withHeadings(),
+            (new CreateTracksWithOSMIDAction)->standalone(),
+            (new UploadTrackFile)->standalone(),
         ];
     }
+
     protected function generateFieldTable($model, $currentValue, $field)
     {
         $demData = json_decode($model->dem_data, true);
@@ -823,24 +820,24 @@ class EcTrack extends Resource
         $table .= '<tr>';
         // if ($demValue !== null) {
         $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">DEM</th>';
-        //}
+        // }
         if ($osmid !== null) {
             $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">OSM</th>';
         }
         $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">MANUAL</th>';
-        $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">CURRENT VALUE (' . $indicator . ')</th>';
+        $table .= '<th style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">CURRENT VALUE ('.$indicator.')</th>';
         $table .= '</tr>';
 
         // Data row
         $table .= '<tr>';
         //   if ($demValue !== null) {
-        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $demValue . '</td>';
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">'.$demValue.'</td>';
         // }
         if ($osmid !== null) {
-            $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $osmValue . '</td>';
+            $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">'.$osmValue.'</td>';
         }
-        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $manualValue . '</td>';
-        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">' . $currentValue . '</td>';
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">'.$manualValue.'</td>';
+        $table .= '<td style="border: 1px solid #ddd; padding: 4px; text-align: center; white-space: nowrap;">'.$currentValue.'</td>';
         $table .= '</tr>';
 
         // End table
@@ -853,12 +850,10 @@ class EcTrack extends Resource
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
      * Refers to OFFICIAL DOCUMENTATION:
      * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
-     *
-     * @return string
      */
     public function getData(): string
     {
-        $text = <<<HTML
+        $text = <<<'HTML'
         <style>
         table {
         font-family: arial, sans-serif;
@@ -922,6 +917,7 @@ class EcTrack extends Resource
 
         </table>
         HTML;
+
         return $text;
     }
 }

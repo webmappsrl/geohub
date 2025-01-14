@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class OutSourceTaxonomyMappingCommand extends Command
 {
     use ImporterAndSyncTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,12 +32,18 @@ class OutSourceTaxonomyMappingCommand extends Command
     protected $description = 'Import the taxonomies from external resource and creates a mapping file';
 
     protected $type;
+
     protected $endpoint;
+
     protected $activity;
+
     protected $theme;
+
     protected $poi_type;
+
     protected $content;
-    protected $trns = array(
+
+    protected $trns = [
         'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a',
         'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A',
         'ß' => 'B', 'ç' => 'c', 'Ç' => 'C',
@@ -50,8 +57,8 @@ class OutSourceTaxonomyMappingCommand extends Command
         'š' => 's', 'Š' => 'S',
         'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u',
         'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U',
-        'ý' => 'y', 'Ý' => 'Y', 'ž' => 'z', 'Ž' => 'Z'
-        );
+        'ý' => 'y', 'Ý' => 'Y', 'ž' => 'z', 'Ž' => 'Z',
+    ];
 
     /**
      * Create a new command instance.
@@ -70,8 +77,9 @@ class OutSourceTaxonomyMappingCommand extends Command
      */
     public function handle()
     {
-        if(app()->environment('production')) {
+        if (app()->environment('production')) {
             $this->error('Sorry, Alessio said you can not run this in production! :-P');
+
             return;
         }
 
@@ -100,7 +108,6 @@ class OutSourceTaxonomyMappingCommand extends Command
         }
     }
 
-
     private function importerWP()
     {
         if ($this->poi_type) {
@@ -121,7 +128,6 @@ class OutSourceTaxonomyMappingCommand extends Command
         $this->createMappingFile();
     }
 
-
     private function importerSentieriSardegna()
     {
         if ($this->poi_type) {
@@ -139,23 +145,23 @@ class OutSourceTaxonomyMappingCommand extends Command
 
     private function importerWPPoiType()
     {
-        $url = $this->endpoint . '/wp-json/wp/v2/webmapp_category?per_page=99';
+        $url = $this->endpoint.'/wp-json/wp/v2/webmapp_category?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input poi_type ' . $c['name'] . ' with external id: ' . $c['id']);
+                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
                     $title = [];
-                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                    if (! empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['name'],
                         ];
                         $description = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['description'],
                         ];
-                        if(!empty($c['wpml_translations'])) {
-                            foreach($c['wpml_translations'] as $lang) {
+                        if (! empty($c['wpml_translations'])) {
+                            foreach ($c['wpml_translations'] as $lang) {
                                 $locale = explode('_', $lang['locale']);
                                 $title[$locale[0]] = $lang['name'];
                                 $cat_decode = $this->curlRequest($lang['source']);
@@ -183,19 +189,19 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["poi_type"] = $input;
+        $this->content['poi_type'] = $input;
     }
 
     private function importerWPActivity()
     {
-        $url = $this->endpoint . '/wp-json/wp/v2/activity?per_page=99';
+        $url = $this->endpoint.'/wp-json/wp/v2/activity?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input poi_type ' . $c['name'] . ' with external id: ' . $c['id']);
-                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                    Log::info('Start creating input poi_type '.$c['name'].' with external id: '.$c['id']);
+                    if (! empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [];
                         $title = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['name'],
@@ -203,8 +209,8 @@ class OutSourceTaxonomyMappingCommand extends Command
                         $description = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['description'],
                         ];
-                        if(!empty($c['wpml_translations'])) {
-                            foreach($c['wpml_translations'] as $lang) {
+                        if (! empty($c['wpml_translations'])) {
+                            foreach ($c['wpml_translations'] as $lang) {
                                 $locale = explode('_', $lang['locale']);
                                 $title[$locale[0]] = $lang['name'];
                                 $cat_decode = $this->curlRequest($lang['source']);
@@ -232,19 +238,19 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["activity"] = $input;
+        $this->content['activity'] = $input;
     }
 
     private function importerWPTheme()
     {
-        $url = $this->endpoint . '/wp-json/wp/v2/theme?per_page=99';
+        $url = $this->endpoint.'/wp-json/wp/v2/theme?per_page=99';
         $WC = $this->curlRequest($url);
         $input = [];
         if ($WC) {
             foreach ($WC as $c) {
                 if ($c['count'] > 0) {
-                    Log::info('Start creating input theme ' . $c['name'] . ' with external id: ' . $c['id']);
-                    if (!empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
+                    Log::info('Start creating input theme '.$c['name'].' with external id: '.$c['id']);
+                    if (! empty($c['wpml_current_locale']) && isset($c['wpml_current_locale'])) {
                         $title = [];
                         $title = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['name'],
@@ -252,8 +258,8 @@ class OutSourceTaxonomyMappingCommand extends Command
                         $description = [
                             explode('_', $c['wpml_current_locale'])[0] => $c['description'],
                         ];
-                        if(!empty($c['wpml_translations'])) {
-                            foreach($c['wpml_translations'] as $lang) {
+                        if (! empty($c['wpml_translations'])) {
+                            foreach ($c['wpml_translations'] as $lang) {
                                 $locale = explode('_', $lang['locale']);
                                 $title[$locale[0]] = $lang['name'];
                                 $cat_decode = $this->curlRequest($lang['source']);
@@ -281,7 +287,7 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["theme"] = $input;
+        $this->content['theme'] = $input;
     }
 
     private function importerSSPoiType()
@@ -295,7 +301,7 @@ class OutSourceTaxonomyMappingCommand extends Command
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
                     $taxname = strtr($tax['name']['it'], $this->trns);
-                    $taxname = str_replace(array( '- ','/','\'', '"',',' , ';', '<', '>', '(', ')' ), '', $taxname);
+                    $taxname = str_replace(['- ', '/', '\'', '"', ',', ';', '<', '>', '(', ')'], '', $taxname);
                     $taxname = strtolower($taxname);
                     $input[$id] = [
                         'skip' => false,
@@ -306,7 +312,7 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["poi_type"] = $input;
+        $this->content['poi_type'] = $input;
     }
 
     private function importerSSTheme()
@@ -321,7 +327,7 @@ class OutSourceTaxonomyMappingCommand extends Command
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
                     $taxname = strtr($tax['name']['it'], $this->trns);
-                    $taxname = str_replace(array( '- ','/','\'', '"',',' , ';', '<', '>', '(', ')' ), '', $taxname);
+                    $taxname = str_replace(['- ', '/', '\'', '"', ',', ';', '<', '>', '(', ')'], '', $taxname);
                     $taxname = strtolower($taxname);
                     $input[$id] = [
                         'skip' => false,
@@ -332,7 +338,7 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["theme"] = $input;
+        $this->content['theme'] = $input;
     }
 
     private function importerSSActivity()
@@ -345,7 +351,7 @@ class OutSourceTaxonomyMappingCommand extends Command
             foreach ($response as $type => $taxonomies) {
                 foreach ($taxonomies as $id => $tax) {
                     $taxname = strtr($tax['name']['it'], $this->trns);
-                    $taxname = str_replace(array( '- ','/','\'', '"',',' , ';', '<', '>', '(', ')' ), '', $taxname);
+                    $taxname = str_replace(['- ', '/', '\'', '"', ',', ';', '<', '>', '(', ')'], '', $taxname);
                     $taxname = strtolower($taxname);
                     $input[$id] = [
                         'skip' => false,
@@ -356,15 +362,15 @@ class OutSourceTaxonomyMappingCommand extends Command
                 }
             }
         }
-        $this->content["activity"] = $input;
+        $this->content['activity'] = $input;
     }
 
     private function createMappingFile()
     {
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.', '-', $path['host']);
-        Log::info('Creating mapping file: ' . $file_name);
-        $p = Storage::disk('mapping')->put($file_name . '.json', json_encode($this->content, JSON_PRETTY_PRINT));
-        Log::info('Finished creating file: ' . $file_name);
+        Log::info('Creating mapping file: '.$file_name);
+        $p = Storage::disk('mapping')->put($file_name.'.json', json_encode($this->content, JSON_PRETTY_PRINT));
+        Log::info('Finished creating file: '.$file_name);
     }
 }

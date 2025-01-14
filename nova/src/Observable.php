@@ -19,7 +19,7 @@ class Observable
      */
     public function __construct($eloquent, $classes)
     {
-        $model = is_string($eloquent) ? new $eloquent() : $eloquent;
+        $model = is_string($eloquent) ? new $eloquent : $eloquent;
 
         $dispatcher = $model->getEventDispatcher();
 
@@ -31,8 +31,6 @@ class Observable
     /**
      * Register a single observer with the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $eventDispatcher
      * @param  object|string  $observer
      * @return void
      *

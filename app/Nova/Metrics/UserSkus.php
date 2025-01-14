@@ -11,18 +11,14 @@ class UserSkus extends Partition
 {
     /**
      * Calculate the value of the metric.
-     *
-     * @param NovaRequest $request
-     *
-     * @return PartitionResult
      */
     public function calculate(NovaRequest $request): PartitionResult
     {
         return $this->count($request, User::class, 'sku')
             ->label(function ($value) {
-                if ($value == null)
+                if ($value == null) {
                     return 'None';
-                else {
+                } else {
                     $str = $value;
                     if (substr($value, 0, 10) == 'it.webmapp') {
                         $array = explode('.', $value);
@@ -30,7 +26,7 @@ class UserSkus extends Partition
                         $str = end($array);
                     }
 
-                    return substr($str, 0, 10) . '...';
+                    return substr($str, 0, 10).'...';
                 }
             });
     }
@@ -38,7 +34,7 @@ class UserSkus extends Partition
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
     {
@@ -47,8 +43,6 @@ class UserSkus extends Partition
 
     /**
      * Get the URI key for the metric.
-     *
-     * @return string
      */
     public function uriKey(): string
     {

@@ -3,50 +3,50 @@
 namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
-use Exception;
-use Laravel\Nova\Panel;
-use Eminiarts\Tabs\Tabs;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Text;
-use Eminiarts\Tabs\TabsOnEdit;
-use NovaAttachMany\AttachMany;
-use Yna\NovaSwatches\Swatches;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\KeyValue;
-use Laravel\Nova\Fields\Textarea;
-use Davidpiesse\NovaToggle\Toggle;
-use Laravel\Nova\Fields\BelongsTo;
-use Wm\MapPointNova3\MapPointNova3;
+use App\Nova\Actions\BulkEditThemesEcResourceAction;
+use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\RegenerateEcPoi;
+use App\Nova\Actions\UploadPoiFile;
+use App\Nova\Fields\NovaWyswyg;
 use App\Nova\Filters\HasFeatureImage;
 use App\Nova\Filters\HasImageGallery;
-use Laravel\Nova\Fields\BelongsToMany;
-use Webmapp\EcMediaPopup\EcMediaPopup;
-use Illuminate\Support\Facades\Storage;
+use App\Nova\Filters\PoiSearchableFromOSMID;
+use App\Nova\Filters\SelectFromPoiTypesPoi;
 use App\Nova\Filters\SelectFromThemesPoi;
 use App\Nova\Filters\SelectFromWheresPoi;
-use App\Nova\Filters\SelectFromPoiTypesPoi;
 use Chaseconey\ExternalImage\ExternalImage;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use App\Nova\Filters\PoiSearchableFromOSMID;
-use App\Nova\Actions\DownloadExcelEcPoiAction;
-use App\Nova\Actions\BulkEditThemesEcResourceAction;
-use App\Nova\Actions\UploadPoiFile;
-use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Titasgailius\SearchRelations\SearchesRelations;
+use Davidpiesse\NovaToggle\Toggle;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\TabsOnEdit;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
-use App\Nova\Fields\NovaWyswyg;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
+use NovaAttachMany\AttachMany;
+use Titasgailius\SearchRelations\SearchesRelations;
+use Webmapp\EcMediaPopup\EcMediaPopup;
+use Webmapp\FeatureImagePopup\FeatureImagePopup;
+use Wm\MapPointNova3\MapPointNova3;
+use Yna\NovaSwatches\Swatches;
 
 class EcPoi extends Resource
 {
-    use TabsOnEdit;
     use SearchesRelations;
+    use TabsOnEdit;
 
     /**
      * The model the resource corresponds to.
@@ -54,12 +54,14 @@ class EcPoi extends Resource
      * @var string
      */
     public static $model = \App\Models\EcPoi::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -91,7 +93,6 @@ class EcPoi extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -100,14 +101,13 @@ class EcPoi extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->where('user_id', $request->user()->id);
     }
-
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -129,7 +129,6 @@ class EcPoi extends Resource
         ];
     }
 
-
     public function fieldsForIndex(Request $request)
     {
 
@@ -147,7 +146,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -178,6 +177,7 @@ class EcPoi extends Resource
                     if ($this->taxonomyPoiTypes()->count() > 0) {
                         return implode('<br/>', $this->taxonomyPoiTypes()->pluck('name')->toArray());
                     }
+
                     return 'No Poi Types';
                 })->asHtml(),
 
@@ -185,6 +185,7 @@ class EcPoi extends Resource
                     if ($this->taxonomyThemes()->count() > 0) {
                         return implode('<br/>', $this->taxonomyThemes()->pluck('name')->toArray());
                     }
+
                     return 'No Themes';
                 })->asHtml(),
 
@@ -192,6 +193,7 @@ class EcPoi extends Resource
                     if ($this->taxonomyWheres()->count() > 0) {
                         return implode('<br/>', $this->taxonomyWheres()->pluck('name')->toArray());
                     }
+
                     return 'No Wheres';
                 })->asHtml(),
 
@@ -227,7 +229,7 @@ class EcPoi extends Resource
                         })
                         ->help(__('If this field contains data, updates to various fields will not be processed as they are synchronized from a different API. Remove the data in this field to update the fields.')),
                     Heading::make(
-                        <<<HTML
+                        <<<'HTML'
                             <ul>
                                 <li><p><strong>Name</strong>: The name of the POI, also known as the title.</p></li>
                                 <li><p><strong>Excerpt</strong>: A brief summary or introduction for the POI, displayed in lists or previews.</p></li>
@@ -259,15 +261,17 @@ class EcPoi extends Resource
                                 $out .= "<a href='{$url}' target='_blank'>{$label}</a></br>";
                             }
                         } else {
-                            $out = "No related Url";
+                            $out = 'No related Url';
                         }
-                        return $out . $help;
+
+                        return $out.$help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
+
                         return $url;
                     })
                         ->withMeta(['width' => 400])
@@ -289,7 +293,7 @@ class EcPoi extends Resource
                 'Map' => [
                     Heading::make('<p>Map: The geographical representation of the POI on the map.</p>')->asHtml(),
                     MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                        'center' => ["51", "4"],
+                        'center' => ['51', '4'],
                         'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                         'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                         'minZoom' => 7,
@@ -328,7 +332,7 @@ class EcPoi extends Resource
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-                    Text::make('Code')
+                    Text::make('Code'),
                 ],
                 'Accessibility' => $this->accessibility_tab(),
                 'Reachability' => $this->reachability_tab(),
@@ -337,12 +341,14 @@ class EcPoi extends Resource
                         if ($this->taxonomyPoiTypes()->count() > 0) {
                             return implode(',', $this->taxonomyPoiTypes()->pluck('name')->toArray());
                         }
+
                         return 'No Poi Types';
                     })->help(__('The taxonomy types associated with the POI')),
                     Text::make('Activities', function () {
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
+
                         return 'No activities';
                     })
                         ->help(__('The taxonomy activities associated with the POI')),
@@ -350,6 +356,7 @@ class EcPoi extends Resource
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
+
                         return 'No Wheres';
                     })
                         ->help(__('The taxonomy locations associated with the POI')),
@@ -357,6 +364,7 @@ class EcPoi extends Resource
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
+
                         return 'No Themes';
                     })
                         ->help(__('The taxonomy themes associated with the POI')),
@@ -364,6 +372,7 @@ class EcPoi extends Resource
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
+
                         return 'No Targets';
                     })
                         ->help(__('The taxonomy targets associated with the POI')),
@@ -371,6 +380,7 @@ class EcPoi extends Resource
                         if ($this->taxonomyWhens()->count() > 0) {
                             return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                         }
+
                         return 'No Whens';
                     })
                         ->help(__('The taxonomy periods associated with the POI')),
@@ -386,7 +396,6 @@ class EcPoi extends Resource
         ];
     }
 
-
     public function fieldsForUpdate(Request $request)
     {
 
@@ -396,19 +405,20 @@ class EcPoi extends Resource
             $geojson = [];
         }
 
-        $tab_title = "New EC Poi";
+        $tab_title = 'New EC Poi';
         // if(NovaCurrentResourceActionHelper::isUpdate($request)) {
         //     $tab_title = "EC Poi Edit: {$this->name} ({$this->id})";
         // }
         $osmid = $this->model()->osmid;
-        $isOsmidSet = !is_null($osmid);
+        $isOsmidSet = ! is_null($osmid);
+
         return [
             (new Tabs(
                 $tab_title,
                 [
                     'Main' => [
                         Heading::make(
-                            <<<HTML
+                            <<<'HTML'
                             <ul>
                                 <li><p><strong>Name</strong>: Enter the name of the POI. This will be the main title displayed.</p></li>
                                 <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
@@ -452,7 +462,6 @@ class EcPoi extends Resource
                             ->feature($geojson ?? [])
                             ->apiBaseUrl('/api/ec/poi/')
                             ->help(__('The feature image is displayed in the list of POIs. It is advisable to use a high-quality image in horizontal format 1440 x 500 pixels in jpg or png format. Alternatively, GeoHub will automatically create thumbnails and crop the image to fit. If you have uploaded georeferenced images in the Ec Medias section that match the track\'s location, you will find them by clicking on "Select image" in the first tab "Associated images". Otherwise, you can upload an image directly via the "Upload media" tab. If set, the feature image of the POI will be shown as the first image in the gallery.')),
-
 
                         EcMediaPopup::make(__('Gallery (by map)'), 'ecMedia')
                             ->onlyOnForms()
@@ -528,12 +537,12 @@ class EcPoi extends Resource
             )),
             new Panel('Map / Geographical info', [
                 MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
 
             // Do not remove below code, necessary for Edit mode
@@ -758,17 +767,14 @@ class EcPoi extends Resource
         ];
     }
 
-
     /**
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
      * Refers to OFFICIAL DOCUMENTATION:
      * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
-     *
-     * @return string
      */
     public function getData(): string
     {
-        $text = <<<HTML
+        $text = <<<'HTML'
         <style>
 table {
   font-family: arial, sans-serif;
@@ -849,13 +855,13 @@ tr:nth-child(even) {
 
 </table>
 HTML;
+
         return $text;
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -867,7 +873,6 @@ HTML;
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -875,21 +880,21 @@ HTML;
     {
         if ($request->user()->hasRole('Editor')) {
             return [
-                new PoiSearchableFromOSMID(),
-                new HasFeatureImage(),
-                new HasImageGallery(),
-                new SelectFromThemesPoi(),
-                new SelectFromWheresPoi(),
-                new SelectFromPoiTypesPoi()
+                new PoiSearchableFromOSMID,
+                new HasFeatureImage,
+                new HasImageGallery,
+                new SelectFromThemesPoi,
+                new SelectFromWheresPoi,
+                new SelectFromPoiTypesPoi,
             ];
         }
+
         return [];
     }
 
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -901,18 +906,17 @@ HTML;
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
     public function actions(Request $request)
     {
         return [
-            new RegenerateEcPoi(),
-            new BulkEditThemesEcResourceAction(),
-            new BulkEditPOIColorAction(),
-            (new DownloadExcelEcPoiAction())->allFields()->except('geometry')->withHeadings(),
-            (new UploadPoiFile())->standalone(),
+            new RegenerateEcPoi,
+            new BulkEditThemesEcResourceAction,
+            new BulkEditPOIColorAction,
+            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
+            (new UploadPoiFile)->standalone(),
         ];
     }
 }

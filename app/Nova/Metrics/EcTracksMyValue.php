@@ -9,16 +9,17 @@ use Laravel\Nova\Metrics\Value;
 
 class EcTracksMyValue extends Value
 {
-    public $name='Le tue Ec Tracks';
+    public $name = 'Le tue Ec Tracks';
+
     /**
      * Calculate the value of the metric.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
-        $count = EcTrack::where('user_id',Auth::user()->id)->count();
+        $count = EcTrack::where('user_id', Auth::user()->id)->count();
+
         return $this->result($count);
     }
 
@@ -36,7 +37,7 @@ class EcTracksMyValue extends Value
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
     {

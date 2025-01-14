@@ -9,9 +9,6 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
 {
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -68,9 +65,7 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
     }
 
     /**
-     * @param EcTrack $track
-     *
-     * @return array
+     * @param  EcTrack  $track
      */
     public function map($track): array
     {
@@ -84,9 +79,9 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
         $whens = '';
         $targets = '';
 
-        $geohub_backend = url('/') . '/resources/ec-tracks/' . $track->id;
-        $geohub_frontend = url('/') . '/track/' . $track->id;
-        if($track->featureImage) {
+        $geohub_backend = url('/').'/resources/ec-tracks/'.$track->id;
+        $geohub_frontend = url('/').'/track/'.$track->id;
+        if ($track->featureImage) {
             if (strpos($track->featureImage->url, 'ecmedia')) {
                 $featureImage = $track->featureImage->url;
             } else {
@@ -187,7 +182,7 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
     private function setOutSourceValue($track): array
     {
         $array = $track->toArray();
-        if(isset($track->out_source_feature_id)) {
+        if (isset($track->out_source_feature_id)) {
             $keys = [
                 'description',
                 'excerpt',
@@ -208,38 +203,42 @@ class DownloadExcelEcTrackAction extends DownloadExcel implements WithMapping
                 $array = $this->setOutSourceSingleValue($array, $key, $track);
             }
         }
+
         return $array;
     }
 
     private function setOutSourceSingleValue($array, $varname, $track): array
     {
-        if($this->isReallyEmpty($array[$varname])) {
-            if(isset($track->outSourceTrack->tags[$varname])) {
+        if ($this->isReallyEmpty($array[$varname])) {
+            if (isset($track->outSourceTrack->tags[$varname])) {
                 $array[$varname] = $track->outSourceTrack->tags[$varname];
             }
         }
+
         return $array;
     }
 
     private function isReallyEmpty($val): bool
     {
-        if(is_null($val)) {
+        if (is_null($val)) {
             return true;
         }
-        if(empty($val)) {
+        if (empty($val)) {
             return true;
         }
-        if(is_array($val)) {
-            if(count($val) == 0) {
+        if (is_array($val)) {
+            if (count($val) == 0) {
                 return true;
             }
-            foreach($val as $lang => $cont) {
-                if(!empty($cont)) {
+            foreach ($val as $lang => $cont) {
+                if (! empty($cont)) {
                     return false;
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 }

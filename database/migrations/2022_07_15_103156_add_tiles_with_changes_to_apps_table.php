@@ -14,7 +14,7 @@ class AddTilesWithChangesToAppsTable extends Migration
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $def = json_encode(array("{\"webmapp\":\"https://api.webmapp.it/tiles/{z}/{x}/{y}.png\"}"));
+            $def = json_encode(['{"webmapp":"https://api.webmapp.it/tiles/{z}/{x}/{y}.png"}']);
             $table->json('tiles')->default($def);
         });
     }

@@ -26,7 +26,6 @@ class AttachedResourceUpdateController extends Controller
     /**
      * Update an attached resource pivot record.
      *
-     * @param  NovaRequest  $request
      * @return Response
      */
     public function handle(NovaRequest $request)
@@ -79,7 +78,6 @@ class AttachedResourceUpdateController extends Controller
     /**
      * Validate the attachment request.
      *
-     * @param  NovaRequest  $request
      * @param  Model  $model
      * @param  string  $resource
      * @return void
@@ -110,7 +108,6 @@ class AttachedResourceUpdateController extends Controller
     /**
      * Find the pivot model for the operation.
      *
-     * @param  NovaRequest  $request
      * @param  Model  $model
      * @return Model
      */
@@ -120,7 +117,7 @@ class AttachedResourceUpdateController extends Controller
 
         if ($request->viaPivotId) {
             tap($relation->getPivotClass(), function ($pivotClass) use ($relation, $request) {
-                $relation->wherePivot((new $pivotClass())->getKeyName(), $request->viaPivotId);
+                $relation->wherePivot((new $pivotClass)->getKeyName(), $request->viaPivotId);
             });
         }
 
@@ -135,7 +132,6 @@ class AttachedResourceUpdateController extends Controller
     /**
      * Determine if the model has been updated since it was retrieved.
      *
-     * @param  NovaRequest  $request
      * @param  Model  $model
      * @return void
      */

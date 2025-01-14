@@ -24,7 +24,7 @@ class AppFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'sku' => 'it.webmapp.' . $this->faker->unique()->slug(),
+            'sku' => 'it.webmapp.'.$this->faker->unique()->slug(),
             'customer_name' => $this->faker->name(),
             'map_max_zoom' => $this->faker->numberBetween(15, 19),
             'map_def_zoom' => $this->faker->numberBetween(12, 14),

@@ -29,7 +29,7 @@ class AddFilterThemeToAppsTable extends Migration
         Schema::table('apps', function (Blueprint $table) {
             $table->dropColumn([
                 'filter_theme',
-                'filter_theme_exclude'
+                'filter_theme_exclude',
             ]);
         });
     }

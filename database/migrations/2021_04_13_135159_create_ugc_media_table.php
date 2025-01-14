@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUgcMediaTable extends Migration {
+class CreateUgcMediaTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('ugc_media', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
@@ -18,9 +20,9 @@ class CreateUgcMediaTable extends Migration {
             $table->string('app_id', 100);
             $table->point('geometry')->nullable();
             $table->string('relative_url');
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
 
         MigrationsHelpers::addDefaultPermissions('ugc_media');
@@ -31,7 +33,8 @@ class CreateUgcMediaTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         MigrationsHelpers::removeDefaultPermissions('ugc_media');
         Schema::dropIfExists('ugc_media');
     }

@@ -9,10 +9,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class EcMediaTest extends TestCase {
+class EcMediaTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testSaveEcMediaOk() {
+    public function test_save_ec_media_ok()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
@@ -24,12 +26,13 @@ class EcMediaTest extends TestCase {
         $ecMedia->save();
     }
 
-    public function testSaveEcMediaError() {
+    public function test_save_ec_media_error()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
                 ->with('enrich_ec_media', ['id' => 1])
-                ->andThrows(new Exception());
+                ->andThrows(new Exception);
         });
         Log::shouldReceive('error')
             ->once();
@@ -38,7 +41,8 @@ class EcMediaTest extends TestCase {
         $ecMedia->save();
     }
 
-    public function testDeleteEcMediaOk() {
+    public function test_delete_ec_media_ok()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -56,7 +60,8 @@ class EcMediaTest extends TestCase {
         $ecMedia->delete();
     }
 
-    public function testEcMediaFieldsTranslation() {
+    public function test_ec_media_fields_translation()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);

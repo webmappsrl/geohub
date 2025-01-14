@@ -17,7 +17,7 @@ class HoquMassivePullCommand extends Command
      * @var string
      */
     protected $signature =
-    'geohub:hoqu_massive_pull 
+        'geohub:hoqu_massive_pull 
     {model : Name of the model that must be enriched by GEOMIXER (EcTrack, EcPoi, EcMedia)}
     {job : Name of the job that must be used to enrich features by GEOMIXER ()}
     {author : id of the author of the instance model GEOMIXER ()}
@@ -77,6 +77,7 @@ class HoquMassivePullCommand extends Command
 
             default:
                 Log::info("Model $model not YET supported");
+
                 return 0;
         }
         if ($features->count() > 0) {
@@ -88,6 +89,7 @@ class HoquMassivePullCommand extends Command
                 $hoqu->store($job, ['id' => $feature->id]);
             }
         }
+
         return 0;
     }
 }

@@ -11,7 +11,6 @@ class DetachResourceRequest extends DeletionRequest
      * Get the selected models for the action in chunks.
      *
      * @param  int  $count
-     * @param  \Closure  $callback
      * @return mixed
      */
     public function chunks($count, Closure $callback)
@@ -33,7 +32,6 @@ class DetachResourceRequest extends DeletionRequest
     /**
      * Get the models that may be detached.
      *
-     * @param  \Illuminate\Support\Collection  $models
      * @param  \Laravel\Nova\Resource  $parentResource
      * @return \Illuminate\Support\Collection
      */

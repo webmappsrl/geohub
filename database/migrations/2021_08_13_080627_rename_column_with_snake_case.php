@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameColumnWithSnakeCase extends Migration {
+class RenameColumnWithSnakeCase extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::table('apps', function (Blueprint $table) {
             $table->renameColumn('"customerName"', 'customer_name');
             $table->renameColumn('"maxZoom"', 'map_max_zoom');
@@ -42,7 +44,8 @@ class RenameColumnWithSnakeCase extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::table('apps', function (Blueprint $table) {
             $table->renameColumn('customer_name', '"customerName"');
             $table->renameColumn('map_max_zoom', '"maxZoom"');

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateManualDataJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, HandlesData;
+    use Dispatchable, HandlesData, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $track;
 
@@ -36,9 +36,9 @@ class UpdateManualDataJob implements ShouldQueue
     {
         try {
             $this->updateManualData($this->track);
-            Log::info($this->track->id . ' UpdateManualDataJob: SUCCESS');
+            Log::info($this->track->id.' UpdateManualDataJob: SUCCESS');
         } catch (\Exception $e) {
-            Log::error($this->track->id . 'UpdateManualDataJob: FAILED: ' . $e->getMessage());
+            Log::error($this->track->id.'UpdateManualDataJob: FAILED: '.$e->getMessage());
         }
     }
 }
