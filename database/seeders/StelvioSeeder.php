@@ -6,16 +6,13 @@ use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Generator;
 use Illuminate\Container\Container;
-
-
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class StelvioSeeder extends Seeder
 {
-
     /**
      * The current Faker instance.
      *
@@ -42,6 +39,7 @@ class StelvioSeeder extends Seeder
     {
         return Container::getInstance()->make(Generator::class);
     }
+
     /**
      * Run the database seeds.
      *
@@ -57,7 +55,7 @@ class StelvioSeeder extends Seeder
                 [
                     'user_id' => $user->id,
                     'sku' => $sku,
-                    'geometry' => $this->getPoiGeometry()
+                    'geometry' => $this->getPoiGeometry(),
                 ]
             );
             // 10 UGC MEDIA
@@ -65,7 +63,7 @@ class StelvioSeeder extends Seeder
                 [
                     'user_id' => $user->id,
                     'sku' => $sku,
-                    'geometry' => $this->getPoiGeometry()
+                    'geometry' => $this->getPoiGeometry(),
                 ]
             );
             // 1 TRACK
@@ -73,7 +71,7 @@ class StelvioSeeder extends Seeder
                 [
                     'user_id' => $user->id,
                     'sku' => $sku,
-                    'geometry' => $this->getTrackGeometry()
+                    'geometry' => $this->getTrackGeometry(),
                 ]
             );
         }
@@ -85,6 +83,7 @@ class StelvioSeeder extends Seeder
         $lon = $this->faker->randomFloat(5, 10.2858, 10.6344);
         $lat = $this->faker->randomFloat(5, 46.0319, 46.5595);
         $geometry = DB::raw("(ST_GeomFromText('POINT($lon $lat)'))");
+
         return $geometry;
     }
 
@@ -100,6 +99,7 @@ class StelvioSeeder extends Seeder
         ksort($line);
         $linestring = implode(',', $line);
         $geometry = DB::raw("(ST_GeomFromText('LINESTRING($linestring)'))");
+
         return $geometry;
     }
 }

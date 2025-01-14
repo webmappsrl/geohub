@@ -27,6 +27,6 @@ class GenerateLayerPBFJob extends GeneratePBFJob
     protected function getLockKey()
     {
         // Utilizza un identificatore unico per ogni tile
-        return 'generate-layer-pbf-job-' . $this->z . '-' . $this->x . '-' . $this->y;
+        return 'generate-layer-pbf-job-'.$this->z.'-'.$this->x.'-'.$this->y;
     }
 }

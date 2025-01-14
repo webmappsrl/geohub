@@ -9,10 +9,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class SearchTest extends TestCase {
+class SearchTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -21,16 +23,18 @@ class SearchTest extends TestCase {
         });
     }
 
-    public function test_api_is_reachable() {
+    public function test_api_is_reachable()
+    {
         $response = $this->postJson('/api/search', []);
 
         $response->assertStatus(400); // No params specified
     }
 
-    public function test_api_return_empty_values_when_no_elements_available() {
+    public function test_api_return_empty_values_when_no_elements_available()
+    {
         $response = $this->postJson('/api/search', [
             'string' => 'test',
-            'language' => 'it'
+            'language' => 'it',
         ]);
 
         $response->assertStatus(200);
@@ -49,25 +53,26 @@ class SearchTest extends TestCase {
         $this->assertCount(0, $json['poi_types']);
     }
 
-    public function test_api_return_empty_values_when_no_elements_match() {
+    public function test_api_return_empty_values_when_no_elements_match()
+    {
         TaxonomyWhere::factory([
             'name' => [
-                'it' => 'prova'
-            ]
+                'it' => 'prova',
+            ],
         ])->create();
         EcTrack::factory([
             'name' => [
-                'it' => 'prova'
-            ]
+                'it' => 'prova',
+            ],
         ])->create();
         TaxonomyPoiType::factory([
             'name' => [
-                'it' => 'prova'
-            ]
+                'it' => 'prova',
+            ],
         ])->create();
         $response = $this->postJson('/api/search', [
             'string' => 'test',
-            'language' => 'it'
+            'language' => 'it',
         ]);
 
         $response->assertStatus(200);
@@ -86,25 +91,26 @@ class SearchTest extends TestCase {
         $this->assertCount(0, $json['poi_types']);
     }
 
-    public function test_api_return_matching_values() {
+    public function test_api_return_matching_values()
+    {
         TaxonomyWhere::factory([
             'name' => [
-                'it' => 'testa'
-            ]
+                'it' => 'testa',
+            ],
         ])->create();
         EcTrack::factory([
             'name' => [
-                'it' => 'testata'
-            ]
+                'it' => 'testata',
+            ],
         ])->create();
         TaxonomyPoiType::factory([
             'name' => [
-                'it' => 'testing'
-            ]
+                'it' => 'testing',
+            ],
         ])->create();
         $response = $this->postJson('/api/search', [
             'string' => 'test',
-            'language' => 'it'
+            'language' => 'it',
         ]);
 
         $response->assertStatus(200);
@@ -123,28 +129,29 @@ class SearchTest extends TestCase {
         $this->assertCount(1, $json['poi_types']);
     }
 
-    public function test_api_return_matching_values_in_same_language() {
+    public function test_api_return_matching_values_in_same_language()
+    {
         TaxonomyWhere::factory([
             'name' => [
                 'it' => 'testa',
-                'en' => 'try'
-            ]
+                'en' => 'try',
+            ],
         ])->create();
         EcTrack::factory([
             'name' => [
                 'it' => 'testata',
-                'en' => 'test'
-            ]
+                'en' => 'test',
+            ],
         ])->create();
         TaxonomyPoiType::factory([
             'name' => [
                 'it' => 'testing',
-                'en' => 'sentiero'
-            ]
+                'en' => 'sentiero',
+            ],
         ])->create();
         $response = $this->postJson('/api/search', [
             'string' => 'test',
-            'language' => 'en'
+            'language' => 'en',
         ]);
 
         $response->assertStatus(200);
@@ -163,25 +170,26 @@ class SearchTest extends TestCase {
         $this->assertCount(0, $json['poi_types']);
     }
 
-    public function test_api_return_matching_values_with_correct_mapping() {
+    public function test_api_return_matching_values_with_correct_mapping()
+    {
         $where = TaxonomyWhere::factory([
             'name' => [
-                'it' => 'testa'
-            ]
+                'it' => 'testa',
+            ],
         ])->create();
         $track = EcTrack::factory([
             'name' => [
-                'it' => 'testata'
-            ]
+                'it' => 'testata',
+            ],
         ])->has(TaxonomyWhere::factory())->create();
         $poiType = TaxonomyPoiType::factory([
             'name' => [
-                'it' => 'testing'
-            ]
+                'it' => 'testing',
+            ],
         ])->create();
         $response = $this->postJson('/api/search', [
             'string' => 'test',
-            'language' => 'it'
+            'language' => 'it',
         ]);
 
         $response->assertStatus(200);

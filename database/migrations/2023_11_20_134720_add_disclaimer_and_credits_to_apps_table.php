@@ -44,7 +44,7 @@ class AddDisclaimerAndCreditsToAppsTable extends Migration
                     ->update(['page_project' => $record->page_project]);
             }
 
-            $table->dropColumn(array('page_disclaimer', 'page_credits'));
+            $table->dropColumn(['page_disclaimer', 'page_credits']);
         });
     }
 }

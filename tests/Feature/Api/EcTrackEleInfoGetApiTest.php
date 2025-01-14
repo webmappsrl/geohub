@@ -12,7 +12,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- *
  * | api/ec/track/download/{id}                                              | api.ec.track.download.geojson        |
  * | api/ec/track/download/{id}.geojson                                      | api.ec.track.download.geojson        |
  * | api/ec/track/{id}                                                       | api.ec.track.json                    |
@@ -22,7 +21,8 @@ use Tests\TestCase;
  * | api/app/elbrus/{app_id}/geojson/ec_track_{track_id}.json                | api.app.elbrus.geojson.track.json |
  * | api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json | api.app.elbrus.track.taxonomies      |
  */
-class EcTrackEleInfoGetApiTest extends TestCase {
+class EcTrackEleInfoGetApiTest extends TestCase
+{
     use RefreshDatabase;
 
     private array $fields = [
@@ -34,10 +34,11 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         'ele_from' => 100,
         'ele_to' => 100,
         'duration_forward' => 100,
-        'duration_backward' => 100
+        'duration_backward' => 100,
     ];
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -46,7 +47,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         });
     }
 
-    public function testEcTrackDownloadGeojson() {
+    public function test_ec_track_download_geojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -56,7 +58,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function testEcTrack() {
+    public function test_ec_track()
+    {
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
@@ -66,7 +69,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function testEcTrackGeojson() {
+    public function test_ec_track_geojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -76,7 +80,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function testAppElbrusGeojson() {
+    public function test_app_elbrus_geojson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
@@ -87,7 +92,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function testAppElbrusJson() {
+    public function test_app_elbrus_json()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         foreach ($this->fields as $key => $val) {
@@ -97,7 +103,8 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function testAppElbrusTaxonomies() {
+    public function test_app_elbrus_taxonomies()
+    {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
         $user = User::factory()->create();
         $image = EcMedia::factory()->create();
@@ -139,14 +146,16 @@ class EcTrackEleInfoGetApiTest extends TestCase {
         }
     }
 
-    public function _getJsonTrack($route_name) {
+    public function _getJsonTrack($route_name)
+    {
         $track = EcTrack::factory()->create($this->fields);
 
         if (preg_match('/elbrus/', $route_name)) {
             $app = App::factory()->create();
             $result = $this->get(route($route_name, ['app_id' => $app->id, 'track_id' => $track->id]));
-        } else
+        } else {
             $result = $this->get(route($route_name, ['id' => $track->id]));
+        }
 
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertJson($result->getContent());

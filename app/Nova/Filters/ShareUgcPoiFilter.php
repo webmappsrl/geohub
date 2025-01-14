@@ -12,14 +12,13 @@ class ShareUgcPoiFilter extends BooleanFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply(Request $request, $query, $value)
     {
-        if (!$value['yes']) {
+        if (! $value['yes']) {
             return $query;
         }
         if ($value['yes']) {
@@ -30,13 +29,12 @@ class ShareUgcPoiFilter extends BooleanFilter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)
     {
         return [
-            'Yes' => 'yes'
+            'Yes' => 'yes',
         ];
     }
 }

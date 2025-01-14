@@ -23,7 +23,6 @@ abstract class Tool
     /**
      * Determine if the element should be displayed for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorize(Request $request)

@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\App;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AppElbrusTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * @test
      * A basic feature test example.
@@ -18,7 +18,7 @@ class AppElbrusTest extends TestCase
      */
     public function check_if_exists_external_overlays_field()
     {
-        $external_overlays = <<<EXTERNAL_OVERLAYS
+        $external_overlays = <<<'EXTERNAL_OVERLAYS'
 [
     {
         "id": "punti_acqua",
@@ -46,7 +46,7 @@ class AppElbrusTest extends TestCase
 EXTERNAL_OVERLAYS;
 
         $app = App::factory()->create([
-            'external_overlays' => $external_overlays
+            'external_overlays' => $external_overlays,
         ]);
         $json = json_encode($external_overlays);
         $this->assertIsObject($app);

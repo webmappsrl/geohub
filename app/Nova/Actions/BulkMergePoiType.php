@@ -6,10 +6,10 @@ use App\Models\TaxonomyPoiType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
-use Illuminate\Support\Facades\DB;
 
 class BulkMergePoiType extends Action
 {
@@ -29,7 +29,7 @@ class BulkMergePoiType extends Action
 
         // Verify if the Main POI Type exists in the database
         $mainRecord = TaxonomyPoiType::find($mainId);
-        if (!$mainRecord) {
+        if (! $mainRecord) {
             return Action::danger("Main POI Type with ID $mainId not found.");
         }
 
@@ -50,12 +50,14 @@ class BulkMergePoiType extends Action
 
             // Commit the transaction if all operations were successful
             DB::commit();
+
             // Return a success message
-            return Action::message("Merge completed successfully.");
+            return Action::message('Merge completed successfully.');
         } catch (\Exception $e) {
             // Roll back the transaction in case of an error
             DB::rollBack();
-            return Action::danger("Error while merging: " . $e->getMessage());
+
+            return Action::danger('Error while merging: '.$e->getMessage());
         }
     }
 
@@ -74,6 +76,7 @@ class BulkMergePoiType extends Action
                         // Extract the Italian name, or provide a readable fallback if 'it' is missing
                         $name = is_array($type->name) && isset($type->name['it']) ? $type->name['it'] : json_encode($type->name);
                         $identifier = $type->identifier;
+
                         return [$type->id => "{$name} ({$identifier})"];
                     })->toArray()
                 )

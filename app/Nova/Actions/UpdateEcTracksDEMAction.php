@@ -4,7 +4,6 @@ namespace App\Nova\Actions;
 
 use App\Jobs\UpdateEcTrackDemJob;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -21,8 +20,6 @@ class UpdateEcTracksDEMAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -31,7 +28,7 @@ class UpdateEcTracksDEMAction extends Action
             try {
                 UpdateEcTrackDemJob::dispatch($model);
             } catch (\Exception $e) {
-                Log::error('An error occurred during DEM operation: ' . $e->getMessage());
+                Log::error('An error occurred during DEM operation: '.$e->getMessage());
             }
         }
     }

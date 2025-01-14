@@ -14,11 +14,7 @@ class DispatchAction
     /**
      * Dispatch the given action.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
-     * @param  \Laravel\Nova\Actions\Action  $action
      * @param  string  $method
-     * @param  \Illuminate\Support\Collection  $models
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @return mixed
      *
      * @throws \Throwable
@@ -52,10 +48,7 @@ class DispatchAction
     /**
      * Dispatch the given action in the background.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
-     * @param  \Laravel\Nova\Actions\Action  $action
      * @param  string  $method
-     * @param  \Illuminate\Support\Collection  $models
      * @return void
      *
      * @throws \Throwable

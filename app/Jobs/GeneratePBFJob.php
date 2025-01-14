@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Services\PBFGenerator;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,15 +13,21 @@ use Illuminate\Support\Facades\Log;
 class GeneratePBFJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     // Numero massimo di tentativi
     public $tries = 5;
+
     // Tempo massimo di esecuzione in secondi
     public $timeout = 900; // 10 minuti
 
     protected $z;
+
     protected $x;
+
     protected $y;
+
     protected $app_id;
+
     protected $author_id;
 
     /**
@@ -57,7 +62,7 @@ class GeneratePBFJob implements ShouldQueue
             $generator->generate($this->z, $this->x, $this->y);
         } catch (\Exception $e) {
             // Log dell'errore
-            Log::error("Errore durante la generazione del PBF: " . $e->getMessage());
+            Log::error('Errore durante la generazione del PBF: '.$e->getMessage());
             // Opzionalmente, puoi reintrodurre l'eccezione per far fallire il job
             throw $e;
         }

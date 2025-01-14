@@ -2,21 +2,19 @@
 
 namespace Tests\Feature\Api\Ec\Track;
 
-use Tests\TestCase;
 use App\Models\EcTrack;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EcTrackApiColorPropertyTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     *
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_properties_key_test()
     {
         $track = EcTrack::factory()->create();
@@ -29,11 +27,10 @@ class EcTrackApiColorPropertyTest extends TestCase
     }
 
     /**
-     * 
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_geometry_key_test()
     {
         $track = EcTrack::factory()->create();
@@ -46,11 +43,10 @@ class EcTrackApiColorPropertyTest extends TestCase
     }
 
     /**
-     * 
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_color_field_test()
     {
         $track = EcTrack::factory()->create(['color' => '#000000']);
@@ -63,11 +59,10 @@ class EcTrackApiColorPropertyTest extends TestCase
     }
 
     /**
-     * 
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_not_color_field_if_null_test()
     {
         $track = EcTrack::factory()->create(['color' => null]);
@@ -80,11 +75,10 @@ class EcTrackApiColorPropertyTest extends TestCase
     }
 
     /**
-     * 
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_not_color_field_if_empty_test()
     {
         $track = EcTrack::factory()->create(['color' => '']);
@@ -97,11 +91,10 @@ class EcTrackApiColorPropertyTest extends TestCase
     }
 
     /**
-     * 
      * @return void
+     *
      * @test
      */
-
     public function ec_track_api_has_not_color_field_if_not_set()
     {
         $track = EcTrack::factory()->create();

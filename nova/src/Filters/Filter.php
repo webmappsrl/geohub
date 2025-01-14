@@ -14,7 +14,7 @@ use Laravel\Nova\ProxiesCanSeeToGate;
 
 abstract class Filter implements FilterContract, JsonSerializable
 {
-    use Metable, AuthorizedToSee, ProxiesCanSeeToGate, Makeable;
+    use AuthorizedToSee, Makeable, Metable, ProxiesCanSeeToGate;
 
     /**
      * The displayable name of the filter.
@@ -33,7 +33,6 @@ abstract class Filter implements FilterContract, JsonSerializable
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -43,7 +42,6 @@ abstract class Filter implements FilterContract, JsonSerializable
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     abstract public function options(Request $request);

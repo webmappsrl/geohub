@@ -6,12 +6,10 @@ use App\Traits\GeometryFeatureTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 
 /**
  * Class UgcTrack
  *
- * @package App\Models
  *
  * @property int    id
  * @property string sku
@@ -23,7 +21,7 @@ use Illuminate\Support\Str;
  */
 class UgcTrack extends Feature
 {
-    use HasFactory, GeometryFeatureTrait;
+    use GeometryFeatureTrait, HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -36,8 +34,7 @@ class UgcTrack extends Feature
     /**
      * Scope a query to only include current user EcTracks.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCurrentUser($query)
@@ -57,7 +54,7 @@ class UgcTrack extends Feature
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function taxonomy_wheres(): BelongsToMany

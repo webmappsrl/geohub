@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,6 +34,6 @@ class TestJob implements ShouldQueue
         Log::info('TestJob is executed');
         Redis::set('test_key', 'test_value');
         $value = Redis::get('test_key');
-        Log::info('Redis value: ' . $value);
+        Log::info('Redis value: '.$value);
     }
 }

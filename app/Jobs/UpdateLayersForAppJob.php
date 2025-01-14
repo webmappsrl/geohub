@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\App;
+use App\Models\Layer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Layer;
-use App\Models\App;
 use Illuminate\Support\Facades\Log;
 
 class UpdateLayersForAppJob implements ShouldQueue
@@ -37,8 +37,9 @@ class UpdateLayersForAppJob implements ShouldQueue
         // Recupera l'istanza dell'app utilizzando l'app_id
         $app = App::with('layers')->find($this->appId);
 
-        if (!$app) {
+        if (! $app) {
             Log::error("App con id {$this->appId} non trovata.");
+
             return;
         }
 
@@ -47,6 +48,7 @@ class UpdateLayersForAppJob implements ShouldQueue
 
         if ($layers->isEmpty()) {
             Log::info("Nessun layer associato trovato per l'app con id {$this->appId}.");
+
             return;
         }
 
@@ -60,7 +62,7 @@ class UpdateLayersForAppJob implements ShouldQueue
                 Log::info("Layer ID: {$layer->id} aggiornato con successo.");
             } catch (\Exception $e) {
                 // Logga eventuali errori
-                Log::error("Errore durante l'aggiornamento del layer ID: {$layer->id}. Errore: " . $e->getMessage());
+                Log::error("Errore durante l'aggiornamento del layer ID: {$layer->id}. Errore: ".$e->getMessage());
             }
         }
 

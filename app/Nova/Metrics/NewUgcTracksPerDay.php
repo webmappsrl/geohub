@@ -6,15 +6,16 @@ use App\Models\UgcTrack;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Trend;
 
-class NewUgcTracksPerDay extends Trend {
+class NewUgcTracksPerDay extends Trend
+{
     /**
      * Calculate the value of the metric.
      *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      *
      * @return mixed
      */
-    public function calculate(NovaRequest $request) {
+    public function calculate(NovaRequest $request)
+    {
         return $this->countByDays($request, UgcTrack::class);
     }
 
@@ -23,7 +24,8 @@ class NewUgcTracksPerDay extends Trend {
      *
      * @return array
      */
-    public function ranges() {
+    public function ranges()
+    {
         return [
             30 => __('30 Days'),
             60 => __('60 Days'),
@@ -34,9 +36,10 @@ class NewUgcTracksPerDay extends Trend {
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return \DateTimeInterface|\DateInterval|float|int
      */
-    public function cacheFor() {
+    public function cacheFor()
+    {
         // return now()->addMinutes(5);
     }
 
@@ -45,7 +48,8 @@ class NewUgcTracksPerDay extends Trend {
      *
      * @return string
      */
-    public function uriKey() {
+    public function uriKey()
+    {
         return 'new-ugc-tracks-per-day';
     }
 }

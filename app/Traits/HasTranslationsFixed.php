@@ -17,10 +17,10 @@ trait HasTranslationsFixed
         $this->guardAgainstNonTranslatableAttribute($key);
 
         $translations = $this->getTranslations($key);
-        $oldValue     = $translations[$locale] ?? '';
+        $oldValue = $translations[$locale] ?? '';
 
         if ($this->hasSetMutator($key)) {
-            $method = 'set' . Str::studly($key) . 'Attribute';
+            $method = 'set'.Str::studly($key).'Attribute';
 
             $this->{$method}($value, $locale);
 

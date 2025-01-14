@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TaxonomyWhereUgcPoi extends Migration {
+class TaxonomyWhereUgcPoi extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('taxonomy_where_ugc_poi', function (Blueprint $table) {
             $table->id();
             $table->integer('ugc_poi_id')->unsigned();
@@ -29,7 +31,8 @@ class TaxonomyWhereUgcPoi extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('taxonomy_where_ugc_poi');
     }
 }

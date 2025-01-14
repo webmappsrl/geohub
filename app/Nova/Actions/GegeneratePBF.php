@@ -14,18 +14,14 @@ class GeneratePBF extends Action
 {
     use InteractsWithQueue, Queueable;
 
-
     public function name(): string
     {
-        return __("Generete PBF");
+        return __('Generete PBF');
     }
-
 
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -38,7 +34,8 @@ class GeneratePBF extends Action
             ]);
             Log::info("Comando geohub:geohub:update-tracks-for-pbf eseguito con successo per l'app ID: {$appId}");
         } catch (\Exception $e) {
-            Log::error('Errore durante l\'esecuzione dei comandi: ' . $e->getMessage());
+            Log::error('Errore durante l\'esecuzione dei comandi: '.$e->getMessage());
+
             return Action::danger('Errore durante l\'esecuzione dei comandi.');
         }
         try {
@@ -47,9 +44,11 @@ class GeneratePBF extends Action
             ]);
             Log::info("Comando geohub:create_pbf eseguito con successo per l'app ID: {$appId}");
         } catch (\Exception $e) {
-            Log::error('Errore durante l\'esecuzione dei comandi: ' . $e->getMessage());
+            Log::error('Errore durante l\'esecuzione dei comandi: '.$e->getMessage());
+
             return Action::danger('Errore durante l\'esecuzione di geohub:create_pbf');
         }
+
         return Action::message('job executed');
     }
 

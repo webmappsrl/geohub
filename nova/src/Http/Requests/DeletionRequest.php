@@ -12,8 +12,6 @@ class DeletionRequest extends NovaRequest
      * Get the selected models for the action in chunks.
      *
      * @param  int  $count
-     * @param  \Closure  $callback
-     * @param  \Closure  $authCallback
      * @return mixed
      */
     protected function chunkWithAuthorization($count, Closure $callback, Closure $authCallback)

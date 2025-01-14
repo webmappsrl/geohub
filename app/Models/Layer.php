@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use App\Jobs\UpdateLayerTracksJob;
-use Exception;
-use App\Models\OverlayLayer;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Traits\HasTranslationsFixed;
+use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Layer extends Model
 {
@@ -108,10 +107,10 @@ class Layer extends Model
         array_push($associated_app_users, $user_id);
 
         // Logga gli utenti associati
-        Log::channel('layer')->info("*************getTracks*****************");
-        Log::channel('layer')->info("id: " . $this->id);
-        Log::channel('layer')->info("layer: " . $this->name);
-        Log::channel('layer')->info("Utenti associati per il layer: ", ['associated_users' => $associated_app_users]);
+        Log::channel('layer')->info('*************getTracks*****************');
+        Log::channel('layer')->info('id: '.$this->id);
+        Log::channel('layer')->info('layer: '.$this->name);
+        Log::channel('layer')->info('Utenti associati per il layer: ', ['associated_users' => $associated_app_users]);
 
         // Partiamo recuperando tutte le tracce
         $allEcTracks = collect();
@@ -129,11 +128,11 @@ class Layer extends Model
             });
 
         // Logga il numero di tracce iniziali
-        Log::channel('layer')->info("Numero iniziale di tracce: " . $allEcTracks->count());
+        Log::channel('layer')->info('Numero iniziale di tracce: '.$allEcTracks->count());
 
         // Per ogni tassonomia, applichiamo un filtro sulle tracce
         foreach ($taxonomies as $taxonomy) {
-            $taxonomyField = 'taxonomy' . $taxonomy;
+            $taxonomyField = 'taxonomy'.$taxonomy;
 
             Log::channel('layer')->info("Inizio processamento tassonomia: $taxonomyField");
 
@@ -149,20 +148,23 @@ class Layer extends Model
                         if ($track->$taxonomyField->isEmpty()) {
                             return false;
                         }
+
                         // Controlla se la traccia ha almeno un termine della tassonomia corrente
                         return $track->$taxonomyField->intersect($taxonomyTerms)->isNotEmpty();
                     } catch (Exception $e) {
-                        Log::channel('layer')->error("Errore durante il filtraggio delle tracce per la tassonomia $taxonomyField: " . $e->getMessage());
+                        Log::channel('layer')->error("Errore durante il filtraggio delle tracce per la tassonomia $taxonomyField: ".$e->getMessage());
+
                         return false;
                     }
                 });
 
                 // Logga il numero di tracce rimanenti dopo il filtro per questa tassonomia
-                Log::channel('layer')->info("Tracce rimanenti dopo il filtro di $taxonomyField: " . $allEcTracks->count());
+                Log::channel('layer')->info("Tracce rimanenti dopo il filtro di $taxonomyField: ".$allEcTracks->count());
 
                 // Se non ci sono più tracce comuni, restituisci subito un array vuoto
                 if ($allEcTracks->isEmpty()) {
                     Log::channel('layer')->info("Nessuna traccia comune trovata dopo l'applicazione di $taxonomyField. Restituzione array vuoto.");
+
                     return [];
                 }
             } else {
@@ -175,7 +177,8 @@ class Layer extends Model
 
         // Se collection è true, ritorna direttamente tutte le tracce raccolte
         if ($collection) {
-            Log::channel('layer')->info("Ritorno tutte le tracce come collezione. Totale tracce: " . $allEcTracks->count());
+            Log::channel('layer')->info('Ritorno tutte le tracce come collezione. Totale tracce: '.$allEcTracks->count());
+
             return $allEcTracks;
         }
 
@@ -183,7 +186,7 @@ class Layer extends Model
         $trackIds = $allEcTracks->pluck('id')->toArray();
 
         // Logga il numero finale di track IDs raccolti
-        Log::channel('layer')->info("Numero totale di track IDs raccolti: " . count($trackIds));
+        Log::channel('layer')->info('Numero totale di track IDs raccolti: '.count($trackIds));
 
         // Libera la memoria utilizzata dalla collezione di tracce
         unset($allEcTracks);
@@ -195,16 +198,17 @@ class Layer extends Model
     public function getPbfTracks()
     {
         // Chiamata a getTracks per ottenere la collection delle tracce filtrate
-        $allEcTracks =  $this->ecTracks;
+        $allEcTracks = $this->ecTracks;
 
         // Verifica che ci siano tracce disponibili
         if ($allEcTracks->isEmpty()) {
-            Log::channel('layer')->info("Nessuna traccia trovata da getTracks.");
+            Log::channel('layer')->info('Nessuna traccia trovata da getTracks.');
+
             return collect(); // Restituisci una collezione vuota
         }
 
         // Logga il numero di tracce filtrate dalla geometria e dalle tassonomie
-        Log::channel('layer')->info("Numero di tracce finali filtrate da getTracks: " . $allEcTracks->count());
+        Log::channel('layer')->info('Numero di tracce finali filtrate da getTracks: '.$allEcTracks->count());
 
         // Restituisci tracce uniche in base all'ID
         return $allEcTracks->unique('id');
@@ -217,7 +221,6 @@ class Layer extends Model
         });
     }
 
-
     public function getLayerUserID()
     {
         return DB::table('apps')->where('id', $this->app_id)->select(['user_id'])->first()->user_id;
@@ -228,11 +231,11 @@ class Layer extends Model
         $bbox = $defaultBBOX;
         $tracks = $this->ecTracks->pluck('id')->toArray();
         if (count($tracks) > 0) {
-            $q = "select ST_Extent(geometry::geometry)
-             as bbox from ec_tracks where id IN (" . implode(',', array_map('intval', $tracks)) . ");";
+            $q = 'select ST_Extent(geometry::geometry)
+             as bbox from ec_tracks where id IN ('.implode(',', array_map('intval', $tracks)).');';
             $res = DB::select($q);
             if (count($res) > 0) {
-                if (!is_null($res[0]->bbox)) {
+                if (! is_null($res[0]->bbox)) {
                     preg_match('/\((.*?)\)/', $res[0]->bbox, $match);
                     $coords = $match[1];
                     $coord_array = explode(',', $coords);
@@ -248,7 +251,7 @@ class Layer extends Model
             $this->bbox = $bbox;
             $this->save();
         } catch (Exception $e) {
-            Log::channel('layer')->error("computeBB of layer with id: " . $this->id);
+            Log::channel('layer')->error('computeBB of layer with id: '.$this->id);
         }
     }
 
@@ -301,6 +304,7 @@ class Layer extends Model
 
         return $ids;
     }
+
     public function ecTracks(): BelongsToMany
     {
         return $this->belongsToMany(EcTrack::class, 'ec_track_layer');
@@ -332,7 +336,6 @@ class Layer extends Model
                 SQL
             )[0]->wkt;
 
-
             $end_point = DB::select(
                 <<<SQL
                     SELECT ST_AsText(ST_SetSRID(ST_Force2D(ST_EndPoint('$geometry')), 4326)) As wkt
@@ -362,6 +365,7 @@ class Layer extends Model
             $edges[$track->id]['prev'] = $previousTrack->pluck('id')->toArray();
             $edges[$track->id]['next'] = $nextTrack->pluck('id')->toArray();
         }
+
         return $edges;
     }
 }

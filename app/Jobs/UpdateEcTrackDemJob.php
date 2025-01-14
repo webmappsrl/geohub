@@ -2,21 +2,21 @@
 
 namespace App\Jobs;
 
+use App\Traits\HandlesData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Traits\HandlesData;
 use Illuminate\Support\Facades\Log;
 
 class UpdateEcTrackDemJob implements ShouldQueue
 {
     use Dispatchable;
+    use HandlesData;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    use HandlesData;
 
     protected $ecTrack;
 
@@ -39,9 +39,9 @@ class UpdateEcTrackDemJob implements ShouldQueue
     {
         try {
             $this->updateDemData($this->ecTrack);
-            Log::info($this->ecTrack->id . ' UpdateEcTrackDemJob: SUCCESS');
+            Log::info($this->ecTrack->id.' UpdateEcTrackDemJob: SUCCESS');
         } catch (\Exception $e) {
-            Log::error($this->ecTrack->id . 'UpdateEcTrackDemJob: FAILED: ' . $e->getMessage());
+            Log::error($this->ecTrack->id.'UpdateEcTrackDemJob: FAILED: '.$e->getMessage());
         }
     }
 }

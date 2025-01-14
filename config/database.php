@@ -92,7 +92,7 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
-        //temporary connection to old osm2cai db
+        // temporary connection to old osm2cai db
         'out_source_osm2cai_old' => [
             'driver' => 'pgsql',
             'url' => env('OUT_SOURCE_OSM_DB_URL'),
@@ -122,7 +122,6 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
-
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -169,7 +168,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],
 
         'default' => [
@@ -200,10 +199,10 @@ return [
     */
     'dbal' => [
         'types' => [
-            # See https://github.com/mstaack/laravel-postgis/issues/144
+            // See https://github.com/mstaack/laravel-postgis/issues/144
             'geometry' => '\Doctrine\DBAL\Types\StringType',
             'geography' => '\Doctrine\DBAL\Types\StringType',
-        ]
-    ]
+        ],
+    ],
 
 ];

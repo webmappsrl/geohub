@@ -13,7 +13,6 @@ class StyleController extends Controller
     /**
      * Serve the requested stylesheet.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Http\Response
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException

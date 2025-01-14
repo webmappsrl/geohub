@@ -27,8 +27,8 @@ class NovaWyswyg extends NovaTrumbowyg
                 ['unorderedList', 'orderedList'],
                 ['horizontalRule'],
                 ['removeformat'],
-                ['fullscreen']
-            ]
+                ['fullscreen'],
+            ],
         ]);
     }
 }

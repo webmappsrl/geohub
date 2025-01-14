@@ -11,10 +11,12 @@ use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EcTrackHasDescentTest extends TestCase {
+class EcTrackHasDescentTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -23,7 +25,8 @@ class EcTrackHasDescentTest extends TestCase {
         });
     }
 
-    public function testEcTrackDownloadGeojson() {
+    public function test_ec_track_download_geojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.download.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -31,7 +34,8 @@ class EcTrackHasDescentTest extends TestCase {
         $this->assertEquals(100000, $json['properties']['descent']);
     }
 
-    public function testEcTrack() {
+    public function test_ec_track()
+    {
         $json = $this->_getJsonTrack('api.ec.track.json');
 
         $this->assertArrayHasKey('properties', $json);
@@ -39,7 +43,8 @@ class EcTrackHasDescentTest extends TestCase {
         $this->assertEquals(100000, $json['properties']['descent']);
     }
 
-    public function testEcTrackGeojson() {
+    public function test_ec_track_geojson()
+    {
         $json = $this->_getJsonTrack('api.ec.track.view.geojson');
 
         $this->assertArrayHasKey('properties', $json);
@@ -47,7 +52,8 @@ class EcTrackHasDescentTest extends TestCase {
         $this->assertEquals(100000, $json['properties']['descent']);
     }
 
-    public function testAppElbrusGeojson() {
+    public function test_app_elbrus_geojson()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track');
 
         $this->assertArrayHasKey('properties', $json);
@@ -55,14 +61,16 @@ class EcTrackHasDescentTest extends TestCase {
         $this->assertEquals(100000, $json['properties']['descent']);
     }
 
-    public function testAppElbrusJson() {
+    public function test_app_elbrus_json()
+    {
         $json = $this->_getJsonTrack('api.app.elbrus.geojson.track.json');
 
         $this->assertArrayHasKey('descent', $json);
         $this->assertEquals(100000, $json['descent']);
     }
 
-    public function testAppElbrusTaxonomies() {
+    public function test_app_elbrus_taxonomies()
+    {
         // api/app/elbrus/{app_id}/taxonomies/track_{taxonomy_name}_{term_id}.json
 
         $user = User::factory()->create();
@@ -98,7 +106,7 @@ class EcTrackHasDescentTest extends TestCase {
         $fields = [
             'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent', 'difficulty',
             'ele:from', 'ele:to', 'ele:min', 'ele:max', 'duration:forward', 'duration:backward',
-            'image', 'imageGallery'
+            'image', 'imageGallery',
         ];
 
         foreach ($fields as $field) {
@@ -108,7 +116,8 @@ class EcTrackHasDescentTest extends TestCase {
         $this->assertEquals(100000, $tracks[1]['descent']);
     }
 
-    public function _getJsonTrack($route_name) {
+    public function _getJsonTrack($route_name)
+    {
         $track = EcTrack::factory()->create(['descent' => 100000]);
         if (preg_match('/elbrus/', $route_name)) {
             $app = App::factory()->create();

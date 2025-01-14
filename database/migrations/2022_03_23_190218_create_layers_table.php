@@ -9,7 +9,7 @@ class CreateLayersTable extends Migration
 {
     /**
      * Run the migrations.
-     * 
+     *
      ### Overlay Layer Config  REF: https://github.com/webmappsrl/wm-app/edit/develop/docs/config/sections/map.md
 
 This represents the configuration of each overlay layer visible in the map with additional interactive and/or visual data.
@@ -79,7 +79,6 @@ STYLE
             $table->integer('stroke_opacity')->nullable();
             $table->integer('zindex')->nullable();
             $table->string('line_dash')->nullable();
-
 
         });
     }

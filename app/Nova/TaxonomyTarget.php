@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
-use Laravel\Nova\Fields\Heading;
-
 
 class TaxonomyTarget extends Resource
 {
@@ -28,12 +26,14 @@ class TaxonomyTarget extends Resource
      * @var string
      */
     public static $model = \App\Models\TaxonomyTarget::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -41,7 +41,7 @@ class TaxonomyTarget extends Resource
      */
     public static $search = [
         'name',
-        'identifier'
+        'identifier',
     ];
 
     public static function group()
@@ -52,7 +52,6 @@ class TaxonomyTarget extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -111,7 +110,7 @@ class TaxonomyTarget extends Resource
             })
                 ->asHtml()
                 ->onlyOnIndex(),
-            NovaIconSelect::make("Icon Label", 'icon')
+            NovaIconSelect::make('Icon Label', 'icon')
                 ->setIconProvider(WebmappAppIconProvider::class)
                 ->help(__('Select an icon from the list to display for the taxonomy.')),
             Text::make(__('Source'), 'source')
@@ -129,9 +128,10 @@ class TaxonomyTarget extends Resource
                 ->hideWhenUpdating(),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                if ($url !== '' && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
+
                 return $url;
             })
                 ->withMeta(['width' => 200])
@@ -277,7 +277,6 @@ class TaxonomyTarget extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -289,7 +288,6 @@ class TaxonomyTarget extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -301,7 +299,6 @@ class TaxonomyTarget extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -313,7 +310,6 @@ class TaxonomyTarget extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */

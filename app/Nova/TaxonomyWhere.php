@@ -13,40 +13,36 @@ use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Panel;
-use Robertboes\NovaSliderField\NovaSliderField;
+use Laravel\Nova\Fields\Textarea;
 use Waynestate\Nova\CKEditor;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
-use Yna\NovaSwatches\Swatches;
-use Tsungsoft\ErrorMessage\ErrorMessage;
-use Webmapp\FeatureImagePopup\FeatureImagePopup;
-use Laravel\Nova\Fields\Heading;
 
 class TaxonomyWhere extends Resource
 {
     use TabsOnEdit;
+
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\TaxonomyWhere::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name'
+        'name',
     ];
 
     public static function group()
@@ -56,10 +52,6 @@ class TaxonomyWhere extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -129,9 +121,10 @@ class TaxonomyWhere extends Resource
                 'Media' => [
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
+
                         return $url;
                     })
                         ->withMeta(['width' => 200])
@@ -192,7 +185,7 @@ class TaxonomyWhere extends Resource
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-                ]
+                ],
             ]
         ))->withToolbar()];
     }
@@ -206,7 +199,7 @@ class TaxonomyWhere extends Resource
             $geojson = [];
         }
 
-        $tab_title = "New Taxonomy Where";
+        $tab_title = 'New Taxonomy Where';
         if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "Taxonomy Where Edit: {$this->name} ({$this->id})";
         }
@@ -247,7 +240,7 @@ class TaxonomyWhere extends Resource
                         return $geometry ? [
                             'geometry' => $geometry,
                         ] : function () {
-                            throw new Exception(__("The uploaded file is not valid"));
+                            throw new Exception(__('The uploaded file is not valid'));
                         };
                     })
                         ->help(__('Here you can upload a GeoJSON file of a polygon, which is a closed geometry that defines an area on a map.')),
@@ -298,17 +291,13 @@ class TaxonomyWhere extends Resource
                         ->hideFromDetail()
                         ->hideWhenCreating()
                         ->hideWhenUpdating(),
-                ]
+                ],
             ]
         ))->withToolbar()];
     }
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -317,10 +306,6 @@ class TaxonomyWhere extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -329,10 +314,6 @@ class TaxonomyWhere extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -341,10 +322,6 @@ class TaxonomyWhere extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {

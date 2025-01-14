@@ -2,9 +2,9 @@
 
 namespace App\Nova\Filters;
 
+use App\Models\App;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
-use \App\Models\App;
 
 class AppFilter extends Filter
 {
@@ -18,21 +18,19 @@ class AppFilter extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function apply(Request $request, $query, $value)
     {
-        //return the models where the sku value contains the digited value
+        // return the models where the sku value contains the digited value
         return $query->where('sku', $value);
     }
 
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)

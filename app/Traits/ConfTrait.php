@@ -7,10 +7,10 @@ use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\OverlayLayer;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 trait ConfTrait
@@ -18,8 +18,7 @@ trait ConfTrait
     /**
      * Display the specified resource.
      *
-     * @param int $id the app id in the database
-     *
+     * @param  int  $id  the app id in the database
      * @return JsonResponse
      */
     public function config()
@@ -46,11 +45,6 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_app(): array
     {
         $data = [];
@@ -60,7 +54,7 @@ trait ConfTrait
         $data['APP']['customerName'] = $this->customer_name;
         $data['APP']['geohubId'] = $this->id;
 
-        if (!is_null($this->welcome)) {
+        if (! is_null($this->welcome)) {
             $data['APP']['welcome'] = [];
             $welcome = $this->toArray()['welcome'];
             $data['APP']['welcome'] = $welcome;
@@ -80,20 +74,15 @@ trait ConfTrait
             $data['APP']['socialShareText'] = $this->getTranslations('social_share_text');
         }
         if ($this->poi_acquisition_form) {
-            $data['APP']['poi_acquisition_form'] =  json_decode($this->poi_acquisition_form, true);
+            $data['APP']['poi_acquisition_form'] = json_decode($this->poi_acquisition_form, true);
         }
         if ($this->track_acquisition_form) {
-            $data['APP']['track_acquisition_form'] =  json_decode($this->track_acquisition_form, true);
+            $data['APP']['track_acquisition_form'] = json_decode($this->track_acquisition_form, true);
         }
 
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_webapp(): array
     {
         $data = [];
@@ -111,43 +100,37 @@ trait ConfTrait
         return $data;
     }
 
-
     private function config_section_translations(): array
     {
         $data = [];
         $data['TRANSLATIONS'] = [];
-        if (!is_null($this->translations_it)) {
+        if (! is_null($this->translations_it)) {
             $data['TRANSLATIONS']['it'] = json_decode($this->translations_it, true);
         }
-        if (!is_null($this->translations_en)) {
+        if (! is_null($this->translations_en)) {
             $data['TRANSLATIONS']['en'] = json_decode($this->translations_en, true);
         }
 
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_home(): array
     {
         $data = [];
 
         $data['HOME'][] = [
             'view' => 'title',
-            'title' => $this->name
+            'title' => $this->name,
         ];
 
-        if (!empty($this->config_home)) {
+        if (! empty($this->config_home)) {
             $data = json_decode($this->config_home, true);
         } elseif ($this->layers->count() > 0) {
             foreach ($this->layers()->orderBy('rank')->get() as $layer) {
                 $data['HOME'][] = [
                     'view' => 'compact-horizontal',
                     'title' => $layer->title,
-                    'terms' => [$layer->id]
+                    'terms' => [$layer->id],
                 ];
             }
         }
@@ -155,19 +138,16 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_languages(): array
     {
         $data['LANGUAGES']['default'] = $this->default_language;
         if (isset($this->available_languages)) {
             $data['LANGUAGES']['available'] = json_decode($this->available_languages, true);
         }
+
         return $data;
     }
+
     public function get_unique_taxonomies($taxonomy_relation)
     {
         $all_taxonomies = collect();
@@ -186,7 +166,7 @@ trait ConfTrait
     private function collect_taxonomies_from_layers(Collection $all_taxonomies, $taxonomy_relation)
     {
         foreach ($this->layers as $layer) {
-            if (!method_exists($layer, $taxonomy_relation)) {
+            if (! method_exists($layer, $taxonomy_relation)) {
                 throw new Exception("The taxonomy relation {$taxonomy_relation} does not exist on the Layer model.");
             }
 
@@ -205,7 +185,7 @@ trait ConfTrait
         $ec_tracks = EcTrack::where('user_id', $this->user_id)->get();
 
         foreach ($ec_tracks as $track) {
-            if (!method_exists($track, $taxonomy_relation)) {
+            if (! method_exists($track, $taxonomy_relation)) {
                 throw new Exception("The taxonomy relation {$taxonomy_relation} does not exist on the EcTrack model.");
             }
 
@@ -227,15 +207,10 @@ trait ConfTrait
             'name' => $taxonomy->getTranslations('name'),
             'color' => $taxonomy->color ?? null,
         ], function ($value) {
-            return !is_null($value);
+            return ! is_null($value);
         });
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_map(): array
     {
         $data = [];
@@ -265,7 +240,7 @@ trait ConfTrait
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
             } catch (\Exception $e) {
-                Log::warning("The overlays in the app " . $this->id . " are not correctly mapped. Error: " . $e->getMessage());
+                Log::warning('The overlays in the app '.$this->id.' are not correctly mapped. Error: '.$e->getMessage());
             }
         }
 
@@ -279,7 +254,7 @@ trait ConfTrait
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
                 } catch (\Exception  $e) {
-                    Log::warning("The bbox value " . $layer->id . " are not correct. Error: " . $e->getMessage());
+                    Log::warning('The bbox value '.$layer->id.' are not correct. Error: '.$e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
@@ -296,25 +271,24 @@ trait ConfTrait
                 unset($item['sku']);
                 unset($item['generate_edges']);
 
-
                 // FEATURE IMAGE:
                 $feature_image = null;
-                if (!empty($layer->featureImage) && $layer->featureImage->count() > 0) {
+                if (! empty($layer->featureImage) && $layer->featureImage->count() > 0) {
                     $feature_image = $layer->featureImage->thumbnail('400x200');
-                    if (!is_null($layer->featureImage->thumbnail('400x200'))) {
+                    if (! is_null($layer->featureImage->thumbnail('400x200'))) {
                         $item['feature_image'] = $layer->featureImage->thumbnail('400x200');
                     }
                 } else {
                     if ($layer->taxonomyWheres->count() > 0) {
                         foreach ($layer->taxonomyWheres as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
                     }
                     if ($feature_image == null && $layer->taxonomyThemes->count() > 0) {
                         foreach ($layer->taxonomyThemes as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
@@ -322,7 +296,7 @@ trait ConfTrait
 
                     if ($feature_image == null && $layer->taxonomyActivities->count() > 0) {
                         foreach ($layer->taxonomyActivities as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
@@ -330,7 +304,7 @@ trait ConfTrait
 
                     if ($feature_image == null && $layer->taxonomyWhens->count() > 0) {
                         foreach ($layer->taxonomyWhens as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
@@ -338,7 +312,7 @@ trait ConfTrait
 
                     if ($feature_image == null && $layer->taxonomyTargets->count() > 0) {
                         foreach ($layer->taxonomyTargets as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
@@ -346,7 +320,7 @@ trait ConfTrait
 
                     if ($feature_image == null && $layer->taxonomyPoiTypes->count() > 0) {
                         foreach ($layer->taxonomyPoiTypes as $term) {
-                            if (isset($term->feature_image) && !empty($term->feature_image)) {
+                            if (isset($term->feature_image) && ! empty($term->feature_image)) {
                                 $feature_image = $term->feature_image;
                             }
                         }
@@ -355,17 +329,16 @@ trait ConfTrait
                     if ($feature_image != null) {
                         // Retrieve proper image
                         $image = EcMedia::find($feature_image);
-                        if (!is_null($image->thumbnail('400x200'))) {
+                        if (! is_null($image->thumbnail('400x200'))) {
                             $item['feature_image'] = $image->thumbnail('400x200');
                         }
                     }
                 }
 
-
                 // remove useless attribute geometry from taxonomy where of layer
                 if ($item['taxonomy_wheres']) {
                     $unsetAttr = ['geometry', 'query_string'];
-                    for ($i = 0; $i < count($item['taxonomy_wheres']); ++$i) {
+                    for ($i = 0; $i < count($item['taxonomy_wheres']); $i++) {
                         foreach ($unsetAttr as $attr) {
                             unset($item['taxonomy_wheres'][$i][$attr]);
                         }
@@ -409,13 +382,14 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
 
         // Tiles
-        if ($this->tiles && !empty(json_decode($this->tiles, true))) {
-            $appTiles = new AppTiles();
-            $data['MAP']['controls']['tiles'][] = ["label" => $this->getTranslations('tiles_label'), "type" => "title"];
+        if ($this->tiles && ! empty(json_decode($this->tiles, true))) {
+            $appTiles = new AppTiles;
+            $data['MAP']['controls']['tiles'][] = ['label' => $this->getTranslations('tiles_label'), 'type' => 'title'];
             $ta = array_map(function ($v) use ($appTiles) {
                 $v = json_decode($v, true);
                 $tile = $appTiles->getConstant(key($v));
                 $tile['type'] = 'button';
+
                 return $tile;
             }, json_decode($this->tiles, true));
             array_push($data['MAP']['controls']['tiles'], ...$ta);
@@ -423,7 +397,7 @@ trait ConfTrait
 
         // Overlays
         if ($this->overlayLayers->count() > 0) {
-            $data['MAP']['controls']['overlays'][] = ["label" => $this->getTranslations('overlays_label'), "type" => "title"];
+            $data['MAP']['controls']['overlays'][] = ['label' => $this->getTranslations('overlays_label'), 'type' => 'title'];
             $overlays = array_map(function ($overlay) {
                 $array = [];
                 $overlay = OverlayLayer::find($overlay['id']);
@@ -448,7 +422,7 @@ trait ConfTrait
                     $array['strokeWidth'] = $overlay['stroke_width'];
                 }
                 if (isset($overlay['feature_collection'])) {
-                    //if the feature collection is an external geojson URL then put it in the conf file
+                    // if the feature collection is an external geojson URL then put it in the conf file
                     if (strpos($overlay['feature_collection'], 'http') === 0 || strpos($overlay['feature_collection'], 'https') === 0) {
                         $array['url'] = $overlay['feature_collection'];
                     } else {
@@ -462,6 +436,7 @@ trait ConfTrait
                     }
                 }
                 $array['type'] = 'button';
+
                 return $array;
             }, json_decode($this->overlayLayers, true));
             array_push($data['MAP']['controls']['overlays'], ...$overlays);
@@ -469,24 +444,24 @@ trait ConfTrait
 
         // data => turn the layers (pois,tracks) off an on
         if ($this->app_pois_api_layer || $this->layers->count() > 0) {
-            $data['MAP']['controls']['data'][] = ["label" => $this->getTranslations('data_label'), "type" => "title"];
+            $data['MAP']['controls']['data'][] = ['label' => $this->getTranslations('data_label'), 'type' => 'title'];
         }
         if ($this->app_pois_api_layer) {
             $data['MAP']['controls']['data'][] = [
-                "label" => $this->getTranslations('pois_data_label'),
-                "type" => "button",
-                "url" => "pois",
-                "default" => $this->pois_data_default,
-                "icon" => $this->pois_data_icon
+                'label' => $this->getTranslations('pois_data_label'),
+                'type' => 'button',
+                'url' => 'pois',
+                'default' => $this->pois_data_default,
+                'icon' => $this->pois_data_icon,
             ];
         }
         if ($this->layers->count() > 0) {
             $data['MAP']['controls']['data'][] = [
-                "label" => $this->getTranslations('tracks_data_label'),
-                "type" => "button",
-                "url" => "layers",
-                "default" => $this->tracks_data_default,
-                "icon" => $this->tracks_data_icon
+                'label' => $this->getTranslations('tracks_data_label'),
+                'type' => 'button',
+                'url' => 'layers',
+                'default' => $this->tracks_data_default,
+                'icon' => $this->tracks_data_icon,
             ];
         }
 
@@ -498,7 +473,7 @@ trait ConfTrait
             $data['MAP']['filters']['activities'] = [
                 'type' => 'select',
                 'name' => $this->getTranslations('filter_activity_label'),
-                'options' => $options
+                'options' => $options,
             ];
         }
 
@@ -510,7 +485,7 @@ trait ConfTrait
             $data['MAP']['filters']['themes'] = [
                 'type' => 'select',
                 'name' => $this->getTranslations('filter_theme_label'),
-                'options' => $options
+                'options' => $options,
             ];
         }
 
@@ -522,12 +497,12 @@ trait ConfTrait
             $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id ORDER BY a.name ASC;");
 
             foreach ($poi_types as $poi_type) {
-                $a = array(
-                    'identifier' => 'poi_type_' . $poi_type->identifier,
+                $a = [
+                    'identifier' => 'poi_type_'.$poi_type->identifier,
                     'name' => json_decode($poi_type->name, true),
                     'id' => $poi_type->id,
                     'icon' => $poi_type->icon,
-                );
+                ];
                 if ($poi_type->color) {
                     $a['color'] = $poi_type->color;
                 }
@@ -537,7 +512,7 @@ trait ConfTrait
             $data['MAP']['filters']['poi_types'] = [
                 'type' => 'select',
                 'name' => $this->getTranslations('filter_poi_type_label'),
-                'options' => $options
+                'options' => $options,
             ];
 
             // For old Applications
@@ -545,7 +520,7 @@ trait ConfTrait
             $data['MAP']['filters']['poi_type'] = [
                 'type' => 'select',
                 'name' => $this->getTranslations('filter_poi_type_label'),
-                'options' => $options
+                'options' => $options,
             ];
         }
 
@@ -573,14 +548,10 @@ trait ConfTrait
                 'max' => $this->filter_track_distance_max ?? '',
             ];
         }
+
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_theme(): array
     {
         $data = [];
@@ -594,11 +565,6 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_pages(): array
     {
         $data = [];
@@ -629,17 +595,12 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_options(): array
     {
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // OPTIONS section
-            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $this->id . '/';
+            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/'.$this->id.'/';
         }
 
         $data['OPTIONS']['startUrl'] = $this->start_url;
@@ -653,55 +614,46 @@ trait ConfTrait
         $data['OPTIONS']['show_scale'] = $this->table_details_show_scale;
         $data['OPTIONS']['showGpxDownload'] = $this->table_details_show_gpx_download;
         $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
-        $data['OPTIONS']['showGeojsonDownload'] = !!$this->table_details_show_geojson_download;
-        $data['OPTIONS']['showShapefileDownload'] = !!$this->table_details_show_shapefile_download;
+        $data['OPTIONS']['showGeojsonDownload'] = (bool) $this->table_details_show_geojson_download;
+        $data['OPTIONS']['showShapefileDownload'] = (bool) $this->table_details_show_shapefile_download;
 
         foreach ($this->track_technical_details as $label => $value) {
             $label = Str::camel($label);
             $data['OPTIONS'][$label] = $value;
         }
+
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_tables(): array
     {
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // TABLES section
-            $data['TABLES']['details']['showGpxDownload'] = !!$this->table_details_show_gpx_download;
-            $data['TABLES']['details']['showKmlDownload'] = !!$this->table_details_show_kml_download;
-            $data['TABLES']['details']['showRelatedPoi'] = !!$this->table_details_show_related_poi;
-            $data['TABLES']['details']['hide_duration:forward'] = !$this->table_details_show_duration_forward;
-            $data['TABLES']['details']['hide_duration:backward'] = !$this->table_details_show_duration_backward;
-            $data['TABLES']['details']['hide_distance'] = !$this->table_details_show_distance;
-            $data['TABLES']['details']['hide_ascent'] = !$this->table_details_show_ascent;
-            $data['TABLES']['details']['hide_descent'] = !$this->table_details_show_descent;
-            $data['TABLES']['details']['hide_ele:max'] = !$this->table_details_show_ele_max;
-            $data['TABLES']['details']['hide_ele:min'] = !$this->table_details_show_ele_min;
-            $data['TABLES']['details']['hide_ele:from'] = !$this->table_details_show_ele_from;
-            $data['TABLES']['details']['hide_ele:to'] = !$this->table_details_show_ele_to;
-            $data['TABLES']['details']['hide_scale'] = !$this->table_details_show_scale;
-            $data['TABLES']['details']['hide_cai_scale'] = !$this->table_details_show_cai_scale;
-            $data['TABLES']['details']['hide_mtb_scale'] = !$this->table_details_show_mtb_scale;
-            $data['TABLES']['details']['hide_ref'] = !$this->table_details_show_ref;
-            $data['TABLES']['details']['hide_surface'] = !$this->table_details_show_surface;
-            $data['TABLES']['details']['showGeojsonDownload'] = !!$this->table_details_show_geojson_download;
-            $data['TABLES']['details']['showShapefileDownload'] = !!$this->table_details_show_shapefile_download;
+            $data['TABLES']['details']['showGpxDownload'] = (bool) $this->table_details_show_gpx_download;
+            $data['TABLES']['details']['showKmlDownload'] = (bool) $this->table_details_show_kml_download;
+            $data['TABLES']['details']['showRelatedPoi'] = (bool) $this->table_details_show_related_poi;
+            $data['TABLES']['details']['hide_duration:forward'] = ! $this->table_details_show_duration_forward;
+            $data['TABLES']['details']['hide_duration:backward'] = ! $this->table_details_show_duration_backward;
+            $data['TABLES']['details']['hide_distance'] = ! $this->table_details_show_distance;
+            $data['TABLES']['details']['hide_ascent'] = ! $this->table_details_show_ascent;
+            $data['TABLES']['details']['hide_descent'] = ! $this->table_details_show_descent;
+            $data['TABLES']['details']['hide_ele:max'] = ! $this->table_details_show_ele_max;
+            $data['TABLES']['details']['hide_ele:min'] = ! $this->table_details_show_ele_min;
+            $data['TABLES']['details']['hide_ele:from'] = ! $this->table_details_show_ele_from;
+            $data['TABLES']['details']['hide_ele:to'] = ! $this->table_details_show_ele_to;
+            $data['TABLES']['details']['hide_scale'] = ! $this->table_details_show_scale;
+            $data['TABLES']['details']['hide_cai_scale'] = ! $this->table_details_show_cai_scale;
+            $data['TABLES']['details']['hide_mtb_scale'] = ! $this->table_details_show_mtb_scale;
+            $data['TABLES']['details']['hide_ref'] = ! $this->table_details_show_ref;
+            $data['TABLES']['details']['hide_surface'] = ! $this->table_details_show_surface;
+            $data['TABLES']['details']['showGeojsonDownload'] = (bool) $this->table_details_show_geojson_download;
+            $data['TABLES']['details']['showShapefileDownload'] = (bool) $this->table_details_show_shapefile_download;
         }
 
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_routing(): array
     {
         $data = [];
@@ -713,11 +665,6 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_report(): array
     {
         $data = [];
@@ -729,22 +676,17 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_geolocation(): array
     {
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // GEOLOCATION SECTION
-            $data['GEOLOCATION']['record']['enable'] = !!$this->geolocation_record_enable;
+            $data['GEOLOCATION']['record']['enable'] = (bool) $this->geolocation_record_enable;
             $data['GEOLOCATION']['record']['export'] = true;
             $data['GEOLOCATION']['record']['uploadUrl'] = 'https://geohub.webmapp.it/api/usergenerateddata/store';
         } else {
-            if (!!$this->geolocation_record_enable) {
-                $data['GEOLOCATION']['record']['enable'] = !!$this->geolocation_record_enable;
+            if ((bool) $this->geolocation_record_enable) {
+                $data['GEOLOCATION']['record']['enable'] = (bool) $this->geolocation_record_enable;
             }
         }
         if ($this->gps_accuracy_default) {
@@ -754,11 +696,6 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_auth(): array
     {
         $data = [];
@@ -782,11 +719,6 @@ trait ConfTrait
         return $data;
     }
 
-    /**
-     * @param
-     *
-     * @return array
-     */
     private function config_section_offline(): array
     {
         $data = [];
@@ -811,18 +743,16 @@ trait ConfTrait
      * Returns bbox array
      * [lon0,lat0,lon1,lat1]
      *
-     * @param App $app
-     *
-     * @return array
+     * @param  App  $app
      */
     private function _getBBox(): array
     {
         $bbox = [];
         $q = "select ST_Extent(geometry::geometry) as bbox from ec_tracks where user_id=$this->user_id;";
-        //$q = "select name,ST_AsGeojson(geometry) as bbox from ec_tracks where user_id=$app->user_id;";
+        // $q = "select name,ST_AsGeojson(geometry) as bbox from ec_tracks where user_id=$app->user_id;";
         $res = DB::select($q);
         if (count($res) > 0) {
-            if (!is_null($res[0]->bbox)) {
+            if (! is_null($res[0]->bbox)) {
                 preg_match('/\((.*?)\)/', $res[0]->bbox, $match);
                 $coords = $match[1];
                 $coord_array = explode(',', $coords);
@@ -837,10 +767,9 @@ trait ConfTrait
         return $bbox;
     }
 
-
     private function _getReportSection()
     {
-        $json_string = <<<EOT
+        $json_string = <<<'EOT'
  {
     "enable": true,
     "url": "https://geohub.webmapp.it/api/usergenerateddata/store",
@@ -897,15 +826,16 @@ EOT;
         $hexColor = ltrim($hexColor, '#');
 
         if (strlen($hexColor) === 6) {
-            list($r, $g, $b) = sscanf($hexColor, "%02x%02x%02x");
+            [$r, $g, $b] = sscanf($hexColor, '%02x%02x%02x');
         } elseif (strlen($hexColor) === 8) {
-            list($r, $g, $b, $a) = sscanf($hexColor, "%02x%02x%02x%02x");
+            [$r, $g, $b, $a] = sscanf($hexColor, '%02x%02x%02x%02x');
             $opacity = round($a / 255, 2);
         } else {
             throw new Exception('Invalid hex color format.');
         }
 
         $rgbaColor = "rgba($r, $g, $b, $opacity)";
+
         return $rgbaColor;
     }
 }

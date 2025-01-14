@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,6 +11,7 @@ class UpdateTrackFromOsmEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $errorLogs;
+
     /**
      * Create a new message instance.
      *
@@ -29,9 +29,9 @@ class UpdateTrackFromOsmEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('noreply@webmapp.it', "Tracks not imported")
-            ->subject("Geohub - Tracks not imported")
+        return $this->from('noreply@webmapp.it', 'Tracks not imported')
+            ->subject('Geohub - Tracks not imported')
             ->view('mails.tracks.UpdateTrackFromOsmEmail')
-            ->with(['errorLogs' => $this->errorLogs]);;
+            ->with(['errorLogs' => $this->errorLogs]);
     }
 }

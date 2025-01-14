@@ -28,10 +28,11 @@ class CurlServiceProvider extends ServiceProvider
         //
     }
 
-    public function exec($url) {
+    public function exec($url)
+    {
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_URL => $url,
@@ -41,8 +42,8 @@ class CurlServiceProvider extends ServiceProvider
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        ));
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ]);
 
         $response = curl_exec($curl);
 

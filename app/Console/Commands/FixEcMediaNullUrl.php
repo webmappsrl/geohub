@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\App;
-use App\Models\User;
 use App\Models\EcMedia;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -46,15 +45,17 @@ class FixEcMediaNullUrl extends Command
         $this->info('Starting regenerate ec media urls command');
 
         $appId = $this->argument('appId');
-        if (!is_numeric($appId)) {
+        if (! is_numeric($appId)) {
             $this->error('App id is not a number');
+
             return 1;
         }
 
         $app = App::where('id', $appId)->first();
 
-        if (!$app) {
+        if (! $app) {
             $this->error('App not found');
+
             return 1;
         }
 
@@ -74,16 +75,17 @@ class FixEcMediaNullUrl extends Command
         $bar->start();
 
         foreach ($ecMedia as $media) {
-            $decodedName = urldecode((string)$media->name);
+            $decodedName = urldecode((string) $media->name);
             $media->name = $decodedName;
             $media->saveQuietly();
 
-            $mediaUrl = EC_MEDIA_URL . $media->id . '.jpg';
+            $mediaUrl = EC_MEDIA_URL.$media->id.'.jpg';
 
             $response = Http::get($mediaUrl);
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 $this->newLine();
                 $this->error("Media {$media->id} not found");
+
                 continue;
             }
 

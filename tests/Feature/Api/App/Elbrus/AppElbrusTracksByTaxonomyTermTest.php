@@ -13,19 +13,24 @@ use App\Models\TaxonomyWhere;
 use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class AppElbrusTracksByTaxonomyTermTest extends TestCase {
+class AppElbrusTracksByTaxonomyTermTest extends TestCase
+{
     use RefreshDatabase;
 
     private $geoapp;
+
     private $activity;
+
     private $target;
+
     private $where;
+
     private $when;
+
     private $theme;
+
     private $fields = [
         'id', 'description', 'excerpt', 'source_id', 'import_method', 'source', 'distance', 'ascent', 'descent',
         //        'ele_from', 'ele_to', 'ele_min', 'ele_max', 'duration_forward', 'duration_backward',
@@ -34,7 +39,8 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase {
         'image', 'imageGallery',
     ];
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -43,7 +49,8 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase {
         });
     }
 
-    private function _setup() {
+    private function _setup()
+    {
         $activity = TaxonomyActivity::factory()->create();
         $where = TaxonomyWhere::factory()->create();
         $when = TaxonomyWhen::factory()->create();
@@ -69,7 +76,7 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase {
             'ele_max' => 10,
             'ele_min' => 10,
             'duration_forward' => 10,
-            'duration_backward' => 10
+            'duration_backward' => 10,
         ])->create();
         $track2->user_id = $user->id;
         $track2->featureImage()->associate($image);
@@ -98,31 +105,39 @@ class AppElbrusTracksByTaxonomyTermTest extends TestCase {
      *
      * @return void
      */
-    public function testGetTracksByTaxonomyTermActivity() {
+    public function test_get_tracks_by_taxonomy_term_activity()
+    {
         $this->_testGetTracksByTaxonomyTerm('activity');
     }
 
-    public function testGetTracksByTaxonomyTermWhere() {
+    public function test_get_tracks_by_taxonomy_term_where()
+    {
         $this->_testGetTracksByTaxonomyTerm('where');
     }
 
-    public function testGetTracksByTaxonomyTermWhen() {
+    public function test_get_tracks_by_taxonomy_term_when()
+    {
         $this->_testGetTracksByTaxonomyTerm('when');
     }
 
-    public function testGetTracksByTaxonomyTermTarget() {
+    public function test_get_tracks_by_taxonomy_term_target()
+    {
         $this->_testGetTracksByTaxonomyTerm('target');
     }
 
-    public function testGetTracksByTaxonomyTermTheme() {
+    public function test_get_tracks_by_taxonomy_term_theme()
+    {
         $this->_testGetTracksByTaxonomyTerm('theme');
     }
 
-    private function _testGetTracksByTaxonomyTerm($taxonomy_name) {
+    private function _testGetTracksByTaxonomyTerm($taxonomy_name)
+    {
         $this->_setup();
 
         $adapted_taxonomy_name = $taxonomy_name;
-        if ($taxonomy_name === 'target') $adapted_taxonomy_name = 'who';
+        if ($taxonomy_name === 'target') {
+            $adapted_taxonomy_name = 'who';
+        }
 
         $uri = "api/app/elbrus/{$this->geoapp->id}/taxonomies/track_{$adapted_taxonomy_name}_{$this->$taxonomy_name->id}.json";
         $result = $this->getJson($uri);

@@ -5,10 +5,10 @@ namespace Tests\Feature\Api\Ec;
 use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EcTracksUpdateEleInfoFieldsTest extends TestCase {
+class EcTracksUpdateEleInfoFieldsTest extends TestCase
+{
     use RefreshDatabase;
 
     private $fields = [
@@ -20,8 +20,9 @@ class EcTracksUpdateEleInfoFieldsTest extends TestCase {
         'ele_from' => 100,
         'ele_to' => 100,
         'duration_forward' => 100,
-        'duration_backward' => 100
+        'duration_backward' => 100,
     ];
+
     private $updated_fields = [
         'distance' => 200,
         'ascent' => 200,
@@ -31,10 +32,11 @@ class EcTracksUpdateEleInfoFieldsTest extends TestCase {
         'ele_from' => 200,
         'ele_to' => 200,
         'duration_forward' => 200,
-        'duration_backward' => 200
+        'duration_backward' => 200,
     ];
-    
-    protected function setUp(): void {
+
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -43,46 +45,56 @@ class EcTracksUpdateEleInfoFieldsTest extends TestCase {
         });
     }
 
-    public function testDistance() {
+    public function test_distance()
+    {
         $this->_testByField('distance');
     }
 
-    public function testAscent() {
+    public function test_ascent()
+    {
         $this->_testByField('ascent');
     }
 
-    public function testDescent() {
+    public function test_descent()
+    {
         $this->_testByField('descent');
     }
 
-    public function testEleMin() {
+    public function test_ele_min()
+    {
         $this->_testByField('ele_min');
     }
 
-    public function testEleMax() {
+    public function test_ele_max()
+    {
         $this->_testByField('ele_max');
     }
 
-    public function testEleFrom() {
+    public function test_ele_from()
+    {
         $this->_testByField('ele_from');
     }
 
-    public function testEleTo() {
+    public function test_ele_to()
+    {
         $this->_testByField('ele_to');
     }
 
-    public function testDurationForward() {
+    public function test_duration_forward()
+    {
         $this->_testByField('duration_forward');
     }
 
-    public function testDurationBackward() {
+    public function test_duration_backward()
+    {
         $this->_testByField('duration_backward');
     }
 
-    private function _testByField($field) {
+    private function _testByField($field)
+    {
         $ecTrack = EcTrack::factory()->create($this->fields);
         $payload = [$field => $this->updated_fields[$field]];
-        $result = $this->putJson('/api/ec/track/update/' . $ecTrack->id, $payload);
+        $result = $this->putJson('/api/ec/track/update/'.$ecTrack->id, $payload);
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertIsString($result->getContent());
         $ecTrackUpdated = EcTrack::find($ecTrack->id);

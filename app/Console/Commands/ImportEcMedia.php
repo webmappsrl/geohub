@@ -45,23 +45,24 @@ class ImportEcMedia extends Command
         $path = 'ec_media/';
         $file = @file_get_contents($url);
         $fileName = basename($this->argument('url'));
-        if ($file === FALSE)
+        if ($file === false) {
             return $this->error('Error, file does not exists');
+        }
         $contents = file_get_contents($url);
-        
+
         if ($this->argument('name')) {
             $newEcmedia = EcMedia::create(['name' => $this->argument('name'), 'url' => '']);
-            $newEcmedia->url = $path . $newEcmedia->id;
+            $newEcmedia->url = $path.$newEcmedia->id;
             $newEcmedia->save();
         } else {
             $newEcmedia = EcMedia::create(['name' => $fileName, 'url' => '']);
-            $newEcmedia->url = $path . $newEcmedia->id;
+            $newEcmedia->url = $path.$newEcmedia->id;
             $newEcmedia->save();
         }
 
-        Storage::disk('public')->put('ec_media/' . $newEcmedia->id, $contents);
+        Storage::disk('public')->put('ec_media/'.$newEcmedia->id, $contents);
 
-        $this->info("File uploaded correctly");
+        $this->info('File uploaded correctly');
 
         return 0;
     }

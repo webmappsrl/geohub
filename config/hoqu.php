@@ -8,5 +8,5 @@ return [
 
     'geohub_domain' => env('GEOHUB_DOMAIN', 'geohub.webmapp.it'),
 
-    'token' => env('HOQU_TOKEN', null)
+    'token' => env('HOQU_TOKEN', null),
 ];

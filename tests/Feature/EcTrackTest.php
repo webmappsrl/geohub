@@ -8,15 +8,17 @@ use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Doctrine\DBAL\Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
-use Illuminate\Http\UploadedFile;
 
-class EcTrackTest extends TestCase {
+class EcTrackTest extends TestCase
+{
     use RefreshDatabase;
 
-    public function testSaveEcTrackOk() {
+    public function test_save_ec_track_ok()
+    {
         $user = User::factory()->create();
         $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -30,14 +32,15 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testSaveEcTrackError() {
+    public function test_save_ec_track_error()
+    {
         $user = User::factory()->create();
         $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()
                 ->with('enrich_ec_track', ['id' => 1])
-                ->andThrows(new Exception());
+                ->andThrows(new Exception);
         });
         Log::shouldReceive('error')
             ->once();
@@ -46,7 +49,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testAssociateFeatureImageToTrack() {
+    public function test_associate_feature_image_to_track()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -62,7 +66,8 @@ class EcTrackTest extends TestCase {
         $this->assertEquals($ecTrack->feature_image, $ecMedia->id);
     }
 
-    public function testLoad2DGeojsonFile() {
+    public function test_load2_d_geojson_file()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -71,8 +76,8 @@ class EcTrackTest extends TestCase {
         $this->assertIsObject($ecTrack);
 
         $name = '2d.geojson';
-        $stub = __DIR__ . '/Stubs/' . $name;
-        $path = sys_get_temp_dir() . '/' . $name;
+        $stub = __DIR__.'/Stubs/'.$name;
+        $path = sys_get_temp_dir().'/'.$name;
 
         copy($stub, $path);
 
@@ -85,7 +90,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testLoad3DGeojsonFile() {
+    public function test_load3_d_geojson_file()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -94,8 +100,8 @@ class EcTrackTest extends TestCase {
         $this->assertIsObject($ecTrack);
 
         $name = '3d.geojson';
-        $stub = __DIR__ . '/Stubs/' . $name;
-        $path = sys_get_temp_dir() . '/' . $name;
+        $stub = __DIR__.'/Stubs/'.$name;
+        $path = sys_get_temp_dir().'/'.$name;
 
         copy($stub, $path);
 
@@ -108,7 +114,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testLoadFeatureCollectionGeojsonFile() {
+    public function test_load_feature_collection_geojson_file()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -117,8 +124,8 @@ class EcTrackTest extends TestCase {
         $this->assertIsObject($ecTrack);
 
         $name = 'featureCollection.geojson';
-        $stub = __DIR__ . '/Stubs/' . $name;
-        $path = sys_get_temp_dir() . '/' . $name;
+        $stub = __DIR__.'/Stubs/'.$name;
+        $path = sys_get_temp_dir().'/'.$name;
 
         copy($stub, $path);
 
@@ -139,7 +146,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testLoadGpxFile() {
+    public function test_load_gpx_file()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -148,8 +156,8 @@ class EcTrackTest extends TestCase {
         $this->assertIsObject($ecTrack);
 
         $name = 'ec_track.gpx';
-        $stub = __DIR__ . '/Stubs/' . $name;
-        $path = sys_get_temp_dir() . '/' . $name;
+        $stub = __DIR__.'/Stubs/'.$name;
+        $path = sys_get_temp_dir().'/'.$name;
 
         copy($stub, $path);
 
@@ -173,7 +181,8 @@ class EcTrackTest extends TestCase {
      * 0.1.8.05 Come GC voglio che le tassonomie WHERE si aggiornino automaticamente
      * quando cambio la geometria del Track perché altrimenti sarebbero potenzialmente sbagliate
      */
-    public function testEcTrackChangeGeometry() {
+    public function test_ec_track_change_geometry()
+    {
         $user = User::factory()->create();
         $this->be($user);
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -199,7 +208,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testLoadKmlFile() {
+    public function test_load_kml_file()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->andReturn(201);
@@ -208,8 +218,8 @@ class EcTrackTest extends TestCase {
         $this->assertIsObject($ecTrack);
 
         $name = 'ec_track.kml';
-        $stub = __DIR__ . '/Stubs/' . $name;
-        $path = sys_get_temp_dir() . '/' . $name;
+        $stub = __DIR__.'/Stubs/'.$name;
+        $path = sys_get_temp_dir().'/'.$name;
 
         copy($stub, $path);
 
@@ -229,7 +239,8 @@ class EcTrackTest extends TestCase {
         $ecTrack->save();
     }
 
-    public function testOsmidFields() {
+    public function test_osmid_fields()
+    {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
                 ->once()

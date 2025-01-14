@@ -17,9 +17,9 @@ class OutSourceImporterListOSM2CAI extends OutSourceImporterListAbstract
             // OLD WAY: CVS FILE
             Log::info('Starting Track List file read ...');
             $path = $this->CreateStoragePathFromEndpoint($this->endpoint);
-            $file = fopen($path, "r");
-            $tracks = array();
-            while (($row = fgetcsv($file, 1000, ",")) !== FALSE) {
+            $file = fopen($path, 'r');
+            $tracks = [];
+            while (($row = fgetcsv($file, 1000, ',')) !== false) {
                 $id = $row[0];
 
                 $tracks[] = $id;
@@ -39,12 +39,14 @@ class OutSourceImporterListOSM2CAI extends OutSourceImporterListAbstract
             foreach ($items as $i) {
                 $tracks_list[$i->id] = $i->updated_at;
             }
-            return  $tracks_list;
+
+            return $tracks_list;
         } else {
             // NEW WAY: API
             $url = $this->endpoint;
             Log::info('Starting Track List CURL request ...');
-            return  (array) $this->curlRequest($url);
+
+            return (array) $this->curlRequest($url);
         }
     }
 

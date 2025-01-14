@@ -5,7 +5,8 @@ namespace Database\Factories;
 use App\Models\Partnership;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PartnershipFactory extends Factory {
+class PartnershipFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
@@ -18,11 +19,12 @@ class PartnershipFactory extends Factory {
      *
      * @return array
      */
-    public function definition() {
+    public function definition()
+    {
         return [
             'name' => $this->faker->name,
             'short_name' => $this->faker->word,
-            'validator' => $this->faker->word
+            'validator' => $this->faker->word,
         ];
     }
 }

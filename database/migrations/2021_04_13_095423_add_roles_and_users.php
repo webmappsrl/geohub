@@ -4,13 +4,15 @@ use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AddRolesAndUsers extends Migration {
+class AddRolesAndUsers extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $permissions = $this->addDefaultPermissions();
         $roles = $this->addDefaultRoles($permissions);
 
@@ -19,10 +21,9 @@ class AddRolesAndUsers extends Migration {
 
     /**
      * Insert the default permissions
-     *
-     * @return array
      */
-    private function addDefaultPermissions(): array {
+    private function addDefaultPermissions(): array
+    {
         $tableName = config('permission.table_names')['permissions'];
         $permissions = [
             'view_user',
@@ -54,15 +55,16 @@ class AddRolesAndUsers extends Migration {
                     'name' => $permission,
                     'guard_name' => 'web',
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
 
                 $result[$permission] = DB::table($tableName)
                     ->where('name', '=', $permission)
                     ->where('guard_name', '=', 'web')
                     ->first()->id;
-            } else
+            } else {
                 $result[$permission] = $exists->id;
+            }
         }
 
         return $result;
@@ -71,11 +73,10 @@ class AddRolesAndUsers extends Migration {
     /**
      * Insert the default roles with the default permissions
      *
-     * @param array $permissionsMap the permissions mapping
-     *
-     * @return array
+     * @param  array  $permissionsMap  the permissions mapping
      */
-    private function addDefaultRoles(array $permissionsMap): array {
+    private function addDefaultRoles(array $permissionsMap): array
+    {
         $tableNames = config('permission.table_names');
         $rolesTableName = $tableNames['roles'];
         $roleHasPermissionTableName = $tableNames['role_has_permissions'];
@@ -83,7 +84,7 @@ class AddRolesAndUsers extends Migration {
             'Admin' => '*',
             'Editor' => ['view_self_user'],
             'Contributor' => ['view_self_user'],
-            'Author' => ['view_self_user']
+            'Author' => ['view_self_user'],
         ];
         $result = [];
 
@@ -97,18 +98,21 @@ class AddRolesAndUsers extends Migration {
                     'name' => $role,
                     'guard_name' => 'web',
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
                 $result[$role] = DB::table($rolesTableName)
                     ->where('name', '=', $role)
                     ->where('guard_name', '=', 'web')
                     ->first()->id;
-            } else
+            } else {
                 $result[$role] = $exists->id;
+            }
 
-            if (is_string($permissions) && $permissions === '*')
+            if (is_string($permissions) && $permissions === '*') {
                 $permissionsArray = array_keys($permissionsMap);
-            else $permissionsArray = $permissions;
+            } else {
+                $permissionsArray = $permissions;
+            }
 
             foreach ($permissionsArray as $permission) {
                 $exists = DB::table($roleHasPermissionTableName)
@@ -118,7 +122,7 @@ class AddRolesAndUsers extends Migration {
                 if (is_null($exists)) {
                     DB::table($roleHasPermissionTableName)->insert([
                         'permission_id' => $permissionsMap[$permission],
-                        'role_id' => $result[$role]
+                        'role_id' => $result[$role],
                     ]);
                 }
             }
@@ -129,59 +133,58 @@ class AddRolesAndUsers extends Migration {
 
     /**
      * Insert the default users with the default roles
-     *
-     * @param array $rolesMap
      */
-    private function addDefaultUsers(array $rolesMap) {
+    private function addDefaultUsers(array $rolesMap)
+    {
         $users = [
             [
                 'name' => 'Webmapp Team',
                 'email' => 'team@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Alessio Piccioli',
                 'email' => 'alessiopiccioli@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Andrea Del Sarto',
                 'email' => 'andreadel84@gmail.com',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Antonella Puglia',
                 'email' => 'antonellapuglia@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Davide Pizzato',
                 'email' => 'davidepizzato@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Marco Barbieri',
                 'email' => 'marcobarbieri@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Pedram Katanchi',
                 'email' => 'pedramkatanchi@webmapp.it',
                 'password' => bcrypt('webmapp'),
-                'role' => 'Admin'
+                'role' => 'Admin',
             ],
             [
                 'name' => 'Laura Roth',
                 'email' => 'lauraroth72@gmail.com',
                 'password' => bcrypt('geohub'),
-                'role' => 'Editor'
-            ]
+                'role' => 'Editor',
+            ],
         ];
         $tableNames = config('permission.table_names');
         $modelHasRolesTableName = $tableNames['model_has_roles'];
@@ -207,7 +210,9 @@ class AddRolesAndUsers extends Migration {
                 $userId = DB::table('users')
                     ->where('email', '=', $user['email'])
                     ->first()->id;
-            } else $userId = $exists->id;
+            } else {
+                $userId = $exists->id;
+            }
 
             $exists = DB::table($modelHasRolesTableName)
                 ->where('role_id', '=', $rolesMap[$user['role']])
@@ -219,7 +224,7 @@ class AddRolesAndUsers extends Migration {
                 DB::table($modelHasRolesTableName)->insert([
                     'role_id' => $rolesMap[$user['role']],
                     'model_id' => $userId,
-                    'model_type' => User::class
+                    'model_type' => User::class,
                 ]);
             }
         }
@@ -230,6 +235,5 @@ class AddRolesAndUsers extends Migration {
      *
      * @return void
      */
-    public function down() {
-    }
+    public function down() {}
 }

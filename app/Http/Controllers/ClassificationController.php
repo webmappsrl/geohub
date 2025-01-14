@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\App;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ClassificationController extends Controller
@@ -19,15 +18,15 @@ class ClassificationController extends Controller
         try {
             $app = App::where('id', $id)->first();
             // Controlla se $app ha un app_id
-            if (!isset($app->app_id)) {
+            if (! isset($app->app_id)) {
                 throw new Exception('App ID non trovato.');
             }
-        
+
             // Controlla se $app->classification_show è false
             if ($app->classification_show === false) {
                 throw new Exception('La classificazione non è mostrata.');
             }
-        
+
             // Controlla se $app->getRankedUsersNearPois() è vuoto
             if (empty($app->getRankedUsersNearPois())) {
                 throw new Exception('Nessun utente classificato.');
@@ -35,12 +34,13 @@ class ClassificationController extends Controller
 
             $classification = $app->getRankedUsersNearPois();
             $data = $app->getAllRankedUsersNearPoisData();
+
             return $this->beautifyRankedUsersNearPois($classification, $data);
-        
+
         } catch (Exception $e) {
             // Log l'errore
             Log::error($e->getMessage());
-        
+
             // Reindirizza alla pagina 404
             abort(404);
         }
@@ -49,7 +49,6 @@ class ClassificationController extends Controller
     /**
      * Beautify the ranked users near pois.
      *
-     * @param array $classification
      * @return array
      */
     public function beautifyRankedUsersNearPois(array $classification, $data)
@@ -64,7 +63,7 @@ class ClassificationController extends Controller
                     'lastname' => isset($utente['last_name']) ? $utente['last_name'] : '',
                     'email' => isset($utente['email']) ? $utente['email'] : '',
                     'total_points' => 0, // Assumendo che tu possa calcolarlo
-                    'pois' => []
+                    'pois' => [],
                 ];
 
                 foreach ($ecPoiArray as $ecPoiInfo) {
@@ -73,7 +72,7 @@ class ClassificationController extends Controller
 
                         if ($ecPoi) {
                             $dettagliPoi = [
-                                'name' => isset($ecPoi['name']) ? $ecPoi['name'] : ''
+                                'name' => isset($ecPoi['name']) ? $ecPoi['name'] : '',
                             ];
 
                             $idsMedia = explode(',', $ecMediaIds);
@@ -82,7 +81,7 @@ class ClassificationController extends Controller
                                 if ($media) {
                                     $dettagliPoi['medias'][] = [
                                         'id' => $idMedia,
-                                        'url' => isset($media['url']) ? $media['url'] : ''
+                                        'url' => isset($media['url']) ? $media['url'] : '',
                                     ];
                                 }
                             }
@@ -97,7 +96,7 @@ class ClassificationController extends Controller
             }
         }
 
-        usort($classificaTrasformata, function($a, $b) {
+        usort($classificaTrasformata, function ($a, $b) {
             return $b['total_points'] - $a['total_points'];
         });
 

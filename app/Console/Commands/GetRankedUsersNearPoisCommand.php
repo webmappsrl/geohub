@@ -3,10 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\App;
-use App\Models\EcPoi;
-use App\Models\UgcMedia;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class GetRankedUsersNearPoisCommand extends Command
 {
@@ -43,20 +40,23 @@ class GetRankedUsersNearPoisCommand extends Command
     {
         if ($this->option('app_id')) {
             $app = App::where('id', $this->option('app_id'))->first();
-            if (!$app) {
-                $this->error('App with id ' . $this->option('app_id') . ' not found!');
+            if (! $app) {
+                $this->error('App with id '.$this->option('app_id').' not found!');
+
                 return;
             }
-            if (!$app->app_id) {
+            if (! $app->app_id) {
                 $this->error('This app does not have app_id! Please add app_id. (e.g. it.webmapp.webmapp)');
+
                 return;
             }
-            
+
             $app->classification = $app->getRankedUsersNearPois();
             $app->save();
+
             return;
         }
         $this->error('app_id not found! Please provide app_id as an option. (e.g. --app_id=1)');
-        return;
+
     }
 }

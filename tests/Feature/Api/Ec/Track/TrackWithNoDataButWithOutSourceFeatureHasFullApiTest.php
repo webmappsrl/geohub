@@ -55,6 +55,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('distance');
     }
+
     /**
      * @test
      */
@@ -62,6 +63,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('ascent');
     }
+
     /**
      * @test
      */
@@ -69,6 +71,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('descent');
     }
+
     /**
      * @test
      */
@@ -76,6 +79,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('ele_from');
     }
+
     /**
      * @test
      */
@@ -83,6 +87,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('ele_to');
     }
+
     /**
      * @test
      */
@@ -90,6 +95,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('ele_max');
     }
+
     /**
      * @test
      */
@@ -97,6 +103,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('ele_min');
     }
+
     /**
      * @test
      */
@@ -104,6 +111,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('duration_forward');
     }
+
     /**
      * @test
      */
@@ -111,7 +119,6 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     {
         $this->ec_track_api_has_out_source_variable('duration_backward');
     }
-
 
     private function ec_track_api_has_out_source_variable($var_name)
     {
@@ -128,9 +135,9 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
     private function getOutSourceTrack(): OutSourceTrack
     {
         $tags = [
-            'name' => ['it'=>$this->faker->name()],
-            'description' => ['it'=>$this->faker->sentence(20)],
-            'excerpt' => ['it'=>$this->faker->sentence(5)],
+            'name' => ['it' => $this->faker->name()],
+            'description' => ['it' => $this->faker->sentence(20)],
+            'excerpt' => ['it' => $this->faker->sentence(5)],
             'from' => $this->faker->name(),
             'to' => $this->faker->name(),
         ];
@@ -142,6 +149,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
             'source_id' => $this->faker->uuid(),
             'tags' => $tags,
         ];
+
         return OutSourceTrack::factory()->create($data);
     }
 
@@ -162,6 +170,7 @@ class TrackWithNoDataButWithOutSourceFeatureHasFullApiTest extends TestCase
             $track->$key = null;
         }
         $track->save();
+
         return $track;
     }
 }

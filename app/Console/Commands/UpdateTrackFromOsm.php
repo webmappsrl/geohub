@@ -4,9 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\GeneratePBFByZoomJob;
 use App\Jobs\UpdateCurrentDataJob;
-use App\Models\User;
-use App\Traits\HandlesData;
-use App\Models\EcTrack;
 use App\Jobs\UpdateEcTrack3DDemJob;
 use App\Jobs\UpdateEcTrackAwsJob;
 use App\Jobs\UpdateEcTrackDemJob;
@@ -17,7 +14,9 @@ use App\Jobs\UpdateEcTrackSlopeValues;
 use App\Jobs\UpdateManualDataJob;
 use App\Jobs\UpdateModelWithGeometryTaxonomyWhere;
 use App\Mail\UpdateTrackFromOsmEmail;
-use App\Models\App;
+use App\Models\EcTrack;
+use App\Models\User;
+use App\Traits\HandlesData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -25,6 +24,7 @@ use Illuminate\Support\Facades\Mail;
 class UpdateTrackFromOsm extends Command
 {
     use HandlesData;
+
     /**
      * The name and signature of the console command.
      *
@@ -52,33 +52,36 @@ class UpdateTrackFromOsm extends Command
 
         if ($userEmail == null) {
             $this->error('Please provide a user email');
+
             return 0;
         }
 
         $user = User::where('email', $userEmail)->first();
         $app = $user->apps->first();
-        $appId =  $app->id;
-        if (!$appId) {
+        $appId = $app->id;
+        if (! $appId) {
             $this->error('User does not have an app_id');
+
             return 0;
         }
-        if (!$user) {
+        if (! $user) {
             $this->error('User not found');
+
             return 0;
         }
         $tracks = $user->ecTracks()->whereNotNull('osmid')->get();
         $mailErrors = [];
 
-        $this->info('Updating tracks(' . count($tracks) . ') for user ' . $user->name . ' (' . $user->email . ')' . '...');
+        $this->info('Updating tracks('.count($tracks).') for user '.$user->name.' ('.$user->email.')'.'...');
 
-        //loop over all the tracks and check if the osmid is not null
+        // loop over all the tracks and check if the osmid is not null
         foreach ($tracks as $track) {
             $result = $this->updateOsmData($track);
-            if (!$result['success']) {
-                $this->error($track->id . ' UpdateTrackFromOsm FAILED: ' . $track->name . ' (' . $track->osmid . '): ' . $result['message']);
+            if (! $result['success']) {
+                $this->error($track->id.' UpdateTrackFromOsm FAILED: '.$track->name.' ('.$track->osmid.'): '.$result['message']);
                 $mailErrors[] = $this->formatErrorMessage($track, $result['message']);
             } else {
-                $this->info($track->id . ' UpdateTrackFromOsm SUCCESS: ' . $track->name . ' (' . $track->osmid . ')');
+                $this->info($track->id.' UpdateTrackFromOsm SUCCESS: '.$track->name.' ('.$track->osmid.')');
                 $chain = [];
                 $chain[] = new UpdateEcTrackDemJob($track);
                 $chain[] = new UpdateManualDataJob($track);
@@ -101,9 +104,9 @@ class UpdateTrackFromOsm extends Command
         }
         Bus::chain($chain)->dispatch();
 
-        $this->info('Tracks for user ' . $user->name . ' (' . $user->email . ')' . ' updated!');
+        $this->info('Tracks for user '.$user->name.' ('.$user->email.')'.' updated!');
         $emails = $this->argument('emails');
-        if (!empty($emails) && !empty($mailErrors)) {
+        if (! empty($emails) && ! empty($mailErrors)) {
             $emailList = explode(',', $emails);
             foreach ($emailList as $email) {
                 Mail::to(trim($email))->send(new UpdateTrackFromOsmEmail($mailErrors));
@@ -113,6 +116,6 @@ class UpdateTrackFromOsm extends Command
 
     private function formatErrorMessage(EcTrack $track, $errorMessage = '')
     {
-        return 'Track ' . $track->name . ' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/' . $track->id . '") "osm:https://www.openstreetmap.org/relation/' . $track->osmid . '") ' . $errorMessage;
+        return 'Track '.$track->name.' ("geohub:https://geohub.webmapp.it/resources/ec-tracks/'.$track->id.'") "osm:https://www.openstreetmap.org/relation/'.$track->osmid.'") '.$errorMessage;
     }
 }

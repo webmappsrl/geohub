@@ -112,7 +112,6 @@ class Date extends Field
     /**
      * Resolve the default value for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return string
      */
     protected function resolveDefaultValue(NovaRequest $request)

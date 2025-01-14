@@ -2,17 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Models\EcTrack;
 use App\Models\TaxonomyWhere;
-use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
 {
@@ -30,8 +26,8 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
      */
     public function __construct(Model $model)
     {
-        //TODO: add validation about geometry attribute existence
-        //TODO: add validation about where taxonomy relation existence
+        // TODO: add validation about geometry attribute existence
+        // TODO: add validation about where taxonomy relation existence
         $this->model = $model;
     }
 
@@ -45,7 +41,7 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
 
         $ids = $this->associateWhere();
 
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $this->model->taxonomyWheres()->sync($ids);
         }
     }
@@ -59,10 +55,10 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
     {
         $ids = TaxonomyWhere::whereRaw(
             'public.ST_Intersects('
-                . 'public.ST_Force2D('
-                . "(SELECT geometry from {$this->model->getTable()} where id = {$this->model->id})"
-                . "::geometry)"
-                . ', geometry)'
+                .'public.ST_Force2D('
+                ."(SELECT geometry from {$this->model->getTable()} where id = {$this->model->id})"
+                .'::geometry)'
+                .', geometry)'
         )->get()->pluck('id')->toArray();
 
         return $ids;

@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -16,9 +14,9 @@ class OutSourceImporterListStorageCSVTest extends TestCase
     public function when_access_file_esercizi_csv_return_200()
     {
         $path = Storage::disk('importer')->path('/parco-maremma/esercizi.csv');
-        $this->assertFileExists($path,"given filename doesn't exists");
+        $this->assertFileExists($path, "given filename doesn't exists");
     }
-    
+
     /**
      * @test
      */
@@ -28,17 +26,15 @@ class OutSourceImporterListStorageCSVTest extends TestCase
         $endpoint = 'importer;parco-maremma/esercizi.csv';
 
         $csv_pois = '{"1" :"19/05/2022","2" :"19/05/2022","3" :"19/05/2022","4" :"19/05/2022","5" :"19/05/2022","6" :"19/05/2022","7" :"19/05/2022","8" :"19/05/2022","9" :"19/05/2022","10" :"19/05/2022","11" :"19/05/2022","12" :"19/05/2022","13" :"19/05/2022","14" :"19/05/2022","15" :"19/05/2022","16" :"19/05/2022","17" :"19/05/2022","18" :"19/05/2022","19" :"19/05/2022","20" :"19/05/2022","21" :"19/05/2022","22" :"19/05/2022","23" :"19/05/2022","24" :"19/05/2022","25" :"19/05/2022","26" :"19/05/2022","27" :"19/05/2022","28" :"19/05/2022","29" :"19/05/2022","30" :"19/05/2022","31" :"19/05/2022","32" :"19/05/2022","33" :"19/05/2022","34" :"19/05/2022","35" :"19/05/2022","36" :"19/05/2022","37" :"19/05/2022","38" :"19/05/2022","39" :"19/05/2022","40" :"19/05/2022","41" :"19/05/2022","42" :"19/05/2022","43" :"19/05/2022","44" :"19/05/2022","45" :"19/05/2022","46" :"19/05/2022","47" :"19/05/2022","48" :"19/05/2022","49" :"19/05/2022","50" :"19/05/2022","51" :"19/05/2022","52" :"19/05/2022","53" :"19/05/2022","54" :"19/05/2022","55" :"19/05/2022","56" :"19/05/2022","57" :"19/05/2022","58" :"19/05/2022","59" :"19/05/2022","60" :"19/05/2022","61" :"19/05/2022","62" :"19/05/2022","63" :"19/05/2022","64" :"19/05/2022","65" :"19/05/2022","66" :"19/05/2022","67" :"19/05/2022","68" :"19/05/2022","69" :"19/05/2022","70" :"19/05/2022","71" :"19/05/2022","72" :"19/05/2022","73" :"19/05/2022","74" :"19/05/2022","75" :"19/05/2022","76" :"19/05/2022","77" :"19/05/2022","78" :"19/05/2022","79" :"19/05/2022","80" :"19/05/2022","81" :"19/05/2022","82" :"19/05/2022","83" :"19/05/2022","84" :"19/05/2022","85" :"19/05/2022","86" :"19/05/2022","87" :"19/05/2022","88" :"19/05/2022","89" :"19/05/2022","90" :"19/05/2022","91" :"19/05/2022","92" :"19/05/2022","93" :"19/05/2022","94" :"19/05/2022","95" :"19/05/2022","96" :"19/05/2022","97" :"19/05/2022","98" :"19/05/2022","99" :"19/05/2022","100" :"19/05/2022","101" :"19/05/2022","102" :"19/05/2022","103" :"19/05/2022","104" :"19/05/2022","105" :"19/05/2022","106" :"19/05/2022","107" :"19/05/2022","108" :"19/05/2022"}';
-        
 
-
-        $importer = new OutSourceImporterListStorageCSV($type,$endpoint);
+        $importer = new OutSourceImporterListStorageCSV($type, $endpoint);
         $features = $importer->getList();
 
         $this->assertIsArray($features);
-        $this->assertEquals(108,count($features));
-        foreach(json_decode($csv_pois,true) as $id => $last_modified) {
-            $this->assertArrayHasKey($id,$features);
-            $this->assertEquals($last_modified,$features[$id]);
+        $this->assertEquals(108, count($features));
+        foreach (json_decode($csv_pois, true) as $id => $last_modified) {
+            $this->assertArrayHasKey($id, $features);
+            $this->assertEquals($last_modified, $features[$id]);
         }
     }
 }
