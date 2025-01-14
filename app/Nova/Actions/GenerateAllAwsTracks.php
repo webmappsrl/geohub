@@ -6,8 +6,6 @@ use App\Jobs\UpdateEcTrackAwsJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 
@@ -15,17 +13,14 @@ class GenerateAllAwsTracks extends Action
 {
     use InteractsWithQueue, Queueable;
 
-
     public function name(): string
     {
-        return __("Generete All AWS Tracks");
+        return __('Generete All AWS Tracks');
     }
-
 
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */

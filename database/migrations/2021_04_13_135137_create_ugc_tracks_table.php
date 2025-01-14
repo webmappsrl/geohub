@@ -5,13 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUgcTracksTable extends Migration {
+class CreateUgcTracksTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('ugc_tracks', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
@@ -21,9 +23,9 @@ class CreateUgcTracksTable extends Migration {
             $table->lineString('geometry')->nullable();
             $table->jsonb('raw_data')->nullable();
             $table->jsonb('raw_gallery')->nullable();
-            $table->foreign("user_id")
-                ->references("id")
-                ->on("users");
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
         });
 
         MigrationsHelpers::addDefaultPermissions('ugc_tracks');
@@ -46,7 +48,7 @@ class CreateUgcTracksTable extends Migration {
                     'raw_data' => $ugc->raw_data,
                     'raw_gallery' => $ugc->raw_gallery,
                     'user_id' => $ugc->user_id,
-                    'name' => $ugc->name
+                    'name' => $ugc->name,
                 ]);
                 DB::table('user_generated_data')->delete($ugc->id);
             }
@@ -58,7 +60,8 @@ class CreateUgcTracksTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         MigrationsHelpers::removeDefaultPermissions('ugc_tracks');
 
         $currentUGCs = DB::table('ugc_tracks')->get();
@@ -72,7 +75,7 @@ class CreateUgcTracksTable extends Migration {
                 'geometry' => $ugc->geometry,
                 'raw_data' => $ugc->raw_data,
                 'raw_gallery' => $ugc->raw_gallery,
-                'user_id' => $ugc->user_id
+                'user_id' => $ugc->user_id,
             ]);
             DB::table('ugc_tracks')->delete($ugc->id);
         }

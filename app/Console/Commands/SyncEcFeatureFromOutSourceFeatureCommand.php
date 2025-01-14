@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use App\Providers\HoquServiceProvider;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureCommand extends Command
@@ -68,26 +68,31 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
         $only_related_url = $this->option('only_related_url');
         $app = 0;
 
-        if ($this->option('provider'))
+        if ($this->option('provider')) {
             $provider = $this->option('provider');
-            
-        if ($this->option('endpoint'))
+        }
+
+        if ($this->option('endpoint')) {
             $endpoint = $this->option('endpoint');
-        
-        if ($this->option('activity'))
+        }
+
+        if ($this->option('activity')) {
             $activity = $this->option('activity');
-        
-        if ($this->option('theme'))
+        }
+
+        if ($this->option('theme')) {
             $theme = $this->option('theme');
-        
-        if ($this->option('poi_type'))
+        }
+
+        if ($this->option('poi_type')) {
             $poi_type = $this->option('poi_type');
-        
-        if ($this->option('app'))
+        }
+
+        if ($this->option('app')) {
             $app = $this->option('app');
+        }
 
-
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app,$theme,$only_related_url);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url);
         Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
             Log::info('Parameters checked successfully.');
@@ -97,12 +102,12 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             } else {
                 $ids_array = $SyncEcFromOutSource->getList();
             }
-            
-            if (!empty($ids_array)) {
+
+            if (! empty($ids_array)) {
                 Log::info('List acquired successfully.');
                 Log::info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($ids_array);
-                Log::info(count($loop) . ' EC features successfully created.');
+                Log::info(count($loop).' EC features successfully created.');
             }
         }
 

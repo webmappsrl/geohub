@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
-use App\Providers\HoquServiceProvider;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
@@ -89,7 +88,6 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
             $app = $this->option('app');
         }
 
-
         $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url);
         Log::info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
@@ -123,11 +121,11 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
 
             }
 
-            if (!empty($recentIDs)) {
+            if (! empty($recentIDs)) {
                 Log::info('List acquired successfully.');
                 Log::info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($recentIDs);
-                Log::info(count($loop) . ' EC features successfully created.');
+                Log::info(count($loop).' EC features successfully created.');
             }
         }
 

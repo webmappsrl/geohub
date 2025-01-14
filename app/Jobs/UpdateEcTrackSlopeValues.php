@@ -42,33 +42,32 @@ class UpdateEcTrackSlopeValues implements ShouldQueue
         }
     }
 
-
     /**
      * From geomixer
-     * @param array $geometry
-     *
-     * @return array|null
      */
     public function calculateSlopeValues(array $geometry): ?array
     {
         if (
-            !isset($geometry['type'])
-            || !isset($geometry['coordinates'])
+            ! isset($geometry['type'])
+            || ! isset($geometry['coordinates'])
             || $geometry['type'] !== 'LineString'
-            || !is_array($geometry['coordinates'])
+            || ! is_array($geometry['coordinates'])
             || count($geometry['coordinates']) === 0
-        )
+        ) {
             return null;
+        }
 
         $values = [];
         foreach ($geometry['coordinates'] as $key => $coordinate) {
             $firstPoint = $coordinate;
             $lastPoint = $coordinate;
-            if ($key < count($geometry['coordinates']) - 1)
+            if ($key < count($geometry['coordinates']) - 1) {
                 $lastPoint = $geometry['coordinates'][$key + 1];
+            }
 
-            if ($key > 0)
+            if ($key > 0) {
                 $firstPoint = $geometry['coordinates'][$key - 1];
+            }
 
             $deltaY = $lastPoint[2] - $firstPoint[2];
             $deltaX = $this->getDistanceComp(['type' => 'LineString', 'coordinates' => [$firstPoint, $lastPoint]]) * 1000;
@@ -76,8 +75,9 @@ class UpdateEcTrackSlopeValues implements ShouldQueue
             $values[] = $deltaX > 0 ? round($deltaY / $deltaX * 100, 1) : 0;
         }
 
-        if (count($values) !== count($geometry['coordinates']))
+        if (count($values) !== count($geometry['coordinates'])) {
             return null;
+        }
 
         return $values;
     }
@@ -85,13 +85,12 @@ class UpdateEcTrackSlopeValues implements ShouldQueue
     /**
      * Calculate the distance comp from geometry in KM
      *
-     * @param array $geometry the ecTrack geometry
-     *
+     * @param  array  $geometry  the ecTrack geometry
      * @return float the distance comp in KMs
      */
     public function getDistanceComp(array $geometry): float
     {
-        $distanceQuery = "SELECT ST_Length(ST_GeomFromGeoJSON('" . json_encode($geometry) . "')::geography)/1000 as length";
+        $distanceQuery = "SELECT ST_Length(ST_GeomFromGeoJSON('".json_encode($geometry)."')::geography)/1000 as length";
         $distance = DB::select(DB::raw($distanceQuery));
 
         return $distance[0]->length;

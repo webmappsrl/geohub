@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OutSourceTrack extends OutSourceFeature
 {
     use HasFactory;
 
-    private $type='track';
+    private $type = 'track';
 
-    public function ecTracks(): HasMany {
+    public function ecTracks(): HasMany
+    {
         return $this->hasMany(EcTrack::class);
     }
-
 }

@@ -66,9 +66,9 @@ class PivotFieldDestroyRequest extends NovaRequest
             abort_unless($resource->hasRelatableField($this, $this->viaRelationship), 404);
 
             return $resource->model()->{$this->viaRelationship}()
-                        ->withoutGlobalScopes()
-                        ->lockForUpdate()
-                        ->findOrFail($this->relatedResourceId);
+                ->withoutGlobalScopes()
+                ->lockForUpdate()
+                ->findOrFail($this->relatedResourceId);
         });
     }
 

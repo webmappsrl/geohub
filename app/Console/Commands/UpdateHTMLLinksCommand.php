@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use App\Models\OutSourceFeature;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
@@ -30,8 +29,11 @@ class UpdateHTMLLinksCommand extends Command
     protected $description = 'This command findes the links in descprition of the EcFeatures and updates them with tag <a>';
 
     protected $type;
+
     protected $author;
+
     protected $author_id;
+
     protected $force;
 
     /**
@@ -66,7 +68,7 @@ class UpdateHTMLLinksCommand extends Command
     public function sync($feature)
     {
 
-        if (!empty($feature->description)) {
+        if (! empty($feature->description)) {
             $description = $feature->getTranslations('description');
 
             foreach ($description as $lang => $text) {
@@ -75,7 +77,8 @@ class UpdateHTMLLinksCommand extends Command
                     function ($matches) {
                         $url = $matches[0];
                         $domain = parse_url($url, PHP_URL_HOST);
-                        return '<a href="' . $url . '" target="_blank">' . $domain . '</a>';
+
+                        return '<a href="'.$url.'" target="_blank">'.$domain.'</a>';
                     },
                     $text
                 );
@@ -83,8 +86,10 @@ class UpdateHTMLLinksCommand extends Command
 
             $feature->setTranslations('description', $description);
             $feature->save();
+
             return true;
         }
+
         return false;
     }
 
@@ -93,10 +98,10 @@ class UpdateHTMLLinksCommand extends Command
         $features = '';
 
         if ($this->type == 'poi') {
-            $features = EcPoi::where('user_id', $this->author_id, )->get();
+            $features = EcPoi::where('user_id', $this->author_id)->get();
         }
         if ($this->type == 'track') {
-            $features = EcTrack::where('user_id', $this->author_id, )->get();
+            $features = EcTrack::where('user_id', $this->author_id)->get();
         }
 
         if ($features) {
@@ -104,11 +109,11 @@ class UpdateHTMLLinksCommand extends Command
             foreach ($features as $feature) {
                 $res = $this->sync($feature);
                 if ($res) {
-                    Log::info('Description of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
-                    $this->info('Description of Feature with ID: ' . $feature->id . ' saved successfully - ' . $count . ' out of -> ' . count($features));
+                    Log::info('Description of Feature with ID: '.$feature->id.' saved successfully - '.$count.' out of -> '.count($features));
+                    $this->info('Description of Feature with ID: '.$feature->id.' saved successfully - '.$count.' out of -> '.count($features));
                 } else {
-                    Log::info('Description of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
-                    $this->error('Description of Feature with ID: ' . $feature->id . ' NOT saved - ' . $count . ' out of -> ' . count($features));
+                    Log::info('Description of Feature with ID: '.$feature->id.' NOT saved - '.$count.' out of -> '.count($features));
+                    $this->error('Description of Feature with ID: '.$feature->id.' NOT saved - '.$count.' out of -> '.count($features));
                 }
                 $count++;
             }
@@ -127,7 +132,7 @@ class UpdateHTMLLinksCommand extends Command
                 $user = User::find(intval($this->author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID ' . $this->author);
+                throw new Exception('No User found with this ID '.$this->author);
             }
         } else {
             try {
@@ -135,7 +140,7 @@ class UpdateHTMLLinksCommand extends Command
 
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this email ' . $this->author);
+                throw new Exception('No User found with this email '.$this->author);
             }
         }
 
@@ -147,7 +152,7 @@ class UpdateHTMLLinksCommand extends Command
         ) {
             $this->type = strtolower($this->type);
         } else {
-            throw new Exception('The value of parameter type: ' . $this->type . ' is not currect');
+            throw new Exception('The value of parameter type: '.$this->type.' is not currect');
         }
     }
 }

@@ -53,7 +53,7 @@ class UpdateUgcPropertiesWithDateCommand extends Command
     /**
      * Update properties with createdAt and updatedAt dates.
      *
-     * @param \Illuminate\Database\Eloquent\Collection $items
+     * @param  \Illuminate\Database\Eloquent\Collection  $items
      * @return void
      */
     private function updateProperties($items)
@@ -61,7 +61,7 @@ class UpdateUgcPropertiesWithDateCommand extends Command
         foreach ($items as $item) {
             $properties = $item->properties;
 
-            if (!isset($properties['createdAt'])) {
+            if (! isset($properties['createdAt'])) {
                 $properties['createdAt'] = $item->created_at;
                 $properties['updatedAt'] = $item->created_at;
                 $item->properties = $properties;

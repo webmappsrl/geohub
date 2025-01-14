@@ -28,7 +28,6 @@ trait Deletable
     /**
      * Specify the callback that should be used to delete the field.
      *
-     * @param  callable  $deleteCallback
      * @return $this
      */
     public function delete(callable $deleteCallback)

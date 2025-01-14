@@ -8,10 +8,8 @@ use App\Models\EcPoi;
 use App\Models\TaxonomyPoiType;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -27,20 +25,19 @@ class ConvertUgcToEcPoiAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
     {
         $already_exists = [];
         foreach ($models as $model) {
-            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && !empty(json_decode($model->raw_data)->ec_poi_id)) {
+            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && ! empty(json_decode($model->raw_data)->ec_poi_id)) {
                 $already_exists[] = $model->id;
+
                 continue;
             }
             if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'share_ugcpoi') && json_decode($model->raw_data)->share_ugcpoi === 'yes') {
-                $ecPoi = new EcPoi();
+                $ecPoi = new EcPoi;
                 $ecPoi->name = $model->name;
                 $ecPoi->geometry = $model->geometry;
                 $ecPoi->user_id = auth()->user()->id;
@@ -56,10 +53,10 @@ class ConvertUgcToEcPoiAction extends Action
                         $storage = Storage::disk('public');
                         foreach ($ugcMedia as $count => $media) {
                             try {
-                                $mediaName = $ecPoi->id . '_' . last(explode('/', $media['relative_url']));
-                                $contents = file_get_contents(public_path('storage/' . $media['relative_url']));
-                                $storage->put('ec_media/' . $mediaName, $contents);
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/' . $mediaName, 'geometry' => $media->geometry]);
+                                $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
+                                $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
+                                $storage->put('ec_media/'.$mediaName, $contents);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/'.$mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
                                 $result = $ecMedia->save();
                                 if ($count == 0) {
@@ -69,7 +66,7 @@ class ConvertUgcToEcPoiAction extends Action
                                     $ecPoi->ecMedia()->attach($ecMedia);
                                 }
                             } catch (Exception $e) {
-                                Log::error("featureImage: create ec media -> " . $e->getMessage());
+                                Log::error('featureImage: create ec media -> '.$e->getMessage());
                             }
                         }
                     }
@@ -108,8 +105,9 @@ class ConvertUgcToEcPoiAction extends Action
         }
 
         if (count($already_exists) > 0) {
-            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: ' . implode(', ', $already_exists));
+            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: '.implode(', ', $already_exists));
         }
+
         return Action::message('Conversion completed successfully');
     }
 

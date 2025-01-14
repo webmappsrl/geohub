@@ -9,7 +9,7 @@ use Laravel\Nova\Contracts\Deletable as DeletableContract;
 use Laravel\Nova\Contracts\Storable as StorableContract;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class VaporFile extends Field implements StorableContract, DeletableContract, Downloadable
+class VaporFile extends Field implements DeletableContract, Downloadable, StorableContract
 {
     use AcceptsTypes, Deletable, HasDownload, HasPreview, HasThumbnail, Storable;
 
@@ -113,7 +113,6 @@ class VaporFile extends Field implements StorableContract, DeletableContract, Do
     /**
      * Specify the callback that should be used to determine the file's storage name.
      *
-     * @param  callable  $storeAsCallback
      * @return $this
      */
     public function storeAs(callable $storeAsCallback)
@@ -162,7 +161,6 @@ class VaporFile extends Field implements StorableContract, DeletableContract, Do
      * Merge the specified extra file information columns into the storable attributes.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  array  $attributes
      * @return array
      */
     protected function mergeExtraStorageColumns($request, array $attributes)
@@ -206,7 +204,6 @@ class VaporFile extends Field implements StorableContract, DeletableContract, Do
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute

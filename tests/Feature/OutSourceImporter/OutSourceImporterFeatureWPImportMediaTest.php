@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Classes\OutSourceImporter\OutSourceImporterFeatureWP;
 use App\Models\OutSourceFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -23,26 +22,26 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $source_id = 2654;
         $stelvio_poi = file_get_contents(base_path('tests/Feature/Stubs/stelvio_poi.json'));
         $url_poi = $endpoint.'/wp-json/wp/v2/poi/'.$source_id;
-        
+
         $source_id_media = 2481;
         $stelvio_media = file_get_contents(base_path('tests/Feature/Stubs/stelvio_media.json'));
         $url_media = $endpoint.'/wp-json/wp/v2/media/'.$source_id_media;
 
         // PREPARE MOCK
-        $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_poi,$url_poi,$stelvio_media,$url_media){
+        $this->mock(CurlServiceProvider::class, function (MockInterface $mock) use ($stelvio_poi, $url_poi, $stelvio_media, $url_media) {
             $mock->shouldReceive('exec')
-            ->atLeast(1)
-            ->with($url_poi)
-            ->andReturn($stelvio_poi);
-            
+                ->atLeast(1)
+                ->with($url_poi)
+                ->andReturn($stelvio_poi);
+
             $mock->shouldReceive('exec')
-            ->atLeast(1)
-            ->with($url_media)
-            ->andReturn($stelvio_media);
+                ->atLeast(1)
+                ->with($url_media)
+                ->andReturn($stelvio_media);
         });
 
         // FIRE
-        $poi = new OutSourceImporterFeatureWP($type,$endpoint,$source_id);
+        $poi = new OutSourceImporterFeatureWP($type, $endpoint, $source_id);
         $poi_id = $poi->importFeature();
 
         $stelvio_media_decode = json_decode($stelvio_media);
@@ -55,13 +54,13 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $OSF_media_geometry = $out_source_media->geometry;
         $poi_geom = DB::select("SELECT ST_AsGeojson('$OSF_poi_geometry')")[0]->st_asgeojson;
         $media_geom = DB::select("SELECT ST_AsGeojson('$OSF_media_geometry')")[0]->st_asgeojson;
-        $this->assertEquals($out_source_media->id,$out_source_poi->tags['feature_image']);
-        $this->assertEquals($out_source_media->provider,'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
-        $this->assertEquals($out_source_media->tags['name']['it'],$stelvio_media_decode->title->rendered);
-        $this->assertEquals($out_source_media->tags['url'],sha1($stelvio_media_decode->title->rendered).'.jpg');
-        $this->assertEquals($poi_geom,$media_geom);
-        $this->assertContains($out_source_gallery[0]->id,$out_source_poi->tags['image_gallery']);
-        $this->assertContains($out_source_gallery[1]->id,$out_source_poi->tags['image_gallery']);
+        $this->assertEquals($out_source_media->id, $out_source_poi->tags['feature_image']);
+        $this->assertEquals($out_source_media->provider, 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
+        $this->assertEquals($out_source_media->tags['name']['it'], $stelvio_media_decode->title->rendered);
+        $this->assertEquals($out_source_media->tags['url'], sha1($stelvio_media_decode->title->rendered).'.jpg');
+        $this->assertEquals($poi_geom, $media_geom);
+        $this->assertContains($out_source_gallery[0]->id, $out_source_poi->tags['image_gallery']);
+        $this->assertContains($out_source_gallery[1]->id, $out_source_poi->tags['image_gallery']);
     }
 
     /** @test */
@@ -73,26 +72,26 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $source_id = 6;
         $stelvio_track = file_get_contents(base_path('tests/Feature/Stubs/stelvio_track.json'));
         $url_track = $endpoint.'/wp-json/wp/v2/track/'.$source_id;
-        
+
         $source_id_media = 1529;
         $stelvio_media = file_get_contents(base_path('tests/Feature/Stubs/stelvio_media_track.json'));
         $url_media = $endpoint.'/wp-json/wp/v2/media/'.$source_id_media;
 
         // PREPARE MOCK
-        $this->mock(CurlServiceProvider::class,function (MockInterface $mock) use ($stelvio_track,$url_track,$stelvio_media,$url_media){
+        $this->mock(CurlServiceProvider::class, function (MockInterface $mock) use ($stelvio_track, $url_track, $stelvio_media, $url_media) {
             $mock->shouldReceive('exec')
-            ->atLeast(1)
-            ->with($url_track)
-            ->andReturn($stelvio_track);
-            
+                ->atLeast(1)
+                ->with($url_track)
+                ->andReturn($stelvio_track);
+
             $mock->shouldReceive('exec')
-            ->atLeast(1)
-            ->with($url_media)
-            ->andReturn($stelvio_media);
+                ->atLeast(1)
+                ->with($url_media)
+                ->andReturn($stelvio_media);
         });
 
         // FIRE
-        $track = new OutSourceImporterFeatureWP($type,$endpoint,$source_id);
+        $track = new OutSourceImporterFeatureWP($type, $endpoint, $source_id);
         $track_id = $track->importFeature();
 
         $stelvio_media_decode = json_decode($stelvio_media);
@@ -105,12 +104,12 @@ class OutSourceImporterFeatureWPImportMediaTest extends TestCase
         $OSF_media_geometry = $out_source_media->geometry;
         $track_geom = DB::select("SELECT ST_AsGeojson(ST_startpoint('$OSF_track_geometry'))")[0]->st_asgeojson;
         $media_geom = DB::select("SELECT ST_AsGeojson('$OSF_media_geometry')")[0]->st_asgeojson;
-        $this->assertEquals($out_source_media->id,$out_source_track->tags['feature_image']);
-        $this->assertEquals($out_source_media->provider,'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
-        $this->assertEquals($out_source_media->tags['name']['it'],$stelvio_media_decode->title->rendered);
-        $this->assertEquals($track_geom,$media_geom);
-        $basename = explode('.',basename($stelvio_media_decode->guid->rendered));
-        $this->assertEquals($out_source_media->tags['url'],sha1($basename[0]).'.jpg');
+        $this->assertEquals($out_source_media->id, $out_source_track->tags['feature_image']);
+        $this->assertEquals($out_source_media->provider, 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP');
+        $this->assertEquals($out_source_media->tags['name']['it'], $stelvio_media_decode->title->rendered);
+        $this->assertEquals($track_geom, $media_geom);
+        $basename = explode('.', basename($stelvio_media_decode->guid->rendered));
+        $this->assertEquals($out_source_media->tags['url'], sha1($basename[0]).'.jpg');
         // TODO: gallery assert not working
         // $this->assertContains($out_source_gallery[0]->id,$out_source_track->tags['image_gallery']);
     }

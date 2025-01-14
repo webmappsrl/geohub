@@ -11,7 +11,6 @@ trait PerformsValidation
     /**
      * Validate a resource creation request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -26,40 +25,37 @@ trait PerformsValidation
     /**
      * Create a validator instance for a resource creation request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public static function validatorForCreation(NovaRequest $request)
     {
         return Validator::make($request->all(), static::rulesForCreation($request))
-                ->after(function ($validator) use ($request) {
-                    static::afterValidation($request, $validator);
-                    static::afterCreationValidation($request, $validator);
-                });
+            ->after(function ($validator) use ($request) {
+                static::afterValidation($request, $validator);
+                static::afterCreationValidation($request, $validator);
+            });
     }
 
     /**
      * Get the validation rules for a resource creation request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public static function rulesForCreation(NovaRequest $request)
     {
         return static::formatRules($request, (self::newResource())
-                    ->creationFields($request)
-                    ->reject(function ($field) use ($request) {
-                        return $field->isReadonly($request);
-                    })
-                    ->mapWithKeys(function ($field) use ($request) {
-                        return $field->getCreationRules($request);
-                    })->all());
+            ->creationFields($request)
+            ->reject(function ($field) use ($request) {
+                return $field->isReadonly($request);
+            })
+            ->mapWithKeys(function ($field) use ($request) {
+                return $field->getCreationRules($request);
+            })->all());
     }
 
     /**
      * Get the creation validation rules for a specific field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $field
      * @return array
      */
@@ -76,7 +72,6 @@ trait PerformsValidation
     /**
      * Validate a resource update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Nova\Resource|null  $resource
      * @return void
      *
@@ -92,23 +87,21 @@ trait PerformsValidation
     /**
      * Create a validator instance for a resource update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Nova\Resource|null  $resource
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public static function validatorForUpdate(NovaRequest $request, $resource = null)
     {
         return Validator::make($request->all(), static::rulesForUpdate($request, $resource))
-                ->after(function ($validator) use ($request) {
-                    static::afterValidation($request, $validator);
-                    static::afterUpdateValidation($request, $validator);
-                });
+            ->after(function ($validator) use ($request) {
+                static::afterValidation($request, $validator);
+                static::afterUpdateValidation($request, $validator);
+            });
     }
 
     /**
      * Get the validation rules for a resource update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Laravel\Nova\Resource|null  $resource
      * @return array
      */
@@ -117,35 +110,33 @@ trait PerformsValidation
         $resource = $resource ?? self::newResource();
 
         return static::formatRules($request, $resource->updateFields($request)
-                    ->reject(function ($field) use ($request) {
-                        return $field->isReadonly($request);
-                    })
-                    ->mapWithKeys(function ($field) use ($request) {
-                        return $field->getUpdateRules($request);
-                    })->all());
+            ->reject(function ($field) use ($request) {
+                return $field->isReadonly($request);
+            })
+            ->mapWithKeys(function ($field) use ($request) {
+                return $field->getUpdateRules($request);
+            })->all());
     }
 
     /**
      * Get the update validation rules for a specific field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $field
      * @return array
      */
     public static function updateRulesFor(NovaRequest $request, $field)
     {
         return static::formatRules($request, self::newResource()
-                    ->availableFields($request)
-                    ->where('attribute', $field)
-                    ->mapWithKeys(function ($field) use ($request) {
-                        return $field->getUpdateRules($request);
-                    })->all());
+            ->availableFields($request)
+            ->where('attribute', $field)
+            ->mapWithKeys(function ($field) use ($request) {
+                return $field->getUpdateRules($request);
+            })->all());
     }
 
     /**
      * Validate a resource attachment request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -158,7 +149,6 @@ trait PerformsValidation
     /**
      * Create a validator instance for a resource attachment request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public static function validatorForAttachment(NovaRequest $request)
@@ -169,22 +159,20 @@ trait PerformsValidation
     /**
      * Get the validation rules for a resource attachment request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public static function rulesForAttachment(NovaRequest $request)
     {
         return static::formatRules($request, self::newResource()
-                    ->creationPivotFields($request, $request->relatedResource)
-                    ->mapWithKeys(function ($field) use ($request) {
-                        return $field->getCreationRules($request);
-                    })->all());
+            ->creationPivotFields($request, $request->relatedResource)
+            ->mapWithKeys(function ($field) use ($request) {
+                return $field->getCreationRules($request);
+            })->all());
     }
 
     /**
      * Validate a resource attachment update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -197,7 +185,6 @@ trait PerformsValidation
     /**
      * Create a validator instance for a resource attachment update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public static function validatorForAttachmentUpdate(NovaRequest $request)
@@ -208,23 +195,20 @@ trait PerformsValidation
     /**
      * Get the validation rules for a resource attachment update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public static function rulesForAttachmentUpdate(NovaRequest $request)
     {
         return static::formatRules($request, self::newResource()
-                    ->updatePivotFields($request, $request->relatedResource)
-                    ->mapWithKeys(function ($field) use ($request) {
-                        return $field->getUpdateRules($request);
-                    })->all());
+            ->updatePivotFields($request, $request->relatedResource)
+            ->mapWithKeys(function ($field) use ($request) {
+                return $field->getUpdateRules($request);
+            })->all());
     }
 
     /**
      * Perform any final formatting of the given validation rules.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @param  array  $rules
      * @return array
      */
     protected static function formatRules(NovaRequest $request, array $rules)
@@ -249,43 +233,40 @@ trait PerformsValidation
     /**
      * Get the validation attribute for a specific field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $field
      * @return string
      */
     public static function validationAttributeFor(NovaRequest $request, $field)
     {
         return self::newResource()
-                    ->availableFields($request)
-                    ->filter(function ($field) {
-                        return ! $field instanceof PivotableField;
-                    })
-                    ->firstWhere('resourceName', $field)
-                    ->getValidationAttribute($request);
+            ->availableFields($request)
+            ->filter(function ($field) {
+                return ! $field instanceof PivotableField;
+            })
+            ->firstWhere('resourceName', $field)
+            ->getValidationAttribute($request);
     }
 
     /**
      * Get the validation attachable attribute for a specific field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $field
      * @return string
      */
     public static function validationAttachableAttributeFor(NovaRequest $request, $field)
     {
         return self::newResource()
-                    ->availableFields($request)
-                    ->filter(function ($field) {
-                        return $field instanceof PivotableField;
-                    })
-                    ->firstWhere('resourceName', $field)
-                    ->getValidationAttribute($request);
+            ->availableFields($request)
+            ->filter(function ($field) {
+                return $field instanceof PivotableField;
+            })
+            ->firstWhere('resourceName', $field)
+            ->getValidationAttribute($request);
     }
 
     /**
      * Map field attributes to field names.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Support\Collection
      */
     private static function attributeNamesForFields(NovaRequest $request)
@@ -303,7 +284,6 @@ trait PerformsValidation
     /**
      * Handle any post-validation processing.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      */
@@ -315,7 +295,6 @@ trait PerformsValidation
     /**
      * Handle any post-creation validation processing.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */
@@ -327,7 +306,6 @@ trait PerformsValidation
     /**
      * Handle any post-update validation processing.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */

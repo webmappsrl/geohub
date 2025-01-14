@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\EcTrack;
 use App\Traits\HandlesData;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,8 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateTrackFromOsmJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, HandlesData;
+    use Dispatchable, HandlesData, InteractsWithQueue, Queueable, SerializesModels;
+
     protected $track;
+
     /**
      * Create a new job instance.
      *
@@ -35,13 +36,13 @@ class UpdateTrackFromOsmJob implements ShouldQueue
     {
         try {
             $result = $this->updateOsmData($this->track);
-            if (!$result['success']) {
-                Log::error($this->track->id . ' UpdateTrackFromOsmJob: FAILED: ' . $this->track->name . ' (' . $this->track->osmid . '): ' . $result['message']);
+            if (! $result['success']) {
+                Log::error($this->track->id.' UpdateTrackFromOsmJob: FAILED: '.$this->track->name.' ('.$this->track->osmid.'): '.$result['message']);
             } else {
-                Log::info($this->track->id . ' UpdateTrackFromOsmJob: SUCCESS');
+                Log::info($this->track->id.' UpdateTrackFromOsmJob: SUCCESS');
             }
         } catch (\Exception $e) {
-            Log::error($this->track->id . 'UpdateTrackFromOsmJob: FAILED: ' . $e->getMessage());
+            Log::error($this->track->id.'UpdateTrackFromOsmJob: FAILED: '.$e->getMessage());
         }
     }
 }

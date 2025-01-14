@@ -4,9 +4,7 @@ namespace App\Nova;
 
 use App\Models\App;
 use App\Nova\Actions\CopyUgc;
-use App\Nova\Actions\DownloadGeojsonUgcMediaAction;
 use App\Nova\Filters\AppFilter;
-use App\Nova\Filters\DateRange;
 use App\Nova\Filters\UgcCreationDateFilter;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -27,28 +25,28 @@ class UgcMedia extends Resource
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\UgcMedia::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
-     * The columns that should be searched. 
+     * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
         'name',
-        'sku'
+        'sku',
     ];
 
     public static array $searchRelations = [
-        'taxonomy_wheres' => ['name']
+        'taxonomy_wheres' => ['name'],
     ];
 
     public static function group()
@@ -59,7 +57,6 @@ class UgcMedia extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -68,15 +65,12 @@ class UgcMedia extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->whereIn('sku', $request->user()->apps->pluck('sku')->toArray());
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -87,6 +81,7 @@ class UgcMedia extends Resource
                 ->help(__('Image associated with the UGC (User-Generated Content). From here, you can delete or replace it.')),
             Text::make(__('Name'), function ($model) {
                 $relativeUrl = $model->relative_url;
+
                 return last(explode('/', $relativeUrl));
             })
                 ->help(__('Name of the uploaded file')),
@@ -101,12 +96,13 @@ class UgcMedia extends Resource
                 ->hideWhenUpdating()
                 ->hideWhenCreating()
                 ->help(__('Creation date of the UGC')),
-            Text::make(__('App'),  function ($model) {
+            Text::make(__('App'), function ($model) {
                 $help = '<p>App from which the UGC was submitted</p>';
                 $sku = $model->sku;
                 $app = App::where('sku', $sku)->first();
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
+
                     return <<<HTML
                         <a 
                             href="{$url}" 
@@ -116,6 +112,7 @@ class UgcMedia extends Resource
                         </a> <br>
                         HTML;
                 }
+
                 return $help;
             })->asHtml(),
             Boolean::make(__('Has geometry'), function ($model) {
@@ -126,13 +123,13 @@ class UgcMedia extends Resource
             WmEmbedmapsField::make(__('Map'), function ($model) {
                 return [
                     'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
+                    'related' => $model->getRelatedUgcGeojson(),
                 ];
             })
                 ->onlyOnDetail()
                 ->help(__('Map with the UGC (User-Generated Content) location')),
             MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                'center' => ["51", "4"],
+                'center' => ['51', '4'],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'minZoom' => 7,
@@ -145,10 +142,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -157,10 +150,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -175,10 +164,6 @@ class UgcMedia extends Resource
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -187,15 +172,11 @@ class UgcMedia extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {
         return [
-            (new CopyUgc())->canSee(function ($request) {
+            (new CopyUgc)->canSee(function ($request) {
                 return $request->user()->hasRole('Admin');
             })->canRun(function ($request, $zone) {
                 return $request->user()->hasRole('Admin');

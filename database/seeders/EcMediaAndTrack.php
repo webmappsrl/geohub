@@ -6,7 +6,6 @@ use App\Models\EcMedia;
 use App\Models\EcTrack;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class EcMediaAndTrack extends Seeder
 {
@@ -68,7 +67,6 @@ class EcMediaAndTrack extends Seeder
             'geometry' => DB::raw('ST_MakePoint(10.0003, 46)'),
             'url' => '/ec_media_test/test.jpg',
         ]);
-        
 
         $track = EcTrack::factory()->create([
             'name' => 'TestTrack',

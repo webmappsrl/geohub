@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\User;
 use App\Models\Partnership;
-use Illuminate\Http\Request;
-use App\Services\UserService;
-use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 use App\Providers\PartnershipValidationProvider;
+use App\Services\UserService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
     /**
-     *
      * @var \App\Services\UserService
      */
     protected $userService;
 
-    function __construct(UserService $userService)
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
+
     /** * Signup and get a JWT
      *
-     *  @param Request $request
-     *  @return JsonResponse
      */
     public function signup(Request $request): JsonResponse
     {
@@ -50,7 +48,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()->first(),
-                'code' => 400
+                'code' => 400,
             ], 400);
         }
 
@@ -66,7 +64,7 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-                'code' => 400
+                'code' => 400,
             ], 400);
         }
 
@@ -79,9 +77,6 @@ class AuthController extends Controller
 
     /**
      * Get a JWT via given credentials.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -101,28 +96,26 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()->first(),
-                'code' => 401
+                'code' => 401,
             ], 401);
         }
 
         $credentials = $request->only(['email', 'password']);
 
-
-        //check if email exists
+        // check if email exists
         $user = User::where('email', $credentials['email'])->first();
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'error' => 'L\'email inserita non è corretta. Per favore, riprova.',
-                'code' => 401
+                'code' => 401,
             ], 401);
         }
 
-
         // Check if password is correct
-        if (!auth('api')->attempt($credentials)) {
+        if (! auth('api')->attempt($credentials)) {
             return response()->json([
                 'error' => 'La password inserita non è corretta. Per favore, riprova.',
-                'code' => 401
+                'code' => 401,
             ], 401);
         }
 
@@ -135,7 +128,6 @@ class AuthController extends Controller
         return $this->loginResponse($token);
     }
 
-
     /**
      * Delete the authenticated user.
      *
@@ -144,6 +136,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse The JSON response containing a success message if the user was deleted successfully,
      *                      or an error message and code if the deletion failed.
+     *
      * @throws Exception If the user does not have the 'Contributor' role.
      */
     public function delete(): JsonResponse
@@ -154,8 +147,8 @@ class AuthController extends Controller
             $user = User::find($userFromAPI->id);
 
             // Check if the user has the 'Contributor' role
-            if (!$user->hasRole('Contributor')) {
-                throw new Exception("Questo utente non può essere cancellato tramite API.");
+            if (! $user->hasRole('Contributor')) {
+                throw new Exception('Questo utente non può essere cancellato tramite API.');
             }
 
             // Logout the user from the API and delete the user
@@ -165,7 +158,7 @@ class AuthController extends Controller
             // If an exception occurs, return a JSON response with the error message and code
             return response()->json([
                 'error' => $e->getMessage(),
-                'code' => 400
+                'code' => 400,
             ], 400);
         }
 
@@ -175,8 +168,6 @@ class AuthController extends Controller
 
     /**
      * Get the authenticated User.
-     *
-     * @return JsonResponse
      */
     public function me(Request $request): JsonResponse
     {
@@ -189,7 +180,7 @@ class AuthController extends Controller
         $result = array_merge($user->toArray(), [
             'roles' => $roles,
             'partnerships' => $partnerships,
-            'referrer' => $user->sku
+            'referrer' => $user->sku,
         ]);
 
         unset($result['password']);
@@ -199,8 +190,6 @@ class AuthController extends Controller
 
     /**
      * Log the user out (Invalidate the token).
-     *
-     * @return JsonResponse
      */
     public function logout(): JsonResponse
     {
@@ -211,8 +200,6 @@ class AuthController extends Controller
 
     /**
      * Refresh a token.
-     *
-     * @return JsonResponse
      */
     public function refresh(): JsonResponse
     {
@@ -221,43 +208,36 @@ class AuthController extends Controller
 
     /**
      * Get the token array structure.
-     *
-     * @param string $token
-     * @return JsonResponse
      */
     protected function respondWithToken(string $token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
         ]);
     }
 
     /**
      * Generate the login response with user data and token.
-     *
-     * @param string $token
-     * @return JsonResponse
      */
     protected function loginResponse(string $token): JsonResponse
     {
         $tokenArray = $this->respondWithToken($token);
+
         return response()->json(array_merge($this->me(request())->getData(true), $tokenArray->getData(true)));
     }
 
     /**
      * Create a new user and handle partnerships
      *
-     * @param array $data
-     * @param Illuminate\Http\Request $request
+     * @param  Illuminate\Http\Request  $request
      *
-     * @return User
      * @throws Exception
      */
     private function createUser(array $data, Request $request): User
     {
-        $user = new User();
+        $user = new User;
         $user->fill([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -285,11 +265,9 @@ class AuthController extends Controller
     /**
      * Assigns the 'Contributor' role to the user.
      *
-     * @param User $user The user to assign the role to.
+     * @param  User  $user  The user to assign the role to.
      *
      * @throws Exception If the 'Contributor' role is not found.
-     *
-     * @return void
      */
     private function assignRole(User $user): void
     {
@@ -297,7 +275,7 @@ class AuthController extends Controller
         $role = Role::where('name', 'Contributor')->first();
 
         // If the role is not found, throw an exception
-        if (!$role) {
+        if (! $role) {
             throw new Exception('Ruolo Contributor non trovato. Per favore, contatta l\'amministratore.');
         }
 
@@ -305,15 +283,12 @@ class AuthController extends Controller
         $user->roles()->sync([$role->id]);
     }
 
-
     /**
      * Assigns partnerships to the user based on their validation.
      *
-     * @param User $user The user to assign partnerships to.
+     * @param  User  $user  The user to assign partnerships to.
      *
      * @throws Exception If there is an error during the assignment process.
-     *
-     * @return void
      */
     private function assignPartnerships(User $user): void
     {

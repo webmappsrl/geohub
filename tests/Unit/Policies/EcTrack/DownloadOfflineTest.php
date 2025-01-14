@@ -10,10 +10,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 
-class DownloadOfflineTest extends TestCase {
+class DownloadOfflineTest extends TestCase
+{
     use RefreshDatabase;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         // To prevent the service to post to hoqu for real
         $this->mock(HoquServiceProvider::class, function ($mock) {
@@ -22,7 +24,8 @@ class DownloadOfflineTest extends TestCase {
         });
     }
 
-    public function test_can_not_download_offline_when_no_partnerships() {
+    public function test_can_not_download_offline_when_no_partnerships()
+    {
         $user = User::factory()->create();
         $track = EcTrack::factory()->create();
 
@@ -30,7 +33,8 @@ class DownloadOfflineTest extends TestCase {
         $this->assertFalse($result);
     }
 
-    public function test_can_not_download_offline_when_partnership_only_on_track() {
+    public function test_can_not_download_offline_when_partnership_only_on_track()
+    {
         $user = User::factory()->create();
         $track = EcTrack::factory()->create();
         $partnership = Partnership::factory()->create();
@@ -41,7 +45,8 @@ class DownloadOfflineTest extends TestCase {
         $this->assertFalse($result);
     }
 
-    public function test_can_not_download_offline_when_partnership_only_on_user() {
+    public function test_can_not_download_offline_when_partnership_only_on_user()
+    {
         $user = User::factory()->create();
         $track = EcTrack::factory()->create();
         $partnership = Partnership::factory()->create();
@@ -52,7 +57,8 @@ class DownloadOfflineTest extends TestCase {
         $this->assertFalse($result);
     }
 
-    public function test_can_download_offline() {
+    public function test_can_download_offline()
+    {
         $user = User::factory()->create();
         $track = EcTrack::factory()->create();
         $partnership = Partnership::factory()->create();

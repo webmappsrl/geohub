@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class UgcPoi
  *
- * @package App\Models
  *
  * @property int    id
  * @property string app_id
@@ -24,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class UgcPoi extends Feature
 {
-    use HasFactory, GeometryFeatureTrait;
+    use GeometryFeatureTrait, HasFactory;
 
     /**
      * @var mixed|string
@@ -35,16 +34,11 @@ class UgcPoi extends Feature
         'name',
         'description',
         'geometry',
-        'properties'
+        'properties',
     ];
-
 
     /**
      * Scope a query to only include current user EcPois.
-     *
-     * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeCurrentUser(Builder $query): Builder
     {
@@ -63,7 +57,7 @@ class UgcPoi extends Feature
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function taxonomy_wheres(): BelongsToMany

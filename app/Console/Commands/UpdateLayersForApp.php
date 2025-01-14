@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\UpdateLayersForAppJob;
-use Illuminate\Console\Command;
-use App\Models\Layer;
 use App\Models\App;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Console\Command;
 
 class UpdateLayersForApp extends Command
 {

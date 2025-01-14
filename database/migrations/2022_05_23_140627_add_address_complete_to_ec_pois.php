@@ -17,7 +17,7 @@ class AddAddressCompleteToEcPois extends Migration
             $table->text('addr_complete')->nullable();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      *

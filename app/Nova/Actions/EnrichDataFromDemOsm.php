@@ -12,13 +12,11 @@ use Laravel\Nova\Fields\ActionFields;
 
 class EnrichDataFromDemOsm extends Action
 {
-    use InteractsWithQueue, Queueable, HandlesData;
+    use HandlesData, InteractsWithQueue, Queueable;
 
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -31,13 +29,14 @@ class EnrichDataFromDemOsm extends Action
                 if ($model->osmid) {
                     // Update with OSM data
                     $osmResult = $this->updateOsmData($model);
-                    if (!$osmResult['success']) {
+                    if (! $osmResult['success']) {
                         throw new \Exception($osmResult['message']);
                     }
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
-                return Action::danger('Failed to update track data: ' . $e->getMessage());
+
+                return Action::danger('Failed to update track data: '.$e->getMessage());
             }
         }
     }

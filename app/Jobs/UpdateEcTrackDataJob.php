@@ -12,7 +12,9 @@ use Illuminate\Queue\SerializesModels;
 class UpdateEcTrackDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     protected $track;
+
     /**
      * Create a new job instance.
      *

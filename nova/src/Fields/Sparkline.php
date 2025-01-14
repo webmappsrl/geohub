@@ -59,7 +59,6 @@ class Sparkline extends Field
     /**
      * Get field data.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array|mixed
      */
     public function getData(NovaRequest $request)

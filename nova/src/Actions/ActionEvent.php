@@ -114,7 +114,6 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for an attached resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $parent
      * @param  \Illuminate\Database\Eloquent\Model  $pivot
      * @return static
@@ -142,7 +141,6 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for an attached resource update.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $parent
      * @param  \Illuminate\Database\Eloquent\Model  $pivot
      * @return static
@@ -171,7 +169,6 @@ class ActionEvent extends Model
      * Create new action event instances for resource deletes.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Support\Collection  $models
      * @return \Illuminate\Support\Collection
      */
     public static function forResourceDelete($user, Collection $models)
@@ -183,7 +180,6 @@ class ActionEvent extends Model
      * Create new action event instances for resource restorations.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Support\Collection  $models
      * @return \Illuminate\Support\Collection
      */
     public static function forResourceRestore($user, Collection $models)
@@ -196,7 +192,6 @@ class ActionEvent extends Model
      *
      * @param  string  $action
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Support\Collection  $models
      * @return \Illuminate\Support\Collection
      */
     public static function forSoftDeleteAction($action, $user, Collection $models)
@@ -230,7 +225,6 @@ class ActionEvent extends Model
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  \Illuminate\Support\Collection  $models
      * @param  string  $pivotClass
      * @return \Illuminate\Support\Collection
      */
@@ -263,15 +257,12 @@ class ActionEvent extends Model
     /**
      * Create the action records for the given models.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
-     * @param  \Laravel\Nova\Actions\Action  $action
      * @param  string  $batchId
-     * @param  \Illuminate\Support\Collection  $models
      * @param  string  $status
      * @return void
      */
     public static function createForModels(ActionRequest $request, Action $action,
-                                           $batchId, Collection $models, $status = 'running')
+        $batchId, Collection $models, $status = 'running')
     {
         $models = $models->map(function ($model) use ($request, $action, $batchId, $status) {
             return array_merge(
@@ -294,14 +285,12 @@ class ActionEvent extends Model
     /**
      * Get the default attributes for creating a new action event.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
-     * @param  \Laravel\Nova\Actions\Action  $action
      * @param  string  $batchId
      * @param  string  $status
      * @return array
      */
     public static function defaultAttributes(ActionRequest $request, Action $action,
-                                             $batchId, $status = 'running')
+        $batchId, $status = 'running')
     {
         if ($request->isPivotAction()) {
             $pivotClass = $request->pivotRelation()->getPivotClass();
@@ -344,9 +333,9 @@ class ActionEvent extends Model
                 ->whereNotIn('id', function ($query) use ($model, $limit) {
                     $query->select('id')->fromSub(
                         static::select('id')->orderBy('id', 'desc')
-                                ->where('actionable_id', $model['actionable_id'])
-                                ->where('actionable_type', $model['actionable_type'])
-                                ->limit($limit)->toBase(),
+                            ->where('actionable_id', $model['actionable_id'])
+                            ->where('actionable_type', $model['actionable_type'])
+                            ->limit($limit)->toBase(),
                         'action_events_temp'
                     );
                 })->delete();
@@ -362,7 +351,7 @@ class ActionEvent extends Model
     public static function markBatchAsRunning($batchId)
     {
         return static::where('batch_id', $batchId)
-                    ->whereNotIn('status', ['finished', 'failed'])->update([
+            ->whereNotIn('status', ['finished', 'failed'])->update([
                         'status' => 'running',
                     ]);
     }
@@ -376,7 +365,7 @@ class ActionEvent extends Model
     public static function markBatchAsFinished($batchId)
     {
         return static::where('batch_id', $batchId)
-                    ->whereNotIn('status', ['finished', 'failed'])->update([
+            ->whereNotIn('status', ['finished', 'failed'])->update([
                         'status' => 'finished',
                     ]);
     }
@@ -403,7 +392,7 @@ class ActionEvent extends Model
     public static function markBatchAsFailed($batchId, $e = null)
     {
         return static::where('batch_id', $batchId)
-                    ->whereNotIn('status', ['finished', 'failed'])->update([
+            ->whereNotIn('status', ['finished', 'failed'])->update([
                         'status' => 'failed',
                         'exception' => $e ? (string) $e : '',
                     ]);
@@ -434,9 +423,9 @@ class ActionEvent extends Model
     public static function updateStatus($batchId, $model, $status, $e = null)
     {
         return static::where('batch_id', $batchId)
-                        ->where('model_type', $model->getMorphClass())
-                        ->where('model_id', $model->getKey())
-                        ->update(['status' => $status, 'exception' => (string) $e]);
+            ->where('model_type', $model->getMorphClass())
+            ->where('model_id', $model->getKey())
+            ->update(['status' => $status, 'exception' => (string) $e]);
     }
 
     /**

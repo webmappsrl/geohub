@@ -17,7 +17,6 @@ use App\Models\UgcTrack;
 use App\Policies\EcMediaPolicy;
 use App\Policies\EcPoiPolicy;
 use App\Policies\LayerPolicy;
-use App\Policies\PermissionPolicy;
 use App\Policies\TaxonomyActivityPolicy;
 use App\Policies\TaxonomyPoiTypePolicy;
 use App\Policies\TaxonomyTargetPolicy;
@@ -29,9 +28,9 @@ use App\Policies\UgcPoiPolicy;
 use App\Policies\UgcTrackPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Models\Permission;
 
-class AuthServiceProvider extends ServiceProvider {
+class AuthServiceProvider extends ServiceProvider
+{
     /**
      * The policy mappings for the application.
      *
@@ -58,7 +57,8 @@ class AuthServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         $this->registerPolicies();
 
         Gate::after(function ($user, $ability) {

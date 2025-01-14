@@ -6,22 +6,21 @@ use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use App\Models\OutSourceFeature;
 use App\Models\OutSourcePoi;
 use App\Models\OutSourceTrack;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
 use App\Models\User;
+use Faker\Generator as Faker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Faker\Generator as Faker;
 
 class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * @test
      */
@@ -33,13 +32,13 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
 
         $faker = new Faker;
         $storage = Storage::fake('s3-osfmedia-test');
-        $image = file_get_contents($faker->imageUrl(640, 480, 'animals', true)); 
+        $image = file_get_contents($faker->imageUrl(640, 480, 'animals', true));
         $storage->put('first.jpg', $image);
         Storage::shouldReceive('disk')
-        ->with('s3-osfmedia-test')
-        ->andReturn($storage)
-        ->shouldReceive('get')
-        ->andReturn($image);
+            ->with('s3-osfmedia-test')
+            ->andReturn($storage)
+            ->shouldReceive('get')
+            ->andReturn($image);
 
         $source1 = OutSourcePoi::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
@@ -47,41 +46,41 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             'type' => 'media',
             'tags' => [
                 'url' => 'first.jpg',
-                'name' => 'first'
+                'name' => 'first',
             ],
         ]);
-        
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',
-            'identifier' => 'hiking'
+            'identifier' => 'hiking',
         ]);
 
         TaxonomyPoiType::updateOrCreate([
             'name' => 'Point Of Interest',
-            'identifier' => 'poi'
+            'identifier' => 'poi',
         ]);
 
         $users = User::all();
-        
+
         $type = 'media';
         $author = 1;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
-        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
-        $name_format = '{name}';            
-        $app = 1; 
+        $name_format = '{name}';
+        $app = 1;
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_features_id = $SyncEcFromOutSource->sync($ids_array);
         $ecmedia = EcMedia::find($new_ec_features_id[0]);
         $this->assertNotEmpty($new_ec_features_id);
-        $this->assertEquals($ecmedia->user_id,1);
+        $this->assertEquals($ecmedia->user_id, 1);
     }
+
     /**
      * @test
      */
@@ -97,56 +96,56 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             'type' => 'media',
             'tags' => [
                 'url' => 'first.jpg',
-                'name' => 'first'
+                'name' => 'first',
             ],
         ]);
-        
+
         $poi1 = OutSourcePoi::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
                 'name' => 'first poi',
-                'feature_image' => $media1->id 
+                'feature_image' => $media1->id,
             ],
         ]);
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',
-            'identifier' => 'hiking'
+            'identifier' => 'hiking',
         ]);
 
         TaxonomyPoiType::updateOrCreate([
             'name' => 'Point Of Interest',
-            'identifier' => 'poi'
+            'identifier' => 'poi',
         ]);
 
         $users = User::all();
-        
+
         $type = 'poi';
         $author = 1;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
-        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
-        $name_format = '{name}';            
-        $app = 1; 
+        $name_format = '{name}';
+        $app = 1;
 
         // Sync Media
-        $SyncEcFromOutSource = new SyncEcFromOutSource('media',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource('media', $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_media = $SyncEcFromOutSource->sync($ids_array);
-        
+
         // Sync poi
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_poi = $SyncEcFromOutSource->sync($ids_array);
         $ecpoi = EcPoi::find($new_ec_poi[0]);
-        $this->assertEquals($ecpoi->featureImage->id,$new_ec_media[0] );
+        $this->assertEquals($ecpoi->featureImage->id, $new_ec_media[0]);
     }
 
     /**
@@ -164,56 +163,56 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             'type' => 'media',
             'tags' => [
                 'url' => 'first.jpg',
-                'name' => 'first'
+                'name' => 'first',
             ],
         ]);
-        
+
         $poi1 = OutSourcePoi::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'poi',
             'tags' => [
                 'name' => 'first poi',
-                'image_gallery' => [$media1->id] 
+                'image_gallery' => [$media1->id],
             ],
         ]);
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',
-            'identifier' => 'hiking'
+            'identifier' => 'hiking',
         ]);
 
         TaxonomyPoiType::updateOrCreate([
             'name' => 'Point Of Interest',
-            'identifier' => 'poi'
+            'identifier' => 'poi',
         ]);
 
         $users = User::all();
-        
+
         $type = 'poi';
         $author = 1;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
-        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
-        $name_format = '{name}';            
-        $app = 1; 
+        $name_format = '{name}';
+        $app = 1;
 
         // Sync Media
-        $SyncEcFromOutSource = new SyncEcFromOutSource('media',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource('media', $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_media = $SyncEcFromOutSource->sync($ids_array);
-        
+
         // Sync poi
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_poi = $SyncEcFromOutSource->sync($ids_array);
         $ecpoi = EcPoi::find($new_ec_poi);
-        $this->assertEquals($ecpoi[0]->ecMedia()->first()->id,$new_ec_media[0] );
+        $this->assertEquals($ecpoi[0]->ecMedia()->first()->id, $new_ec_media[0]);
     }
 
     /**
@@ -231,56 +230,56 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             'type' => 'media',
             'tags' => [
                 'url' => 'first.jpg',
-                'name' => 'first'
+                'name' => 'first',
             ],
         ]);
-        
+
         $track1 = OutSourceTrack::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
                 'name' => 'first track',
-                'feature_image' => $media1->id 
+                'feature_image' => $media1->id,
             ],
         ]);
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',
-            'identifier' => 'hiking'
+            'identifier' => 'hiking',
         ]);
 
         TaxonomyPoiType::updateOrCreate([
             'name' => 'Point Of Interest',
-            'identifier' => 'poi'
+            'identifier' => 'poi',
         ]);
 
         $users = User::all();
-        
+
         $type = 'track';
         $author = 1;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
-        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
-        $name_format = '{name}';            
-        $app = 1; 
+        $name_format = '{name}';
+        $app = 1;
 
         // Sync Media
-        $SyncEcFromOutSource = new SyncEcFromOutSource('media',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource('media', $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_media = $SyncEcFromOutSource->sync($ids_array);
-        
+
         // Sync track
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_track = $SyncEcFromOutSource->sync($ids_array);
         $ectrack = EcTrack::find($new_ec_track[0]);
-        $this->assertEquals($ectrack->featureImage->id,$new_ec_media[0] );
+        $this->assertEquals($ectrack->featureImage->id, $new_ec_media[0]);
     }
 
     /**
@@ -298,55 +297,55 @@ class EcSynchronizerSyncEcFromOutSourceSyncMedia extends TestCase
             'type' => 'media',
             'tags' => [
                 'url' => 'first.jpg',
-                'name' => 'first'
+                'name' => 'first',
             ],
         ]);
-        
+
         $track1 = OutSourceTrack::factory()->create([
             'provider' => 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP',
             'endpoint' => 'https://stelvio.wp.webmapp.it',
             'type' => 'track',
             'tags' => [
                 'name' => 'first track',
-                'image_gallery' => [$media1->id] 
+                'image_gallery' => [$media1->id],
             ],
         ]);
 
         TaxonomyActivity::updateOrCreate([
             'name' => 'Hiking',
-            'identifier' => 'hiking'
+            'identifier' => 'hiking',
         ]);
 
         TaxonomyPoiType::updateOrCreate([
             'name' => 'Point Of Interest',
-            'identifier' => 'poi'
+            'identifier' => 'poi',
         ]);
 
         $users = User::all();
-        
+
         $type = 'track';
         $author = 1;
         $provider = 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP';
-        $endpoint = 'https://stelvio.wp.webmapp.it';            
+        $endpoint = 'https://stelvio.wp.webmapp.it';
         $activity = 'hiking';
         $poi_type = 'poi';
-        $name_format = '{name}';            
-        $app = 1; 
+        $name_format = '{name}';
+        $app = 1;
 
         // Sync Media
-        $SyncEcFromOutSource = new SyncEcFromOutSource('media',$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource('media', $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_media = $SyncEcFromOutSource->sync($ids_array);
-        
+
         // Sync track
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type,$author,$provider,$endpoint,$activity,$poi_type,$name_format,$app);
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app);
         $SyncEcFromOutSource->checkParameters();
         $ids_array = $SyncEcFromOutSource->getList();
 
         $new_ec_track = $SyncEcFromOutSource->sync($ids_array);
         $ectrack = EcTrack::find($new_ec_track);
-        $this->assertEquals($ectrack[0]->ecMedia()->first()->id,$new_ec_media[0] );
+        $this->assertEquals($ectrack[0]->ecMedia()->first()->id, $new_ec_media[0]);
     }
 }

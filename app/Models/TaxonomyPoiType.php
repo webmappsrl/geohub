@@ -29,7 +29,7 @@ class TaxonomyPoiType extends Model
         });
 
         static::saving(function ($taxonomyPoiType) {
-            if (null !== $taxonomyPoiType->identifier) {
+            if ($taxonomyPoiType->identifier !== null) {
                 $taxonomyPoiType->identifier = Str::slug($taxonomyPoiType->identifier, '-');
             }
         });
@@ -43,7 +43,7 @@ class TaxonomyPoiType extends Model
         static::creating(function ($taxonomyPoiType) {
             if ($taxonomyPoiType->identifier != null) {
                 $validateTaxonomyPoiType = TaxonomyPoiType::where('identifier', 'LIKE', $taxonomyPoiType->identifier)->first();
-                if (!$validateTaxonomyPoiType == null) {
+                if (! $validateTaxonomyPoiType == null) {
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
@@ -52,7 +52,7 @@ class TaxonomyPoiType extends Model
 
     public function author()
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function ecMedia()
@@ -85,13 +85,11 @@ class TaxonomyPoiType extends Model
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
-        throw  ValidationException::withMessages($messageBag->getMessages());
+        throw ValidationException::withMessages($messageBag->getMessages());
     }
 
     /**
      * Create a json for the activity
-     *
-     * @return array
      */
     public function getJson(): array
     {
@@ -104,14 +102,14 @@ class TaxonomyPoiType extends Model
         $data['name'] = $json['name'];
         if ($data['name']) {
             foreach ($data['name'] as $lang => $val) {
-                if (empty($val) || !$val) {
+                if (empty($val) || ! $val) {
                     unset($data['name'][$lang]);
                 }
             }
         }
         if ($json['description']) {
             foreach ($json['description'] as $lang => $val) {
-                if (!empty($val) || $val) {
+                if (! empty($val) || $val) {
                     $data['description'][$lang] = $val;
                 }
             }

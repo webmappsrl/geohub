@@ -11,9 +11,6 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
 {
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -82,14 +79,12 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             'addr_complete',
             'image_gallery',
             'poi_type',
-            'wheres'
+            'wheres',
         ];
     }
 
     /**
-     * @param EcPoi $poi
-     *
-     * @return array
+     * @param  EcPoi  $poi
      */
     public function map($poi): array
     {
@@ -103,8 +98,8 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $lng = DB::select("SELECT ST_X(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
             $lat = DB::select("SELECT ST_Y(ST_AsText('$poi->geometry')) As wkt")[0]->wkt;
         }
-        $geohub_backend = url('/') . '/resources/ec-pois/' . $poi->id;
-        if($poi->featureImage) {
+        $geohub_backend = url('/').'/resources/ec-pois/'.$poi->id;
+        if ($poi->featureImage) {
             if (strpos($poi->featureImage->url, 'ecmedia')) {
                 $featureImage = $poi->featureImage->url;
             } else {
@@ -208,14 +203,14 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
             $poi->addr_complete,
             $image_gallery,
             $poi_type,
-            $wheres
+            $wheres,
         ];
     }
 
     private function setOutSourceValue($poi): array
     {
         $array = $poi->toArray();
-        if(isset($poi->out_source_feature_id)) {
+        if (isset($poi->out_source_feature_id)) {
             $keys = [
                 'description',
                 'excerpt',
@@ -235,38 +230,42 @@ class DownloadExcelEcPoiAction extends DownloadExcel implements WithMapping
                 $array = $this->setOutSourceSingleValue($array, $key, $poi);
             }
         }
+
         return $array;
     }
 
     private function setOutSourceSingleValue($array, $varname, $poi): array
     {
-        if($this->isReallyEmpty($array[$varname])) {
-            if(isset($poi->outSourcePoi->tags[$varname])) {
+        if ($this->isReallyEmpty($array[$varname])) {
+            if (isset($poi->outSourcePoi->tags[$varname])) {
                 $array[$varname] = $poi->outSourcePoi->tags[$varname];
             }
         }
+
         return $array;
     }
 
     private function isReallyEmpty($val): bool
     {
-        if(is_null($val)) {
+        if (is_null($val)) {
             return true;
         }
-        if(empty($val)) {
+        if (empty($val)) {
             return true;
         }
-        if(is_array($val)) {
-            if(count($val) == 0) {
+        if (is_array($val)) {
+            if (count($val) == 0) {
                 return true;
             }
-            foreach($val as $lang => $cont) {
-                if(!empty($cont)) {
+            foreach ($val as $lang => $cont) {
+                if (! empty($cont)) {
                     return false;
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 }

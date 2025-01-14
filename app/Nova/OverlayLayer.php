@@ -2,25 +2,21 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Text;
-use NovaAttachMany\AttachMany;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\MorphTo;
-use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\Number;
-use Nova\Multiselect\Multiselect;
-use Yna\NovaSwatches\Swatches;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaAttachMany\AttachMany;
+use Yna\NovaSwatches\Swatches;
 
 class OverlayLayer extends Resource
 {
@@ -45,13 +41,12 @@ class OverlayLayer extends Resource
      */
     public static $search = [
         'id',
-        'name'
+        'name',
     ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -92,15 +87,16 @@ class OverlayLayer extends Resource
                     $html = <<<HTML
                     <a href="{$value}" target="_blank">{$value}</a>
                 HTML;
+
                     return $html;
                 })->asHtml()
                 ->hideFromIndex()
                 ->help(__('Enter the GeoJson URL. Alternatively you can delete the existent Geojson URL, click on "Update & Continue Editing" below, and upload an external Geojson file. NOTE: If both fields are filled, the GeoJson File will be used.')),
             File::make('Geojson File', 'feature_collection')
                 ->disk('public')
-                ->path('geojson/' . $app_name)
+                ->path('geojson/'.$app_name)
                 ->acceptedTypes(['.json', '.geojson'])
-                //rename the file taking the name property from the request
+                // rename the file taking the name property from the request
                 ->storeAs(function (Request $request) {
                     return $request->feature_collection->getClientOriginalName();
                 })
@@ -112,11 +108,11 @@ class OverlayLayer extends Resource
                     return $this->getFeatureCollectionType() == 'external';
                 })
                 ->hideFromDetail(function () {
-                    return $this->getFeatureCollectionType() == 'external';;
+                    return $this->getFeatureCollectionType() == 'external';
                 })
                 ->help('Upload a Geojson file. Alternatively you can delete the existent Geojson file, click on "Update & Continue Editing" below, and insert an external Geojson URL. NOTE: If both fields are filled, the GeoJson File will be used.'),
             Text::make('Icon', 'icon', function () {
-                return "<div style='width:64px;height:64px;'>" . $this->icon . "</div>";
+                return "<div style='width:64px;height:64px;'>".$this->icon.'</div>';
             })
                 ->asHtml()
                 ->onlyOnDetail()
@@ -157,9 +153,9 @@ class OverlayLayer extends Resource
             Text::make('Layers', function () {
                 $help = '<p>Layers: The layers associated with this overlay.</p>';
                 if (count($this->layers) > 0) {
-                    return $this->layers->pluck('name')->implode("</;>") . $help;
+                    return $this->layers->pluck('name')->implode('</;>').$help;
                 } else {
-                    return 'No layers' . $help;
+                    return 'No layers'.$help;
                 }
             })
                 ->onlyOnDetail()
@@ -176,7 +172,6 @@ class OverlayLayer extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -187,7 +182,6 @@ class OverlayLayer extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -198,7 +192,6 @@ class OverlayLayer extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -209,7 +202,6 @@ class OverlayLayer extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
@@ -225,6 +217,7 @@ class OverlayLayer extends Resource
         try {
             $resource = \App\Models\OverlayLayer::find($resourceId);
             $app_id = $resource->app_id;
+
             return $query->where('app_id', $app_id);
         } catch (\Throwable $th) {
             return $query->where('id', $resourceId);
@@ -233,8 +226,6 @@ class OverlayLayer extends Resource
 
     /**
      * Check if the feature_collection field is an external url or a local file path
-     * 
-     * @return string
      */
     public function getFeatureCollectionType(): string
     {
@@ -246,13 +237,12 @@ class OverlayLayer extends Resource
                 $result = 'local';
             }
         }
+
         return $result;
     }
 
     /**
      * Check if the feature_collection file exist at the given path
-     * 
-     * @return bool
      */
     public function featureCollectionFileExist(): bool
     {
@@ -260,6 +250,7 @@ class OverlayLayer extends Resource
         if ($this->getFeatureCollectionType() == 'local') {
             $result = Storage::disk('public')->exists($this->feature_collection);
         }
+
         return $result;
     }
 }

@@ -32,15 +32,17 @@ class LaunchTrackPBFJobCommand extends Command
         $trackId = $this->argument('track_id');
         $track = EcTrack::find($trackId);
 
-        if (!$track) {
-            $this->error('Track with id ' . $trackId . ' not found!');
+        if (! $track) {
+            $this->error('Track with id '.$trackId.' not found!');
+
             return 1; // return a non-zero code for failure
         }
 
         // Dispatch the job
         UpdateTrackPBFJob::dispatch($track);
 
-        $this->info('UpdateTrackPBFJob for track id ' . $trackId . ' has been dispatched.');
+        $this->info('UpdateTrackPBFJob for track id '.$trackId.' has been dispatched.');
+
         return 0; // return zero for success
     }
 }

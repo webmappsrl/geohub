@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -42,7 +41,7 @@ class UpdateEcTrack3DDemJob implements ShouldQueue
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->post(
-            rtrim(config('services.dem.host'), '/') . rtrim(config('services.dem.3d_data_api'), '/'),
+            rtrim(config('services.dem.host'), '/').rtrim(config('services.dem.3d_data_api'), '/'),
             $data
         );
 
@@ -51,19 +50,19 @@ class UpdateEcTrack3DDemJob implements ShouldQueue
             // Request was successful, handle the response data here
             $responseData = $response->json();
             try {
-                if (isset($responseData['geometry']) && !empty($responseData['geometry'])) {
-                    $this->ecTrack->geometry = DB::select("SELECT ST_GeomFromGeoJSON('" . json_encode($responseData['geometry']) . "') As wkt")[0]->wkt;
+                if (isset($responseData['geometry']) && ! empty($responseData['geometry'])) {
+                    $this->ecTrack->geometry = DB::select("SELECT ST_GeomFromGeoJSON('".json_encode($responseData['geometry'])."') As wkt")[0]->wkt;
                     $this->ecTrack->saveQuietly();
-                    Log::info($this->ecTrack->id . ' UpdateEcTrack3DDemJob: SUCCESS');
+                    Log::info($this->ecTrack->id.' UpdateEcTrack3DDemJob: SUCCESS');
                 }
             } catch (\Exception $e) {
-                Log::error($this->ecTrack->id . 'UpdateEcTrack3DDemJob: FAILED: ' . $e->getMessage());
+                Log::error($this->ecTrack->id.'UpdateEcTrack3DDemJob: FAILED: '.$e->getMessage());
             }
         } else {
             // Request failed, handle the error here
             $errorCode = $response->status();
             $errorBody = $response->body();
-            Log::error($this->ecTrack->id . "UpdateEcTrack3DDemJob: FAILED: Error {$errorCode}: {$errorBody}");
+            Log::error($this->ecTrack->id."UpdateEcTrack3DDemJob: FAILED: Error {$errorCode}: {$errorBody}");
         }
     }
 }

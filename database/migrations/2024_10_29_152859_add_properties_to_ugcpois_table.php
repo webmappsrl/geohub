@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
@@ -46,19 +45,20 @@ class AddPropertiesToUgcpoisTable extends Migration
             $locations = $properties['locations'] ?? [];
 
             // Verifica che ci siano location valide
-            if (!empty($locations)) {
+            if (! empty($locations)) {
                 // Verifica che ci siano location valide con altitudine
                 $coordinates = array_filter(array_map(function ($location) use ($ugctrack) {
                     if (isset($location['longitude'], $location['latitude'], $location['altitude'])) {
                         return "{$location['longitude']} {$location['latitude']} {$location['altitude']}";
                     } else {
                         Log::warning("Manca l'altitudine per una location nella traccia con ID {$ugctrack->id}");
+
                         return null;
                     }
                 }, $locations));
-                if (!empty($coordinates) && count($coordinates) > 1) {
+                if (! empty($coordinates) && count($coordinates) > 1) {
                     // Crea una stringa WKT per la geometria 3D (LINESTRING o MULTIPOINT)
-                    $wkt = 'LINESTRING Z(' . implode(', ', $coordinates) . ')';
+                    $wkt = 'LINESTRING Z('.implode(', ', $coordinates).')';
 
                     // Salva la geometria 3D utilizzando ST_GeomFromText
                     $ugctrack->geometry = DB::raw("ST_GeomFromText('$wkt', 4326)");

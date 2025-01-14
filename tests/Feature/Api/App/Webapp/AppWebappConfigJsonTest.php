@@ -5,7 +5,6 @@ namespace Tests\Feature\Api\App\Webapp;
 use App\Models\App;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -42,8 +41,8 @@ class AppWebappConfigJsonTest extends TestCase
     public function when_app_it_exists_it_returns_200()
     {
         $app = App::factory()->create(['api' => 'webapp']);
-        Storage::disk('conf')->delete($app->id  . '.json');
-        $result = $this->getJson('/api/app/webapp/' . $app->id . '/config', []);
+        Storage::disk('conf')->delete($app->id.'.json');
+        $result = $this->getJson('/api/app/webapp/'.$app->id.'/config', []);
         $this->assertEquals(200, $result->getStatusCode());
     }
 
@@ -56,8 +55,8 @@ class AppWebappConfigJsonTest extends TestCase
     public function when_api_is_webapp_it_returns_proper_section_app()
     {
         $app = App::factory()->create(['api' => 'webapp']);
-        Storage::disk('conf')->delete($app->id  . '.json');
-        $result = $this->getJson('/api/app/webapp/' . $app->id . '/config', []);
+        Storage::disk('conf')->delete($app->id.'.json');
+        $result = $this->getJson('/api/app/webapp/'.$app->id.'/config', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 

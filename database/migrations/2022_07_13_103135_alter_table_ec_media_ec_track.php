@@ -14,7 +14,7 @@ class AlterTableEcMediaEcTrack extends Migration
     public function up()
     {
         Schema::table('ec_media_ec_track', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_track_id']);
             $table->dropForeign(['ec_media_id']);
 
@@ -37,7 +37,7 @@ class AlterTableEcMediaEcTrack extends Migration
     public function down()
     {
         Schema::table('ec_media_ec_track', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_track_id']);
             $table->dropForeign(['ec_media_id']);
 

@@ -12,7 +12,6 @@ class SearchController extends Controller
     /**
      * Get the global search results for the given query.
      *
-     * @param  \Laravel\Nova\Http\Requests\GlobalSearchRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(GlobalSearchRequest $request)

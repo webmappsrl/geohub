@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\App;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AppPolicy
@@ -15,14 +15,11 @@ class AppPolicy
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Perform pre-authorization checks.
      *
-     * @param  \App\Models\User  $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -57,6 +54,7 @@ class AppPolicy
         if ($user->hasRole('Editor') && $user->id === $model->user_id) {
             return true;
         }
+
         return false;
     }
 
@@ -87,7 +85,7 @@ class AppPolicy
         if ($user->hasRole('Editor')) {
             return false;
         }
-        
+
         $user = User::getEmulatedUser($user);
 
         return $user->can('delete_apps');
@@ -98,7 +96,7 @@ class AppPolicy
         if ($user->hasRole('Editor')) {
             return false;
         }
-        
+
         $user = User::getEmulatedUser($user);
 
         return $user->hasRole('Admin') && $user->id !== $model->id;

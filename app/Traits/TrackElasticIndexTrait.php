@@ -3,21 +3,18 @@
 namespace App\Traits;
 
 use App\Models\EcTrack;
-use Elasticsearch\ClientBuilder;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Exception;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait TrackElasticIndexTrait
-
 {
     use ElasticIndexTrait;
+
     /**
      * Deletes the EcTrack index on Elastic
      *
-     * @param String $index_name
-     * @return void
+     * @param  string  $index_name
      */
     public function elasticIndexDelete($index_name, $id): void
     {
@@ -26,8 +23,8 @@ trait TrackElasticIndexTrait
         try {
             $client = $this->getClient();
 
-            if ($client->exists(['index' =>  $index_name, 'id' => $id])) {
-                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
+            if ($client->exists(['index' => $index_name, 'id' => $id])) {
+                Log::info('DELETE Elastic Indexing '.$index_name.' track '.$id);
                 $response = $client->delete($params);
                 Log::info($response);
             }
@@ -47,7 +44,7 @@ trait TrackElasticIndexTrait
                 $response = $client->index($params_index);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticSearch Error: ' . $e->getMessage());
+            Log::error('ElasticSearch Error: '.$e->getMessage());
             throw $e; // Rilancia l'eccezione per gestirla altrove, se necessario
         }
 
@@ -60,7 +57,7 @@ trait TrackElasticIndexTrait
             $updates = null;
             $ecTrackLayers = $this->associatedLayers()->get();
             foreach ($ecTrackLayers as $layer) {
-                if (!empty($layer)) {
+                if (! empty($layer)) {
                     $updates['layers'][$layer->app_id] = $layer->id;
                     $updates['activities'][$layer->app_id] = $this->getTaxonomyArray($this->taxonomyActivities);
                     $updates['themes'][$layer->app_id] = $this->getTaxonomyArray($this->taxonomyThemes);
@@ -73,13 +70,13 @@ trait TrackElasticIndexTrait
                 });
             }
         } catch (Exception $e) {
-            throw new Exception('ERROR ' . $e->getMessage());
+            throw new Exception('ERROR '.$e->getMessage());
         }
     }
 
     public function elasticIndex($index_name, $layers): void
     {
-        Log::info('Update Elastic Indexing track ' . $this->id);
+        Log::info('Update Elastic Indexing track '.$this->id);
 
         $geom = $this->getGeometry();
 
@@ -90,7 +87,7 @@ trait TrackElasticIndexTrait
         $taxonomy_wheres = $this->getTaxonomyWheres();
         $taxonomy_themes = $this->getTaxonomyArray($this->taxonomyThemes);
 
-        list($start, $end) = $this->getStartEndCoordinates($geom);
+        [$start, $end] = $this->getStartEndCoordinates($geom);
 
         // Preparazione dei parametri per ElasticSearch
         $params = $this->buildParamsArray(
@@ -103,12 +100,13 @@ trait TrackElasticIndexTrait
             $taxonomy_wheres,
             $taxonomy_themes
         );
-        $this->elasticIndexDoc($index_name,  $this->id, $params);
+        $this->elasticIndexDoc($index_name, $this->id, $params);
     }
 
     private function getGeometry()
     {
-        $geom_query = "ST_AsGeoJSON(geometry) as geom";
+        $geom_query = 'ST_AsGeoJSON(geometry) as geom';
+
         return EcTrack::where('id', '=', $this->id)
             ->select(
                 DB::raw($geom_query)
@@ -128,12 +126,13 @@ trait TrackElasticIndexTrait
                 $feature_image = $sizes['225x100'];
             }
         }
+
         return $feature_image;
     }
 
     private function getTaxonomyArray($taxonomyCollection)
     {
-        return $taxonomyCollection->count() > 0 ? Array_values(array_unique($taxonomyCollection->pluck('identifier')->toArray())) : [];
+        return $taxonomyCollection->count() > 0 ? array_values(array_unique($taxonomyCollection->pluck('identifier')->toArray())) : [];
     }
 
     private function getTaxonomyWheres()
@@ -150,7 +149,8 @@ trait TrackElasticIndexTrait
                 $taxonomy_wheres = $this->taxonomyWheres->pluck('name')->toArray();
             }
         }
-        return Array_values(array_unique($taxonomy_wheres));
+
+        return array_values(array_unique($taxonomy_wheres));
     }
 
     private function getStartEndCoordinates($geom)
@@ -164,6 +164,7 @@ trait TrackElasticIndexTrait
             $start = [];
             $end = [];
         }
+
         return [[$start[0], $start[1]], [$end[0], $end[1]]];
     }
 
@@ -183,41 +184,41 @@ trait TrackElasticIndexTrait
 
         return [
             'id' => $this->id,
-            'ref' =>  $this->ref,
-            'start' =>  $start,
-            'end' =>  $end,
-            'cai_scale' =>  $this->cai_scale,
-            'from' =>  $this->getActualOrOSFValue('from'),
-            'to' =>  $this->getActualOrOSFValue('to'),
-            'name' =>  $this->name,
+            'ref' => $this->ref,
+            'start' => $start,
+            'end' => $end,
+            'cai_scale' => $this->cai_scale,
+            'from' => $this->getActualOrOSFValue('from'),
+            'to' => $this->getActualOrOSFValue('to'),
+            'name' => $this->name,
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
             'feature_image' => $feature_image,
-            'strokeColor' =>  $this->hexToRgba($this->color),
-            "distance" => $this->setEmptyValueToZero($this->distance),
-            "duration_forward" => $this->setEmptyValueToZero($this->duration_forward),
-            "ascent" => $this->setEmptyValueToZero($this->ascent),
+            'strokeColor' => $this->hexToRgba($this->color),
+            'distance' => $this->setEmptyValueToZero($this->distance),
+            'duration_forward' => $this->setEmptyValueToZero($this->duration_forward),
+            'ascent' => $this->setEmptyValueToZero($this->ascent),
             'activities' => $this->taxonomyActivities->pluck('identifier')->toArray(),
             'themes' => $this->taxonomyThemes->pluck('identifier')->toArray(),
             'layers' => $layers,
-            'searchable' => json_encode($this->getSearchableString($app_id))
+            'searchable' => json_encode($this->getSearchableString($app_id)),
         ];
     }
 
     private function executeElasticIndexing($index_name, $params)
     {
         $params_update = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => [
-                'doc' => $params
-            ]
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => [
+                'doc' => $params,
+            ],
         ];
         $params_index = [
-            'index' => 'geohub_' . $index_name,
-            'id'    => $this->id,
-            'body'  => $params
+            'index' => 'geohub_'.$index_name,
+            'id' => $this->id,
+            'body' => $params,
         ];
 
         try {

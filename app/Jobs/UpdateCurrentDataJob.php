@@ -15,6 +15,7 @@ class UpdateCurrentDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     use HandlesData;
+
     protected $track;
 
     /**
@@ -37,7 +38,7 @@ class UpdateCurrentDataJob implements ShouldQueue
         try {
             $this->updateCurrentData($this->track);
         } catch (\Exception $e) {
-            Log::error($this->track->id . 'UpdateCurrentDataJob: FAILED: ' . $e->getMessage());
+            Log::error($this->track->id.'UpdateCurrentDataJob: FAILED: '.$e->getMessage());
         }
     }
 }

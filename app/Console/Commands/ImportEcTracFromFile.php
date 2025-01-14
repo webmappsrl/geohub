@@ -38,15 +38,17 @@ class ImportEcTracFromFile extends Command
      */
     public function handle()
     {
-        $filePath = 'storage/importer/' . $this->argument('path');
+        $filePath = 'storage/importer/'.$this->argument('path');
         $this->info("Importing EcTrack data from file: $filePath");
         try {
             \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\EcTrackFromCSV, $filePath);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
+
             return 1;
         }
         $this->info("Imported EcTrack data from file: $filePath");
+
         return 0;
     }
 }

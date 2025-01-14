@@ -191,7 +191,6 @@ class Nova
     /**
      * Run callback when currently serving Nova.
      *
-     * @param  callable  $callback
      * @return mixed
      */
     public static function whenServing(callable $callback)
@@ -216,7 +215,6 @@ class Nova
     /**
      * Get meta data information about all resources for client side consumption.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function resourceInformation(Request $request)
@@ -255,7 +253,6 @@ class Nova
     /**
      * Return Nova's authorized resources.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Nova\ResourceCollection
      */
     public static function authorizedResources(Request $request)
@@ -266,7 +263,6 @@ class Nova
     /**
      * Get the resources available for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableResources(Request $request)
@@ -279,7 +275,6 @@ class Nova
     /**
      * Get the resources available for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function globallySearchableResources(Request $request)
@@ -293,7 +288,6 @@ class Nova
     /**
      * Get the resources available for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function resourcesForNavigation(Request $request)
@@ -307,7 +301,6 @@ class Nova
     /**
      * Register the given resources.
      *
-     * @param  array  $resources
      * @return static
      */
     public static function resources(array $resources)
@@ -322,7 +315,6 @@ class Nova
     /**
      * Replace the registered resources with the given resources.
      *
-     * @param  array  $resources
      * @return static
      */
     public static function replaceResources(array $resources)
@@ -335,21 +327,19 @@ class Nova
     /**
      * Get the available resource groups for the given request.
      *
-     * @param  Request  $request
      * @return \Illuminate\Support\Collection
      */
     public static function groups(Request $request)
     {
         return collect(static::availableResources($request))
-                    ->map(function ($item, $key) {
-                        return $item::group();
-                    })->unique()->values();
+            ->map(function ($item, $key) {
+                return $item::group();
+            })->unique()->values();
     }
 
     /**
      * Get the grouped resources available for the given request.
      *
-     * @param  Request  $request
      * @return array
      */
     public static function groupedResources(Request $request)
@@ -362,7 +352,6 @@ class Nova
     /**
      * Get the grouped resources available for the given request.
      *
-     * @param  Request  $request
      * @return \Illuminate\Support\Collection
      */
     public static function groupedResourcesForNavigation(Request $request)
@@ -573,7 +562,6 @@ class Nova
     /**
      * Resolve the user's preferred timezone.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
     public static function resolveUserTimezone(Request $request)
@@ -586,7 +574,6 @@ class Nova
     /**
      * Register new tools with Nova.
      *
-     * @param  array  $tools
      * @return static
      */
     public static function tools(array $tools)
@@ -612,7 +599,6 @@ class Nova
     /**
      * Boot the available Nova tools.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return void
      */
     public static function bootTools(Request $request)
@@ -623,7 +609,6 @@ class Nova
     /**
      * Get the tools registered with Nova.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableTools(Request $request)
@@ -634,7 +619,6 @@ class Nova
     /**
      * Register new dashboard cards with Nova.
      *
-     * @param  array  $cards
      * @return static
      */
     public static function cards(array $cards)
@@ -660,7 +644,6 @@ class Nova
     /**
      * Get the cards registered with Nova.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableCards(Request $request)
@@ -683,7 +666,6 @@ class Nova
     /**
      * Get the dashboards registered with Nova.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableDashboards(Request $request)
@@ -694,7 +676,6 @@ class Nova
     /**
      * Register the dashboards.
      *
-     * @param  array  $dashboards
      * @return static
      */
     public static function dashboards(array $dashboards)
@@ -707,7 +688,6 @@ class Nova
     /**
      * Get the available dashboard cards for the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Support\Collection
      */
     public static function allAvailableDashboardCards(NovaRequest $request)
@@ -728,7 +708,6 @@ class Nova
      * Get the available dashboard for the given request.
      *
      * @param  string  $dashboard
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return \Illuminate\Support\Collection
      */
     public static function dashboardForKey($dashboard, NovaRequest $request)
@@ -743,7 +722,6 @@ class Nova
      * Get the available dashboard cards for the given request.
      *
      * @param  string  $dashboard
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return Collection
      */
     public static function availableDashboardCardsForDashboard($dashboard, NovaRequest $request)
@@ -770,7 +748,6 @@ class Nova
     /**
      * Get all of the available scripts that should be registered.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableScripts(Request $request)
@@ -791,7 +768,6 @@ class Nova
     /**
      * Get all of the available stylesheets that should be registered.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function availableStyles(Request $request)
@@ -904,7 +880,6 @@ class Nova
     /**
      * Get the JSON variables that should be provided to the global Nova JavaScript object.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public static function jsonVariables(Request $request)
@@ -919,7 +894,6 @@ class Nova
     /**
      * Provide additional variables to the global Nova JavaScript object.
      *
-     * @param  array  $variables
      * @return static
      */
     public static function provideToScript(array $variables)

@@ -36,8 +36,9 @@ class GenerateDEMCommand extends Command
         $type = $this->argument('type');
 
         $app = App::where('id', $appId)->first();
-        if (!$app) {
-            $this->error('App with id ' . $appId . ' not found!');
+        if (! $app) {
+            $this->error('App with id '.$appId.' not found!');
+
             return;
         }
 
@@ -48,17 +49,19 @@ class GenerateDEMCommand extends Command
         foreach ($ecTracks as $ecTrack) {
             if ($type === '3d') {
                 UpdateEcTrack3DDemJob::dispatch($ecTrack);
-                Log::info('Job 3d DEM dispatched for track id: ' . $ecTrack->id);
+                Log::info('Job 3d DEM dispatched for track id: '.$ecTrack->id);
             } elseif ($type === 'dem') {
                 UpdateEcTrackDemJob::dispatch($ecTrack);
-                Log::info('Job DEM dispatched for track id: ' . $ecTrack->id);
+                Log::info('Job DEM dispatched for track id: '.$ecTrack->id);
             } else {
                 $this->error("Invalid DEM type. Please provide either '3d' or 'dem'.");
+
                 return 1; // Exit with error status
             }
         }
 
         $this->info("DEM generation job dispatched successfully for app_id: $appId and type: $type");
+
         return 0; // Exit with success status
     }
 }
