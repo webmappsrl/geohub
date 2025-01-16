@@ -470,7 +470,8 @@ class Layer extends Resource
                 NovaTabTranslatable::make([
                     Text::make('Title'),
                     Text::make('Subtitle'),
-                    Textarea::make('Description')->alwaysShow(),
+                    NovaWyswyg::make('Descriptions', 'description')
+                        ->help(__('Description displayed in the layer details on the app home screen.')),
                     Text::make('Track Type', 'track_type'),
                 ]),
                 BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
