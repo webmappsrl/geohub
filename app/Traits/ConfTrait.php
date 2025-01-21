@@ -719,7 +719,6 @@ trait ConfTrait
             }
         }
 
-
         return $data;
     }
 
