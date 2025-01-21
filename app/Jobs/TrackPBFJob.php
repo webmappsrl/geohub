@@ -74,11 +74,11 @@ class TrackPBFJob implements ShouldQueue
                 Log::channel('pbf')->info("{$this->app_id}/{$this->z}/{$this->x}/{$this->y}.pbf -> EMPTY");
             }
 
-            return $this->app_id.'/'.$this->z.'/'.$this->x.'/'.$this->y.'.pbf';
+            return $this->app_id . '/' . $this->z . '/' . $this->x . '/' . $this->y . '.pbf';
         } catch (\Exception $e) {
 
             // Log dell'errore
-            Log::error('Errore durante la generazione del PBF: '.$e->getMessage());
+            Log::error('Errore durante la generazione del PBF: ' . $e->getMessage());
             // Opzionalmente, puoi reintrodurre l'eccezione per far fallire il job
             throw $e;
         }
@@ -122,7 +122,7 @@ class TrackPBFJob implements ShouldQueue
         SQL;
 
         $result = DB::select($sql, [
-            'layer_ids' => '{'.implode(',', $layerIds).'}', // Converti in array PostgreSQL
+            'layer_ids' => '{' . implode(',', $layerIds) . '}', // Converti in array PostgreSQL
         ]);
 
         return $result[0]->total_tracks ?? 0;
@@ -163,7 +163,7 @@ class TrackPBFJob implements ShouldQueue
         $filePath = "{$this->app_id}/{$this->z}/{$this->x}/{$this->y}.pbf";
 
         $s3Disk->put($filePath, $pbfContent);
-        Log::channel('pbf')->info("$filePath".'-> STORED.');
+        Log::channel('pbf')->info("$filePath" . '-> STORED.');
     }
 
     protected function getAssociatedLayerMap(): array
@@ -229,6 +229,8 @@ class TrackPBFJob implements ShouldQueue
             ec.name,
             ec.ref,
             ec.cai_scale,
+            ec.distance,
+            ec.duration_forward,
             JSON_AGG(DISTINCT etl.layer_id) AS layers,
             ec.activities -> '{$this->app_id}' AS activities, -- Usa $this->app_id per searchable
             ec.themes -> '{$this->app_id}' AS themes, -- Usa $this->app_id per themes
@@ -257,7 +259,9 @@ class TrackPBFJob implements ShouldQueue
             track_layers.themes,
             track_layers.activities,
             track_layers.searchable,
-            track_layers.stroke_color
+            track_layers.stroke_color,
+            track_layers.distance,
+            track_layers.duration_forward
         FROM track_layers
         CROSS JOIN bounds
         WHERE 
