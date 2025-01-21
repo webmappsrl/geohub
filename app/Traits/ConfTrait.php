@@ -714,7 +714,11 @@ trait ConfTrait
             } else {
                 $data['AUTH']['enable'] = false;
             }
+            if ($this->webapp_auth_show_at_startup) {
+                $data['AUTH']['webappEnable'] = true;
+            }
         }
+
 
         return $data;
     }
