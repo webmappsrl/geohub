@@ -245,9 +245,9 @@ class App extends Resource
     {
         return [
             'APP' => $this->app_tab(),
+            'WEBAPP' => $this->webapp_tab(),
             'TRANSLATIONS' => $this->translations_tab(),
             'RELEASE DATA' => $this->app_release_data_tab(),
-            'WEBAPP' => $this->webapp_tab(),
             'HOME' => $this->home_tab(),
             'PAGES' => $this->pages_tab(),
             'ICONS' => $this->icons_tab(),
@@ -271,6 +271,47 @@ class App extends Resource
                 ->help(__('Google Analytics ID used for tracking.')),
             Code::make(__('Embed Code'), 'embed_code_body')
                 ->help(__('Insert scripts to be included in the body section of the web app.')),
+            Heading::make('Configuration')
+                ->asHtml()
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Auth at startup'), 'webapp_auth_show_at_startup')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Shows the authentication and registration page for users'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show editing inline'), 'editing_inline_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Activates the "edit with geohub" button in the track detail.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Draw Track'), 'draw_track_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables the draw track feature in the web app.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show splash screen'), 'splash_screen_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Displays the splash screen when the web app starts.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
         ];
     }
 
@@ -371,39 +412,12 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
-            Toggle::make(__('Show webapp splash screen'), 'splash_screen_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Displays the splash screen when the web app starts.'))
-                ->canSee(function ($request) {
-                    return $request->user()->hasRole('Admin');
-                }),
             Toggle::make(__('Show searchbar'), 'show_search')
                 ->trueValue('On')
                 ->falseValue('Off')
                 ->default(true)
                 ->hideFromIndex()
                 ->help(__('Activate to show the search bar on the home'))
-                ->canSee(function ($request) {
-                    return $request->user()->hasRole('Admin');
-                }),
-            Toggle::make(__('Show editing inline'), 'editing_inline_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Activates the "edit with geohub" button in the track detail.'))
-                ->canSee(function ($request) {
-                    return $request->user()->hasRole('Admin');
-                }),
-            Toggle::make(__('Show Draw Track'), 'draw_track_show')
-                ->trueValue('On')
-                ->falseValue('Off')
-                ->default(false)
-                ->hideFromIndex()
-                ->help(__('Enables the draw track feature in the web app.'))
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
