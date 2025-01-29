@@ -37,6 +37,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->app->singleton(\Laravel\Nova\Http\Controllers\ResetPasswordController::class, \App\Http\Controllers\ResetPasswordController::class);
     }
 
     /**
