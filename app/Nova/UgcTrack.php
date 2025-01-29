@@ -139,7 +139,7 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html = '<strong>'.htmlspecialchars($typeLabel).'</strong>';
+                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
 
                             return $html;
                         }
@@ -153,7 +153,33 @@ class UgcTrack extends Resource
 
                 return count($gallery) > 0;
             })->onlyOnIndex(),
-            Text::make(__('Form data'), function ($model) {
+            WmEmbedmapsField::make(__('Geometry'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson(),
+                ];
+            })->onlyOnDetail(),
+            Heading::make('<p>properties</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
+            Text::make(__('App version'), function ($model) {
+                $properties = $model->properties;
+                $device = $properties['device'] ?? null;
+                $appVersion = $device['appVersion'] ?? null;
+
+                return $appVersion;
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
+            Text::make(__('Distance filter'), function ($model) {
+                $properties = $model->properties;
+                $distanceFilter = $properties['distanceFilter'] ?? null;
+
+                return $distanceFilter;
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
+            Text::make(__('Form'), function ($model) {
 
                 $formData = $model->properties['form'] ?? [];
 
@@ -178,7 +204,7 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html .= '<td><strong>tipo di form</strong></td><td>'.htmlspecialchars($typeLabel).'</td>';
+                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
 
                             foreach ($currentSchema['fields'] as $field) {
                                 $fieldLabel = reset($field['label']);
@@ -199,30 +225,37 @@ class UgcTrack extends Resource
 
                                 if (isset($fieldValue)) {
                                     $html .= '<tr>';
-                                    $html .= '<td><strong>'.htmlspecialchars($fieldLabel).'</strong></td>';
-                                    $html .= '<td>'.htmlspecialchars($fieldValue).'</td>';
+                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
+                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
                                     $html .= '</tr>';
                                 }
                             }
                             $html .= '</table>';
 
-                            return $html.$help;
+                            return $html . $help;
                         }
                     }
                 }
             })
                 ->onlyOnDetail()
                 ->asHtml(),
-            Heading::make('<p>Geolocated track created by the user</p>')
-                ->asHtml()
-                ->onlyOnDetail(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson(),
-                ];
-            })->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
+            Code::make(__('device'), 'properties')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail()
+                ->resolveUsing(function ($properties) {
+                    return json_encode($properties['device'] ?? null, JSON_PRETTY_PRINT);
+                }),
+            Code::make(__('location'), 'properties')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail()
+                ->resolveUsing(function ($properties) {
+                    return json_encode($properties['locations'] ?? null, JSON_PRETTY_PRINT);
+                }),
             Code::Make(__('metadata'), 'metadata')
                 ->language('json')
                 ->rules('nullable', 'json')
@@ -238,7 +271,7 @@ class UgcTrack extends Resource
                 $result = [];
 
                 foreach ($rawData as $key => $value) {
-                    $result[] = $key.' = '.json_encode($value);
+                    $result[] = $key . ' = ' . json_encode($value);
                 }
 
                 return implode('<br>', $result);

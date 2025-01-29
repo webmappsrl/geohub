@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
@@ -107,6 +108,31 @@ class UgcPoi extends Resource
                 ->help(__('Creator of the UGC (User-Generated Content).')),
             BelongsToMany::make(__('Taxonomy wheres'))
                 ->searchable(),
+
+            Boolean::make(__('Has gallery'), function ($model) {
+                $gallery = $model->ugc_media;
+
+                return count($gallery) > 0;
+            })->onlyOnIndex(),
+
+            WmEmbedmapsField::make(__('Geometry'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson(),
+                ];
+            })->onlyOnDetail(),
+            Heading::make('<p>properties</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
+            Text::make(__('App version'), function ($model) {
+                $properties = $model->properties;
+                $device = $properties['device'] ?? null;
+                $appVersion = $device['appVersion'] ?? null;
+
+                return $appVersion;
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
             Text::make(__('Form'), function ($model) {
                 $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
@@ -131,7 +157,7 @@ class UgcPoi extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html = '<strong>'.htmlspecialchars($typeLabel).'</strong>';
+                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
 
                             return $html;
                         }
@@ -140,11 +166,6 @@ class UgcPoi extends Resource
             })
                 ->onlyOnIndex()
                 ->asHtml(),
-            Boolean::make(__('Has gallery'), function ($model) {
-                $gallery = $model->ugc_media;
-
-                return count($gallery) > 0;
-            })->onlyOnIndex(),
             Text::make(__('Form data'), function ($model) {
                 $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
@@ -169,7 +190,7 @@ class UgcPoi extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html .= '<td><strong>tipo di form</strong></td><td>'.htmlspecialchars($typeLabel).'</td>';
+                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
 
                             foreach ($currentSchema['fields'] as $field) {
                                 $fieldLabel = reset($field['label']);
@@ -190,52 +211,27 @@ class UgcPoi extends Resource
 
                                 if (isset($fieldValue)) {
                                     $html .= '<tr>';
-                                    $html .= '<td><strong>'.htmlspecialchars($fieldLabel).'</strong></td>';
-                                    $html .= '<td>'.htmlspecialchars($fieldValue).'</td>';
+                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
+                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
                                     $html .= '</tr>';
                                 }
                             }
                             $html .= '</table>';
 
-                            return $html.$help;
+                            return $html . $help;
                         }
                     }
                 }
             })->onlyOnDetail()->asHtml(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson(),
-                ];
-            })->onlyOnDetail(),
+            Code::make(__('device'), 'properties')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail()
+                ->resolveUsing(function ($properties) {
+                    return json_encode($properties['device'] ?? null, JSON_PRETTY_PRINT);
+                }),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
-            Code::make(__('json Form data'), function ($model) {
-                $jsonRawData = $model->properties['form'] ?? [];
-                unset($jsonRawData['position']);
-                unset($jsonRawData['displayPosition']);
-                unset($jsonRawData['city']);
-                unset($jsonRawData['date']);
-                unset($jsonRawData['nominatim']);
-                $rawData = json_encode($jsonRawData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-                return $rawData;
-            })
-                ->onlyOnDetail()
-                ->language('json')
-                ->rules('json'),
-            Code::make(__('Device data'), function ($model) {
-                $jsonRawData = $model->properties ?? [];
-                $jsonData['position'] = $jsonRawData['position'];
-                $jsonData['displayPosition'] = $jsonRawData['displayPosition'];
-                $jsonData['city'] = $jsonRawData['city'];
-                $jsonData['date'] = $jsonRawData['date'];
-                $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-                return $rawData;
-            })
-                ->onlyOnDetail()
-                ->language('json')
-                ->rules('json'),
             Code::make(__('Nominatim'), function ($model) {
                 $jsonData = $model->properties['nominatim'] ?? '{}';
                 $rawData = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
