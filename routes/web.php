@@ -128,3 +128,7 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoi
     ]);
 });
 Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware('auth')->name('logs');
+
+Route::get('/password-reset-success', function () {
+    return view('vendor.nova.auth.passwords.success');
+})->name('nova.password.reset.success');
