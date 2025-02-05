@@ -159,9 +159,9 @@ class App extends Resource
             Text::make('Name')->sortable(),
             Text::make('Customer Name'),
             Text::make(__('APP'), function () {
-                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
-                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                $urlAny = 'https://'.$this->model()->id.'.app.webmapp.it';
+                $urlDesktop = 'https://'.$this->model()->id.'.app.geohub.webmapp.it';
+                $urlMobile = 'https://'.$this->model()->id.'.mobile.webmapp.it';
 
                 return "
                 <a class='btn btn-default btn-primary flex items-center justify-center px-3' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
@@ -364,9 +364,9 @@ class App extends Resource
                 HTML;
             })->asHtml(),
             Text::make(__('APP'), function () {
-                $urlAny = 'https://' . $this->model()->id . '.app.webmapp.it';
-                $urlDesktop = 'https://' . $this->model()->id . '.app.geohub.webmapp.it';
-                $urlMobile = 'https://' . $this->model()->id . '.mobile.webmapp.it';
+                $urlAny = 'https://'.$this->model()->id.'.app.webmapp.it';
+                $urlDesktop = 'https://'.$this->model()->id.'.app.geohub.webmapp.it';
+                $urlMobile = 'https://'.$this->model()->id.'.mobile.webmapp.it';
 
                 return <<<HTML
                 <a class='btn btn-default btn-primary' style='margin:3px' href='$urlAny' target='_blank'>ANY</a>
@@ -596,7 +596,7 @@ class App extends Resource
                 ->language('json')
                 ->rules('json')
                 ->default('{"HOME": []}')
-                ->help(__('This code in JSON format organizes the elements on the app\'s home. Knowledge of JSON format required.') . view('layers', ['layers' => $this->layers])->render()),
+                ->help(__('This code in JSON format organizes the elements on the app\'s home. Knowledge of JSON format required.').view('layers', ['layers' => $this->layers])->render()),
         ];
     }
 
@@ -744,7 +744,7 @@ class App extends Resource
                     function ($attribute, $value, $fail) {
                         $decoded = json_decode($value);
                         if (is_array($decoded) == false) {
-                            $fail('The ' . $attribute . ' is invalid. Follow the example [9.9456,43.9116,11.3524,45.0186]');
+                            $fail('The '.$attribute.' is invalid. Follow the example [9.9456,43.9116,11.3524,45.0186]');
                         }
                     },
                 ])
@@ -767,7 +767,7 @@ class App extends Resource
             Number::make(__('ref_on_track_min_zoom'))->min(10)->max(20)
                 ->help(__('Set minimum zoom at which ref parameter is shown on tracks line in general maps (ref_on_track_show must be true)')),
             Text::make(__('POIS API'), function () {
-                $url = '/api/v1/app/' . $this->model()->id . '/pois.geojson';
+                $url = '/api/v1/app/'.$this->model()->id.'/pois.geojson';
 
                 return <<<HTML
                     <a class='btn btn-default btn-primary' href='$url' target='_blank'>POIS API</a>
@@ -1059,7 +1059,7 @@ class App extends Resource
                 ->help(__('Main theme of the POIs used by the app.')),
 
             Text::make('Download GeoJSON collection', function () {
-                $url = url('/api/v1/app/' . $this->id . '/pois.geojson');
+                $url = url('/api/v1/app/'.$this->id.'/pois.geojson');
 
                 return <<<HTML
                 <a class="btn btn-default btn-primary" href="' . $url . '" target="_blank">Download</a>
@@ -1084,7 +1084,7 @@ class App extends Resource
             Image::make(__('Logo Homepage'), 'logo_homepage')
                 ->rules('image', 'mimes:svg')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'logo_homepage.svg';
                 })
@@ -1096,7 +1096,7 @@ class App extends Resource
             Text::make('QR Code custom URL', 'qrcode_custom_url')
                 ->help(__('Customize the URL associated with the QR code, or leave empty for the default webapp URL')),
             Text::make('QR Code', 'qr_code', function () {
-                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>" . $this->qr_code . '</div>';
+                return "<div style='width:64px;height:64px; display:flex; align-items:center;'>".$this->qr_code.'</div>';
             })
                 ->asHtml()
                 ->help(__('This field displays a QR code associated with this record. Ensure the QR code is clearly visible and scannable.')),
@@ -1135,7 +1135,7 @@ class App extends Resource
             Image::make(__('Icon'), 'icon')
                 ->rules('image', 'mimes:png', 'dimensions:width=1024,height=1024')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'icon.png';
                 })
@@ -1144,7 +1144,7 @@ class App extends Resource
             Image::make(__('Splash image'), 'splash')
                 ->rules('image', 'mimes:png', 'dimensions:width=2732,height=2732')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'splash.png';
                 })
@@ -1153,7 +1153,7 @@ class App extends Resource
             Image::make(__('Icon small'), 'icon_small')
                 ->rules('image', 'mimes:png', 'dimensions:width=512,height=512')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'icon_small.png';
                 })
@@ -1186,13 +1186,13 @@ class App extends Resource
     {
         return [
             Text::make(__('API List'), function () {
-                return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/config.json" target="_blank">Config</a>
-                <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/activity.json" target="_blank">Activity</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/theme.json" target="_blank">Theme</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/when.json" target="_blank">When</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/where.json" target="_blank">Where</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/who.json" target="_blank">Target</a>
-                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/' . $this->model()->id . '/taxonomies/webmapp_category.json" target="_blank">Webmapp Category</a>';
+                return '<a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/config.json" target="_blank">Config</a>
+                <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/activity.json" target="_blank">Activity</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/theme.json" target="_blank">Theme</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/when.json" target="_blank">When</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/where.json" target="_blank">Where</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/who.json" target="_blank">Target</a>
+                    <a class="btn btn-default btn-primary" href="/api/app/elbrus/'.$this->model()->id.'/taxonomies/webmapp_category.json" target="_blank">Webmapp Category</a>';
             })->asHtml()->onlyOnDetail(),
             Text::make(__('API List (Tracks)'), function ($tracks) {
                 $tracks = \App\Models\EcTrack::where('user_id', $this->model()->user_id)->get();
@@ -1200,10 +1200,10 @@ class App extends Resource
                 foreach ($tracks as $track) {
                     $html .= '<div style="display:flex;margin-top:15px">';
                     $html .= '<div class="col-3">';
-                    $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/' . $this->model()->id . '/geojson/ec_track_' . $track->id . '.geojson">' . $track->name . '</a>';
+                    $html .= '<a class="btn btn-default btn-primary mx-2" href="/api/app/elbrus/'.$this->model()->id.'/geojson/ec_track_'.$track->id.'.geojson">'.$track->name.'</a>';
                     $html .= '</div>';
                     $html .= '<div class="col-3">';
-                    $html .= '<a class="btn btn-default btn-secondary mx-2" href="/resources/ec-tracks/' . $track->id . '/edit">Modifica Track</a>';
+                    $html .= '<a class="btn btn-default btn-secondary mx-2" href="/resources/ec-tracks/'.$track->id.'/edit">Modifica Track</a>';
                     $html .= '</div>';
                     $html .= '</div>';
                 }
@@ -1233,12 +1233,12 @@ class App extends Resource
                 if ($this->layers->count() > 0) {
                     $out = '';
                     foreach ($this->layers as $l) {
-                        $out .= '<a href="/resources/layers/' . $l->id . '">' . $l->name . '</a></br>';
+                        $out .= '<a href="/resources/layers/'.$l->id.'">'.$l->name.'</a></br>';
                     }
 
-                    return $out . $help;
+                    return $out.$help;
                 } else {
-                    return 'No Layers' . $help;
+                    return 'No Layers'.$help;
                 }
             })->asHtml(),
         ];
@@ -1256,12 +1256,12 @@ class App extends Resource
                 if ($this->overlayLayers->count() > 0) {
                     $out = '';
                     foreach ($this->overlayLayers as $l) {
-                        $out .= '<a href="/resources/overlay-layers/' . $l->id . '">' . $l->name . '</a></br>';
+                        $out .= '<a href="/resources/overlay-layers/'.$l->id.'">'.$l->name.'</a></br>';
                     }
 
-                    return $out . $help;
+                    return $out.$help;
                 } else {
-                    return 'No Overlay Layers' . $help;
+                    return 'No Overlay Layers'.$help;
                 }
             })->asHtml(),
         ];
@@ -1379,7 +1379,7 @@ class App extends Resource
                     ] 
                 }
             ]`)
-                ->help(__('This JSON structures the acquisition form for UGC POIs. Knowledge of JSON format required.') . view('poi-forms')->render()),
+                ->help(__('This JSON structures the acquisition form for UGC POIs. Knowledge of JSON format required.').view('poi-forms')->render()),
             Code::Make(__('TRACK acquisition forms'), 'track_acquisition_form')
                 ->language('json')
                 ->rules('json')
@@ -1489,7 +1489,7 @@ class App extends Resource
                     ] 
                 }
             ]`)
-                ->help(__('This JSON structures the acquisition form for UGC Tracks. Knowledge of JSON format required.') . view('track-forms')->render()),
+                ->help(__('This JSON structures the acquisition form for UGC Tracks. Knowledge of JSON format required.').view('track-forms')->render()),
         ];
     }
 
@@ -1536,7 +1536,7 @@ class App extends Resource
                 $collection = json_decode($mostviewedpois);
                 foreach ($collection->features as $count => $feature) {
                     $count++;
-                    $html .= '<tr><td style="width: 50%;">' . $count . ' - ' . $feature->properties->name . '</td><td style="width: 50%;"><strong>' . $feature->properties->visits . '</strong> visits</td></tr>';
+                    $html .= '<tr><td style="width: 50%;">'.$count.' - '.$feature->properties->name.'</td><td style="width: 50%;"><strong>'.$feature->properties->visits.'</strong> visits</td></tr>';
                 }
                 $html .= '</tbody></table>';
 
@@ -1610,8 +1610,8 @@ class App extends Resource
                     HTML;
 
                     foreach ($mediaIds as $mediaId) {
-                        $imageUrl = env('APP_URL') . '/storage/media/images/ugc/image_' . $mediaId . '.jpg'; // Assuming 'media_ids' is the ID for the image
-                        $UgcMediaUrl = env('APP_URL') . '/resources/ugc-medias/' . $mediaId;
+                        $imageUrl = env('APP_URL').'/storage/media/images/ugc/image_'.$mediaId.'.jpg'; // Assuming 'media_ids' is the ID for the image
+                        $UgcMediaUrl = env('APP_URL').'/resources/ugc-medias/'.$mediaId;
                         $html .= <<<HTML
                                 <div style="flex: 0 0 5%; text-align: center;">
                                     <a href="{$UgcMediaUrl}" target="_blank">
