@@ -241,6 +241,29 @@ class UgcMediaController extends Controller
         return response(['id' => $media->id, 'message' => 'Created successfully'], 201);
     }
 
+    public function saveAndAttachMediaToModel($model, $user, $photos)
+    {
+        if (isset($photos) && is_array($photos)) {
+            foreach ($photos as $photo) {
+                if (isset($photo)) {
+                    try {
+                        $media = new UgcMedia;
+                        $media->name = 'placeholder_name';
+                        $media->user_id = $user->id;
+                        $media->relative_url = '';
+                        $media->app_id = $model->app_id;
+                        $media->sku = $model->sku;
+                        $media->populateProperties();
+                        $this->addImageToMedia($media, $photo);
+                        $model->ugc_media()->attach($media->id);
+                    } catch (Exception $e) {
+                        Log::channel('ugc')->error('Errore nel salvataggio di un media per il POI: '.$e->getMessage());
+                    }
+                }
+            }
+        }
+    }
+
     public function addImageToMedia($media, $image)
     {
         try {
