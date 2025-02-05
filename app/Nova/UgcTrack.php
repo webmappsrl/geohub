@@ -139,7 +139,7 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
+                            $html = '<strong>'.htmlspecialchars($typeLabel).'</strong>';
 
                             return $html;
                         }
@@ -204,7 +204,7 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
+                            $html .= '<td><strong>tipo di form</strong></td><td>'.htmlspecialchars($typeLabel).'</td>';
 
                             foreach ($currentSchema['fields'] as $field) {
                                 $fieldLabel = reset($field['label']);
@@ -225,14 +225,14 @@ class UgcTrack extends Resource
 
                                 if (isset($fieldValue)) {
                                     $html .= '<tr>';
-                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
-                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
+                                    $html .= '<td><strong>'.htmlspecialchars($fieldLabel).'</strong></td>';
+                                    $html .= '<td>'.htmlspecialchars($fieldValue).'</td>';
                                     $html .= '</tr>';
                                 }
                             }
                             $html .= '</table>';
 
-                            return $html . $help;
+                            return $html.$help;
                         }
                     }
                 }
@@ -271,7 +271,7 @@ class UgcTrack extends Resource
                 $result = [];
 
                 foreach ($rawData as $key => $value) {
-                    $result[] = $key . ' = ' . json_encode($value);
+                    $result[] = $key.' = '.json_encode($value);
                 }
 
                 return implode('<br>', $result);

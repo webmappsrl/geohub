@@ -201,6 +201,7 @@ class UgcPoiController extends Controller
         Log::channel('ugc')->info('user id:'.$user->id);
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
+
             return response(['error' => 'User not authenticated'], 403);
         }
 
@@ -233,6 +234,7 @@ class UgcPoiController extends Controller
             $poi->save();
         } catch (\Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio del poi:'.$e->getMessage());
+
             return response(['error' => 'Error saving POI'], 500);
         }
         $ugcMediaCtrl = app(UgcMediaController::class);
