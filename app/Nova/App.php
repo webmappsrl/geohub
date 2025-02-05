@@ -109,6 +109,8 @@ class App extends Resource
         'fr' => 'Français',
         'de' => 'Deutsch',
         'es' => 'español',
+        'nl' => 'Dutch',
+        'sq' => 'Albanian',
     ];
 
     /**
