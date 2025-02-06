@@ -493,7 +493,7 @@ class EcTrack extends Resource
                         }
                     })
                         ->asHtml(),
-                        $this->widgetSimpleField($this->outSourceTrack->endpoint_slug ?? null, $this->outSourceTrack->source_id ?? null),
+                    $this->widgetSimpleField($this->outSourceTrack->endpoint_slug ?? null, $this->outSourceTrack->source_id ?? null),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
@@ -778,11 +778,11 @@ class EcTrack extends Resource
             (new UploadTrackFile)->standalone(),
         ];
     }
-    
+
     /**
      * Helper method to generate Widget Simple field
      */
-    protected function widgetSimpleField(string $endpointSlug = null, string $sourceId = null, int $trackId = null)
+    protected function widgetSimpleField(?string $endpointSlug = null, ?string $sourceId = null, ?int $trackId = null)
     {
         return Text::make('Widget: Simple', function () use ($endpointSlug, $sourceId, $trackId) {
             $help = '<p>Simple: Link to the simple widget.</p>';
@@ -790,18 +790,19 @@ class EcTrack extends Resource
             $links = '';
             if ($endpointSlug && $sourceId) {
                 foreach ($languages as $code => $label) {
-                    $url = request()->root() . "/w/osf/simple/{$endpointSlug}/{$sourceId}?locale={$code}";
+                    $url = request()->root()."/w/osf/simple/{$endpointSlug}/{$sourceId}?locale={$code}";
                     $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
                 }
             } elseif ($trackId) {
                 foreach ($languages as $code => $label) {
-                    $url = request()->root() . "/w/simple/{$trackId}?locale={$code}";
+                    $url = request()->root()."/w/simple/{$trackId}?locale={$code}";
                     $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
                 }
             } else {
-                return 'No Out Source Feature.' . $help;
+                return 'No Out Source Feature.'.$help;
             }
-            return $links . $help;
+
+            return $links.$help;
         })->asHtml();
     }
 

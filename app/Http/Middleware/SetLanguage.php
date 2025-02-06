@@ -29,7 +29,7 @@ class SetLanguage
         }
 
         // Check if the language is supported, otherwise use the locale_fallback from config/app.php
-        if (!in_array($locale, $supportedLocales)) {
+        if (! in_array($locale, $supportedLocales)) {
             $locale = config('app.fallback_locale');
         }
 
