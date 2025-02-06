@@ -493,26 +493,7 @@ class EcTrack extends Resource
                         }
                     })
                         ->asHtml(),
-                    Text::make('Widget: Simple', function () {
-                        $help = '<p>Simple: Link to the simple widget of the external source feature.</p>';
-                        if (! is_null($this->out_source_feature_id)) {
-                            $t = $this->outSourceTrack; // Retrieve the outsource track data
-
-                            // Supported languages
-                            $languages = ['it' => 'IT', 'en' => 'EN', 'fr' => 'FR', 'de' => 'DE', 'es' => 'ES', 'nl' => 'NL', 'sq' => 'SQ'];
-
-                            // Generate links for each language
-                            $links = '';
-                            foreach ($languages as $code => $label) {
-                                $url = request()->root()."/w/osf/simple/{$t->endpoint_slug}/{$t->source_id}?lang={$code}";
-                                $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
-                            }
-
-                            return $links.$help;
-                        } else {
-                            return 'No Out Source Feature.'.$help;
-                        }
-                    })->asHtml(),
+                        $this->widgetSimpleField($this->outSourceTrack->endpoint_slug ?? null, $this->outSourceTrack->source_id ?? null),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
@@ -527,21 +508,7 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>".$help;
                     })->asHtml(),
-                    Text::make('Widget: Simple', function () {
-                        $help = '<p>Link to the simple widget for this track.</p>';
-
-                        // Supported languages
-                        $languages = ['it' => 'IT', 'en' => 'EN', 'fr' => 'FR', 'de' => 'DE', 'es' => 'ES', 'nl' => 'NL', 'sq' => 'SQ'];
-
-                        // Generate links for each language
-                        $links = '';
-                        foreach ($languages as $code => $label) {
-                            $url = request()->root()."/w/simple/{$this->id}?lang={$code}";
-                            $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
-                        }
-
-                        return $links.$help;
-                    })->asHtml(),
+                    $this->widgetSimpleField(null, null, $this->id),
                     // show a link to the track-pdf.blade.php
                     Text::make('PDF')
                         ->resolveUsing(function ($value, $resource, $attribute) {
@@ -810,6 +777,32 @@ class EcTrack extends Resource
             (new CreateTracksWithOSMIDAction)->standalone(),
             (new UploadTrackFile)->standalone(),
         ];
+    }
+    
+    /**
+     * Helper method to generate Widget Simple field
+     */
+    protected function widgetSimpleField(string $endpointSlug = null, string $sourceId = null, int $trackId = null)
+    {
+        return Text::make('Widget: Simple', function () use ($endpointSlug, $sourceId, $trackId) {
+            $help = '<p>Simple: Link to the simple widget.</p>';
+            $languages = ['it' => 'IT', 'en' => 'EN', 'fr' => 'FR', 'de' => 'DE', 'es' => 'ES', 'nl' => 'NL', 'sq' => 'SQ'];
+            $links = '';
+            if ($endpointSlug && $sourceId) {
+                foreach ($languages as $code => $label) {
+                    $url = request()->root() . "/w/osf/simple/{$endpointSlug}/{$sourceId}?locale={$code}";
+                    $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
+                }
+            } elseif ($trackId) {
+                foreach ($languages as $code => $label) {
+                    $url = request()->root() . "/w/simple/{$trackId}?locale={$code}";
+                    $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
+                }
+            } else {
+                return 'No Out Source Feature.' . $help;
+            }
+            return $links . $help;
+        })->asHtml();
     }
 
     protected function generateFieldTable($model, $currentValue, $field)

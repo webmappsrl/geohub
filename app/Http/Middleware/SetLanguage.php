@@ -16,36 +16,26 @@ class SetLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        // Supported languages
+        $locale = null;
         $supportedLocales = ['it', 'en', 'fr', 'de', 'es', 'nl', 'sq'];
 
-        // Check if the language is specified in the URL (es. ?lang=en)
-        if ($request->has('lang')) {
-            $locale = $request->query('lang');
-
-            // Check that the language is supported
-            if (! in_array($locale, $supportedLocales)) {
-                $locale = 'en'; // Fallback to English
-            }
-
-            // Set the language and save in the session
-            App::setLocale($locale);
-            Session::put('locale', $locale);
-        }
-        // If the language is not passed in the URL, use session
-        elseif (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
-        }
-        // If the session doesn't have a language either, use the 'Accept-Language' HTTP header
-        else {
+        // Determines the language based on the request, session or header
+        if ($request->has('locale')) {
+            $locale = $request->query('locale');
+        } elseif (Session::has('locale')) {
+            $locale = Session::get('locale');
+        } else {
             $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-
-            if (! in_array($locale, $supportedLocales)) {
-                $locale = 'en'; // Fallback to English∏
-            }
-
-            App::setLocale($locale);
         }
+
+        // Check if the language is supported, otherwise use the locale_fallback from config/app.php
+        if (!in_array($locale, $supportedLocales)) {
+            $locale = config('app.fallback_locale');
+        }
+
+        // Set the language
+        App::setLocale($locale);
+        Session::put('locale', $locale);
 
         return $next($request);
     }
