@@ -527,7 +527,7 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>".$help;
                     })->asHtml(),
-                    Text::make('Widgetz: Simple', function () {
+                    Text::make('Widget: Simple', function () {
                         $help = '<p>Link to the simple widget for this track.</p>';
 
                         // Supported languages
