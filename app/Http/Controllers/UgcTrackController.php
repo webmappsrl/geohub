@@ -169,10 +169,12 @@ class UgcTrackController extends Controller
     {
         $user = auth('api')->user();
         $data = $request->all();
+        $feature = json_decode($data['feature'], true);
+        $photos = $data['images'];
         Log::channel('ugc')->info('*************store v2 ugc track*****************');
         Log::channel('ugc')->info('user email:'.$user->email);
         Log::channel('ugc')->info('user id:'.$user->id);
-        $properties = $data['properties'];
+        $properties = $feature['properties'];
         Log::channel('ugc')->info('ugc poi store properties name:'.$properties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id:'.$properties['app_id']);
         $this->checkValidation($data, [
@@ -193,7 +195,7 @@ class UgcTrackController extends Controller
         $track = new UgcTrack;
 
         $track->name = $properties['name'];
-        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($data['geometry'])."'))");
+        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($feature['geometry'])."'))");
         $track->properties = $properties;
         $track->user_id = $user->id;
 
@@ -223,23 +225,9 @@ class UgcTrackController extends Controller
 
             return response(['error' => 'Error saving Track'], 500);
         }
-
-        if (isset($properties['image_gallery']) && is_array($properties['image_gallery']) && count($properties['image_gallery']) > 0) {
-            foreach ($properties['image_gallery'] as $imageId) {
-                if ((bool) UgcMedia::find($imageId)) {
-                    $track->ugc_media()->attach($imageId);
-                }
-            }
-        }
-
-        unset($properties['image_gallery']);
+        $ugcMediaCtrl = app(UgcMediaController::class);
+        $ugcMediaCtrl->saveAndAttachMediaToModel($track, $user, $photos);
         $track->save();
-
-        $hoquService = app(HoquServiceProvider::class);
-        try {
-            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
-        } catch (\Exception $e) {
-        }
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
     }

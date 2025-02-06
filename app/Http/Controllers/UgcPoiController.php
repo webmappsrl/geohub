@@ -67,7 +67,12 @@ class UgcPoiController extends Controller
 
         Log::channel('ugc')->info('*************store ugc poi*****************');
         $data = $request->all();
-        $dataProperties = $data['properties'];
+        if (isset($data['properties'])) {
+            $dataProperties = $data['properties'];
+        } else {
+            $feature = json_decode($data['feature'], true);
+            $dataProperties = $feature['properties'];
+        }
         Log::channel('ugc')->info('ugc poi store properties name:'.$dataProperties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id(sku):'.$dataProperties['app_id']);
 
@@ -172,10 +177,12 @@ class UgcPoiController extends Controller
     {
         $user = auth('api')->user();
         $data = $request->all();
+        $feature = json_decode($data['feature'], true);
+        $photos = $data['images'];
+        $properties = $feature['properties'];
         Log::channel('ugc')->info('*************store v2 ugc poi*****************');
         Log::channel('ugc')->info('user email:'.$user->email);
         Log::channel('ugc')->info('user id:'.$user->id);
-        $properties = $data['properties'];
         Log::channel('ugc')->info('ugc poi store properties name:'.$properties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id:'.$properties['app_id']);
 
@@ -200,12 +207,12 @@ class UgcPoiController extends Controller
 
         $poi = new UgcPoi;
         $poi->name = $properties['name'];
-        $poi->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($data['geometry']).")')");
+        $poi->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($feature['geometry']).")')");
         $poi->properties = $properties;
         $poi->user_id = $user->id;
 
-        if (isset($data['properties']['app_id'])) {
-            $app_id = $data['properties']['app_id'];
+        if (isset($properties['app_id'])) {
+            $app_id = $properties['app_id'];
             if (is_numeric($app_id)) {
                 Log::channel('ugc')->info('numeric');
                 $app = App::where('id', '=', $app_id)->first();
@@ -230,21 +237,8 @@ class UgcPoiController extends Controller
 
             return response(['error' => 'Error saving POI'], 500);
         }
-
-        if (isset($properties['image_gallery']) && is_array($properties['image_gallery']) && count($properties['image_gallery']) > 0) {
-            foreach ($properties['image_gallery'] as $imageId) {
-                if ((bool) UgcMedia::find($imageId)) {
-                    $poi->ugc_media()->attach($imageId);
-                }
-            }
-        }
-        $poi->save();
-
-        $hoquService = app(HoquServiceProvider::class);
-        try {
-            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
-        } catch (\Exception $e) {
-        }
+        $ugcMediaCtrl = app(UgcMediaController::class);
+        $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $photos);
 
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
