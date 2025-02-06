@@ -493,17 +493,26 @@ class EcTrack extends Resource
                         }
                     })
                         ->asHtml(),
-                    Text::make('Widget: Simple', function () {
-                        $help = '<p>Simple: Link to the simple widget of the external source feature.</p>';
-                        if (! is_null($this->out_source_feature_id)) {
-                            $t = $this->outSourceTrack;
-                            $url_base_api = request()->root().'/w/osf/simple/'.$t->endpoint_slug.'/'.$t->source_id;
-
-                            return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Widget Simple</a>".$help;
-                        } else {
-                            return 'No Out Source Feature.'.$help;
-                        }
-                    })->asHtml(),
+                        Text::make('Widget: Simple', function () {
+                            $help = '<p>Simple: Link to the simple widget of the external source feature.</p>';
+                            if (! is_null($this->out_source_feature_id)) {
+                                $t = $this->outSourceTrack; // Retrieve the outsource track data
+                        
+                                // Supported languages
+                                $languages = ['it' => 'IT', 'en' => 'EN', 'fr' => 'FR', 'de' => 'DE', 'es' => 'ES', 'nl' => 'NL', 'sq' => 'SQ'];
+                        
+                                // Generate links for each language
+                                $links = "";
+                                foreach ($languages as $code => $label) {
+                                    $url = request()->root()."/w/osf/simple/{$t->endpoint_slug}/{$t->source_id}?lang={$code}";
+                                    $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
+                                }
+                        
+                                return $links . $help;
+                            } else {
+                                return 'No Out Source Feature.' . $help;
+                            }
+                        })->asHtml(),
                 ],
                 'API' => [
                     Text::make('Public Page', function () {
@@ -518,11 +527,20 @@ class EcTrack extends Resource
 
                         return "<a target='_blank' style='color:#3aadcc;' href='{$url_base_api}'>View Base API</a>".$help;
                     })->asHtml(),
-                    Text::make('Widget: Simple', function () {
+                    Text::make('Widgetz: Simple', function () {
                         $help = '<p>Link to the simple widget for this track.</p>';
-                        $url_widget_simple = request()->root().'/w/simple/'.$this->id;
-
-                        return "<a target='_blank' style='color:#3aadcc;' href='{$url_widget_simple}'>View Widget Simple</a>".$help;
+                    
+                        // Supported languages
+                        $languages = ['it' => 'IT', 'en' => 'EN', 'fr' => 'FR', 'de' => 'DE', 'es' => 'ES', 'nl' => 'NL', 'sq' => 'SQ'];
+                    
+                        // Generate links for each language
+                        $links = "";
+                        foreach ($languages as $code => $label) {
+                            $url = request()->root()."/w/simple/{$this->id}?lang={$code}";
+                            $links .= "<a target='_blank' style='color:#3aadcc;' href='{$url}'>View Widget Simple ({$label})</a><br>";
+                        }
+                    
+                        return $links . $help;
                     })->asHtml(),
                     // show a link to the track-pdf.blade.php
                     Text::make('PDF')
