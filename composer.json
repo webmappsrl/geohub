@@ -32,6 +32,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "gabrieliuga/laravel-nova-sidebar-links": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.5",
         "jenssegers/agent": "^2.6",
         "khalin/nova-link-field": "^1.2",
         "kirschbaum-development/nova-inline-relationship": "^0.3.0",
@@ -39,6 +40,7 @@
         "laravel/framework": "^8.12",
         "laravel/horizon": "^5.22",
         "laravel/nova": "*",
+        "laravel/telescope": "^4.10",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "~1.0",
         "maatwebsite/excel": "^3.1",
@@ -70,8 +72,7 @@
         "wm/map-multi-linestring-nova3": "0.0.9",
         "wm/map-multi-purpose-nova3": "*",
         "wm/map-point-nova3": "0.0.9",
-        "ynacorp/nova-swatches": "^1.0",
-        "intervention/image": "^2.5"
+        "ynacorp/nova-swatches": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
