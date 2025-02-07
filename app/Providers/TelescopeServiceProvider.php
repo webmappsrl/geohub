@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use Laravel\Nova\Nova;
+use Laravel\Telescope\Telescope;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
-use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
@@ -26,10 +28,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             }
 
             return $entry->isReportableException() ||
-                   $entry->isFailedRequest() ||
-                   $entry->isFailedJob() ||
-                   $entry->isScheduledTask() ||
-                   $entry->hasMonitoredTag();
+                $entry->isFailedRequest() ||
+                $entry->isFailedJob() ||
+                $entry->isScheduledTask() ||
+                $entry->hasMonitoredTag();
         });
     }
 
@@ -63,9 +65,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewTelescope', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
+            return $user->hasAnyRole(['Admin', 'Author', 'Editor']);
         });
     }
 }
