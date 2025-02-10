@@ -138,7 +138,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
         $horizonLink = (new SidebarLink)->setName('Horizon')->setUrl(url('/horizon'));
         $logsLink = (new SidebarLink)->setName('Logs')->setUrl(url('/logs'));
-        $toolSidebar = (new NovaSidebar)->addLink($horizonLink)->addLink($logsLink);
+        $telescopeLink = (new SidebarLink)->setName('Telescope')->setUrl(url('/telescope'));
+        $toolSidebar = (new NovaSidebar)
+            ->addLink($horizonLink)
+            ->addLink($logsLink)
+            ->addLink($telescopeLink);
         $res = [];
         if ($isAdmin) {
             $res[] = $toolSidebar;
