@@ -49,7 +49,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('geohub:update_pois_from_osm caipontedera@webmapp.it')->dailyAt('18:15');
         $schedule->command('geohub:update_track_from_osm caipontedera@webmapp.it')->dailyAt('19:15');
 
-
         // Index BLUBELL
         $schedule->command('geohub:index-tracks 48')->dailyAt('05:00');
         // Index PARCO MAREMMA
@@ -91,7 +90,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
     }
