@@ -75,6 +75,8 @@ class Kernel extends ConsoleKernel
         // HORIZON
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
+        // TELESCOPE PRUNING
+        $schedule->command('telescope:prune --hours=720')->daily(); // The following command will delete all records older than 30 days https://laravel.com/docs/11.x/telescope#data-pruning
     }
 
     /**
