@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Storage;
+
 trait UGCFeatureCollectionTrait
 {
     public function getUGCFeatureCollection($features, $version = 'v1')
@@ -10,6 +12,21 @@ trait UGCFeatureCollectionTrait
             'type' => 'FeatureCollection',
             'features' => [],
         ];
+        if ($version != 'v1') {
+            foreach ($features as $feature) {
+                $media = $feature->ugc_media->map(function ($media) {
+                    return [
+                        'id' => $media->id,
+                        'name' => $media->name,
+                        'description' => $media->description,
+                        'webPath' => Storage::disk('public')->url($media->relative_url), // Assicurati che 'url' esista in UgcMedia
+                    ];
+                });
+                $properties = $feature->properties;
+                $properties['photos'] = $media;
+                $feature->setAttribute('properties', $properties);
+            }
+        }
 
         if ($features) {
             foreach ($features as $feature) {
