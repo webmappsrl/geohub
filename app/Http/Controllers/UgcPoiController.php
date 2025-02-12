@@ -178,7 +178,7 @@ class UgcPoiController extends Controller
         $user = auth('api')->user();
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
-        $photos = isset($data['images']) ? $data['images'] : [];
+        $images = isset($data['images']) ? $data['images'] : [];
         $properties = $feature['properties'];
         Log::channel('ugc')->info('*************store v2 ugc poi*****************');
         Log::channel('ugc')->info('user email:' . $user->email);
@@ -238,7 +238,7 @@ class UgcPoiController extends Controller
             return response(['error' => 'Error saving POI'], 500);
         }
         $ugcMediaCtrl = app(UgcMediaController::class);
-        $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $photos);
+        $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
 
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }

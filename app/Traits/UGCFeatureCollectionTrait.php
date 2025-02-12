@@ -23,7 +23,8 @@ trait UGCFeatureCollectionTrait
                     ];
                 });
                 $properties = $feature->properties;
-                $properties['photos'] = $media;
+                $properties['media'] = $media;
+                $properties['photos'] = $media; // da eliminare
                 $feature->setAttribute('properties', $properties);
             }
         }
