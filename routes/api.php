@@ -42,6 +42,27 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
+// Add routes with lang-prefix
+Route::group(
+    [
+        'prefix' => '/{version}/',
+        'where' => ['version' => 'v2'],
+        'middleware' => ['auth.jwt']
+    ],
+    function () {
+        Route::prefix('ugc')->name('ugc.v2.')->group(function () {
+            Route::prefix('poi')->name('poi.')->group(function () {
+                Route::post('store', [UgcPoiController::class, 'store'])->name('store');
+                Route::get('index', [UgcPoiController::class, 'index'])->name('index');
+            });
+            Route::prefix('track')->name('track.v2.')->group(function () {
+                Route::post('store', [UgcTrackController::class, 'store'])->name('store');
+                Route::get('index', [UgcTrackController::class, 'index'])->name('index');
+            });
+        });
+    }
+);
+
 Route::get('downloadUserUgcMediaGeojson/{user_id}', [UgcMediaController::class, 'downloadUserGeojson'])
     ->name('downloadUserUgcMediaGeojson');
 
@@ -230,7 +251,7 @@ Route::name('api.')->group(function () {
             ])->name('track.taxonomies');
             Route::get('/{app_id}/taxonomies/{taxonomy_name}.json', [AppElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
             Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
-                return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+                return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
