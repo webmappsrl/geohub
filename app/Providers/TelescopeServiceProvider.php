@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Laravel\Telescope\Telescope;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
@@ -23,11 +23,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         Telescope::tag(function (IncomingEntry $entry) {
             return $entry->type === 'request'
                 ? [
-                    'status:' . $entry->content['response_status'],
-                    'uri:' . $entry->content['uri'],
+                    'status:'.$entry->content['response_status'],
+                    'uri:'.$entry->content['uri'],
                     preg_replace('#\d+#', 'x', $entry->content['uri']),
-                    'method:' . $entry->content['method'],
-                    'controller:' . $entry->content['controller_action']
+                    'method:'.$entry->content['method'],
+                    'controller:'.$entry->content['controller_action'],
                 ]
                 : [];
         });
