@@ -54,10 +54,14 @@ Route::group(
             Route::prefix('poi')->name('poi.')->group(function () {
                 Route::post('store', [UgcPoiController::class, 'store'])->name('store');
                 Route::get('index', [UgcPoiController::class, 'index'])->name('index');
+                Route::post('edit', [UgcPoiController::class, 'edit'])->name('edit');
+                Route::get('delete/{id}', [UgcPoiController::class, 'destroy'])->name('destroy');
             });
             Route::prefix('track')->name('track.v2.')->group(function () {
                 Route::post('store', [UgcTrackController::class, 'store'])->name('store');
                 Route::get('index', [UgcTrackController::class, 'index'])->name('index');
+                Route::post('edit', [UgcTrackController::class, 'edit'])->name('edit');
+                Route::get('delete/{id}', [UgcTrackController::class, 'destroy'])->name('destroy');
             });
         });
     }
@@ -251,7 +255,7 @@ Route::name('api.')->group(function () {
             ])->name('track.taxonomies');
             Route::get('/{app_id}/taxonomies/{taxonomy_name}.json', [AppElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
             Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
-                return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+                return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
