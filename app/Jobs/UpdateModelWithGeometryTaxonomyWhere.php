@@ -18,6 +18,7 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public $timeout = 300;
     protected $model;
 
     /**
