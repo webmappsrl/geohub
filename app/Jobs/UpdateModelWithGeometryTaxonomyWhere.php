@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
 {
@@ -53,13 +54,16 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
      */
     public function associateWhere()
     {
-        $ids = TaxonomyWhere::whereRaw(
-            'public.ST_Intersects('
-                .'public.ST_Force2D('
-                ."(SELECT geometry from {$this->model->getTable()} where id = {$this->model->id})"
-                .'::geometry)'
-                .', geometry)'
-        )->get()->pluck('id')->toArray();
+        $geom = DB::table('ec_tracks')->where('id', $this->model->id)->value('geometry');
+
+        if (!$geom) {
+            return [];
+        }
+
+        $ids = TaxonomyWhere::whereRaw('geometry && public.ST_Force2D(?::geometry)', [$geom])
+            ->whereRaw('public.ST_Intersects(public.ST_Force2D(?::geometry), geometry)', [$geom])
+            ->pluck('id')
+            ->toArray();
 
         return $ids;
     }
