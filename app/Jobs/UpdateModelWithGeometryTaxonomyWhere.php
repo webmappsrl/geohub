@@ -54,7 +54,8 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
      */
     public function associateWhere()
     {
-        $geom = DB::table('ec_tracks')->where('id', $this->model->id)->value('geometry');
+        $table = $this->model->getTable();
+        $geom = DB::table($table)->where('id', $this->model->id)->value('geometry');
 
         if (!$geom) {
             return [];
