@@ -59,7 +59,7 @@ class UgcMedia extends Feature
                         $position = $app->getRankedUserPositionNearPoisQuery($user->id);
                         Mail::send('mails.gamification.rankingIncreased', ['user' => $user, 'position' => $position, 'app' => $app], function ($message) use ($user, $app) {
                             $message->to($user->email);
-                            $message->subject($app->name.': Your Ranking Has Increased');
+                            $message->subject($app->name . ': Your Ranking Has Increased');
                         });
                     }
                 }
@@ -69,10 +69,10 @@ class UgcMedia extends Feature
 
             if (! $media->preventHoquSave) {
                 try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
+                    //        $hoquServiceProvider = app(HoquServiceProvider::class);
+                    //        $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
                 } catch (\Exception $e) {
-                    Log::error($media->id.' saved UgcMedia: An error occurred during a store operation: '.$e->getMessage());
+                    Log::error($media->id . ' saved UgcMedia: An error occurred during a store operation: ' . $e->getMessage());
                 }
             }
         });

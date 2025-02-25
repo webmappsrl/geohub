@@ -100,7 +100,7 @@ class UgcMediaController extends Controller
     public function store(Request $request, $version = 'v1'): Response
     {
         Log::channel('ugc')->info('*************store ugc media*****************');
-        Log::channel('ugc')->info('version:'.$version);
+        Log::channel('ugc')->info('version:' . $version);
         switch ($version) {
             case 'v1':
             default:
@@ -115,8 +115,8 @@ class UgcMediaController extends Controller
 
         $user = auth('api')->user();
         $data = $request->all();
-        Log::channel('ugc')->info('user email:'.$user->email);
-        Log::channel('ugc')->info('user id:'.$user->id);
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
         $this->checkValidation($data, [
             'feature' => 'required',
             'image' => 'required',
@@ -142,7 +142,7 @@ class UgcMediaController extends Controller
         }
         $media->user_id = $user->id;
         if (isset($feature['geometry'])) {
-            $media->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($feature['geometry'])."')");
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($feature['geometry']) . "')");
         }
 
         if (isset($properties['app_id'])) {
@@ -174,7 +174,7 @@ class UgcMediaController extends Controller
     {
         $data = $request->all();
         $dataGeojson = $data['geojson'];
-        Log::channel('ugc')->info('geojson'.$dataGeojson);
+        Log::channel('ugc')->info('geojson' . $dataGeojson);
 
         $this->checkValidation($data, [
             'geojson' => 'required',
@@ -195,8 +195,8 @@ class UgcMediaController extends Controller
         ]);
 
         $user = auth('api')->user();
-        Log::channel('ugc')->info('user email:'.$user->email);
-        Log::channel('ugc')->info('user id:'.$user->id);
+        Log::channel('ugc')->info('user email:' . $user->email);
+        Log::channel('ugc')->info('user id:' . $user->id);
         $media = new UgcMedia;
         $media->name = $geojson['properties']['name'] ?? 'placeholder_name';
         if (isset($geojson['properties']['description'])) {
@@ -206,7 +206,7 @@ class UgcMediaController extends Controller
         $media->relative_url = '';
 
         if (isset($geojson['geometry'])) {
-            $media->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($geojson['geometry'])."')");
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . "')");
         }
 
         if (isset($geojson['properties']['app_id'])) {
@@ -243,10 +243,18 @@ class UgcMediaController extends Controller
 
     public function saveAndAttachMediaToModel($model, $user, $photos)
     {
+        Log::channel('ugc')->info('Inizio salvataggio media per il modello.', [
+            'model_id' => $model->id,
+            'user_id' => $user->id,
+            'photos_count' => is_array($photos) ? count($photos) : 0
+        ]);
+
         if (isset($photos) && is_array($photos)) {
-            foreach ($photos as $photo) {
+            foreach ($photos as $index => $photo) {
                 if (isset($photo)) {
                     try {
+                        Log::channel('ugc')->info("Elaborazione foto index {$index}", ['photo' => $photo]);
+
                         $media = new UgcMedia;
                         $media->name = 'placeholder_name';
                         $media->user_id = $user->id;
@@ -254,15 +262,32 @@ class UgcMediaController extends Controller
                         $media->app_id = $model->app_id;
                         $media->sku = $model->sku;
                         $media->populateProperties();
+
+                        Log::channel('ugc')->info('Media creato.', ['media' => $media]);
+
                         $this->addImageToMedia($media, $photo);
+
+                        Log::channel('ugc')->info('Immagine aggiunta al media.', ['media_id' => $media->id]);
+
                         $model->ugc_media()->attach($media->id);
+
+                        Log::channel('ugc')->info('Media collegato al modello.', ['media_id' => $media->id, 'model_id' => $model->id]);
                     } catch (Exception $e) {
-                        Log::channel('ugc')->error('Errore nel salvataggio di un media per il POI: '.$e->getMessage());
+                        Log::channel('ugc')->error('Errore nel salvataggio di un media per il POI.', [
+                            'error' => $e->getMessage(),
+                            'photo' => $photo,
+                            'index' => $index
+                        ]);
                     }
+                } else {
+                    Log::channel('ugc')->warning("Foto index {$index} non valida o null.");
                 }
             }
+        } else {
+            Log::channel('ugc')->warning('Nessuna foto valida fornita per il modello.', ['photos' => $photos]);
         }
     }
+
 
     public function addImageToMedia($media, $image)
     {
@@ -284,7 +309,7 @@ class UgcMediaController extends Controller
             Storage::disk('public')->delete("$basePath$imageName.$ext");
             Storage::disk('public')->move("{$basePath}image_$id/$savedName", "$basePath$imageName.$ext");
             Storage::disk('public')->deleteDirectory("$basePath$imageName");
-            $media->relative_url = $basePath.$imageName.'.'.$ext;
+            $media->relative_url = $basePath . $imageName . '.' . $ext;
 
             if ($media->name == 'placeholder_name') {
                 $media->name = $imageName;
@@ -362,7 +387,7 @@ class UgcMediaController extends Controller
                 $feature = ['type' => 'Feature'];
                 $feature['properties']['id'] = $media->id;
                 $feature['properties']['name'] = $media->name;
-                $feature['properties']['url'] = env('APP_URL').Storage::url($media->relative_url);
+                $feature['properties']['url'] = env('APP_URL') . Storage::url($media->relative_url);
                 $emptygeojson = $media->getEmptyGeojson();
                 $feature['geometry'] = $emptygeojson['geometry'];
                 $geojson['features'][] = $feature;
@@ -765,7 +790,7 @@ class UgcMediaController extends Controller
         $mime = $this->ext2mime($extension);
         $headers = [
             'Content-type' => $mime,
-            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
         return response(readfile(Storage::disk('public')->path($media->relative_url)), 200, $headers);
@@ -797,7 +822,7 @@ class UgcMediaController extends Controller
         $geojson = $data['geojson'];
 
         if (isset($geojson['geometry']['type']) && $geojson['geometry']['type'] === 'Point' && isset($geojson['geometry']['coordinates'])) {
-            $media->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($geojson['geometry'])."')");
+            $media->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($geojson['geometry']) . "')");
             $media->saveWithoutHoquJob();
         }
 
