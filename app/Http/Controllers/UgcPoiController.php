@@ -175,17 +175,23 @@ class UgcPoiController extends Controller
 
     public function storeV2(Request $request): Response
     {
-        DB::beginTransaction();
         $user = auth('api')->user();
+        if (is_null($user)) {
+            Log::channel('ugc')->info('Utente non autenticato');
+            return response(['error' => 'User not authenticated'], 403);
+        }
+
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
-        $images = isset($data['images']) ? $data['images'] : [];
+        $images = $data['images'] ?? [];
         $properties = $feature['properties'];
+
         Log::channel('ugc')->info('*************store v2 ugc poi*****************');
         Log::channel('ugc')->info('user email:' . $user->email);
         Log::channel('ugc')->info('user id:' . $user->id);
         Log::channel('ugc')->info('ugc poi store properties name:' . $properties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id:' . $properties['app_id']);
+        Log::channel('ugc')->info('images count:' . count($images));
 
         $this->checkValidation($data, [
             'type' => 'required',
@@ -197,58 +203,50 @@ class UgcPoiController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        $user = auth('api')->user();
-        Log::channel('ugc')->info('user email:' . $user->email);
-        Log::channel('ugc')->info('user id:' . $user->id);
-        if (is_null($user)) {
-            Log::channel('ugc')->info('Utente non autenticato');
+        DB::beginTransaction();
+        try {
+            $poi = new UgcPoi;
+            $poi->name = $properties['name'];
+            $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($feature['geometry']) . ")')");
+            $poi->properties = $properties;
+            $poi->user_id = $user->id;
 
-            return response(['error' => 'User not authenticated'], 403);
-        }
-
-        $poi = new UgcPoi;
-        $poi->name = $properties['name'];
-        $poi->geometry = DB::raw("ST_GeomFromGeojson('" . json_encode($feature['geometry']) . ")')");
-        $poi->properties = $properties;
-        $poi->user_id = $user->id;
-
-        if (isset($properties['app_id'])) {
-            $app_id = $properties['app_id'];
-            if (is_numeric($app_id)) {
-                Log::channel('ugc')->info('numeric');
-                $app = App::where('id', '=', $app_id)->first();
-                if ($app != null) {
-                    $poi->app_id = $app_id;
-                    $poi->sku = $app->sku;
-                }
-            } else {
-                Log::channel('ugc')->info('sku');
-                $app = App::where('sku', '=', $app_id)->first();
-                if ($app != null) {
-                    $poi->app_id = $app->id;
-                    $poi->sku = $app_id;
+            if (isset($properties['app_id'])) {
+                $app_id = $properties['app_id'];
+                if (is_numeric($app_id)) {
+                    Log::channel('ugc')->info('numeric');
+                    $app = App::where('id', '=', $app_id)->first();
+                    if ($app != null) {
+                        $poi->app_id = $app_id;
+                        $poi->sku = $app->sku;
+                    }
+                } else {
+                    Log::channel('ugc')->info('sku');
+                    $app = App::where('sku', '=', $app_id)->first();
+                    if ($app != null) {
+                        $poi->app_id = $app->id;
+                        $poi->sku = $app_id;
+                    }
                 }
             }
-        }
 
-        try {
             $poi->save();
+            Log::channel('ugc')->info('Poi creato id:' . $poi->id);
+
+            // **Poi associa i media**
+            if (!empty($images)) {
+                $ugcMediaCtrl = app(UgcMediaController::class);
+                $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
+            }
+
+            DB::commit();
+
+            return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
         } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio del poi:' . $e->getMessage());
+            Log::channel('ugc')->error('Errore durante la creazione del POI: ' . $e->getMessage());
             DB::rollBack();
             return response(['error' => 'Error saving POI'], 500);
         }
-        try {
-            $ugcMediaCtrl = app(UgcMediaController::class);
-            $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
-        } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio delle immagini:' . $e->getMessage());
-            DB::rollBack();
-            return response(['error' => 'Created error'], 500);
-        }
-
-        DB::commit();
-        return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
