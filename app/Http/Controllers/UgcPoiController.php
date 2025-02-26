@@ -175,6 +175,7 @@ class UgcPoiController extends Controller
 
     public function storeV2(Request $request): Response
     {
+        DB::beginTransaction();
         $user = auth('api')->user();
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
@@ -234,12 +235,19 @@ class UgcPoiController extends Controller
             $poi->save();
         } catch (\Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio del poi:' . $e->getMessage());
-
+            DB::rollBack();
             return response(['error' => 'Error saving POI'], 500);
         }
-        $ugcMediaCtrl = app(UgcMediaController::class);
-        $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
+        try {
+            $ugcMediaCtrl = app(UgcMediaController::class);
+            $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
+        } catch (\Exception $e) {
+            Log::channel('ugc')->info('Errore nel salvataggio delle immagini:' . $e->getMessage());
+            DB::rollBack();
+            return response(['error' => 'Created error'], 500);
+        }
 
+        DB::commit();
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
     }
 
