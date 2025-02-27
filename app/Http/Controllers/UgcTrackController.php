@@ -168,15 +168,22 @@ class UgcTrackController extends Controller
     public function storeV2(Request $request): Response
     {
         $user = auth('api')->user();
+        if (is_null($user)) {
+            Log::channel('ugc')->info('Utente non autenticato');
+            return response(['error' => 'User not authenticated'], 403);
+        }
+
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
         $images = isset($data['images']) ? $data['images'] : [];
+        $properties = $feature['properties'];
+
         Log::channel('ugc')->info('*************store v2 ugc track*****************');
         Log::channel('ugc')->info('user email:' . $user->email);
         Log::channel('ugc')->info('user id:' . $user->id);
-        $properties = $feature['properties'];
         Log::channel('ugc')->info('ugc poi store properties name:' . $properties['name']);
         Log::channel('ugc')->info('ugc poi store properties app_id:' . $properties['app_id']);
+
         $this->checkValidation($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -187,49 +194,50 @@ class UgcTrackController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        $user = auth('api')->user();
-        if (is_null($user)) {
-            return response(['error' => 'User not authenticated'], 403);
-        }
+        DB::beginTransaction();
+        try {
+            $track = new UgcTrack;
+            $track->name = $properties['name'];
+            $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($feature['geometry']) . "'))");
+            $track->properties = $properties;
+            $track->user_id = $user->id;
 
-        $track = new UgcTrack;
-
-        $track->name = $properties['name'];
-        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($feature['geometry']) . "'))");
-        $track->properties = $properties;
-        $track->user_id = $user->id;
-
-        if (isset($properties['app_id'])) {
-            $app_id = $properties['app_id'];
-            if (is_numeric($app_id)) {
-                Log::channel('ugc')->info('numeric');
-                $app = App::where('id', '=', $app_id)->first();
-                if ($app != null) {
-                    $track->app_id = $app_id;
-                    $track->sku = $app->sku;
-                }
-            } else {
-                Log::channel('ugc')->info('sku');
-                $app = App::where('sku', '=', $app_id)->first();
-                if ($app != null) {
-                    $track->app_id = $app->id;
-                    $track->sku = $app_id;
+            if (isset($properties['app_id'])) {
+                $app_id = $properties['app_id'];
+                if (is_numeric($app_id)) {
+                    Log::channel('ugc')->info('numeric');
+                    $app = App::where('id', '=', $app_id)->first();
+                    if ($app != null) {
+                        $track->app_id = $app_id;
+                        $track->sku = $app->sku;
+                    }
+                } else {
+                    Log::channel('ugc')->info('sku');
+                    $app = App::where('sku', '=', $app_id)->first();
+                    if ($app != null) {
+                        $track->app_id = $app->id;
+                        $track->sku = $app_id;
+                    }
                 }
             }
-        }
 
-        try {
             $track->save();
+            Log::channel('ugc')->info('track creata id:' . $track->id);
+
+            // **Track associa i media**
+            if (!empty($images)) {
+                $ugcMediaCtrl = app(UgcMediaController::class);
+                $ugcMediaCtrl->saveAndAttachMediaToModel($track, $user, $images);
+            }
+
+            DB::commit();
+
+            return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
         } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio della track:' . $e->getMessage());
-
-            return response(['error' => 'Error saving Track'], 500);
+            Log::channel('ugc')->error('Errore durante la creazione della TRACK: ' . $e->getMessage());
+            DB::rollBack();
+            return response(['error' => 'Error saving TRACK'], 500);
         }
-        $ugcMediaCtrl = app(UgcMediaController::class);
-        $ugcMediaCtrl->saveAndAttachMediaToModel($track, $user, $images);
-        $track->save();
-
-        return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
     }
 
     /**
