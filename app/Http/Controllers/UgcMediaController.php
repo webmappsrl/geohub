@@ -94,6 +94,45 @@ class UgcMediaController extends Controller
         //
     }
 
+    public function validateUploadedImages($images): bool
+    {
+        if (!is_array($images) || empty($images)) {
+            Log::channel('ugc')->warning("Nessuna immagine ricevuta.");
+            return false;
+        }
+
+        foreach ($images as $index => $image) {
+            // **Verifica che sia un `UploadedFile` valido**
+            if (!$image instanceof \Illuminate\Http\UploadedFile) {
+                Log::channel('ugc')->warning("File index {$index} non è un UploadedFile valido.", ['image' => $image]);
+                return false;
+            }
+
+            // **Verifica se il file è stato caricato correttamente**
+            if (!$image->isValid()) {
+                Log::channel('ugc')->warning("Immagine index {$index} non valida. Errore: " . $image->getErrorMessage());
+                return false;
+            }
+
+            // **Verifica dimensione**
+            if ($image->getSize() <= 0) {
+                Log::channel('ugc')->warning("Il file index {$index} è vuoto o corrotto.");
+                return false;
+            }
+
+            // **Controllo MIME**
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+            if (!in_array($image->getMimeType(), $allowedMimeTypes)) {
+                Log::channel('ugc')->warning("Il file index {$index} non è un'immagine valida. MIME: " . $image->getMimeType());
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -249,42 +288,50 @@ class UgcMediaController extends Controller
             'photos_count' => is_array($photos) ? count($photos) : 0
         ]);
 
-        if (isset($photos) && is_array($photos)) {
-            foreach ($photos as $index => $photo) {
-                if (isset($photo)) {
-                    try {
-                        Log::channel('ugc')->info("Elaborazione foto index {$index}", ['photo' => $photo]);
-
-                        $media = new UgcMedia;
-                        $media->name = 'placeholder_name';
-                        $media->user_id = $user->id;
-                        $media->relative_url = '';
-                        $media->app_id = $model->app_id;
-                        $media->sku = $model->sku;
-                        $media->populateProperties();
-
-                        Log::channel('ugc')->info('Media creato.', ['media' => $media]);
-
-                        $this->addImageToMedia($media, $photo);
-
-                        Log::channel('ugc')->info('Immagine aggiunta al media.', ['media_id' => $media->id]);
-
-                        $model->ugc_media()->attach($media->id);
-
-                        Log::channel('ugc')->info('Media collegato al modello.', ['media_id' => $media->id, 'model_id' => $model->id]);
-                    } catch (Exception $e) {
-                        Log::channel('ugc')->error('Errore nel salvataggio di un media per il POI.', [
-                            'error' => $e->getMessage(),
-                            'photo' => $photo,
-                            'index' => $index
-                        ]);
-                    }
-                } else {
-                    Log::channel('ugc')->warning("Foto index {$index} non valida o null.");
-                }
-            }
-        } else {
+        if (!isset($photos) || !is_array($photos) || empty($photos)) {
             Log::channel('ugc')->warning('Nessuna foto valida fornita per il modello.', ['photos' => $photos]);
+            return;
+        }
+
+        foreach ($photos as $index => $photo) {
+            if (!$photo instanceof \Illuminate\Http\UploadedFile) {
+                Log::channel('ugc')->warning("File index {$index} non è un UploadedFile valido.", ['photo' => $photo]);
+                throw new Exception("File index {$index} non è un UploadedFile valido.");
+            }
+
+            if (!$photo->isValid() || $photo->getSize() <= 0) {
+                Log::channel('ugc')->warning("File index {$index} corrotto o vuoto.");
+                throw new Exception("File index {$index} corrotto o vuoto.");
+            }
+
+            try {
+                Log::channel('ugc')->info("Elaborazione foto index {$index}", ['photo' => $photo]);
+
+                $media = new UgcMedia;
+                $media->name = 'placeholder_name';
+                $media->user_id = $user->id;
+                $media->relative_url = '';
+                $media->app_id = $model->app_id;
+                $media->sku = $model->sku;
+                $media->populateProperties();
+
+                Log::channel('ugc')->info('Media creato.', ['media' => $media]);
+
+                $this->addImageToMediav2($media, $photo);
+
+                Log::channel('ugc')->info('Immagine aggiunta al media.', ['media_id' => $media->id]);
+
+                $model->ugc_media()->attach($media->id);
+
+                Log::channel('ugc')->info('Media collegato al modello.', ['media_id' => $media->id, 'model_id' => $model->id]);
+            } catch (Exception $e) {
+                throw $e;
+                Log::channel('ugc')->error('Errore nel salvataggio di un media per il POI.', [
+                    'error' => $e->getMessage(),
+                    'photo' => $photo,
+                    'index' => $index
+                ]);
+            }
         }
     }
 
@@ -324,6 +371,43 @@ class UgcMediaController extends Controller
             return response(['message' => 'An error occurred while creating the new image'], 500);
         }
     }
+
+    public function addImageToMediav2($media, $image)
+    {
+        try {
+            $id = $media->id;
+            $imageName = "image_{$id}." . $image->getClientOriginalExtension(); // Prende l'estensione originale
+            $basePath = 'media/images/ugc';
+
+            // ✅ Salvataggio corretto del file nel disco 'public'
+            $path = $image->storeAs($basePath, $imageName, 'public');
+
+            if (!$path) {
+                Log::channel('ugc')->error("Errore nel salvataggio dell'immagine per media ID: {$id}");
+                return response(['message' => 'Error saving image'], 500);
+            }
+
+            // ✅ Assegna il percorso salvato all'oggetto media
+            $media->relative_url = $path;
+
+            // ✅ Imposta un nome descrittivo se è un placeholder
+            if ($media->name == 'placeholder_name') {
+                $media->name = $imageName;
+            }
+            if (empty($media->description)) {
+                $media->description = $imageName;
+            }
+
+            // ✅ Salva il modello aggiornato
+            $media->save();
+
+            Log::channel('ugc')->info("Immagine salvata con successo per media ID: {$id}, percorso: {$path}");
+        } catch (Exception $e) {
+            Log::channel('ugc')->error("Errore nel salvataggio dell'immagine per media ID: {$id}, errore: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
 
     /**
      * Display the specified resource.

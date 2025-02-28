@@ -176,15 +176,27 @@ class UgcPoiController extends Controller
     public function storeV2(Request $request): Response
     {
         $user = auth('api')->user();
+
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
             return response(['error' => 'User not authenticated'], 403);
         }
 
+        $ugcMediaCtrl = app(UgcMediaController::class);
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
-        $images = $data['images'] ?? [];
+        $images = $request->file('images', []);
         $properties = $feature['properties'];
+
+        if (!empty($images)) {
+            if (!$ugcMediaCtrl->validateUploadedImages($images)) {
+                Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
+                return response([
+                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'retry' => true
+                ], 422);
+            }
+        }
 
         Log::channel('ugc')->info('*************store v2 ugc poi*****************');
         Log::channel('ugc')->info('user email:' . $user->email);
@@ -235,12 +247,11 @@ class UgcPoiController extends Controller
 
             // **Poi associa i media**
             if (!empty($images)) {
-                $ugcMediaCtrl = app(UgcMediaController::class);
                 $ugcMediaCtrl->saveAndAttachMediaToModel($poi, $user, $images);
             }
 
             DB::commit();
-
+            Log::channel('ugc')->info('POST STORE POI OK:' . $poi->id);
             return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
         } catch (\Exception $e) {
             Log::channel('ugc')->error('Errore durante la creazione del POI: ' . $e->getMessage());

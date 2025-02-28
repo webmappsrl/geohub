@@ -168,15 +168,27 @@ class UgcTrackController extends Controller
     public function storeV2(Request $request): Response
     {
         $user = auth('api')->user();
+
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
             return response(['error' => 'User not authenticated'], 403);
         }
 
+        $ugcMediaCtrl = app(UgcMediaController::class);
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
-        $images = isset($data['images']) ? $data['images'] : [];
+        $images = $request->file('images', []);
         $properties = $feature['properties'];
+
+        if (!empty($images)) {
+            if (!$ugcMediaCtrl->validateUploadedImages($images)) {
+                Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
+                return response([
+                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'retry' => true
+                ], 422);
+            }
+        }
 
         Log::channel('ugc')->info('*************store v2 ugc track*****************');
         Log::channel('ugc')->info('user email:' . $user->email);
@@ -226,12 +238,11 @@ class UgcTrackController extends Controller
 
             // **Track associa i media**
             if (!empty($images)) {
-                $ugcMediaCtrl = app(UgcMediaController::class);
                 $ugcMediaCtrl->saveAndAttachMediaToModel($track, $user, $images);
             }
 
             DB::commit();
-
+            Log::channel('ugc')->info('POST STORE TRACK OK:' . $track->id);
             return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
         } catch (\Exception $e) {
             Log::channel('ugc')->error('Errore durante la creazione della TRACK: ' . $e->getMessage());
