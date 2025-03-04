@@ -55,15 +55,16 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
      */
     public function associateWhere()
     {
+
         $table = $this->model->getTable();
-        $geom = DB::table($table)->where('id', $this->model->id)->value('geometry');
+        $geom = DB::table($table)->selectRaw('ST_Force2D(geometry::geometry) as geometry')->where('id', $this->model->id)->value('geometry');
 
         if (!$geom) {
             return [];
         }
 
-        $ids = TaxonomyWhere::whereRaw('geometry && public.ST_Force2D(?::geometry)', [$geom])
-            ->whereRaw('public.ST_Intersects(public.ST_Force2D(?::geometry), geometry)', [$geom])
+        $ids = TaxonomyWhere::whereRaw('geometry && ?', [$geom])
+            ->whereRaw('ST_Intersects(?, geometry)', [$geom])
             ->pluck('id')
             ->toArray();
 
