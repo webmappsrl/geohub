@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Facades\OsmClient;
+use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\User;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Models\App;
 
 class UpdatePOIFromOsm extends Command
 {
@@ -105,17 +105,17 @@ class UpdatePOIFromOsm extends Command
         $apps = App::where('user_id', $user->id)->get();
 
         if ($apps->isEmpty()) {
-            $this->info('No apps found for user: ' . $user->email);
+            $this->info('No apps found for user: '.$user->email);
         } else {
             foreach ($apps as $app) {
-                $this->info('Generating App POIs for App ID: ' . $app->id . '...');
+                $this->info('Generating App POIs for App ID: '.$app->id.'...');
 
                 try {
                     $app->GenerateAppPois();
-                    $this->info('App POIs generated successfully for App ID: ' . $app->id);
+                    $this->info('App POIs generated successfully for App ID: '.$app->id);
                 } catch (Exception $e) {
-                    $this->error('Error generating App POIs for App ID: ' . $app->id . ': ' . $e->getMessage());
-                    Log::error('Error generating App POIs for App ID: ' . $app->id . ': ' . $e->getMessage());
+                    $this->error('Error generating App POIs for App ID: '.$app->id.': '.$e->getMessage());
+                    Log::error('Error generating App POIs for App ID: '.$app->id.': '.$e->getMessage());
                 }
             }
         }
