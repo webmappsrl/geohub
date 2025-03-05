@@ -100,7 +100,12 @@ class UpdatePOIFromOsm extends Command
                 $this->error('Poi '.$poi->name.' (osmid: '.$poi->osmid.' ) not updated.');
             }
         }
+        $this->generatePoisJson($user); 
+        
+        $this->info('Finished.');
+    }
 
+    private function generatePoisJson($user){
         // Find the App instance based on the user_id of the first updated POI
         $apps = App::where('user_id', $user->id)->get();
 
@@ -119,7 +124,6 @@ class UpdatePOIFromOsm extends Command
                 }
             }
         }
-        $this->info('Finished.');
     }
 
     // Update the data for a single poi
