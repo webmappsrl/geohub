@@ -19,6 +19,7 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
     use SerializesModels;
 
     public $timeout = 300;
+
     protected $model;
 
     /**
@@ -59,7 +60,7 @@ class UpdateModelWithGeometryTaxonomyWhere implements ShouldQueue
         $table = $this->model->getTable();
         $geom = DB::table($table)->selectRaw('ST_Force2D(geometry::geometry) as geometry')->where('id', $this->model->id)->value('geometry');
 
-        if (!$geom) {
+        if (! $geom) {
             return [];
         }
 

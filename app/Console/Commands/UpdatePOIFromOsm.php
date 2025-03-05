@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Facades\OsmClient;
+use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\User;
@@ -99,8 +100,31 @@ class UpdatePOIFromOsm extends Command
                 $this->error('Poi '.$poi->name.' (osmid: '.$poi->osmid.' ) not updated.');
             }
         }
+        $this->generatePoisJson($user);
 
         $this->info('Finished.');
+    }
+
+    private function generatePoisJson($user)
+    {
+        // Find the App instance based on the user_id of the first updated POI
+        $apps = App::where('user_id', $user->id)->get();
+
+        if ($apps->isEmpty()) {
+            $this->info('No apps found for user: '.$user->email);
+        } else {
+            foreach ($apps as $app) {
+                $this->info('Generating App POIs for App ID: '.$app->id.'...');
+
+                try {
+                    $app->GenerateAppPois();
+                    $this->info('App POIs generated successfully for App ID: '.$app->id);
+                } catch (Exception $e) {
+                    $this->error('Error generating App POIs for App ID: '.$app->id.': '.$e->getMessage());
+                    Log::error('Error generating App POIs for App ID: '.$app->id.': '.$e->getMessage());
+                }
+            }
+        }
     }
 
     // Update the data for a single poi
