@@ -235,6 +235,11 @@ class UpdatePOIFromOsm extends Command
     private function updatePoiAttribute(EcPoi $poi, array $osmPoi, string $poiAttributeKey, string $osmPropertyKey)
     {
         if (array_key_exists($osmPropertyKey, $osmPoi['properties']) && $osmPoi['properties'][$osmPropertyKey] != null) {
+            // normalize attribute ele
+            $value = $osmPoi['properties'][$osmPropertyKey];
+            if ($osmPropertyKey == 'ele') {
+                $value = preg_replace('/[^0-9.]/', '', $value);
+            }
             // update the 'code' attribute of the poi
             if ($osmPropertyKey == 'ref') {
                 // update the 'code' attribute of the poi
