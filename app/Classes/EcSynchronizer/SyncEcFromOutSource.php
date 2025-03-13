@@ -52,7 +52,7 @@ class SyncEcFromOutSource
      * @param  string  $endpoint  the url from which import begins (https://stelvio.wp.webmapp.it)
      * @param  string  $activity  the activity to associate with the feature. it takes the Identifier (eg. hiking)
      * @param  string  $poi_type  the poi_type to associate with the feature. it takes the Identifier (eg. poi)
-     * @param  string  $name_format  the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
+     * @param  string  $name_format  the rule to construct the name field of the feature. (eg. "Ecooci {ref} - from {from}, to {to}")
      * @param  int  $app  the id of the app (eg. Parco Maremma = 1 )
      * @param  string  $theme  the theme to associate with the feature. it takes the Identifier (eg. hiking-pec)
      * @param  bool  $only_related_url  true if only sync related url value
@@ -393,7 +393,7 @@ class SyncEcFromOutSource
                             [
                                 'name' => $this->generateName($out_source),
                                 'not_accessible' => false,
-                                'geometry' => DB::raw("(ST_Force3D(ST_LineMerge('$out_source->geometry')))"),
+                                'geometry' => DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt,
                             ]
                         );
                     } else {
