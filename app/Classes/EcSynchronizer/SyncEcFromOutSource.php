@@ -93,7 +93,7 @@ class SyncEcFromOutSource
                 $user = User::find(intval($this->author));
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this ID '.$this->author);
+                throw new Exception('No User found with this ID ' . $this->author);
             }
         } else {
             try {
@@ -101,7 +101,7 @@ class SyncEcFromOutSource
 
                 $this->author_id = $user->id;
             } catch (Exception $e) {
-                throw new Exception('No User found with this email '.$this->author);
+                throw new Exception('No User found with this email ' . $this->author);
             }
         }
 
@@ -115,7 +115,7 @@ class SyncEcFromOutSource
         ) {
             $this->type = strtolower($this->type);
         } else {
-            throw new Exception('The value of parameter type: '.$this->type.' is not currect');
+            throw new Exception('The value of parameter type: ' . $this->type . ' is not currect');
         }
 
         // Check the provider
@@ -134,7 +134,7 @@ class SyncEcFromOutSource
             }, $all_providers->pluck('provider')->toArray());
             if (in_array(true, $mapped_providers)) {
             } else {
-                throw new Exception('The value of parameter provider '.$this->provider.' is not currect');
+                throw new Exception('The value of parameter provider ' . $this->provider . ' is not currect');
             }
         }
 
@@ -163,7 +163,7 @@ class SyncEcFromOutSource
             if (in_array(true, $mapped_endpoints)) {
                 $this->endpoint = $this->endpoint;
             } else {
-                throw new Exception('The value of parameter endpoint '.$this->endpoint.' is not currect');
+                throw new Exception('The value of parameter endpoint ' . $this->endpoint . ' is not currect');
             }
         }
 
@@ -189,7 +189,7 @@ class SyncEcFromOutSource
             if (is_array($matches[0])) {
                 foreach ($matches[0] as $m) {
                     if (! in_array($m, $available_name_formats)) {
-                        throw new Exception('The value of parameter '.$m.' can not be found');
+                        throw new Exception('The value of parameter ' . $m . ' can not be found');
                     }
                 }
             }
@@ -209,7 +209,7 @@ class SyncEcFromOutSource
             if (in_array(true, $mapped_activities)) {
                 $this->activity = $this->activity;
             } else {
-                throw new Exception('The value of parameter activity '.$this->activity.' is not currect');
+                throw new Exception('The value of parameter activity ' . $this->activity . ' is not currect');
             }
         }
 
@@ -227,7 +227,7 @@ class SyncEcFromOutSource
             if (in_array(true, $mapped_themes)) {
                 $this->theme = $this->theme;
             } else {
-                throw new Exception('The value of parameter theme '.$this->theme.' is not currect');
+                throw new Exception('The value of parameter theme ' . $this->theme . ' is not currect');
             }
         }
 
@@ -245,7 +245,7 @@ class SyncEcFromOutSource
             if (in_array(true, $mapped_poi_types)) {
                 $this->poi_type = $this->poi_type;
             } else {
-                throw new Exception('The value of parameter poi_type '.$this->poi_type.' is not currect');
+                throw new Exception('The value of parameter poi_type ' . $this->poi_type . ' is not currect');
             }
         }
 
@@ -379,10 +379,10 @@ class SyncEcFromOutSource
 
             $out_source = OutSourceFeature::find($id);
 
-            Log::info('Creating EC Feature number: '.$count.' out of '.count($ids_array));
+            Log::info('Creating EC Feature number: ' . $count . ' out of ' . count($ids_array));
             if ($this->type == 'track') {
                 // Create Track
-                Log::info('Creating EC Track from OSF with id: '.$id);
+                Log::info('Creating EC Track from OSF with id: ' . $id);
                 try {
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
                         $ec_track = EcTrack::updateOrCreate(
@@ -411,16 +411,16 @@ class SyncEcFromOutSource
                     }
 
                     // Attach Activities to track
-                    Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
+                    Log::info('Attaching EC Track taxonomyActivities: ' . $this->activity);
                     if (! empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.', '-', $path['host']);
-                        $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                        $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
                         foreach ($out_source->tags['activity'] as $cat) {
                             foreach (json_decode($taxonomy_map, true)['activity'] as $w) {
                                 if ($w['geohub_identifier'] == $cat) {
-                                    Log::info('Attaching more EC Track taxonomyActivities: '.$cat);
+                                    Log::info('Attaching more EC Track taxonomyActivities: ' . $cat);
                                     $geohub_w = TaxonomyActivity::where('identifier', $w['geohub_identifier'])->first();
                                     if ($geohub_w && ! is_null($geohub_w)) {
                                         $ec_track->taxonomyActivities()->syncWithoutDetaching($geohub_w);
@@ -443,19 +443,19 @@ class SyncEcFromOutSource
 
                     // Attach Themes to track
                     if ($this->theme) {
-                        Log::info('Attaching EC Track taxonomyThemes: '.$this->theme);
+                        Log::info('Attaching EC Track taxonomyThemes: ' . $this->theme);
                         $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                     }
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP') {
                         if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             $path = parse_url($this->endpoint);
                             $file_name = str_replace('.', '-', $path['host']);
-                            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                            $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
                             if (is_array(json_decode($taxonomy_map, true)['theme'])) {
                                 foreach ($out_source->tags['theme'] as $cat) {
                                     foreach (json_decode($taxonomy_map, true)['theme'] as $w) {
                                         if ($w['geohub_identifier'] == $cat) {
-                                            Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
+                                            Log::info('Attaching more EC Track taxonomyThemes: ' . $cat);
                                             $geohub_w = TaxonomyTheme::where('identifier', $w['geohub_identifier'])->first();
                                             if ($geohub_w && ! is_null($geohub_w)) {
                                                 $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
@@ -478,7 +478,7 @@ class SyncEcFromOutSource
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna') {
                         if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             foreach ($out_source->tags['theme'] as $cat) {
-                                Log::info('Attaching more EC Track taxonomyThemes: '.$cat);
+                                Log::info('Attaching more EC Track taxonomyThemes: ' . $cat);
                                 $geohub_w = TaxonomyTheme::where('identifier', $cat)->first();
                                 if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
@@ -498,14 +498,14 @@ class SyncEcFromOutSource
                         if (isset($out_source->tags['sda'])) {
                             $sda = $out_source->tags['sda'];
                             if ($sda) {
-                                Log::info('Attaching EC Track OSM2CAI SDA taxonomyThemes: sda'.$sda);
-                                $ec_track->taxonomyThemes()->sync(TaxonomyTheme::where('identifier', 'osm2cai-sda'.$sda)->first());
+                                Log::info('Attaching EC Track OSM2CAI SDA taxonomyThemes: sda' . $sda);
+                                $ec_track->taxonomyThemes()->sync(TaxonomyTheme::where('identifier', 'osm2cai-sda' . $sda)->first());
                             }
                             if ($sda == 4) {
                                 if ($this->endpoint) {
                                     $array_endpoint = explode('/', $this->endpoint);
-                                    Log::info('Attaching EC Track OSM2CAI taxonomyThemes: Infomont - '.$array_endpoint[7]);
-                                    $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', 'infomont-'.$array_endpoint[7])->first());
+                                    Log::info('Attaching EC Track OSM2CAI taxonomyThemes: Infomont - ' . $array_endpoint[7]);
+                                    $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', 'infomont-' . $array_endpoint[7])->first());
                                 }
                             }
                         }
@@ -577,13 +577,13 @@ class SyncEcFromOutSource
                     array_push($new_ec_features, $ec_track->id);
                 } catch (Exception $e) {
                     array_push($error_not_created, $out_source->source_id);
-                    Log::info('Error creating EcTrack from OSF with id: '.$id."\n ERROR: ".$e);
+                    Log::info('Error creating EcTrack from OSF with id: ' . $id . "\n ERROR: " . $e);
                 }
             }
 
             if ($this->type == 'poi') {
                 // create poi
-                Log::info('Creating EC POI from OSF with id: '.$id);
+                Log::info('Creating EC POI from OSF with id: ' . $id);
                 try {
                     if ($this->only_related_url) {
                         $ec_poi = EcPoi::updateOrCreate(
@@ -623,12 +623,12 @@ class SyncEcFromOutSource
                             } else {
                                 $path = parse_url($this->endpoint);
                                 $file_name = str_replace('.', '-', $path['host']);
-                                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                                $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
                                 foreach ($out_source->tags['poi_type'] as $cat) {
                                     foreach (json_decode($taxonomy_map, true)['poi_type'] as $w) {
                                         if ($w['geohub_identifier'] == $cat) {
-                                            Log::info('Attaching more EC POI taxonomyPoiTypes: '.$w['geohub_identifier']);
+                                            Log::info('Attaching more EC POI taxonomyPoiTypes: ' . $w['geohub_identifier']);
                                             $geohub_w = TaxonomyPoiType::where('identifier', $w['geohub_identifier'])->first();
                                             if ($geohub_w && ! is_null($geohub_w)) {
                                                 $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
@@ -655,7 +655,7 @@ class SyncEcFromOutSource
                                     $cat_identifier = 'b-and-b';
                                 }
                                 $cat_name = ucwords($cat);
-                                Log::info('Attaching EC POI taxonomyPoiTypes: '.$cat_identifier);
+                                Log::info('Attaching EC POI taxonomyPoiTypes: ' . $cat_identifier);
                                 $geohub_w = TaxonomyPoiType::where('identifier', $cat_identifier)->first();
                                 if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
@@ -670,13 +670,13 @@ class SyncEcFromOutSource
                                 }
                             }
                         } else {
-                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
+                            Log::info('Attaching EC POI taxonomyPoiTypes: ' . $this->poi_type);
                             $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier', $this->poi_type)->first());
                         }
 
                         // Attach Themes to poi
                         if ($this->theme) {
-                            Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
+                            Log::info('Attaching EC Poi taxonomyThemes: ' . $this->theme);
                             $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                         }
 
@@ -737,7 +737,7 @@ class SyncEcFromOutSource
                     array_push($new_ec_features, $ec_poi->id);
                 } catch (Exception $e) {
                     array_push($error_not_created, $out_source->source_id);
-                    Log::info('Error creating EcPoi from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
+                    Log::info('Error creating EcPoi from OSF with id: ' . $id . "\n ERROR: " . $e->getMessage());
                 }
             }
 
@@ -763,18 +763,18 @@ class SyncEcFromOutSource
                             'description' => $tag_description,
                         ]
                     );
-                    $new_media_name = $ec_media->id.'.'.explode('.', basename($out_source->tags['url']))[1];
-                    if (Storage::disk($ec_storage_name)->exists('ec_media/'.$new_media_name)) {
-                        $ec_media->url = Storage::disk($ec_storage_name)->url('ec_media/'.$new_media_name);
+                    $new_media_name = $ec_media->id . '.' . explode('.', basename($out_source->tags['url']))[1];
+                    if (Storage::disk($ec_storage_name)->exists('ec_media/' . $new_media_name)) {
+                        $ec_media->url = Storage::disk($ec_storage_name)->url('ec_media/' . $new_media_name);
                     } else {
-                        Storage::disk('public')->put('ec_media/'.$new_media_name, $s3_osfmedia->get($out_source->tags['url']));
-                        $ec_media->url = 'ec_media/'.$new_media_name;
+                        Storage::disk('public')->put('ec_media/' . $new_media_name, $s3_osfmedia->get($out_source->tags['url']));
+                        $ec_media->url = 'ec_media/' . $new_media_name;
                     }
                     $ec_media->save();
                     array_push($new_ec_features, $ec_media->id);
                 } catch (Exception $e) {
                     array_push($error_not_created, $out_source->source_id);
-                    Log::info('Error creating EcMedia from OSF with id: '.$id."\n ERROR: ".$e->getMessage());
+                    Log::info('Error creating EcMedia from OSF with id: ' . $id . "\n ERROR: " . $e->getMessage());
                 }
             }
             $count++;
@@ -785,18 +785,18 @@ class SyncEcFromOutSource
                 Log::channel('osm2cai')->info(' ');
                 Log::channel('osm2cai')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
-                    Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/'.$id);
-                    Log::info('https://osm2cai.cai.it/resources/hiking-routes/'.$id);
+                    Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/' . $id);
+                    Log::info('https://osm2cai.cai.it/resources/hiking-routes/' . $id);
                 }
             } elseif ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
                 Log::channel('euma')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
-                    Log::channel('euma')->info('https://database.european-mountaineers.eu/resources/trails/'.$id);
-                    Log::info('https://database.european-mountaineers.eu/resources/trails/'.$id);
+                    Log::channel('euma')->info('https://database.european-mountaineers.eu/resources/trails/' . $id);
+                    Log::info('https://database.european-mountaineers.eu/resources/trails/' . $id);
                 }
             } else {
                 foreach ($error_not_created as $id) {
-                    Log::info('OSF ID: '.$id);
+                    Log::info('OSF ID: ' . $id);
                 }
             }
         }
