@@ -2,15 +2,15 @@
 
 namespace App\Nova\Actions;
 
-use Illuminate\Bus\Queueable;
-use Laravel\Nova\Actions\Action;
-use App\Jobs\UpdateEcTrackAwsJob;
-use Illuminate\Support\Collection;
 use App\Jobs\UpdateEcTrack3DDemJob;
+use App\Jobs\UpdateEcTrackAwsJob;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use Illuminate\Queue\InteractsWithQueue;
 
 class UpdateEcTracks3DDEMAction extends Action
 {
@@ -33,7 +33,7 @@ class UpdateEcTracks3DDEMAction extends Action
                     new UpdateEcTrackAwsJob($model),
                 ])->dispatch();
             } catch (\Exception $e) {
-                Log::error('An error occurred during 3D DEM operation: ' . $e->getMessage());
+                Log::error('An error occurred during 3D DEM operation: '.$e->getMessage());
             }
         }
     }
