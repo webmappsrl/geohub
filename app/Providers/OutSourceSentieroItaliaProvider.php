@@ -111,7 +111,7 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
         if (! is_null($item)) {
             // ADD Geometry
             $geometry = null;
-            $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2=' . $id));
+            $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2='.$id));
             if (isset($res[0]->geometry)) {
                 $geometry = $res[0]->geometry;
             }
