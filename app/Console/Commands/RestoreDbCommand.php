@@ -43,7 +43,7 @@ class RestoreDbCommand extends Command
         Log::info('db:restore -> is started');
         $localDirectory = 'database';
         $localRootPath = 'storage/app';
-        $AbsolutePath = base_path() . "/$localRootPath/$localDirectory/last-dump.sql";
+        $AbsolutePath = base_path()."/$localRootPath/$localDirectory/last-dump.sql";
 
         if (! file_exists($AbsolutePath)) {
             try {
@@ -63,22 +63,22 @@ class RestoreDbCommand extends Command
         $psqlBaseCommand = "PGPASSWORD={$db_password} psql -U {$db_user} -h {$db_host}";
 
         // psql -c "DROP DATABASE geohub"
-        $drop_cmd = $psqlBaseCommand . ' -d postgres -c "DROP DATABASE ' . $db_name . '"';
+        $drop_cmd = $psqlBaseCommand.' -d postgres -c "DROP DATABASE '.$db_name.'"';
         Log::info("db:restore -> $drop_cmd");
         exec($drop_cmd);
 
         // psql -c "CREATE DATABASE geohub"
-        $create_cmd = $psqlBaseCommand . ' -d postgres -c "CREATE DATABASE ' . $db_name . '"';
+        $create_cmd = $psqlBaseCommand.' -d postgres -c "CREATE DATABASE '.$db_name.'"';
         Log::info("db:restore -> $create_cmd");
         exec($create_cmd);
 
         // psql -d geohub -c "create extension postgis"
-        $postgis_cmd = $psqlBaseCommand . ' -d ' . $db_name . ' -c "create extension postgis";';
+        $postgis_cmd = $psqlBaseCommand.' -d '.$db_name.' -c "create extension postgis";';
         Log::info("db:restore -> $postgis_cmd");
         exec($postgis_cmd);
 
         // psql geohub < last-dump.sql
-        $restore_cmd = $psqlBaseCommand . " $db_name < $AbsolutePath";
+        $restore_cmd = $psqlBaseCommand." $db_name < $AbsolutePath";
         Log::info("db:restore -> $restore_cmd");
         exec($restore_cmd);
 

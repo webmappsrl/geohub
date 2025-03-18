@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\OutSourceFeature;
 use Exception;
 use Illuminate\Console\Command;
-use App\Models\OutSourceFeature;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class Osm2CaiOutSourceIdUpdateCommand extends Command
 {
@@ -58,11 +57,11 @@ class Osm2CaiOutSourceIdUpdateCommand extends Command
         $this->getOsm2CaiOutSourceFeatures()->each(function ($osf) {
             try {
                 $hr = $this->getOldHikingRouteByColAndValue('id', $osf->source_id);
-                $osf->source_id = 'R' . $hr->relation_id;
-                //$this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai2 ' . $osf->source_id . ' source id');
+                $osf->source_id = 'R'.$hr->relation_id;
+                // $this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai2 ' . $osf->source_id . ' source id');
                 $osf->save();
             } catch (Exception $e) {
-                $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with ID: ' . $osf->source_id);
+                $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with ID: '.$osf->source_id);
             }
         });
     }
@@ -75,16 +74,17 @@ class Osm2CaiOutSourceIdUpdateCommand extends Command
     public function reverse()
     {
         $this->getOsm2CaiOutSourceFeatures()->each(function ($osf) {
-            if (is_numeric(substr($osf->source_id, 0, 1)))
+            if (is_numeric(substr($osf->source_id, 0, 1))) {
                 return;
+            }
             try {
                 $relation_id = substr($osf->source_id, 1);
                 $hr = $this->getOldHikingRouteByColAndValue('relation_id', $relation_id);
                 $osf->source_id = $hr->id;
-                //$this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai1 ' . $hr->id  . ' source id');
+                // $this->line('Updating hiking route with ID: ' . $hr->id . ' to osm2cai1 ' . $hr->id  . ' source id');
                 $osf->save();
             } catch (Exception $e) {
-                $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with relation id: ' . $relation_id);
+                $this->error('Unable to find an hiking route on connection out_source_osm2cai_old with relation id: '.$relation_id);
             }
         });
     }
@@ -98,8 +98,7 @@ class Osm2CaiOutSourceIdUpdateCommand extends Command
     {
         return OutSourceFeature::where('provider', 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI')
             ->where('endpoint', 'LIKE', 'https://osm2cai.cai.it/api/v1/hiking-routes%')
-            ->get()
-        ;
+            ->get();
     }
 
     protected function getOldHikingRouteByColAndValue($col, $val)

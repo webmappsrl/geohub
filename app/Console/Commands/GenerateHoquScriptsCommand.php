@@ -110,6 +110,7 @@ class GenerateHoquScriptsCommand extends Command
             $osfs = OutSourceFeature::where('endpoint', $endpoint)->get();
             if ($osfs->count() == 0) {
                 $this->info("No OSF found with endpoint {$endpoint}");
+
                 return 0;
             }
             $ids = $osfs->pluck('id')->toArray();
@@ -123,6 +124,7 @@ class GenerateHoquScriptsCommand extends Command
                 $media->count() == 0
             ) {
                 $this->info("No feature found corresponding to endpoint {$endpoint}");
+
                 return 0;
             }
         } else {
