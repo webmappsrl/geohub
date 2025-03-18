@@ -103,6 +103,7 @@ class GenerateHoquScriptsCommand extends Command
 
         // OPTION OSF_ENDPOINT
         elseif (! empty($this->option('osf_endpoint'))) {
+            $endpoint = $this->option('osf_endpoint');
             $osfs = OutSourceFeature::where('endpoint', $endpoint)->get();
             if ($osfs->count() == 0) {
                 $this->info("No OSF found with endpoint {$endpoint}");
