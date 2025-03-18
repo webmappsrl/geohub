@@ -78,7 +78,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
         // TELESCOPE PRUNING
-        $schedule->command('telescope:prune --hours=168')->daily(); // The following command will delete all records older than 30 days https://laravel.com/docs/11.x/telescope#data-pruning
+        // The following command will delete all records older than 1 days https://laravel.com/docs/11.x/telescope#data-pruning
+        $schedule->command('telescope:prune --hours=12')->daily();
     }
 
     /**
@@ -88,7 +89,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
