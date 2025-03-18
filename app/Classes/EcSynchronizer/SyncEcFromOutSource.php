@@ -147,10 +147,6 @@ class SyncEcFromOutSource
                     if (
                         strpos($e, $this->endpoint)
                         || $e == $this->endpoint
-                        // needed for the migration from osm2cai1 to osm2cai2
-                        // once the migration is done, update the import_sync_osm2cai_all.sh script
-                        // restoring the old https://osm2cai.cai.it and remove this line
-                        || strpos($this->endpoint, 'https://osm2cai.maphub.it') === 0
                     ) {
                         $this->endpoint = $e;
 

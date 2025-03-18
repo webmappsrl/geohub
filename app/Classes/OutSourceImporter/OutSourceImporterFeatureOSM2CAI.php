@@ -18,17 +18,6 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
 
     protected string $mediaGeom;
 
-    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false)
-    {
-        // needed only for the migration from old to new source_id
-        // this is important because the OutSourceFeature has a tuple as identifier with source_id and endpoint
-        // currently all osm2cai tracks have osm2cai.cai.it as endpoint domain
-        // once the migration is done, this has to be removed after a proper update of import_sync_osm2cai_all.sh script
-        // restoring the osm2cai.cai.it domain
-        $endpoint = str_replace('https://osm2cai.maphub.it', 'https://osm2cai.cai.it', $endpoint);
-        parent::__construct($type, $endpoint, $source_id, $only_related_url);
-    }
-
     /**
      * It imports each track of the given list to the out_source_features table.
      *
