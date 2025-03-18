@@ -13,7 +13,7 @@ use Laravel\Nova\Metrics\HasHelpText;
 
 abstract class Field extends FieldElement implements JsonSerializable, Resolvable
 {
-    use Macroable, HasHelpText;
+    use HasHelpText, Macroable;
 
     /**
      * The displayable name of the field.
@@ -174,10 +174,9 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
      *
      * @param  string  $name
      * @param  string|callable|null  $attribute
-     * @param  callable|null  $resolveCallback
      * @return void
      */
-    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    public function __construct($name, $attribute = null, ?callable $resolveCallback = null)
     {
         $this->name = $name;
         $this->resolveCallback = $resolveCallback;
@@ -286,7 +285,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Define the callback that should be used to display the field's value.
      *
-     * @param  callable  $displayCallback
      * @return $this
      */
     public function displayUsing(callable $displayCallback)
@@ -299,7 +297,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Define the callback that should be used to resolve the field's value.
      *
-     * @param  callable  $resolveCallback
      * @return $this
      */
     public function resolveUsing(callable $resolveCallback)
@@ -312,7 +309,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  object  $model
      * @return mixed
      */
@@ -324,7 +320,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  object  $model
      * @return mixed
      */
@@ -336,7 +331,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  object  $model
      * @param  string  $attribute
      * @param  string|null  $requestAttribute
@@ -350,7 +344,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute
@@ -372,7 +365,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute
@@ -433,7 +425,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Get the validation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getRules(NovaRequest $request)
@@ -446,7 +437,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Get the creation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array|string
      */
     public function getCreationRules(NovaRequest $request)
@@ -476,7 +466,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Get the update rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getUpdateRules(NovaRequest $request)
@@ -506,7 +495,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Get the validation attribute for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return string
      */
     public function getValidationAttribute(NovaRequest $request)
@@ -629,7 +617,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Determine if the field is readonly.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return bool
      */
     public function isReadonly(NovaRequest $request)
@@ -686,7 +673,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Determine if the field is required.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return bool
      */
     public function isRequired(NovaRequest $request)
@@ -752,7 +738,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Set the callback to be used for determining the field's default value.
      *
-     * @param $callback
      * @return $this
      */
     public function default($callback)
@@ -765,7 +750,6 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Resolve the default value for the field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return string
      */
     protected function resolveDefaultValue(NovaRequest $request)

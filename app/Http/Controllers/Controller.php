@@ -17,6 +17,7 @@ use Illuminate\Routing\Controller as BaseController;
  *      },
  *      title="GEOHUB",
  *      description="Api documentation",
+ *
  *      @OA\Contact(
  *          email="info@webmapp.it"
  *      ),

@@ -9,7 +9,6 @@ trait HasSearchable
     /**
      * Search for the given value for a searchable field attribute.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  string  $search
      * @return void
@@ -17,14 +16,13 @@ trait HasSearchable
     public function searchInput(Browser $browser, $attribute, $search)
     {
         $browser->click('[dusk="'.$attribute.'-search-input"]')
-                ->pause(100)
-                ->type('[dusk="'.$attribute.'-search-input"] input', $search);
+            ->pause(100)
+            ->type('[dusk="'.$attribute.'-search-input"] input', $search);
     }
 
     /**
      * Select the searchable field by result index.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  int  $resultIndex
      * @return void
@@ -37,7 +35,6 @@ trait HasSearchable
     /**
      * Select the currently highlighted searchable field.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @return void
      */
@@ -49,7 +46,6 @@ trait HasSearchable
     /**
      * Select the currently highlighted searchable field.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @return void
      */
@@ -61,7 +57,6 @@ trait HasSearchable
     /**
      * Search and select the searchable field by result index.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  string  $search
      * @param  int  $resultIndex
@@ -79,7 +74,6 @@ trait HasSearchable
     /**
      * Search and select the currently highlighted searchable field.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @param  string  $attribute
      * @param  string  $search
      * @return void

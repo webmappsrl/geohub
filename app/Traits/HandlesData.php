@@ -3,11 +3,11 @@
 namespace App\Traits;
 
 use App\Http\Facades\OsmClient;
+use App\Models\EcTrack;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\EcTrack;
-use Exception;
 
 trait HandlesData
 {
@@ -20,17 +20,17 @@ trait HandlesData
         'descent',
         'distance',
         'duration_forward',
-        'duration_backward'
+        'duration_backward',
     ];
 
     public function getDemDataFields()
     {
         return $this->fields;
     }
+
     /**
      * Update track with DEM data.
      *
-     * @param EcTrack $track
      * @return void
      */
     public function updateDemData(EcTrack $track)
@@ -39,7 +39,7 @@ trait HandlesData
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->post(
-            rtrim(config('services.dem.host'), '/') . rtrim(config('services.dem.tech_data_api'), '/'),
+            rtrim(config('services.dem.host'), '/').rtrim(config('services.dem.tech_data_api'), '/'),
             $data
         );
 
@@ -56,7 +56,7 @@ trait HandlesData
             try {
                 if (isset($demData)) {
                     foreach ($this->fields as $field) {
-                        if (isset($demData[$field]) && !empty($demData[$field]) && is_null($track->$field)) {
+                        if (isset($demData[$field]) && ! empty($demData[$field]) && is_null($track->$field)) {
                             $track->$field = $this->updateFieldIfNecessary($track, $field, $demData, $oldDemData);
                         }
                     }
@@ -67,7 +67,7 @@ trait HandlesData
                 //    }
                 $track->saveQuietly();
             } catch (\Exception $e) {
-                Log::error('An error occurred during DEM operation: ' . $e->getMessage());
+                Log::error('An error occurred during DEM operation: '.$e->getMessage());
             }
         } else {
             // Request failed, handle the error here
@@ -83,8 +83,8 @@ trait HandlesData
 
         try {
             $osmId = trim($track->osmid);
-            $osmClient = new OsmClient();
-            $geojson_content = $osmClient::getGeojson('relation/' . $osmId);
+            $osmClient = new OsmClient;
+            $geojson_content = $osmClient::getGeojson('relation/'.$osmId);
             $geojson_content = json_decode($geojson_content, true);
             $osmData = $geojson_content['properties'];
             if (isset($osmData['duration:forward'])) {
@@ -99,20 +99,20 @@ trait HandlesData
             }
 
             $geojson_geometry = json_encode($geojson_content['geometry']);
-            $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_geometry . "')))) As wkt")[0]->wkt;
+            $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_geometry."')))) As wkt")[0]->wkt;
 
             $name_array = [];
-            if (array_key_exists('ref', $osmData) && !empty($osmData['ref'])) {
+            if (array_key_exists('ref', $osmData) && ! empty($osmData['ref'])) {
                 array_push($name_array, $osmData['ref']);
             }
-            if (array_key_exists('name', $osmData) && !empty($osmData['name'])) {
+            if (array_key_exists('name', $osmData) && ! empty($osmData['name'])) {
                 array_push($name_array, $osmData['name']);
             }
 
-            $trackname = !empty($name_array) ? implode(' - ', $name_array) : null;
+            $trackname = ! empty($name_array) ? implode(' - ', $name_array) : null;
             $trackname = str_replace('"', '', $trackname);
 
-            $track->name = !empty($track->name) ? $track->name : $trackname;
+            $track->name = ! empty($track->name) ? $track->name : $trackname;
             $track->geometry = $geometry ?? $track->geometry;
             $track->ref = $track->ref ?? $osmData['ref'] ?? null;
 
@@ -123,9 +123,9 @@ trait HandlesData
             $track->to = $this->updateFieldIfNecessary($track, 'to', $osmData, $oldOsmData);
             $track->ascent = $this->updateFieldIfNecessary($track, 'ascent', $osmData, $oldOsmData);
             $track->descent = $this->updateFieldIfNecessary($track, 'descent', $osmData, $oldOsmData);
-            $track->distance = $this->updateFieldIfNecessary($track, 'distance',  $osmData,  $oldOsmData, true);
-            $track->duration_forward = $this->updateFieldIfNecessary($track, 'duration_forward',  $osmData, $oldOsmData);
-            $track->duration_backward = $this->updateFieldIfNecessary($track, 'duration_backward',  $osmData, $oldOsmData);
+            $track->distance = $this->updateFieldIfNecessary($track, 'distance', $osmData, $oldOsmData, true);
+            $track->duration_forward = $this->updateFieldIfNecessary($track, 'duration_forward', $osmData, $oldOsmData);
+            $track->duration_backward = $this->updateFieldIfNecessary($track, 'duration_backward', $osmData, $oldOsmData);
             $track->osm_data = $osmData;
             $track->saveQuietly();
 
@@ -150,12 +150,12 @@ trait HandlesData
                 if (is_null($newValue)) {
                     $demData = json_decode($track->dem_data, true);
                     $osmData = json_decode($track->osm_data, true);
-                    if (isset($osmData[$field]) && !is_null($osmData[$field])) {
+                    if (isset($osmData[$field]) && ! is_null($osmData[$field])) {
                         $track[$field] = $osmData[$field];
-                        Log::info("Updated $field with OSM value: " . $osmData[$field]);
-                    } elseif (isset($demData[$field]) && !is_null($demData[$field])) {
+                        Log::info("Updated $field with OSM value: ".$osmData[$field]);
+                    } elseif (isset($demData[$field]) && ! is_null($demData[$field])) {
                         $track[$field] = $demData[$field];
-                        Log::info("Updated $field with DEM value: " . $demData[$field]);
+                        Log::info("Updated $field with DEM value: ".$demData[$field]);
                     }
                 }
             }
@@ -163,7 +163,7 @@ trait HandlesData
             $track->manual_data = $manualData;
             $track->saveQuietly();
         } catch (\Exception $e) {
-            Log::error($track->id . ': HandlesData: An error occurred during a store operation: ' . $e->getMessage());
+            Log::error($track->id.': HandlesData: An error occurred during a store operation: '.$e->getMessage());
         }
     }
 
@@ -191,7 +191,7 @@ trait HandlesData
     /**
      * Converts the given duration to a specific format.
      *
-     * @param int $duration The duration to be converted.
+     * @param  int  $duration  The duration to be converted.
      * @return string The converted duration.
      */
     protected function convertDuration($duration)
@@ -209,8 +209,7 @@ trait HandlesData
     /**
      * Check if the current field value matches the value in dem_data.
      *
-     * @param EcTrack $track
-     * @param string $field
+     * @param  string  $field
      * @return bool
      */
     protected function matchesDemData(EcTrack $track, $field)
@@ -226,15 +225,14 @@ trait HandlesData
     /**
      * Update a field if necessary.
      *
-     * @param EcTrack $track
-     * @param string $field
-     * @param array $properties
-     * @param bool $isNumeric
+     * @param  string  $field
+     * @param  array  $properties
+     * @param  bool  $isNumeric
      * @return mixed
      */
     protected function updateFieldIfNecessary(EcTrack $track, $field, $properties, $oldProperties, $isNumeric = false)
     {
-        if ($track->{$field} === null || (!is_null($oldProperties) && isset($oldProperties[$field]) && $track->{$field} == $oldProperties[$field])) {
+        if ($track->{$field} === null || (! is_null($oldProperties) && isset($oldProperties[$field]) && $track->{$field} == $oldProperties[$field])) {
             if (isset($properties[$field])) {
                 return $isNumeric ? str_replace(',', '.', $properties[$field]) : $properties[$field];
             }

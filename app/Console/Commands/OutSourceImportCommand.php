@@ -49,17 +49,18 @@ class OutSourceImportCommand extends Command
                 $this->handleSicai();
                 break;
             case 'osm':
-                    $this->handleOSM();
+                $this->handleOSM();
                 break;
-                
+
             default:
-                Log::error("INVALID PROVIDER");
-            break;
+                Log::error('INVALID PROVIDER');
+                break;
         }
     }
 
-    private function handleSicai() {
-        Log::info("Handling Sentiero Italia Provider");
+    private function handleSicai()
+    {
+        Log::info('Handling Sentiero Italia Provider');
         $si = app(OutSourceSentieroItaliaProvider::class);
         foreach ($si->getTrackList() as $id) {
             Log::info("Importing track: source_id -> {$id}");
@@ -69,17 +70,19 @@ class OutSourceImportCommand extends Command
                 'source_id' => $id,
             ]);
             $item = $si->getItem($id);
-            $os->tags=$item['tags'];
-            $os->geometry=DB::raw("(ST_GeomFromGeoJSON('{$item['geometry']}'))");
+            $os->tags = $item['tags'];
+            $os->geometry = DB::raw("(ST_GeomFromGeoJSON('{$item['geometry']}'))");
             $os->save();
         }
+
         return 0;
     }
 
-    private function handleOSM() {
-        Log::info("Handling OSM Provider");
+    private function handleOSM()
+    {
+        Log::info('Handling OSM Provider');
         $provider = app(OutSourceOSMProvider::class);
-        foreach($this->getHardCodedOSMIds() as $id) {
+        foreach ($this->getHardCodedOSMIds() as $id) {
             Log::info("Processing OSMID $id");
             $item = $provider->getItem($id);
             $os = OutSourceTrack::firstOrCreate([
@@ -88,13 +91,14 @@ class OutSourceImportCommand extends Command
                 'source_id' => $id,
             ]);
             $item = $provider->getItem($id);
-            $os->tags=$item['tags'];
-            $os->geometry=DB::raw("(ST_GeomFromGeoJSON('{$item['geometry']}'))");
+            $os->tags = $item['tags'];
+            $os->geometry = DB::raw("(ST_GeomFromGeoJSON('{$item['geometry']}'))");
             $os->save();
         }
     }
 
-    private function getHardCodedOSMIds() {
+    private function getHardCodedOSMIds()
+    {
         return [
             7744463,
             3523766,

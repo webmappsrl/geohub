@@ -26,19 +26,19 @@ class UgcPoiFactory extends Factory
         if (User::count() == 0) {
             User::factory()->create(100);
         }
-        /** @var  $geometry  LON : 10.3 - 10.7 LAT : 43.6 - 43.9 */
+        /** @var $geometry LON : 10.3 - 10.7 LAT : 43.6 - 43.9 */
         $lon = $this->faker->randomFloat(5, 10.3, 10.7);
         $lat = $this->faker->randomFloat(5, 43.6, 43.9);
         $geometry = DB::raw("(ST_GeomFromText('POINT($lon $lat)'))");
 
         $rawData = [];
         for ($i = 0; $i < $this->faker->numberBetween(1, 10); $i++) {
-            $rawData[strtolower($this->faker->word())] = implode(" ", $this->faker->words($this->faker->randomDigit()));
+            $rawData[strtolower($this->faker->word())] = implode(' ', $this->faker->words($this->faker->randomDigit()));
         }
 
         return [
             'name' => $this->faker->name(),
-            'sku' => 'it.webmapp.' . strtolower($this->faker->word()),
+            'sku' => 'it.webmapp.'.strtolower($this->faker->word()),
             'geometry' => $geometry,
             'raw_data' => json_encode($rawData),
             'user_id' => User::all()->random(1)->first()->id,

@@ -5,13 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartnershipsTable extends Migration {
+class CreatePartnershipsTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('partnerships', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
@@ -21,9 +23,9 @@ class CreatePartnershipsTable extends Migration {
         });
 
         DB::table('partnerships')->insert([
-            'name' => "Club Alpino Italiano",
-            'short_name' => "CAI",
-            'validator' => 'cai'
+            'name' => 'Club Alpino Italiano',
+            'short_name' => 'CAI',
+            'validator' => 'cai',
         ]);
     }
 
@@ -32,7 +34,8 @@ class CreatePartnershipsTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('partnerships');
     }
 }

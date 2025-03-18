@@ -11,14 +11,16 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Spatie\Translatable\HasTranslations;
 
-class TaxonomyTheme extends Model {
+class TaxonomyTheme extends Model
+{
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['identifier','name']; 
-    
+    protected $fillable = ['identifier', 'name'];
+
     public $translatable = ['name', 'description', 'excerpt'];
 
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         static::creating(function ($taxonomyTheme) {
             $user = User::getEmulatedUser();
             if (is_null($user)) {
@@ -28,7 +30,7 @@ class TaxonomyTheme extends Model {
         });
 
         static::saving(function ($taxonomyTheme) {
-            if (null !== $taxonomyTheme->identifier) {
+            if ($taxonomyTheme->identifier !== null) {
                 $taxonomyTheme->identifier = Str::slug($taxonomyTheme->identifier, '-');
             }
         });
@@ -36,51 +38,59 @@ class TaxonomyTheme extends Model {
         parent::save($options);
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
         static::creating(function ($taxonomyTheme) {
             if ($taxonomyTheme->identifier != null) {
                 $validateTaxonomyTheme = TaxonomyTheme::where('identifier', 'LIKE', $taxonomyTheme->identifier)->first();
-                if (!$validateTaxonomyTheme == null) {
+                if (! $validateTaxonomyTheme == null) {
                     self::validationError("The inserted 'identifier' field already exists.");
                 }
             }
         });
     }
 
-    public function author() {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+    public function author()
+    {
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
-    public function ecMedia() {
+    public function ecMedia()
+    {
         return $this->morphedByMany(EcMedia::class, 'taxonomy_themeable');
     }
 
-    public function ecTracks() {
+    public function ecTracks()
+    {
         return $this->morphedByMany(EcTrack::class, 'taxonomy_themeable');
     }
-    
-    public function ecPois() {
+
+    public function ecPois()
+    {
         return $this->morphedByMany(EcPoi::class, 'taxonomy_themeable');
     }
-    
-    public function apps() {
+
+    public function apps()
+    {
         return $this->morphedByMany(App::class, 'taxonomy_themeable');
     }
 
-    public function layers(): MorphToMany {
+    public function layers(): MorphToMany
+    {
         return $this->morphedByMany(Layer::class, 'taxonomy_themeable');
     }
 
-
-    public function featureImage(): BelongsTo {
+    public function featureImage(): BelongsTo
+    {
         return $this->belongsTo(EcMedia::class, 'feature_image');
     }
 
-    private static function validationError($message) {
+    private static function validationError($message)
+    {
         $messageBag = new MessageBag;
         $messageBag->add('error', __($message));
 
-        throw  ValidationException::withMessages($messageBag->getMessages());
+        throw ValidationException::withMessages($messageBag->getMessages());
     }
 }

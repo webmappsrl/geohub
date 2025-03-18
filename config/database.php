@@ -123,7 +123,6 @@ return [
             'sslmode' => 'prefer',
         ],
 
-
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -200,10 +199,10 @@ return [
     */
     'dbal' => [
         'types' => [
-            # See https://github.com/mstaack/laravel-postgis/issues/144
+            // See https://github.com/mstaack/laravel-postgis/issues/144
             'geometry' => '\Doctrine\DBAL\Types\StringType',
             'geography' => '\Doctrine\DBAL\Types\StringType',
-        ]
-    ]
+        ],
+    ],
 
 ];

@@ -14,20 +14,21 @@ class EmulateUser extends Action
     use InteractsWithQueue, Queueable;
 
     public $showOnDetail = false;
+
     public $showOnIndex = false;
+
     public $showOnTableRow = true;
+
     public $withoutConfirmation = true;
 
     public function name(): string
     {
-        return __("Emulate");
+        return __('Emulate');
     }
 
     /**
      * Perform the action on the given models.
      *
-     * @param ActionFields $fields
-     * @param Collection   $models
      *
      * @return mixed
      */

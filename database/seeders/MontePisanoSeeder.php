@@ -8,10 +8,10 @@ use App\Models\EcTrack;
 use App\Models\Layer;
 use App\Models\TaxonomyActivity;
 use App\Models\TaxonomyPoiType;
-use App\Models\TaxonomyTheme;
-use App\Models\TaxonomyWhere;
-use App\Models\TaxonomyWhen;
 use App\Models\TaxonomyTarget;
+use App\Models\TaxonomyTheme;
+use App\Models\TaxonomyWhen;
+use App\Models\TaxonomyWhere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -20,18 +20,28 @@ use Illuminate\Support\Str;
 
 class MontePisanoSeeder extends Seeder
 {
-
     private $taxonomy_activity_hiking;
+
     private $taxonomy_activity_cycling;
+
     private $taxonomy_theme_nature;
+
     private $taxonomy_theme_culture;
+
     private $taxonomy_when_spring;
+
     private $taxonomy_when_summer;
+
     private $taxonomy_when_autumn;
+
     private $taxonomy_when_winter;
+
     private $taxonomy_target_children;
+
     private $taxonomy_target_family;
+
     private $feature_image;
+
     /**
      * Run the database seeds.
      *
@@ -55,7 +65,8 @@ class MontePisanoSeeder extends Seeder
         $this->createAppsAndLayers();
     }
 
-    private function importAllWhere() {
+    private function importAllWhere()
+    {
         // Toscana
         $this->importWhere('toscana');
         // Provincia di Lucca
@@ -74,54 +85,61 @@ class MontePisanoSeeder extends Seeder
         $this->importWhere('comune_capannori');
         // Comune di Lucca
         $this->importWhere('comune_lucca');
-        // Comune di Vecchiano 
+        // Comune di Vecchiano
         $this->importWhere('comune_vecchiano');
         // Comune di Pisa
         $this->importWhere('comune_pisa');
 
     }
 
-    private function importAllPoiTypes() {
-        $this->importPoiType('Cultura','culture');
-        $this->importPoiType('Natura','nature');
-        $this->importPoiType('Centro Visite','visitor-center');
-        $this->importPoiType('Informazioni','tourist-information');
+    private function importAllPoiTypes()
+    {
+        $this->importPoiType('Cultura', 'culture');
+        $this->importPoiType('Natura', 'nature');
+        $this->importPoiType('Centro Visite', 'visitor-center');
+        $this->importPoiType('Informazioni', 'tourist-information');
         // $this->importPoiType('','');
     }
 
-    private function importAllActivities() {
-        $this->taxonomy_activity_hiking = TaxonomyActivity::factory()->create(['identifier'=>'hiking','name'=>'Escursionismo']);
-        $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier'=>'cycling','name'=>'In Bicicletta']);
+    private function importAllActivities()
+    {
+        $this->taxonomy_activity_hiking = TaxonomyActivity::factory()->create(['identifier' => 'hiking', 'name' => 'Escursionismo']);
+        $this->taxonomy_activity_cycling = TaxonomyActivity::factory()->create(['identifier' => 'cycling', 'name' => 'In Bicicletta']);
     }
 
-    private function importAllThemes() {
-        $this->taxonomy_theme_nature = TaxonomyTheme::factory()->create(['identifier'=>'nature','name'=>'Nature']);
-        $this->taxonomy_theme_culture = TaxonomyTheme::factory()->create(['identifier'=>'culture','name'=>'Culture']);
+    private function importAllThemes()
+    {
+        $this->taxonomy_theme_nature = TaxonomyTheme::factory()->create(['identifier' => 'nature', 'name' => 'Nature']);
+        $this->taxonomy_theme_culture = TaxonomyTheme::factory()->create(['identifier' => 'culture', 'name' => 'Culture']);
     }
 
-    private function importAllWhens() {
-        $this->taxonomy_when_spring = TaxonomyWhen::factory()->create(['identifier'=>'spring','name'=>'Primavera']);
-        $this->taxonomy_when_summer = TaxonomyWhen::factory()->create(['identifier'=>'summer','name'=>'Estate']);
-        $this->taxonomy_when_autumn = TaxonomyWhen::factory()->create(['identifier'=>'autumn','name'=>'Autunno']);
-        $this->taxonomy_when_winter = TaxonomyWhen::factory()->create(['identifier'=>'winter','name'=>'Inverno']);
+    private function importAllWhens()
+    {
+        $this->taxonomy_when_spring = TaxonomyWhen::factory()->create(['identifier' => 'spring', 'name' => 'Primavera']);
+        $this->taxonomy_when_summer = TaxonomyWhen::factory()->create(['identifier' => 'summer', 'name' => 'Estate']);
+        $this->taxonomy_when_autumn = TaxonomyWhen::factory()->create(['identifier' => 'autumn', 'name' => 'Autunno']);
+        $this->taxonomy_when_winter = TaxonomyWhen::factory()->create(['identifier' => 'winter', 'name' => 'Inverno']);
     }
 
-    private function importAllTargets() {
-        $this->taxonomy_target_children = TaxonomyTarget::factory()->create(['identifier'=>'children','name'=>'Bambini']);
-        $this->taxonomy_target_family = TaxonomyTarget::factory()->create(['identifier'=>'family','name'=>'Famiglie']);
-        $this->taxonomy_target_sport = TaxonomyTarget::factory()->create(['identifier'=>'sport','name'=>'Sportivi']);
+    private function importAllTargets()
+    {
+        $this->taxonomy_target_children = TaxonomyTarget::factory()->create(['identifier' => 'children', 'name' => 'Bambini']);
+        $this->taxonomy_target_family = TaxonomyTarget::factory()->create(['identifier' => 'family', 'name' => 'Famiglie']);
+        $this->taxonomy_target_sport = TaxonomyTarget::factory()->create(['identifier' => 'sport', 'name' => 'Sportivi']);
     }
 
-    private function importAllImages() {
+    private function importAllImages()
+    {
         Artisan::call('geohub:import_ec_media',
-                          ['url'=>'tests/Fixtures/EcMedia/test.jpg',
-                           'name'=>'TEST']);
-        $this->feature_image=EcMedia::all()->first();
+            ['url' => 'tests/Fixtures/EcMedia/test.jpg',
+                'name' => 'TEST']);
+        $this->feature_image = EcMedia::all()->first();
     }
 
-    private function importWhere($name) {
+    private function importWhere($name)
+    {
         $path = base_path().'/tests/Fixtures/MontePisano/where/'.$name.'.geojson';
-        if(file_exists($path)) {
+        if (file_exists($path)) {
             Log::info("Processing $path");
             $g = json_decode(file_get_contents($path));
             TaxonomyWhere::factory()->create(
@@ -131,13 +149,13 @@ class MontePisanoSeeder extends Seeder
                     'geometry' => DB::raw("ST_GeomFromGeoJSON('".json_encode($g->geometry)."')"),
                 ]
             );
-        }
-        else {
+        } else {
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
     }
 
-    private function importPoiType($name,$identifier) {
+    private function importPoiType($name, $identifier)
+    {
         TaxonomyPoiType::factory()->create(
             [
                 'name' => $name,
@@ -151,12 +169,13 @@ class MontePisanoSeeder extends Seeder
      *
      * @return void
      */
-    private function importTracks() {
+    private function importTracks()
+    {
         $path = base_path().'/tests/Fixtures/MontePisano/tracks.geojson';
-        if(file_exists($path)) {
-            Log::info("Processing TRACKS");
+        if (file_exists($path)) {
+            Log::info('Processing TRACKS');
             $g = json_decode(file_get_contents($path));
-            foreach($g->features as $track) {
+            foreach ($g->features as $track) {
                 $t = EcTrack::factory()->create([
                     'name' => isset($track->properties->name) ? $track->properties->name : 'ND',
                     'ref' => isset($track->properties->ref) ? $track->properties->ref : 'ND',
@@ -164,23 +183,23 @@ class MontePisanoSeeder extends Seeder
                 ]);
                 $t->TaxonomyActivities()->attach($this->taxonomy_activity_cycling);
                 $t->TaxonomyActivities()->attach($this->taxonomy_activity_hiking);
-                $t->feature_image=$this->feature_image->id;
+                $t->feature_image = $this->feature_image->id;
                 $t->save();
             }
-        }
-        else {
+        } else {
             Log::info("Warning $path does not exists... SKIPPING!!");
         }
 
     }
 
-    private function createAppsAndLayers() {
+    private function createAppsAndLayers()
+    {
         // TODO: uncomment elbrus and webmapp after ELASTIC stuff
         // $app_elbrus = App::factory()->create(['api'=>'elbrus']);
         // $app_webmapp = App::factory()->create(['api'=>'webmapp']);
-        $app = App::factory()->create(['api'=>'webapp']);
-        Layer::factory()->create(['app_id'=>$app->id]);
-        Layer::factory()->create(['app_id'=>$app->id]);
-       
+        $app = App::factory()->create(['api' => 'webapp']);
+        Layer::factory()->create(['app_id' => $app->id]);
+        Layer::factory()->create(['app_id' => $app->id]);
+
     }
 }

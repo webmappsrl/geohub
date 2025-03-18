@@ -3,8 +3,6 @@
 namespace Tests\Unit\Providers;
 
 use App\Providers\OsmServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class OsmServiceProviderCheckOsmIdTest extends TestCase
@@ -14,7 +12,7 @@ class OsmServiceProviderCheckOsmIdTest extends TestCase
      *
      * @return void
      */
-    public function test_some_cases() 
+    public function test_some_cases()
     {
         $osmp = app(OsmServiceProvider::class);
         $this->assertTrue($osmp->checkOsmId('node/1234'));

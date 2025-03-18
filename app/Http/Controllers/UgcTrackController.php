@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UgcTrackResource;
+use App\Http\Resources\UgcTrackCollection;
 use App\Models\App;
 use App\Models\UgcMedia;
 use App\Models\UgcTrack;
 use App\Providers\HoquServiceProvider;
+use App\Traits\UGCFeatureCollectionTrait;
+use App\Traits\ValidationTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\UgcTrackCollection;
-use App\Traits\UGCFeatureCollectionTrait;
-use Exception;
 use Illuminate\Support\Facades\Log;
-use App\Traits\ValidationTrait;
 
 class UgcTrackController extends Controller
 {
     use UGCFeatureCollectionTrait, ValidationTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +29,7 @@ class UgcTrackController extends Controller
         $user = auth('api')->user();
         if (isset($user)) {
 
-            if (!empty($request->header('app-id'))) {
+            if (! empty($request->header('app-id'))) {
                 $appId = $request->header('app-id');
                 if (is_numeric($appId)) {
                     $app = App::where('id', $appId)->first();
@@ -39,12 +38,14 @@ class UgcTrackController extends Controller
                 }
                 $tracks = UgcTrack::where([
                     ['user_id', $user->id],
-                    ['app_id', $app->id]
+                    ['app_id', $app->id],
                 ])->orderByRaw('updated_at DESC')->get();
+
                 return $this->getUGCFeatureCollection($tracks, $version);
             }
 
             $tracks = UgcTrack::where('user_id', $user->id)->orderByRaw('updated_at DESC')->get();
+
             return $this->getUGCFeatureCollection($tracks, $version);
         } else {
             return new UgcTrackCollection(UgcTrack::currentUser()->paginate(10));
@@ -63,15 +64,11 @@ class UgcTrackController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function store(Request $request, $version = 'v1'): Response
     {
-        Log::channel('ugc')->info("*************store ugc track*****************");
-        Log::channel('ugc')->info('version:' . $version);
+        Log::channel('ugc')->info('*************store ugc track*****************');
+        Log::channel('ugc')->info('version:'.$version);
         switch ($version) {
             case 'v1':
             default:
@@ -80,13 +77,14 @@ class UgcTrackController extends Controller
                 return $this->storeV2($request);
         }
     }
+
     public function storeV1(Request $request): Response
     {
         $data = $request->all();
-        Log::channel('ugc')->info("*************store v1 ugc track*****************");
+        Log::channel('ugc')->info('*************store v1 ugc track*****************');
         $dataProperties = $data['properties'];
-        Log::channel('ugc')->info('ugc poi store properties name:' . $dataProperties['name']);
-        Log::channel('ugc')->info('ugc poi store properties app_id(sku):' . $dataProperties['app_id']);
+        Log::channel('ugc')->info('ugc poi store properties name:'.$dataProperties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id(sku):'.$dataProperties['app_id']);
         $this->checkValidation($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -98,16 +96,18 @@ class UgcTrackController extends Controller
         ]);
 
         $user = auth('api')->user();
-        if (is_null($user))
+        if (is_null($user)) {
             return response(['error' => 'User not authenticated'], 403);
+        }
 
-        $track = new UgcTrack();
-        Log::channel('ugc')->info('user email:' . $user->email);
-        Log::channel('ugc')->info('user id:' . $user->id);
+        $track = new UgcTrack;
+        Log::channel('ugc')->info('user email:'.$user->email);
+        Log::channel('ugc')->info('user id:'.$user->id);
         $track->name = $data['properties']['name'];
-        if (isset($data['properties']['description']))
+        if (isset($data['properties']['description'])) {
             $track->description = $data['properties']['description'];
-        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($data['geometry']) . "'))");
+        }
+        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($data['geometry'])."'))");
         $track->user_id = $user->id;
 
         if (isset($data['properties']['app_id'])) {
@@ -137,14 +137,16 @@ class UgcTrackController extends Controller
         try {
             $track->save();
         } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio della track:' . $e->getMessage());
+            Log::channel('ugc')->info('Errore nel salvataggio della track:'.$e->getMessage());
+
             return response(['error' => 'Error saving Track'], 500);
         }
 
         if (isset($data['properties']['image_gallery']) && is_array($data['properties']['image_gallery']) && count($data['properties']['image_gallery']) > 0) {
             foreach ($data['properties']['image_gallery'] as $imageId) {
-                if (!!UgcMedia::find($imageId))
+                if ((bool) UgcMedia::find($imageId)) {
                     $track->ugc_media()->attach($imageId);
+                }
             }
         }
 
@@ -162,16 +164,40 @@ class UgcTrackController extends Controller
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
     }
+
     public function storeV2(Request $request): Response
     {
         $user = auth('api')->user();
+
+        if (is_null($user)) {
+            Log::channel('ugc')->info('Utente non autenticato');
+
+            return response(['error' => 'User not authenticated'], 403);
+        }
+
+        $ugcMediaCtrl = app(UgcMediaController::class);
         $data = $request->all();
-        Log::channel('ugc')->info("*************store v2 ugc track*****************");
-        Log::channel('ugc')->info('user email:' . $user->email);
-        Log::channel('ugc')->info('user id:' . $user->id);
-        $properties = $data['properties'];
-        Log::channel('ugc')->info('ugc poi store properties name:' . $properties['name']);
-        Log::channel('ugc')->info('ugc poi store properties app_id:' . $properties['app_id']);
+        $feature = json_decode($data['feature'], true);
+        $images = $request->file('images', []);
+        $properties = $feature['properties'];
+
+        if (! empty($images)) {
+            if (! $ugcMediaCtrl->validateUploadedImages($images)) {
+                Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
+
+                return response([
+                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'retry' => true,
+                ], 422);
+            }
+        }
+
+        Log::channel('ugc')->info('*************store v2 ugc track*****************');
+        Log::channel('ugc')->info('user email:'.$user->email);
+        Log::channel('ugc')->info('user id:'.$user->id);
+        Log::channel('ugc')->info('ugc poi store properties name:'.$properties['name']);
+        Log::channel('ugc')->info('ugc poi store properties app_id:'.$properties['app_id']);
+
         $this->checkValidation($data, [
             'type' => 'required',
             'properties' => 'required|array',
@@ -182,66 +208,56 @@ class UgcTrackController extends Controller
             'geometry.coordinates' => 'required|array',
         ]);
 
-        $user = auth('api')->user();
-        if (is_null($user))
-            return response(['error' => 'User not authenticated'], 403);
+        DB::beginTransaction();
+        try {
+            $track = new UgcTrack;
+            $track->name = $properties['name'];
+            $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($feature['geometry'])."'))");
+            $track->properties = $properties;
+            $track->user_id = $user->id;
 
-        $track = new UgcTrack();
-
-        $track->name = $properties['name'];
-        $track->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($data['geometry']) . "'))");
-        $track->properties = $properties;
-        $track->user_id = $user->id;
-
-        if (isset($properties['app_id'])) {
-            $app_id = $properties['app_id'];
-            if (is_numeric($app_id)) {
-                Log::channel('ugc')->info('numeric');
-                $app = App::where('id', '=', $app_id)->first();
-                if ($app != null) {
-                    $track->app_id = $app_id;
-                    $track->sku = $app->sku;
-                }
-            } else {
-                Log::channel('ugc')->info('sku');
-                $app = App::where('sku', '=', $app_id)->first();
-                if ($app != null) {
-                    $track->app_id = $app->id;
-                    $track->sku = $app_id;
+            if (isset($properties['app_id'])) {
+                $app_id = $properties['app_id'];
+                if (is_numeric($app_id)) {
+                    Log::channel('ugc')->info('numeric');
+                    $app = App::where('id', '=', $app_id)->first();
+                    if ($app != null) {
+                        $track->app_id = $app_id;
+                        $track->sku = $app->sku;
+                    }
+                } else {
+                    Log::channel('ugc')->info('sku');
+                    $app = App::where('sku', '=', $app_id)->first();
+                    if ($app != null) {
+                        $track->app_id = $app->id;
+                        $track->sku = $app_id;
+                    }
                 }
             }
-        }
 
-        try {
             $track->save();
-        } catch (\Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio della track:' . $e->getMessage());
-            return response(['error' => 'Error saving Track'], 500);
-        }
+            Log::channel('ugc')->info('track creata id:'.$track->id);
 
-        if (isset($properties['image_gallery']) && is_array($properties['image_gallery']) && count($properties['image_gallery']) > 0) {
-            foreach ($properties['image_gallery'] as $imageId) {
-                if (!!UgcMedia::find($imageId))
-                    $track->ugc_media()->attach($imageId);
+            // **Track associa i media**
+            if (! empty($images)) {
+                $ugcMediaCtrl->saveAndAttachMediaToModel($track, $user, $images);
             }
-        }
 
-        unset($properties['image_gallery']);
-        $track->save();
+            DB::commit();
+            Log::channel('ugc')->info('POST STORE TRACK OK:'.$track->id);
 
-        $hoquService = app(HoquServiceProvider::class);
-        try {
-            $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
+            return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
         } catch (\Exception $e) {
-        }
+            Log::channel('ugc')->error('Errore durante la creazione della TRACK: '.$e->getMessage());
+            DB::rollBack();
 
-        return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
+            return response(['error' => 'Error saving TRACK'], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\UgcTrack $ugcTrack
      *
      * @return Response
      */
@@ -253,25 +269,24 @@ class UgcTrackController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\UgcTrack $ugcTrack
-     *
-     * @return Response
+     * @param  \App\Models\UgcTrack  $ugcTrack
      */
     public function edit(Request $request): Response
     {
-        Log::channel('ugc')->info("*************edit ugc track*****************");
+        Log::channel('ugc')->info('*************edit ugc track*****************');
 
         $data = $request->all();
 
-        if (!isset($data['properties']['id'])) {
+        if (! isset($data['properties']['id'])) {
             Log::channel('ugc')->info('ID non presente nelle properties del GeoJSON');
+
             return response(['error' => 'ID is required in properties'], 400);
         }
 
         $id = $data['properties']['id'];
         $properties = $data['properties'];
 
-        Log::channel('ugc')->info('Modifica della track con ID: ' . $id);
+        Log::channel('ugc')->info('Modifica della track con ID: '.$id);
 
         // Validazione dei dati
         $this->checkValidation($data, [
@@ -288,31 +303,34 @@ class UgcTrackController extends Controller
         $user = auth('api')->user();
         if (is_null($user)) {
             Log::channel('ugc')->info('Utente non autenticato');
+
             return response(['error' => 'User not authenticated'], 403);
         }
 
         // Recupero della track esistente
         $ugcTrack = UgcTrack::find($id);
-        if (!$ugcTrack || $ugcTrack->user_id !== $user->id) {
+        if (! $ugcTrack || $ugcTrack->user_id !== $user->id) {
             Log::channel('ugc')->info('Track non trovata o accesso non autorizzato');
+
             return response(['error' => 'Track not found or unauthorized access'], 404);
         }
 
-        Log::channel('ugc')->info('user email:' . $user->email);
-        Log::channel('ugc')->info('user id:' . $user->id);
+        Log::channel('ugc')->info('user email:'.$user->email);
+        Log::channel('ugc')->info('user id:'.$user->id);
 
         // Aggiornamento dei campi principali
         $ugcTrack->name = $properties['name'] ?? $ugcTrack->name;
         if (isset($properties['description'])) {
             $ugcTrack->description = $properties['description'];
         }
-        $ugcTrack->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('" . json_encode($data['geometry']) . "'))");
+        $ugcTrack->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($data['geometry'])."'))");
         $ugcTrack->properties = $properties;
         // Salvataggio della track
         try {
             $ugcTrack->save();
         } catch (Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio della track: ' . $e->getMessage());
+            Log::channel('ugc')->info('Errore nel salvataggio della track: '.$e->getMessage());
+
             return response(['error' => 'Error updating Track'], 500);
         }
 
@@ -324,12 +342,9 @@ class UgcTrackController extends Controller
         return response(['id' => $ugcTrack->id, 'message' => 'Updated successfully'], 200);
     }
 
-
     /**
      * Update the specified resource in storage.
      *
-     * @param Request              $request
-     * @param \App\Models\UgcTrack $ugcTrack
      *
      * @return Response
      */
@@ -341,21 +356,28 @@ class UgcTrackController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\UgcTrack $ugcTrack
-     *
+     * @param  \App\Models\UgcTrack  $ugcTrack
      * @return Response
      */
     public function destroy($id)
     {
+        // This sections is needed to handle the case when the user asks for a specific api version
+        $args = func_get_args();
+        $n = func_num_args();
+        if ($n > 1) {
+            $id = $args[1];
+        }
+
         try {
             $track = UgcTrack::find($id);
             $track->delete();
         } catch (Exception $e) {
             return response()->json([
-                'error' => "this track can't be deleted by api",
-                'code' => 400
+                'error' => "this track can't be deleted by api. ".$e->getMessage(),
+                'code' => 400,
             ], 400);
         }
+
         return response()->json(['success' => 'track deleted']);
     }
 }

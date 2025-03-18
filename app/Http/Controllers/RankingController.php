@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
-use Illuminate\Http\Request;
 
 class RankingController extends Controller
 {
     public function showTopTen($appid)
     {
         // Supponiamo che l'ID dell'app sia 1
-        if (!is_null($appid)) {
+        if (! is_null($appid)) {
 
             $app = App::find($appid);
             $topTen = $app->getRankedUsersNearPois();
@@ -28,8 +27,6 @@ class RankingController extends Controller
         // Find the position of the user
         $position = array_search($userId, $userIds);
 
-
-
         // Get the three users before and three users after
         $start = max(0, $position - 3);
         $end = min(count($userIds) - 1, $position + 3);
@@ -39,7 +36,7 @@ class RankingController extends Controller
             'rankings' => $subset,
             'position' => $position + 1, // Convert to 1-based index
             'userId' => $userId,
-            'app' => $app
+            'app' => $app,
         ]);
     }
 }

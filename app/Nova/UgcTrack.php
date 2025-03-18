@@ -2,26 +2,25 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\AppFilter;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
-use Laravel\Nova\Fields\Text;
-
-use App\Nova\Filters\SchemaFilter;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use App\Nova\Filters\UgcCreationDateFilter;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
-use Titasgailius\SearchRelations\SearchesRelations;
-use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
-use App\Nova\Actions\ExportFormDataXLSX;
 use App\Models\App;
 use App\Nova\Actions\CopyUgc;
+use App\Nova\Actions\ExportFormDataXLSX;
+use App\Nova\Filters\AppFilter;
+use App\Nova\Filters\SchemaFilter;
+use App\Nova\Filters\UgcCreationDateFilter;
 use Exception;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
+use Titasgailius\SearchRelations\SearchesRelations;
+use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 
 class UgcTrack extends Resource
 {
@@ -29,26 +28,27 @@ class UgcTrack extends Resource
 
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
     public static string $model = \App\Models\UgcTrack::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'name'
+        'name',
     ];
+
     public static array $searchRelations = [
-        'taxonomy_wheres' => ['name']
+        'taxonomy_wheres' => ['name'],
     ];
 
     public static function group()
@@ -59,7 +59,6 @@ class UgcTrack extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -70,15 +69,12 @@ class UgcTrack extends Resource
         }
         $user = $request->user();
         $apps = $user->apps->pluck('id')->toArray();
+
         return $query->whereIn('app_id', $apps);
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -91,12 +87,13 @@ class UgcTrack extends Resource
             Text::make(__('Name'), 'name')
                 ->sortable()
                 ->help(__('Name of the UGC (User-Generated Content).')),
-            Text::make(__('App'),  function ($model) {
+            Text::make(__('App'), function ($model) {
                 $help = __('App from which the UGC was submitted.');
                 $sku = $model->sku;
                 $app = App::where('sku', $sku)->first();
                 if ($app) {
                     $url = url("/resources/apps/{$app->id}");
+
                     return <<<HTML
                     <a
                         href="{$url}"
@@ -106,6 +103,7 @@ class UgcTrack extends Resource
                     </a> <br>
                     HTML;
                 }
+
                 return $help;
             })->asHtml(),
             BelongsTo::make(__('Creator'), 'user', User::class)
@@ -118,7 +116,7 @@ class UgcTrack extends Resource
                 ->help(__('Reference ID of the app SKU. If changed, the UGC (User-Generated Content) will no longer be visible for the current app.')),
             BelongsToMany::make(__('Taxonomy wheres')),
             Text::make(__('Form'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+                $formData = $model->properties['form'] ?? [];
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
 
                 if (isset($formData)) {
@@ -141,7 +139,8 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
+                            $html = '<strong>'.htmlspecialchars($typeLabel).'</strong>';
+
                             return $html;
                         }
                     }
@@ -154,8 +153,36 @@ class UgcTrack extends Resource
 
                 return count($gallery) > 0;
             })->onlyOnIndex(),
-            Text::make(__('Form data'), function ($model) {
-                $formData = json_decode($model->raw_data, true);
+            WmEmbedmapsField::make(__('Geometry'), function ($model) {
+                return [
+                    'feature' => $model->getGeojson(),
+                    'related' => $model->getRelatedUgcGeojson(),
+                ];
+            })->onlyOnDetail(),
+            Heading::make('<p>properties</p>')
+                ->asHtml()
+                ->onlyOnDetail(),
+            Text::make(__('App version'), function ($model) {
+                $properties = $model->properties;
+                $device = $properties['device'] ?? null;
+                $appVersion = $device['appVersion'] ?? null;
+
+                return $appVersion;
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
+            Text::make(__('Distance filter'), function ($model) {
+                $properties = $model->properties;
+                $distanceFilter = $properties['distanceFilter'] ?? null;
+
+                return $distanceFilter;
+            })
+                ->onlyOnDetail()
+                ->asHtml(),
+            Text::make(__('Form'), function ($model) {
+
+                $formData = $model->properties['form'] ?? [];
+
                 $html = '<table style="width:100%; border-collapse: collapse;" border="1">';
                 $help = '<p>Type of form submitted, and data entered within it</p>';
                 if (isset($formData)) {
@@ -177,7 +204,7 @@ class UgcTrack extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
+                            $html .= '<td><strong>tipo di form</strong></td><td>'.htmlspecialchars($typeLabel).'</td>';
 
                             foreach ($currentSchema['fields'] as $field) {
                                 $fieldLabel = reset($field['label']);
@@ -198,30 +225,37 @@ class UgcTrack extends Resource
 
                                 if (isset($fieldValue)) {
                                     $html .= '<tr>';
-                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
-                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
+                                    $html .= '<td><strong>'.htmlspecialchars($fieldLabel).'</strong></td>';
+                                    $html .= '<td>'.htmlspecialchars($fieldValue).'</td>';
                                     $html .= '</tr>';
                                 }
                             }
                             $html .= '</table>';
 
-                            return $html . $help;
+                            return $html.$help;
                         }
                     }
                 }
             })
                 ->onlyOnDetail()
                 ->asHtml(),
-            Heading::make('<p>Geolocated track created by the user</p>')
-                ->asHtml()
-                ->onlyOnDetail(),
-            WmEmbedmapsField::make(__('Map'), function ($model) {
-                return [
-                    'feature' => $model->getGeojson(),
-                    'related' => $model->getRelatedUgcGeojson()
-                ];
-            })->onlyOnDetail(),
             BelongsToMany::make(__('UGC Medias'), 'ugc_media'),
+            Code::make(__('device'), 'properties')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail()
+                ->resolveUsing(function ($properties) {
+                    return json_encode($properties['device'] ?? null, JSON_PRETTY_PRINT);
+                }),
+            Code::make(__('location'), 'properties')
+                ->language('json')
+                ->rules('nullable', 'json')
+                ->help('metadata of track')
+                ->onlyOnDetail()
+                ->resolveUsing(function ($properties) {
+                    return json_encode($properties['locations'] ?? null, JSON_PRETTY_PRINT);
+                }),
             Code::Make(__('metadata'), 'metadata')
                 ->language('json')
                 ->rules('nullable', 'json')
@@ -230,16 +264,17 @@ class UgcTrack extends Resource
             Text::make(__('Raw data'), function ($model) {
                 $rawData = json_decode($model->raw_data, true);
 
-                if (! is_array($rawData))
+                if (! is_array($rawData)) {
                     return 'Invalid raw data';
+                }
 
                 $result = [];
 
                 foreach ($rawData as $key => $value) {
-                    $result[] = $key . ' = ' . json_encode($value);
+                    $result[] = $key.' = '.json_encode($value);
                 }
 
-                return join('<br>', $result);
+                return implode('<br>', $result);
             })
                 ->onlyOnDetail()
                 ->asHtml(),
@@ -248,10 +283,6 @@ class UgcTrack extends Resource
 
     /**
      * Get the cards available for the request.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function cards(Request $request): array
     {
@@ -260,10 +291,6 @@ class UgcTrack extends Resource
 
     /**
      * Get the filters available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function filters(Request $request): array
     {
@@ -275,16 +302,11 @@ class UgcTrack extends Resource
             (new AppFilter),
             (new SchemaFilter('ugc_track')),
 
-
         ];
     }
 
     /**
      * Get the lenses available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function lenses(Request $request): array
     {
@@ -293,10 +315,6 @@ class UgcTrack extends Resource
 
     /**
      * Get the actions available for the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function actions(Request $request): array
     {
@@ -304,7 +322,7 @@ class UgcTrack extends Resource
             (new ExportFormDataXLSX('ugc_tracks'))->canRun(function ($request, $model) {
                 return true;
             }),
-            (new CopyUgc())->canSee(function ($request) {
+            (new CopyUgc)->canSee(function ($request) {
                 return $request->user()->hasRole('Admin');
             })->canRun(function ($request, $zone) {
                 return $request->user()->hasRole('Admin');

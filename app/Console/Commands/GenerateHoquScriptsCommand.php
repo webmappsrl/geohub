@@ -9,7 +9,6 @@ use App\Models\EcTrack;
 use App\Models\OutSourceFeature;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 
 class GenerateHoquScriptsCommand extends Command
 {
@@ -56,51 +55,57 @@ class GenerateHoquScriptsCommand extends Command
         $tracks = $pois = $media = [];
 
         // OPTION USER_ID
-        if ($this->hasOption('user_id') && !empty($this->option('user_id'))) {
+        if ($this->hasOption('user_id') && ! empty($this->option('user_id'))) {
             $user = User::find($this->option('user_id'));
             if (is_null($user)) {
                 $this->info("No user found with id={$this->option('user_id')}");
+
                 return 0;
             }
             $tracks = $user->ecTracks;
             if ($tracks->count() == 0) {
                 $this->info("No tracks found corresponding to user {$user->email},ID:{$user->id}");
+
                 return 0;
             }
         }
         // OPTION USER_EMAIL
-        else if ($this->hasOption('user_email') && !empty($this->option('user_email'))) {
+        elseif ($this->hasOption('user_email') && ! empty($this->option('user_email'))) {
             $user = User::where('email', $this->option('user_email'))->first();
             if (is_null($user)) {
                 $this->info("No user found with email={$this->option('user_email')}");
+
                 return 0;
             }
             $tracks = $user->ecTracks;
             if ($tracks->count() == 0) {
                 $this->info("No tracks found corresponding to user {$user->email},ID:{$user->id}");
+
                 return 0;
             }
         }
         // OPTION APP_ID
-        else if (!empty($this->option('app_id'))) {
+        elseif (! empty($this->option('app_id'))) {
             $app = App::find($this->option('app_id'));
             if (is_null($app)) {
                 $this->info("No app found with id={$this->option('app_id')}");
+
                 return 0;
             }
             $tracks = $app->getTracksFromLayer();
             if (count($tracks) == 0) {
                 $this->info("No tracks found corresponding to user {$app->name},ID:{$app->id}");
+
                 return 0;
             }
             $tracks = EcTrack::whereIn('id', array_keys($tracks))->get();
         }
 
         // OPTION OSF_ENDPOINT
-        else if (!empty($this->option('osf_endpoint'))) {
-            //currently all osm2cai tracks have osm2cai.cai.it as endpoint domain
-            //once the migration is done, this has to be removed after a proper update of import_sync_osm2cai_all.sh script
-            //restoring the osm2cai.cai.it domain
+        elseif (! empty($this->option('osf_endpoint'))) {
+            // currently all osm2cai tracks have osm2cai.cai.it as endpoint domain
+            // once the migration is done, this has to be removed after a proper update of import_sync_osm2cai_all.sh script
+            // restoring the osm2cai.cai.it domain
             $endpoint = str_replace('https://osm2cai.maphub.it', 'https://osm2cai.cai.it', $this->option('osf_endpoint'));
             $osfs = OutSourceFeature::where('endpoint', $endpoint)->get();
             if ($osfs->count() == 0) {
@@ -123,11 +128,12 @@ class GenerateHoquScriptsCommand extends Command
         } else {
             $this->info('No option set: you have to set one of user_id,user_email,app_id,osf_endpoint.');
             $this->info('Use php artisan geohub:generate_hoqu_script --help to have more details.');
+
             return 0;
         }
 
         // MEDIA (skip with --mbtiles)
-        if (!$this->option('mbtiles') && ($c = count($media)) > 0) {
+        if (! $this->option('mbtiles') && ($c = count($media)) > 0) {
             foreach ($media as $item) {
                 $item->updateDataChain($item);
             }
@@ -135,7 +141,7 @@ class GenerateHoquScriptsCommand extends Command
         }
 
         // POI (skip with --mbtiles)
-        if (!$this->option('mbtiles') && ($c = count($pois)) > 0) {
+        if (! $this->option('mbtiles') && ($c = count($pois)) > 0) {
             foreach ($pois as $item) {
                 $item->updateDataChain($item);
             }

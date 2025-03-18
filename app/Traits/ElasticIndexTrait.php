@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 trait ElasticIndexTrait
 {
-
     public function getClient()
     {
         $host = config('services.elastic.host');
@@ -28,10 +27,9 @@ trait ElasticIndexTrait
 
             return $client;
         } catch (\Exception $e) {
-            Log::error('Connection to Elasticsearch failed: ' . $e->getMessage());
+            Log::error('Connection to Elasticsearch failed: '.$e->getMessage());
         }
     }
-
 
     public function createElasticIndex($indexName)
     {
@@ -46,26 +44,26 @@ trait ElasticIndexTrait
                     'mappings' => [
                         'properties' => [
                             'name' => [
-                                'type' => 'text'
+                                'type' => 'text',
                             ],
-                        ]
+                        ],
                     ],
                     'settings' => [
-                        'max_result_window' => 50000
-                    ]
-                ]
+                        'max_result_window' => 50000,
+                    ],
+                ],
             ];
 
             // Creazione dell'indice
 
-            if (!$client->indices()->exists(['index' => $indexName])) {
+            if (! $client->indices()->exists(['index' => $indexName])) {
                 $response = $client->indices()->create($params);
-                Log::info('Indice creato con successo: ' . json_encode($response));
+                Log::info('Indice creato con successo: '.json_encode($response));
             } else {
                 Log::info('Indice già esistente');
             }
         } catch (\Exception $e) {
-            Log::error('Errore nella creazione dell\'indice: ' . $e->getMessage());
+            Log::error('Errore nella creazione dell\'indice: '.$e->getMessage());
             throw $e; // Rilancia l'eccezione se necessario
         }
     }
@@ -74,18 +72,21 @@ trait ElasticIndexTrait
     {
         try {
             $client = $this->getClient();
-            Log::info("ping:" . $client->ping());
+            Log::info('ping:'.$client->ping());
             // Verifica se l'indice esiste prima di tentare di cancellarlo
             if ($client->indices()->exists(['index' => $indexName])) {
                 $response = $client->indices()->delete(['index' => $indexName]);
                 Log::info("Indice '$indexName' cancellato con successo.");
+
                 return response()->json(['status' => 'success', 'message' => "Indice '$indexName' cancellato con successo."], 200);
             } else {
                 Log::warning("Indice '$indexName' non esiste.");
+
                 return response()->json(['status' => 'error', 'message' => "Indice '$indexName' non esiste."], 404);
             }
         } catch (\Exception $e) {
-            Log::error('Errore durante la cancellazione dell\'indice: ' . $e->getMessage());
+            Log::error('Errore durante la cancellazione dell\'indice: '.$e->getMessage());
+
             return response()->json(['status' => 'error', 'message' => 'Errore durante la cancellazione dell\'indice.'], 500);
         }
     }
@@ -98,15 +99,15 @@ trait ElasticIndexTrait
             // Parametri per la cancellazione dell'indice
             $params = [
                 'index' => $indexName,
-                'id' => $id
+                'id' => $id,
             ];
             if ($client->exists($params)) {
-                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  ' . $params['index'] . ' doc' . $params['id']);
+                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  '.$params['index'].' doc'.$params['id']);
                 $response = $client->delete($params);
                 Log::info($response);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: ' . $e->getMessage());
+            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: '.$e->getMessage());
             throw $e;
         }
     }
@@ -125,14 +126,15 @@ trait ElasticIndexTrait
                 'body' => [
                     'doc' => $doc,
                     'doc_as_upsert' => true, // Crea il documento se non esiste (upsert)
-                ]
+                ],
             ];
             // Indicizza o aggiorna il documento
             $response = $client->index($params);
             Log::info("Documento con ID '$id' indicizzato/aggiornato con successo nell'indice '$indexName'.");
-            return response()->json(['status' => 'success', 'message' => "Documento indicizzato/aggiornato con successo.", 'data' => $response], 200);
+
+            return response()->json(['status' => 'success', 'message' => 'Documento indicizzato/aggiornato con successo.', 'data' => $response], 200);
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => updateElasticIndexDoc: ' . json_encode($doc));
+            Log::error('ElasticIndexTrait => updateElasticIndexDoc: '.json_encode($doc));
             throw $e;
         }
     }

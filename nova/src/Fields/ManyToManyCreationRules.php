@@ -60,7 +60,6 @@ trait ManyToManyCreationRules
     /**
      * Get the creation rules for this field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function getManyToManyCreationRules(NovaRequest $request)

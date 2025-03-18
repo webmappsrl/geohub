@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\EcTrack;
-use App\Providers\HoquServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -52,19 +51,19 @@ class RegeneratesContentCommand extends Command
                 $this->info('Sending store to HOQU for EcTrack');
                 if (isset($id)) {
                     $tracks = EcTrack::all()->where('id', $id);
-                    $msg = ' with id ' . $id;
+                    $msg = ' with id '.$id;
                 } else {
                     $tracks = EcTrack::all();
                 }
                 if (count($tracks) == 0) {
-                    $this->warn('No EcTracks found in geohub' . $msg);
+                    $this->warn('No EcTracks found in geohub'.$msg);
                 } else {
                     foreach ($tracks as $track) {
-                        $this->info('Hoqu Store for track: ' . $track->id);
+                        $this->info('Hoqu Store for track: '.$track->id);
                         try {
                             $track->updateDataChain($track);
                         } catch (\Exception $e) {
-                            Log::error($track->id . ' EcTrack RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($track->id.' EcTrack RegeneratesContentCommand: An error occurred during a store operation: '.$e->getMessage());
                         }
                     }
                 }
@@ -73,19 +72,19 @@ class RegeneratesContentCommand extends Command
                 $this->info('Sending store to HOQU for EcPoi');
                 if (isset($id)) {
                     $pois = EcPoi::all()->where('id', $id);
-                    $msg = ' with id ' . $id;
+                    $msg = ' with id '.$id;
                 } else {
                     $pois = EcPoi::all();
                 }
                 if (count($pois) == 0) {
-                    $this->warn('No EcPois found in geohub' . $msg);
+                    $this->warn('No EcPois found in geohub'.$msg);
                 } else {
                     foreach ($pois as $poi) {
-                        $this->info('Hoqu Store for poi: ' . $poi->id);
+                        $this->info('Hoqu Store for poi: '.$poi->id);
                         try {
                             $poi->updateDataChain($poi);
                         } catch (\Exception $e) {
-                            Log::error($poi->id . ' EcPoi RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($poi->id.' EcPoi RegeneratesContentCommand: An error occurred during a store operation: '.$e->getMessage());
                         }
                     }
                 }
@@ -94,25 +93,25 @@ class RegeneratesContentCommand extends Command
                 $this->info('Sending store to HOQU for EcMedia');
                 if (isset($id)) {
                     $medias = EcMedia::all()->where('id', $id);
-                    $msg = ' with id ' . $id;
+                    $msg = ' with id '.$id;
                 } else {
                     $medias = EcMedia::all();
                 }
                 if (count($medias) == 0) {
-                    $this->warn('No EcMedia found in geohub' . $msg);
+                    $this->warn('No EcMedia found in geohub'.$msg);
                 } else {
                     foreach ($medias as $media) {
-                        $this->info('Hoqu Store for media: ' . $media->id);
+                        $this->info('Hoqu Store for media: '.$media->id);
                         try {
                             $media->updateDataChain($media);
                         } catch (\Exception $e) {
-                            Log::error($media->id . ' EcMedia RegeneratesContentCommand: An error occurred during a store operation: ' . $e->getMessage());
+                            Log::error($media->id.' EcMedia RegeneratesContentCommand: An error occurred during a store operation: '.$e->getMessage());
                         }
                     }
                 }
                 break;
             default:
-                $this->error('Invalid model ' . $model . '. Available model: EcTrack, EcMedia');
+                $this->error('Invalid model '.$model.'. Available model: EcTrack, EcMedia');
                 break;
         }
 

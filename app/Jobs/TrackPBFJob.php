@@ -16,19 +16,24 @@ use Illuminate\Support\Facades\Storage;
 
 class TrackPBFJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
-
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     // Numero massimo di tentativi
     public $tries = 5;
+
     // Tempo massimo di esecuzione in secondi
     public $timeout = 900; // 10 minuti
 
     protected $z;
+
     protected $x;
+
     protected $y;
+
     protected $app_id;
+
     protected $author_id;
+
     protected $zoomTreshold = 6;
 
     /**
@@ -62,26 +67,28 @@ class TrackPBFJob implements ShouldQueue
             $sql = $this->generateSQL($boundingBox);
             $pbf = DB::select($sql);
             $pbfContent = stream_get_contents($pbf[0]->st_asmvt) ?? null;
-            if (!empty($pbfContent)) {
+            if (! empty($pbfContent)) {
                 $this->storePBF($pbfContent);
             } else {
                 $this->markTileAsEmpty($this->z, $this->x, $this->y);
                 Log::channel('pbf')->info("{$this->app_id}/{$this->z}/{$this->x}/{$this->y}.pbf -> EMPTY");
             }
-            return $this->app_id . '/' . $this->z . '/' . $this->x . '/' . $this->y . '.pbf';
+
+            return $this->app_id.'/'.$this->z.'/'.$this->x.'/'.$this->y.'.pbf';
         } catch (\Exception $e) {
 
             // Log dell'errore
-            Log::error("Errore durante la generazione del PBF: " . $e->getMessage());
+            Log::error('Errore durante la generazione del PBF: '.$e->getMessage());
             // Opzionalmente, puoi reintrodurre l'eccezione per far fallire il job
             throw $e;
         }
     }
+
     protected function countTracks($boundingBox): int
     {
         // Recupera l'app con i layer associati
         $app = App::with('layers')->find($this->app_id);
-        if (!$app) {
+        if (! $app) {
             return 0; // Nessun layer associato, nessuna traccia
         }
 
@@ -115,11 +122,11 @@ class TrackPBFJob implements ShouldQueue
         SQL;
 
         $result = DB::select($sql, [
-            'layer_ids' => '{' . implode(',', $layerIds) . '}', // Converti in array PostgreSQL
+            'layer_ids' => '{'.implode(',', $layerIds).'}', // Converti in array PostgreSQL
         ]);
+
         return $result[0]->total_tracks ?? 0;
     }
-
 
     public function tileToBoundingBox($tileCoordinates): array
     {
@@ -129,7 +136,7 @@ class TrackPBFJob implements ShouldQueue
         $worldTileSize = 2 ** $tileCoordinates['zoom'];
         $tileMercSize = $worldMercSize / $worldTileSize;
 
-        $env = array();
+        $env = [];
         $env['xmin'] = $worldMercMin + $tileMercSize * $tileCoordinates['x'];
         $env['xmax'] = $worldMercMin + $tileMercSize * ($tileCoordinates['x'] + 1);
         $env['ymin'] = $worldMercMax - $tileMercSize * ($tileCoordinates['y'] + 1);
@@ -156,14 +163,14 @@ class TrackPBFJob implements ShouldQueue
         $filePath = "{$this->app_id}/{$this->z}/{$this->x}/{$this->y}.pbf";
 
         $s3Disk->put($filePath, $pbfContent);
-        Log::channel('pbf')->info("$filePath" . "-> STORED.");
+        Log::channel('pbf')->info("$filePath".'-> STORED.');
     }
 
     protected function getAssociatedLayerMap(): array
     {
         // Ottieni l'app con i layer associati
         $app = App::with('layers')->find($this->app_id);
-        if (!$app) {
+        if (! $app) {
             return [];
         }
 
@@ -185,12 +192,11 @@ class TrackPBFJob implements ShouldQueue
         return $map;
     }
 
-
     protected function generateSQL($boundingBox): string
     {
         // Recupera l'app con i layer associati
         $app = App::with('layers')->find($this->app_id);
-        if (!$app) {
+        if (! $app) {
             throw new \Exception("App not found: {$this->app_id}");
         }
         $layerIds = $app->layers->pluck('id')->toArray();
@@ -209,6 +215,7 @@ class TrackPBFJob implements ShouldQueue
         );
         // Interpola gli ID dei layer
         $layerIdsSQL = implode(', ', $layerIds);
+
         // Genera la query SQL con gli ID dei layer incorporati
         return <<<SQL
     WITH 
@@ -222,6 +229,8 @@ class TrackPBFJob implements ShouldQueue
             ec.name,
             ec.ref,
             ec.cai_scale,
+            ec.distance,
+            ec.duration_forward,
             JSON_AGG(DISTINCT etl.layer_id) AS layers,
             ec.activities -> '{$this->app_id}' AS activities, -- Usa $this->app_id per searchable
             ec.themes -> '{$this->app_id}' AS themes, -- Usa $this->app_id per themes
@@ -250,7 +259,9 @@ class TrackPBFJob implements ShouldQueue
             track_layers.themes,
             track_layers.activities,
             track_layers.searchable,
-            track_layers.stroke_color
+            track_layers.stroke_color,
+            track_layers.distance,
+            track_layers.duration_forward
         FROM track_layers
         CROSS JOIN bounds
         WHERE 
@@ -273,7 +284,7 @@ class TrackPBFJob implements ShouldQueue
 
         // Aggiorna la lista delle chiavi tracciate
         $trackedKeys = Cache::get('tiles_keys', []);
-        if (!in_array($cacheKey, $trackedKeys)) {
+        if (! in_array($cacheKey, $trackedKeys)) {
             $trackedKeys[] = $cacheKey;
             Cache::put('tiles_keys', $trackedKeys, 3600); // Salva la lista aggiornata
         }

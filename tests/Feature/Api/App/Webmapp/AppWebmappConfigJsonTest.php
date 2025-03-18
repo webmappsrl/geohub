@@ -40,7 +40,7 @@ class AppWebmappConfigJsonTest extends TestCase
     public function when_app_it_exists_it_returns_200()
     {
         $app = App::factory()->create(['api' => 'webmapp']);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webmapp/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
     }
 
@@ -53,7 +53,7 @@ class AppWebmappConfigJsonTest extends TestCase
     public function when_api_is_webmapp_it_returns_proper_section_app()
     {
         $app = App::factory()->create(['api' => 'webmapp']);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webmapp/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 
@@ -68,9 +68,9 @@ class AppWebmappConfigJsonTest extends TestCase
     {
         $app = App::factory()->create([
             'api' => 'webmapp',
-            'geolocation_record_enable' => true
+            'geolocation_record_enable' => true,
         ]);
-        $result = $this->getJson('/api/app/webmapp/' . $app->id . '/config.json', []);
+        $result = $this->getJson('/api/app/webmapp/'.$app->id.'/config.json', []);
         $this->assertEquals(200, $result->getStatusCode());
         $json = json_decode($result->getContent());
 

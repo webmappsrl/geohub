@@ -2,33 +2,27 @@
 
 namespace App\Imports;
 
-use Schema;
 use App\Models\EcTrack;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-
 class EcTrackFromCSV implements ToModel, WithHeadingRow
 {
     /**
-     * @param array $row
-     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
     {
-        //ele_from = quota partenza
-        //ele_to = quota arrivo
-        //distance = km
-        //duration_forward = tempo percorrenza a-p
-        //duration_backward = tempo percorrenza p-a
-        //ele_max = quota massima
-        //ele_min = quota minima
-        //ascent = dislivello totale UP
-        //descent = dislivello totale DOWN
-
+        // ele_from = quota partenza
+        // ele_to = quota arrivo
+        // distance = km
+        // duration_forward = tempo percorrenza a-p
+        // duration_backward = tempo percorrenza p-a
+        // ele_max = quota massima
+        // ele_min = quota minima
+        // ascent = dislivello totale UP
+        // descent = dislivello totale DOWN
 
         $user_id = auth()->user()->id;
         $ecTrackData = [];
@@ -37,11 +31,11 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
         $invalidHeaders = array_diff($fileHeaders, $validHeaders);
 
         $invalidHeaders = array_filter($invalidHeaders, function ($value) {
-            return !is_numeric($value);
+            return ! is_numeric($value);
         });
 
-        if (!empty($invalidHeaders)) {
-            $errorMessage = "Invalid headers found:" . implode(', ', $invalidHeaders) . ". Please check the file and try again.";
+        if (! empty($invalidHeaders)) {
+            $errorMessage = 'Invalid headers found:'.implode(', ', $invalidHeaders).'. Please check the file and try again.';
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
@@ -55,12 +49,12 @@ class EcTrackFromCSV implements ToModel, WithHeadingRow
                 if (in_array($key, $validHeaders)) {
                     if ($key == 'distance') {
                         $value = str_replace(',', '.', $value);
-                        //cut the 'km' from the distance value if present
+                        // cut the 'km' from the distance value if present
                         if (strpos($value, 'km') !== false) {
                             $value = str_replace('km', '', $value);
                         }
                     }
-                    if (!empty($value)) {
+                    if (! empty($value)) {
                         $ecTrackData[$key] = $value;
                     }
                 }

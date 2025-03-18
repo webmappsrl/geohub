@@ -11,12 +11,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class UgcPoiTest extends TestCase {
+class UgcPoiTest extends TestCase
+{
     use RefreshDatabase, WithFaker;
 
-    public function testGetGeojsonWithoutGeometry() {
+    public function test_get_geojson_without_geometry()
+    {
         $poi = UgcPoi::factory([
-            'geometry' => null
+            'geometry' => null,
         ])->create();
 
         $geojson = $poi->getGeojson();
@@ -24,9 +26,10 @@ class UgcPoiTest extends TestCase {
         $this->assertNull($geojson);
     }
 
-    public function testGetGeojsonWithGeometry() {
+    public function test_get_geojson_with_geometry()
+    {
         $poi = UgcPoi::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
         ])->create();
 
         $geojson = $poi->getGeojson();
@@ -46,10 +49,11 @@ class UgcPoiTest extends TestCase {
         $this->assertSame(json_encode([11, 43]), json_encode($geojson['geometry']['coordinates']));
     }
 
-    public function testGetRelatedUgcWithNoRelated() {
+    public function test_get_related_ugc_with_no_related()
+    {
         $poi = UgcPoi::factory([
             'name' => $this->faker->name(),
-            'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
         ])->create();
 
         $geojson = $poi->getRelatedUgcGeojson();
@@ -63,24 +67,25 @@ class UgcPoiTest extends TestCase {
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function testGetRelatedUgcWithRelated() {
+    public function test_get_related_ugc_with_related()
+    {
         $user = User::factory(1)->create()->first();
         $poi = UgcPoi::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         UgcMedia::factory([
             'geometry' => DB::raw("(ST_GeomFromText('POINT(11 43)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         UgcTrack::factory([
             'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
             'user_id' => $user['id'],
-            'created_at' => now()
+            'created_at' => now(),
         ])->create();
 
         $geojson = $poi->getRelatedUgcGeojson();

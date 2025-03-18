@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AlterTableEcPoiEcTrack extends Migration
@@ -15,7 +14,7 @@ class AlterTableEcPoiEcTrack extends Migration
     public function up()
     {
         Schema::table('ec_poi_ec_track', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_poi_id']);
             $table->dropForeign(['ec_track_id']);
 
@@ -38,7 +37,7 @@ class AlterTableEcPoiEcTrack extends Migration
     public function down()
     {
         Schema::table('ec_poi_ec_track', function (Blueprint $table) {
-            
+
             $table->dropForeign(['ec_poi_id']);
             $table->dropForeign(['ec_track_id']);
 

@@ -17,7 +17,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * Class User
  *
- * @package App\Models
  *
  * @property string email
  * @property string name
@@ -31,7 +30,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, HasRoles, Favoriteability;
+    use Favoriteability, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -43,8 +42,9 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'sku',
-        'app_id'
+        'app_id',
     ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -54,6 +54,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
     ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -139,8 +140,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
      */
     public function getJWTCustomClaims(): array
     {
@@ -149,8 +148,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the current logged User
-     *
-     * @return User
      */
     public static function getLoggedUser(): ?User
     {
@@ -161,19 +158,18 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the current emulated User
-     *
-     * @param User|null $user
-     *
-     * @return User|null
      */
-    public static function getEmulatedUser(User $user = null): ?User
+    public static function getEmulatedUser(?User $user = null): ?User
     {
-        if (!isset($user)) $user = self::getLoggedUser();
+        if (! isset($user)) {
+            $user = self::getLoggedUser();
+        }
 
         $result = $user;
         $emulateUserId = session('emulate_user_id');
-        if (isset($emulateUserId))
+        if (isset($emulateUserId)) {
             $result = User::find($emulateUserId);
+        }
 
         return $result;
     }
@@ -181,12 +177,13 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Set the emulated user id
      *
-     * @param int $userId the user to emulate
+     * @param  int  $userId  the user to emulate
      */
     public static function emulateUser(int $userId)
     {
-        if (!is_null(User::find($userId)))
+        if (! is_null(User::find($userId))) {
             session(['emulate_user_id' => $userId]);
+        }
     }
 
     /**
@@ -199,19 +196,22 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * defines the default roles of this app
-     * @param User|null $user
+     *
+     * @param  User|null  $user
      */
     public static function isInDefaultRoles(User $user)
     {
         if ($user->hasRole('Author') || $user->hasRole('Contributor')) {
             return true;
         }
+
         return false;
     }
 
     /**
      * defines whether at least one app associated to the user has Dashboard show true or not
-     * @param User|null $user
+     *
+     * @param  User|null  $user
      */
     public function hasDashboardShow($app_id = null)
     {
@@ -226,6 +226,7 @@ class User extends Authenticatable implements JWTSubject
                     }
                 }
             }
+
             return $result;
         }
 
@@ -234,12 +235,14 @@ class User extends Authenticatable implements JWTSubject
                 $result = true;
             }
         }
+
         return $result;
     }
 
     /**
      * defines whether at least one app associated to the user has Classification show true or not
-     * @param User|null $user
+     *
+     * @param  User|null  $user
      */
     public function hasClassificationShow($app_id = null)
     {
@@ -254,6 +257,7 @@ class User extends Authenticatable implements JWTSubject
                     }
                 }
             }
+
             return $result;
         }
 
@@ -262,6 +266,7 @@ class User extends Authenticatable implements JWTSubject
                 $result = true;
             }
         }
+
         return $result;
     }
 
@@ -273,6 +278,7 @@ class User extends Authenticatable implements JWTSubject
     public function getGeoPassAttribute()
     {
         $pass = $this->attributes['geopass'] = $this->password;
+
         return $pass;
     }
 }

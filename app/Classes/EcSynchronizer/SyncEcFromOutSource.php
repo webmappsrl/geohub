@@ -14,38 +14,48 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class SyncEcFromOutSource
 {
     // DATA
     protected $type;
+
     protected $author;
+
     protected $author_id;
+
     protected $author_webmapp = 1;
+
     protected $provider;
+
     protected $endpoint;
+
     protected $activity;
+
     protected $theme;
+
     protected $poi_type;
+
     protected $name_format;
+
     protected $app;
+
     protected $only_related_url;
 
     /**
      * It sets all needed properties in order to perform the sync ec_tracks table from out_source_features
      *
      *
-     * @param string $type the of the feature (Track, Poi or Media)
-     * @param string $author the email of the author to be associated with features
-     * @param string $provider the class of the importer, can be only the class or whole namespace.
-     * @param string $endpoint the url from which import begins (https://stelvio.wp.webmapp.it)
-     * @param string $activity the activity to associate with the feature. it takes the Identifier (eg. hiking)
-     * @param string $poi_type the poi_type to associate with the feature. it takes the Identifier (eg. poi)
-     * @param string $name_format the rule to construct the name field of the feature. (eg. “Ecooci {ref} - from {from}, to {to}”)
-     * @param int $app the id of the app (eg. Parco Maremma = 1 )
-     * @param string $theme the theme to associate with the feature. it takes the Identifier (eg. hiking-pec)
-     * @param bool $only_related_url true if only sync related url value
+     * @param  string  $type  the of the feature (Track, Poi or Media)
+     * @param  string  $author  the email of the author to be associated with features
+     * @param  string  $provider  the class of the importer, can be only the class or whole namespace.
+     * @param  string  $endpoint  the url from which import begins (https://stelvio.wp.webmapp.it)
+     * @param  string  $activity  the activity to associate with the feature. it takes the Identifier (eg. hiking)
+     * @param  string  $poi_type  the poi_type to associate with the feature. it takes the Identifier (eg. poi)
+     * @param  string  $name_format  the rule to construct the name field of the feature. (eg. "Ecooci {ref} - from {from}, to {to}")
+     * @param  int  $app  the id of the app (eg. Parco Maremma = 1 )
+     * @param  string  $theme  the theme to associate with the feature. it takes the Identifier (eg. hiking-pec)
+     * @param  bool  $only_related_url  true if only sync related url value
      */
     public function __construct(string $type, string $author, string $provider = '', string $endpoint = '', string $activity = '', string $poi_type = '', string $name_format = '{name}', $app = 0, string $theme = '', bool $only_related_url = false)
     {
@@ -72,7 +82,7 @@ class SyncEcFromOutSource
      * It checks the parameters of the command geohub:sync-ec-from-out-source to see if they are
      *
      *
-     * @return boolean
+     * @return bool
      */
     public function checkParameters()
     {
@@ -110,12 +120,13 @@ class SyncEcFromOutSource
 
         // Check the provider
         Log::info('Checking paramtere PROVIDER');
-        if (!empty($this->provider)) {
+        if (! empty($this->provider)) {
             $all_providers = DB::table('out_source_features')->select('provider')->distinct()->get();
             $mapped_providers = array_map(function ($p) {
                 $provider = explode('\\', $p);
                 if ($this->provider == end($provider) || $this->provider == $p) {
                     $this->provider = $p;
+
                     return true;
                 } else {
                     return false;
@@ -129,10 +140,10 @@ class SyncEcFromOutSource
 
         // Check the endpoint
         Log::info('Checking paramter ENDPOINT');
-        if (!empty($this->endpoint)) {
+        if (! empty($this->endpoint)) {
             $all_endpoints = DB::table('out_source_features')->select('endpoint')->distinct()->get();
             $mapped_endpoints = array_map(function ($e) {
-                if (!is_null($e)) {
+                if (! is_null($e)) {
                     if (
                         strpos($e, $this->endpoint)
                         || $e == $this->endpoint
@@ -142,6 +153,7 @@ class SyncEcFromOutSource
                         || strpos($this->endpoint, 'https://osm2cai.maphub.it') === 0
                     ) {
                         $this->endpoint = $e;
+
                         return true;
                     } else {
                         return false;
@@ -157,26 +169,26 @@ class SyncEcFromOutSource
 
         // Check the name_format
         Log::info('Checking paramtere NAME_FORMAT');
-        if (!empty($this->name_format)) {
+        if (! empty($this->name_format)) {
             $format = $this->name_format;
             preg_match_all('/\{{1}?(.*?)\}{1}?/', $format, $matches);
             if ($this->type == 'track') {
-                $available_name_formats = array(
+                $available_name_formats = [
                     '{name}',
                     '{ref}',
                     '{from}',
-                    '{to}'
-                );
+                    '{to}',
+                ];
             }
             if ($this->type == 'poi' || $this->type == 'media') {
-                $available_name_formats = array(
+                $available_name_formats = [
                     '{name}',
-                    '{ref}'
-                );
+                    '{ref}',
+                ];
             }
             if (is_array($matches[0])) {
                 foreach ($matches[0] as $m) {
-                    if (!in_array($m, $available_name_formats)) {
+                    if (! in_array($m, $available_name_formats)) {
                         throw new Exception('The value of parameter ' . $m . ' can not be found');
                     }
                 }
@@ -185,7 +197,7 @@ class SyncEcFromOutSource
 
         // Check the avtivity
         Log::info('Checking paramtere ACTIVITY');
-        if (!empty($this->activity)) {
+        if (! empty($this->activity)) {
             $all_activities = DB::table('taxonomy_activities')->select('identifier')->distinct()->get();
             $mapped_activities = array_map(function ($a) {
                 if ($this->activity == $a) {
@@ -203,7 +215,7 @@ class SyncEcFromOutSource
 
         // Check the Theme
         Log::info('Checking paramtere Theme');
-        if (!empty($this->theme)) {
+        if (! empty($this->theme)) {
             $all_themes = DB::table('taxonomy_themes')->select('identifier')->distinct()->get();
             $mapped_themes = array_map(function ($a) {
                 if ($this->theme == $a) {
@@ -221,7 +233,7 @@ class SyncEcFromOutSource
 
         // Check the poi_type
         Log::info('Checking paramtere POI_TYPE');
-        if (!empty($this->poi_type)) {
+        if (! empty($this->poi_type)) {
             $all_poi_types = DB::table('taxonomy_poi_types')->select('identifier')->distinct()->get();
             $mapped_poi_types = array_map(function ($a) {
                 if ($this->poi_type == $a) {
@@ -242,7 +254,6 @@ class SyncEcFromOutSource
 
         return true;
     }
-
 
     /**
      * It creates a list if IDs from out_source_features table based on the parameters of the command geohub:sync-ec-from-out-source
@@ -291,18 +302,19 @@ class SyncEcFromOutSource
     {
         // get All Ec Features
         switch ($this->type) {
-            case "track":
+            case 'track':
                 $eloquentQuery = EcTrack::query();
                 break;
-            case "poi":
+            case 'poi':
                 $eloquentQuery = EcPoi::query();
                 break;
-            case "media":
+            case 'media':
                 $eloquentQuery = EcMedia::query();
                 break;
             default:
                 break;
         }
+
         return $eloquentQuery->whereIn('out_source_feature_id', $ids)->pluck('updated_at', 'out_source_feature_id')->toArray();
     }
 
@@ -334,14 +346,14 @@ class SyncEcFromOutSource
         $deleteEntriesEc = array_diff(array_keys($ids_updated_at_ec), array_keys($ids_updated_at_osf));
 
         // Delete entries that are not in $ids_updated_at_osf
-        if (!empty($deleteEntriesEc)) {
+        if (! empty($deleteEntriesEc)) {
             // Assuming you have a model named EcFeature, adjust the model name accordingly
             // get All Ec Features
             switch ($this->type) {
-                case "track":
+                case 'track':
                     $eloquentQuery = EcTrack::query();
                     break;
-                case "poi":
+                case 'poi':
                     $eloquentQuery = EcPoi::query();
                     break;
                 default:
@@ -354,7 +366,7 @@ class SyncEcFromOutSource
     /**
      * It updates or creates the Ec features based on the list if IDs from out_source_features table
      *
-     * @param array $ids_array an array of ids to be synced to EcFeature
+     * @param  array  $ids_array  an array of ids to be synced to EcFeature
      * @return array array of ids of newly created EcFeatures
      */
     public function sync(array $ids_array)
@@ -381,7 +393,7 @@ class SyncEcFromOutSource
                             [
                                 'name' => $this->generateName($out_source),
                                 'not_accessible' => false,
-                                'geometry' => DB::raw("(ST_Force3D(ST_LineMerge('$out_source->geometry')))"),
+                                'geometry' => DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt,
                             ]
                         );
                     } else {
@@ -400,7 +412,7 @@ class SyncEcFromOutSource
 
                     // Attach Activities to track
                     Log::info('Attaching EC Track taxonomyActivities: ' . $this->activity);
-                    if (!empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
+                    if (! empty($out_source->tags['activity']) && isset($out_source->tags['activity'])) {
                         $path = parse_url($this->endpoint);
                         $file_name = str_replace('.', '-', $path['host']);
                         $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
@@ -410,7 +422,7 @@ class SyncEcFromOutSource
                                 if ($w['geohub_identifier'] == $cat) {
                                     Log::info('Attaching more EC Track taxonomyActivities: ' . $cat);
                                     $geohub_w = TaxonomyActivity::where('identifier', $w['geohub_identifier'])->first();
-                                    if ($geohub_w && !is_null($geohub_w)) {
+                                    if ($geohub_w && ! is_null($geohub_w)) {
                                         $ec_track->taxonomyActivities()->syncWithoutDetaching($geohub_w);
                                     } else {
                                         $new_activity = TaxonomyActivity::create(
@@ -435,7 +447,7 @@ class SyncEcFromOutSource
                         $ec_track->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                     }
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureWP') {
-                        if (!empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
+                        if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             $path = parse_url($this->endpoint);
                             $file_name = str_replace('.', '-', $path['host']);
                             $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
@@ -445,7 +457,7 @@ class SyncEcFromOutSource
                                         if ($w['geohub_identifier'] == $cat) {
                                             Log::info('Attaching more EC Track taxonomyThemes: ' . $cat);
                                             $geohub_w = TaxonomyTheme::where('identifier', $w['geohub_identifier'])->first();
-                                            if ($geohub_w && !is_null($geohub_w)) {
+                                            if ($geohub_w && ! is_null($geohub_w)) {
                                                 $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
                                             } else {
                                                 $new_theme = TaxonomyTheme::create(
@@ -464,17 +476,17 @@ class SyncEcFromOutSource
                         }
                     }
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureSentieriSardegna') {
-                        if (!empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
+                        if (! empty($out_source->tags['theme']) && isset($out_source->tags['theme'])) {
                             foreach ($out_source->tags['theme'] as $cat) {
                                 Log::info('Attaching more EC Track taxonomyThemes: ' . $cat);
                                 $geohub_w = TaxonomyTheme::where('identifier', $cat)->first();
-                                if ($geohub_w && !is_null($geohub_w)) {
+                                if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_track->taxonomyThemes()->syncWithoutDetaching($geohub_w);
                                 } else {
                                     $new_theme = TaxonomyTheme::create(
                                         [
                                             'identifier' => $cat,
-                                            'name' => ['it' => $cat]
+                                            'name' => ['it' => $cat],
                                         ]
                                     );
                                     $ec_track->taxonomyThemes()->syncWithoutDetaching($new_theme);
@@ -507,56 +519,56 @@ class SyncEcFromOutSource
                                 ->where('user_id', $this->author_id)
                                 ->first();
 
-                            if ($EcPoi && !is_null($EcPoi)) {
+                            if ($EcPoi && ! is_null($EcPoi)) {
                                 $ec_track->ecPois()->syncWithoutDetaching($EcPoi);
                             }
                         }
                     }
 
                     // Adding related url to the track
-                    if (!empty($out_source->tags['related_url']) && isset($out_source->tags['related_url'])) {
+                    if (! empty($out_source->tags['related_url']) && isset($out_source->tags['related_url'])) {
                         $ec_track->related_url = $out_source->tags['related_url'];
                     }
 
                     // Adding cai_scale to Ec Track
-                    if (!empty($out_source->tags['cai_scale']) && isset($out_source->tags['cai_scale'])) {
+                    if (! empty($out_source->tags['cai_scale']) && isset($out_source->tags['cai_scale'])) {
                         Log::info('Attaching EC Track cai_scale.');
                         $ec_track->cai_scale = $out_source->tags['cai_scale'];
                     }
 
                     // Adding osmid to Ec Track
-                    if (!empty($out_source->tags['osmid']) && isset($out_source->tags['osmid'])) {
+                    if (! empty($out_source->tags['osmid']) && isset($out_source->tags['osmid'])) {
                         Log::info('Attaching EC Track osmid.');
                         $ec_track->osmid = $out_source->tags['osmid'];
                     }
 
                     // Adding color to Ec Track
-                    if (!empty($out_source->tags['color']) && isset($out_source->tags['color'])) {
+                    if (! empty($out_source->tags['color']) && isset($out_source->tags['color'])) {
                         Log::info('Attaching EC Track color.');
                         $ec_track->color = $out_source->tags['color'];
                     }
 
                     // Attach feature image to Track
-                    if (!empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                    if (! empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                         Log::info('Attaching EC Track FEATURE_IMAGE.');
                         $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
                             ->where('user_id', $this->author_webmapp)
                             ->first();
 
-                        if ($EcMedia && !is_null($EcMedia)) {
+                        if ($EcMedia && ! is_null($EcMedia)) {
                             $ec_track->featureImage()->associate($EcMedia);
                         }
                     }
 
                     // Attach EcMedia Gallery to track
-                    if (!empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                    if (! empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
                         Log::info('Attaching EC Track IMAGE_GALLERY.');
                         foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                             $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
                                 ->where('user_id', $this->author_webmapp)
                                 ->first();
 
-                            if ($EcMedia && !is_null($EcMedia)) {
+                            if ($EcMedia && ! is_null($EcMedia)) {
                                 $ec_track->ecMedia()->syncWithoutDetaching($EcMedia);
                             }
                         }
@@ -593,19 +605,19 @@ class SyncEcFromOutSource
                         );
                     }
 
-                    if (!$this->only_related_url) { // start sync if only related url is not true
+                    if (! $this->only_related_url) { // start sync if only related url is not true
                         // Attach poi_type to poi
-                        if (!empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial') {
+                        if (! empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint !== 'sicai_pt_accoglienza_unofficial') {
                             if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureStorageCSV') {
                                 foreach ($out_source->tags['poi_type'] as $cat) {
                                     $geohub_w = TaxonomyPoiType::where('identifier', $cat)->first();
-                                    if ($geohub_w && !is_null($geohub_w)) {
+                                    if ($geohub_w && ! is_null($geohub_w)) {
                                         $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                     }
                                 }
                             } elseif ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
                                 $geohub_w = TaxonomyPoiType::where('identifier', $out_source->tags['poi_type'])->first();
-                                if ($geohub_w && !is_null($geohub_w)) {
+                                if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_poi->taxonomyPoiTypes()->sync($geohub_w);
                                 }
                             } else {
@@ -618,7 +630,7 @@ class SyncEcFromOutSource
                                         if ($w['geohub_identifier'] == $cat) {
                                             Log::info('Attaching more EC POI taxonomyPoiTypes: ' . $w['geohub_identifier']);
                                             $geohub_w = TaxonomyPoiType::where('identifier', $w['geohub_identifier'])->first();
-                                            if ($geohub_w && !is_null($geohub_w)) {
+                                            if ($geohub_w && ! is_null($geohub_w)) {
                                                 $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                             } else {
                                                 $new_poi_type = TaxonomyPoiType::create(
@@ -634,7 +646,7 @@ class SyncEcFromOutSource
                                     }
                                 }
                             }
-                        } elseif (!empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint == 'sicai_pt_accoglienza_unofficial') {
+                        } elseif (! empty($out_source->tags['poi_type']) && isset($out_source->tags['poi_type']) && $this->endpoint == 'sicai_pt_accoglienza_unofficial') {
                             foreach ($out_source->tags['poi_type'] as $cat) {
                                 $cat = trim($cat);
                                 $cat_identifier = strtolower($cat);
@@ -645,7 +657,7 @@ class SyncEcFromOutSource
                                 $cat_name = ucwords($cat);
                                 Log::info('Attaching EC POI taxonomyPoiTypes: ' . $cat_identifier);
                                 $geohub_w = TaxonomyPoiType::where('identifier', $cat_identifier)->first();
-                                if ($geohub_w && !is_null($geohub_w)) {
+                                if ($geohub_w && ! is_null($geohub_w)) {
                                     $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching($geohub_w);
                                 } else {
                                     $new_poi_type = TaxonomyPoiType::create(
@@ -669,13 +681,13 @@ class SyncEcFromOutSource
                         }
 
                         // Attach feature image to poi
-                        if (!empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
+                        if (! empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                             Log::info('Attaching EC POI FEATURE_IMAGE.');
                             $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
                                 ->where('user_id', $this->author_webmapp)
                                 ->first();
 
-                            if ($EcMedia && !is_null($EcMedia)) {
+                            if ($EcMedia && ! is_null($EcMedia)) {
                                 $ec_poi->featureImage()->associate($EcMedia);
                             }
                         }
@@ -703,14 +715,14 @@ class SyncEcFromOutSource
                         }
 
                         // Attach EcMedia Gallery to poi
-                        if (!empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
+                        if (! empty($out_source->tags['image_gallery']) && isset($out_source->tags['image_gallery'])) {
                             Log::info('Attaching EC POI IMAGE_GALLERY.');
                             foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                                 $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
                                     ->where('user_id', $this->author_webmapp)
                                     ->first();
 
-                                if ($EcMedia && !is_null($EcMedia)) {
+                                if ($EcMedia && ! is_null($EcMedia)) {
                                     $ec_poi->ecMedia()->syncWithoutDetaching($EcMedia);
                                 }
                             }
@@ -736,7 +748,7 @@ class SyncEcFromOutSource
                     $s3_osfmedia = Storage::disk($osf_storage_name);
                     Log::info('Creating EC Media.');
                     $tag_description = '';
-                    if (key_exists('description', $out_source['tags'])) {
+                    if (array_key_exists('description', $out_source['tags'])) {
                         $tag_description = $out_source['tags']['description'];
                     }
                     $ec_media = EcMedia::updateOrCreate(
@@ -748,7 +760,7 @@ class SyncEcFromOutSource
                             'name' => $this->generateName($out_source),
                             'geometry' => DB::select("SELECT ST_AsText('$out_source->geometry') As wkt")[0]->wkt,
                             'url' => '',
-                            'description' => $tag_description
+                            'description' => $tag_description,
                         ]
                     );
                     $new_media_name = $ec_media->id . '.' . explode('.', basename($out_source->tags['url']))[1];
@@ -770,7 +782,7 @@ class SyncEcFromOutSource
         if ($error_not_created) {
             Log::info('Ec features not created from Source with ID: ');
             if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureOSM2CAI') {
-                Log::channel('osm2cai')->info(" ");
+                Log::channel('osm2cai')->info(' ');
                 Log::channel('osm2cai')->info($this->endpoint);
                 foreach ($error_not_created as $id) {
                     Log::channel('osm2cai')->info('https://osm2cai.cai.it/resources/hiking-routes/' . $id);
@@ -788,14 +800,14 @@ class SyncEcFromOutSource
                 }
             }
         }
+
         return $new_ec_features;
     }
 
     /**
      * It generate the Ec feature's name name_format parameter
      *
-     * @param object $out_source
-     * @return array
+     * @param  object  $out_source
      */
     private function generateName(OutSourceFeature $out_source): array
     {

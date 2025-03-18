@@ -39,7 +39,6 @@ class ActionResource extends Resource
     /**
      * Determine if the current user can create new resources.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public static function authorizedToCreate(Request $request)
@@ -50,7 +49,6 @@ class ActionResource extends Resource
     /**
      * Determine if the current user can edit resources.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorizedToUpdate(Request $request)
@@ -61,7 +59,6 @@ class ActionResource extends Resource
     /**
      * Determine if the current user can delete resources.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public function authorizedToDelete(Request $request)
@@ -72,7 +69,6 @@ class ActionResource extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -110,7 +106,6 @@ class ActionResource extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -122,7 +117,6 @@ class ActionResource extends Resource
     /**
      * Determine if this resource is available for navigation.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
     public static function availableForNavigation(Request $request)

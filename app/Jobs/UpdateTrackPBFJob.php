@@ -51,7 +51,7 @@ class UpdateTrackPBFJob implements ShouldQueue
                 $generator->generateTilesAndDispatch($bbox, $min_zoom, $max_zoom);
 
                 for ($zoom = $min_zoom; $zoom <= $max_zoom; $zoom++) {
-                    Log::info("$app_id/$zoom" . ' -> START');
+                    Log::info("$app_id/$zoom".' -> START');
                     GeneratePBFByZoomJob::dispatch($bbox, $zoom, $app_id, $author_id);
                 }
             }

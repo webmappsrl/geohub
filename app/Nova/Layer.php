@@ -3,25 +3,25 @@
 namespace App\Nova;
 
 use App\Models\User;
+use App\Nova\Fields\NovaWyswyg;
+use Chaseconey\ExternalImage\ExternalImage;
 use Eminiarts\Tabs\Tabs;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
-use NovaAttachMany\AttachMany;
-use Yna\NovaSwatches\Swatches;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\Textarea;
-use Ncus\InlineIndex\InlineIndex;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
-use Illuminate\Support\Facades\Storage;
-use Chaseconey\ExternalImage\ExternalImage;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
+use Ncus\InlineIndex\InlineIndex;
+use NovaAttachMany\AttachMany;
+use Yna\NovaSwatches\Swatches;
 
 class Layer extends Resource
 {
@@ -34,8 +34,10 @@ class Layer extends Resource
         }
         $userId = $request->user()->id;
         $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+
         return $query->whereIn('app_id', $userApps);
     }
+
     /**
      * The model the resource corresponds to.
      *
@@ -48,7 +50,7 @@ class Layer extends Resource
      *
      * @var string
      */
-    public static $title = 'name'; //* IMPORTANT this parameter affects also the attachmany field in OverlayLayer Nova Resource. If you change to ID, the attachmany field will show the ID instead of the name.
+    public static $title = 'name'; // * IMPORTANT this parameter affects also the attachmany field in OverlayLayer Nova Resource. If you change to ID, the attachmany field will show the ID instead of the name.
 
     /**
      * The columns that should be searched.
@@ -59,15 +61,18 @@ class Layer extends Resource
         'id',
         'name',
         'title',
-        'subtitle'
+        'subtitle',
     ];
 
-
+    public function authorizedToDelete(Request $request)
+    {
+        // Permetti la cancellazione solo agli utenti con ruolo di "Admin"
+        return $request->user()->hasRole('Admin');
+    }
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -81,9 +86,9 @@ class Layer extends Resource
         return [
             ID::make('id'),
             NovaTabTranslatable::make([
-                Text::make(__('Name'), 'name')
+                Text::make(__('Name'), 'name'),
             ]),
-            AttachMany::make('Associated apps', 'associatedApps',  \App\Nova\App::class),
+            AttachMany::make('Associated apps', 'associatedApps', \App\Nova\App::class),
             AttachMany::make('taxonomyActivities'),
             AttachMany::make('TaxonomyThemes'),
             AttachMany::make('TaxonomyTargets'),
@@ -101,7 +106,6 @@ class Layer extends Resource
             // Number::make('Rank')->sortable(),
             InlineIndex::make('Rank')->sortable()->rules('required'),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable(),
-
 
         ];
     }
@@ -134,9 +138,10 @@ class Layer extends Resource
                 'MEDIA' => [
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                        if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                        if ($url !== '' && substr($url, 0, 4) !== 'http') {
                             $url = Storage::disk('public')->url($url);
                         }
+
                         return $url;
                     })
                         ->withMeta(['width' => 400])
@@ -245,6 +250,7 @@ class Layer extends Resource
                         if ($this->associatedApps()->count() > 0) {
                             return implode(',', $this->associatedApps()->pluck('name')->toArray());
                         }
+
                         return 'No associated apps';
                     })
                         ->help(__('It is possible to share the content of tracks from one app to another. Select the app that shares its track content in this layer. Additional taxonomy filters can be added, for example, if "Activities" and "MTB" are also selected, only the MTB tracks of the associated app will be shown. Click "Preview" to display the selected ones.')),
@@ -252,6 +258,7 @@ class Layer extends Resource
                         if ($this->taxonomyActivities()->count() > 0) {
                             return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                         }
+
                         return 'No activities';
                     })
                         ->help(__('Select one or more activities taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
@@ -259,6 +266,7 @@ class Layer extends Resource
                         if ($this->taxonomyWheres()->count() > 0) {
                             return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                         }
+
                         return 'No Wheres';
                     })
                         ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
@@ -266,6 +274,7 @@ class Layer extends Resource
                         if ($this->taxonomyThemes()->count() > 0) {
                             return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                         }
+
                         return 'No Themes';
                     })
                         ->help(__('Select one or more themes taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
@@ -273,12 +282,13 @@ class Layer extends Resource
                         if ($this->taxonomyTargets()->count() > 0) {
                             return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                         }
+
                         return 'No Targets';
                     })
                         ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
 
                     BelongsToMany::make('EcTracks'),
-                ]
+                ],
 
             ]))->withToolbar(),
         ];
@@ -292,6 +302,7 @@ class Layer extends Resource
             Text::make('Title'),
         ];
     }
+
     public function fieldsForUpdate(Request $request)
     {
 
@@ -304,7 +315,7 @@ class Layer extends Resource
                 ->required()
                 ->help(__('Name associated with the layer in GeoHub. This is not the name displayed on the app home screen; for that, refer to the "Title" field below.')),
             Heading::make(
-                <<<HTML
+                <<<'HTML'
                     <ul>
                         <li><p><strong>Title</strong>: Enter the title of the layer. This will be the main title displayed.</p></li>
                         <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
@@ -322,12 +333,11 @@ class Layer extends Resource
                     ->hideFromDetail()
                     ->hideWhenCreating()
                     ->hideWhenUpdating(),
-                Textarea::make('Description')
-                    ->alwaysShow()
+                NovaWyswyg::make('Description')
                     ->help(__('Description displayed in the layer details on the app home screen.')),
-                Text::make('Track Type', 'track_type')
-                    ->help(__('Name displayed as the header of the layer\'s track list.')),
             ]),
+            Text::make('Track Type', 'track_type')
+                ->help(__('Name displayed as the header of the layer\'s track list.')),
         ];
 
         $behaviourTab = [
@@ -416,7 +426,7 @@ class Layer extends Resource
                 ->hideFromIndex()
                 ->hideFromDetail()
                 ->hideWhenCreating()
-                ->hideWhenUpdating()
+                ->hideWhenUpdating(),
         ];
 
         $dataTab = [
@@ -430,7 +440,7 @@ class Layer extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
-            AttachMany::make('Associated Apps', 'associatedApps',  \App\Nova\App::class)
+            AttachMany::make('Associated Apps', 'associatedApps', \App\Nova\App::class)
                 ->showPreview()
                 ->help(__('It is possible to share the content of tracks from one app to another. Select the app that shares its track content in this layer. Additional taxonomy filters can be added, for example, if "Activities" and "MTB" are also selected, only the MTB tracks of the associated app will be shown. Click "Preview" to display the selected ones.')),
             AttachMany::make('taxonomyActivities')
@@ -444,23 +454,24 @@ class Layer extends Resource
                 ->help(__('Select one or more targets taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
             AttachMany::make('TaxonomyWheres')
                 ->showPreview()
-                ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.'))
+                ->help(__('Select one or more wheres taxonomies to associate with the Layer. Click "Preview" to display the selected ones.')),
         ];
 
-        $mediaTab =  [
+        $mediaTab = [
             BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
                 ->searchable()
                 ->nullable()
                 ->help(__('The feature image is displayed in the list of Layers as the image in the app home screen. You can find the desired image previously uploaded in Ec Medias by searching and clicking on "click to choose".')),
         ];
 
-        //if the logged user has role editor only show the main tab
+        // if the logged user has role editor only show the main tab
         if ($request->user()->hasRole('Editor')) {
             return [
                 NovaTabTranslatable::make([
                     Text::make('Title'),
                     Text::make('Subtitle'),
-                    Textarea::make('Description')->alwaysShow(),
+                    NovaWyswyg::make('Descriptions', 'description')
+                        ->help(__('Description displayed in the layer details on the app home screen.')),
                     Text::make('Track Type', 'track_type'),
                 ]),
                 BelongsTo::make('Feature Image', 'featureImage', 'App\Nova\EcMedia')
@@ -472,13 +483,14 @@ class Layer extends Resource
                 ]),
             ];
         }
+
         return [
             (new Tabs($title, [
                 'MAIN' => $mainTab,
                 'MEDIA' => $mediaTab,
                 'BEHAVIOUR' => $behaviourTab,
                 'STYLE' => $styleTab,
-                'DATA' => $dataTab
+                'DATA' => $dataTab,
             ]))->withToolbar(),
             // MorphToMany::make('TaxonomyWheres')->searchable()->nullable()
         ];
@@ -487,7 +499,6 @@ class Layer extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -498,7 +509,6 @@ class Layer extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -513,7 +523,6 @@ class Layer extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -524,7 +533,6 @@ class Layer extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
@@ -534,13 +542,14 @@ class Layer extends Resource
 
     public function authorizedTo(Request $request, $ability)
     {
-        //can see only layers belonging to the app of the logged user. If the layer is not belonging to the app of the logged user, error 403 is thrown. Admin can see all layers.
+        // can see only layers belonging to the app of the logged user. If the layer is not belonging to the app of the logged user, error 403 is thrown. Admin can see all layers.
         $user = $request->user();
         if ($user->hasRole('Admin')) {
             return true;
         }
         $userId = $request->user()->id;
         $userApps = User::find($userId)->apps()->pluck('id')->toArray();
+
         return $this->app_id && in_array($this->app_id, $userApps);
     }
 }

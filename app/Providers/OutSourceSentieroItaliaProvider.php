@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
@@ -49,10 +48,8 @@ Indexes:
  *
  * @return array
  */
-
 class OutSourceSentieroItaliaProvider extends ServiceProvider
 {
-
     /**
      * Register services.
      *
@@ -79,8 +76,6 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
      * Test on tinker:
      * tinker>>> $si = app(App\Providers\OutSourceSentieroItaliaProvider::class);
      * tinker>>> $si->getTrackList();
-     *
-     * @return array
      */
     public function getTrackList(): array
     {
@@ -90,6 +85,7 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
             ->get()
             ->pluck('id_2')
             ->toArray();
+
         return $ids;
     }
 
@@ -97,8 +93,6 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
      * It downloads data from SICAI
      * tinker>>> $si = app(App\Providers\OutSourceSentieroItaliaProvider::class);
      * tinker>>> $si->getItem(531);
-     * @param string $id
-     * @return array
      */
     public function getItem(string $id): array
     {
@@ -114,7 +108,7 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
                 'arrivo',
             ])
             ->first();
-        if (!is_null($item)) {
+        if (! is_null($item)) {
             // ADD Geometry
             $geometry = null;
             $res = $db->select(DB::raw('select st_asgeojson(ST_transform(geom,4326)) as geometry from sentiero_italia."SI_Tappe" where id_2=' . $id));
@@ -135,6 +129,7 @@ class OutSourceSentieroItaliaProvider extends ServiceProvider
                 'geometry' => $geometry,
             ];
         }
+
         return $data;
     }
 }

@@ -36,7 +36,7 @@ class UpdateSkuAppIdOnUsersTable extends Migration
              * @var \App\Models\User
              */
             $model = User::find($user->user_id);
-            //$user->timestamps = false;
+            // $user->timestamps = false;
             $userService->assigUserSkuAndAppIdIfNeeded($model, $user->sku, $user->app_id);
         }
     }

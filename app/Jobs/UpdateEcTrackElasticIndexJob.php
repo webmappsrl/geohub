@@ -17,7 +17,9 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
     use SerializesModels;
 
     protected $ecTrack;
+
     protected $layer_ids;
+
     protected $app_id;
 
     /**
@@ -42,8 +44,8 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
         $trackId = $this->ecTrack->id;
         $prefix = config('services.elastic.prefix') ?? 'geohub_app';
         Log::info("Inizio UpdateEcTrackElasticIndexJob per ecTrack ID: {$trackId}");
-        if (!empty($this->app_id) && !empty($this->layer_ids)) {
-            $indexName = $prefix . '_' . $this->app_id;
+        if (! empty($this->app_id) && ! empty($this->layer_ids)) {
+            $indexName = $prefix.'_'.$this->app_id;
             $this->ecTrack->elasticIndex($indexName, $this->layer_ids);
         } else {
             // Recupera i layer associati al track per applicazione
@@ -52,10 +54,10 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
 
             Log::debug("Prefisso dell'indice Elasticsearch utilizzato: {$prefix}");
 
-            if (!empty($ecTrackLayers)) {
+            if (! empty($ecTrackLayers)) {
                 foreach ($ecTrackLayers as $app_id => $layer_ids) {
-                    if (!empty($layer_ids)) {
-                        $indexName = $prefix . '_' . $app_id;
+                    if (! empty($layer_ids)) {
+                        $indexName = $prefix.'_'.$app_id;
                         Log::info("Indicizzazione dei layer per app ID: {$app_id} sotto l'indice: {$indexName}", ['layer_ids' => $layer_ids]);
 
                         // Esegui l'effettiva indicizzazione

@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartnershipUserTable extends Migration {
+class CreatePartnershipUserTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('partnership_user', function (Blueprint $table) {
             $table->integer('partnership_id')->unsigned();
             $table->integer('user_id')->unsigned();
@@ -30,7 +32,8 @@ class CreatePartnershipUserTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('partnership_user');
     }
 }

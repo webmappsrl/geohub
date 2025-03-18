@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Mail;
 /**
  * Class UgcMedia
  *
- * @package App\Models
  *
  * @property int    id
  * @property string app_id
@@ -25,7 +24,8 @@ use Illuminate\Support\Facades\Mail;
  */
 class UgcMedia extends Feature
 {
-    use HasFactory, GeometryFeatureTrait;
+    use GeometryFeatureTrait, HasFactory;
+
     private $beforeCount = 0;
 
     protected $fillable = [
@@ -55,11 +55,11 @@ class UgcMedia extends Feature
                 $afterCount = count($app->getRankedUsersNearPoisQuery($media->user_id));
                 if ($afterCount > $media->beforeCount) {
                     $user = User::find($media->user_id);
-                    if (!is_null($user)) {
+                    if (! is_null($user)) {
                         $position = $app->getRankedUserPositionNearPoisQuery($user->id);
-                        Mail::send('mails.gamification.rankingIncreased', ['user' => $user, 'position' => $position, 'app' =>  $app], function ($message) use ($user, $app) {
+                        Mail::send('mails.gamification.rankingIncreased', ['user' => $user, 'position' => $position, 'app' => $app], function ($message) use ($user, $app) {
                             $message->to($user->email);
-                            $message->subject($app->name . ': Your Ranking Has Increased');
+                            $message->subject($app->name.': Your Ranking Has Increased');
                         });
                     }
                 }
@@ -67,12 +67,12 @@ class UgcMedia extends Feature
         });
         static::saved(function ($media) {
 
-            if (!$media->preventHoquSave) {
+            if (! $media->preventHoquSave) {
                 try {
-                    $hoquServiceProvider = app(HoquServiceProvider::class);
-                    $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
+                    //        $hoquServiceProvider = app(HoquServiceProvider::class);
+                    //        $hoquServiceProvider->store('update_ugc_media_position', ['id' => $media->id]);
                 } catch (\Exception $e) {
-                    Log::error($media->id . ' saved UgcMedia: An error occurred during a store operation: ' . $e->getMessage());
+                    Log::error($media->id.' saved UgcMedia: An error occurred during a store operation: '.$e->getMessage());
                 }
             }
         });
@@ -91,8 +91,7 @@ class UgcMedia extends Feature
     /**
      * Scope a query to only include current user EcMedia.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeCurrentUser($query)
@@ -117,7 +116,7 @@ class UgcMedia extends Feature
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo("\App\Models\User", "user_id", "id");
+        return $this->belongsTo("\App\Models\User", 'user_id', 'id');
     }
 
     public function taxonomy_wheres(): BelongsToMany

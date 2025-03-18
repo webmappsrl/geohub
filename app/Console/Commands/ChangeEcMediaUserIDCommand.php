@@ -25,6 +25,7 @@ class ChangeEcMediaUserIDCommand extends Command
     protected $description = 'Change the user_id of the ec_media records to the user_id of the app';
 
     protected $user_id;
+
     /**
      * Create a new command instance.
      *
@@ -44,8 +45,9 @@ class ChangeEcMediaUserIDCommand extends Command
     {
         if ($this->argument('app_id')) {
             $app = App::where('id', $this->argument('app_id'))->first();
-            if (!$app) {
-                $this->error('App with id ' . $this->argument('app_id') . ' not found!');
+            if (! $app) {
+                $this->error('App with id '.$this->argument('app_id').' not found!');
+
                 return;
             }
 
@@ -57,17 +59,17 @@ class ChangeEcMediaUserIDCommand extends Command
             if ($pois->count() > 0) {
                 $poiCount = $pois->count();
                 foreach ($pois as $index => $poi) {
-                    Log::info("Processing POI ". ++$index ." of $poiCount.");
+                    Log::info('Processing POI '.++$index." of $poiCount.");
                     if ($poi->ecMedia->count() > 0) {
                         $poi->ecMedia->each(function ($media) {
-                            Log::info("Processing Gallery Media ". $media->id ."");
+                            Log::info('Processing Gallery Media '.$media->id.'');
                             $media->user_id = $this->user_id;
                             $media->save();
                         });
                     }
-                    if (!empty($poi->featureImage)) {
+                    if (! empty($poi->featureImage)) {
                         $media = $poi->featureImage;
-                        Log::info("Processing Feature Image ". $media->id ."");
+                        Log::info('Processing Feature Image '.$media->id.'');
                         $media->user_id = $this->user_id;
                         $media->save();
                     }
@@ -77,17 +79,17 @@ class ChangeEcMediaUserIDCommand extends Command
             if ($tracks->count() > 0) {
                 $trackCount = $tracks->count();
                 foreach ($tracks as $index => $track) {
-                    Log::info("Processing TRACK ". ++$index ." of $trackCount.");
+                    Log::info('Processing TRACK '.++$index." of $trackCount.");
                     if ($track->ecMedia->count() > 0) {
                         $track->ecMedia->each(function ($media) {
-                            Log::info("Processing Gallery Media ". $media->id ."");
+                            Log::info('Processing Gallery Media '.$media->id.'');
                             $media->user_id = $this->user_id;
                             $media->save();
                         });
                     }
-                    if (!empty($track->featureImage)) {
+                    if (! empty($track->featureImage)) {
                         $media = $track->featureImage;
-                        Log::info("Processing Feature Image ". $media->id ."");
+                        Log::info('Processing Feature Image '.$media->id.'');
                         $media->user_id = $this->user_id;
                         $media->save();
                     }

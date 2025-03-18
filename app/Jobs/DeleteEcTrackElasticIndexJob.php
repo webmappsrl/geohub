@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\EcTrack;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -18,7 +17,9 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
     use SerializesModels;
 
     protected $ecTrack;
+
     protected $ecTrackLayers;
+
     protected $id;
 
     /**
@@ -39,12 +40,12 @@ class DeleteEcTrackElasticIndexJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->ecTrack = new EcTrack();
+        $this->ecTrack = new EcTrack;
         $prefix = config('services.elastic.prefix') ?? 'geohub_app';
 
-        if (!empty($this->ecTrackLayers)) {
+        if (! empty($this->ecTrackLayers)) {
             foreach ($this->ecTrackLayers as $app_id => $layer_ids) {
-                $indexName = $prefix . '_' . $app_id;
+                $indexName = $prefix.'_'.$app_id;
                 $this->ecTrack->elasticIndexDelete($indexName, $this->id);
             }
         }

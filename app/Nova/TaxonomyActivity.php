@@ -11,12 +11,10 @@ use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\MorphedByMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Panel;
 use Robertboes\NovaSliderField\NovaSliderField;
 use Waynestate\Nova\CKEditor;
 use Yna\NovaSwatches\Swatches;
@@ -29,12 +27,14 @@ class TaxonomyActivity extends Resource
      * @var string
      */
     public static $model = \App\Models\TaxonomyActivity::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -42,7 +42,7 @@ class TaxonomyActivity extends Resource
      */
     public static $search = [
         'name',
-        'identifier'
+        'identifier',
     ];
 
     public static function group()
@@ -52,10 +52,6 @@ class TaxonomyActivity extends Resource
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -107,7 +103,7 @@ class TaxonomyActivity extends Resource
             })
                 ->asHtml()
                 ->onlyOnIndex(),
-            NovaIconSelect::make("Icon Label", 'icon')
+            NovaIconSelect::make('Icon Label', 'icon')
                 ->setIconProvider(WebmappAppIconProvider::class)
                 ->help(__('Select an icon from the list to display for the activity.')),
             Text::make(__('Source'), 'source')
@@ -122,7 +118,7 @@ class TaxonomyActivity extends Resource
                 ->help(__('Select an image from Ec Medias to use as the feature image. If selected, this image will be shown by default in layers that use this activity taxonomy but do not have their own feature image.')),
             ExternalImage::make(__('Feature Image'), function () {
                 $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
-                if ('' !== $url && substr($url, 0, 4) !== 'http') {
+                if ($url !== '' && substr($url, 0, 4) !== 'http') {
                     $url = Storage::disk('public')->url($url);
                 }
 
@@ -146,7 +142,7 @@ class TaxonomyActivity extends Resource
                 ->hideFromIndex()
                 ->help(__('The date and time when this taxonomy was last updated.')),
             MorphedByMany::make(__('Tracks'), 'ecTracks', EcTrack::class)
-                ->searchable()
+                ->searchable(),
         ];
     }
 
@@ -213,7 +209,6 @@ class TaxonomyActivity extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -225,7 +220,6 @@ class TaxonomyActivity extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -237,7 +231,6 @@ class TaxonomyActivity extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -249,7 +242,6 @@ class TaxonomyActivity extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */

@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\TaxonomyWhen;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
 
 class TaxonomyWhenFactory extends Factory
 {
@@ -24,6 +22,7 @@ class TaxonomyWhenFactory extends Factory
     public function definition()
     {
         $name = $this->faker->name();
+
         return [
             'name' => [
                 'it' => $name,

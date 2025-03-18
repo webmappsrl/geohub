@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Jobs\UpdateTrackPBFInfoJob;
 use App\Models\App;
 use App\Models\EcTrack;
-use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +27,7 @@ class UpdateTracksInfoForPBFCommand extends Command
     protected $description = 'Update tracks info for PBF files for the app and upload the to AWS';
 
     protected $app_id;
+
     protected $author_id;
 
     /**
@@ -51,14 +51,15 @@ class UpdateTracksInfoForPBFCommand extends Command
 
         $this->app_id = $this->argument('app_id');
 
-        if (!$app) {
-            $this->error('App with id ' . $this->argument('app_id') . ' not found!');
+        if (! $app) {
+            $this->error('App with id '.$this->argument('app_id').' not found!');
+
             return 0;
         }
         try {
             $this->author_id = $app->user_id;
         } catch (Exception $e) {
-            throw new Exception('No User found for this app ' . $this->app_id);
+            throw new Exception('No User found for this app '.$this->app_id);
         }
 
         $tracks = DB::table('ec_tracks')
@@ -70,9 +71,9 @@ class UpdateTracksInfoForPBFCommand extends Command
             $track = EcTrack::find($track_id->id);
             try {
                 UpdateTrackPBFInfoJob::dispatch($track);
-                Log::info($c . '/'. count($tracks));
+                Log::info($c.'/'.count($tracks));
             } catch (\Exception $e) {
-                Log::error('An error occurred during updating EcTrack PBF Info dispatch: ' . $e->getMessage());
+                Log::error('An error occurred during updating EcTrack PBF Info dispatch: '.$e->getMessage());
             }
         }
 

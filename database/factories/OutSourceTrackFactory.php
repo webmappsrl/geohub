@@ -34,13 +34,12 @@ class OutSourceTrackFactory extends Factory
             'type' => 'track',
             'source_id' => $this->faker->uuid(),
             'tags' => [
-                'name' => [ 'it' => $this->faker->name() ],
-                'description' => [ 'it' => $this->faker->text()],
+                'name' => ['it' => $this->faker->name()],
+                'description' => ['it' => $this->faker->text()],
                 'from' => $this->faker->city(),
                 'to' => $this->faker->city(),
             ],
             'geometry' => $geometry,
         ];
     }
-
 }

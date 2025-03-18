@@ -22,13 +22,13 @@ class StoreApiTest extends TestCase
         });
     }
 
-    public function testWithoutAuthentication()
+    public function test_without_authentication()
     {
         $response = $this->post('/api/usergenerateddata/store', []);
         $this->assertSame(401, $response->status());
     }
 
-    public function testWithNoData()
+    public function test_with_no_data()
     {
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $count = count(UgcPoi::get()) + count(UgcTrack::get());
@@ -37,31 +37,31 @@ class StoreApiTest extends TestCase
         $this->assertSame($count, count(UgcPoi::get()) + count(UgcTrack::get()));
     }
 
-    public function testWithAPoi()
+    public function test_with_a_poi()
     {
         $this->_getHoquServiceProviderMock();
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "Point",
-                        "coordinates" => [10, 20]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'Point',
+                        'coordinates' => [10, 20],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/usergenerateddata/store', $data);
@@ -76,31 +76,31 @@ class StoreApiTest extends TestCase
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 
-    public function testWithATrack()
+    public function test_with_a_track()
     {
         $this->_getHoquServiceProviderMock();
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "LineString",
-                        "coordinates" => [[10, 20], [10, 20], [10, 20]]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'LineString',
+                        'coordinates' => [[10, 20], [10, 20], [10, 20]],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/usergenerateddata/store', $data);
@@ -115,7 +115,7 @@ class StoreApiTest extends TestCase
         $this->assertSame(json_encode($formData), json_encode(json_decode($newContent->raw_data, true)));
     }
 
-    public function testSaveUgcPoiTriggerHoquStore()
+    public function test_save_ugc_poi_trigger_hoqu_store()
     {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -129,30 +129,30 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "Point",
-                        "coordinates" => [10, 20]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'Point',
+                        'coordinates' => [10, 20],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
         $response = $this->postJson('/api/usergenerateddata/store', $data);
     }
 
-    public function testSaveUgcTrackTriggerHoquStore()
+    public function test_save_ugc_track_trigger_hoqu_store()
     {
         $this->mock(HoquServiceProvider::class, function ($mock) {
             $mock->shouldReceive('store')
@@ -166,25 +166,25 @@ class StoreApiTest extends TestCase
         $this->actingAs(User::where('email', '=', 'team@webmapp.it')->first(), 'api');
         $appId = 'it.webmapp.test';
         $formData = [
-            "name" => "Test name"
+            'name' => 'Test name',
         ];
         $data = [
-            "type" => "FeatureCollection",
-            "features" => [
+            'type' => 'FeatureCollection',
+            'features' => [
                 [
-                    "type" => "Feature",
-                    "geometry" => [
-                        "type" => "LineString",
-                        "coordinates" => [[10, 20], [10, 20], [10, 20]]
+                    'type' => 'Feature',
+                    'geometry' => [
+                        'type' => 'LineString',
+                        'coordinates' => [[10, 20], [10, 20], [10, 20]],
                     ],
-                    "properties" => [
-                        "app" => [
-                            "id" => $appId
+                    'properties' => [
+                        'app' => [
+                            'id' => $appId,
                         ],
-                        "form_data" => $formData
-                    ]
-                ]
-            ]
+                        'form_data' => $formData,
+                    ],
+                ],
+            ],
         ];
         $response = $this->postJson('/api/usergenerateddata/store', $data);
     }

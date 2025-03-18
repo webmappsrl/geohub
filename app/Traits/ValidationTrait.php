@@ -20,4 +20,4 @@ trait ValidationTrait
             return response(['error' => $errors], 400);
         }
     }
-} 
+}

@@ -2,6 +2,4 @@
 
 namespace Laravel\Nova\Fields;
 
-interface Downloadable
-{
-}
+interface Downloadable {}

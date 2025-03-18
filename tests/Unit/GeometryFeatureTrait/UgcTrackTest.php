@@ -15,10 +15,10 @@ class UgcTrackTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function testGetGeojsonWithoutGeometry()
+    public function test_get_geojson_without_geometry()
     {
         $track = UgcTrack::factory([
-            'geometry' => null
+            'geometry' => null,
         ])->create();
 
         $geojson = $track->getGeojson();
@@ -26,10 +26,10 @@ class UgcTrackTest extends TestCase
         $this->assertNull($geojson);
     }
 
-    public function testGetGeojsonWithGeometry()
+    public function test_get_geojson_with_geometry()
     {
         $track = UgcTrack::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
         ])->create();
 
         $geojson = $track->getGeojson();
@@ -49,10 +49,10 @@ class UgcTrackTest extends TestCase
         $this->assertSame(json_encode([[11, 43], [12, 43], [12, 44], [11, 44]]), json_encode($geojson['geometry']['coordinates']));
     }
 
-    public function testGetRelatedUgcWithNoRelated()
+    public function test_get_related_ugc_with_no_related()
     {
         $track = UgcTrack::factory([
-            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))")
+            'geometry' => DB::raw("(ST_GeomFromText('LINESTRING(11 43, 12 43, 12 44, 11 44)'))"),
         ])->create();
 
         $geojson = $track->getRelatedUgcGeojson();
@@ -66,7 +66,7 @@ class UgcTrackTest extends TestCase
         $this->assertCount(0, $geojson['features']);
     }
 
-    public function testGetRelatedUgcWithRelated()
+    public function test_get_related_ugc_with_related()
     {
         $user = User::factory(1)->create()->first();
         $track = UgcTrack::factory([

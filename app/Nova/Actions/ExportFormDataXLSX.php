@@ -7,18 +7,19 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ExportFormDataXLSX extends Action
 {
     protected $type;
+
     public function __construct($type = 'ugc_pois')
     {
         $this->type = $type;
@@ -30,14 +31,14 @@ class ExportFormDataXLSX extends Action
         return __('Export All Form Data');
     }
 
-
     protected function getDownloadUrl(string $filePath): string
     {
         return URL::temporarySignedRoute('laravel-nova-excel.download', now()->addMinutes(1), [
-            'path'     => encrypt($filePath),
-            'filename' =>  $this->type . '.xlsx',
+            'path' => encrypt($filePath),
+            'filename' => $this->type.'.xlsx',
         ]);
     }
+
     public function handle(ActionFields $fields, Collection $models): array
     {
         $modelsGoupedByApp = $models->groupBy('sku');
@@ -64,10 +65,10 @@ class ExportFormDataXLSX extends Action
                     foreach ($modelsInGroup as $model) {
                         $formData = json_decode($model->raw_data, true);
                         $ugc_path = $this->type === 'ugc_pois' ? 'ugc-pois' : 'ugc-tracks';
-                        $formData[$this->type] =  url('/resources/' . $ugc_path . '/' . $model['id']);
-                        $formData['username'] =  $model->user->name;
+                        $formData[$this->type] = url('/resources/'.$ugc_path.'/'.$model['id']);
+                        $formData['username'] = $model->user->name;
                         if (isset($formData['id']) && $formSchema['id'] === $formData['id']) {
-                            foreach ($heading[$formData['id']] as  $headingRow) {
+                            foreach ($heading[$formData['id']] as $headingRow) {
                                 foreach ($headingRow as $fieldName) {
                                     $rowData[$fieldName] = isset($formData[$fieldName]) ? $formData[$fieldName] : 'N/A';
                                 }
@@ -87,7 +88,8 @@ class ExportFormDataXLSX extends Action
             'all-form-data.xlsx',
             \Maatwebsite\Excel\Excel::XLSX
         );
-        return action::download($this->getDownloadUrl($response->getFile()->getPathname()), $this->type . '.xlsx');
+
+        return action::download($this->getDownloadUrl($response->getFile()->getPathname()), $this->type.'.xlsx');
     }
 
     public function fields()
@@ -95,9 +97,10 @@ class ExportFormDataXLSX extends Action
         return [];
     }
 }
-class Sheet implements FromArray, WithTitle, WithStyles
+class Sheet implements FromArray, WithStyles, WithTitle
 {
     protected $data;
+
     protected $title;
 
     public function __construct($data, $title)
@@ -121,7 +124,7 @@ class Sheet implements FromArray, WithTitle, WithStyles
         // Assume that the URL is in the first column of each row
         $highestRow = $sheet->getHighestRow();
         for ($row = 3; $row <= $highestRow; $row++) {
-            $cellCoordinate = 'A' . $row;
+            $cellCoordinate = 'A'.$row;
             $url = $sheet->getCell($cellCoordinate)->getValue();
             $sheet->getCell($cellCoordinate)->getHyperlink()->setUrl($url);
             $sheet->getStyle($cellCoordinate)->getFont()->setUnderline(true)->setColor(new Color(Color::COLOR_BLUE));
@@ -131,6 +134,7 @@ class Sheet implements FromArray, WithTitle, WithStyles
 class MultiSheetExport implements WithMultipleSheets
 {
     use Exportable;
+
     protected $sheets;
 
     public function __construct($sheets)

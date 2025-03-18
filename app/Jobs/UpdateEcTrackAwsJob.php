@@ -37,7 +37,7 @@ class UpdateEcTrackAwsJob implements ShouldQueue
     public function handle()
     {
         $geojson = $this->ecTrack->getGeojson();
-        $trackUri = $this->ecTrack->id . '.json';
+        $trackUri = $this->ecTrack->id.'.json';
         try {
             Storage::disk('wmfetracks')->put($trackUri, json_encode($geojson));
         } catch (\Exception $e) {

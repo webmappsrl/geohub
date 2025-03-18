@@ -11,9 +11,9 @@ use Laravel\Nova\Trix\DiscardPendingAttachments;
 use Laravel\Nova\Trix\PendingAttachment;
 use Laravel\Nova\Trix\StorePendingAttachment;
 
-class Trix extends Field implements StorableContract, DeletableContract
+class Trix extends Field implements DeletableContract, StorableContract
 {
-    use Storable, Deletable, Expandable;
+    use Deletable, Expandable, Storable;
 
     /**
      * The field's component.
@@ -60,7 +60,6 @@ class Trix extends Field implements StorableContract, DeletableContract
     /**
      * Specify the callback that should be used to store file attachments.
      *
-     * @param  callable  $callback
      * @return $this
      */
     public function attach(callable $callback)
@@ -75,7 +74,6 @@ class Trix extends Field implements StorableContract, DeletableContract
     /**
      * Specify the callback that should be used to delete a single, persisted file attachment.
      *
-     * @param  callable  $callback
      * @return $this
      */
     public function detach(callable $callback)
@@ -90,7 +88,6 @@ class Trix extends Field implements StorableContract, DeletableContract
     /**
      * Specify the callback that should be used to discard pending file attachments.
      *
-     * @param  callable  $callback
      * @return $this
      */
     public function discard(callable $callback)
@@ -105,7 +102,6 @@ class Trix extends Field implements StorableContract, DeletableContract
     /**
      * Specify the callback that should be used to delete the field.
      *
-     * @param  callable  $deleteCallback
      * @return $this
      */
     public function delete(callable $deleteCallback)
@@ -131,10 +127,10 @@ class Trix extends Field implements StorableContract, DeletableContract
         $this->disk($disk)->path($path);
 
         $this->attach(new StorePendingAttachment($this))
-             ->detach(new DetachAttachment($this))
-             ->delete(new DeleteAttachments($this))
-             ->discard(new DiscardPendingAttachments($this))
-             ->prunable();
+            ->detach(new DetachAttachment($this))
+            ->delete(new DeleteAttachments($this))
+            ->discard(new DiscardPendingAttachments($this))
+            ->prunable();
 
         return $this;
     }
@@ -142,7 +138,6 @@ class Trix extends Field implements StorableContract, DeletableContract
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  string  $requestAttribute
      * @param  object  $model
      * @param  string  $attribute
@@ -179,9 +174,7 @@ class Trix extends Field implements StorableContract, DeletableContract
      *
      * @return string|null
      */
-    public function getStoragePath()
-    {
-    }
+    public function getStoragePath() {}
 
     /**
      * Prepare the element for JSON serialization.

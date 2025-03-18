@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Helpers\NovaCurrentResourceActionHelper;
 use App\Nova\Actions\RegenerateEcMedia;
 use Chaseconey\ExternalImage\ExternalImage;
+use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Exception;
@@ -13,42 +14,42 @@ use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Panel;
-use NovaAttachMany\AttachMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Titasgailius\SearchRelations\SearchesRelations;
-use DigitalCreative\MegaFilter\HasMegaFilterTrait;
-use Laravel\Nova\Fields\Heading;
+use Laravel\Nova\Panel;
 use Ncus\InlineIndex\InlineIndex;
+use NovaAttachMany\AttachMany;
+use Titasgailius\SearchRelations\SearchesRelations;
 use Wm\MapPointNova3\MapPointNova3;
-use Laravel\Nova\Fields\BelongsToMany;
 
 class EcMedia extends Resource
 {
-    use TabsOnEdit;
-    use SearchesRelations;
     use HasMegaFilterTrait;
-
-
+    use SearchesRelations;
     use TabsOnEdit;
+    use TabsOnEdit;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
     public static $model = \App\Models\EcMedia::class;
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The columns that should be searched.
      *
@@ -66,7 +67,6 @@ class EcMedia extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -75,15 +75,12 @@ class EcMedia extends Resource
         if ($request->user()->can('Admin')) {
             return $query;
         }
+
         return $query->where('user_id', $request->user()->id);
     }
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @param Request $request
-     *
-     * @return array
      */
     public function fields(Request $request): array
     {
@@ -98,7 +95,6 @@ class EcMedia extends Resource
         if (NovaCurrentResourceActionHelper::isForm($request)) {
             return $this->form($request);
         }
-
 
         $fields = [
             NovaTabTranslatable::make([
@@ -121,7 +117,7 @@ class EcMedia extends Resource
             DateTime::make(__('Created At'), 'created_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             DateTime::make(__('Updated At'), 'updated_at')->sortable()->hideWhenUpdating()->hideWhenCreating(),
             MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                'center' => ["51", "4"],
+                'center' => ['51', '4'],
                 'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                 'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                 'minZoom' => 7,
@@ -138,12 +134,11 @@ class EcMedia extends Resource
         ];
 
         if (isset($this->model()->thumbnails)) {
-            $fields[] = Panel::make("Thumbnails", $this->_getThumbnailsFields());
+            $fields[] = Panel::make('Thumbnails', $this->_getThumbnailsFields());
         }
 
         return $fields;
     }
-
 
     private function index()
     {
@@ -157,7 +152,7 @@ class EcMedia extends Resource
                         $url = $thumbnails[array_key_first($thumbnails)];
                     }
                 }
-                if (!$url) {
+                if (! $url) {
                     $url = $this->model()->url;
                     if (substr($url, 0, 4) !== 'http') {
                         $url = Storage::disk('public')->url($url);
@@ -177,7 +172,7 @@ class EcMedia extends Resource
                     $url = Storage::disk('public')->url($url);
                 }
 
-                return '<a href="' . $url . '" target="_blank">' . __('Original image') . '</a>';
+                return '<a href="'.$url.'" target="_blank">'.__('Original image').'</a>';
             })->asHtml(),
             InlineIndex::make('Rank')
                 ->sortable()
@@ -227,7 +222,7 @@ class EcMedia extends Resource
                             <p>Map: The geometry of the media content (geographical point).</p>
                         ')->asHtml(),
                         MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                            'center' => ["51", "4"],
+                            'center' => ['51', '4'],
                             'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                             'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                             'minZoom' => 7,
@@ -239,30 +234,35 @@ class EcMedia extends Resource
                             if ($this->taxonomyActivities()->count() > 0) {
                                 return implode(',', $this->taxonomyActivities()->pluck('name')->toArray());
                             }
+
                             return 'No activities';
                         })->help(__('The taxonomy activities associated with the media content.')),
                         Text::make('Wheres', function () {
                             if ($this->taxonomyWheres()->count() > 0) {
                                 return implode(',', $this->taxonomyWheres()->pluck('name')->toArray());
                             }
+
                             return 'No Wheres';
                         })->help(__('The taxonomy locations associated with the media content.')),
                         Text::make('Themes', function () {
                             if ($this->taxonomyThemes()->count() > 0) {
                                 return implode(',', $this->taxonomyThemes()->pluck('name')->toArray());
                             }
+
                             return 'No Themes';
                         })->help(__('The taxonomy themes associated with the media content.')),
                         Text::make('Targets', function () {
                             if ($this->taxonomyTargets()->count() > 0) {
                                 return implode(',', $this->taxonomyTargets()->pluck('name')->toArray());
                             }
+
                             return 'No Targets';
                         })->help(__('The taxonomy targets associated with the media content.')),
                         Text::make('Whens', function () {
                             if ($this->taxonomyWhens()->count() > 0) {
                                 return implode(',', $this->taxonomyWhens()->pluck('name')->toArray());
                             }
+
                             return 'No Whens';
                         })->help(__('The taxonomy periods associated with the media content.')),
                     ],
@@ -277,7 +277,6 @@ class EcMedia extends Resource
         ];
     }
 
-
     private function form($request)
     {
 
@@ -287,8 +286,7 @@ class EcMedia extends Resource
             $geojson = null;
         }
 
-
-        $tab_title = "New EC Media";
+        $tab_title = 'New EC Media';
         if (NovaCurrentResourceActionHelper::isUpdate($request)) {
             $tab_title = "EC Media Edit: {$this->name} ({$this->id})";
         }
@@ -299,7 +297,7 @@ class EcMedia extends Resource
                 [
                     'Main' => [
                         Heading::make(
-                            <<<HTML
+                            <<<'HTML'
                             <ul>
                                 <li><p><strong>Name</strong>: Enter the name of the item. This will be the main title displayed.</p></li>
                                 <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
@@ -318,7 +316,7 @@ class EcMedia extends Resource
                             ->canSee(function ($request) {
                                 return $request->user()->can('Admin');
                             })
-                            ->help(__("Associate the author of the app that will show the media")),
+                            ->help(__('Associate the author of the app that will show the media')),
                     ],
                     'Images' => [
                         Image::make('Url')
@@ -337,22 +335,20 @@ class EcMedia extends Resource
                             ->help(__('Select one or more themes taxonomies to associate with the media. Click "Preview" to display the selected ones.')),
                     ],
 
-
                 ]
             ))->withToolbar(),
             new Panel('Map / Geographical info', [
                 MapPointNova3::make(__('Map'), 'geometry')->withMeta([
-                    'center' => ["51", "4"],
+                    'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
                     'tiles' => 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
                     'minZoom' => 7,
                     'maxZoom' => 16,
-                ])
+                ]),
             ]),
 
         ];
     }
-
 
     private function getImages()
     {
@@ -363,7 +359,7 @@ class EcMedia extends Resource
                 $url = Storage::disk('public')->url($url);
             }
 
-            return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+            return '<a href="'.$url.'" target="_blank">'.$url.'</a>';
         })->asHtml();
 
         $return[] = ExternalImage::make('Image', function () {
@@ -382,7 +378,7 @@ class EcMedia extends Resource
             if (isset($thumbnails)) {
                 foreach ($thumbnails as $size => $url) {
                     $return[] = Text::make($size, function () use ($url) {
-                        return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+                        return '<a href="'.$url.'" target="_blank">'.$url.'</a>';
                     })->asHtml();
                 }
             }
@@ -416,7 +412,6 @@ class EcMedia extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -428,7 +423,6 @@ class EcMedia extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -440,7 +434,6 @@ class EcMedia extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
@@ -448,23 +441,23 @@ class EcMedia extends Resource
     {
         if ($request->user()->hasRole('Editor')) {
             return [
-                new Lenses\MyEcMediasLens(),
+                new Lenses\MyEcMediasLens,
             ];
         }
+
         return [];
     }
 
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      *
      * @return array
      */
     public function actions(Request $request)
     {
         return [
-            new RegenerateEcMedia(),
+            new RegenerateEcMedia,
         ];
     }
 
@@ -472,12 +465,10 @@ class EcMedia extends Resource
      * This method returns the HTML STRING rendered by DATA tab (object structure and fields)
      * Refers to OFFICIAL DOCUMENTATION:
      * https://docs.google.com/spreadsheets/d/1S5kVk2tBF4ZQxuaeYBLG2lLu8Y8AnfmKzvHft8Pw7ms/edit#gid=0
-     *
-     * @return string
      */
     public function getData(): string
     {
-        $text = <<<HTML
+        $text = <<<'HTML'
         <style>
 table {
   font-family: arial, sans-serif;
@@ -515,6 +506,7 @@ tr:nth-child(even) {
 <tr><td><i>outsource</i></td><td>source</td><td>text</td><td>YES</td><td>NULL</td><td>NULL</td><td>NO</td><td>TBD</td><td></td></tr>
 </table>
 HTML;
+
         return $text;
     }
 }

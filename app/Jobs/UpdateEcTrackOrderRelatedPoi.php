@@ -2,15 +2,12 @@
 
 namespace App\Jobs;
 
-use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class UpdateEcTrackOrderRelatedPoi implements ShouldQueue
 {
@@ -53,7 +50,7 @@ class UpdateEcTrackOrderRelatedPoi implements ShouldQueue
     {
         $geojson = $this->ecTrack->getGeojson();
         // CHeck if TRACK has related POIS
-        if (!isset($geojson['ecTrack']['properties']['related_pois'])) {
+        if (! isset($geojson['ecTrack']['properties']['related_pois'])) {
             // SKIP;
             return;
         }
@@ -64,13 +61,14 @@ class UpdateEcTrackOrderRelatedPoi implements ShouldQueue
         foreach ($related_pois as $poi) {
             $poi_geometry = $poi['geometry'];
             // POI VAL along track https://postgis.net/docs/ST_LineLocatePoint.html
-            $line = "ST_GeomFromGeoJSON('" . json_encode($track_geometry) . "')";
-            $point = "ST_GeomFromGeoJSON('" . json_encode($poi_geometry) . "')";
+            $line = "ST_GeomFromGeoJSON('".json_encode($track_geometry)."')";
+            $point = "ST_GeomFromGeoJSON('".json_encode($poi_geometry)."')";
             $sql = DB::raw("SELECT ST_LineLocatePoint($line,$point) as val;");
             $result = DB::select($sql);
             $oredered_pois[$poi['properties']['id']] = $result[0]->val;
         }
         asort($oredered_pois);
+
         return array_keys($oredered_pois);
     }
 }

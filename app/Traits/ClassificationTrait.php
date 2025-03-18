@@ -13,13 +13,12 @@ trait ClassificationTrait
     {
         $rankings = $this->getRankedUsersNearPoisQuery();
 
-
         $groupedArray = [];
         foreach ($rankings as $item) {
             $userId = $item['ugc_user_id'];
 
             // Initialize the user_id array if not already set
-            if (!isset($groupedArray[$userId])) {
+            if (! isset($groupedArray[$userId])) {
                 $groupedArray[$userId] = [];
             }
 
@@ -30,6 +29,7 @@ trait ClassificationTrait
             return count($b) - count($a); // Descending order
         });
         $groupedArray = array_slice($groupedArray, 0, 10, true);
+
         return $groupedArray;
     }
 
@@ -41,26 +41,26 @@ trait ClassificationTrait
         $transformedArray = [
             'User' => [],
             'UgcMedia' => [],
-            'EcPoi' => []
+            'EcPoi' => [],
         ];
 
         // Loop through the original array to extract and organize the data
         foreach ($rankings as $element) {
             // Add the user_id if it is not already present
-            if (!in_array($element['user_id'], $transformedArray['User'])) {
+            if (! in_array($element['user_id'], $transformedArray['User'])) {
                 $transformedArray['User'][] = $element['user_id'];
             }
 
             // Split the media_ids and add them if they are not already present
             $mediaIds = explode(',', $element['media_ids']);
             foreach ($mediaIds as $mediaId) {
-                if (!in_array($mediaId, $transformedArray['UgcMedia'])) {
+                if (! in_array($mediaId, $transformedArray['UgcMedia'])) {
                     $transformedArray['UgcMedia'][] = $mediaId;
                 }
             }
 
             // Add the id (EcPoi) if it is not already present
-            if (!in_array($element['id'], $transformedArray['EcPoi'])) {
+            if (! in_array($element['id'], $transformedArray['EcPoi'])) {
                 $transformedArray['EcPoi'][] = $element['id'];
             }
         }
@@ -71,8 +71,9 @@ trait ClassificationTrait
             $carry[$item->id] = [
                 'name' => $item->name,
                 'last_name' => $item->last_name,
-                'email' => $item->email
+                'email' => $item->email,
             ];
+
             return $carry;
         }, []);
 
@@ -80,8 +81,9 @@ trait ClassificationTrait
         $ugcMedias = UgcMedia::whereIn('id', $transformedArray['UgcMedia'])->get(['id', 'relative_url']);
         $formattedugcMedias = $ugcMedias->reduce(function ($carry, $item) {
             $carry[$item->id] = [
-                'url' => 'https://geohub.webmapp.it/storage/' . $item->relative_url
+                'url' => 'https://geohub.webmapp.it/storage/'.$item->relative_url,
             ];
+
             return $carry;
         }, []);
 
@@ -89,16 +91,18 @@ trait ClassificationTrait
         $ecPois = EcPoi::whereIn('id', $transformedArray['EcPoi'])->get(['id', 'name']);
         $formattedEcPois = $ecPois->reduce(function ($carry, $item) {
             $carry[$item->id] = [
-                'name' => $item->name
+                'name' => $item->name,
             ];
+
             return $carry;
         }, []);
 
         $data = [
             'Users' => $formattedusers,
             'UgcMedia' => $formattedugcMedias,
-            'EcPois' => $formattedEcPois
+            'EcPois' => $formattedEcPois,
         ];
+
         return $data;
     }
 
@@ -112,9 +116,9 @@ trait ClassificationTrait
                 'ec_pois.*' // Seleziona tutti i campi di ec_pois
             )
             ->join('ugc_media', function ($join) {
-                $join->on('ec_pois.user_id', '=', DB::raw("'" . $this->user_id . "'"))
-                    ->whereRaw("ST_DWithin(ugc_media.geometry, ec_pois.geometry, 100.0)")
-                    ->where('ugc_media.app_id', '=', DB::raw("'" . $this->app_id . "'"));
+                $join->on('ec_pois.user_id', '=', DB::raw("'".$this->user_id."'"))
+                    ->whereRaw('ST_DWithin(ugc_media.geometry, ec_pois.geometry, 100.0)')
+                    ->where('ugc_media.app_id', '=', DB::raw("'".$this->app_id."'"));
             });
 
         if ($ugcUserId) {
@@ -137,9 +141,10 @@ trait ClassificationTrait
                     'ec_poi' => [
                         'id' => $item->id,
                         'name' => $item->name,
-                    ]
+                    ],
                 ];
             });
+
         return $result;
     }
 

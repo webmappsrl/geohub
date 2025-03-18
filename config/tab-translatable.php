@@ -12,7 +12,13 @@ return [
      * If you choose array selection, you should add all supported translation on it as "code"
      */
     'locales' => [
-        'it', 'en', 'fr', 'de', 'es', 'nl'
+        'it',
+        'en',
+        'fr',
+        'de',
+        'es',
+        'nl',
+        'sq',
     ],
 
     /*

@@ -2,9 +2,9 @@
 
 namespace App\Nova\Filters;
 
+use App\Models\App;
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\Filter;
-use App\Models\App; // Importa il modello App se non già fatto
+use Laravel\Nova\Filters\Filter; // Importa il modello App se non già fatto
 
 class SchemaFilter extends Filter
 {
@@ -14,12 +14,12 @@ class SchemaFilter extends Filter
      * @var string
      */
     public $name = 'Filter by Form schema';
+
     protected $type = 'ugc_pois';
 
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -28,14 +28,15 @@ class SchemaFilter extends Filter
     {
         return $query->whereRaw("raw_data->>'id' = ?", [$value]);
     }
+
     public function __construct($type = 'ugc_pois')
     {
         $this->type = $type;
     }
+
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function options(Request $request)

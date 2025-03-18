@@ -24,7 +24,6 @@ class NotAttached implements Rule
     /**
      * Create a new rule instance.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return void
      */

@@ -8,6 +8,7 @@ use Laravel\Dusk\Component as BaseComponent;
 class DetailComponent extends BaseComponent
 {
     public $resourceName;
+
     public $resourceId;
 
     /**
@@ -36,7 +37,6 @@ class DetailComponent extends BaseComponent
     /**
      * Assert that the browser page contains the component.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
      * @return void
      */
     public function assert(Browser $browser)

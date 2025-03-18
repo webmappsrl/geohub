@@ -3,31 +3,29 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Laravel\Nova\Nova;
-use Webmapp\Import\Import;
-use App\Policies\RolePolicy;
+use App\Nova\Metrics\NewUgcMedia;
+use App\Nova\Metrics\NewUgcMediaByLoggedUser;
+use App\Nova\Metrics\NewUgcMediaPerDay;
+use App\Nova\Metrics\NewUgcPois;
+use App\Nova\Metrics\NewUgcPoisByLoggedUser;
+use App\Nova\Metrics\NewUgcPoisPerDay;
+use App\Nova\Metrics\NewUgcTracks;
+use App\Nova\Metrics\NewUgcTracksByLoggedUser;
+use App\Nova\Metrics\NewUgcTracksPerDay;
 use App\Nova\Metrics\NewUsers;
 use App\Nova\Metrics\TotalUgc;
-use App\Nova\Metrics\NewUgcPois;
 use App\Nova\Metrics\TotalUsers;
-use App\Nova\Metrics\NewUgcMedia;
-use App\Nova\Metrics\NewUgcTracks;
-use App\Policies\PermissionPolicy;
-use Illuminate\Support\Facades\DB;
 use App\Nova\Metrics\UserSkus;
-use Illuminate\Support\Facades\Gate;
-use App\Nova\Metrics\NewUgcPoisPerDay;
-use App\Nova\Metrics\NewUgcMediaPerDay;
-use App\Nova\Metrics\NewUgcTracksPerDay;
+use App\Policies\PermissionPolicy;
+use App\Policies\RolePolicy;
 use Giuga\LaravelNovaSidebar\NovaSidebar;
 use Giuga\LaravelNovaSidebar\SidebarLink;
-use Giuga\LaravelNovaSidebar\SidebarGroup;
-use App\Nova\Metrics\NewUgcPoisByLoggedUser;
-use App\Nova\Metrics\NewUgcMediaByLoggedUser;
-use App\Nova\Metrics\NewUgcTracksByLoggedUser;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Vyuldashev\NovaPermission\NovaPermissionTool;
-use Illuminate\Support\Facades\Auth;
+use Webmapp\Import\Import;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -39,6 +37,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->app->singleton(\Laravel\Nova\Http\Controllers\ResetPasswordController::class, \App\Http\Controllers\ResetPasswordController::class);
     }
 
     /**
@@ -87,8 +87,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
     /**
      * Get the cards that should be displayed on the default Nova dashboard.
-     *
-     * @return array
      */
     protected function cards(): array
     {
@@ -96,25 +94,25 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         $currentUser = User::getEmulatedUser();
 
         if ($currentUser->hasRole('Admin')) {
-            $cards[] = new TotalUsers();
-            $cards[] = new NewUsers();
-            $cards[] = new UserSkus();
-            $cards[] = new TotalUgc();
-            $cards[] = new NewUgcTracks();
-            $cards[] = new NewUgcPois();
-            $cards[] = new NewUgcMedia();
-            $cards[] = new NewUgcTracksPerDay();
-            $cards[] = new NewUgcPoisPerDay();
-            $cards[] = new NewUgcMediaPerDay();
+            $cards[] = new TotalUsers;
+            $cards[] = new NewUsers;
+            $cards[] = new UserSkus;
+            $cards[] = new TotalUgc;
+            $cards[] = new NewUgcTracks;
+            $cards[] = new NewUgcPois;
+            $cards[] = new NewUgcMedia;
+            $cards[] = new NewUgcTracksPerDay;
+            $cards[] = new NewUgcPoisPerDay;
+            $cards[] = new NewUgcMediaPerDay;
         }
 
         if (
             $currentUser->hasRole('Admin') ||
             $currentUser->hasRole('Editor')
         ) {
-            $cards[] = new NewUgcTracksByLoggedUser();
-            $cards[] = new NewUgcPoisByLoggedUser();
-            $cards[] = new NewUgcMediaByLoggedUser();
+            $cards[] = new NewUgcTracksByLoggedUser;
+            $cards[] = new NewUgcPoisByLoggedUser;
+            $cards[] = new NewUgcMediaByLoggedUser;
         }
 
         return $cards;
@@ -132,17 +130,19 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
     /**
      * Get the tools that should be listed in the Nova sidebar.
-     *
-     * @return array
      */
     public function tools(): array
     {
         $currentUser = User::getEmulatedUser();
-        $isAdmin =   $currentUser->hasRole('Admin');
+        $isAdmin = $currentUser->hasRole('Admin');
 
-        $horizonLink = (new SidebarLink())->setName('Horizon')->setUrl(url('/horizon'));
-        $logsLink = (new SidebarLink())->setName('Logs')->setUrl(url('/logs'));
-        $toolSidebar = (new NovaSidebar())->addLink($horizonLink)->addLink($logsLink);
+        $horizonLink = (new SidebarLink)->setName('Horizon')->setUrl(url('/horizon'));
+        $logsLink = (new SidebarLink)->setName('Logs')->setUrl(url('/logs'));
+        $telescopeLink = (new SidebarLink)->setName('Telescope')->setUrl(url('/telescope'));
+        $toolSidebar = (new NovaSidebar)
+            ->addLink($horizonLink)
+            ->addLink($logsLink)
+            ->addLink($telescopeLink);
         $res = [];
         if ($isAdmin) {
             $res[] = $toolSidebar;
@@ -151,6 +151,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->rolePolicy(RolePolicy::class)
             ->permissionPolicy(PermissionPolicy::class);
         $res[] = new Import;
+
         return $res;
     }
 

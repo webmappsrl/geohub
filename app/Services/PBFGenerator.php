@@ -3,17 +3,20 @@
 namespace App\Services;
 
 use App\Models\App;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Exception;
 
 class PBFGenerator
 {
     protected $app_id;
+
     protected $author_id;
+
     protected $format;
+
     protected $zoomTreshold = 6;
 
     public function __construct($app_id, $author_id, $format = 'pbf')
@@ -26,19 +29,20 @@ class PBFGenerator
     public function generate($z, $x, $y)
     {
         $tile = [
-            'zoom'   => $z,
-            'x'      => $x,
-            'y'      => $y,
-            'format' => $this->format
+            'zoom' => $z,
+            'x' => $x,
+            'y' => $y,
+            'format' => $this->format,
         ];
 
-        if (!$this->tileIsValid($tile)) {
+        if (! $this->tileIsValid($tile)) {
             throw new Exception('ERROR Invalid Tile Path');
         }
 
         // Controlla se il tile corrente è in un quadrante vuoto a un livello di zoom inferiore
         if ($this->isTileInEmptyParent($z, $x, $y)) {
-            Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> JUMP PARENT EMPTY');
+            Log::channel('pbf')->info($this->app_id.'/'.$z.'/'.$x.'/'.$y.'.pbf -> JUMP PARENT EMPTY');
+
             return '';
         }
 
@@ -56,15 +60,17 @@ class PBFGenerator
         }
 
         $pbfContent = stream_get_contents($pbf[0]->st_asmvt);
-        if (!empty($pbfContent)) {
+        if (! empty($pbfContent)) {
             $storage_name = config('geohub.s3_pbf_storage_name');
             $s3_osfmedia = Storage::disk($storage_name);
-            $s3_osfmedia->put($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf', $pbfContent);
-            Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf');
-            return $this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf';
+            $s3_osfmedia->put($this->app_id.'/'.$z.'/'.$x.'/'.$y.'.pbf', $pbfContent);
+            Log::channel('pbf')->info($this->app_id.'/'.$z.'/'.$x.'/'.$y.'.pbf');
+
+            return $this->app_id.'/'.$z.'/'.$x.'/'.$y.'.pbf';
         }
         $this->markTileAsEmpty($z, $x, $y);
-        Log::channel('pbf')->info($this->app_id . '/' . $z . '/' . $x . '/' . $y . '.pbf -> EMPTY');
+        Log::channel('pbf')->info($this->app_id.'/'.$z.'/'.$x.'/'.$y.'.pbf -> EMPTY');
+
         return '';
     }
 
@@ -84,6 +90,7 @@ class PBFGenerator
                 return true; // Il tile è in un quadrante vuoto
             }
         }
+
         return false; // Il tile non è in un quadrante vuoto
     }
 
@@ -97,11 +104,11 @@ class PBFGenerator
     // Check if the tile is valid
     private function tileIsValid($tile)
     {
-        if (!isset($tile['x']) || !isset($tile['y']) || !isset($tile['zoom'])) {
+        if (! isset($tile['x']) || ! isset($tile['y']) || ! isset($tile['zoom'])) {
             return false;
         }
 
-        if (!isset($tile['format']) || !in_array($tile['format'], ['pbf'])) {
+        if (! isset($tile['format']) || ! in_array($tile['format'], ['pbf'])) {
             return false;
         }
 
@@ -123,7 +130,7 @@ class PBFGenerator
         $worldTileSize = 2 ** $tile['zoom'];
         $tileMercSize = $worldMercSize / $worldTileSize;
 
-        $env = array();
+        $env = [];
         $env['xmin'] = $worldMercMin + $tileMercSize * $tile['x'];
         $env['xmax'] = $worldMercMin + $tileMercSize * ($tile['x'] + 1);
         $env['ymin'] = $worldMercMax - $tileMercSize * ($tile['y'] + 1);
@@ -138,8 +145,10 @@ class PBFGenerator
         $DENSIFY_FACTOR = 4;
         $env['segSize'] = ($env['xmax'] - $env['xmin']) / $DENSIFY_FACTOR;
         $sql_tmpl = 'ST_Segmentize(ST_MakeEnvelope(%f, %f, %f, %f, 3857), %f)';
+
         return sprintf($sql_tmpl, $env['xmin'], $env['ymin'], $env['xmax'], $env['ymax'], $env['segSize']);
     }
+
     // Funzione per calcolare il fattore di semplificazione in base al livello di zoom
     private function getSimplificationFactor($zoom)
     {
@@ -147,25 +156,27 @@ class PBFGenerator
             // Maggiore semplificazione per zoom <= 8
             return 4;  // Puoi regolare questo valore in base alle tue esigenze
         }
+
         return 0.1 / ($zoom + 1);  // Semplificazione inversamente proporzionale per altri zoom
     }
+
     // Generate a SQL query to pull a tile worth of MVT data
     private function envelopeToSQL($env, $zoom)
     {
         if ($zoom <= $this->zoomTreshold) {
-            $tbl = array(
-                'table'       => 'temp_layers',
-                'srid'        => '4326',
-                'geomColumn'  => 'geometry',
-                'attrColumns' => 't.id, t.layers, t.stroke_color'
-            );
+            $tbl = [
+                'table' => 'temp_layers',
+                'srid' => '4326',
+                'geomColumn' => 'geometry',
+                'attrColumns' => 't.id, t.layers, t.stroke_color',
+            ];
         } else {
-            $tbl = array(
-                'table'       => 'temp_tracks',
-                'srid'        => '4326',
-                'geomColumn'  => 'geometry',
-                'attrColumns' => 't.id, t.name, t.ref, t.cai_scale, t.layers, t.themes, t.activities, t.searchable, t.stroke_color'
-            );
+            $tbl = [
+                'table' => 'temp_tracks',
+                'srid' => '4326',
+                'geomColumn' => 'geometry',
+                'attrColumns' => 't.id, t.name, t.ref, t.cai_scale, t.layers, t.themes, t.activities, t.searchable, t.stroke_color',
+            ];
         }
 
         $tbl['layers'] = $this->getAppLayersIDs($this->app_id);
@@ -234,16 +245,16 @@ class PBFGenerator
         return $sql_tmpl;
     }
 
-
     private function getAppLayersIDs($app_id)
     {
         return Cache::remember("app_layers_{$app_id}", 60, function () use ($app_id) {
             $app = App::with('layers')->find($app_id);
-            if (!$app) {
+            if (! $app) {
                 return [];
             }
             $layers = $app->layers;
             $layer_ids = $layers->pluck('id')->toArray();
+
             return implode(',', $layer_ids);
         });
     }
@@ -259,8 +270,8 @@ class PBFGenerator
 
     private function createTemporaryTrackTable()
     {
-        DB::statement("DROP TABLE IF EXISTS temp_tracks");
-        DB::statement("
+        DB::statement('DROP TABLE IF EXISTS temp_tracks');
+        DB::statement('
             CREATE TEMPORARY TABLE temp_tracks (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255),
@@ -273,19 +284,20 @@ class PBFGenerator
                 activities JSON,
                 searchable JSON
             )
-        ");
+        ');
     }
+
     private function createTemporaryLayerTable()
     {
-        DB::statement("DROP TABLE IF EXISTS temp_layers");
-        DB::statement("
+        DB::statement('DROP TABLE IF EXISTS temp_layers');
+        DB::statement('
         CREATE TEMPORARY TABLE temp_layers (
             id SERIAL PRIMARY KEY,
             layers JSON,
             geometry GEOMETRY,
             stroke_color VARCHAR(255)
         )
-    ");
+    ');
     }
 
     private function populateTemporaryTable($zoom)
@@ -296,17 +308,18 @@ class PBFGenerator
             $this->populateTemporaryTrackTable();
         }
     }
+
     private function populateTemporaryTrackTable()
     {
         ini_set('memory_limit', '1G'); // Aumenta il limite di memoria a 1GB per questo script
-        //Log::channel('pbf')->info('Inizio populateTemporaryTrackTable');
+        // Log::channel('pbf')->info('Inizio populateTemporaryTrackTable');
         $app = App::with('layers')->find($this->app_id);
         $batchSize = 1000; // Modifica questo valore in base alla memoria disponibile e alle prestazioni desiderate
 
         foreach ($app->layers as $layer) {
-            //Log::channel('pbf')->info("Processing layer: {$layer->id}");
+            // Log::channel('pbf')->info("Processing layer: {$layer->id}");
             $tracks = $layer->getPbfTracks();
-            //Log::channel('pbf')->info("Number of tracks: " . $tracks->count());
+            // Log::channel('pbf')->info("Number of tracks: " . $tracks->count());
 
             $trackArrayBatch = [];
             $batchCounter = 0;
@@ -315,7 +328,7 @@ class PBFGenerator
                 try {
                     $layers = $track->associatedLayers->pluck('id')->toArray();
 
-                    if (!in_array($layer->id, $layers)) {
+                    if (! in_array($layer->id, $layers)) {
                         $layers[] = $layer->id;
                     }
                     $themes = $this->extractFirstValue($track->themes);
@@ -349,7 +362,7 @@ class PBFGenerator
                             'layers',
                             'themes',
                             'activities',
-                            'searchable'
+                            'searchable',
                         ]);
 
                         // Libera la memoria
@@ -373,7 +386,7 @@ class PBFGenerator
                     'layers',
                     'themes',
                     'activities',
-                    'searchable'
+                    'searchable',
                 ]);
 
                 // Libera la memoria
@@ -381,8 +394,9 @@ class PBFGenerator
                 gc_collect_cycles();
             }
         }
-        //Log::channel('pbf')->info('Fine populateTemporaryTrackTable');
+        // Log::channel('pbf')->info('Fine populateTemporaryTrackTable');
     }
+
     private function populateTemporaryLayerTable()
     {
         // Log::channel('pbf')->info('Inizio populateTemporaryLayerTable');
@@ -396,7 +410,7 @@ class PBFGenerator
             // Ottieni gli ID delle tracce
             $trackIds = $tracks->pluck('id')->toArray();
 
-            if (!empty($trackIds)) {
+            if (! empty($trackIds)) {
                 // Converti gli ID delle tracce in una stringa separata da virgole
                 $trackIdsStr = implode(',', $trackIds);
                 // Prepara i parametri
@@ -443,21 +457,18 @@ class PBFGenerator
             }
         }
 
-        //Log::channel('pbf')->info('Fine populateTemporaryLayerTable');
+        // Log::channel('pbf')->info('Fine populateTemporaryLayerTable');
     }
-
-
-
-
 
     private function extractFirstValue($array)
     {
-        if (!is_array($array)) {
+        if (! is_array($array)) {
             return [];
         }
         foreach ($array as $value) {
             return $value; // Ritorna il primo valore trovato
         }
+
         return [];
     }
 }
