@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
 
         // mondays tuesdays wednesdays thursdays fridays saturdays sundays
         // GEOHUB DB DUMP ogni giorno alle 6
-        // $schedule->command('geohub:dump_db')->dailyAt('6:00');
+        $schedule->command('geohub:dump_db')->dailyAt('6:00');
 
         // ###########################################################
         // # SUB DAYLY Script
