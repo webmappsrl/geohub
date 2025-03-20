@@ -143,12 +143,14 @@ class SicaiCicloImp extends Command
             }
 
             // Save the row to the database in model EcTrack
-            $track = EcTrack::create([
-                'name' => $mappedRow['tappa'],
-                'from' => $mappedRow['partenza'],
-                'to' => $mappedRow['arrivo'],
-                'user_id' => $uid,
-            ]);
+            $track = EcTrack::withoutEvents(function () use ($mappedRow, $uid) {
+                return EcTrack::create([
+                    'name' => $mappedRow['tappa'],
+                    'from' => $mappedRow['partenza'],
+                    'to' => $mappedRow['arrivo'],
+                    'user_id' => $uid,
+                ]);
+            });
 
             $this->info('Track created with ID: ' . $track->id);
 
@@ -198,7 +200,7 @@ class SicaiCicloImp extends Command
                     return 1;
             }
 
-            $track->save();
+            $track->saveQuietly();
             $this->info('Updated track with ID: ' . $track->id);
 
             // Update geometry
@@ -218,7 +220,7 @@ class SicaiCicloImp extends Command
                     $track->geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."')))) As wkt")[0]->wkt;
         
                     try {
-                        $track->save();
+                        $track->saveQuietly();
                         $this->info('Geometry Updated: ' . $track->id);
                     } catch (\Exception $e) {
                         File::append(storage_path('logs/sicai_import_complete.log'), "Error track geometry: {$track->name}, OSMID: {$mappedRow['osmid']}, WMT: {$wmtUrl}, Error: " . $e->getMessage() . "\n");
@@ -258,12 +260,12 @@ class SicaiCicloImp extends Command
                         // Attach first image to track as feature
                         if ($count == 0) {
                             $track->featureImage()->associate($ecMedia);
-                            $track->save();
+                            $track->saveQuietly();
                         }
                         // Attach other images to track gallery
                         if ($count > 0) {
                             $track->ecMedia()->attach($ecMedia->id);
-                            $track->save();
+                            $track->saveQuietly();
                         }
                         $count++;
                     } catch (\Exception $e) {
