@@ -23,7 +23,7 @@ class RemoveDeleteConstraintOnMediasMigration extends Migration
             'taxonomy_activities',
             'taxonomy_poi_types',
             'taxonomy_targets',
-            'layers'
+            'layers',
         ];
 
         foreach ($tablesWithFeatureImage as $tableName) {
