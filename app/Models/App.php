@@ -629,4 +629,38 @@ class App extends Model
 
         return null;
     }
+
+    /**
+     * Get the bounding box geometry as a GeoJSON Feature.
+     *
+     * This function converts the bounding box stored in the `map_bbox` attribute
+     * (in the format [minX, minY, maxX, maxY]) into a GeoJSON Feature representing
+     * a rectangular Polygon.
+     *
+     * @return array|null A GeoJSON Feature array or null if invalid bbox
+     */
+    public function getBBoxFeature()
+    {
+        $bbox = json_decode($this->map_bbox);
+        //Verify that it is indeed an array with 4 elements (i.e.: minX, minY, maxX, maxY
+        if (is_array($bbox) && count($bbox) === 4) {
+            return [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Polygon',
+                    'coordinates' => [[
+                        [$bbox[0], $bbox[1]],
+                        [$bbox[2], $bbox[1]],
+                        [$bbox[2], $bbox[3]],
+                        [$bbox[0], $bbox[3]],
+                        [$bbox[0], $bbox[1]],
+                    ]],
+                ],
+                'properties' => [],
+            ];
+        }
+
+        return null;
+    }
+
 }
