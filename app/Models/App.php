@@ -642,7 +642,7 @@ class App extends Model
     public function getBBoxFeature()
     {
         $bbox = json_decode($this->map_bbox);
-        //Verify that it is indeed an array with 4 elements (i.e.: minX, minY, maxX, maxY
+        // Verify that it is indeed an array with 4 elements (i.e.: minX, minY, maxX, maxY
         if (is_array($bbox) && count($bbox) === 4) {
             return [
                 'type' => 'Feature',
@@ -662,5 +662,4 @@ class App extends Model
 
         return null;
     }
-
 }

@@ -753,15 +753,15 @@ class App extends Resource
                 ->onlyOnDetail()
                 ->asHtml()
                 ->displayUsing(function ($value) {
-                    return '<code>' . e($value) . '</code>' .
-                        '<button onclick="navigator.clipboard.writeText(`' . e($value) . '`)" 
+                    return '<code>'.e($value).'</code>'.
+                        '<button onclick="navigator.clipboard.writeText(`'.e($value).'`)" 
                             style="margin-left:10px;padding:4px 10px;border:none;background:#e2e8f0;border-radius:4px;cursor:pointer;">
-                            ' . __('Copy') . '
+                            '.__('Copy').'
                         </button>';
                 }),
             WmEmbedmapsField::make(__('Bounding Box Map'), function () {
-                    return ['feature' => $this->getBBoxFeature()];
-                }),                
+                return ['feature' => $this->getBBoxFeature()];
+            }),
             Number::make(__('Max Zoom'), 'map_max_zoom')
                 ->help(__('Maximum zoom level for the map'))
                 ->onlyOnDetail(),
