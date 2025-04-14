@@ -246,8 +246,8 @@ class UserGeneratedDataController extends Controller
             $taxonomyWheresNames = null;
         }
 
-        $ugcGeojson = ! is_null($ugc) ? $ugc->getGeojson() : null;
-        $email = $ugcGeojson['properties']['user_id'] ? User::find($ugcGeojson['properties']['user_id'])->email : '';
+        $ugcGeojson = ! is_null($ugc) ? $ugc->getGeojson('v2') : null;
+        $email = User::find($ugc->user_id)->email;
         $ugcGeojson['properties']['user_email'] = $email;
         if (! is_null($taxonomyWheresNames)) {
             $ugcGeojson['properties']['taxonomy_wheres'] = $taxonomyWheresNames;
