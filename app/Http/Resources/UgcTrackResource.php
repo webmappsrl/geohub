@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\UgcResource;
-
 class UgcTrackResource extends UgcResource
 {
     /**

@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
-use App\Models\UgcPoi;
-use Illuminate\Support\Facades\DB;
-use App\Http\Resources\UgcResource;
-
 class UgcPoiResource extends UgcResource
 {
     /**

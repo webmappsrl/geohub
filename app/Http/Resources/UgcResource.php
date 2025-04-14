@@ -4,9 +4,8 @@ namespace App\Http\Resources;
 
 use App\Models\App;
 use App\Models\User;
-use App\Models\UgcPoi;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class UgcResource extends JsonResource
 {
@@ -73,7 +72,7 @@ class UgcResource extends JsonResource
     /**
      * Flatten form properties if they exist.
      *
-     * @param array $properties
+     * @param  array  $properties
      * @return array
      */
     protected function flattenFormProperties($properties)
@@ -91,8 +90,8 @@ class UgcResource extends JsonResource
     /**
      * Build the properties array for the resource.
      *
-     * @param string $email
-     * @param array $rawData
+     * @param  string  $email
+     * @param  array  $rawData
      * @return array
      */
     protected function buildProperties($email, $rawData)
@@ -129,6 +128,7 @@ class UgcResource extends JsonResource
             foreach ($taxonomyWheres as $taxonomyWhere) {
                 $taxonomyWheresNames[] = $taxonomyWhere->name;
             }
+
             return implode(',', $taxonomyWheresNames);
         }
 

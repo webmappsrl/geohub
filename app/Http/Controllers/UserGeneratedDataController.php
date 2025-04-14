@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UgcMediaResource;
+use App\Http\Resources\UgcPoiResource;
+use App\Http\Resources\UgcTrackResource;
 use App\Models\TaxonomyWhere;
 use App\Models\UgcMedia;
 use App\Models\UgcPoi;
@@ -15,9 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\UgcMediaResource;
-use App\Http\Resources\UgcPoiResource;
-use App\Http\Resources\UgcTrackResource;
 
 class UserGeneratedDataController extends Controller
 {

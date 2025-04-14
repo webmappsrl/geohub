@@ -2,10 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\UgcMedia;
-use Illuminate\Support\Facades\DB;
-use App\Http\Resources\UgcResource;
-
 class UgcMediaResource extends UgcResource
 {
     /**
