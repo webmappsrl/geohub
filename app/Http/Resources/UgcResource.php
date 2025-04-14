@@ -61,30 +61,10 @@ class UgcResource extends JsonResource
     protected function processRawData()
     {
         $properties = $this->properties;
-        $properties = $this->removeUnwantedKeys($properties);
         $properties = $this->flattenFormProperties($properties);
 
         if (isset($this->raw_data)) {
             return array_merge($properties, json_decode($this->raw_data, true));
-        }
-
-        return $properties;
-    }
-
-    /**
-     * Remove unwanted keys from properties.
-     *
-     * @param array $properties
-     * @return array
-     */
-    protected function removeUnwantedKeys($properties)
-    {
-        $keysToRemove = ['media', 'device', 'coordinateProperties'];
-
-        foreach ($keysToRemove as $key) {
-            if (isset($properties[$key])) {
-                unset($properties[$key]);
-            }
         }
 
         return $properties;
