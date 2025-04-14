@@ -2,11 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\UgcTrack;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\DB;
+use App\Http\Resources\UgcResource;
 
-class UgcTrackResource extends JsonResource
+class UgcTrackResource extends UgcResource
 {
     /**
      * Transform the resource into an array.
@@ -16,22 +14,18 @@ class UgcTrackResource extends JsonResource
      */
     public function toArray($request)
     {
-        $geom = UgcTrack::where('id', '=', $this->id)
-            ->select(
-                DB::raw('ST_AsGeoJSON(geometry) as geom')
-            )
-            ->first()
-            ->geom;
+        $ugcGeojson = parent::toArray($request);
 
-        return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'app_id' => $this->app_id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'geometry' => json_decode($geom),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        $mediaIds = [];
+        $ugcMedia = $this->ugc_media;
+        if (count($ugcMedia) > 0) {
+            foreach ($ugcMedia as $media) {
+                $mediaIds[] = $media->id;
+            }
+        }
+
+        $ugcGeojson['properties']['media_ids'] = $mediaIds;
+
+        return $ugcGeojson;
     }
 }

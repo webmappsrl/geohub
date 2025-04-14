@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\UgcMediaResource;
+use App\Http\Resources\UgcPoiResource;
+use App\Http\Resources\UgcTrackResource;
 
 class UserGeneratedDataController extends Controller
 {
@@ -235,50 +238,26 @@ class UserGeneratedDataController extends Controller
             return response()->json(['code' => 404, 'error' => 'Not Found'], 404);
         }
 
-        $taxonomyWheres = $ugc->taxonomy_wheres;
-        $taxonomyWheresNames = [];
-        if (count($taxonomyWheres) > 0) {
-            foreach ($taxonomyWheres as $taxonomyWhere) {
-                $taxonomyWheresNames[] = $taxonomyWhere->name;
-            }
-            $taxonomyWheresNames = implode(',', $taxonomyWheresNames);
-        } else {
-            $taxonomyWheresNames = null;
-        }
-
-        $ugcGeojson = ! is_null($ugc) ? $ugc->getGeojson('v2') : null;
-        $email = User::find($ugc->user_id)->email;
-        $ugcGeojson['properties']['user_email'] = $email;
-        if (! is_null($taxonomyWheresNames)) {
-            $ugcGeojson['properties']['taxonomy_wheres'] = $taxonomyWheresNames;
-        }
-        if ($ugc instanceof UgcMedia) {
-            $ugcGeojson['properties']['relative_url'] = $ugc->relative_url;
-            $ugcPois = $ugc->ugc_pois;
-            $ugcTracks = $ugc->ugc_tracks;
-            if (count($ugcPois) > 0) {
-                $ugcGeojson['properties']['ugc_pois'] = [];
-                foreach ($ugcPois as $ugcPoi) {
-                    $ugcGeojson['properties']['ugc_pois'][] = $ugcPoi->id;
-                }
-            }
-            if (count($ugcTracks) > 0) {
-                $ugcGeojson['properties']['ugc_tracks'] = [];
-                foreach ($ugcTracks as $ugcTrack) {
-                    $ugcGeojson['properties']['ugc_tracks'][] = $ugcTrack->id;
-                }
-            }
-        } else {
-            $ugcMedia = $ugc->ugc_media;
-            if (count($ugcMedia) > 0) {
-                $ugcGeojson['properties']['ugc_media'] = [];
-                foreach ($ugcMedia as $media) {
-                    $ugcGeojson['properties']['ugc_media'][] = $media->id;
-                }
-            }
-        }
+        $ugcGeojson = $this->transformUgcToGeoJson($ugc);
 
         return response()->json($ugcGeojson);
+    }
+
+    private function transformUgcToGeoJson($ugc)
+    {
+        if ($ugc instanceof UgcPoi) {
+            $ugcResource = new UgcPoiResource($ugc);
+        } elseif ($ugc instanceof UgcTrack) {
+            $ugcResource = new UgcTrackResource($ugc);
+        } elseif ($ugc instanceof UgcMedia) {
+            $ugcResource = new UgcMediaResource($ugc);
+        } else {
+            return null;
+        }
+
+        $ugcGeojson = $ugcResource->toArray(request());
+
+        return $ugcGeojson;
     }
 
     /**
