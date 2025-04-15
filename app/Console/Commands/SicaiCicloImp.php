@@ -2,17 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\UpdateEcMedia;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
-use App\Jobs\UpdateEcMedia;
 use App\Models\TaxonomyTheme;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Symm\Gisconverter\Gisconverter;
 use Illuminate\Support\Facades\File;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\HeadingRowImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Symm\Gisconverter\Gisconverter;
 
 class SicaiCicloImp extends Command
 {
@@ -21,7 +20,7 @@ class SicaiCicloImp extends Command
      *
      * @var string
      */
-    protected $signature = 
+    protected $signature =
         'geohub:sicai-ciclo-import 
             {xls : Path to the XLS file} 
             {uid : User id} 
@@ -60,8 +59,9 @@ class SicaiCicloImp extends Command
 
         // CHECK IF FILE EXISTS
 
-        if (!File::exists($xlsPath)) {
+        if (! File::exists($xlsPath)) {
             $this->error("The file at path {$xlsPath} does not exist.");
+
             return 1;
         }
 
@@ -71,8 +71,9 @@ class SicaiCicloImp extends Command
         $uid = $this->argument('uid');
         $user = \App\Models\User::find($uid);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("User with ID {$uid} does not exist.");
+
             return 1;
         }
         $this->info("User with ID {$uid} exists. Email: {$user->email}");
@@ -83,20 +84,23 @@ class SicaiCicloImp extends Command
         $themeA = TaxonomyTheme::find($themeAId);
         $themeB = TaxonomyTheme::find($themeBId);
 
-        if (!$themeA) {
+        if (! $themeA) {
             $this->error("Theme with ID {$themeAId} does not exist.");
+
             return 1;
         }
         $this->info("Theme with ID {$themeAId} exists. Name: {$themeA->name}");
 
-        if (!$themeB) {
+        if (! $themeB) {
             $this->error("Theme with ID {$themeBId} does not exist.");
+
             return 1;
         }
         $this->info("Theme with ID {$themeBId} exists. Name: {$themeB->name}");
 
         if ($this->option('check')) {
             $this->info('Check mode enabled. Exiting...');
+
             return 0;
         }
 
@@ -135,10 +139,11 @@ class SicaiCicloImp extends Command
                 'lunghezza' => $row[26] ?? '',
             ];
 
-            $this->info($this->option('i') ? print_r($mappedRow, true) : 'Inserting row: ' . $mappedRow['tappa']);
+            $this->info($this->option('i') ? print_r($mappedRow, true) : 'Inserting row: '.$mappedRow['tappa']);
 
-            if ($this->option('i') && !$this->confirm('Do you wish to continue?', true)) {
+            if ($this->option('i') && ! $this->confirm('Do you wish to continue?', true)) {
                 $this->info('Exiting...');
+
                 return 1;
             }
 
@@ -152,38 +157,38 @@ class SicaiCicloImp extends Command
                 ]);
             });
 
-            $this->info('Track created with ID: ' . $track->id);
+            $this->info('Track created with ID: '.$track->id);
 
-            // Update track with ref 
-            $track->ref=$mappedRow['tappa'];
+            // Update track with ref
+            $track->ref = $mappedRow['tappa'];
 
             // Update difficulty
-            $track->difficulty = 'Salita: ' . $mappedRow['s+'] . ' / Discesa: ' . $mappedRow['s-'];
+            $track->difficulty = 'Salita: '.$mappedRow['s+'].' / Discesa: '.$mappedRow['s-'];
 
             // Update description
-            $track->description = 
-                  '<p><strong>Descrizione:</strong> ' . nl2br($mappedRow['descrizione']) . '</p>'
-                . '<p><strong>Percorribilità:</strong> ' . (!empty($mappedRow['percorribilità']) ? $mappedRow['percorribilità'] : 'Sconosciuta') . '</p>'
-                . '<p><strong>Ultimo aggiornamento:</strong> ' . date("d/m/Y", ($mappedRow['data'] - 25569) * 86400) . '</p>';
+            $track->description =
+                  '<p><strong>Descrizione:</strong> '.nl2br($mappedRow['descrizione']).'</p>'
+                .'<p><strong>Percorribilità:</strong> '.(! empty($mappedRow['percorribilità']) ? $mappedRow['percorribilità'] : 'Sconosciuta').'</p>'
+                .'<p><strong>Ultimo aggiornamento:</strong> '.date('d/m/Y', ($mappedRow['data'] - 25569) * 86400).'</p>';
 
             // Udate taxonomy activity MTB ID=6
             $track->taxonomyActivities()->attach(6);
-            
+
             // Update ascent only if is not empty
-            if (!empty($mappedRow['d+'])) {
+            if (! empty($mappedRow['d+'])) {
                 $track->ascent = $mappedRow['d+'];
             }
             // Update descent only if is not empty
-            if (!empty($mappedRow['d-'])) {
+            if (! empty($mappedRow['d-'])) {
                 $track->descent = $mappedRow['d-'];
             }
 
             // Update ele_from only if is not empty
-            if (!empty($mappedRow['quota_part'])) {
+            if (! empty($mappedRow['quota_part'])) {
                 $track->ele_from = $mappedRow['quota_part'];
             }
             // Update ele_to only if is not empty
-            if (!empty($mappedRow['quota_arri'])) {
+            if (! empty($mappedRow['quota_arri'])) {
                 $track->ele_to = $mappedRow['quota_arri'];
             }
 
@@ -196,46 +201,47 @@ class SicaiCicloImp extends Command
                     $track->taxonomyThemes()->attach($themeBId);
                     break;
                 default:
-                    $this->error('Invalid value for "verso" column: ' . $mappedRow['verso']);
+                    $this->error('Invalid value for "verso" column: '.$mappedRow['verso']);
+
                     return 1;
             }
 
             $track->saveQuietly();
-            $this->info('Updated track with ID: ' . $track->id);
+            $this->info('Updated track with ID: '.$track->id);
 
             // Update geometry
-            if (!$this->option('skip-geometry')) {
+            if (! $this->option('skip-geometry')) {
                 $gpxUrl = "https://mtb.waymarkedtrails.org/api/v1/details/relation/{$mappedRow['osmid']}/geometry/gpx";
                 $wmtUrl = "https://mtb.waymarkedtrails.org/#route?id={$mappedRow['osmid']}";
-                
+
                 // 1. Get the geometry from the GPX url
                 $gpx = @file_get_contents($gpxUrl);
                 if ($gpx === false) {
-                    $this->error('Failed to fetch GPX data from URL: ' . $gpxUrl);
+                    $this->error('Failed to fetch GPX data from URL: '.$gpxUrl);
                     File::append(storage_path('logs/sicai_import_simple.log'), "Error fetching GPX data for track: {$track->name}, OSMID: {$mappedRow['osmid']}, WMT: {$wmtUrl}\n");
                 } else {
                     // 2. Convert the GPX into a GEOJSON linestring
                     $geometry = Gisconverter::gpxToGeoJSON($gpx);
                     // 3. Save the GEOJSON linestring into the geometry field
                     $track->geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('".$geometry."')))) As wkt")[0]->wkt;
-        
+
                     try {
                         $track->saveQuietly();
-                        $this->info('Geometry Updated: ' . $track->id);
+                        $this->info('Geometry Updated: '.$track->id);
                     } catch (\Exception $e) {
-                        File::append(storage_path('logs/sicai_import_complete.log'), "Error track geometry: {$track->name}, OSMID: {$mappedRow['osmid']}, WMT: {$wmtUrl}, Error: " . $e->getMessage() . "\n");
+                        File::append(storage_path('logs/sicai_import_complete.log'), "Error track geometry: {$track->name}, OSMID: {$mappedRow['osmid']}, WMT: {$wmtUrl}, Error: ".$e->getMessage()."\n");
                         File::append(storage_path('logs/sicai_import_simple.log'), "Error track geometry: {$track->name}, OSMID: {$mappedRow['osmid']}, WMT: {$wmtUrl}\n");
                         $this->error('Error saving track');
-                    }    
+                    }
                 }
-    
+
             }
 
             // IMAGE import
             $images = [];
             for ($i = 1; $i <= 4; $i++) {
-                $fotoKey = 'foto0' . $i;
-                if (!empty($mappedRow[$fotoKey])) {
+                $fotoKey = 'foto0'.$i;
+                if (! empty($mappedRow[$fotoKey])) {
                     $images[] = $mappedRow[$fotoKey];
                 }
             }
@@ -243,10 +249,10 @@ class SicaiCicloImp extends Command
             if (count($images) > 0) {
                 $count = 0;
                 foreach ($images as $imageUrl) {
-                    $imageName = preg_replace('/[^A-Za-z0-9]/', '', $track->name) . $count . '.jpg';
-                    $this->info('Image found: ' . $imageName. ' URL: ' . $imageUrl);
+                    $imageName = preg_replace('/[^A-Za-z0-9]/', '', $track->name).$count.'.jpg';
+                    $this->info('Image found: '.$imageName.' URL: '.$imageUrl);
 
-                    $localPath = storage_path($imageName) ;
+                    $localPath = storage_path($imageName);
                     try {
                         Storage::disk('public')->put($localPath, file_get_contents($imageUrl));
                         $ecMedia = EcMedia::create([
@@ -269,16 +275,15 @@ class SicaiCicloImp extends Command
                         }
                         $count++;
                     } catch (\Exception $e) {
-                        $this->error('Error fetching or saving image: ' . $imageUrl . ' - ' . $e->getMessage());
-                        File::append(storage_path('logs/sicai_import_simple.log'), "Error fetching or saving image for track: {$track->name}, Image URL: {$imageUrl}" . "\n");
-                        File::append(storage_path('logs/sicai_import_complete.log'), "Error fetching or saving image for track: {$track->name}, Image URL: {$imageUrl}, Error: " . $e->getMessage() . "\n");
+                        $this->error('Error fetching or saving image: '.$imageUrl.' - '.$e->getMessage());
+                        File::append(storage_path('logs/sicai_import_simple.log'), "Error fetching or saving image for track: {$track->name}, Image URL: {$imageUrl}"."\n");
+                        File::append(storage_path('logs/sicai_import_complete.log'), "Error fetching or saving image for track: {$track->name}, Image URL: {$imageUrl}, Error: ".$e->getMessage()."\n");
                     }
                 }
+            } else {
+                $this->info('No images found for track: '.$track->id);
             }
-            else {
-                $this->info('No images found for track: ' . $track->id);
-            }
-    
+
         }
 
         return 0;

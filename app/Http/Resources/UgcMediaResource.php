@@ -2,11 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\UgcMedia;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\DB;
-
-class UgcMediaResource extends JsonResource
+class UgcMediaResource extends UgcResource
 {
     /**
      * Transform the resource into an array.
@@ -16,23 +12,12 @@ class UgcMediaResource extends JsonResource
      */
     public function toArray($request)
     {
-        $geom = UgcMedia::where('id', '=', $this->id)
-            ->select(
-                DB::raw('ST_AsGeoJSON(geometry) as geom')
-            )
-            ->first()
-            ->geom;
+        $ugcGeojson = parent::toArray($request);
 
-        return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'app_id' => $this->app_id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'relative_url' => $this->relative_url,
-            'geometry' => json_decode($geom),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        $ugcGeojson['properties']['relative_url'] = $this->relative_url;
+        $ugcGeojson['properties']['ugc_pois'] = $this->ugc_pois->pluck('id');
+        $ugcGeojson['properties']['ugc_tracks'] = $this->ugc_tracks->pluck('id');
+
+        return $ugcGeojson;
     }
 }
