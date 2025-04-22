@@ -65,7 +65,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         foreach ($osmData as $key => $value) {
             $track->$key = $value;
         }
-        //override osmfeatures_id with the correct one
+        // override osmfeatures_id with the correct one
         $track->osmfeatures_id = $osmfeaturesId;
 
         // prepare feature parameters to pass to updateOrCreate function
