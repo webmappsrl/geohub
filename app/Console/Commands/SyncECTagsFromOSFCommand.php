@@ -192,6 +192,12 @@ class SyncECTagsFromOSFCommand extends Command
                         $feature->color = $out_source->tags['color'];
                     }
                 }
+                if (empty($feature->from) && isset($out_source->tags['from'])) {
+                    $feature->from = $out_source->tags['from'];
+                }
+                if (empty($feature->to) && isset($out_source->tags['to'])) {
+                    $feature->to = $out_source->tags['to'];
+                }
 
                 // if (empty($feature->related_url)) {
                 //     $urls = [];

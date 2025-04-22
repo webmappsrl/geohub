@@ -570,143 +570,67 @@ class EcPoi extends Resource
             //         'show-fallback' => true,
             //         'fallback-type' => 'input',
             //     ])->hideFromIndex(),
-            Text::make(__('Z index'), 'zindex')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            Text::make(__('Z index'), 'zindex'),
             Toggle::make(__('No Interaction'), 'noInteraction')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
             Toggle::make(__('No Details'), 'noDetails')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
         ];
     }
 
     private function accessibility_tab()
     {
         return [
-            DateTime::make(__('Last verification date'), 'accessibility_validity_date')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            DateTime::make(__('Last verification date'), 'accessibility_validity_date'),
             File::make(__('Accessibility PDF'), 'accessibility_pdf')->disk('public')
-                ->acceptedTypes('.pdf')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->acceptedTypes('.pdf'),
 
             Toggle::make(__('Access Mobility Check'), 'access_mobility_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
             Select::make(__('Access Mobility Level'), 'access_mobility_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ])
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Access Mobility Description'), 'access_mobility_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            ]),
+            Textarea::make(__('Access Mobility Description'), 'access_mobility_description'),
 
             Toggle::make(__('Access Hearing Check'), 'access_hearing_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
             Select::make(__('Access Hearing Level'), 'access_hearing_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ])
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Access Hearing Description'), 'access_hearing_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            ]),
+            Textarea::make(__('Access Hearing Description'), 'access_hearing_description'),
 
             Toggle::make(__('Access Vision Check'), 'access_vision_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
             Select::make(__('Access Vision Level'), 'access_vision_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with_a_guide' => 'Accessible with a guide',
-            ])
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Access Vision Description'), 'access_vision_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            ]),
+            Textarea::make(__('Access Vision Description'), 'access_vision_description'),
 
             Toggle::make(__('Access Cognitive Check'), 'access_cognitive_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
             Select::make(__('Access Cognitive Level'), 'access_cognitive_level')->options([
                 'accessible_independently' => 'Accessible independently',
                 'accessible_with_assistance' => 'Accessible with assistance',
                 'accessible_with a guide' => 'Accessible with a guide',
-            ])
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Access Cognitive Description'), 'access_cognitive_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            ]),
+            Textarea::make(__('Access Cognitive Description'), 'access_cognitive_description'),
 
             Toggle::make(__('Access Food Check'), 'access_food_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Access Food Description'), 'access_food_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
+            Textarea::make(__('Access Food Description'), 'access_food_description'),
         ];
     }
 
@@ -715,55 +639,23 @@ class EcPoi extends Resource
         return [
             Toggle::make(__('Reachability by Bike'), 'reachability_by_bike_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Reachability by Bike Description'), 'reachability_by_bike_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
+            Textarea::make(__('Reachability by Bike Description'), 'reachability_by_bike_description'),
 
             Toggle::make(__('Reachability on Foot'), 'reachability_on_foot_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Reachability on Foot Description'), 'reachability_on_foot_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
+            Textarea::make(__('Reachability on Foot Description'), 'reachability_on_foot_description'),
 
             Toggle::make(__('Reachability by Car'), 'reachability_by_car_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Reachability by Car Description'), 'reachability_by_car_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
+            Textarea::make(__('Reachability by Car Description'), 'reachability_by_car_description'),
 
             Toggle::make(__('Reachability by Public Transportation'), 'reachability_by_public_transportation_check')
                 ->trueValue('On')
-                ->falseValue('Off')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-            Textarea::make(__('Reachability by Public Transportation Description'), 'reachability_by_public_transportation_description')
-                ->hideFromIndex()
-                ->hideFromDetail()
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+                ->falseValue('Off'),
+            Textarea::make(__('Reachability by Public Transportation Description'), 'reachability_by_public_transportation_description'),
         ];
     }
 
