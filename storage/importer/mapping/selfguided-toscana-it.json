@@ -1,0 +1,970 @@
+{
+    "poi_type": {
+        "461": {
+            "source_title": {
+                "it": "Acquedotti",
+                "en": "Acqueducts"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "historic-aqueduct"
+        },
+        "138": {
+            "source_title": {
+                "it": "Agriturismo",
+                "en": "Agriturismo"
+            },
+            "source_description": {
+                "it": "Direttamente dal vostro alloggio, potrete farvi guidare per escursioni a piedi o in bicicletta",
+                "en": "Agriturismo"
+            },
+            "geohub_identifier": "farmhouse"
+        },
+        "10": {
+            "source_title": {
+                "it": "Alberghi e Residence",
+                "en": "Hotel &amp; Residences"
+            },
+            "source_description": {
+                "it": "Confortevoli, serviti ed adatti ad ospitare clientela che fa dell'escursionismo la propria attivit\u00e0 in vacanza",
+                "en": "Comfortable, served and suitable to host customers who make hiking their holiday activity"
+            },
+            "geohub_identifier": "residence"
+        },
+        "148": {
+            "source_title": {
+                "it": "Alert",
+                "en": "Alert"
+            },
+            "source_description": {
+                "it": "Attenzione Prego!",
+                "en": "Be careful!"
+            },
+            "geohub_identifier": "attention"
+        },
+        "137": {
+            "source_title": {
+                "it": "Alimentari",
+                "en": "Grocery shops"
+            },
+            "source_description": {
+                "it": "Negozi di alimentari consigliati per rifornimenti",
+                "en": "Selected groceries"
+            },
+            "geohub_identifier": "shop-convenience"
+        },
+        "147": {
+            "source_title": {
+                "it": "Appuntamenti",
+                "en": "Appointments"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Appointments"
+            },
+            "geohub_identifier": "appointments"
+        },
+        "145": {
+            "source_title": {
+                "it": "Assaggi e Visite",
+                "en": "Visits and Tastings"
+            },
+            "source_description": {
+                "it": "Luoghi privilegiati per assaggiare i prodotti del territorio",
+                "en": "Privileged places to taste local products"
+            },
+            "geohub_identifier": "visits-and-tastings"
+        },
+        "257": {
+            "source_title": {
+                "it": "Azienda Agricola",
+                "en": "Azienda Agricola"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Farm: local productions"
+            },
+            "geohub_identifier": "agricultural-company"
+        },
+        "307": {
+            "source_title": {
+                "it": "Bagni Termali",
+                "en": "Thermal pools"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Thermal pools"
+            },
+            "geohub_identifier": "thermal-baths"
+        },
+        "424": {
+            "source_title": {
+                "it": "Bagni Termali",
+                "en": "Thermal baths"
+            },
+            "source_description": {
+                "it": "Bagni termali: stabilimenti o pozze in natura",
+                "en": "Thermal baths: establishments or pools in nature"
+            },
+            "geohub_identifier": "thermal-baths"
+        },
+        "310": {
+            "source_title": {
+                "it": "Baita",
+                "en": "Chalet"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Chalet"
+            },
+            "geohub_identifier": "chalet"
+        },
+        "198": {
+            "source_title": {
+                "it": "Balneazione",
+                "en": "Swimming"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Swimming places"
+            },
+            "geohub_identifier": "swimming"
+        },
+        "250": {
+            "source_title": {
+                "it": "Bed&amp;Breakfast",
+                "en": "Bed and Breakfast"
+            },
+            "source_description": {
+                "it": "Alloggi turistici spesso\u00a0 informali, che offrono supporto base al servizio di alloggio. In Toscana sono la forma pi\u00f9 comune insieme agli Agriturismo",
+                "en": "Bed and Breakfast"
+            },
+            "geohub_identifier": "bed-and-breakfast"
+        },
+        "269": {
+            "source_title": {
+                "it": "Biancane",
+                "en": "Biancane"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Biancane"
+            },
+            "geohub_identifier": "biancane"
+        },
+        "330": {
+            "source_title": {
+                "it": "Bicicletta",
+                "en": "Bike"
+            },
+            "source_description": {
+                "it": "Bicicletta",
+                "en": ""
+            },
+            "geohub_identifier": "bike"
+        },
+        "272": {
+            "source_title": {
+                "it": "Birrificio",
+                "en": "Brewery"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Local artesanal beers"
+            },
+            "geohub_identifier": "brewery"
+        },
+        "184": {
+            "source_title": {
+                "it": "Campeggi",
+                "en": "Camp sites"
+            },
+            "source_description": {
+                "it": "Con la propria tenda all'aria aperta ed in aree attrezzate, per immergersi a pieno nella natura delle montagne, dei boschi o la selvaticit\u00e0 delle coste toscane",
+                "en": "Camp sites"
+            },
+            "geohub_identifier": "camping"
+        },
+        "254": {
+            "source_title": {
+                "it": "Cantina",
+                "en": "Cellar"
+            },
+            "source_description": {
+                "it": "Produzioni locali di vino",
+                "en": "Local wines production"
+            },
+            "geohub_identifier": "winery-and-wine-tasting"
+        },
+        "403": {
+            "source_title": {
+                "it": "Capanne",
+                "en": "Huts"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "hut"
+        },
+        "305": {
+            "source_title": {
+                "it": "Cascate",
+                "en": "Waterfalls"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "waterway-waterfall"
+        },
+        "192": {
+            "source_title": {
+                "it": "Case Vacanze",
+                "en": "Holiday House"
+            },
+            "source_description": {
+                "it": "Case vacanze per famiglie o gruppi di amici, da vivere in autonomia e libert\u00e0",
+                "en": "Holiday House"
+            },
+            "geohub_identifier": "casa-vacanze"
+        },
+        "412": {
+            "source_title": {
+                "it": "Caseificio",
+                "en": "Cheese factory"
+            },
+            "source_description": {
+                "it": "Luoghi di lavorazione e trasformazione del latte in prodotti caseari",
+                "en": "Places of processing and transformation of milk into dairy products"
+            },
+            "geohub_identifier": "cheese-factory"
+        },
+        "195": {
+            "source_title": {
+                "it": "Castelli e Fortezze",
+                "en": "Castles and Fortresses"
+            },
+            "source_description": {
+                "it": "I castelli e le fortezze che costellano il territorio toscano, sono spesso oggigiorno contesto di accoglienza ed informazione per il turista. Una visita a questi caposaldi del territorio e della storia, \u00e8 sempre consgliata",
+                "en": "Castles and fortresses that dot the Tuscan territory are often a great introductions  for visitors. A recommendedmilestone of the history of territory "
+            },
+            "geohub_identifier": "castle"
+        },
+        "246": {
+            "source_title": {
+                "it": "Centro visita o informazioni",
+                "en": "Visitor Center \/ Info Points"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Visitor Center \/ Info Points"
+            },
+            "geohub_identifier": "visitor-center"
+        },
+        "239": {
+            "source_title": {
+                "it": "Dimore Storiche",
+                "en": "Historical Residences"
+            },
+            "source_description": {
+                "it": "Luoghi privilegiati per la permanenza, ville e dimore di pregio architettonico e valore storico. Per soggiorni esclusivi, rilassanti e meditativi",
+                "en": "Favourite places for your relaxed staying, in villas and properties of relevant architecture and historical value. "
+            },
+            "geohub_identifier": "historical-residences"
+        },
+        "508": {
+            "source_title": {
+                "it": "Ecosostenibile",
+                "en": "Eco friendly"
+            },
+            "source_description": {
+                "it": "Strutture con certificazione ambientale",
+                "en": "Structures with environmental certification"
+            },
+            "geohub_identifier": "eco-friendly"
+        },
+        "168": {
+            "source_title": {
+                "it": "Flora",
+                "en": "Flora"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Flora"
+            },
+            "geohub_identifier": "flora"
+        },
+        "271": {
+            "source_title": {
+                "it": "Fumarole",
+                "en": "Fumaroles"
+            },
+            "source_description": {
+                "it": "Fumarole",
+                "en": "Fumaroles"
+            },
+            "geohub_identifier": "fumaroles"
+        },
+        "159": {
+            "source_title": {
+                "it": "Geologia",
+                "en": "Geology"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Geology"
+            },
+            "geohub_identifier": "punti-geologia"
+        },
+        "167": {
+            "source_title": {
+                "it": "Grotte",
+                "en": "Caves"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Caves and Spleunks"
+            },
+            "geohub_identifier": "natural-cave-entrance"
+        },
+        "191": {
+            "source_title": {
+                "it": "Guide Canyoning",
+                "en": "Canyoning guides"
+            },
+            "source_description": {
+                "it": "Guide Canyoning certificate AIGC",
+                "en": "Canyoning guides lycensed AIGC "
+            },
+            "geohub_identifier": "canyoning-guides"
+        },
+        "155": {
+            "source_title": {
+                "it": "Incroci",
+                "en": "Cross"
+            },
+            "source_description": {
+                "it": "Incrocio con altri itinerari  o sentieri",
+                "en": ""
+            },
+            "geohub_identifier": "crossroads"
+        },
+        "286": {
+            "source_title": {
+                "it": "Laghi",
+                "en": "Lakes"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Lakes"
+            },
+            "geohub_identifier": "water-lake"
+        },
+        "460": {
+            "source_title": {
+                "it": "Lago",
+                "en": "Lake"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "water-lake"
+        },
+        "156": {
+            "source_title": {
+                "it": "Locande e Osterie",
+                "en": "Taverns"
+            },
+            "source_description": {
+                "it": "Locande e Osterie consigliate per pranzi, cene, assaggi",
+                "en": "Taverns selected for your lunches, dinners, tastings"
+            },
+            "geohub_identifier": "osteria"
+        },
+        "200": {
+            "source_title": {
+                "it": "Mulini",
+                "en": "Mills"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Mills"
+            },
+            "geohub_identifier": "mill"
+        },
+        "196": {
+            "source_title": {
+                "it": "Musei e Punti informazioni",
+                "en": "Museums and Info Points"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Museums and Info Points"
+            },
+            "geohub_identifier": "museum"
+        },
+        "181": {
+            "source_title": {
+                "it": "Ostelli",
+                "en": "Hostels"
+            },
+            "source_description": {
+                "it": "In un'atmosfera  per lo pi\u00f9 dedicata agli ospiti giovani, strutture dotate del comfort essenziale per chi cerca riposo ma anche interazione con gli altri ospiti.",
+                "en": "Dedicated to a young public: comfortable and &#034;social&#034;"
+            },
+            "geohub_identifier": "ostello"
+        },
+        "176": {
+            "source_title": {
+                "it": "Paesi e villaggi",
+                "en": "Villages and Hamlets"
+            },
+            "source_description": {
+                "it": "Villaggi e paesi lungo il percorso",
+                "en": "Visits to villages and hamlets along the trip"
+            },
+            "geohub_identifier": "village"
+        },
+        "292": {
+            "source_title": {
+                "it": "Palazzi e Ville",
+                "en": "Palaces and Villas"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Historical Palaces and Villas"
+            },
+            "geohub_identifier": "building"
+        },
+        "166": {
+            "source_title": {
+                "it": "Panorama",
+                "en": "Panorama"
+            },
+            "source_description": {
+                "it": "Punti panoramici e fotografici",
+                "en": "Panoramic points and fotoshoting points"
+            },
+            "geohub_identifier": "viewpoint"
+        },
+        "9": {
+            "source_title": {
+                "it": "Parcheggi",
+                "en": "Parking"
+            },
+            "source_description": {
+                "it": "Parcheggi utili per inizio itinerario",
+                "en": ""
+            },
+            "geohub_identifier": "parking"
+        },
+        "190": {
+            "source_title": {
+                "it": "Parco Avventura",
+                "en": "Adventure Park"
+            },
+            "source_description": {
+                "it": "parchi avventura",
+                "en": "Adventure and amusement Park"
+            },
+            "geohub_identifier": "adventure-park"
+        },
+        "436": {
+            "source_title": {
+                "it": "Parco o Riserva Naturale",
+                "en": "Natural Park or Reserve"
+            },
+            "source_description": {
+                "it": "Riserve, parchi naturali, regionali e nazionali",
+                "en": "National or Regional Natural Parks, Reserve "
+            },
+            "geohub_identifier": "natural-park"
+        },
+        "146": {
+            "source_title": {
+                "it": "Partenza",
+                "en": "Start"
+            },
+            "source_description": {
+                "it": "Punti di partenza",
+                "en": "Start point"
+            },
+            "geohub_identifier": "start"
+        },
+        "8": {
+            "source_title": {
+                "it": "Passi",
+                "en": "Pass"
+            },
+            "source_description": {
+                "it": "Passi",
+                "en": "Pass"
+            },
+            "geohub_identifier": "natural-saddle"
+        },
+        "242": {
+            "source_title": {
+                "it": "Pievi e Chiese",
+                "en": "Parishes and Churches"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Parishes and Churches"
+            },
+            "geohub_identifier": "church"
+        },
+        "197": {
+            "source_title": {
+                "it": "Ponti storici",
+                "en": "Historical bridges"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Historical bridges"
+            },
+            "geohub_identifier": "historical"
+        },
+        "454": {
+            "source_title": {
+                "it": "Pontili"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "highway-bridge"
+        },
+        "252": {
+            "source_title": {
+                "it": "Prodotti Locali",
+                "en": "Local Products"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Local Products"
+            },
+            "geohub_identifier": "shop-farm"
+        },
+        "5": {
+            "source_title": {
+                "it": "Punti Acqua",
+                "en": "Brass Tap"
+            },
+            "source_description": {
+                "it": "Punto rifornimento acqua",
+                "en": "Brass Tap"
+            },
+            "geohub_identifier": "water-point"
+        },
+        "21": {
+            "source_title": {
+                "it": "Punto Noleggio",
+                "en": "Rental point"
+            },
+            "source_description": {
+                "it": "I punti noleggio convenzionati per le attivit\u00e0 proposte",
+                "en": "Rental point"
+            },
+            "geohub_identifier": "rental-point"
+        },
+        "441": {
+            "source_title": {
+                "it": "Punto Timbro Credenziali VF",
+                "en": "VF Credentials Stamp Point"
+            },
+            "source_description": {
+                "it": "Punti timbro credenziale Via Francigena",
+                "en": "VF Credentials Stamp Point"
+            },
+            "geohub_identifier": "vf-credentials-point"
+        },
+        "261": {
+            "source_title": {
+                "it": "Retisti Monte Pisano",
+                "en": "Monte Pisano Net"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Monte Pisano Net of enterprises"
+            },
+            "geohub_identifier": "rete-monte-pisano"
+        },
+        "4": {
+            "source_title": {
+                "it": "Rifugi",
+                "en": "Refuges"
+            },
+            "source_description": {
+                "it": "L'impareggiabile ospitalit\u00e0 e calore dei Rifugi, punti di appoggio imprescindibili per le attivit\u00e0 in montagna toscana, in Apuane o in Appennino",
+                "en": "The valuable hospitality of a Refuge: basic reference points for whoever wanders along mountain trails"
+            },
+            "geohub_identifier": "alpine-hut"
+        },
+        "172": {
+            "source_title": {
+                "it": "Servizi",
+                "en": "Facilities"
+            },
+            "source_description": {
+                "it": "Servizi vari (informazioni, noleggio, rifornimenti, parcheggi)",
+                "en": "Facilities"
+            },
+            "geohub_identifier": "service"
+        },
+        "248": {
+            "source_title": {
+                "it": "Siti archeologici",
+                "en": "Archeological Sites"
+            },
+            "source_description": {
+                "it": "Siti Archeologici degni di nota: ad ingresso sorvegliato e contingentato oppure in forma di rudere in natura. Talvolta in propriet\u00e0 privata",
+                "en": "Archeological Sites"
+            },
+            "geohub_identifier": "archaeological-site"
+        },
+        "203": {
+            "source_title": {
+                "it": "Spiaggia",
+                "en": "Beaches"
+            },
+            "source_description": {
+                "it": "Spiagge e luoghi balneabili",
+                "en": "Beaches and swim points"
+            },
+            "geohub_identifier": "beach"
+        },
+        "151": {
+            "source_title": {
+                "it": "Storia e Cultura",
+                "en": "History and Culture"
+            },
+            "source_description": {
+                "it": "Immergiti nella cultura millenaria della Toscana: visite a castelli, fortezze, borghi, insediamenti e  opere d'arte",
+                "en": "Deep into thousand year tuscan culture: visits, castles, fortresses, hamlets, settlements, piece of arts, experiences"
+            },
+            "geohub_identifier": "history-and-culture"
+        },
+        "309": {
+            "source_title": {
+                "it": "Taverne e Bar",
+                "en": "Taverns and Bars"
+            },
+            "source_description": {
+                "it": "",
+                "en": "Taverns and Bars"
+            },
+            "geohub_identifier": "bar"
+        },
+        "170": {
+            "source_title": {
+                "it": "Vette",
+                "en": "Summits"
+            },
+            "source_description": {
+                "it": "Vette",
+                "en": "Summits"
+            },
+            "geohub_identifier": "natural-peak"
+        },
+        "440": {
+            "source_title": {
+                "it": "Vie,Vicoli,Piazze",
+                "en": "Streets, alleys, squares"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "majesty-of-streets"
+        },
+        "464": {
+            "source_title": {
+                "it": "Ville"
+            },
+            "source_description": {
+                "it": ""
+            },
+            "geohub_identifier": "villa-and-garden"
+        }
+    },
+    "activity": {
+        "183": {
+            "source_title": {
+                "it": "A piedi",
+                "en": "On foot"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "walking"
+        },
+        "194": {
+            "source_title": {
+                "it": "Arte e Cultura",
+                "en": "Art and Culture"
+            },
+            "source_description": {
+                "it": "Itinerari da svolgere in auto o in moto, seguendo consigli di approfondimento e di sosta sul percorso per godere delle opportunit\u00e0 di visite a musei, entrate in luoghi speciali, brevi visite guidate, e godere del patrimonio artistico toscano",
+                "en": "Itineraries to be developed by car or motorbike, in order to go deep into cultural visits in museums, villas, palaces, churches, parishes, exhibitions and everything else which helps in enjoying tuscan cultural heritage "
+            },
+            "geohub_identifier": "art-and-culture"
+        },
+        "188": {
+            "source_title": {
+                "it": "Avventura",
+                "en": "Adventure"
+            },
+            "source_description": {
+                "it": "Attivit\u00e0 sportive spesso concordate con guide qualificate",
+                "en": "Activities with lycensed Outdoor Guides"
+            },
+            "geohub_identifier": "adventure"
+        },
+        "134": {
+            "source_title": {
+                "it": "Birdwatching",
+                "en": "Birdwatching"
+            },
+            "source_description": {
+                "it": "Luoghi consigliati per l'attivit\u00e0 di osservazione Avifauna, da raggiungere a piedi e dove permanere in posizione privilegiata per l'avvistamento\r\nPer questo tipo di escursioni raccomandiamo: Binocolo o Cannocchiale, Taccuino per appunti,  Libro Guida Uccelli, e soprattutto abbigliamento mimetico e comportamento silenzioso e rispettoso dell'ambiente. Buone osservazioni! ",
+                "en": ""
+            },
+            "geohub_identifier": "birdwatching"
+        },
+        "186": {
+            "source_title": {
+                "it": "Canoa",
+                "en": "Canoe"
+            },
+            "source_description": {
+                "it": "Escursioni in canoa per laghi e riserve d'acqua, dove è possibile trovare il silenzio ed ammirare avifauna e flora delle zone umide toscane",
+                "en": ""
+            },
+            "geohub_identifier": "canoe"
+        },
+        "108": {
+            "source_title": {
+                "it": "Ciaspole",
+                "en": "Snowshoeing"
+            },
+            "source_description": {
+                "it": "Con le ciaspole ai piedi percorrendo il tipico ambiente appenninico, guadagnando crinali attraverso boschi di faggio e abeti, e cercando le tracce degli animali sulla morbida coltre bianca",
+                "en": "Snowshoeing through the typical appeninic environment, made of spruces and beech trees woods, watching out for footprints of the animals on the snow and gaining the panoramic ridges gazing at valleys and mountain ranges."
+            },
+            "geohub_identifier": "ciaspole"
+        },
+        "180": {
+            "source_title": {
+                "it": "Ciclismo",
+                "en": "Road biking"
+            },
+            "source_description": {
+                "it": "La terra dei corridori e dei ciclisti",
+                "en": "Road biking in the land of bicycle"
+            },
+            "geohub_identifier": "road-bike"
+        },
+        "104": {
+            "source_title": {
+                "it": "Cicloturismo",
+                "en": "Cyclotourism"
+            },
+            "source_description": {
+                "it": "La Toscana \u00e8 il paradiso del cicloturismo, con strade panoramiche e isolate, in pianura, collina e con salite ripide...",
+                "en": ""
+            },
+            "geohub_identifier": "touring-bike"
+        },
+        "453": {
+            "source_title": {
+                "it": "e-Mtb",
+                "en": "e-Mtb"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "e-bike"
+        },
+        "275": {
+            "source_title": {
+                "it": "Enogastronomia",
+                "en": "Oeno-gastronomy"
+            },
+            "source_description": {
+                "it": "Visite ed Assaggi alla ricerca di prodotti  espressioni della tipicit\u00e0 dei territori attraversati",
+                "en": ""
+            },
+            "geohub_identifier": "oeno-gastronomy"
+        },
+        "182": {
+            "source_title": {
+                "it": "In bicicletta",
+                "en": "Cycling"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "mbt"
+        },
+        "128": {
+            "source_title": {
+                "it": "Ippotrekking",
+                "en": "Horse trekking"
+            },
+            "source_description": {
+                "it": "Passeggiate a cavallo in Natura: <em>fare conoscenza con il cavallo</em>, imparare ad approcciarsi e ricevere le prime nozioni di equitazione di base. Infine  divertirsi in sella al nostro nuovo amico per sentieri e percorsi.",
+                "en": ""
+            },
+            "geohub_identifier": "horse-trekking"
+        },
+        "102": {
+            "source_title": {
+                "it": "Joelette",
+                "en": "Joelette"
+            },
+            "source_description": {
+                "it": "Itinerari selezionati da affrontare con Joelette",
+                "en": "Selected itineraries for joelette"
+            },
+            "geohub_identifier": "joelette"
+        },
+        "187": {
+            "source_title": {
+                "it": "Kayak",
+                "en": "Kayak"
+            },
+            "source_description": {
+                "it": "Kayak",
+                "en": "Kayak"
+            },
+            "geohub_identifier": "kayak"
+        },
+        "103": {
+            "source_title": {
+                "it": "Mountain Bike",
+                "en": "Mountain Bike"
+            },
+            "source_description": {
+                "it": "La Toscana \u00e8 meta ideale per la Mountain Bike, con le infinite strade sterrate delle sue colline, o le salite e discese impegnative dell'Appennino o delle Alpi Apuane.",
+                "en": ""
+            },
+            "geohub_identifier": "mbt"
+        },
+        "423": {
+            "source_title": {
+                "it": "Nordic Walking",
+                "en": "Nordic Walking"
+            },
+            "source_description": {
+                "it": "Itinerari di Nordic Walking: parchi cittadini, campagna, mare, lago, fiume e montagna. Ovunque, con gli  opportuni accorgimenti e secondo il proprio livello, si può praticare questa benefica attività",
+                "en": ""
+            },
+            "geohub_identifier": "nordic-walking"
+        },
+        "129": {
+            "source_title": {
+                "it": "Onotrekking",
+                "en": "Donkey trekking"
+            },
+            "source_description": {
+                "it": "Trekking someggiato",
+                "en": ""
+            },
+            "geohub_identifier": "donkey-trekking"
+        },
+        "106": {
+            "source_title": {
+                "it": "Running",
+                "en": "Running"
+            },
+            "source_description": {
+                "it": "Una corsa ispirati dai meravigliosi scenari, e dagli svariati sentieri, strade sterrate e forestali",
+                "en": ""
+            },
+            "geohub_identifier": "running"
+        },
+        "107": {
+            "source_title": {
+                "it": "Trekking",
+                "en": "Trekking"
+            },
+            "source_description": {
+                "it": "A piedi per sentieri e strade secondarie raggiungendo gli angoli più reconditi, salendo sulle cime, percorrendo antichi tracciati",
+                "en": ""
+            },
+            "geohub_identifier": "trekking"
+        },
+        "109": {
+            "source_title": {
+                "it": "Treno trekking",
+                "en": "Train trekking"
+            },
+            "source_description": {
+                "it": "Invito all'escursionismo utilizzando il treno come mezzo di avvicinamento a \"mobilità dolce\", assaporando la libertà di lasciare l'auto a casa, e di usfruire del patrimonio di binari che la nostra regione ancora ci offre, dandoci la possibilità di arrivare nei posti entrando per la \"porta posteriore\". Gli itinerari qui proposti sono raccolti nel pacchetto \"Guida al Treno-trekking in Toscana\" acquistabile su questo sito",
+                "en": ""
+            },
+            "geohub_identifier": "train-trekking"
+        },
+        "144": {
+            "source_title": {
+                "it": "Walking",
+                "en": "Walking"
+            },
+            "source_description": {
+                "it": "Facili camminate, senza bisogno di attrezzatura particolare ma solo di scarpe comode e qualche accessorio. Quel che importa è la scoperta dei luoghi e delle loro caratteristiche: lasciati guidare!",
+                "en": ""
+            },
+            "geohub_identifier": "walking"
+        },
+        "201": {
+            "source_title": {
+                "it": "Nuoto e Snorkeling",
+                "en": "Swimming and Snorkeling"
+            },
+            "source_description": {
+                "it": "Raggiungi a piedi o in bici le cale più belle della costa e delle isole toscane, per concedersi un bagno, tra ricchi fondali ed in acque cristalline",
+                "en": ""
+            },
+            "geohub_identifier": "swimming-snorkeling"
+        },
+        "458": {
+            "source_title": {
+                "it": "Speleologia",
+                "en": "Speleology"
+            },
+            "source_description": {
+                "it": "Raggiungi a piedi o in bici le cale più belle della costa e delle isole toscane, per concedersi un bagno, tra ricchi fondali ed in acque cristalline",
+                "en": ""
+            },
+            "geohub_identifier": "speleology"
+        },
+        "185": {
+            "source_title": {
+                "it": "Torrentismo",
+                "en": "Canyoning"
+            },
+            "source_description": {
+                "it": "Attività da praticare con guide qualificate che possono mettere a disposizione la loro competenza e passione oltre che tutta l'attrezzatura necessaria",
+                "en": ""
+            },
+            "geohub_identifier": "canyoning"
+        },
+        "294": {
+            "source_title": {
+                "it": "Turismo",
+                "en": "Tourism"
+            },
+            "source_description": {
+                "it": "Non solo sport e avventura. In Toscana c'è sempre stato spazio per esplorare condendo il girovagare con elementi di cultura, di relax, di buon cibo. E allora perché non esplorare con un mezzo le Strade del Vino e dell'Olio, visitare uno dei luoghi di Terme e Benessere, recarsi sui luoghi di set cinematografici scoprendo la Toscana da Cinema e quella Romantica di poeti ed autori. Molte località sono attrezzate ulteriormente per un Turismo accessibile",
+                "en": ""
+            },
+            "geohub_identifier": "tourism"
+        }
+    }
+}
