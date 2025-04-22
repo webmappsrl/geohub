@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\MorphedByMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -61,7 +60,6 @@ class TaxonomyActivity extends Resource
                 Text::make(__('Name'), 'name')
                     ->sortable()
                     ->help(__('Name displayed of the taxonomy')),
-                Heading::make('<p>Name: This is the name displayed throughout the app.</p>')->asHtml(),
                 CKEditor::make(__('Description'), 'description')
                     ->hideFromIndex()
                     ->help(__('Enter a detailed description of the taxonomy.'))
