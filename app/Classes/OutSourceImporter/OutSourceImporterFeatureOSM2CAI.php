@@ -30,7 +30,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         // Curl request to get the feature information from external source
         $db = DB::connection('out_source_osm');
         $track = $db->table('hiking_routes')
-            ->where('osmfeatures_id', $this->source_id)
+            ->where('id', $this->source_id)
             ->select([
                 'id',
                 'osmfeatures_id',
@@ -60,12 +60,13 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         }
 
         $osmData = json_decode($track->osmfeatures_data, true)['properties'] ?? [];
+        $osmfeaturesId = $track->osmfeatures_id;
         unset($track->osmfeatures_data);
         foreach ($osmData as $key => $value) {
             $track->$key = $value;
         }
-
-        // dd($track);
+        // override osmfeatures_id with the correct one
+        $track->osmfeatures_id = $osmfeaturesId;
 
         // prepare feature parameters to pass to updateOrCreate function
         Log::info('Preparing OSF Track with external ID: '.$this->source_id);
@@ -83,7 +84,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
         Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
 
-        return $this->create_or_update_feature($this->params);
+        return $this->create_or_update_feature($this->params, $osmfeaturesId);
     }
 
     /**
@@ -106,16 +107,17 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
      * It updateOrCreate method of the class OutSourceFeature
      *
      * @param  array  $params  The OutSourceFeature parameters to be added or updated
+     * @param  int  $osmfeaturesId  The ID of the OSM features
      * @return int The ID of OutSourceFeature created
      */
-    protected function create_or_update_feature(array $params)
+    protected function create_or_update_feature(array $params, $osmfeaturesId)
     {
         // TODO: use the endpoint_slug column identifier instead (it should be a not null column) and set only the endpoint path into the endpoint column
         //      this will allow to have multiple domains for the same source_id
 
         $feature = OutSourceFeature::updateOrCreate(
             [
-                'source_id' => $this->source_id,
+                'source_id' => $osmfeaturesId,
                 'endpoint' => $this->endpoint,
             ],
             $params
