@@ -54,17 +54,19 @@ class CleanupOsm2caiFeatures extends Command
 
             if ($hikingRoutesData->isEmpty()) {
                 $this->error('Could not fetch valid IDs from osm2cai database or the table is empty. Aborting.');
+
                 return 1;
             }
 
-            // Create lookup arrays 
+            // Create lookup arrays
             $validHikingRouteIdsLookup = array_flip($hikingRoutesData->pluck('id')->filter()->all());
             $validOsmFeaturesIdsLookup = array_flip($hikingRoutesData->pluck('osmfeatures_id')->filter()->all());
 
-            $this->info('Found ' . count($validHikingRouteIdsLookup) . ' unique valid hiking route IDs and ' . count($validOsmFeaturesIdsLookup) . ' unique valid osmfeatures_ids.');
+            $this->info('Found '.count($validHikingRouteIdsLookup).' unique valid hiking route IDs and '.count($validOsmFeaturesIdsLookup).' unique valid osmfeatures_ids.');
         } catch (\Exception $e) {
             Log::error("Error connecting to or querying osm2cai database: {$e->getMessage()}");
             $this->error("Error connecting to or querying osm2cai database: {$e->getMessage()}");
+
             return 1;
         }
 
@@ -80,6 +82,7 @@ class CleanupOsm2caiFeatures extends Command
 
         if ($totalToCheck === 0) {
             $this->info("No OutSourceFeatures found for provider '{$providerName}'. Nothing to do.");
+
             return 0;
         }
 
@@ -100,14 +103,15 @@ class CleanupOsm2caiFeatures extends Command
                     if (empty($sourceId)) {
                         Log::warning("Skipping OutSourceFeature ID {$osf->id}: Missing or empty source_id.");
                         $skippedOsfCountMissingSourceId++;
+
                         continue;
                     }
 
                     $isOrphan = false;
                     // Perform matching based on source_id format
-                    if (strpos((string)$sourceId, 'R') === 0) {
+                    if (strpos((string) $sourceId, 'R') === 0) {
                         // Source ID starts with 'R', check against osmfeatures_id
-                        if (!isset($validOsmFeaturesIdsLookup[$sourceId])) {
+                        if (! isset($validOsmFeaturesIdsLookup[$sourceId])) {
                             $isOrphan = true;
                         }
                     } else {
@@ -115,9 +119,9 @@ class CleanupOsm2caiFeatures extends Command
                         // Attempt conversion to integer if it looks like one, as hiking_route.id is likely integer
                         $idToCheck = $sourceId;
                         if (is_numeric($idToCheck)) {
-                            $idToCheck = (int)$idToCheck;
+                            $idToCheck = (int) $idToCheck;
                         }
-                        if (!isset($validHikingRouteIdsLookup[$idToCheck])) {
+                        if (! isset($validHikingRouteIdsLookup[$idToCheck])) {
                             $isOrphan = true;
                         }
                     }
@@ -142,10 +146,11 @@ class CleanupOsm2caiFeatures extends Command
 
         if (empty($orphanedOsfIds)) {
             $this->info('No orphaned OutSourceFeatures found based on source_id matching.');
+
             return 0;
         }
 
-        $this->warn('Found ' . count($orphanedOsfIds) . ' potentially orphaned OutSourceFeatures (based on source_id matching). ');
+        $this->warn('Found '.count($orphanedOsfIds).' potentially orphaned OutSourceFeatures (based on source_id matching). ');
 
         // --- Step 3: Find related EcTracks ---
         $this->info('Finding related EcTracks for orphaned OutSourceFeatures...');
@@ -153,8 +158,8 @@ class CleanupOsm2caiFeatures extends Command
             ->pluck('id')
             ->toArray();
 
-        if (!empty($orphanedEcTrackIds)) {
-            $this->warn('Found ' . count($orphanedEcTrackIds) . ' related EcTracks to be deleted.');
+        if (! empty($orphanedEcTrackIds)) {
+            $this->warn('Found '.count($orphanedEcTrackIds).' related EcTracks to be deleted.');
         } else {
             $this->info('No related EcTracks found for the orphaned OutSourceFeatures.');
         }
@@ -166,22 +171,22 @@ class CleanupOsm2caiFeatures extends Command
         $orphanedOsfIdsCount = count($orphanedOsfIds);
         $orphanedEcTrackIdsCount = count($orphanedEcTrackIds);
 
-        if ($isDryRun || !$isForce) {
+        if ($isDryRun || ! $isForce) {
             // Perform dry run if --dry-run is set OR if --force is NOT set
             $this->info("Dry run: Found {$orphanedOsfIdsCount} orphaned OutSourceFeatures that would be deleted.");
             if ($orphanedEcTrackIdsCount > 0) {
                 $this->info("Dry run: Found {$orphanedEcTrackIdsCount} related EcTracks that would be deleted.");
             }
-            if (!$isDryRun && !$isForce) { // Add specific message if neither option was used
+            if (! $isDryRun && ! $isForce) { // Add specific message if neither option was used
                 $this->warn('Execution halted. Use the --force option to perform the actual deletion.');
             } else {
                 $this->info('Dry run finished. No data was deleted.');
             }
         } elseif ($isForce) { // Only delete if --force is explicitly set
-            $this->warn("Executing deletion as --force option was specified...");
+            $this->warn('Executing deletion as --force option was specified...');
 
             // Delete EcTracks first (if any)
-            if (!empty($orphanedEcTrackIds)) {
+            if (! empty($orphanedEcTrackIds)) {
                 $this->info('Deleting related EcTracks...');
                 $deletedEcTracksCount = EcTrack::destroy($orphanedEcTrackIds);
                 $this->info("Deleted {$deletedEcTracksCount} EcTracks.");

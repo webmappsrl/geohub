@@ -10,8 +10,7 @@ use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\SchemaFilter;
 use App\Nova\Filters\ShareUgcPoiFilter;
 use App\Nova\Filters\UgcCreationDateFilter;
-use App\Nova\Filters\UgcUserFilter;
-use App\Nova\Filters\UserFilter;
+use App\Nova\Filters\UgcUserRelationFilter;
 use Exception;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -22,10 +21,8 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Suenerds\NovaSearchableBelongsToFilter\NovaSearchableBelongsToFilter;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
-use App\Nova\Filters\UgcUserRelationFilter;
 
 class UgcPoi extends Resource
 {
@@ -160,7 +157,7 @@ class UgcPoi extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html = '<strong>' . htmlspecialchars($typeLabel) . '</strong>';
+                            $html = '<strong>'.htmlspecialchars($typeLabel).'</strong>';
 
                             return $html;
                         }
@@ -193,7 +190,7 @@ class UgcPoi extends Resource
                         if ($currentSchema) {
                             // Aggiungi una riga all'inizio per il tipo di form
                             $typeLabel = reset($currentSchema['label']); // Assumi che 'label' esista e abbia almeno una voce
-                            $html .= '<td><strong>tipo di form</strong></td><td>' . htmlspecialchars($typeLabel) . '</td>';
+                            $html .= '<td><strong>tipo di form</strong></td><td>'.htmlspecialchars($typeLabel).'</td>';
 
                             foreach ($currentSchema['fields'] as $field) {
                                 $fieldLabel = reset($field['label']);
@@ -214,14 +211,14 @@ class UgcPoi extends Resource
 
                                 if (isset($fieldValue)) {
                                     $html .= '<tr>';
-                                    $html .= '<td><strong>' . htmlspecialchars($fieldLabel) . '</strong></td>';
-                                    $html .= '<td>' . htmlspecialchars($fieldValue) . '</td>';
+                                    $html .= '<td><strong>'.htmlspecialchars($fieldLabel).'</strong></td>';
+                                    $html .= '<td>'.htmlspecialchars($fieldValue).'</td>';
                                     $html .= '</tr>';
                                 }
                             }
                             $html .= '</table>';
 
-                            return $html . $help;
+                            return $html.$help;
                         }
                     }
                 }
