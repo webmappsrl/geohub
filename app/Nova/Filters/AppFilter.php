@@ -5,6 +5,7 @@ namespace App\Nova\Filters;
 use App\Models\App;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
+use Illuminate\Support\Facades\DB;
 
 class AppFilter extends Filter
 {
@@ -14,6 +15,13 @@ class AppFilter extends Filter
      * @var string
      */
     public $component = 'select-filter';
+    protected $relationName = 'ugc_pois';
+
+    public function setRelation($relationName)
+    {
+        $this->relationName = $relationName;
+        return $this;
+    }
 
     /**
      * Apply the filter to the given query.
@@ -24,8 +32,7 @@ class AppFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        // return the models where the sku value contains the digited value
-        return $query->where('sku', $value);
+        return $query->where('app_id', $value);
     }
 
     /**
@@ -38,13 +45,22 @@ class AppFilter extends Filter
         $apps = [];
         $options = [];
         if ($request->user()->can('Admin')) {
-            $apps = App::all()->toArray();
+            $apps = App::whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from($this->relationName)
+                    ->whereRaw('CAST(apps.id AS VARCHAR) = ' . $this->relationName . '.app_id');
+            })->orderBy('name')->get()->toArray();
         } else {
-            $apps = App::where('user_id', $request->user()->id)->get()->toArray();
+            $apps = App::where('user_id', $request->user()->id)
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from($this->relationName)
+                        ->whereRaw('CAST(apps.id AS VARCHAR) = ' . $this->relationName . '.app_id');
+                })->orderBy('name')->get()->toArray();
         }
         foreach ($apps as $app) {
             $label = $app['name'];
-            $options[$label] = $app['sku'];
+            $options[$label] = $app['id'];
         }
 
         return $options;
