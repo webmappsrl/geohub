@@ -141,3 +141,6 @@ echo "generate queue jobs for all needed calculations -  Sardegna ..."
 php artisan geohub:generate_hoqu_script --osf_endpoint="https://osm2cai.cai.it/api/v1/hiking-routes/region/z/1,2,3,4" osm2cai_z
 
 echo "finished OSM2CAI all regioni"
+
+echo "Cleaning up orphaned OSM2CAI features from Geohub..."
+php artisan geohub:clean-osm2cai-features --force
