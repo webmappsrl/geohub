@@ -54,23 +54,27 @@ class UgcUserRelationFilter extends Filter
     {
         $users = [];
         $options = [];
+        $appIds = [];
+        $apps = [];
 
         if ($request->user()->can('Admin')) {
-            $users = User::whereExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from($this->relationName)
-                    ->whereRaw('users.id = ' . $this->relationName . '.user_id');
-            })->orderBy('name')->get()->toArray();
+            $apps = App::all();
         } else {
-            $apps = App::where('user_id', $request->user()->id)
-                ->orderBy('name')->get()->pluck('id')->toArray();
-            $users = User::where('app_id', $apps)
-                ->whereExists(function ($query) {
-                    $query->select(DB::raw(1))
-                        ->from($this->relationName)
-                        ->whereRaw('users.id = ' . $this->relationName . '.user_id');
-                })->orderBy('name')->get()->toArray();
+            $appOwner = $request->user();
+            $apps = $appOwner->apps;
         }
+
+        $appIds = $apps->pluck('id')->toArray();;
+        $userIds = DB::table($this->relationName)
+            ->whereIn('app_id', $appIds)
+            ->pluck('user_id')
+            ->unique()
+            ->toArray();
+
+        $users = User::whereIn('id', $userIds)
+            ->orderBy('name')
+            ->get()
+            ->toArray();
 
         foreach ($users as $user) {
             $label = $user['name'];
