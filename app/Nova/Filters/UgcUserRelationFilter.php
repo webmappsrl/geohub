@@ -59,20 +59,16 @@ class UgcUserRelationFilter extends Filter
             $users = User::whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from($this->relationName)
-                    ->whereRaw('users.id = '.$this->relationName.'.user_id');
+                    ->whereRaw('users.id = ' . $this->relationName . '.user_id');
             })->orderBy('name')->get()->toArray();
         } else {
             $apps = App::where('user_id', $request->user()->id)
-                ->whereExists(function ($query) {
-                    $query->select(DB::raw(1))
-                        ->from($this->relationName)
-                        ->whereRaw('CAST(apps.id AS VARCHAR) = '.$this->relationName.'.app_id');
-                })->orderBy('name')->get()->pluck('id')->toArray();
+                ->orderBy('name')->get()->pluck('id')->toArray();
             $users = User::where('app_id', $apps)
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))
                         ->from($this->relationName)
-                        ->whereRaw('users.id = '.$this->relationName.'.user_id');
+                        ->whereRaw('users.id = ' . $this->relationName . '.user_id');
                 })->orderBy('name')->get()->toArray();
         }
 
