@@ -64,7 +64,7 @@ class UgcUserRelationFilter extends Filter
             $apps = $appOwner->apps;
         }
 
-        $appIds = $apps->pluck('id')->toArray();;
+        $appIds = $apps->pluck('id')->toArray();
         $userIds = DB::table($this->relationName)
             ->whereIn('app_id', $appIds)
             ->pluck('user_id')

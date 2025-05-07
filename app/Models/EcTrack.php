@@ -68,6 +68,7 @@ class EcTrack extends Model
         'themes',
         'activities',
         'searchable',
+        'description',
     ];
 
     public $translatable = ['name', 'description', 'excerpt', 'difficulty', 'difficulty_i18n', 'not_accessible_message'];

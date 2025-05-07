@@ -381,30 +381,22 @@ class SyncEcFromOutSource
                 Log::info('Creating EC Track from OSF with id: '.$id);
                 try {
                     if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
-                        $ec_track = EcTrack::updateOrCreate(
-                            [
-                                'user_id' => $this->author_id,
-                                'out_source_feature_id' => $id,
-                            ],
-                            [
-                                'name' => $this->generateName($out_source),
-                                'not_accessible' => false,
-                                'geometry' => DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt,
-                            ]
-                        );
+                        $geometry = DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt;
                     } else {
-                        $ec_track = EcTrack::updateOrCreate(
-                            [
-                                'user_id' => $this->author_id,
-                                'out_source_feature_id' => $id,
-                            ],
-                            [
-                                'name' => $this->generateName($out_source),
-                                'not_accessible' => false,
-                                'geometry' => DB::select("SELECT ST_Force3D('$out_source->geometry')As wkt")[0]->wkt,
-                            ]
-                        );
+                        $geometry = DB::select("SELECT ST_Force3D('$out_source->geometry')As wkt")[0]->wkt;
                     }
+                    $ec_track = EcTrack::updateOrCreate(
+                        [
+                            'user_id' => $this->author_id,
+                            'out_source_feature_id' => $id,
+                        ],
+                        [
+                            'name' => $this->generateName($out_source),
+                            'not_accessible' => false,
+                            'geometry' => $geometry,
+                            'description' => $out_source->tags['description'] ?? null,
+                        ]
+                    );
 
                     // Attach Activities to track
                     Log::info('Attaching EC Track taxonomyActivities: '.$this->activity);
