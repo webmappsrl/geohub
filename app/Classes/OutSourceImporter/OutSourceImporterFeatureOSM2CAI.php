@@ -63,6 +63,9 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $osmfeaturesId = $track->osmfeatures_id;
         unset($track->osmfeatures_data);
         foreach ($osmData as $key => $value) {
+            if ($key === 'osm2cai_status') {
+                continue; //we will use osm2cai_status from the track table which is more reliable
+            }
             $track->$key = $value;
         }
         // override osmfeatures_id with the correct one
