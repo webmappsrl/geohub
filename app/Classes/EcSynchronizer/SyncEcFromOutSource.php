@@ -658,13 +658,13 @@ class SyncEcFromOutSource
                                 }
                             }
                         } else {
-                            Log::info('Attaching EC POI taxonomyPoiTypes: ' . $this->poi_type);
+                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
                             $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier', $this->poi_type)->first());
                         }
 
                         // Attach Themes to poi
                         if ($this->theme) {
-                            Log::info('Attaching EC Poi taxonomyThemes: ' . $this->theme);
+                            Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
                             $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                         }
 
