@@ -380,6 +380,11 @@ class SyncEcFromOutSource
                 // Create Track
                 Log::info('Creating EC Track from OSF with id: '.$id);
                 try {
+                    if ($this->provider == 'App\Classes\OutSourceImporter\OutSourceImporterFeatureEUMA') {
+                        $geometry = DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt;
+                    } else {
+                        $geometry = DB::select("SELECT ST_Force3D('$out_source->geometry')As wkt")[0]->wkt;
+                    }
                     $ec_track = EcTrack::updateOrCreate(
                         [
                             'user_id' => $this->author_id,
@@ -388,7 +393,7 @@ class SyncEcFromOutSource
                         [
                             'name' => $this->generateName($out_source),
                             'not_accessible' => false,
-                            'geometry' => DB::select("SELECT ST_Force3D(ST_LineMerge('$out_source->geometry')) As wkt")[0]->wkt,
+                            'geometry' => $geometry,
                             'description' => $out_source->tags['description'] ?? null,
                         ]
                     );
@@ -653,13 +658,13 @@ class SyncEcFromOutSource
                                 }
                             }
                         } else {
-                            Log::info('Attaching EC POI taxonomyPoiTypes: '.$this->poi_type);
+                            Log::info('Attaching EC POI taxonomyPoiTypes: ' . $this->poi_type);
                             $ec_poi->taxonomyPoiTypes()->syncWithoutDetaching(TaxonomyPoiType::where('identifier', $this->poi_type)->first());
                         }
 
                         // Attach Themes to poi
                         if ($this->theme) {
-                            Log::info('Attaching EC Poi taxonomyThemes: '.$this->theme);
+                            Log::info('Attaching EC Poi taxonomyThemes: ' . $this->theme);
                             $ec_poi->taxonomyThemes()->syncWithoutDetaching(TaxonomyTheme::where('identifier', $this->theme)->first());
                         }
 
