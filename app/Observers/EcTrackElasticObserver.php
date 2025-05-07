@@ -60,7 +60,7 @@ class EcTrackElasticObserver
         if ($apps && $bbox && $author_id) {
             DeleteTrackPBFJob::dispatch($apps, $author_id, $bbox);
         } else {
-            Log::info('No apps or bbox or author_id found for track ' . $ecTrack->id . ' to delete PBFs.');
+            Log::info('No apps or bbox or author_id found for track '.$ecTrack->id.' to delete PBFs.');
         }
     }
 
