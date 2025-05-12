@@ -26,7 +26,7 @@ class EcMedia extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'url', 'geometry', 'out_source_feature_id', 'description', 'excerpt'];
+    protected $fillable = ['name', 'url', 'geometry', 'out_source_feature_id', 'description', 'excerpt', 'user_id'];
 
     public array $translatable = ['name', 'description', 'excerpt'];
 
@@ -40,11 +40,12 @@ class EcMedia extends Model
         parent::booted();
 
         static::creating(function ($ecMedia) {
-            $user = User::getEmulatedUser();
-            if (is_null($user)) {
-                $user = User::where('email', '=', 'team@webmapp.it')->first();
+            if (is_null($ecMedia->user_id)) {
+                $user = User::getEmulatedUser();
+                if ($user) {
+                    $ecMedia->author()->associate($user);
+                }
             }
-            $ecMedia->author()->associate($user);
         });
 
         static::created(function ($ecMedia) {
