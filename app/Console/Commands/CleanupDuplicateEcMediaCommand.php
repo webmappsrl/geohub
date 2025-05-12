@@ -46,6 +46,7 @@ class CleanupDuplicateEcMediaCommand extends Command
 
         if ($duplicatedOsfEntries->isEmpty()) {
             $this->info('No EcMedia records found with duplicate out_source_feature_id.');
+
             return Command::SUCCESS;
         }
 
@@ -59,42 +60,44 @@ class CleanupDuplicateEcMediaCommand extends Command
 
         if ($totalExcessEcMediaRecords == 0) {
             $this->info('No excess EcMedia records to process after initial count.');
+
             return Command::SUCCESS;
         }
 
         // Detailed Explanation
         $this->newLine();
-        $this->line("<fg=cyan>--------------------------------------------------------------------</>");
-        $this->line("<fg=cyan> EcMedia Duplicate Cleanup Process</>");
-        $this->line("<fg=cyan>--------------------------------------------------------------------</>");
-        $this->line("This command will perform the following actions:");
+        $this->line('<fg=cyan>--------------------------------------------------------------------</>');
+        $this->line('<fg=cyan> EcMedia Duplicate Cleanup Process</>');
+        $this->line('<fg=cyan>--------------------------------------------------------------------</>');
+        $this->line('This command will perform the following actions:');
         $this->line("1.  <fg=yellow>Identify Duplicates</>: Finds groups of EcMedia records sharing the same 'out_source_feature_id'.");
-        $this->line("2.  <fg=yellow>Select Record to Keep</>: For each group:");
+        $this->line('2.  <fg=yellow>Select Record to Keep</>: For each group:');
         $this->line("    a. It prioritizes the <options=bold>most recently updated</> EcMedia record whose URL contains 'amazonaws.com'.");
-        $this->line("    b. If no AWS-hosted media is found, it keeps the <options=bold>most recently updated</> EcMedia record overall.");
-        $this->line("3.  <fg=yellow>Re-map Relationships</>: For each EcMedia record marked for deletion in a group:");
+        $this->line('    b. If no AWS-hosted media is found, it keeps the <options=bold>most recently updated</> EcMedia record overall.');
+        $this->line('3.  <fg=yellow>Re-map Relationships</>: For each EcMedia record marked for deletion in a group:');
         $this->line("    a. <options=bold>Feature Images</>: Any EcPoi, EcTrack, or Layer records using the duplicate media as a 'feature_image' will be updated to point to the EcMedia record being kept.");
-        $this->line("    b. <options=bold>Galleries (ManyToMany)</>: EcPoi and EcTrack records related to the duplicate media (e.g., in image galleries) will be re-associated with the EcMedia record being kept. The old associations will be detached.");
-        $this->line("4.  <fg=yellow>Delete Duplicate EcMedia</>: After re-mapping, the duplicate EcMedia records will be deleted from the database.");
+        $this->line('    b. <options=bold>Galleries (ManyToMany)</>: EcPoi and EcTrack records related to the duplicate media (e.g., in image galleries) will be re-associated with the EcMedia record being kept. The old associations will be detached.');
+        $this->line('4.  <fg=yellow>Delete Duplicate EcMedia</>: After re-mapping, the duplicate EcMedia records will be deleted from the database.');
         $this->line("    - The EcMedia model's 'deleting' event will trigger, which is expected to handle the deletion of the actual media file from storage (e.g., S3 via HOQU).");
-        $this->line("<fg=cyan>--------------------------------------------------------------------</>");
-        $this->line("Summary of items to process:");
+        $this->line('<fg=cyan>--------------------------------------------------------------------</>');
+        $this->line('Summary of items to process:');
         $this->line("- Found <options=bold>$numberOfOsfIdsWithDuplicates</> OutSourceFeature IDs with duplicate EcMedia records.");
         $this->line("- A total of <options=bold>$totalExcessEcMediaRecords</> EcMedia records will be processed for deletion.");
 
-        $this->warn("WARNING: This operation WILL MODIFY the database. Ensure you have a backup.");
+        $this->warn('WARNING: This operation WILL MODIFY the database. Ensure you have a backup.');
 
-        if (!$this->confirm('Do you want to proceed with the cleanup?', false)) {
+        if (! $this->confirm('Do you want to proceed with the cleanup?', false)) {
             $this->info('Cleanup aborted by user.');
+
             return Command::INVALID;
         }
         $this->newLine();
 
         $progressBar = $this->output->createProgressBar($totalExcessEcMediaRecords);
         $progressBar->setFormat("<fg=white;bg=blue> %message:-30s %</>\n <fg=green>%current%</>/<fg=yellow>%max%</> [%bar%] <fg=magenta>%percent:3s%%</>\n <fg=cyan>Time:</> <fg=white>%elapsed:6s%</> <fg=cyan>ETA:</> <fg=white>%remaining:-6s%</> <fg=cyan>Mem:</> <fg=white>%memory:6s%</>");
-        $progressBar->setBarCharacter("<fg=green>❚</>");
-        $progressBar->setEmptyBarCharacter("<fg=gray>─</>");
-        $progressBar->setProgressCharacter("<fg=green;options=bold>➤</>");
+        $progressBar->setBarCharacter('<fg=green>❚</>');
+        $progressBar->setEmptyBarCharacter('<fg=gray>─</>');
+        $progressBar->setProgressCharacter('<fg=green;options=bold>➤</>');
         $progressBar->setMessage('Cleaning EcMedia duplicates...');
         $progressBar->start();
 
@@ -135,7 +138,6 @@ class CleanupDuplicateEcMediaCommand extends Command
                     return;
                 }
 
-
                 foreach ($recordsToDelete as $mediaToDelete) {
                     $processedForDeletionLoopCount++;
 
@@ -172,12 +174,12 @@ class CleanupDuplicateEcMediaCommand extends Command
                         $actualDeletedCount++;
                     } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
                         $this->output->newLine(); // Ensure error message is on a new line from progress bar
-                        $this->error("Error deleting Media ID {$mediaToDelete->id} (OSF ID: $osfId) due to HttpException: " . $e->getMessage());
-                        Log::channel('stderr')->error("    - OSF ID: $osfId - Failed to delete Media ID {$mediaToDelete->id} due to HttpException: " . $e->getMessage());
+                        $this->error("Error deleting Media ID {$mediaToDelete->id} (OSF ID: $osfId) due to HttpException: ".$e->getMessage());
+                        Log::channel('stderr')->error("    - OSF ID: $osfId - Failed to delete Media ID {$mediaToDelete->id} due to HttpException: ".$e->getMessage());
                     } catch (\Exception $e) {
                         $this->output->newLine(); // Ensure error message is on a new line from progress bar
-                        $this->error("Error deleting Media ID {$mediaToDelete->id} (OSF ID: $osfId): " . $e->getMessage());
-                        Log::channel('stderr')->error("    - OSF ID: $osfId - Failed to delete Media ID {$mediaToDelete->id}: " . $e->getMessage());
+                        $this->error("Error deleting Media ID {$mediaToDelete->id} (OSF ID: $osfId): ".$e->getMessage());
+                        Log::channel('stderr')->error("    - OSF ID: $osfId - Failed to delete Media ID {$mediaToDelete->id}: ".$e->getMessage());
                     }
                 }
                 $progressBar->advance();
@@ -189,6 +191,7 @@ class CleanupDuplicateEcMediaCommand extends Command
 
         $finalMessage = "Cleanup complete. $actualDeletedCount media records were actually deleted (out of $processedForDeletionLoopCount processed).";
         $this->info($finalMessage);
+
         return Command::SUCCESS;
     }
 }
