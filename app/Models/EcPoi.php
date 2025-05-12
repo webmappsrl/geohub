@@ -28,7 +28,7 @@ class EcPoi extends Model
 
     protected $fillable = ['name', 'user_id', 'geometry', 'out_source_feature_id', 'description', 'addr_complete', 'capacity', 'contact_phone', 'contact_email', 'related_url'];
 
-    public array $translatable = ['name', 'description', 'excerpt', 'audio'];
+    public array $translatable = ['name', 'description', 'excerpt', 'audio', 'info', 'embedded_html'];
 
     public bool $skip_update = false;
 

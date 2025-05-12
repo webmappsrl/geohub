@@ -234,6 +234,8 @@ class EcPoi extends Resource
                                 <li><p><strong>Name</strong>: The name of the POI, also known as the title.</p></li>
                                 <li><p><strong>Excerpt</strong>: A brief summary or introduction for the POI, displayed in lists or previews.</p></li>
                                 <li><p><strong>Description</strong>: A detailed description of the POI, providing comprehensive information.</p></li>
+                                <li><p><strong>Info</strong>: Additional information about the POI, displayed in the POI detail.</p></li>
+                                <li><p><strong>Embedded HTML</strong>: Add custom html code, displayed in the POI detail.</p></li>
                             </ul>
                             HTML
                     )->asHtml(),
@@ -241,6 +243,8 @@ class EcPoi extends Resource
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
                         Textarea::make('Description'),
+                        Textarea::make(__('Info'), 'info'),
+                        Textarea::make(__('Embedded HTML'), 'embedded_html'),
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
@@ -423,6 +427,8 @@ class EcPoi extends Resource
                                 <li><p><strong>Name</strong>: Enter the name of the POI. This will be the main title displayed.</p></li>
                                 <li><p><strong>Excerpt</strong>: Provide a brief summary or introduction. This will be shown in lists or previews.</p></li>
                                 <li><p><strong>Description</strong>: Add a detailed description. This field is for the full content that users will see.</p></li>
+                                <li><p><strong>Info</strong>: Additional information about the POI, displayed in the POI detail.</p></li>
+                                <li><p><strong>Embedded HTML</strong>: Add custom html code, displayed in the POI detail.</p></li>
                             </ul>
                             HTML
                         )->asHtml()->onlyOnForms(),
@@ -436,6 +442,14 @@ class EcPoi extends Resource
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
+                            NovaWyswyg::make('Info')->canSee(function () use ($osmid) {
+                                return is_null($osmid);
+                            })
+                                ->help(__('Enter additional information of the POI.')),
+                            NovaWyswyg::make('Embedded HTML')->canSee(function () use ($osmid) {
+                                return is_null($osmid);
+                            })
+                                ->help(__('Enter a html code.')),
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid')
                             ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
