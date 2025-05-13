@@ -146,7 +146,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -268,7 +268,7 @@ class EcPoi extends Resource
                             $out = 'No related Url';
                         }
 
-                        return $out.$help;
+                        return $out . $help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -442,13 +442,12 @@ class EcPoi extends Resource
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
-                            NovaWyswyg::make('Info')->canSee(function () use ($osmid) {
-                                return is_null($osmid);
-                            })
+                            NovaWyswyg::make(__('Info'), 'info')
                                 ->help(__('Enter additional information of the POI.')),
-                            NovaWyswyg::make('Embedded HTML')->canSee(function () use ($osmid) {
-                                return is_null($osmid);
-                            })
+                            NovaWyswyg::make(__('Embedded HTML'), 'embedded_html')
+                                ->canSee(function () {
+                                    return $this->canShowEmbeddedHtml();
+                                })
                                 ->help(__('Enter a html code.')),
                         ])->onlyOnForms(),
                         Number::make('OSM ID', 'osmid')
@@ -671,6 +670,26 @@ class EcPoi extends Resource
                 ->falseValue('Off'),
             Textarea::make(__('Reachability by Public Transportation Description'), 'reachability_by_public_transportation_description'),
         ];
+    }
+
+    private function canShowEmbeddedHtml(): bool
+    {
+        $user = $this->author;
+        if (!$user) {
+            return false;
+        }
+
+        $apps = $user->apps;
+        if ($apps->count() == 1) {
+            return $apps->first()->show_embedded_html;
+        } else {
+            foreach ($apps as $app) {
+                if ($app->show_embedded_html && $app->ecPoiInApp($this->id)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
