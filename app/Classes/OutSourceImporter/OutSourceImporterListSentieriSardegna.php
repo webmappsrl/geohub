@@ -12,7 +12,7 @@ class OutSourceImporterListSentieriSardegna extends OutSourceImporterListAbstrac
 
     public function getTrackList(): array
     {
-        Log::info('Starting Track List CURL request ...');
+        $this->logChannel->info('Starting Track List CURL request ...');
         $response = Http::get($this->endpoint);
 
         return $response->json();
@@ -20,7 +20,7 @@ class OutSourceImporterListSentieriSardegna extends OutSourceImporterListAbstrac
 
     public function getPoiList(): array
     {
-        Log::info('Starting POI List CURL request ...');
+        $this->logChannel->info('Starting POI List CURL request ...');
         $response = Http::get($this->endpoint);
 
         return $response->json();

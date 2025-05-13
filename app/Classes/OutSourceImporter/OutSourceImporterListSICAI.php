@@ -13,7 +13,7 @@ class OutSourceImporterListSICAI extends OutSourceImporterListAbstract
     public function getTrackList(): array
     {
 
-        Log::info('Getting items from OSM2CAI database ...');
+        Log::channel($this->logChannel)->info('Getting items from OSM2CAI database ...');
         $db = DB::connection('out_source_sicai');
         $items = $db->table('sentiero_italia.SI_Tappe')
             ->get();
@@ -31,7 +31,7 @@ class OutSourceImporterListSICAI extends OutSourceImporterListAbstract
 
     public function getPoiList(): array
     {
-        Log::info('Getting items from OSM2CAI database ...');
+        $this->logChannel->info('Getting items from OSM2CAI database ...');
         $db = DB::connection('out_source_sicai');
         $items = $db->table('sentiero_italia.pt_accoglienza_unofficial')
             ->where('situazione', 'ha aderito')

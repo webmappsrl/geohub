@@ -51,7 +51,7 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
         $poi = json_decode($osmp->getGeojson($this->source_id), true);
 
         // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF POI with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: ' . $this->source_id);
         try {
             $geometry_poi = DB::select("SELECT ST_AsText(ST_Centroid(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."'))) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
@@ -61,15 +61,15 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: ' . $this->source_id);
             $this->tags = [];
             $this->params['tags'] = $this->prepareTagsForPoiWithOsmMapping($poi);
-            Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
-            Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: ' . $this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: ' . $this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            Log::info('Error creating OSF : '.$e);
+            $this->logChannel->error('Error creating OSF : ' . $e);
         }
     }
 
@@ -92,14 +92,19 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
     protected function create_or_update_feature(array $params)
     {
 
-        $feature = OutSourceFeature::updateOrCreate(
-            [
-                'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint,
-            ],
-            $params);
+        try {
+            $feature = OutSourceFeature::updateOrCreate(
+                [
+                    'source_id' => $this->source_id,
+                    'endpoint' => $this->endpoint,
+                ],
+                $params
+            );
 
-        return $feature->id;
+            return $feature->id;
+        } catch (Exception $e) {
+            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+        }
     }
 
     /**
@@ -114,15 +119,15 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
             $media = $array;
             break;
         }
-        Log::info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media_id);
+        $this->logChannel->info('Preparing OSF MEDIA TRANSLATIONS with external ID: ' . $media_id);
         $tags = [];
         $tags['name']['it'] = $media['title'];
 
         try {
             // Saving the Media in to the s3-osfmedia storage (.env in production)
             $storage_name = config('geohub.osf_media_storage_name');
-            Log::info('Saving OSF MEDIA on storage '.$storage_name);
-            Log::info(' ');
+            $this->logChannel->info('Saving OSF MEDIA on storage ' . $storage_name);
+            $this->logChannel->info(' ');
             if (isset($media['imageinfo']) && isset($media['imageinfo'][0])) {
                 $url_encoded = $media['imageinfo'][0]['url'];
             }
@@ -134,11 +139,11 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
             $osf_name_tmp = sha1($basename[0]).'.'.$basename[1];
             $s3_osfmedia->put($osf_name_tmp, $contents);
 
-            Log::info('Saved OSF Media with name: '.$osf_name_tmp);
+            $this->logChannel->info('Saved OSF Media with name: ' . $osf_name_tmp);
             $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp)) ? $osf_name_tmp : '';
         } catch (Exception $e) {
             echo $e;
-            Log::info('Saving media in s3-osfmedia error:'.$e);
+            $this->logChannel->error('Saving media in s3-osfmedia error:' . $e);
         }
 
         return $tags;

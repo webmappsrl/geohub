@@ -2,6 +2,9 @@
 
 namespace App\Classes\OutSourceImporter;
 
+use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Log;
+
 abstract class OutSourceImporterFeatureAbstract
 {
     // DATA
@@ -13,6 +16,8 @@ abstract class OutSourceImporterFeatureAbstract
 
     protected $only_related_url;
 
+    protected $logChannel;
+
     /**
      * It sets all needed properties in order to perform the import in the out_source_feature table
      *
@@ -21,13 +26,15 @@ abstract class OutSourceImporterFeatureAbstract
      * @param  string  $endpoint  the url from which import begins (https://stelvio.wp.webmapp.it)
      * @param  string  $source_id  the id of the feature being imported
      * @param  bool  $only_related_url  true if only import related url value
+     * @param  Logger  $logChannel  the log channel to use for logging
      */
-    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false)
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false, Logger $logChannel)
     {
         $this->type = strtolower($type);
         $this->endpoint = $endpoint;
         $this->source_id = $source_id;
         $this->only_related_url = $only_related_url;
+        $this->logChannel = $logChannel;
     }
 
     abstract protected function importTrack();

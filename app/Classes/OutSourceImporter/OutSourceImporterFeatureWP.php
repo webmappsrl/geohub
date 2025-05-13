@@ -32,40 +32,40 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
-            $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
+            $url = $this->endpoint . '/wp-json/wp/v2/track/' . $this->source_id;
             $track = $this->curlRequest($url);
 
             // prepare feature parameters to pass to updateOrCreate function
-            Log::info('Preparing OSF Track with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF Track with external ID: ' . $this->source_id);
             if (isset($track['osmid']) && ! empty($track['osmid'])) {
                 $osmid = $track['osmid'];
                 $this->tags['osmid'] = $track['osmid'];
 
                 $osmClient = new OsmClient;
-                $geojson_content = $osmClient::getGeojson('relation/'.$osmid);
+                $geojson_content = $osmClient::getGeojson('relation/' . $osmid);
                 $geojson_content = json_decode($geojson_content);
                 $geojson_content = json_encode($geojson_content->geometry);
-                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_content."'))) As wkt")[0]->wkt;
-                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_content."')))) As wkt")[0]->wkt;
+                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_content . "'))) As wkt")[0]->wkt;
+                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_LineMerge(ST_GeomFromGeoJSON('" . $geojson_content . "')))) As wkt")[0]->wkt;
             } else {
-                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."')) As wkt")[0]->wkt;
-                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('".json_encode(unserialize($track['n7webmap_geojson']))."'))) As wkt")[0]->wkt;
+                $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('" . json_encode(unserialize($track['n7webmap_geojson'])) . "')) As wkt")[0]->wkt;
+                $this->mediaGeom = DB::select("SELECT ST_AsText(ST_StartPoint(ST_GeomFromGeoJSON('" . json_encode(unserialize($track['n7webmap_geojson'])) . "'))) As wkt")[0]->wkt;
             }
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['raw_data'] = json_encode($track);
 
             // prepare the value of tags data
-            Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
             $this->prepareTrackTagsJson($track);
             $this->params['tags'] = $this->tags;
-            Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
-            Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+            $this->logChannel->info('Finished preparing OSF Track with external ID: ' . $this->source_id);
+            $this->logChannel->info('Starting creating OSF Track with external ID: ' . $this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             array_push($error_not_created, $url);
-            Log::info('Error creating Track OSF from external link with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
+            Log::info('Error creating Track OSF from external link with id: ' . $this->source_id . "\n ERROR: " . $e->getMessage());
         }
         if ($error_not_created) {
             Log::info('Ec features not created from Source with URL: ');
@@ -84,23 +84,23 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     public function importPoi()
     {
         // Curl request to get the feature information from external source
-        $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$this->source_id;
+        $url = $this->endpoint . '/wp-json/wp/v2/poi/' . $this->source_id;
         $poi = $this->curlRequest($url);
 
         // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF POI with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: ' . $this->source_id);
         try {
             if ($this->endpoint == 'https://www.pnab.it') {
                 $path = parse_url($this->endpoint);
                 $file_name = str_replace('.', '-', $path['host']);
-                if (Storage::disk('mapping')->exists($file_name.'.json')) {
-                    $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+                if (Storage::disk('mapping')->exists($file_name . '.json')) {
+                    $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
                     if (! empty(json_decode($taxonomy_map, true)['poi_type']) && $poi['webmapp_category']) {
                         foreach ($poi['webmapp_category'] as $tax) {
                             if (json_decode($taxonomy_map, true)['poi_type'][$tax]['geohub_identifier'] == 'event') {
                                 if ($poi['date'] < '2024-01-01') {
-                                    Log::info('POI is an event and the date is in the past: '.$this->source_id);
+                                    $this->logChannel->info('POI is an event and the date is in the past: ' . $this->source_id);
                                     throw new Exception('POI is an event and the date is in the past');
 
                                     continue;
@@ -115,7 +115,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                 throw new Exception('POI missing coordinates');
             }
 
-            $geometry = '{"type":"Point","coordinates":['.$poi['n7webmap_coord']['lng'].','.$poi['n7webmap_coord']['lat'].']}';
+            $geometry = '{"type":"Point","coordinates":[' . $poi['n7webmap_coord']['lng'] . ',' . $poi['n7webmap_coord']['lat'] . ']}';
             $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->mediaGeom = $geometry_poi;
@@ -124,16 +124,16 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: ' . $this->source_id);
             $this->tags = [];
             $this->preparePOITagsJson($poi);
             $this->params['tags'] = $this->tags;
-            Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
-            Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: ' . $this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: ' . $this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            Log::info('Error creating OSF : '.$e);
+            $this->logChannel->error('Error creating OSF : ' . $e);
         }
     }
 
@@ -151,14 +151,19 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     protected function create_or_update_feature(array $params)
     {
 
-        $feature = OutSourceFeature::updateOrCreate(
-            [
-                'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint,
-            ],
-            $params);
+        try {
+            $feature = OutSourceFeature::updateOrCreate(
+                [
+                    'source_id' => $this->source_id,
+                    'endpoint' => $this->endpoint,
+                ],
+                $params
+            );
 
-        return $feature->id;
+            return $feature->id;
+        } catch (Exception $e) {
+            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+        }
     }
 
     /**
@@ -169,7 +174,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     protected function prepareTrackTagsJson($track)
     {
         $domain_path = parse_url($this->endpoint);
-        Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: ' . $this->source_id);
         $this->tags['name'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['title']['rendered']);
         $this->tags['description'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['content']['rendered']);
         $this->tags['excerpt'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['excerpt']['rendered']);
@@ -180,7 +185,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                 $locale = explode('_', $lang['locale']);
                 $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']);
                 // Curl request to get the feature translation from external source
-                $url = $this->endpoint.'/wp-json/wp/v2/track/'.$lang['id'];
+                $url = $this->endpoint . '/wp-json/wp/v2/track/' . $lang['id'];
                 $track_decode = $this->curlRequest($url);
                 $this->tags['description'][$locale[0]] = html_entity_decode($track_decode['content']['rendered']);
                 $this->tags['excerpt'][$locale[0]] = html_entity_decode($track_decode['excerpt']['rendered']);
@@ -211,7 +216,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
 
         // Adds the EcOutSource:poi ID to EcOutSource:track's related_poi tags
         if (isset($track['n7webmap_related_poi']) && is_array($track['n7webmap_related_poi'])) {
-            Log::info('Preparing OSF Track RELATED_POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF Track RELATED_POI with external ID: ' . $this->source_id);
             $this->tags['related_poi'] = [];
             foreach ($track['n7webmap_related_poi'] as $poi) {
                 $OSF_poi = OutSourceFeature::where('endpoint', $this->endpoint)
@@ -249,27 +254,27 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
 
         // Processing the feature image of Track
         if (isset($track['featured_media']) && $track['featured_media']) {
-            Log::info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
-            $url = $this->endpoint.'/wp-json/wp/v2/media/'.$track['featured_media'];
+            $this->logChannel->info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
+            $url = $this->endpoint . '/wp-json/wp/v2/media/' . $track['featured_media'];
             $media = $this->curlRequest($url);
             if ($media) {
                 $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
             } else {
-                Log::info('ERROR reaching media: '.$url);
+                $this->logChannel->error('ERROR reaching media: ' . $url);
             }
         }
 
         // Processing the image Gallery of Track
         if (isset($track['n7webmap_track_media_gallery']) && $track['n7webmap_track_media_gallery']) {
             if (is_array($track['n7webmap_track_media_gallery'])) {
-                Log::info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
+                $this->logChannel->info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
                 foreach ($track['n7webmap_track_media_gallery'] as $img) {
-                    $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
+                    $url = $this->endpoint . '/wp-json/wp/v2/media/' . $img['id'];
                     $media = $this->curlRequest($url);
                     if ($media) {
                         $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
                     } else {
-                        Log::info('ERROR reaching media: '.$url);
+                        $this->logChannel->error('ERROR reaching media: ' . $url);
                     }
                 }
             }
@@ -278,9 +283,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         // Processing the activity
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.', '-', $path['host']);
-        Log::info('Preparing OSF Track ACTIVITY MAPPING with external ID: '.$this->source_id);
-        if (Storage::disk('mapping')->exists($file_name.'.json')) {
-            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+        $this->logChannel->info('Preparing OSF Track ACTIVITY MAPPING with external ID: ' . $this->source_id);
+        if (Storage::disk('mapping')->exists($file_name . '.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
             if (! empty(json_decode($taxonomy_map, true)['activity']) && $track['activity']) {
                 foreach ($track['activity'] as $tax) {
@@ -292,9 +297,9 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         // Processing the theme
         $path = parse_url($this->endpoint);
         $file_name = str_replace('.', '-', $path['host']);
-        Log::info('Preparing OSF Track THEME MAPPING with external ID: '.$this->source_id);
-        if (Storage::disk('mapping')->exists($file_name.'.json')) {
-            $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+        $this->logChannel->info('Preparing OSF Track THEME MAPPING with external ID: ' . $this->source_id);
+        if (Storage::disk('mapping')->exists($file_name . '.json')) {
+            $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
             if (! empty(json_decode($taxonomy_map, true)['theme']) && $track['theme']) {
                 foreach ($track['theme'] as $tax) {
@@ -312,7 +317,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     protected function preparePOITagsJson($poi)
     {
         if (! $this->only_related_url) { // skip import if only related url is true
-            Log::info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: ' . $this->source_id);
             $this->tags['name'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
             $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
 
@@ -348,83 +353,83 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                         $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<h3 style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Informazioni aggiuntive:</h3><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
                         if (isset($poi['acf']['caipr_poi_localita']) && ! empty($poi['acf']['caipr_poi_localita'])) {
                             $this->tags['caipr_poi_localita'] = $poi['acf']['caipr_poi_localita'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Località:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_localita'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Località:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_localita'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_title_alt']) && ! empty($poi['acf']['caipr_poi_title_alt'])) {
                             $this->tags['caipr_poi_title_alt'] = $poi['acf']['caipr_poi_title_alt'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Nome alternativo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_title_alt'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Nome alternativo:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_title_alt'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_collegamenti']) && ! empty($poi['acf']['caipr_poi_collegamenti'])) {
                             $this->tags['caipr_poi_collegamenti'] = $poi['acf']['caipr_poi_collegamenti'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Collegamenti:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_collegamenti'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Collegamenti:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_collegamenti'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_data_opera']) && ! empty($poi['acf']['caipr_poi_data_opera'])) {
                             $this->tags['caipr_poi_data_opera'] = $poi['acf']['caipr_poi_data_opera'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data opera:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_opera'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data opera:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_data_opera'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_data_manutenzione']) && ! empty($poi['acf']['caipr_poi_data_manutenzione'])) {
                             $this->tags['caipr_poi_data_manutenzione'] = $poi['acf']['caipr_poi_data_manutenzione'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data manutenzione:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_manutenzione'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data manutenzione:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_data_manutenzione'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_data_sopraluogo']) && ! empty($poi['acf']['caipr_poi_data_sopraluogo'])) {
                             $this->tags['caipr_poi_data_sopraluogo'] = $poi['acf']['caipr_poi_data_sopraluogo'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data sopralluogo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_data_sopraluogo'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Data sopralluogo:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_data_sopraluogo'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_uso_attuale']) && ! empty($poi['acf']['caipr_poi_uso_attuale'])) {
                             $this->tags['caipr_poi_uso_attuale'] = $poi['acf']['caipr_poi_uso_attuale'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso attuale:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_attuale'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso attuale:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_uso_attuale'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_uso_storico']) && ! empty($poi['acf']['caipr_poi_uso_storico'])) {
                             $this->tags['caipr_poi_uso_storico'] = $poi['acf']['caipr_poi_uso_storico'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso storico:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_uso_storico'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Uso storico:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_uso_storico'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_epoca']) && ! empty($poi['acf']['caipr_poi_epoca'])) {
                             $this->tags['caipr_poi_epoca'] = $poi['acf']['caipr_poi_epoca'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Epoca:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_epoca'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Epoca:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_epoca'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_iconografia']) && ! empty($poi['acf']['caipr_poi_iconografia'])) {
                             $this->tags['caipr_poi_iconografia'] = $poi['acf']['caipr_poi_iconografia'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Iconografia:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_iconografia'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Iconografia:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_iconografia'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_igm_1']) && ! empty($poi['acf']['caipr_poi_igm_1'])) {
                             $this->tags['caipr_poi_igm_1'] = $poi['acf']['caipr_poi_igm_1'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 1° impianto (18811893):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_1'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 1° impianto (18811893):</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_igm_1'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_igm_2']) && ! empty($poi['acf']['caipr_poi_igm_2'])) {
                             $this->tags['caipr_poi_igm_2'] = $poi['acf']['caipr_poi_igm_2'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 2° impianto (1936):</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_igm_2'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">IGM 2° impianto (1936):</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_igm_2'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_proposta_restauro']) && ! empty($poi['acf']['caipr_poi_proposta_restauro'])) {
                             $this->tags['caipr_poi_proposta_restauro'] = $poi['acf']['caipr_poi_proposta_restauro'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proposta di restauro:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proposta_restauro'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proposta di restauro:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_proposta_restauro'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_proprieta']) && ! empty($poi['acf']['caipr_poi_proprieta'])) {
                             $this->tags['caipr_poi_proprieta'] = $poi['acf']['caipr_poi_proprieta'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proprietà:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_proprieta'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Proprietà:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_proprieta'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_restauratore']) && ! empty($poi['acf']['caipr_poi_restauratore'])) {
                             $this->tags['caipr_poi_restauratore'] = $poi['acf']['caipr_poi_restauratore'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Restauratore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_restauratore'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Restauratore:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_restauratore'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_rilevatore']) && ! empty($poi['acf']['caipr_poi_rilevatore'])) {
                             $this->tags['caipr_poi_rilevatore'] = $poi['acf']['caipr_poi_rilevatore'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Rivelatore:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_rilevatore'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Rivelatore:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_rilevatore'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_segnalato_da']) && ! empty($poi['acf']['caipr_poi_segnalato_da'])) {
                             $this->tags['caipr_poi_segnalato_da'] = $poi['acf']['caipr_poi_segnalato_da'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato da:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_segnalato_da'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato da:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_segnalato_da'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_gis_er']) && ! empty($poi['acf']['caipr_poi_gis_er'])) {
                             $this->tags['caipr_poi_gis_er'] = $poi['acf']['caipr_poi_gis_er'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato nel WebGis E.R.:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_gis_er'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Segnalato nel WebGis E.R.:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_gis_er'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['caipr_poi_stato_conservazione']) && ! empty($poi['acf']['caipr_poi_stato_conservazione'])) {
                             $this->tags['caipr_poi_stato_conservazione'] = $poi['acf']['caipr_poi_stato_conservazione'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Stato conservazione:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['caipr_poi_stato_conservazione'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Stato conservazione:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['caipr_poi_stato_conservazione'] . '</strong></td></tr>';
                         }
                         if (isset($poi['acf']['scheda_elenco']) && ! empty($poi['acf']['scheda_elenco'])) {
                             $this->tags['scheda_elenco'] = $poi['acf']['scheda_elenco'];
-                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Tipo:</td><td style="width: 48.6%;"><strong>'.$poi['acf']['scheda_elenco'].'</strong></td></tr>';
+                            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '<tr><td style="width: 48.6%;">Tipo:</td><td style="width: 48.6%;"><strong>' . $poi['acf']['scheda_elenco'] . '</strong></td></tr>';
                         }
 
                         $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] .= '</tbody></table>';
@@ -441,7 +446,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                     $locale = explode('_', $lang['locale']);
                     $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']);
                     // Curl request to get the feature translation from external source
-                    $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$lang['id'];
+                    $url = $this->endpoint . '/wp-json/wp/v2/poi/' . $lang['id'];
                     $poi_decode = $this->curlRequest($url);
                     $this->tags['description'][$locale[0]] = html_entity_decode($poi_decode['content']['rendered']);
 
@@ -473,7 +478,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                 }
             }
             // Adding POI parameters of accessibility
-            Log::info('Preparing OSF POI ACCESSIBILITY with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI ACCESSIBILITY with external ID: ' . $this->source_id);
             if (isset($poi['accessibility_validity_date'])) {
                 $this->tags['accessibility_validity_date'] = $poi['accessibility_validity_date'];
             }
@@ -524,7 +529,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             }
 
             // Adding POI parameters of reachability
-            Log::info('Preparing OSF POI REACHABILITY with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI REACHABILITY with external ID: ' . $this->source_id);
             if (isset($poi['reachability_by_bike_check'])) {
                 $this->tags['reachability_by_bike_check'] = $poi['reachability_by_bike_check'];
             }
@@ -551,7 +556,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             }
 
             // Adding POI parameters of general info
-            Log::info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI GENERAL INFO with external ID: ' . $this->source_id);
             if (isset($poi['addr:street'])) {
                 $this->tags['addr_street'] = html_entity_decode($poi['addr:street']);
             }
@@ -612,7 +617,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             }
 
             // Adding POI parameters of style
-            Log::info('Preparing OSF POI STYLE with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI STYLE with external ID: ' . $this->source_id);
             if (isset($poi['color'])) {
                 $this->tags['color'] = $poi['color'];
             }
@@ -695,37 +700,37 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
 
             // Processing the feature image of POI
             if (isset($poi['featured_media']) && $poi['featured_media']) {
-                Log::info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
-                $url = $this->endpoint.'/wp-json/wp/v2/media/'.$poi['featured_media'];
+                $this->logChannel->info('Preparing OSF POI FEATURE_IMAGE with external ID: ' . $this->source_id);
+                $url = $this->endpoint . '/wp-json/wp/v2/media/' . $poi['featured_media'];
                 $media = $this->curlRequest($url);
                 if ($media) {
                     $this->tags['feature_image'] = $this->createOSFMediaFromWP($media);
                 } else {
-                    Log::info('ERROR reaching media: '.$url);
+                    $this->logChannel->error('ERROR reaching media: ' . $url);
                 }
             }
             // Processing the image Gallery of POI
             if (isset($poi['n7webmap_media_gallery']) && $poi['n7webmap_media_gallery']) {
                 if (is_array($poi['n7webmap_media_gallery'])) {
-                    Log::info('Preparing OSF POI IMAGE_GALLERY with external ID: '.$this->source_id);
+                    $this->logChannel->info('Preparing OSF POI IMAGE_GALLERY with external ID: ' . $this->source_id);
                     foreach ($poi['n7webmap_media_gallery'] as $img) {
-                        $url = $this->endpoint.'/wp-json/wp/v2/media/'.$img['id'];
+                        $url = $this->endpoint . '/wp-json/wp/v2/media/' . $img['id'];
                         $media = $this->curlRequest($url);
                         if ($media) {
                             $this->tags['image_gallery'][] = $this->createOSFMediaFromWP($media);
                         } else {
-                            Log::info('ERROR reaching media: '.$url);
+                            $this->logChannel->error('ERROR reaching media: ' . $url);
                         }
                     }
                 }
             }
 
             // Processing the poi_type
-            Log::info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI POI_TYPE MAPPING with external ID: ' . $this->source_id);
             $path = parse_url($this->endpoint);
             $file_name = str_replace('.', '-', $path['host']);
-            if (Storage::disk('mapping')->exists($file_name.'.json')) {
-                $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
+            if (Storage::disk('mapping')->exists($file_name . '.json')) {
+                $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
 
                 if (! empty(json_decode($taxonomy_map, true)['poi_type']) && $poi['webmapp_category']) {
                     foreach ($poi['webmapp_category'] as $tax) {
@@ -743,7 +748,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
      */
     public function prepareMediaTagsJson($media)
     {
-        Log::info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media['id']);
+        $this->logChannel->info('Preparing OSF MEDIA TRANSLATIONS with external ID: ' . $media['id']);
         $tags = [];
         if (! empty($media['wpml_current_locale'])) {
             $local_lang = explode('_', $media['wpml_current_locale'])[0];
@@ -766,30 +771,30 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         try {
             // Saving the Media in to the s3-osfmedia storage (.env in production)
             $storage_name = config('geohub.osf_media_storage_name');
-            Log::info('Saving OSF MEDIA on storage '.$storage_name);
-            Log::info(' ');
+            $this->logChannel->info('Saving OSF MEDIA on storage ' . $storage_name);
+            $this->logChannel->info(' ');
             if (isset($media['media_details']) && isset($media['media_details']['file'])) {
-                $wp_url = $this->endpoint.'/wp-content/uploads/'.$media['media_details']['file'];
+                $wp_url = $this->endpoint . '/wp-content/uploads/' . $media['media_details']['file'];
             } elseif (isset($media['guid'])) {
                 $wp_url = $media['media_details']['rendered'];
             } else {
                 $wp_url = $media['source_url'];
             }
-            Log::info('Geting image from url: '.$wp_url);
+            $this->logChannel->info('Geting image from url: ' . $wp_url);
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function ($match) {
                 return urlencode($match[0]);
             }, $wp_url);
             $contents = file_get_contents($url_encoded);
             $basename = explode('.', basename($wp_url));
             $s3_osfmedia = Storage::disk($storage_name);
-            $osf_name_tmp = sha1($basename[0]).'.'.$basename[1];
+            $osf_name_tmp = sha1($basename[0]) . '.' . $basename[1];
             $s3_osfmedia->put($osf_name_tmp, $contents);
 
-            Log::info('Saved OSF Media with name: '.$osf_name_tmp);
+            $this->logChannel->info('Saved OSF Media with name: ' . $osf_name_tmp);
             $tags['url'] = ($s3_osfmedia->exists($osf_name_tmp)) ? $osf_name_tmp : '';
         } catch (Exception $e) {
             echo $e;
-            Log::info('Saving media in s3-osfmedia error:'.$e);
+            $this->logChannel->error('Saving media in s3-osfmedia error:' . $e);
         }
 
         return $tags;
