@@ -616,6 +616,11 @@ trait ConfTrait
         $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
         $data['OPTIONS']['showGeojsonDownload'] = (bool) $this->table_details_show_geojson_download;
         $data['OPTIONS']['showShapefileDownload'] = (bool) $this->table_details_show_shapefile_download;
+        $data['OPTIONS']['showTravelMode'] = $this->show_travel_mode;
+        $data['OPTIONS']['showGetDirections'] = $this->show_get_directions;
+        $data['OPTIONS']['showFeaturesInViewport'] = $this->show_features_in_viewport;
+        $data['OPTIONS']['showMediaName'] = $this->show_media_name;
+        $data['OPTIONS']['showEmbeddedHtml'] = $this->show_embedded_html;
 
         foreach ($this->track_technical_details as $label => $value) {
             $label = Str::camel($label);
