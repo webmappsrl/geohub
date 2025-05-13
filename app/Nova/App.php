@@ -576,6 +576,51 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            Toggle::make(__('Show Travel Mode'), 'show_travel_mode')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable the Travel Mode feature on the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Get Directions (google maps)'), 'show_get_directions')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable the Get Directions with google maps on the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Features In Viewport'), 'show_features_in_viewport')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable the Features In Viewport on the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Media Name'), 'show_media_name')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Shows the names under media in the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+            Toggle::make(__('Show Embedded HTML'), 'show_embedded_html')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable the Embedded HTML for Ec Pois'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
         ];
     }
 

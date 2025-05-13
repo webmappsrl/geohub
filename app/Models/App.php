@@ -262,6 +262,19 @@ class App extends Model
         return $json;
     }
 
+    public function ecPoiInApp($ecpoiId)
+    {
+        $appThemes = $this->taxonomyThemes()->get();
+        foreach ($appThemes as $theme) {
+            $appPoisIds = $theme->ecPois()->pluck('id')->toArray();
+            if (in_array($ecpoiId, $appPoisIds)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function BuildConfJson()
     {
         $confUri = $this->id.'.json';

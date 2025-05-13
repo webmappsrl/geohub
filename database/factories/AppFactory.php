@@ -70,6 +70,11 @@ class AppFactory extends Factory
             'ref_on_track_show' => $this->faker->boolean(),
             'ref_on_track_min_zoom' => $this->faker->numberBetween(10, 20),
             'tiles' => json_encode([$this->faker->url(), $this->faker->url()]),
+            'show_travel_mode' => $this->faker->boolean(),
+            'show_get_directions' => $this->faker->boolean(),
+            'show_features_in_viewport' => $this->faker->boolean(),
+            'show_media_name' => $this->faker->boolean(),
+            'show_embedded_html' => $this->faker->boolean(),
         ];
     }
 }
