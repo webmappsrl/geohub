@@ -116,22 +116,21 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
                 $this->logChannel->info('List acquired successfully.');
                 $this->logChannel->info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($ids_array);
-                $this->logChannel->info(count($loop) . ' EC features successfully created.');
+                $this->logChannel->info(count($loop).' EC features successfully created.');
             } else {
                 $this->logChannel->info('No features to synchronize for the given parameters.');
             }
         } else {
-            $this->logChannel->error("Parameter check failed for SyncEcFromOutSource.");
+            $this->logChannel->error('Parameter check failed for SyncEcFromOutSource.');
+
             return Command::FAILURE;
         }
+
         return Command::SUCCESS;
     }
 
     /**
      * Gets the log channel based on the provider option.
-     *
-     * @param string|null $providerOption
-     * @return Logger
      */
     private function getLogChannel(?string $providerOption): Logger
     {
@@ -141,13 +140,14 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
 
         $providerBaseName = strtolower(class_basename($providerOption));
 
-        $channel = Log::channel(config('out_source_logging.sync_provider_channels.' . $providerBaseName));
+        $channel = Log::channel(config('out_source_logging.sync_provider_channels.'.$providerBaseName));
 
         if ($channel) {
             return $channel;
         }
 
-        $this->logChannel->warning(class_basename($this) . ": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+        $this->logChannel->warning(class_basename($this).": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+
         return $this->logChannel;
     }
 }

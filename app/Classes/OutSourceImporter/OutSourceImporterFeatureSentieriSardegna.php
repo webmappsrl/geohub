@@ -7,7 +7,6 @@ use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symm\Gisconverter\Gisconverter;
 
@@ -50,7 +49,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $track = $response->json();
 
             // prepare feature parameters to pass to updateOrCreate function
-            $this->logChannel->info('Preparing OSF Track with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
             $geometry = '';
 
             if (array_key_exists('gpx', $track['properties']) && ! empty($track['properties']['gpx'])) {
@@ -70,16 +69,16 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             // $this->params['raw_data'] = json_encode($track);
 
             // prepare the value of tags data
-            $this->logChannel->info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
             $this->prepareTrackTagsJson($track);
             $this->params['tags'] = $this->tags;
-            $this->logChannel->info('Finished preparing OSF Track with external ID: ' . $this->source_id);
-            $this->logChannel->info('Starting creating OSF Track with external ID: ' . $this->source_id);
+            $this->logChannel->info('Finished preparing OSF Track with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF Track with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             array_push($error_not_created, ['error', [$url, $e->getMessage()]]);
-            $this->logChannel->error('Error creating OSF from external with id: ' . $this->source_id . "\n ERROR: " . $e->getMessage());
+            $this->logChannel->error('Error creating OSF from external with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
         }
         if ($error_not_created) {
             $this->logChannel->info('Ec features not created from Source with URL: ');
@@ -105,7 +104,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         $poi = $response->json();
 
         // prepare feature parameters to pass to updateOrCreate function
-        $this->logChannel->info('Preparing OSF POI with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
             $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
@@ -116,16 +115,16 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            $this->logChannel->info('Preparing OSF POI TAGS with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
             $this->preparePOITagsJson($poi);
             $this->params['tags'] = $this->tags;
-            $this->logChannel->info('Finished preparing OSF POI with external ID: ' . $this->source_id);
-            $this->logChannel->info('Starting creating OSF POI with external ID: ' . $this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            $this->logChannel->error('Error creating OSF : ' . $e);
+            $this->logChannel->error('Error creating OSF : '.$e);
         }
     }
 
@@ -154,7 +153,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
             return $feature->id;
         } catch (Exception $e) {
-            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
         }
     }
 
@@ -165,7 +164,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
      */
     protected function prepareTrackTagsJson($track)
     {
-        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track['properties']['name'])) {
             $this->tags['name'] = $track['properties']['name'];
         }
@@ -227,7 +226,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Processing the Theme stato di validazione
         if (isset($track['properties']['taxonomies'])) {
-            $this->logChannel->info('Preparing OSF TRACK theme MAPPING with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
 
             $path = parse_url($this->endpoint);
             $file_name = str_replace('.', '-', $path['host']);
@@ -292,7 +291,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Processing the Theme Tipologia Itinerari
         if (isset($track['properties']['taxonomies'])) {
-            $this->logChannel->info('Preparing OSF TRACK theme MAPPING with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF TRACK theme MAPPING with external ID: '.$this->source_id);
 
             $path = parse_url($this->endpoint);
             $file_name = str_replace('.', '-', $path['host']);
@@ -322,7 +321,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Processing the Activity
         if (isset($track['properties']['taxonomies'])) {
-            $this->logChannel->info('Preparing OSF TRACK activity MAPPING with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF TRACK activity MAPPING with external ID: '.$this->source_id);
 
             $path = parse_url($this->endpoint);
             $file_name = str_replace('.', '-', $path['host']);
@@ -351,19 +350,19 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Processing the feature image of Track
         if (isset($track['properties']['immagine_principale'])) {
-            $this->logChannel->info('Preparing OSF Track FEATURE_IMAGE with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF Track FEATURE_IMAGE with external ID: '.$this->source_id);
             if ($track['properties']['immagine_principale']) {
-                $image_source_id = $this->source_id . 666;
+                $image_source_id = $this->source_id. 666;
                 $this->tags['feature_image'] = $this->createOSFMediaFromLink($track['properties']['immagine_principale'], $image_source_id);
             } else {
-                $this->logChannel->info('ERROR reaching media: ' . $track['properties']['immagine_principale']);
+                $this->logChannel->info('ERROR reaching media: '.$track['properties']['immagine_principale']);
             }
         }
 
         // Processing the image Gallery of Track
         if (isset($track['properties']['galleria_immagini'])) {
             if (is_array($track['properties']['galleria_immagini'])) {
-                $this->logChannel->info('Preparing OSF Track IMAGE_GALLERY with external ID: ' . $this->source_id);
+                $this->logChannel->info('Preparing OSF Track IMAGE_GALLERY with external ID: '.$this->source_id);
                 $count = 777;
                 foreach ($track['properties']['galleria_immagini'] as $img) {
                     if ($img) {
@@ -371,7 +370,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                         $this->tags['image_gallery'][] = $this->createOSFMediaFromLink($img, $image_source_id);
                         $count++;
                     } else {
-                        $this->logChannel->info('ERROR reaching media: ' . $img);
+                        $this->logChannel->info('ERROR reaching media: '.$img);
                     }
                 }
             }
@@ -385,7 +384,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
      */
     protected function preparePOITagsJson($poi)
     {
-        $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($poi['properties']['name'])) {
             $this->tags['name'] = $poi['properties']['name'];
         }
@@ -404,12 +403,12 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         if (! $this->only_related_url) {
             // Processing the poi_type
             if (isset($poi['properties']['taxonomies'])) {
-                $this->logChannel->info('Preparing OSF POI POI_TYPE MAPPING with external ID: ' . $this->source_id);
+                $this->logChannel->info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
 
                 $path = parse_url($this->endpoint);
                 $file_name = str_replace('.', '-', $path['host']);
-                if (Storage::disk('mapping')->exists($file_name . '.json')) {
-                    $taxonomy_map = Storage::disk('mapping')->get($file_name . '.json');
+                if (Storage::disk('mapping')->exists($file_name.'.json')) {
+                    $taxonomy_map = Storage::disk('mapping')->get($file_name.'.json');
                     $json_poi_type = json_decode($taxonomy_map, true)['poi_type'];
 
                     if (! empty($json_poi_type)) {
@@ -418,7 +417,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
                                 foreach ($idList as $id) {
                                     if (array_key_exists($id, $json_poi_type)) {
                                         if (! $json_poi_type[$id]['skip'] && ! empty($json_poi_type[$id]['geohub_identifier'])) {
-                                            $this->logChannel->info('tax added : ' . $id);
+                                            $this->logChannel->info('tax added : '.$id);
                                             $this->tags['poi_type'][] = $json_poi_type[$id]['geohub_identifier'];
                                         }
                                     }
@@ -431,13 +430,13 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
             // Processing the feature image of POI
             if (isset($poi['properties']['immagine_principale'])) {
-                $this->logChannel->info('Preparing OSF POI FEATURE_IMAGE with external ID: ' . $this->source_id);
+                $this->logChannel->info('Preparing OSF POI FEATURE_IMAGE with external ID: '.$this->source_id);
 
                 if ($poi['properties']['immagine_principale']) {
                     $image_source_id = $this->source_id. 555;
                     $this->tags['feature_image'] = $this->createOSFMediaFromLink($poi['properties']['immagine_principale'], $image_source_id);
                 } else {
-                    $this->logChannel->info('ERROR reaching media: ' . $poi['properties']['immagine_principale']);
+                    $this->logChannel->info('ERROR reaching media: '.$poi['properties']['immagine_principale']);
                 }
             }
         }
@@ -454,7 +453,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         try {
             // Saving the Media in to the s3-osfmedia storage (.env in production)
             $storage_name = config('geohub.osf_media_storage_name');
-            $this->logChannel->info('Geting image from url: ' . $image['url']);
+            $this->logChannel->info('Geting image from url: '.$image['url']);
             $url_encoded = preg_replace_callback('/[^\x20-\x7f]/', function ($match) {
                 return urlencode($match[0]);
             }, $image['url']);
@@ -466,7 +465,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $fullPathName = 'sardegna-sentieri/'.$basename;
             $s3_osfmedia->put($fullPathName, $contents->body());
 
-            $this->logChannel->info('Saved OSF Media with name: ' . $basename);
+            $this->logChannel->info('Saved OSF Media with name: '.$basename);
             $tags['url'] = ($s3_osfmedia->exists($fullPathName)) ? $fullPathName : '';
             $tags['name']['it'] = urldecode($basename_explode[0]);
             $caption = '';
@@ -482,15 +481,15 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
             $tags['description']['it'] = $caption;
         } catch (Exception $e) {
             echo $e;
-            $this->logChannel->info('Saving media in s3-osfmedia error:' . $e);
+            $this->logChannel->info('Saving media in s3-osfmedia error:'.$e);
         }
 
-        $this->logChannel->info('Preparing OSF MEDIA TAGS with external ID: ' . $image_source_id);
+        $this->logChannel->info('Preparing OSF MEDIA TAGS with external ID: '.$image_source_id);
         $params['tags'] = $tags;
         $params['type'] = 'media';
         $params['provider'] = get_class($this);
         $params['geometry'] = $this->mediaGeom;
-        $this->logChannel->info('Starting creating OSF MEDIA with external ID: ' . $image_source_id);
+        $this->logChannel->info('Starting creating OSF MEDIA with external ID: '.$image_source_id);
         $feature = OutSourceFeature::updateOrCreate(
             [
                 'source_id' => $image_source_id,

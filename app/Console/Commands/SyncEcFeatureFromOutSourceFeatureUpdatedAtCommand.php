@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Log\Logger;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
+use Illuminate\Console\Command;
+use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
 {
@@ -133,22 +133,21 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
                 $this->logChannel->info('List acquired successfully.');
                 $this->logChannel->info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($recentIDs);
-                $this->logChannel->info(count($loop) . ' EC features successfully created.');
+                $this->logChannel->info(count($loop).' EC features successfully created.');
             } else {
                 $this->logChannel->info('No EC features to create or update based on updated_at timestamps.');
             }
         } else {
             $this->logChannel->error('Parameter check failed for SyncEcFromOutSource.');
+
             return Command::FAILURE;
         }
+
         return Command::SUCCESS;
     }
 
     /**
      * Gets the log channel based on the provider option.
-     *
-     * @param string|null $providerOption
-     * @return Logger
      */
     private function getLogChannel(?string $providerOption): Logger
     {
@@ -158,13 +157,14 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
 
         $providerBaseName = strtolower(class_basename($providerOption));
 
-        $channel = config('out_source_logging.sync_provider_channels.' . $providerBaseName);
+        $channel = config('out_source_logging.sync_provider_channels.'.$providerBaseName);
 
         if ($channel) {
             return Log::channel($channel);
         }
 
-        $this->logChannel->warning(class_basename($this) . ": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+        $this->logChannel->warning(class_basename($this).": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+
         return $this->logChannel;
     }
 }

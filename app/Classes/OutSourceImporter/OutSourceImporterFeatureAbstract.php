@@ -28,7 +28,7 @@ abstract class OutSourceImporterFeatureAbstract
      * @param  bool  $only_related_url  true if only import related url value
      * @param  Logger  $logChannel  the log channel to use for logging
      */
-    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url = false, Logger $logChannel)
+    public function __construct(string $type, string $endpoint, string $source_id, bool $only_related_url, Logger $logChannel)
     {
         $this->type = strtolower($type);
         $this->endpoint = $endpoint;

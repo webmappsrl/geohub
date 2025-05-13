@@ -5,7 +5,6 @@ namespace App\Classes\OutSourceImporter;
 use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
 {
@@ -54,7 +53,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
             ->first();
 
         if (! $track) {
-            $this->logChannel->error('Unable to find an hiking route on connection out_source_osm with ID: ' . $this->source_id);
+            $this->logChannel->error('Unable to find an hiking route on connection out_source_osm with ID: '.$this->source_id);
 
             return 0;
         }
@@ -69,7 +68,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $track->osmfeatures_id = $osmfeaturesId;
 
         // prepare feature parameters to pass to updateOrCreate function
-        $this->logChannel->info('Preparing OSF Track with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
         $this->params['geometry'] = $track->geometry;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
@@ -78,11 +77,11 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $this->params['endpoint_slug'] = 'osm2cai';
 
         // prepare the value of tags data
-        $this->logChannel->info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
         $this->prepareTrackTagsJson($track);
         $this->params['tags'] = $this->tags;
-        $this->logChannel->info('Finished preparing OSF Track with external ID: ' . $this->source_id);
-        $this->logChannel->info('Starting creating OSF Track with external ID: ' . $this->source_id);
+        $this->logChannel->info('Finished preparing OSF Track with external ID: '.$this->source_id);
+        $this->logChannel->info('Starting creating OSF Track with external ID: '.$this->source_id);
 
         return $this->create_or_update_feature($this->params, $osmfeaturesId);
     }
@@ -123,9 +122,10 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
                 ],
                 $params
             );
+
             return $feature->id;
         } catch (\Exception $e) {
-            $this->logChannel->error('Error createOrUpdate OutSourceFeature: ' . $e->getMessage());
+            $this->logChannel->error('Error createOrUpdate OutSourceFeature: '.$e->getMessage());
         }
     }
 
@@ -136,17 +136,17 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
-        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track->name)) {
             $this->tags['name']['it'] = $track->name;
         }
         $this->tags['description']['it'] = '';
         if (isset($track->description)) {
-            $this->tags['description']['it'] = $track->description . '<br>';
+            $this->tags['description']['it'] = $track->description.'<br>';
         }
         if (isset($track->osm2cai_status)) {
             $this->tags['sda'] = $track->osm2cai_status;
-            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>' . $track->osm2cai_status . '</strong> (' . $this->getSDADescription($track->osm2cai_status) . ')<br>';
+            $this->tags['description']['it'] .= 'Stato di accatastamento: <strong>'.$track->osm2cai_status.'</strong> ('.$this->getSDADescription($track->osm2cai_status).')<br>';
         }
         $this->tags['description']['it'] .= "<a href='https://osm2cai.cai.it/resources/hiking-routes/$track->id' target='_blank'>Modifica questo percorso</a>";
         if (isset($track->note)) {

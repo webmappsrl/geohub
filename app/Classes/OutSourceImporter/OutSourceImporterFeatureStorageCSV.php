@@ -2,11 +2,10 @@
 
 namespace App\Classes\OutSourceImporter;
 
-use App\Models\TaxonomyPoiType;
 use App\Models\OutSourceFeature;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Models\TaxonomyPoiType;
 use App\Traits\ImporterAndSyncTrait;
+use Illuminate\Support\Facades\DB;
 
 class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstract
 {
@@ -56,7 +55,7 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
 
         // prepare the value of tags data
         $this->preparePOITagsJson($poi);
-        $geometry = '{"type":"Point","coordinates":[' . $poi['lon'] . ',' . $poi['lat'] . ']}';
+        $geometry = '{"type":"Point","coordinates":['.$poi['lon'].','.$poi['lat'].']}';
         // prepare feature parameters to pass to updateOrCreate function
         $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geometry')) As wkt")[0]->wkt;
         $this->params['provider'] = get_class($this);
@@ -92,7 +91,7 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
 
             return $feature->id;
         } catch (Exception $e) {
-            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
         }
     }
 

@@ -3,7 +3,6 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Traits\ImporterAndSyncTrait;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterListEUMA extends OutSourceImporterListAbstract
 {

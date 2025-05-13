@@ -10,7 +10,7 @@ class OutSourceImporterListWP extends OutSourceImporterListAbstract
 
     public function getTrackList(): array
     {
-        $url = $this->endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $this->type;
+        $url = $this->endpoint.'/'.'wp-json/webmapp/v1/list?type='.$this->type;
         $this->logChannel->info('Starting Track List CURL request ...');
 
         return $this->curlRequest($url);
@@ -18,7 +18,7 @@ class OutSourceImporterListWP extends OutSourceImporterListAbstract
 
     public function getPoiList(): array
     {
-        $url = $this->endpoint . '/' . 'wp-json/webmapp/v1/list?type=' . $this->type;
+        $url = $this->endpoint.'/'.'wp-json/webmapp/v1/list?type='.$this->type;
         $this->logChannel->info('Starting POI List CURL request ...');
 
         return $this->curlRequest($url);

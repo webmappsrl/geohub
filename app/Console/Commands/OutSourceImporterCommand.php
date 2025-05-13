@@ -101,6 +101,7 @@ class OutSourceImporterCommand extends Command
                 return $this->importerSisteco();
             default:
                 $this->logChannel->error("Provider {$provider} not recognized.");
+
                 return Command::FAILURE;
         }
     }
@@ -116,7 +117,7 @@ class OutSourceImporterCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $last_modified) {
-                $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureWP($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                 $OSF_id = $OSF->importFeature();
                 $this->logChannel->info("OutSourceImporterFeatureWP::importFeature() returns $OSF_id");
@@ -125,6 +126,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer WP get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -136,7 +138,7 @@ class OutSourceImporterCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $last_modified) {
-                $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureStorageCSV($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                 $OSF_id = $OSF->importFeature();
                 $this->logChannel->info("OutSourceImporterFeatureStorageCSV::importFeature() returns $OSF_id");
@@ -145,6 +147,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer StorageCSV get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -156,7 +159,7 @@ class OutSourceImporterCommand extends Command
             $count = 1;
             if (strpos($this->endpoint, '.txt')) {
                 foreach ($features_list as $id => $date) {
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureOSM2CAI($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
@@ -164,7 +167,7 @@ class OutSourceImporterCommand extends Command
                 }
             } else {
                 foreach ($features_list as $id) {
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureOSM2CAI($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureOSM2CAI::importFeature() returns $OSF_id");
@@ -174,6 +177,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer OSM2CAI get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -188,7 +192,7 @@ class OutSourceImporterCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $date) {
-                $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureSICAI($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                 $OSF_id = $OSF->importFeature();
                 $this->logChannel->info("OutSourceImporterFeatureSICAI::importFeature() returns $OSF_id");
@@ -197,6 +201,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer SICAI get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -212,7 +217,7 @@ class OutSourceImporterCommand extends Command
             if ($this->type == 'track') {
                 foreach ($features_list as $count => $feature) {
                     $count++;
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $feature['id'], $this->only_related_url, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
@@ -221,7 +226,7 @@ class OutSourceImporterCommand extends Command
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureEUMA($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureEUMA::importFeature() returns $OSF_id");
@@ -231,6 +236,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer EUMA get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -249,7 +255,7 @@ class OutSourceImporterCommand extends Command
         if ($features_list) {
             $count = 1;
             foreach ($features_list as $id => $updated_at) {
-                $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                 $OSF = new OutSourceImporterFeatureOSMPoi($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                 $OSF_id = $OSF->importFeature();
                 $this->logChannel->info("OutSourceImporterFeatureOSMPoi::importFeature() returns $OSF_id");
@@ -258,6 +264,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer OSMPoi get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -276,7 +283,7 @@ class OutSourceImporterCommand extends Command
                 $count = 1;
                 foreach ($features_list as $id => $feature) {
                     $count++;
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
@@ -285,7 +292,7 @@ class OutSourceImporterCommand extends Command
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, []);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
@@ -295,6 +302,7 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer SentieriSardegna get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
@@ -310,7 +318,7 @@ class OutSourceImporterCommand extends Command
             if ($this->type == 'poi') {
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
-                    $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
+                    $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
                     $OSF = new OutSourceImporterFeatureSisteco($this->type, $this->endpoint, $id, $this->only_related_url, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureSisteco::importFeature() returns $OSF_id");
@@ -320,21 +328,20 @@ class OutSourceImporterCommand extends Command
         } else {
             $this->logChannel->info('Importer Sisteco get List is empty.');
         }
+
         return Command::SUCCESS;
     }
 
     /**
      * Gets the log channel based on the provider.
-     *
-     * @param string $provider
-     * @return \Illuminate\Log\Logger
      */
     private function getLogChannel(string $provider): \Illuminate\Log\Logger
     {
         $providerLower = strtolower($provider);
         // Use the configuration to get the channel name, with a fallback to the default channel,
         // and a final fallback to 'stack' if the default is not set in the config.
-        $channelName = config('out_source_logging.importer_provider_channels.' . $providerLower, config('out_source_logging.default_channel', 'stack'));
+        $channelName = config('out_source_logging.importer_provider_channels.'.$providerLower, config('out_source_logging.default_channel', 'stack'));
+
         return Log::channel($channelName);
     }
 }

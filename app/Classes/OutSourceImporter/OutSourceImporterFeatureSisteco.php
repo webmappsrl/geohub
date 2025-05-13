@@ -6,7 +6,6 @@ use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
 {
@@ -41,25 +40,25 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
         $poi = $this->curlRequest($url);
 
         // prepare feature parameters to pass to updateOrCreate function
-       $this->logChannel->info('Preparing OSF POI with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
-            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('" . json_encode($poi['geometry']) . "')) As wkt")[0]->wkt;
+            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            $this->logChannel->info('Preparing OSF POI TAGS with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
             $this->preparePOITagsJson($poi);
             $this->params['tags'] = $this->tags;
-            $this->logChannel->info('Finished preparing OSF POI with external ID: ' . $this->source_id);
-            $this->logChannel->info('Starting creating OSF POI with external ID: ' . $this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            $this->logChannel->info('Error creating OSF : ' . $e);
+            $this->logChannel->info('Error creating OSF : '.$e);
         }
     }
 
@@ -87,7 +86,7 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
 
             return $feature->id;
         } catch (Exception $e) {
-            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
         }
     }
 

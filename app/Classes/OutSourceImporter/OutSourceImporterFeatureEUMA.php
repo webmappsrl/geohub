@@ -6,7 +6,6 @@ use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 {
@@ -32,27 +31,27 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         $error_not_created = [];
         try {
             // Curl request to get the feature information from external source
-            $url = 'https://database.european-mountaineers.eu/api/v1/trail/geojson/' . $this->source_id;
+            $url = 'https://database.european-mountaineers.eu/api/v1/trail/geojson/'.$this->source_id;
             $track = $this->curlRequest($url);
 
             // prepare feature parameters to pass to updateOrCreate function
-            $this->logChannel->info('Preparing OSF Track with external ID: ' . $this->source_id);
-            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('" . json_encode($track['geometry']) . "'))) As wkt")[0]->wkt;
+            $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
+            $this->params['geometry'] = DB::select("SELECT ST_AsText(ST_LineMerge(ST_GeomFromGeoJSON('".json_encode($track['geometry'])."'))) As wkt")[0]->wkt;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             // $this->params['raw_data'] = json_encode($track);
 
             // prepare the value of tags data
-            $this->logChannel->info('Preparing OSF Track TAGS with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
             $this->prepareTrackTagsJson($track);
             $this->params['tags'] = $this->tags;
-            $this->logChannel->info('Finished preparing OSF Track with external ID: ' . $this->source_id);
-            $this->logChannel->info('Starting creating OSF Track with external ID: ' . $this->source_id);
+            $this->logChannel->info('Finished preparing OSF Track with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF Track with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
             array_push($error_not_created, $url);
-            $this->logChannel->info('Error creating OSF from external with id: ' . $this->source_id . "\n ERROR: " . $e->getMessage());
+            $this->logChannel->info('Error creating OSF from external with id: '.$this->source_id."\n ERROR: ".$e->getMessage());
         }
         if ($error_not_created) {
             $this->logChannel->info('Ec features not created from Source with URL: ');
@@ -72,35 +71,35 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
     {
         // Curl request to get the feature information from external source
         if (strpos($this->endpoint, 'hut')) {
-            $url = 'https://database.european-mountaineers.eu/api/v1/hut/geojson/' . $this->source_id;
+            $url = 'https://database.european-mountaineers.eu/api/v1/hut/geojson/'.$this->source_id;
             $this->poi_type = 'alpine-hut';
         }
         if (strpos($this->endpoint, 'climbingrockarea')) {
-            $url = 'https://database.european-mountaineers.eu/api/v1/climbingrockarea/geojson/' . $this->source_id;
+            $url = 'https://database.european-mountaineers.eu/api/v1/climbingrockarea/geojson/'.$this->source_id;
             $this->poi_type = 'climbing-crag';
         }
         $poi = $this->curlRequest($url);
 
         // prepare feature parameters to pass to updateOrCreate function
-        $this->logChannel->info('Preparing OSF POI with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
-            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('" . json_encode($poi['geometry']) . "')) As wkt")[0]->wkt;
+            $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
             $this->params['provider'] = get_class($this);
             $this->params['type'] = $this->type;
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            $this->logChannel->info('Preparing OSF POI TAGS with external ID: ' . $this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
             $this->preparePOITagsJson($poi);
             $this->params['tags'] = $this->tags;
-            $this->logChannel->info('Finished preparing OSF POI with external ID: ' . $this->source_id);
-            $this->logChannel->info('Starting creating OSF POI with external ID: ' . $this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            $this->logChannel->info('Error creating OSF : ' . $e);
+            $this->logChannel->info('Error creating OSF : '.$e);
         }
     }
 
@@ -128,7 +127,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 
             return $feature->id;
         } catch (Exception $e) {
-            $this->logChannel->info('Error createOrUpdate OSF: ' . $e);
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
         }
     }
 
@@ -139,11 +138,11 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
-        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track['properties']['name'])) {
             $trackname = html_entity_decode($track['properties']['name']);
         } else {
-            $trackname = $track['properties']['ref'] . ' - ' . $track['properties']['member_acronym'];
+            $trackname = $track['properties']['ref'].' - '.$track['properties']['member_acronym'];
         }
         $this->tags['name']['it'] = $trackname;
 
@@ -171,7 +170,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
      */
     protected function preparePOITagsJson($poi)
     {
-        $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($poi['properties']['official_name'])) {
             $poiname = html_entity_decode($poi['properties']['official_name']);
         } elseif (isset($poi['properties']['second_official_name'])) {
@@ -205,12 +204,12 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
             $poidescription .= '<p style="width: 100%; border-top: 1px solid black; padding: 10px 0;">Additional Information:</p><table style="border-collapse: collapse; width: 100%; border-style: none;"><tbody>';
             if (isset($poi['properties']['local_rules_url'])) {
                 $this->tags['local_rules_url'] = $poi['properties']['local_rules_url'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><a href="' . $poi['properties']['local_rules_url'] . '"><strong>' . $poi['properties']['local_rules_url'] . '</strong></a></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><a href="'.$poi['properties']['local_rules_url'].'"><strong>'.$poi['properties']['local_rules_url'].'</strong></a></td></tr>';
             }
 
             if (isset($poi['properties']['local_rules_description'])) {
                 $this->tags['local_rules_description'] = $poi['properties']['local_rules_description'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><strong>' . $poi['properties']['local_rules_description']['en'] . '</strong></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Local rules URL:</td><td style="width: 48.6%;"><strong>'.$poi['properties']['local_rules_description']['en'].'</strong></td></tr>';
             }
 
             if (isset($poi['properties']['local_restrictions'])) {
@@ -220,24 +219,24 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 
             if (isset($poi['properties']['local_restrictions_description'])) {
                 $this->tags['local_restrictions_description'] = $poi['properties']['local_restrictions_description'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Local restrictions description:</td><td style="width: 48.6%;"><strong>' . $poi['properties']['local_restrictions_description']['en'] . '</strong></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Local restrictions description:</td><td style="width: 48.6%;"><strong>'.$poi['properties']['local_restrictions_description']['en'].'</strong></td></tr>';
             }
 
             if (isset($poi['properties']['location_quality'])) {
                 $this->tags['location_quality'] = $poi['properties']['location_quality'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Local quality:</td><td style="width: 48.6%;"><strong>' . $poi['properties']['location_quality'] . '</strong></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Local quality:</td><td style="width: 48.6%;"><strong>'.$poi['properties']['location_quality'].'</strong></td></tr>';
             }
 
             if (isset($poi['properties']['routes_number'])) {
                 $this->tags['routes_number'] = $poi['properties']['routes_number'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Routes number:</td><td style="width: 48.6%;"><strong>' . $poi['properties']['routes_number'] . '</strong></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Routes number:</td><td style="width: 48.6%;"><strong>'.$poi['properties']['routes_number'].'</strong></td></tr>';
             }
 
             if (isset($poi['properties']['styles'])) {
                 $poidescription .= '<tr><td style="width: 100%;"><p>Styles:</p></td><td></td></tr>';
                 $this->tags['styles'] = $poi['properties']['styles'];
                 foreach ($poi['properties']['styles'] as $style) {
-                    $poidescription .= '<tr><td style="width: 48.6%;"><strong>' . $style['name'] . '</strong></td><td style="width: 48.6%;"><strong>' . $style['description'] . '</strong></td></tr>';
+                    $poidescription .= '<tr><td style="width: 48.6%;"><strong>'.$style['name'].'</strong></td><td style="width: 48.6%;"><strong>'.$style['description'].'</strong></td></tr>';
                 }
             }
 
@@ -245,7 +244,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
                 $poidescription .= '<tr><td style="width: 100%;"><p>Types:</p></td><td></td></tr>';
                 $this->tags['types'] = $poi['properties']['types'];
                 foreach ($poi['properties']['types'] as $type) {
-                    $poidescription .= '<tr><td style="width: 48.6%;"><strong>' . $type['name'] . '</strong></td><td style="width: 48.6%;"><strong>' . $type['description'] . '</strong></td></tr>';
+                    $poidescription .= '<tr><td style="width: 48.6%;"><strong>'.$type['name'].'</strong></td><td style="width: 48.6%;"><strong>'.$type['description'].'</strong></td></tr>';
                 }
             }
 
@@ -254,43 +253,43 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
                 $this->tags['external_databases'] = $poi['properties']['external_databases'];
                 foreach ($poi['properties']['external_databases'] as $db) {
                     if (isset($db['name'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Name:</td><td style="width: 48.6%;"><strong>' . $db['name'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Name:</td><td style="width: 48.6%;"><strong>'.$db['name'].'</strong></td></tr>';
                     }
                     if (isset($db['url'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">URL:</td><td style="width: 48.6%;"><a target="_blank" href="' . $db['url'] . '"><strong>' . $db['url'] . '</strong></a></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">URL:</td><td style="width: 48.6%;"><a target="_blank" href="'.$db['url'].'"><strong>'.$db['url'].'</strong></a></td></tr>';
                     }
                     if (isset($db['mobile_app_name'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>' . $db['mobile_app_name'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.$db['mobile_app_name'].'</strong></td></tr>';
                     }
                     if (isset($db['mobile_app_os'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>' . implode(', ', $db['mobile_app_os']) . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Mobile app name:</td><td style="width: 48.6%;"><strong>'.implode(', ', $db['mobile_app_os']).'</strong></td></tr>';
                     }
                     if (isset($db['access'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Access:</td><td style="width: 48.6%;"><strong>' . str_replace('_', ' ', $db['access']) . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Access:</td><td style="width: 48.6%;"><strong>'.str_replace('_', ' ', $db['access']).'</strong></td></tr>';
                     }
                     if (isset($db['offline'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Offline:</td><td style="width: 48.6%;"><strong>' . $db['offline'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Offline:</td><td style="width: 48.6%;"><strong>'.$db['offline'].'</strong></td></tr>';
                     }
                     if (isset($db['download'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Download:</td><td style="width: 48.6%;"><strong>' . $db['download'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Download:</td><td style="width: 48.6%;"><strong>'.$db['download'].'</strong></td></tr>';
                     }
                     if (isset($db['scope'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Scope:</td><td style="width: 48.6%;"><strong>' . $db['scope'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Scope:</td><td style="width: 48.6%;"><strong>'.$db['scope'].'</strong></td></tr>';
                     }
                     if (isset($db['contribution'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Contribution:</td><td style="width: 48.6%;"><strong>' . str_replace('_', ' ', $db['contribution']) . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Contribution:</td><td style="width: 48.6%;"><strong>'.str_replace('_', ' ', $db['contribution']).'</strong></td></tr>';
                     }
                     if (isset($db['languages'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Languages:</td><td style="width: 48.6%;"><strong>' . $db['languages'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Languages:</td><td style="width: 48.6%;"><strong>'.$db['languages'].'</strong></td></tr>';
                     }
                     if (isset($db['editor'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Editor:</td><td style="width: 48.6%;"><strong>' . $db['editor'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Editor:</td><td style="width: 48.6%;"><strong>'.$db['editor'].'</strong></td></tr>';
                     }
                     if (isset($db['editor_contact'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Editor contact:</td><td style="width: 48.6%;"><strong>' . $db['editor_contact'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Editor contact:</td><td style="width: 48.6%;"><strong>'.$db['editor_contact'].'</strong></td></tr>';
                     }
                     if (isset($db['characteristic'])) {
-                        $poidescription .= '<tr><td style="width: 48.6%;">Characteristic:</td><td style="width: 48.6%;"><strong>' . $db['characteristic'] . '</strong></td></tr>';
+                        $poidescription .= '<tr><td style="width: 48.6%;">Characteristic:</td><td style="width: 48.6%;"><strong>'.$db['characteristic'].'</strong></td></tr>';
                     }
                     if (isset($db['user_ascent_log'])) {
                         $poidescription .= '<tr><td style="width: 48.6%;">User ascent log:</td><td style="width: 48.6%;"><strong>Yes</strong></td></tr>';
@@ -306,7 +305,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
 
             if (isset($poi['properties']['parking_position'])) {
                 $this->tags['parking_position'] = $poi['properties']['parking_position'];
-                $poidescription .= '<tr><td style="width: 48.6%;">Parking position:</td><td style="width: 48.6%;"><a href="https://maps.google.com/?q=' . $poi['properties']['parking_position'][1] . ',' . $poi['properties']['parking_position'][0] . '"><strong>Google maps</strong></a></td></tr>';
+                $poidescription .= '<tr><td style="width: 48.6%;">Parking position:</td><td style="width: 48.6%;"><a href="https://maps.google.com/?q='.$poi['properties']['parking_position'][1].','.$poi['properties']['parking_position'][0].'"><strong>Google maps</strong></a></td></tr>';
             }
 
             $poidescription .= '</tbody></table>';
@@ -315,7 +314,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         $this->tags['description']['en'] = $poidescription;
 
         // Adding POI parameters of general info
-        $this->logChannel->info('Preparing OSF POI GENERAL INFO with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI GENERAL INFO with external ID: '.$this->source_id);
         if (isset($poi['properties']['elevation'])) {
             $this->tags['ele'] = $poi['properties']['elevation'];
         }
@@ -341,7 +340,7 @@ class OutSourceImporterFeatureEUMA extends OutSourceImporterFeatureAbstract
         }
 
         // Processing the poi_type
-        $this->logChannel->info('Preparing OSF POI POI_TYPE MAPPING with external ID: ' . $this->source_id);
+        $this->logChannel->info('Preparing OSF POI POI_TYPE MAPPING with external ID: '.$this->source_id);
         $this->tags['poi_type'][] = $this->poi_type;
     }
 }
