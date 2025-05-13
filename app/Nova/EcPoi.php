@@ -146,7 +146,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -268,7 +268,7 @@ class EcPoi extends Resource
                             $out = 'No related Url';
                         }
 
-                        return $out . $help;
+                        return $out.$help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -675,7 +675,7 @@ class EcPoi extends Resource
     private function canShowEmbeddedHtml(): bool
     {
         $user = $this->author;
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -688,6 +688,7 @@ class EcPoi extends Resource
                     return true;
                 }
             }
+
             return false;
         }
     }
