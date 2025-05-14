@@ -11,11 +11,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CreateSelfGuidedLayersCommand extends Command
+class ImportWpLayersCommand extends Command
 {
     protected $author_id;
 
-    protected $signature = 'geohub:create_self_guided_layers 
+    protected $signature = 'geohub:import_wp_layers_command
                             {routeUrlApi : Set the url of api route)} 
                             {author : Set the author that must be assigned to EcFeature created, use email or ID } 
                             {app_id : Set the app_id to be assigned to the new Layer}
@@ -62,12 +62,12 @@ class CreateSelfGuidedLayersCommand extends Command
             foreach ($layers as $index => $layer) {
                 $this->logAndInfo("Processing layer $index");
 
-                $layerNameRaw = $layer['title']['rendered'] ?? null;
+                $layerNameRaw = $layer['title']['rendered'] ?? 'no_name';
                 $layerName = html_entity_decode($layerNameRaw);
                 $relatedTracks = $layer['n7webmap_route_related_track'] ?? [];
 
-                if (! $layerName || count($relatedTracks) === 0) {
-                    $msg = "Layer $index skipped (missing name or no associated tracks)";
+                if (count($relatedTracks) === 0) {
+                    $msg = "Layer $index skipped (missing associated tracks)";
                     $this->logAndInfo($msg, 'warn');
                     continue;
                 }
@@ -192,6 +192,9 @@ class CreateSelfGuidedLayersCommand extends Command
     protected function logAndInfo(string $message, string $level = 'info'): void
     {
         $this->$level($message);
+        if ($level === 'warn') {
+            $level = 'warning';
+        }
         Log::$level($message);
     }
 }
