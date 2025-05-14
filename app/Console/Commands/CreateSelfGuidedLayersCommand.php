@@ -32,16 +32,14 @@ class CreateSelfGuidedLayersCommand extends Command
     {
         $routeUrlApi = $this->argument('routeUrlApi');
         $authorId = $this->argument('author');
-        $allTracks = EcTrack::query()->where('user_id', $authorId)->get();
+        $allTracks = EcTrack::query()->where('user_id', $authorId)->with('outSourceTrack')->get();
         $appId = $this->argument('app_id');
         $generateEdges = $this->option('generate_edges');
 
-        $this->info("Starting command with endpoint: $routeUrlApi and author ID: $authorId");
-        Log::info("Starting command with endpoint: $routeUrlApi and author ID: $authorId");
+        $this->logAndInfo("Starting command with endpoint: $routeUrlApi and author ID: $authorId");
 
         try {
-            $this->info('Calling API...');
-            Log::info('Calling API...');
+            $this->logAndInfo('Calling API...');
 
             $layerCreatedCount = 0;
             $themeCreatedCount = 0;
@@ -59,12 +57,10 @@ class CreateSelfGuidedLayersCommand extends Command
                 throw new Exception('API response is not a valid array');
             }
 
-            $this->info('API successfully loaded. Starting processing...');
-            Log::info('API successfully loaded. Starting processing...');
+            $this->logAndInfo('API successfully loaded. Starting processing...');
 
             foreach ($layers as $index => $layer) {
-                $this->info("Processing layer $index");
-                Log::info("Processing layer $index");
+                $this->logAndInfo("Processing layer $index");
 
                 $layerNameRaw = $layer['title']['rendered'] ?? null;
                 $layerName = html_entity_decode($layerNameRaw);
@@ -72,24 +68,18 @@ class CreateSelfGuidedLayersCommand extends Command
 
                 if (! $layerName || count($relatedTracks) === 0) {
                     $msg = "Layer $index skipped (missing name or no associated tracks)";
-                    $this->warn($msg);
-                    Log::warning($msg);
-
+                    $this->logAndInfo($msg, 'warn');
                     continue;
                 }
 
-                $this->info("Layer name: $layerName");
-                Log::info("Layer name: $layerName");
-
-                $this->info('Associated tracks: '.count($relatedTracks));
-                Log::info('Associated tracks: '.count($relatedTracks));
+                $this->logAndInfo("Layer name: $layerName");
+                $this->logAndInfo('Associated tracks: ' . count($relatedTracks));
 
                 $identifier = $this->slugify($layerName);
                 $taxonomyTheme = TaxonomyTheme::where('identifier', $identifier)->first();
 
                 if ($taxonomyTheme) {
-                    $this->info("Existing TaxonomyTheme found with ID: {$taxonomyTheme->id}");
-                    Log::info("Existing TaxonomyTheme found with ID: {$taxonomyTheme->id}");
+                    $this->logAndInfo("Existing TaxonomyTheme found with ID: {$taxonomyTheme->id}");
                 } else {
                     $taxonomyTheme = new TaxonomyTheme;
                     $taxonomyTheme->name = $layerName;
@@ -97,16 +87,16 @@ class CreateSelfGuidedLayersCommand extends Command
                     $taxonomyTheme->user_id = 1;
                     $taxonomyTheme->saveQuietly();
                     $themeCreatedCount++;
-                    $this->info("TaxonomyTheme created with ID: {$taxonomyTheme->id}");
-                    Log::info("TaxonomyTheme created with ID: {$taxonomyTheme->id}");
+                    $this->logAndInfo("TaxonomyTheme created with ID: {$taxonomyTheme->id}");
                 }
 
                 foreach ($relatedTracks as $track) {
                     $trackNameRaw = $track['post_title'] ?? null;
                     $trackName = html_entity_decode($trackNameRaw);
+                    $trackId =  $track['ID'] ?? null;
 
-                    $geohubTrack = $allTracks->first(function ($t) use ($trackName) {
-                        return html_entity_decode($t->name) === $trackName;
+                    $geohubTrack = $allTracks->first(function ($t) use ($trackId) {
+                        return $t->outSourceTrack->source_id == $trackId;
                     });
 
                     if ($geohubTrack) {
@@ -122,13 +112,11 @@ class CreateSelfGuidedLayersCommand extends Command
                             'taxonomy_themeable_type' => EcTrack::class,
                         ]);
                         $trackUpdatedCount++;
-                        $this->info("  ↪ Track updated: {$geohubTrack->name} (ID: {$geohubTrack->id})");
-                        Log::info("  ↪ Track updated: {$geohubTrack->name} (ID: {$geohubTrack->id})");
+                        $this->logAndInfo("  ↪ Track updated: {$geohubTrack->name} (ID: {$geohubTrack->id})");
                     } else {
                         $trackNotFoundCount++;
                         $msg = "Track not found: $trackName";
-                        $this->warn($msg);
-                        Log::warning($msg);
+                        $this->logAndInfo($msg, 'warn');
                     }
                 }
 
@@ -154,42 +142,32 @@ class CreateSelfGuidedLayersCommand extends Command
                     $ecMedia->saveQuietly();
 
                     $geohubLayer->feature_image = $ecMedia->id;
-                    $this->info("Media created with ID: {$ecMedia->id}, file: {$ecMedia->name}");
-                    Log::info("Media created with ID: {$ecMedia->id}, file: {$ecMedia->name}");
+                    $this->logAndInfo("Media created with ID: {$ecMedia->id}, file: {$ecMedia->name}");
                 }
 
                 $geohubLayer->save();
                 $layerCreatedCount++;
-                $this->info("Layer created with ID: {$geohubLayer->id}");
-                Log::info("Layer created with ID: {$geohubLayer->id}");
+                $this->logAndInfo("Layer created with ID: {$geohubLayer->id}");
 
                 DB::table('taxonomy_themeables')->insert([
                     'taxonomy_theme_id' => $taxonomyTheme->id,
                     'taxonomy_themeable_id' => $geohubLayer->id,
                     'taxonomy_themeable_type' => Layer::class,
                 ]);
-                $this->info('Layer/TaxonomyTheme relationship created');
-                Log::info('Layer/TaxonomyTheme relationship created');
+                $this->logAndInfo('Layer/TaxonomyTheme relationship created');
             }
 
-            $this->info("Total layers created: $layerCreatedCount");
-            $this->info("Total taxonomy themes created: $themeCreatedCount");
-            $this->info("Total tracks updated: $trackUpdatedCount");
-            $this->info("Total tracks not found: $trackNotFoundCount");
+            $this->logAndInfo("Total layers created: $layerCreatedCount");
+            $this->logAndInfo("Total taxonomy themes created: $themeCreatedCount");
+            $this->logAndInfo("Total tracks updated: $trackUpdatedCount");
+            $this->logAndInfo("Total tracks not found: $trackNotFoundCount");
 
-            Log::info("Total layers created: $layerCreatedCount");
-            Log::info("Total taxonomy themes created: $themeCreatedCount");
-            Log::info("Total tracks updated: $trackUpdatedCount");
-            Log::info("Total tracks not found: $trackNotFoundCount");
-
-            $this->info('Processing completed successfully!');
-            Log::info('Processing completed successfully!');
+            $this->logAndInfo('Processing completed successfully!');
 
             return 0;
         } catch (Exception $e) {
-            $msg = 'Error during processing: '.$e->getMessage();
-            $this->error($msg);
-            Log::error($msg);
+            $msg = 'Error during processing: ' . $e->getMessage();
+            $this->logAndInfo($msg, 'error');
 
             return 1;
         }
@@ -202,5 +180,18 @@ class CreateSelfGuidedLayersCommand extends Command
         }
 
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', html_entity_decode($string))));
+    }
+
+    /**
+     * Logga il messaggio e lo mostra come info nel terminale
+     *
+     * @param string $message Il messaggio da loggare e mostrare
+     * @param string $level Il livello di log (default: 'info')
+     * @return void
+     */
+    protected function logAndInfo(string $message, string $level = 'info'): void
+    {
+        $this->$level($message);
+        Log::$level($message);
     }
 }
