@@ -69,11 +69,12 @@ class ImportWpLayersCommand extends Command
                 if (count($relatedTracks) === 0) {
                     $msg = "Layer $index skipped (missing associated tracks)";
                     $this->logAndInfo($msg, 'warn');
+
                     continue;
                 }
 
                 $this->logAndInfo("Layer name: $layerName");
-                $this->logAndInfo('Associated tracks: ' . count($relatedTracks));
+                $this->logAndInfo('Associated tracks: '.count($relatedTracks));
 
                 $identifier = $this->slugify($layerName);
                 $taxonomyTheme = TaxonomyTheme::where('identifier', $identifier)->first();
@@ -93,7 +94,7 @@ class ImportWpLayersCommand extends Command
                 foreach ($relatedTracks as $track) {
                     $trackNameRaw = $track['post_title'] ?? null;
                     $trackName = html_entity_decode($trackNameRaw);
-                    $trackId =  $track['ID'] ?? null;
+                    $trackId = $track['ID'] ?? null;
 
                     $geohubTrack = $allTracks->first(function ($t) use ($trackId) {
                         return $t->outSourceTrack->source_id == $trackId;
@@ -166,7 +167,7 @@ class ImportWpLayersCommand extends Command
 
             return 0;
         } catch (Exception $e) {
-            $msg = 'Error during processing: ' . $e->getMessage();
+            $msg = 'Error during processing: '.$e->getMessage();
             $this->logAndInfo($msg, 'error');
 
             return 1;
@@ -185,9 +186,8 @@ class ImportWpLayersCommand extends Command
     /**
      * Logga il messaggio e lo mostra come info nel terminale
      *
-     * @param string $message Il messaggio da loggare e mostrare
-     * @param string $level Il livello di log (default: 'info')
-     * @return void
+     * @param  string  $message  Il messaggio da loggare e mostrare
+     * @param  string  $level  Il livello di log (default: 'info')
      */
     protected function logAndInfo(string $message, string $level = 'info'): void
     {
