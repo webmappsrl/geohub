@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Layer;
-use App\Models\EcTrack;
 use App\Models\EcMedia;
+use App\Models\EcTrack;
+use App\Models\Layer;
 use App\Models\TaxonomyTheme;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-class CreateSelfGuidedLayersCommand  extends Command
+class CreateSelfGuidedLayersCommand extends Command
 {
     protected $author_id;
 
@@ -55,7 +55,7 @@ class CreateSelfGuidedLayersCommand  extends Command
                 throw new Exception('Error parsing JSON response');
             }
 
-            if (!is_array($layers)) {
+            if (! is_array($layers)) {
                 throw new Exception('API response is not a valid array');
             }
 
@@ -70,18 +70,19 @@ class CreateSelfGuidedLayersCommand  extends Command
                 $layerName = html_entity_decode($layerNameRaw);
                 $relatedTracks = $layer['n7webmap_route_related_track'] ?? [];
 
-                if (!$layerName || count($relatedTracks) === 0) {
+                if (! $layerName || count($relatedTracks) === 0) {
                     $msg = "Layer $index skipped (missing name or no associated tracks)";
                     $this->warn($msg);
                     Log::warning($msg);
+
                     continue;
                 }
 
                 $this->info("Layer name: $layerName");
                 Log::info("Layer name: $layerName");
 
-                $this->info("Associated tracks: " . count($relatedTracks));
-                Log::info("Associated tracks: " . count($relatedTracks));
+                $this->info('Associated tracks: '.count($relatedTracks));
+                Log::info('Associated tracks: '.count($relatedTracks));
 
                 $identifier = $this->slugify($layerName);
                 $taxonomyTheme = TaxonomyTheme::where('identifier', $identifier)->first();
@@ -90,7 +91,7 @@ class CreateSelfGuidedLayersCommand  extends Command
                     $this->info("Existing TaxonomyTheme found with ID: {$taxonomyTheme->id}");
                     Log::info("Existing TaxonomyTheme found with ID: {$taxonomyTheme->id}");
                 } else {
-                    $taxonomyTheme = new TaxonomyTheme();
+                    $taxonomyTheme = new TaxonomyTheme;
                     $taxonomyTheme->name = $layerName;
                     $taxonomyTheme->identifier = $identifier;
                     $taxonomyTheme->user_id = 1;
@@ -131,7 +132,7 @@ class CreateSelfGuidedLayersCommand  extends Command
                     }
                 }
 
-                $geohubLayer = new Layer();
+                $geohubLayer = new Layer;
                 $geohubLayer->app_id = $appId;
                 $geohubLayer->name = $layerName;
                 $geohubLayer->generate_edges = $generateEdges;
@@ -144,7 +145,7 @@ class CreateSelfGuidedLayersCommand  extends Command
                 $imageCaption = $layer['yoast_head_json']['og_image'][0]['caption'] ?? null;
 
                 if ($featuredImageUrl) {
-                    $ecMedia = new EcMedia();
+                    $ecMedia = new EcMedia;
                     $ecMedia->name = basename(parse_url($featuredImageUrl, PHP_URL_PATH));
                     $ecMedia->description = $imageCaption ?? null;
                     $ecMedia->source = $routeUrlApi;
@@ -167,8 +168,8 @@ class CreateSelfGuidedLayersCommand  extends Command
                     'taxonomy_themeable_id' => $geohubLayer->id,
                     'taxonomy_themeable_type' => Layer::class,
                 ]);
-                $this->info("Layer/TaxonomyTheme relationship created");
-                Log::info("Layer/TaxonomyTheme relationship created");
+                $this->info('Layer/TaxonomyTheme relationship created');
+                Log::info('Layer/TaxonomyTheme relationship created');
             }
 
             $this->info("Total layers created: $layerCreatedCount");
@@ -186,9 +187,10 @@ class CreateSelfGuidedLayersCommand  extends Command
 
             return 0;
         } catch (Exception $e) {
-            $msg = 'Error during processing: ' . $e->getMessage();
+            $msg = 'Error during processing: '.$e->getMessage();
             $this->error($msg);
             Log::error($msg);
+
             return 1;
         }
     }
