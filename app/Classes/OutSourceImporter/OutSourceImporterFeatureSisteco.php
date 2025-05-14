@@ -6,7 +6,6 @@ use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
 {
@@ -41,7 +40,7 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
         $poi = $this->curlRequest($url);
 
         // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF POI with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
             $geometry_poi = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('".json_encode($poi['geometry'])."')) As wkt")[0]->wkt;
             $this->params['geometry'] = $geometry_poi;
@@ -50,16 +49,16 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
             $this->params['raw_data'] = json_encode($poi);
 
             // prepare the value of tags data
-            Log::info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
+            $this->logChannel->info('Preparing OSF POI TAGS with external ID: '.$this->source_id);
             $this->tags = [];
             $this->preparePOITagsJson($poi);
             $this->params['tags'] = $this->tags;
-            Log::info('Finished preparing OSF POI with external ID: '.$this->source_id);
-            Log::info('Starting creating OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Finished preparing OSF POI with external ID: '.$this->source_id);
+            $this->logChannel->info('Starting creating OSF POI with external ID: '.$this->source_id);
 
             return $this->create_or_update_feature($this->params);
         } catch (Exception $e) {
-            Log::info('Error creating OSF : '.$e);
+            $this->logChannel->info('Error creating OSF : '.$e);
         }
     }
 
@@ -76,15 +75,19 @@ class OutSourceImporterFeatureSisteco extends OutSourceImporterFeatureAbstract
      */
     protected function create_or_update_feature(array $params)
     {
+        try {
+            $feature = OutSourceFeature::updateOrCreate(
+                [
+                    'source_id' => $this->source_id,
+                    'endpoint' => $this->endpoint,
+                ],
+                $params
+            );
 
-        $feature = OutSourceFeature::updateOrCreate(
-            [
-                'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint,
-            ],
-            $params);
-
-        return $feature->id;
+            return $feature->id;
+        } catch (Exception $e) {
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
+        }
     }
 
     /**

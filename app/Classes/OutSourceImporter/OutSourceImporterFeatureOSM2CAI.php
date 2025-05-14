@@ -5,7 +5,6 @@ namespace App\Classes\OutSourceImporter;
 use App\Models\OutSourceFeature;
 use App\Traits\ImporterAndSyncTrait;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
 {
@@ -54,7 +53,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
             ->first();
 
         if (! $track) {
-            Log::error('Unable to find an hiking route on connection out_source_osm with ID: '.$this->source_id);
+            $this->logChannel->error('Unable to find an hiking route on connection out_source_osm with ID: '.$this->source_id);
 
             return 0;
         }
@@ -69,7 +68,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $track->osmfeatures_id = $osmfeaturesId;
 
         // prepare feature parameters to pass to updateOrCreate function
-        Log::info('Preparing OSF Track with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
         $this->params['geometry'] = $track->geometry;
         $this->params['provider'] = get_class($this);
         $this->params['type'] = $this->type;
@@ -78,11 +77,11 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         $this->params['endpoint_slug'] = 'osm2cai';
 
         // prepare the value of tags data
-        Log::info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF Track TAGS with external ID: '.$this->source_id);
         $this->prepareTrackTagsJson($track);
         $this->params['tags'] = $this->tags;
-        Log::info('Finished preparing OSF Track with external ID: '.$this->source_id);
-        Log::info('Starting creating OSF Track with external ID: '.$this->source_id);
+        $this->logChannel->info('Finished preparing OSF Track with external ID: '.$this->source_id);
+        $this->logChannel->info('Starting creating OSF Track with external ID: '.$this->source_id);
 
         return $this->create_or_update_feature($this->params, $osmfeaturesId);
     }
@@ -115,15 +114,19 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
         // TODO: use the endpoint_slug column identifier instead (it should be a not null column) and set only the endpoint path into the endpoint column
         //      this will allow to have multiple domains for the same source_id
 
-        $feature = OutSourceFeature::updateOrCreate(
-            [
-                'source_id' => $osmfeaturesId,
-                'endpoint' => $this->endpoint,
-            ],
-            $params
-        );
+        try {
+            $feature = OutSourceFeature::updateOrCreate(
+                [
+                    'source_id' => $osmfeaturesId,
+                    'endpoint' => $this->endpoint,
+                ],
+                $params
+            );
 
-        return $feature->id;
+            return $feature->id;
+        } catch (\Exception $e) {
+            $this->logChannel->error('Error createOrUpdate OutSourceFeature: '.$e->getMessage());
+        }
     }
 
     /**
@@ -133,7 +136,7 @@ class OutSourceImporterFeatureOSM2CAI extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
-        Log::info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
+        $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         if (isset($track->name)) {
             $this->tags['name']['it'] = $track->name;
         }

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Console\Command;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureCommand extends Command
@@ -34,6 +35,8 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
      */
     protected $description = 'This command creates or updates EcFeatures from OutSourceFeatures based on given parameters';
 
+    protected Logger $logChannel;
+
     /**
      * Create a new command instance.
      *
@@ -42,6 +45,7 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->logChannel = Log::channel(config('out_source_logging.default_channel', 'stack'));
     }
 
     /**
@@ -57,6 +61,11 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
 
         $type = $this->argument('type');
         $author = $this->argument('author');
+
+        $providerOption = $this->option('provider');
+        $this->logChannel = $this->getLogChannel($providerOption);
+
+        $this->logChannel->info("Starting SyncEcFeatureFromOutSourceFeatureCommand for provider: {$providerOption}, type: {$type}");
 
         $provider = '';
         $endpoint = '';
@@ -92,11 +101,11 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             $app = $this->option('app');
         }
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url);
-        Log::info('Start checking parameters... ');
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url, $this->logChannel);
+        $this->logChannel->info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
-            Log::info('Parameters checked successfully.');
-            Log::info('Getting List');
+            $this->logChannel->info('Parameters checked successfully.');
+            $this->logChannel->info('Getting List');
             if ($single_feature) {
                 $ids_array = $SyncEcFromOutSource->getOSFFromSingleFeature($single_feature);
             } else {
@@ -104,12 +113,41 @@ class SyncEcFeatureFromOutSourceFeatureCommand extends Command
             }
 
             if (! empty($ids_array)) {
-                Log::info('List acquired successfully.');
-                Log::info('Start syncronizing ...');
+                $this->logChannel->info('List acquired successfully.');
+                $this->logChannel->info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($ids_array);
-                Log::info(count($loop).' EC features successfully created.');
+                $this->logChannel->info(count($loop).' EC features successfully created.');
+            } else {
+                $this->logChannel->info('No features to synchronize for the given parameters.');
             }
+        } else {
+            $this->logChannel->error('Parameter check failed for SyncEcFromOutSource.');
+
+            return Command::FAILURE;
         }
 
+        return Command::SUCCESS;
+    }
+
+    /**
+     * Gets the log channel based on the provider option.
+     */
+    private function getLogChannel(?string $providerOption): Logger
+    {
+        if (empty($providerOption)) {
+            return $this->logChannel;
+        }
+
+        $providerBaseName = strtolower(class_basename($providerOption));
+
+        $channel = Log::channel(config('out_source_logging.sync_provider_channels.'.$providerBaseName));
+
+        if ($channel) {
+            return $channel;
+        }
+
+        $this->logChannel->warning(class_basename($this).": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+
+        return $this->logChannel;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Classes\EcSynchronizer\SyncEcFromOutSource;
 use Illuminate\Console\Command;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 
 class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
@@ -33,6 +34,8 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
      */
     protected $description = 'This command creates or updates EcFeatures from OutSourceFeatures based on given parameters';
 
+    protected Logger $logChannel;
+
     /**
      * Create a new command instance.
      *
@@ -41,6 +44,7 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->logChannel = Log::channel(config('out_source_logging.default_channel', 'stack'));
     }
 
     /**
@@ -50,7 +54,6 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
      */
     public function handle()
     {
-
         $type = $this->argument('type');
         $author = $this->argument('author');
 
@@ -63,6 +66,11 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
         $single_feature = $this->option('single_feature');
         $only_related_url = $this->option('only_related_url');
         $app = 0;
+
+        $providerOption = $this->option('provider');
+        $this->logChannel = $this->getLogChannel($providerOption);
+
+        $this->logChannel->info("Starting SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand for provider: {$providerOption}, type: {$type}");
 
         if ($this->option('provider')) {
             $provider = $this->option('provider');
@@ -88,13 +96,14 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
             $app = $this->option('app');
         }
 
-        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url);
-        Log::info('Start checking parameters... ');
+        $SyncEcFromOutSource = new SyncEcFromOutSource($type, $author, $provider, $endpoint, $activity, $poi_type, $name_format, $app, $theme, $only_related_url, $this->logChannel);
+        $this->logChannel->info('Start checking parameters... ');
         if ($SyncEcFromOutSource->checkParameters()) {
-            Log::info('Parameters checked successfully.');
-            Log::info('Getting List');
+            $this->logChannel->info('Parameters checked successfully.');
+            $this->logChannel->info('Getting List');
             if ($single_feature) {
                 $ids_array = $SyncEcFromOutSource->getOSFFromSingleFeature($single_feature);
+                $recentIDs = $ids_array;
             } else {
                 // get All OSF ids
                 $ids_array = $SyncEcFromOutSource->getList();
@@ -118,16 +127,44 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
                         $recentIDs[] = $key;
                     }
                 }
-
             }
 
             if (! empty($recentIDs)) {
-                Log::info('List acquired successfully.');
-                Log::info('Start syncronizing ...');
+                $this->logChannel->info('List acquired successfully.');
+                $this->logChannel->info('Start syncronizing ...');
                 $loop = $SyncEcFromOutSource->sync($recentIDs);
-                Log::info(count($loop).' EC features successfully created.');
+                $this->logChannel->info(count($loop).' EC features successfully created.');
+            } else {
+                $this->logChannel->info('No EC features to create or update based on updated_at timestamps.');
             }
+        } else {
+            $this->logChannel->error('Parameter check failed for SyncEcFromOutSource.');
+
+            return Command::FAILURE;
         }
 
+        return Command::SUCCESS;
+    }
+
+    /**
+     * Gets the log channel based on the provider option.
+     */
+    private function getLogChannel(?string $providerOption): Logger
+    {
+        if (empty($providerOption)) {
+            return $this->logChannel;
+        }
+
+        $providerBaseName = strtolower(class_basename($providerOption));
+
+        $channel = config('out_source_logging.sync_provider_channels.'.$providerBaseName);
+
+        if ($channel) {
+            return Log::channel($channel);
+        }
+
+        $this->logChannel->warning(class_basename($this).": Channel mapping for provider '{$providerOption}' (normalized to '{$providerLower}' or '{$shortProviderKey}') not found in config/importer_logging.php. Using default channel.");
+
+        return $this->logChannel;
     }
 }

@@ -80,14 +80,19 @@ class OutSourceImporterFeatureStorageCSV extends OutSourceImporterFeatureAbstrac
     protected function create_or_update_feature(array $params)
     {
 
-        $feature = OutSourceFeature::updateOrCreate(
-            [
-                'source_id' => $this->source_id,
-                'endpoint' => $this->endpoint,
-            ],
-            $params);
+        try {
+            $feature = OutSourceFeature::updateOrCreate(
+                [
+                    'source_id' => $this->source_id,
+                    'endpoint' => $this->endpoint,
+                ],
+                $params
+            );
 
-        return $feature->id;
+            return $feature->id;
+        } catch (Exception $e) {
+            $this->logChannel->info('Error createOrUpdate OSF: '.$e);
+        }
     }
 
     /**

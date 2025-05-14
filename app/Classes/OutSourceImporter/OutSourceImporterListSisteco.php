@@ -3,7 +3,6 @@
 namespace App\Classes\OutSourceImporter;
 
 use App\Traits\ImporterAndSyncTrait;
-use Illuminate\Support\Facades\Log;
 
 class OutSourceImporterListSisteco extends OutSourceImporterListAbstract
 {
@@ -17,7 +16,7 @@ class OutSourceImporterListSisteco extends OutSourceImporterListAbstract
     public function getPoiList(): array
     {
         $url = $this->endpoint;
-        Log::info('Starting POI List CURL request ...');
+        $this->logChannel->info('Starting POI List CURL request ...');
 
         return $this->curlRequest($url);
     }

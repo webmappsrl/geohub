@@ -41,10 +41,11 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'single' => [
+        'cai_parma_osm_poi_importer' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/cai_parma_osm_poi_importer.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
         ],
 
         'daily' => [
@@ -54,12 +55,40 @@ return [
             'days' => 14,
         ],
 
-        'slack' => [
-            'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
-            'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL', 'critical'),
+        'emergency' => [
+            'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'errorlog' => [
+            'driver' => 'errorlog',
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'euma_importer' => [
+            'driver' => 'single',
+            'days' => '1',
+            'level' => 'debug',
+            'path' => storage_path('logs/euma_importer.log'),
+            'bubble' => false,
+        ],
+
+        'layer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/layer.log'),
+            'level' => 'debug',
+        ],
+
+        'null' => [
+            'driver' => 'monolog',
+            'handler' => NullHandler::class,
+        ],
+
+        'osm2cai_importer' => [
+            'driver' => 'single',
+            'days' => '1',
+            'level' => 'debug',
+            'path' => storage_path('logs/osm2cai_importer.log'),
+            'bubble' => false,
         ],
 
         'papertrail' => [
@@ -70,6 +99,48 @@ return [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
             ],
+        ],
+
+        'pbf' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/pbf.log'),
+            'level' => 'debug',
+            'days' => '1',
+        ],
+
+        'sentierisardegna_importer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sentierisardegna_importer.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
+        ],
+
+        'sicai_importer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sicai_importer.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
+        ],
+
+        'single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'sisteco_importer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sisteco_importer.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
+        ],
+
+        'slack' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'username' => 'Laravel Log',
+            'emoji' => ':boom:',
+            'level' => env('LOG_LEVEL', 'critical'),
         ],
 
         'stderr' => [
@@ -92,51 +163,31 @@ return [
             ],
         ],
 
+        'storagecsv_importer' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/storagecsv_importer.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
         ],
-        'errorlog' => [
-            'driver' => 'errorlog',
-            'level' => env('LOG_LEVEL', 'debug'),
-        ],
-        'null' => [
-            'driver' => 'monolog',
-            'handler' => NullHandler::class,
-        ],
-        'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
-        ],
-        'osm2cai' => [
-            'driver' => 'single',
-            'days' => '1',
-            'level' => 'debug',
-            'path' => storage_path('logs/osm2cai.log'),
-            'bubble' => false,
-        ],
-        'euma' => [
-            'driver' => 'single',
-            'days' => '1',
-            'level' => 'debug',
-            'path' => storage_path('logs/euma.log'),
-            'bubble' => false,
-        ],
-        'layer' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/layer.log'),
-            'level' => 'debug',
-        ],
+
         'ugc' => [
             'driver' => 'single',
             'path' => storage_path('logs/ugc.log'),
             'level' => 'debug',
         ],
-        'pbf' => [
+
+        'wp_importer' => [
             'driver' => 'single',
-            'path' => storage_path('logs/pbf.log'),
-            'level' => 'debug',
-            'days' => '1',
+            'path' => storage_path('logs/wp_importer.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'bubble' => false,
         ],
+
     ],
 
 ];

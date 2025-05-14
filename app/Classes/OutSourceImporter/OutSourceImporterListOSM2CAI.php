@@ -44,7 +44,7 @@ class OutSourceImporterListOSM2CAI extends OutSourceImporterListAbstract
         } else {
             // NEW WAY: API
             $url = $this->endpoint;
-            Log::info('Starting Track List CURL request ...');
+            $this->logChannel->info('Starting Track List CURL request ...');
 
             return (array) $this->curlRequest($url);
         }
