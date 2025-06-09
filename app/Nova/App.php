@@ -305,6 +305,16 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            //TODO: aggiungere al wmpackage
+            Toggle::make(__('Show Draw POI'), 'draw_poi_show')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enables the draw POI feature in the web app.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
             Toggle::make(__('Show splash screen'), 'splash_screen_show')
                 ->trueValue('On')
                 ->falseValue('Off')
