@@ -381,6 +381,7 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_show'] = $this->flow_line_quote_show;
         $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
+        $data['MAP']['show_track_direction_arrow'] = $this->show_track_direction_arrow;
 
         // Tiles
         if ($this->tiles && ! empty(json_decode($this->tiles, true))) {

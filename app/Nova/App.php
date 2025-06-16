@@ -631,6 +631,16 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            Toggle::make(__('Show Track Direction Arrow'), 'show_track_direction_arrow')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(true)
+                ->hideFromIndex()
+                ->help(__('Enables the track direction arrow in the map.'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
+
         ];
     }
 

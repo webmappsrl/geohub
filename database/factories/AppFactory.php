@@ -75,6 +75,7 @@ class AppFactory extends Factory
             'show_features_in_viewport' => $this->faker->boolean(),
             'show_media_name' => $this->faker->boolean(),
             'show_embedded_html' => $this->faker->boolean(),
+            'show_track_direction_arrow' => $this->faker->boolean(),
         ];
     }
 }
