@@ -241,7 +241,7 @@ trait ConfTrait
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
             } catch (\Exception $e) {
-                Log::warning('The overlays in the app ' . $this->id . ' are not correctly mapped. Error: ' . $e->getMessage());
+                Log::warning('The overlays in the app '.$this->id.' are not correctly mapped. Error: '.$e->getMessage());
             }
         }
 
@@ -255,7 +255,7 @@ trait ConfTrait
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
                 } catch (\Exception  $e) {
-                    Log::warning('The bbox value ' . $layer->id . ' are not correct. Error: ' . $e->getMessage());
+                    Log::warning('The bbox value '.$layer->id.' are not correct. Error: '.$e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
@@ -500,7 +500,7 @@ trait ConfTrait
 
             foreach ($poi_types as $poi_type) {
                 $a = [
-                    'identifier' => 'poi_type_' . $poi_type->identifier,
+                    'identifier' => 'poi_type_'.$poi_type->identifier,
                     'name' => json_decode($poi_type->name, true),
                     'id' => $poi_type->id,
                     'icon' => $poi_type->icon,
@@ -602,7 +602,7 @@ trait ConfTrait
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // OPTIONS section
-            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $this->id . '/';
+            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/'.$this->id.'/';
         }
 
         $data['OPTIONS']['startUrl'] = $this->start_url;
