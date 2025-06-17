@@ -617,6 +617,27 @@ class App extends Resource
                     return $request->user()->hasRole('Admin');
                 }),
             // TODO: ADD2WMPACKAGE
+            NovaSliderField::make(__('Min Zoom Features In Viewport'), 'min_zoom_features_in_viewport')
+                ->min(5)
+                ->max(25)
+                ->default(10)
+                ->onlyOnForms()
+                ->help(__('Minimum zoom level for enable the Features In Viewport')),
+            // TODO: ADD2WMPACKAGE
+            NovaSliderField::make(__('Max Zoom Features In Viewport'), 'max_zoom_features_in_viewport')
+                ->min(5)
+                ->max(25)
+                ->default(12)
+                ->onlyOnForms()
+                ->help(__('Maximum zoom level for enable the Features In Viewport')),
+            // TODO: ADD2WMPACKAGE
+            Number::make(__('Min Zoom Features In Viewport'), 'min_zoom_features_in_viewport')
+                ->help(__('Minimum zoom level for enable the Features In Viewport'))
+                ->onlyOnDetail(),
+            // TODO: ADD2WMPACKAGE
+            Number::make(__('Max Zoom Features In Viewport'), 'max_zoom_features_in_viewport')
+                ->help(__('Maximum zoom level for enable the Features In Viewport'))
+                ->onlyOnDetail(),
             Toggle::make(__('Show Media Name'), 'show_media_name')
                 ->trueValue('On')
                 ->falseValue('Off')
