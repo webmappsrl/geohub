@@ -305,7 +305,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
-            // TODO: aggiungere al wmpackage
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Draw POI'), 'draw_poi_show')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -586,6 +586,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Travel Mode'), 'show_travel_mode')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -595,6 +596,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Get Directions (google maps)'), 'show_get_directions')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -604,6 +606,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Features In Viewport'), 'show_features_in_viewport')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -613,6 +616,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Media Name'), 'show_media_name')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -622,6 +626,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Embedded HTML'), 'show_embedded_html')
                 ->trueValue('On')
                 ->falseValue('Off')
@@ -631,7 +636,7 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
-            // TODO: aggiungere al wmpackage
+            // TODO: ADD2WMPACKAGE
             Toggle::make(__('Show Track Direction Arrow'), 'show_track_direction_arrow')
                 ->trueValue('On')
                 ->falseValue('Off')

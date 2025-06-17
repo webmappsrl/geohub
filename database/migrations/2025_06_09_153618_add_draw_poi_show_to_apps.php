@@ -14,6 +14,7 @@ class AddDrawPoiShowToApps extends Migration
      */
     public function up()
     {
+        // TODO: ADD2WMPACKAGE
         Schema::table('apps', function (Blueprint $table) {
             $table->boolean('draw_poi_show')->default(false);
         });

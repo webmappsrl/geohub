@@ -13,6 +13,7 @@ class AddInfoAndEmbeddedElementToEcPois extends Migration
      */
     public function up()
     {
+        // TODO: ADD2WMPACKAGE
         Schema::table('ec_pois', function (Blueprint $table) {
             $table->text('info')->nullable();
             $table->text('embedded_html')->nullable();

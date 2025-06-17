@@ -13,7 +13,7 @@ class AddTrackDirectionArrowToApps extends Migration
      */
     public function up()
     {
-        // TODO: aggiungere nuovo parametro al wmpackage
+        // TODO: ADD2WMPACKAGE
         Schema::table('apps', function (Blueprint $table) {
             $table->boolean('show_track_direction_arrow')->default(true);
         });
