@@ -243,8 +243,8 @@ class EcPoi extends Resource
                         Text::make(__('Name'), 'name'),
                         Textarea::make(__('Excerpt'), 'excerpt'),
                         Textarea::make('Description'),
-                        Textarea::make(__('Info'), 'info'),
-                        Textarea::make(__('Embedded HTML'), 'embedded_html'),
+                        Textarea::make(__('Info'), 'info'), // TODO: ADD2WMPACKAGE
+                        Textarea::make(__('Embedded HTML'), 'embedded_html'), // TODO: ADD2WMPACKAGE
                     ])->onlyOnDetail(),
                 ],
                 'Media' => [
@@ -442,9 +442,9 @@ class EcPoi extends Resource
                                 return is_null($osmid);
                             })
                                 ->help(__('Enter a detailed description of the POI. Use this field to provide comprehensive information.')),
-                            NovaWyswyg::make(__('Info'), 'info')
+                            NovaWyswyg::make(__('Info'), 'info') // TODO: ADD2WMPACKAGE
                                 ->help(__('Enter additional information of the POI.')),
-                            NovaWyswyg::make(__('Embedded HTML'), 'embedded_html')
+                            NovaWyswyg::make(__('Embedded HTML'), 'embedded_html') // TODO: ADD2WMPACKAGE
                                 ->canSee(function () {
                                     return $this->canShowEmbeddedHtml();
                                 })
@@ -672,6 +672,7 @@ class EcPoi extends Resource
         ];
     }
 
+    // TODO: ADD2WMPACKAGE
     private function canShowEmbeddedHtml(): bool
     {
         $user = $this->author;

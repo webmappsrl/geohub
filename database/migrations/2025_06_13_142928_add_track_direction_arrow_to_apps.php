@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddInfoAndEmbeddedElementToEcPois extends Migration
+class AddTrackDirectionArrowToApps extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,8 @@ class AddInfoAndEmbeddedElementToEcPois extends Migration
     public function up()
     {
         // TODO: ADD2WMPACKAGE
-        Schema::table('ec_pois', function (Blueprint $table) {
-            $table->text('info')->nullable();
-            $table->text('embedded_html')->nullable();
+        Schema::table('apps', function (Blueprint $table) {
+            $table->boolean('show_track_direction_arrow')->default(true);
         });
     }
 
@@ -27,9 +26,8 @@ class AddInfoAndEmbeddedElementToEcPois extends Migration
      */
     public function down()
     {
-        Schema::table('ec_pois', function (Blueprint $table) {
-            $table->dropColumn('info');
-            $table->dropColumn('embedded_html');
+        Schema::table('apps', function (Blueprint $table) {
+            $table->dropColumn('show_track_direction_arrow');
         });
     }
 }

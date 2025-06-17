@@ -88,7 +88,7 @@ trait ConfTrait
         $data = [];
 
         $data['WEBAPP']['draw_track_show'] = $this->draw_track_show;
-        $data['WEBAPP']['draw_poi_show'] = $this->draw_poi_show; // TODO: aggiungere al wmpackage
+        $data['WEBAPP']['draw_poi_show'] = $this->draw_poi_show; // TODO: ADD2WMPACKAGE
         $data['WEBAPP']['editing_inline_show'] = $this->editing_inline_show;
         $data['WEBAPP']['splash_screen_show'] = $this->splash_screen_show;
         if ($this->gu_id) {
@@ -381,6 +381,7 @@ trait ConfTrait
         $data['MAP']['flow_line_quote_show'] = $this->flow_line_quote_show;
         $data['MAP']['flow_line_quote_orange'] = $this->flow_line_quote_orange;
         $data['MAP']['flow_line_quote_red'] = $this->flow_line_quote_red;
+        $data['MAP']['show_track_direction_arrow'] = $this->show_track_direction_arrow; // TODO: ADD2WMPACKAGE
 
         // Tiles
         if ($this->tiles && ! empty(json_decode($this->tiles, true))) {
@@ -617,11 +618,11 @@ trait ConfTrait
         $data['OPTIONS']['showKmlDownload'] = $this->table_details_show_kml_download;
         $data['OPTIONS']['showGeojsonDownload'] = (bool) $this->table_details_show_geojson_download;
         $data['OPTIONS']['showShapefileDownload'] = (bool) $this->table_details_show_shapefile_download;
-        $data['OPTIONS']['showTravelMode'] = $this->show_travel_mode;
-        $data['OPTIONS']['showGetDirections'] = $this->show_get_directions;
-        $data['OPTIONS']['showFeaturesInViewport'] = $this->show_features_in_viewport;
-        $data['OPTIONS']['showMediaName'] = $this->show_media_name;
-        $data['OPTIONS']['showEmbeddedHtml'] = $this->show_embedded_html;
+        $data['OPTIONS']['showTravelMode'] = $this->show_travel_mode; // TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['showGetDirections'] = $this->show_get_directions; // TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['showFeaturesInViewport'] = $this->show_features_in_viewport; // TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['showMediaName'] = $this->show_media_name; // TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['showEmbeddedHtml'] = $this->show_embedded_html; // TODO: ADD2WMPACKAGE
 
         foreach ($this->track_technical_details as $label => $value) {
             $label = Str::camel($label);

@@ -13,6 +13,7 @@ class AddNewOptionsForConfig extends Migration
      */
     public function up()
     {
+        // TODO: ADD2WMPACKAGE
         Schema::table('apps', function (Blueprint $table) {
             $table->boolean('show_travel_mode')->default(false);
             $table->boolean('show_get_directions')->default(false);
