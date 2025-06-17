@@ -73,6 +73,8 @@ class AppFactory extends Factory
             'show_travel_mode' => $this->faker->boolean(),
             'show_get_directions' => $this->faker->boolean(),
             'show_features_in_viewport' => $this->faker->boolean(),
+            'min_zoom_features_in_viewport' => 10,
+            'max_zoom_features_in_viewport' => 12,
             'show_media_name' => $this->faker->boolean(),
             'show_embedded_html' => $this->faker->boolean(),
             'show_track_direction_arrow' => $this->faker->boolean(),

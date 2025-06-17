@@ -623,6 +623,8 @@ trait ConfTrait
         $data['OPTIONS']['showFeaturesInViewport'] = $this->show_features_in_viewport; // TODO: ADD2WMPACKAGE
         $data['OPTIONS']['showMediaName'] = $this->show_media_name; // TODO: ADD2WMPACKAGE
         $data['OPTIONS']['showEmbeddedHtml'] = $this->show_embedded_html; // TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['maxZoomFeaturesInViewport'] = $this->max_zoom_features_in_viewport; //TODO: ADD2WMPACKAGE
+        $data['OPTIONS']['minZoomFeaturesInViewport'] = $this->min_zoom_features_in_viewport; //TODO: ADD2WMPACKAGE
 
         foreach ($this->track_technical_details as $label => $value) {
             $label = Str::camel($label);
