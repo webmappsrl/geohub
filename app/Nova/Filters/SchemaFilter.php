@@ -26,7 +26,10 @@ class SchemaFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->whereRaw("raw_data->>'id' = ?", [$value]);
+        return $query->where(function ($query) use ($value) {
+            $query->whereRaw("raw_data->>'id' = ?", [$value])
+                ->orWhereRaw("properties->'form'->>'id' = ?", [$value]);
+        });
     }
 
     public function __construct($type = 'ugc_pois')
