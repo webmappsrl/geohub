@@ -51,26 +51,57 @@ class ExportFormDataXLSX extends Action
             $dataSheets = [];
             $heading = [];
             foreach ($formSchemas as $formSchema) {
-                $allFieldLabels = [$this->type, 'username'];
-                $allFieldNames = [$this->type, 'username'];
+                $allFieldLabels = [$this->type, 'username', 'created_at', 'geometry'];
+                $allFieldNames = [$this->type, 'username', 'created_at', 'geometry'];
+                $fieldSchemas = [];
                 foreach ($formSchema['fields'] as $field) {
                     $label = reset($field['label']);
                     $allFieldLabels[] = $label;
                     $allFieldNames[] = $field['name'];
+                    $fieldSchemas[$field['name']] = $field;
                 }
                 if (isset($formSchema['id'])) {
                     $heading[$formSchema['id']][] = $allFieldNames;
                     $dataSheets[$formSchema['id']][] = $allFieldNames;
                     $dataSheets[$formSchema['id']][] = $allFieldLabels;
                     foreach ($modelsInGroup as $model) {
-                        $formData = json_decode($model->raw_data, true);
+                        $formData = $model->properties['form'] ?? $model->properties;
                         $ugc_path = $this->type === 'ugc_pois' ? 'ugc-pois' : 'ugc-tracks';
                         $formData[$this->type] = url('/resources/'.$ugc_path.'/'.$model['id']);
                         $formData['username'] = $model->user->name;
+                        $formData['created_at'] = $model->created_at ? $model->created_at->format('Y-m-d H:i:s') : 'N/A';
+
+                        if ($model->geometry) {
+                            $geojson = $model->getGeojson();
+                            if ($geojson && isset($geojson['geometry']['coordinates'])) {
+                                $formData['geometry'] = json_encode($geojson['geometry']['coordinates']);
+                            } else {
+                                $formData['geometry'] = 'N/A';
+                            }
+                        } else {
+                            $formData['geometry'] = 'N/A';
+                        }
+
                         if (isset($formData['id']) && $formSchema['id'] === $formData['id']) {
                             foreach ($heading[$formData['id']] as $headingRow) {
                                 foreach ($headingRow as $fieldName) {
-                                    $rowData[$fieldName] = isset($formData[$fieldName]) ? $formData[$fieldName] : 'N/A';
+                                    if (
+                                        isset($fieldSchemas[$fieldName]) &&
+                                        $fieldSchemas[$fieldName]['type'] === 'select' &&
+                                        isset($formData[$fieldName])
+                                    ) {
+                                        $selectedValue = $formData[$fieldName];
+                                        $fieldValue = 'N/A';
+                                        foreach ($fieldSchemas[$fieldName]['values'] as $option) {
+                                            if ($option['value'] === $selectedValue) {
+                                                $fieldValue = reset($option['label']);
+                                                break;
+                                            }
+                                        }
+                                        $rowData[$fieldName] = $fieldValue;
+                                    } else {
+                                        $rowData[$fieldName] = isset($formData[$fieldName]) ? $formData[$fieldName] : 'N/A';
+                                    }
                                 }
                             }
                             $dataSheets[$formData['id']][] = $rowData;
