@@ -34,7 +34,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             // Curl request to get the feature information from external source
             $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
             $track = $this->curlRequest($url);
-
+            $this->forceOutcropediaEnglish($track);
             // prepare feature parameters to pass to updateOrCreate function
             $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
             if (isset($track['osmid']) && ! empty($track['osmid'])) {
@@ -86,7 +86,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         // Curl request to get the feature information from external source
         $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$this->source_id;
         $poi = $this->curlRequest($url);
-
+        $this->forceOutcropediaEnglish($poi);  
         // prepare feature parameters to pass to updateOrCreate function
         $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
@@ -173,6 +173,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
+        $this->forceOutcropediaEnglish($track);
         $domain_path = parse_url($this->endpoint);
         $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         $lang_key = $this->getLangKey($track['wpml_current_locale'] ?? null);
@@ -317,6 +318,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
      */
     protected function preparePOITagsJson($poi)
     {
+        $this->forceOutcropediaEnglish($poi);
         if (! $this->only_related_url) { // skip import if only related url is true
             $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
             $lang_key = $this->getLangKey($poi['wpml_current_locale'] ?? null);
@@ -751,6 +753,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     public function prepareMediaTagsJson($media)
     {
         $this->logChannel->info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media['id']);
+        $this->forceOutcropediaEnglish($media);
         $tags = [];
         $lang_key = $this->getLangKey($media['wpml_current_locale'] ?? null);
         if (! empty($media['wpml_current_locale'])) {
@@ -804,15 +807,18 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     }
 
     /**
-     * Returns the correct base language from a WPML localization.
-     * Exception for outcropedia which includes English content localized in Italian
+     * Forces English as the default language for all Outcropedia entities
+     * and clears any translation entries.
+     *
+     * @param array $item The entity (track, poi or media) to modify
+     * @return void
      */
-    private function getLangKey(?string $locale): string
+    private function forceOutcropediaEnglish(&$item)
     {
-        if (str_contains($this->endpoint, 'outcropedia.tectask.org')) {
-            return 'en';
+        if (str_contains($this->endpoint, 'outcropedia')) {
+            $item['wpml_current_locale'] = 'en_US';
+            $item['wpml_translations'] = [];
         }
-
-        return $locale ? explode('_', $locale)[0] : 'it'; // fallback 'it'
     }
+
 }
