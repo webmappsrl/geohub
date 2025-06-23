@@ -59,6 +59,10 @@ class ExportFormDataXLSX extends Action
                     $allFieldLabels[] = $label;
                     $allFieldNames[] = $field['name'];
                     $fieldSchemas[$field['name']] = $field;
+                    if ($field['type'] === 'select') {
+                        $allFieldLabels[] = $label.' (valore)';
+                        $allFieldNames[] = $field['name'].'_select_val';
+                    }
                 }
                 if (isset($formSchema['id'])) {
                     $heading[$formSchema['id']][] = $allFieldNames;
@@ -85,23 +89,7 @@ class ExportFormDataXLSX extends Action
                         if (isset($formData['id']) && $formSchema['id'] === $formData['id']) {
                             foreach ($heading[$formData['id']] as $headingRow) {
                                 foreach ($headingRow as $fieldName) {
-                                    if (
-                                        isset($fieldSchemas[$fieldName]) &&
-                                        $fieldSchemas[$fieldName]['type'] === 'select' &&
-                                        isset($formData[$fieldName])
-                                    ) {
-                                        $selectedValue = $formData[$fieldName];
-                                        $fieldValue = 'N/A';
-                                        foreach ($fieldSchemas[$fieldName]['values'] as $option) {
-                                            if ($option['value'] === $selectedValue) {
-                                                $fieldValue = reset($option['label']);
-                                                break;
-                                            }
-                                        }
-                                        $rowData[$fieldName] = $fieldValue;
-                                    } else {
-                                        $rowData[$fieldName] = isset($formData[$fieldName]) ? $formData[$fieldName] : 'N/A';
-                                    }
+                                    $rowData[$fieldName] = $this->getFieldValue($fieldName, $fieldSchemas, $formData);
                                 }
                             }
                             $dataSheets[$formData['id']][] = $rowData;
@@ -126,6 +114,51 @@ class ExportFormDataXLSX extends Action
     public function fields()
     {
         return [];
+    }
+
+    private function getFieldValue(string $fieldName, array $fieldSchemas, array $formData): string
+    {
+        if (! $this->isValueField($fieldName)) {
+            return $formData[$fieldName] ?? 'N/A';
+        }
+
+        $originalFieldName = $this->getOriginalFieldName($fieldName);
+
+        if (! $this->isValidSelectField($originalFieldName, $fieldSchemas, $formData)) {
+            return 'N/A';
+        }
+
+        return $this->getSelectFieldLabel($originalFieldName, $fieldSchemas, $formData);
+    }
+
+    private function isValueField(string $fieldName): bool
+    {
+        return str_ends_with($fieldName, '_select_val');
+    }
+
+    private function getOriginalFieldName(string $fieldName): string
+    {
+        return str_replace('_select_val', '', $fieldName);
+    }
+
+    private function isValidSelectField(string $fieldName, array $fieldSchemas, array $formData): bool
+    {
+        return isset($fieldSchemas[$fieldName]) &&
+            $fieldSchemas[$fieldName]['type'] === 'select' &&
+            isset($formData[$fieldName]);
+    }
+
+    private function getSelectFieldLabel(string $fieldName, array $fieldSchemas, array $formData): string
+    {
+        $selectedValue = $formData[$fieldName];
+
+        foreach ($fieldSchemas[$fieldName]['values'] as $option) {
+            if ($option['value'] === $selectedValue) {
+                return reset($option['label']);
+            }
+        }
+
+        return 'N/A';
     }
 }
 class Sheet implements FromArray, WithStyles, WithTitle
