@@ -176,21 +176,20 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         $this->forceOutcropediaEnglish($track);
         $domain_path = parse_url($this->endpoint);
         $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
-        $lang_key = $this->getLangKey($track['wpml_current_locale'] ?? null);
-        $this->tags['name'][$lang_key] = html_entity_decode($track['title']['rendered']);
-        $this->tags['description'][$lang_key] = html_entity_decode($track['content']['rendered']);
-        $this->tags['excerpt'][$lang_key] = html_entity_decode($track['excerpt']['rendered']);
+        $this->tags['name'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['title']['rendered']);
+        $this->tags['description'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['content']['rendered']);
+        $this->tags['excerpt'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['excerpt']['rendered']);
         // Add audio for default language
         // $this->tags['audio'][explode('_',$track['wpml_current_locale'])[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.explode('_',$track['wpml_current_locale'])[0].'.mp3',explode('_',$track['wpml_current_locale'])[0]);
         if (! empty($track['wpml_translations'])) {
             foreach ($track['wpml_translations'] as $lang) {
-                $locale = $this->getLangKey($lang['locale'] ?? null);
-                $this->tags['name'][[$locale]] = html_entity_decode($lang['post_title']);
+                $locale = explode('_', $lang['locale']);
+                $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']);
                 // Curl request to get the feature translation from external source
                 $url = $this->endpoint.'/wp-json/wp/v2/track/'.$lang['id'];
                 $track_decode = $this->curlRequest($url);
-                $this->tags['description'][[$locale]] = html_entity_decode($track_decode['content']['rendered']);
-                $this->tags['excerpt'][[$locale]] = html_entity_decode($track_decode['excerpt']['rendered']);
+                $this->tags['description'][$locale[0]] = html_entity_decode($track_decode['content']['rendered']);
+                $this->tags['excerpt'][$locale[0]] = html_entity_decode($track_decode['excerpt']['rendered']);
                 // Add audio for other languages
                 // $this->tags['audio'][$locale[0]] = $this->uploadAudioAWS('https://a.webmapp.it/'.$domain_path['host'].'/media/audios/'.$track['id'].'_'.$locale[0].'.mp3',$locale[0]);
             }
@@ -321,9 +320,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         $this->forceOutcropediaEnglish($poi);
         if (! $this->only_related_url) { // skip import if only related url is true
             $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
-            $lang_key = $this->getLangKey($poi['wpml_current_locale'] ?? null);
-            $this->tags['name'][$lang_key] = html_entity_decode($poi['title']['rendered']);
-            $this->tags['description'][$lang_key] = html_entity_decode($poi['content']['rendered']);
+            $this->tags['name'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
+            $this->tags['description'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['content']['rendered']);
 
             // Adding the name from Sardinian to Italian for Campos project
             if ($this->endpoint == 'https://cordinamentu-campos.org') {
@@ -441,18 +439,18 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                 }
             }
 
-            $this->tags['excerpt'][$lang_key] = html_entity_decode($poi['excerpt']['rendered']);
+            $this->tags['excerpt'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['excerpt']['rendered']);
             if (isset($poi['audio']) && $poi['audio']) {
                 $this->tags['audio'][explode('_', $poi['wpml_current_locale'])[0]] = $this->uploadAudioAWS($poi['audio']['url'], explode('_', $poi['wpml_current_locale'])[0]);
             }
             if (! empty($poi['wpml_translations'])) {
                 foreach ($poi['wpml_translations'] as $lang) {
-                    $locale = $this->getLangKey($lang['locale'] ?? null);
-                    $this->tags['name'][$locale] = html_entity_decode($lang['post_title']);
+                    $locale = explode('_', $lang['locale']);
+                    $this->tags['name'][$locale[0]] = html_entity_decode($lang['post_title']);
                     // Curl request to get the feature translation from external source
                     $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$lang['id'];
                     $poi_decode = $this->curlRequest($url);
-                    $this->tags['description'][$locale] = html_entity_decode($poi_decode['content']['rendered']);
+                    $this->tags['description'][$locale[0]] = html_entity_decode($poi_decode['content']['rendered']);
 
                     // Adding ACF of Itinera Romanica to description
                     if (isset($poi_decode['acf'])) {
@@ -474,7 +472,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                         }
                     }
 
-                    $this->tags['excerpt'][$locale] = html_entity_decode($poi_decode['excerpt']['rendered']);
+                    $this->tags['excerpt'][$locale[0]] = html_entity_decode($poi_decode['excerpt']['rendered']);
 
                     // Add audio file
                     // $domain_path = parse_url($this->endpoint);
@@ -755,9 +753,8 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         $this->logChannel->info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media['id']);
         $this->forceOutcropediaEnglish($media);
         $tags = [];
-        $lang_key = $this->getLangKey($media['wpml_current_locale'] ?? null);
         if (! empty($media['wpml_current_locale'])) {
-            $local_lang = $lang_key;
+            $local_lang = explode('_', $media['wpml_current_locale'])[0];
         } else {
             $local_lang = 'it';
         }
@@ -806,13 +803,6 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         return $tags;
     }
 
-    /**
-     * Forces English as the default language for all Outcropedia entities
-     * and clears any translation entries.
-     *
-     * @param array $item The entity (track, poi or media) to modify
-     * @return void
-     */
     private function forceOutcropediaEnglish(&$item)
     {
         if (str_contains($this->endpoint, 'outcropedia')) {
