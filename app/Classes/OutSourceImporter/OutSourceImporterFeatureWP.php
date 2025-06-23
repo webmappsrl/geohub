@@ -86,7 +86,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         // Curl request to get the feature information from external source
         $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$this->source_id;
         $poi = $this->curlRequest($url);
-        $this->forceOutcropediaEnglish($poi);  
+        $this->forceOutcropediaEnglish($poi);
         // prepare feature parameters to pass to updateOrCreate function
         $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
@@ -810,5 +810,4 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             $item['wpml_translations'] = [];
         }
     }
-
 }
