@@ -186,7 +186,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
                 $locale = $this->getLangKey($lang['locale'] ?? null);
                 $this->tags['name'][[$locale]] = html_entity_decode($lang['post_title']);
                 // Curl request to get the feature translation from external source
-                $url = $this->endpoint . '/wp-json/wp/v2/track/' . $lang['id'];
+                $url = $this->endpoint.'/wp-json/wp/v2/track/'.$lang['id'];
                 $track_decode = $this->curlRequest($url);
                 $this->tags['description'][[$locale]] = html_entity_decode($track_decode['content']['rendered']);
                 $this->tags['excerpt'][[$locale]] = html_entity_decode($track_decode['excerpt']['rendered']);
@@ -806,9 +806,6 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     /**
      * Returns the correct base language from a WPML localization.
      * Exception for outcropedia which includes English content localized in Italian
-     *
-     * @param string|null $locale
-     * @return string
      */
     private function getLangKey(?string $locale): string
     {
@@ -818,5 +815,4 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
 
         return $locale ? explode('_', $locale)[0] : 'it'; // fallback 'it'
     }
-
 }
