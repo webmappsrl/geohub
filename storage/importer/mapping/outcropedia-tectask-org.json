@@ -1,0 +1,160 @@
+{
+    "poi_type": {
+        "228": {
+            "source_title": {
+                "it": "Boudinage",
+                "en": "Boudinage"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "boudinage"
+        },
+        "220": {
+            "source_title": {
+                "it": "Faglie",
+                "en": "Faults"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "tectonics"
+        },
+         "229": {
+            "source_title": {
+                "it": "Pieghe",
+                "en": "Folds"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "folds"
+        },
+        "232": {
+            "source_title": {
+                "it": "Foliature",
+                "en": "Foliations"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "foliations"
+        },
+        "238": {
+            "source_title": {
+                "it": "Fossili",
+                "en": "Fossils"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "fossils"
+        },
+        "224": {
+            "source_title": {
+                "it": "Fratture, Diaclasi, Vene",
+                "en": "Fractures, Joints, Veins"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "fractures-joints-veins"
+        },
+        "230": {
+            "source_title": {
+                "it": "Lineazioni",
+                "en": "Lineations"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "lineations"
+        },
+        "234": {
+            "source_title": {
+                "it": "Rocce metamorfiche",
+                "en": "Metamorphic rocks"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "metamorphic-rocks"
+        },
+        "219": {
+            "source_title": {
+                "it": "Primary structures, Sedimentary rocks, Magmatic rocks",
+                "en": "Primary structures, sedimentary, magmatic rocks"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "primary-structures"
+        },
+        "242": {
+            "source_title": {
+                "it": "Rocce sedimentarie",
+                "en": "Sedimentary rocks"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "sedimentary-rocks"
+        },
+        "231": {
+            "source_title": {
+                "it": "Zone di taglio",
+                "en": "Shear zones"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "shear-zones"
+        },
+        "241": {
+            "source_title": {
+                "it": "Street geology",
+                "en": "Geologia urbana"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "street-geology"
+        }
+    },
+    "activity": {
+        "240": {
+            "source_title": {
+                "it": "In macchina",
+                "en": "By car"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "by-car"
+        },
+        "239": {
+            "source_title": {
+                "it": "Escursionismo",
+                "en": "Hiking"
+            },
+            "source_description": {
+                "it": "",
+                "en": ""
+            },
+            "geohub_identifier": "hiking"
+        }
+    }
+}

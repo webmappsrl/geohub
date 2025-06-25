@@ -34,7 +34,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
             // Curl request to get the feature information from external source
             $url = $this->endpoint.'/wp-json/wp/v2/track/'.$this->source_id;
             $track = $this->curlRequest($url);
-
+            $this->forceOutcropediaEnglish($track);
             // prepare feature parameters to pass to updateOrCreate function
             $this->logChannel->info('Preparing OSF Track with external ID: '.$this->source_id);
             if (isset($track['osmid']) && ! empty($track['osmid'])) {
@@ -86,7 +86,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         // Curl request to get the feature information from external source
         $url = $this->endpoint.'/wp-json/wp/v2/poi/'.$this->source_id;
         $poi = $this->curlRequest($url);
-
+        $this->forceOutcropediaEnglish($poi);
         // prepare feature parameters to pass to updateOrCreate function
         $this->logChannel->info('Preparing OSF POI with external ID: '.$this->source_id);
         try {
@@ -173,6 +173,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
      */
     protected function prepareTrackTagsJson($track)
     {
+        $this->forceOutcropediaEnglish($track);
         $domain_path = parse_url($this->endpoint);
         $this->logChannel->info('Preparing OSF Track TRANSLATIONS with external ID: '.$this->source_id);
         $this->tags['name'][explode('_', $track['wpml_current_locale'])[0]] = html_entity_decode($track['title']['rendered']);
@@ -316,6 +317,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
      */
     protected function preparePOITagsJson($poi)
     {
+        $this->forceOutcropediaEnglish($poi);
         if (! $this->only_related_url) { // skip import if only related url is true
             $this->logChannel->info('Preparing OSF POI TRANSLATIONS with external ID: '.$this->source_id);
             $this->tags['name'][explode('_', $poi['wpml_current_locale'])[0]] = html_entity_decode($poi['title']['rendered']);
@@ -749,6 +751,7 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
     public function prepareMediaTagsJson($media)
     {
         $this->logChannel->info('Preparing OSF MEDIA TRANSLATIONS with external ID: '.$media['id']);
+        $this->forceOutcropediaEnglish($media);
         $tags = [];
         if (! empty($media['wpml_current_locale'])) {
             $local_lang = explode('_', $media['wpml_current_locale'])[0];
@@ -798,5 +801,13 @@ class OutSourceImporterFeatureWP extends OutSourceImporterFeatureAbstract
         }
 
         return $tags;
+    }
+
+    private function forceOutcropediaEnglish(&$item)
+    {
+        if (str_contains($this->endpoint, 'outcropedia')) {
+            $item['wpml_current_locale'] = 'en_US';
+            $item['wpml_translations'] = [];
+        }
     }
 }

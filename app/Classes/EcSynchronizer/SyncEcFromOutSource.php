@@ -551,7 +551,6 @@ class SyncEcFromOutSource
                     if (! empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                         $this->logChannel->info('Attaching EC Track FEATURE_IMAGE.');
                         $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
-                            ->where('user_id', $this->author_webmapp)
                             ->first();
 
                         if ($EcMedia && ! is_null($EcMedia)) {
@@ -566,7 +565,6 @@ class SyncEcFromOutSource
                         $this->logChannel->info('Attaching EC Track IMAGE_GALLERY.');
                         foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                             $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
-                                ->where('user_id', $this->author_webmapp)
                                 ->first();
 
                             if ($EcMedia && ! is_null($EcMedia)) {
@@ -692,7 +690,6 @@ class SyncEcFromOutSource
                         if (! empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                             $this->logChannel->info('Attaching EC POI FEATURE_IMAGE.');
                             $EcMedia = EcMedia::where('out_source_feature_id', $out_source->tags['feature_image'])
-                                ->where('user_id', $this->author_webmapp)
                                 ->first();
 
                             if ($EcMedia && ! is_null($EcMedia)) {
@@ -729,7 +726,6 @@ class SyncEcFromOutSource
                             $this->logChannel->info('Attaching EC POI IMAGE_GALLERY.');
                             foreach ($out_source->tags['image_gallery'] as $OSD_media_id) {
                                 $EcMedia = EcMedia::where('out_source_feature_id', $OSD_media_id)
-                                    ->where('user_id', $this->author_webmapp)
                                     ->first();
 
                                 if ($EcMedia && ! is_null($EcMedia)) {
