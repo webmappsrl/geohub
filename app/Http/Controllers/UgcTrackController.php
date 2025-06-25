@@ -276,7 +276,7 @@ class UgcTrackController extends Controller
         Log::channel('ugc')->info('*************edit ugc track*****************');
 
         $ugcMediaCtrl = app(UgcMediaController::class);
-        
+
         $data = $request->all();
         $feature = json_decode($data['feature'], true);
         $images = $request->file('images', []);
@@ -342,7 +342,7 @@ class UgcTrackController extends Controller
             $ugcTrack->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($feature['geometry'])."'))");
             $ugcTrack->properties = $properties;
 
-            // Salvataggio della track        
+            // Salvataggio della track
             $ugcTrack->save();
             Log::channel('ugc')->info('Track aggiornato id:'.$ugcTrack->id);
 
@@ -353,7 +353,7 @@ class UgcTrackController extends Controller
 
             DB::commit();
             Log::channel('ugc')->info('POST UPDATE TRACK OK:'.$ugcTrack->id);
-            
+
             return response(['id' => $ugcTrack->id, 'message' => 'Updated successfully'], 200);
         } catch (Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio della track: '.$e->getMessage());
