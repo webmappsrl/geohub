@@ -275,18 +275,32 @@ class UgcTrackController extends Controller
     {
         Log::channel('ugc')->info('*************edit ugc track*****************');
 
+        $ugcMediaCtrl = app(UgcMediaController::class);
+        
         $data = $request->all();
+        $feature = json_decode($data['feature'], true);
+        $images = $request->file('images', []);
+        $properties = $feature['properties'];
 
-        if (! isset($data['properties']['id'])) {
+        if (! isset($properties['id'])) {
             Log::channel('ugc')->info('ID non presente nelle properties del GeoJSON');
 
             return response(['error' => 'ID is required in properties'], 400);
         }
-
-        $id = $data['properties']['id'];
-        $properties = $data['properties'];
+        $id = $properties['id'];
 
         Log::channel('ugc')->info('Modifica della track con ID: '.$id);
+
+        if (! empty($images)) {
+            if (! $ugcMediaCtrl->validateUploadedImages($images)) {
+                Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
+
+                return response([
+                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'retry' => true,
+                ], 422);
+            }
+        }
 
         // Validazione dei dati
         $this->checkValidation($data, [
@@ -307,39 +321,46 @@ class UgcTrackController extends Controller
             return response(['error' => 'User not authenticated'], 403);
         }
 
-        // Recupero della track esistente
-        $ugcTrack = UgcTrack::find($id);
-        if (! $ugcTrack || $ugcTrack->user_id !== $user->id) {
-            Log::channel('ugc')->info('Track non trovata o accesso non autorizzato');
-
-            return response(['error' => 'Track not found or unauthorized access'], 404);
-        }
-
-        Log::channel('ugc')->info('user email:'.$user->email);
-        Log::channel('ugc')->info('user id:'.$user->id);
-
-        // Aggiornamento dei campi principali
-        $ugcTrack->name = $properties['name'] ?? $ugcTrack->name;
-        if (isset($properties['description'])) {
-            $ugcTrack->description = $properties['description'];
-        }
-        $ugcTrack->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($data['geometry'])."'))");
-        $ugcTrack->properties = $properties;
-        // Salvataggio della track
+        DB::beginTransaction();
         try {
+            // Recupero della track esistente
+            $ugcTrack = UgcTrack::find($id);
+            if (! $ugcTrack || $ugcTrack->user_id !== $user->id) {
+                Log::channel('ugc')->info('Track non trovata o accesso non autorizzato');
+
+                return response(['error' => 'Track not found or unauthorized access'], 404);
+            }
+
+            Log::channel('ugc')->info('user email:'.$user->email);
+            Log::channel('ugc')->info('user id:'.$user->id);
+
+            // Aggiornamento dei campi principali
+            $ugcTrack->name = $properties['name'] ?? $ugcTrack->name;
+            if (isset($properties['description'])) {
+                $ugcTrack->description = $properties['description'];
+            }
+            $ugcTrack->geometry = DB::raw("ST_Force3D(ST_GeomFromGeojson('".json_encode($feature['geometry'])."'))");
+            $ugcTrack->properties = $properties;
+
+            // Salvataggio della track        
             $ugcTrack->save();
+            Log::channel('ugc')->info('Track aggiornato id:'.$ugcTrack->id);
+
+            // **Track associa i media**
+            if (! empty($images)) {
+                $ugcMediaCtrl->saveAndAttachMediaToModel($ugcTrack, $user, $images);
+            }
+
+            DB::commit();
+            Log::channel('ugc')->info('POST UPDATE TRACK OK:'.$ugcTrack->id);
+            
+            return response(['id' => $ugcTrack->id, 'message' => 'Updated successfully'], 200);
         } catch (Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio della track: '.$e->getMessage());
+            DB::rollBack();
 
             return response(['error' => 'Error updating Track'], 500);
         }
-
-        // Gestione image_gallery
-        if (isset($properties['image_gallery']) && is_array($properties['image_gallery'])) {
-            $ugcTrack->ugc_media()->sync($properties['image_gallery']);
-        }
-
-        return response(['id' => $ugcTrack->id, 'message' => 'Updated successfully'], 200);
     }
 
     /**

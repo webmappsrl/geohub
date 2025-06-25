@@ -281,18 +281,32 @@ class UgcPoiController extends Controller
     {
         Log::channel('ugc')->info('*************edit ugc poi*****************');
 
-        $data = $request->all();
+        $ugcMediaCtrl = app(UgcMediaController::class);
 
-        if (! isset($data['properties']['id'])) {
+        $data = $request->all();
+        $feature = json_decode($data['feature'], true);
+        $images = $request->file('images', []);
+        $properties = $feature['properties'];
+
+        if (! isset($properties['id'])) {
             Log::channel('ugc')->info('ID non presente nelle properties del GeoJSON');
 
             return response(['error' => 'ID is required in properties'], 400);
         }
-
-        $id = $data['properties']['id'];
-        $properties = $data['properties'];
+        $id = $properties['id'];
 
         Log::channel('ugc')->info('Modifica del POI con ID: '.$id);
+
+        if (! empty($images)) {
+            if (! $ugcMediaCtrl->validateUploadedImages($images)) {
+                Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
+
+                return response([
+                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'retry' => true,
+                ], 422);
+            }
+        }
 
         // Validazione dei dati
         $this->checkValidation($data, [
@@ -313,40 +327,46 @@ class UgcPoiController extends Controller
             return response(['error' => 'User not authenticated'], 403);
         }
 
-        // Recupero del POI esistente
-        $ugcPoi = UgcPoi::find($id);
-        if (! $ugcPoi || $ugcPoi->user_id !== $user->id) {
-            Log::channel('ugc')->info('POI non trovato o accesso non autorizzato');
-
-            return response(['error' => 'POI not found or unauthorized access'], 404);
-        }
-
-        Log::channel('ugc')->info('user email:'.$user->email);
-        Log::channel('ugc')->info('user id:'.$user->id);
-
-        // Aggiornamento dei campi principali
-        $ugcPoi->name = $properties['name'] ?? $ugcPoi->name;
-        if (isset($properties['description'])) {
-            $ugcPoi->description = $properties['description'];
-        }
-        $ugcPoi->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($data['geometry'])."')");
-        $ugcPoi->properties = $properties;
-
-        // Salvataggio del POI
+        DB::beginTransaction();
         try {
+            // Recupero del POI esistente
+            $ugcPoi = UgcPoi::find($id);
+            if (! $ugcPoi || $ugcPoi->user_id !== $user->id) {
+                Log::channel('ugc')->info('POI non trovato o accesso non autorizzato');
+
+                return response(['error' => 'POI not found or unauthorized access'], 404);
+            }
+
+            Log::channel('ugc')->info('user email:'.$user->email);
+            Log::channel('ugc')->info('user id:'.$user->id);
+
+            // Aggiornamento dei campi principali
+            $ugcPoi->name = $properties['name'] ?? $ugcPoi->name;
+            if (isset($properties['description'])) {
+                $ugcPoi->description = $properties['description'];
+            }
+            $ugcPoi->geometry = DB::raw("ST_GeomFromGeojson('".json_encode($feature['geometry'])."')");
+            $ugcPoi->properties = $properties;
+
+            // Salvataggio del POI
             $ugcPoi->save();
-        } catch (Exception $e) {
-            Log::channel('ugc')->info('Errore nel salvataggio del POI: '.$e->getMessage());
+            Log::channel('ugc')->info('Poi aggiornato id:'.$ugcPoi->id);
+
+            // **Poi associa i media**
+            if (! empty($images)) {
+                $ugcMediaCtrl->saveAndAttachMediaToModel($ugcPoi, $user, $images);
+            }
+
+            DB::commit();
+            Log::channel('ugc')->info('POST UPDATE POI OK:'.$ugcPoi->id);
+
+            return response(['id' => $ugcPoi->id, 'message' => 'Updated successfully'], 200);
+        } catch (\Exception $e) {
+            Log::channel('ugc')->error('Errore durante la modifica del POI: '.$e->getMessage());
+            DB::rollBack();
 
             return response(['error' => 'Error updating POI'], 500);
         }
-
-        // Gestione image_gallery
-        if (isset($properties['image_gallery']) && is_array($properties['image_gallery'])) {
-            $ugcPoi->ugc_media()->sync($properties['image_gallery']);
-        }
-
-        return response(['id' => $ugcPoi->id, 'message' => 'Updated successfully'], 200);
     }
 
     /**
