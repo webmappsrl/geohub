@@ -33,7 +33,7 @@ class ForgotPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('nova.guest:' . config('nova.guard'));
+        $this->middleware('nova.guest:'.config('nova.guard'));
 
         ResetPassword::toMailUsing(function ($notifiable, $token) {
             return (new MailMessage)
@@ -68,7 +68,7 @@ class ForgotPasswordController extends Controller
      * Send a reset link to the given user.
      *
      * @override
-     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function sendResetLinkEmail(\Illuminate\Http\Request $request)
@@ -77,11 +77,12 @@ class ForgotPasswordController extends Controller
 
         $inputEmail = strtolower($request->input('email'));
         $user = User::whereRaw('LOWER(email) = ?', [$inputEmail])->first();
-        if (!$user) {
+        if (! $user) {
             return $this->sendResetLinkFailedResponse($request, Password::INVALID_USER);
         }
         $request->merge(['email' => $user->email]);
         $response = $this->broker()->sendResetLink(['email' => $user->email]);
+
         return $response == Password::RESET_LINK_SENT
             ? $this->sendResetLinkResponse($request, $response)
             : $this->sendResetLinkFailedResponse($request, $response);
