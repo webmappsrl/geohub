@@ -442,6 +442,13 @@ class UgcMediaController extends Controller
      */
     public function destroy($id)
     {
+        // This sections is needed to handle the case when the user asks for a specific api version
+        $args = func_get_args();
+        $n = func_num_args();
+        if ($n > 1) {
+            $id = $args[1];
+        }
+        
         try {
             $media = UgcMedia::find($id);
             $media->delete();

@@ -63,6 +63,9 @@ Route::group(
                 Route::post('edit', [UgcTrackController::class, 'edit'])->name('edit');
                 Route::get('delete/{id}', [UgcTrackController::class, 'destroy'])->name('destroy');
             });
+            Route::prefix('media')->name('media.v2.')->group(function () {
+                Route::get('delete/{id}', [UgcMediaController::class, 'destroy'])->name('destroy');
+            });
         });
     }
 );
