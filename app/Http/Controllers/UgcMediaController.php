@@ -448,7 +448,7 @@ class UgcMediaController extends Controller
         if ($n > 1) {
             $id = $args[1];
         }
-        
+
         try {
             $media = UgcMedia::find($id);
             $media->delete();
