@@ -186,7 +186,7 @@ class UgcTrackController extends Controller
                 Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
 
                 return response([
-                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'error' => 'The received images are corrupted or incomplete, please try again',
                     'retry' => true,
                 ], 422);
             }
@@ -296,7 +296,7 @@ class UgcTrackController extends Controller
                 Log::channel('ugc')->warning('Immagini non valide o incomplete ricevute.', ['images' => $images]);
 
                 return response([
-                    'error' => 'Le immagini ricevute sono corrotte o incomplete, riprovare',
+                    'error' => 'The received images are corrupted or incomplete, please try again',
                     'retry' => true,
                 ], 422);
             }
