@@ -54,7 +54,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
     /**
      * Convert user emails to lowercase.
      *
-     * @param bool $dryRun
+     * @param  bool  $dryRun
      * @return void
      */
     private function convertUserEmails($dryRun)
@@ -65,6 +65,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
 
         if ($users->isEmpty()) {
             $this->info('   ✅ All user emails are already lowercase');
+
             return;
         }
 
@@ -88,7 +89,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
                 $this->line("\n   ⚠️  SKIP: {$oldEmail} → {$newEmail} (duplicate with ID: {$existingUser->id})");
                 $skipped++;
             } else {
-                if (!$dryRun) {
+                if (! $dryRun) {
                     $user->email = $newEmail;
                     $user->timestamps = false;
                     $user->saveQuietly();
@@ -104,7 +105,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         $bar->finish();
         $this->newLine();
 
-        $this->info("📊 Summary:");
+        $this->info('📊 Summary:');
         $this->info("   ✅ Converted: {$converted}");
         $this->info("   ⚠️  Skipped (duplicates): {$skipped}");
     }
