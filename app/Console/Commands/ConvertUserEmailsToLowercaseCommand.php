@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use Illuminate\Console\Command;
+use App\Models\EcPoi;
+use App\Models\EcTrack;
+use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
-use App\Models\UgcMedia;
-use App\Models\EcTrack;
-use App\Models\EcPoi;
+use App\Models\User;
+use Illuminate\Console\Command;
 
 class ConvertUserEmailsToLowercaseCommand extends Command
 {
@@ -127,7 +127,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
      */
     private function transferUserData($fromUser, $toUser, $dryRun)
     {
-        if (!$dryRun) {
+        if (! $dryRun) {
             // Disable timestamps for all models
             UgcPoi::withoutTimestamps();
             UgcTrack::withoutTimestamps();
@@ -139,7 +139,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         // Transfer UgcPoi
         $ugcPoisCount = $fromUser->ugc_pois()->count();
         if ($ugcPoisCount > 0) {
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $fromUser->ugc_pois()->updateQuietly(['user_id' => $toUser->id]);
             }
             $this->line("      📊 Transferred {$ugcPoisCount} UgcPoi");
@@ -148,7 +148,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         // Transfer UgcTrack
         $ugcTracksCount = $fromUser->ugc_tracks()->count();
         if ($ugcTracksCount > 0) {
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $fromUser->ugc_tracks()->updateQuietly(['user_id' => $toUser->id]);
             }
             $this->line("      📊 Transferred {$ugcTracksCount} UgcTrack");
@@ -157,7 +157,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         // Transfer UgcMedia
         $ugcMediaCount = $fromUser->ugc_medias()->count();
         if ($ugcMediaCount > 0) {
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $fromUser->ugc_medias()->updateQuietly(['user_id' => $toUser->id]);
             }
             $this->line("      📷 Transferred {$ugcMediaCount} UgcMedia");
@@ -166,7 +166,7 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         // Transfer EcTrack
         $ecTracksCount = $fromUser->ecTracks()->count();
         if ($ecTracksCount > 0) {
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $fromUser->ecTracks()->updateQuietly(['user_id' => $toUser->id]);
             }
             $this->line("      📊 Transferred {$ecTracksCount} EcTrack");
@@ -175,14 +175,14 @@ class ConvertUserEmailsToLowercaseCommand extends Command
         // Transfer EcPoi
         $ecPoisCount = $fromUser->ecPois()->count();
         if ($ecPoisCount > 0) {
-            if (!$dryRun) {
+            if (! $dryRun) {
                 $fromUser->ecPois()->updateQuietly(['user_id' => $toUser->id]);
             }
             $this->line("      📊 Transferred {$ecPoisCount} EcPoi");
         }
 
         // Delete the duplicate user
-        if (!$dryRun) {
+        if (! $dryRun) {
             $fromUser->delete();
             $this->line("      🗑️  Deleted duplicate user (email: {$fromUser->email}, ID: {$fromUser->id})");
         } else {
