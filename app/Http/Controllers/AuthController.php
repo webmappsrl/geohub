@@ -53,6 +53,7 @@ class AuthController extends Controller
         }
 
         $credentials = $request->only(['email', 'password', 'name']);
+        $credentials['email'] = strtolower($credentials['email']);
 
         // Check if user already exists
         if ($token = auth('api')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
@@ -101,6 +102,7 @@ class AuthController extends Controller
         }
 
         $credentials = $request->only(['email', 'password']);
+        $credentials['email'] = strtolower($credentials['email']);
 
         // check if email exists
         $user = User::where('email', $credentials['email'])->first();
