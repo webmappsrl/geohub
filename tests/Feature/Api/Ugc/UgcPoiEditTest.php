@@ -20,6 +20,7 @@ class UgcPoiEditTest extends TestCase
     private const EXPECTED_COORDINATES = [10.0, 45.0];
 
     private User $user;
+
     private App $testApp;
 
     protected function setUp(): void
@@ -50,7 +51,7 @@ class UgcPoiEditTest extends TestCase
             'geometry' => DB::raw("ST_GeomFromText('POINT(11 43)')"),
         ];
 
-        $poi = new UgcPoi();
+        $poi = new UgcPoi;
         $poi->fill($defaultAttributes);
         $poi->app_id = $this->testApp->id;
         $poi->save();
@@ -89,6 +90,7 @@ class UgcPoiEditTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $images[] = UploadedFile::fake()->image("test_image_{$i}.jpg", 800, 600);
         }
+
         return $images;
     }
 
@@ -102,7 +104,7 @@ class UgcPoiEditTest extends TestCase
         }
 
         $requestData = $data;
-        if (!empty($images)) {
+        if (! empty($images)) {
             $requestData['images'] = $images;
         }
 

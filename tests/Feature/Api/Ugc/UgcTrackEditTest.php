@@ -24,6 +24,7 @@ class UgcTrackEditTest extends TestCase
     ];
 
     private User $user;
+
     private App $testApp;
 
     protected function setUp(): void
@@ -54,7 +55,7 @@ class UgcTrackEditTest extends TestCase
             'geometry' => DB::raw("ST_Force3D(ST_GeomFromText('LINESTRING(11 43 0, 12 43 0, 12 44 0, 11 44 0)'))"),
         ];
 
-        $track = new UgcTrack();
+        $track = new UgcTrack;
         $track->fill($defaultAttributes);
         $track->app_id = $this->testApp->id;
         $track->save();
@@ -93,6 +94,7 @@ class UgcTrackEditTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $images[] = UploadedFile::fake()->image("test_image_{$i}.jpg", 800, 600);
         }
+
         return $images;
     }
 
@@ -106,7 +108,7 @@ class UgcTrackEditTest extends TestCase
         }
 
         $requestData = $data;
-        if (!empty($images)) {
+        if (! empty($images)) {
             $requestData['images'] = $images;
         }
 

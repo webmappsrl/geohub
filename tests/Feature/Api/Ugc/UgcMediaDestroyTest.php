@@ -15,6 +15,7 @@ class UgcMediaDestroyTest extends TestCase
     use DatabaseTransactions, WithFaker;
 
     private User $user;
+
     private App $testApp;
 
     protected function setUp(): void
@@ -70,7 +71,7 @@ class UgcMediaDestroyTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success' => 'media deleted'
+            'success' => 'media deleted',
         ]);
 
         $this->assertDatabaseMissing('ugc_media', ['id' => $mediaId]);
