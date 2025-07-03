@@ -69,6 +69,23 @@ Route::group(
         });
     }
 );
+Route::group(
+    [
+        'prefix' => '/{version}/',
+        'where' => ['version' => 'v3'],
+        'middleware' => ['auth.jwt'],
+    ],
+    function () {
+        Route::prefix('ugc')->name('ugc.v3.')->group(function () {
+            Route::prefix('poi')->name('poi.v3.')->group(function () {
+                Route::post('edit', [UgcPoiController::class, 'editV3'])->name('edit');
+            });
+            Route::prefix('track')->name('track.v3.')->group(function () {
+                Route::post('edit', [UgcTrackController::class, 'editV3'])->name('edit');
+            });
+        });
+    }
+);
 
 Route::get('downloadUserUgcMediaGeojson/{user_id}', [UgcMediaController::class, 'downloadUserGeojson'])
     ->name('downloadUserUgcMediaGeojson');
@@ -258,7 +275,7 @@ Route::name('api.')->group(function () {
             ])->name('track.taxonomies');
             Route::get('/{app_id}/taxonomies/{taxonomy_name}.json', [AppElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
             Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
-                return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+                return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {

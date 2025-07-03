@@ -112,7 +112,7 @@ class UgcTrackEditTest extends TestCase
             $requestData['images'] = $images;
         }
 
-        return $this->post(route('api.ugc.track.edit'), $requestData);
+        return $this->post(route('ugc.v3.track.v3.edit', ['version' => 'v3']), $requestData);
     }
 
     /**
@@ -190,7 +190,7 @@ class UgcTrackEditTest extends TestCase
 
         foreach ($track->ugc_media as $media) {
             $this->assertNotEmpty($media->relative_url);
-            Storage::disk('public')->assertExists($media->relative_url);
+            $this->assertTrue(Storage::disk('public')->exists($media->relative_url));
         }
     }
 
