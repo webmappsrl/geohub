@@ -344,9 +344,6 @@ class UgcTrackController extends Controller
 
     /**
      * Edit the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
      */
     public function editV3(Request $request): Response
     {
