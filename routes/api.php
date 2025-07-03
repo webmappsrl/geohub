@@ -63,6 +63,25 @@ Route::group(
                 Route::post('edit', [UgcTrackController::class, 'edit'])->name('edit');
                 Route::get('delete/{id}', [UgcTrackController::class, 'destroy'])->name('destroy');
             });
+            Route::prefix('media')->name('media.v2.')->group(function () {
+                Route::get('delete/{id}', [UgcMediaController::class, 'destroy'])->name('destroy');
+            });
+        });
+    }
+);
+Route::group(
+    [
+        'prefix' => 'v3',
+        'middleware' => ['auth.jwt'],
+    ],
+    function () {
+        Route::prefix('ugc')->name('ugc.v3.')->group(function () {
+            Route::prefix('poi')->name('poi.v3.')->group(function () {
+                Route::post('edit', [UgcPoiController::class, 'editV3'])->name('edit');
+            });
+            Route::prefix('track')->name('track.v3.')->group(function () {
+                Route::post('edit', [UgcTrackController::class, 'editV3'])->name('edit');
+            });
         });
     }
 );
