@@ -9,12 +9,12 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
 {
     protected $signature = 'geohub:outcropedia_sync_ugc_poi_from_outsource';
+
     protected $description = 'Sync UGC POIs and Users from out_source_features table specific to Outcropedia';
 
     public function handle(): int
@@ -26,24 +26,27 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
         $taxonomyMappingPath = storage_path('importer/mapping/outcropedia-tectask-org.json');
 
         // === VALIDATE MAPPING FILES ===
-        if (!file_exists($userMappingPath)) {
+        if (! file_exists($userMappingPath)) {
             $this->error("Mapping file not found at $userMappingPath");
             Log::error("Mapping file not found at $userMappingPath");
+
             return 1;
         }
 
-        if (!file_exists($taxonomyMappingPath)) {
+        if (! file_exists($taxonomyMappingPath)) {
             $this->error("Taxonomy mapping file not found at $taxonomyMappingPath");
             Log::error("Taxonomy mapping file not found at $taxonomyMappingPath");
+
             return 1;
         }
 
         $userMapping = json_decode(file_get_contents($userMappingPath), true);
         $taxonomyMapping = json_decode(file_get_contents($taxonomyMappingPath), true);
 
-        if (!is_array($userMapping) || !is_array($taxonomyMapping)) {
-            $this->error("Invalid JSON format in one of the mapping files.");
-            Log::error("Invalid JSON format in one of the mapping files.");
+        if (! is_array($userMapping) || ! is_array($taxonomyMapping)) {
+            $this->error('Invalid JSON format in one of the mapping files.');
+            Log::error('Invalid JSON format in one of the mapping files.');
+
             return 1;
         }
 
@@ -58,17 +61,19 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
             $raw = json_decode($feature->raw_data, true);
 
             // === GET ASSOCIATED USER ===
-            if (!isset($raw['author'])) {
+            if (! isset($raw['author'])) {
                 $this->warn("Missing author for feature ID: $feature->id");
                 Log::warning("Missing author for feature ID: $feature->id");
+
                 continue;
             }
 
             $authorId = $raw['author'];
             $userData = collect($userMapping)->firstWhere('ID', $authorId);
-            if (!$userData) {
+            if (! $userData) {
                 $this->warn("User mapping not found for author ID: $authorId");
                 Log::warning("User mapping not found for author ID: $authorId");
+
                 continue;
             }
 
@@ -82,7 +87,7 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 ]
             );
 
-            if (!$user->hasRole('Contributor')) {
+            if (! $user->hasRole('Contributor')) {
                 $user->assignRole('Contributor');
             }
 
@@ -94,13 +99,14 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
             } else {
                 $this->warn("Missing coordinates for POI (feature ID: $feature->id), POI not created.");
                 Log::warning("Missing coordinates for POI (feature ID: $feature->id), POI not created.");
+
                 continue;
             }
 
             // === DETERMINE WAYPOINT TYPE ===
             $waypointType = 'poi';
-            if (!empty($raw['webmapp_category'][0])) {
-                $catId = (string)$raw['webmapp_category'][0];
+            if (! empty($raw['webmapp_category'][0])) {
+                $catId = (string) $raw['webmapp_category'][0];
                 if (isset($taxonomyMapping['poi_type'][$catId]['geohub_identifier'])) {
                     $waypointType = $taxonomyMapping['poi_type'][$catId]['geohub_identifier'];
                 } else {
@@ -110,7 +116,7 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
             }
 
             // === CREATE UGC POI ===
-            $poi = new UgcPoi();
+            $poi = new UgcPoi;
             $poi->user_id = $user->id;
             $poi->app_id = $appId;
             $poi->sku = $sku;
@@ -130,22 +136,22 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 'type' => 'waypoint',
                 'uuid' => $raw['uuid'] ?? null,
                 'media' => [],
-                'app_id' => (string)$appId,
+                'app_id' => (string) $appId,
                 'createdAt' => $raw['date'] ?? now()->toIso8601String(),
                 'updatedAt' => $raw['modified'] ?? now()->toIso8601String(),
             ];
             $poi->save();
 
             // === HANDLE MEDIA ===
-            if (!empty($raw['yoast_head_json']['og_image'][0]['url'])) {
+            if (! empty($raw['yoast_head_json']['og_image'][0]['url'])) {
                 $imageUrl = $raw['yoast_head_json']['og_image'][0]['url'];
                 try {
                     $imageContents = file_get_contents($imageUrl);
-                    $filename = 'image_' . uniqid() . '.jpg';
-                    $relativePath = 'media/images/ugc/' . $filename;
+                    $filename = 'image_'.uniqid().'.jpg';
+                    $relativePath = 'media/images/ugc/'.$filename;
                     Storage::disk('public')->put($relativePath, $imageContents);
 
-                    $media = new UgcMedia();
+                    $media = new UgcMedia;
                     $media->user_id = $user->id;
                     $media->app_id = $appId;
                     $media->sku = $sku;
