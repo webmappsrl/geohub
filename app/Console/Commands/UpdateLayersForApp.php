@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Jobs\UpdateLayersForAppJob;
-use App\Models\App;
 use Illuminate\Console\Command;
 
 class UpdateLayersForApp extends Command
