@@ -71,8 +71,7 @@ Route::group(
 );
 Route::group(
     [
-        'prefix' => '/{version}/',
-        'where' => ['version' => 'v3'],
+        'prefix' => 'v3',
         'middleware' => ['auth.jwt'],
     ],
     function () {
