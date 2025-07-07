@@ -118,7 +118,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
             $updatedAt = $raw['modified'] ?? now()->toIso8601String();
 
             // === GENERATE POI NAME ===
-            $poiName = $raw['title']['rendered'] ?? $this->generateDefaultPoiName($waypointType, $createdAt, $feature->id);
+            $titleRendered = isset($raw['title']['rendered']) ? html_entity_decode($raw['title']['rendered'], ENT_QUOTES | ENT_HTML5, 'UTF-8') : null;
+            $poiName = $titleRendered ?? $this->generateDefaultPoiName($waypointType, $createdAt, $feature->id);
 
             // === CREATE UGC POI ===
             $poi = new UgcPoi;
