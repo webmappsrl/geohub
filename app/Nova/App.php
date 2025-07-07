@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Enums\AppTiles;
+use App\Enums\AppZoom;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAllAwsTracks;
 use App\Nova\Actions\GenerateAppConfigAction;
@@ -618,15 +619,15 @@ class App extends Resource
                 }),
             // TODO: ADD2WMPACKAGE
             NovaSliderField::make(__('Min Zoom Features In Viewport'), 'min_zoom_features_in_viewport')
-                ->min(5)
-                ->max(25)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(10)
                 ->onlyOnForms()
                 ->help(__('Minimum zoom level for enable the Features In Viewport')),
             // TODO: ADD2WMPACKAGE
             NovaSliderField::make(__('Max Zoom Features In Viewport'), 'max_zoom_features_in_viewport')
-                ->min(5)
-                ->max(25)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(12)
                 ->onlyOnForms()
                 ->help(__('Maximum zoom level for enable the Features In Viewport')),
@@ -802,8 +803,8 @@ class App extends Resource
                 ->hideWhenCreating()
                 ->help(__('SVG icon shown in the filter')),
             NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
-                ->min(5)
-                ->max(25)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(16)
                 ->onlyOnForms()
                 ->help(__('Maximum zoom level for the map')),
@@ -813,8 +814,8 @@ class App extends Resource
                 ->default(6)
                 ->help(__('Set max stroke width of line string, the max stroke width is applied when the app is on max level zoom')),
             NovaSliderField::make(__('Min Zoom'), 'map_min_zoom')
-                ->min(5)
-                ->max(19)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(12)
                 ->help(__('Minimum zoom level for the map')),
             Number::make(__('Min Stroke width'), 'map_min_stroke_width')
@@ -823,7 +824,7 @@ class App extends Resource
                 ->default(3)
                 ->help(__('Set min stroke width of line string, the min stroke width is applied when the app is on min level zoom')),
             NovaSliderField::make(__('Def Zoom'), 'map_def_zoom')
-                ->min(5)
+                ->min(1)
                 ->max(19)
                 ->interval(0.1)
                 ->default(12)
@@ -1113,15 +1114,15 @@ class App extends Resource
                 ->onlyOnForms()
                 ->help(__('Poi Icon Radius: Select the radius for the POI icons.')),
             NovaSliderField::make(__('Poi Min Zoom'), 'poi_min_zoom')
-                ->min(5)
-                ->max(19)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(13)
                 ->interval(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Min Zoom: Set the minimum zoom level at which POIs are visible.')),
             NovaSliderField::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')
-                ->min(5)
-                ->max(19)
+                ->min(AppZoom::MIN_ZOOM)
+                ->max(AppZoom::MAX_ZOOM)
                 ->default(10.5)
                 ->interval(0.1)
                 ->onlyOnForms()
