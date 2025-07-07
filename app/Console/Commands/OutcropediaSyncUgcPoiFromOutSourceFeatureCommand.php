@@ -127,7 +127,7 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
             $poi->app_id = $appId;
             $poi->sku = $sku;
             $poi->name = $poiName;
-            $poi->description = strip_tags($raw['content']['rendered'] ?? '');
+            $poi->description = html_entity_decode(strip_tags($raw['content']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $poi->raw_data = $feature->raw_data;
             $poi->geometry = $geometry;
 
@@ -153,8 +153,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 $imageUrl = $raw['yoast_head_json']['og_image'][0]['url'];
                 try {
                     $imageContents = file_get_contents($imageUrl);
-                    $filename = 'image_'.uniqid().'.jpg';
-                    $relativePath = 'media/images/ugc/'.$filename;
+                    $filename = 'image_' . uniqid() . '.jpg';
+                    $relativePath = 'media/images/ugc/' . $filename;
                     Storage::disk('public')->put($relativePath, $imageContents);
 
                     $media = new UgcMedia;
