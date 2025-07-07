@@ -153,8 +153,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 $imageUrl = $raw['yoast_head_json']['og_image'][0]['url'];
                 try {
                     $imageContents = file_get_contents($imageUrl);
-                    $filename = 'image_' . uniqid() . '.jpg';
-                    $relativePath = 'media/images/ugc/' . $filename;
+                    $filename = 'image_'.uniqid().'.jpg';
+                    $relativePath = 'media/images/ugc/'.$filename;
                     Storage::disk('public')->put($relativePath, $imageContents);
 
                     $media = new UgcMedia;
