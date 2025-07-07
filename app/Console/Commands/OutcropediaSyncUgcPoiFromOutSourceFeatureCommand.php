@@ -114,16 +114,22 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                     Log::warning("Taxonomy mapping not found for POI (feature ID: $feature->id)");
                 }
             }
+            $createdAt = $raw['date'] ?? now()->toIso8601String();
+            $updatedAt = $raw['modified'] ?? now()->toIso8601String();
+
+            // === GENERATE POI NAME ===
+            $poiName = $raw['title']['rendered'] ?? $this->generateDefaultPoiName($waypointType, $createdAt, $feature->id);
 
             // === CREATE UGC POI ===
             $poi = new UgcPoi;
             $poi->user_id = $user->id;
             $poi->app_id = $appId;
             $poi->sku = $sku;
-            $poi->name = $raw['title']['rendered'] ?? 'POI';
+            $poi->name = $poiName;
             $poi->description = strip_tags($raw['content']['rendered'] ?? '');
             $poi->raw_data = $feature->raw_data;
             $poi->geometry = $geometry;
+
             $poi->properties = [
                 'form' => [
                     'id' => 'poi',
@@ -136,8 +142,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 'type' => 'waypoint',
                 'media' => [],
                 'app_id' => (string) $appId,
-                'createdAt' => $raw['date'] ?? now()->toIso8601String(),
-                'updatedAt' => $raw['modified'] ?? now()->toIso8601String(),
+                'createdAt' => $createdAt,
+                'updatedAt' => $updatedAt,
             ];
             $poi->save();
 
@@ -146,8 +152,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 $imageUrl = $raw['yoast_head_json']['og_image'][0]['url'];
                 try {
                     $imageContents = file_get_contents($imageUrl);
-                    $filename = 'image_'.uniqid().'.jpg';
-                    $relativePath = 'media/images/ugc/'.$filename;
+                    $filename = 'image_' . uniqid() . '.jpg';
+                    $relativePath = 'media/images/ugc/' . $filename;
                     Storage::disk('public')->put($relativePath, $imageContents);
 
                     $media = new UgcMedia;
@@ -174,5 +180,40 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * Generate default POI name using waypoint type and creation date
+     *
+     * @param string $waypointType
+     * @param string|null $createdAt
+     * @param int $featureId
+     * @return string
+     */
+    private function generateDefaultPoiName(string $waypointType, ?string $createdAt, int $featureId): string
+    {
+        // Handle null or empty date - return only waypoint type
+        if (empty($createdAt)) {
+            $this->warn("Empty or null date for POI name (feature ID: $featureId), using only waypoint type");
+            Log::warning("Empty or null date for POI name (feature ID: $featureId), using only waypoint type");
+
+            return $waypointType;
+        }
+
+        try {
+            $dateTime = new \DateTime($createdAt);
+            $year = $dateTime->format('Y');
+            $month = $dateTime->format('m');
+            $day = $dateTime->format('d');
+            $hours = $dateTime->format('H');
+            $minutes = $dateTime->format('i');
+
+            return "$waypointType $year/$month/$day $hours:$minutes";
+        } catch (\Exception $e) {
+            $this->warn("Error parsing date '$createdAt' for POI name (feature ID: $featureId), using only waypoint type");
+            Log::warning("Error parsing date '$createdAt' for POI name (feature ID: $featureId), using only waypoint type");
+
+            return $waypointType;
+        }
     }
 }
