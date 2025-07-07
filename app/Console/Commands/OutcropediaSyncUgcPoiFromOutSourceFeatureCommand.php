@@ -152,8 +152,8 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
                 $imageUrl = $raw['yoast_head_json']['og_image'][0]['url'];
                 try {
                     $imageContents = file_get_contents($imageUrl);
-                    $filename = 'image_' . uniqid() . '.jpg';
-                    $relativePath = 'media/images/ugc/' . $filename;
+                    $filename = 'image_'.uniqid().'.jpg';
+                    $relativePath = 'media/images/ugc/'.$filename;
                     Storage::disk('public')->put($relativePath, $imageContents);
 
                     $media = new UgcMedia;
@@ -184,11 +184,6 @@ class OutcropediaSyncUgcPoiFromOutSourceFeatureCommand extends Command
 
     /**
      * Generate default POI name using waypoint type and creation date
-     *
-     * @param string $waypointType
-     * @param string|null $createdAt
-     * @param int $featureId
-     * @return string
      */
     private function generateDefaultPoiName(string $waypointType, ?string $createdAt, int $featureId): string
     {
