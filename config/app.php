@@ -279,4 +279,16 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | UGC Redirect Configuration
+    |--------------------------------------------------------------------------
+    |
+    | URL dell'istanza alternativa per il ridirezionamento delle richieste UGC
+    | per app_id specifici (26, 20, 58)
+    |
+    */
+
+    'ugc_redirect_url' => env('UGC_REDIRECT_URL', 'https://osm2cai2.dev.maphub.it'),
+
 ];
