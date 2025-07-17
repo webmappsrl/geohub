@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckToken;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\Osm2caiRedirectMiddleware;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -53,6 +54,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:2000:1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\Osm2caiRedirectMiddleware::class,
         ],
     ];
 
