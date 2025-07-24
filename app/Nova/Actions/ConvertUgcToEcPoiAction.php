@@ -31,12 +31,23 @@ class ConvertUgcToEcPoiAction extends Action
     {
         $already_exists = [];
         foreach ($models as $model) {
-            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'ec_poi_id') && ! empty(json_decode($model->raw_data)->ec_poi_id)) {
-                $already_exists[] = $model->id;
+            // Controlla se esiste già un ec_poi_id nelle properties o nel raw_data (per retrocompatibilità)
+            $properties = $model->properties ?? [];
+            $rawData = isset($model->raw_data) ? json_decode($model->raw_data, true) : [];
 
+            $ecPoiId = $properties['ec_poi_id'] ?? $rawData['ec_poi_id'] ?? null;
+
+            if (!empty($ecPoiId)) {
+                $already_exists[] = $model->id;
                 continue;
             }
-            if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'share_ugcpoi') && json_decode($model->raw_data)->share_ugcpoi === 'yes') {
+
+            // Controlla se il POI deve essere condiviso (anche nel form)
+            $shareUgcPoi = $properties['share_ugcpoi'] ??
+                $properties['form']['share_ugcpoi'] ??
+                $rawData['share_ugcpoi'] ?? null;
+
+            if ($shareUgcPoi === 'yes') {
                 $ecPoi = new EcPoi;
                 $ecPoi->name = $model->name;
                 $ecPoi->geometry = $model->geometry;
@@ -53,10 +64,10 @@ class ConvertUgcToEcPoiAction extends Action
                         $storage = Storage::disk('public');
                         foreach ($ugcMedia as $count => $media) {
                             try {
-                                $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
-                                $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
-                                $storage->put('ec_media/'.$mediaName, $contents);
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/'.$mediaName, 'geometry' => $media->geometry]);
+                                $mediaName = $ecPoi->id . '_' . last(explode('/', $media['relative_url']));
+                                $contents = file_get_contents(public_path('storage/' . $media['relative_url']));
+                                $storage->put('ec_media/' . $mediaName, $contents);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/' . $mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
                                 $result = $ecMedia->save();
                                 if ($count == 0) {
@@ -66,7 +77,7 @@ class ConvertUgcToEcPoiAction extends Action
                                     $ecPoi->ecMedia()->attach($ecMedia);
                                 }
                             } catch (Exception $e) {
-                                Log::error('featureImage: create ec media -> '.$e->getMessage());
+                                Log::error('featureImage: create ec media -> ' . $e->getMessage());
                             }
                         }
                     }
@@ -77,13 +88,16 @@ class ConvertUgcToEcPoiAction extends Action
                         $ecPoi->taxonomyWheres()->attach($taxonomyWheres);
                     }
 
-                    // Attach Taxonomy poi types
-                    if (isset($model->raw_data) && property_exists(json_decode($model->raw_data), 'waypointtype')) {
-                        $poi_type_identifier = json_decode($model->raw_data)->waypointtype;
-                    }
-                    if (isset($poi_type_identifier)) {
-                        $poi_type = TaxonomyPoiType::where('identifier', $poi_type_identifier)->first();
-                        $ecPoi->taxonomyPoiTypes()->attach($poi_type);
+                    // Attach Taxonomy poi types (anche nel form)
+                    $poiTypeIdentifier = $properties['waypointtype'] ??
+                        $properties['form']['waypointtype'] ??
+                        $rawData['waypointtype'] ?? null;
+
+                    if (isset($poiTypeIdentifier)) {
+                        $poi_type = TaxonomyPoiType::where('identifier', $poiTypeIdentifier)->first();
+                        if ($poi_type) {
+                            $ecPoi->taxonomyPoiTypes()->attach($poi_type);
+                        }
                     }
 
                     // attach taxonomy theme
@@ -98,14 +112,17 @@ class ConvertUgcToEcPoiAction extends Action
                         }
                     }
 
-                    $model->raw_data = DB::raw("jsonb_set(raw_data, '{ec_poi_id}', '\"{$ecPoi->id}\"')");
+                    // Aggiorna le properties con l'ID dell'EcPoi creato
+                    $updatedProperties = $model->properties ?? [];
+                    $updatedProperties['ec_poi_id'] = $ecPoi->id;
+                    $model->properties = $updatedProperties;
                     $model->save();
                 }
             }
         }
 
         if (count($already_exists) > 0) {
-            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: '.implode(', ', $already_exists));
+            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: ' . implode(', ', $already_exists));
         }
 
         return Action::message('Conversion completed successfully');
