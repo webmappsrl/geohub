@@ -22,7 +22,7 @@ class ShareUgcPoiFilter extends BooleanFilter
             return $query;
         }
         if ($value['yes']) {
-            return $query->whereRaw("raw_data->>'share_ugcpoi' = 'yes'");
+            return $query->whereRaw("properties->'form'->>'share_ugcpoi' = 'yes'");
         }
     }
 
