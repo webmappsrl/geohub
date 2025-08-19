@@ -437,7 +437,7 @@ class EcPoi extends Resource
                                 ->readonly($isOsmidSet)
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                             Textarea::make(__('Excerpt'), 'excerpt')
-                                ->rules('nullable','max:255')
+                                ->rules('nullable', 'max:255')
                                 ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
                             NovaWyswyg::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
