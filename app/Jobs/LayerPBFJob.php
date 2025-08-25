@@ -73,6 +73,7 @@ class LayerPBFJob extends TrackPBFJob
                 AND ST_Dimension(ec.{$tbl['geomColumn']}) > 0
                 AND NOT ST_IsEmpty(ec.{$tbl['geomColumn']})
                 AND ec.{$tbl['geomColumn']} IS NOT NULL
+            ORDER BY l.rank ASC -- Ordina i risultati per rank del layer
         )
         SELECT ST_AsMVT(mvtgeom.*, 'layers') FROM mvtgeom;
         SQL;
