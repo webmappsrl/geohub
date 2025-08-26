@@ -101,20 +101,11 @@ trait HandlesData
             $geojson_geometry = json_encode($geojson_content['geometry']);
             $geometry = DB::select("SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_GeomFromGeoJSON('".$geojson_geometry."')))) As wkt")[0]->wkt;
 
-            $name_array = [];
-            if (array_key_exists('ref', $osmData) && ! empty($osmData['ref'])) {
-                array_push($name_array, $osmData['ref']);
-            }
-            if (array_key_exists('name', $osmData) && ! empty($osmData['name'])) {
-                array_push($name_array, $osmData['name']);
-            }
+            $trackName = $this->buildTrackName($osmData);
 
-            $trackname = ! empty($name_array) ? implode(' - ', $name_array) : null;
-            $trackname = str_replace('"', '', $trackname);
-
-            $track->name = ! empty($track->name) ? $track->name : $trackname;
+            $track->name = $trackName ?? $track->name ?? '';
             $track->geometry = $geometry ?? $track->geometry;
-            $track->ref = $track->ref ?? $osmData['ref'] ?? null;
+            $track->ref = $osmData['ref'] ?? $track->ref ?? '';
 
             // Update additional fields only if they are null
             $oldOsmData = json_decode($track->osm_data, true);
@@ -239,5 +230,21 @@ trait HandlesData
         }
 
         return $track->{$field};
+    }
+
+    protected function buildTrackName($osmData)
+    {
+        $name_array = [];
+        if (array_key_exists('ref', $osmData) && ! empty($osmData['ref'])) {
+            array_push($name_array, $osmData['ref']);
+        }
+        if (array_key_exists('name', $osmData) && ! empty($osmData['name'])) {
+            array_push($name_array, $osmData['name']);
+        }
+
+        $trackName = ! empty($name_array) ? implode(' - ', $name_array) : null;
+        $trackName = $trackName !== null ? str_replace('"', '', $trackName) : $trackName;
+
+        return $trackName;
     }
 }
