@@ -10,7 +10,6 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
@@ -37,8 +36,9 @@ class ConvertUgcToEcPoiAction extends Action
 
             $ecPoiId = $properties['ec_poi_id'] ?? $rawData['ec_poi_id'] ?? null;
 
-            if (!empty($ecPoiId)) {
+            if (! empty($ecPoiId)) {
                 $already_exists[] = $model->id;
+
                 continue;
             }
 
@@ -64,10 +64,10 @@ class ConvertUgcToEcPoiAction extends Action
                         $storage = Storage::disk('public');
                         foreach ($ugcMedia as $count => $media) {
                             try {
-                                $mediaName = $ecPoi->id . '_' . last(explode('/', $media['relative_url']));
-                                $contents = file_get_contents(public_path('storage/' . $media['relative_url']));
-                                $storage->put('ec_media/' . $mediaName, $contents);
-                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/' . $mediaName, 'geometry' => $media->geometry]);
+                                $mediaName = $ecPoi->id.'_'.last(explode('/', $media['relative_url']));
+                                $contents = file_get_contents(public_path('storage/'.$media['relative_url']));
+                                $storage->put('ec_media/'.$mediaName, $contents);
+                                $ecMedia = new EcMedia(['name' => $mediaName, 'url' => 'ec_media/'.$mediaName, 'geometry' => $media->geometry]);
                                 $ecMedia->user_id = auth()->user()->id;
                                 $result = $ecMedia->save();
                                 if ($count == 0) {
@@ -77,7 +77,7 @@ class ConvertUgcToEcPoiAction extends Action
                                     $ecPoi->ecMedia()->attach($ecMedia);
                                 }
                             } catch (Exception $e) {
-                                Log::error('featureImage: create ec media -> ' . $e->getMessage());
+                                Log::error('featureImage: create ec media -> '.$e->getMessage());
                             }
                         }
                     }
@@ -122,7 +122,7 @@ class ConvertUgcToEcPoiAction extends Action
         }
 
         if (count($already_exists) > 0) {
-            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: ' . implode(', ', $already_exists));
+            return Action::message('Conversion completed successfully! The following UgcPois already have an associated EcPoi: '.implode(', ', $already_exists));
         }
 
         return Action::message('Conversion completed successfully');
