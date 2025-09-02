@@ -78,6 +78,7 @@ class AppFactory extends Factory
             'show_media_name' => $this->faker->boolean(),
             'show_embedded_html' => $this->faker->boolean(),
             'show_track_direction_arrow' => $this->faker->boolean(),
+            'show_download_tiles_button' => $this->faker->boolean(),
         ];
     }
 }

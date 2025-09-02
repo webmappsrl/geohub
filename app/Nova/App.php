@@ -668,7 +668,16 @@ class App extends Resource
                 ->canSee(function ($request) {
                     return $request->user()->hasRole('Admin');
                 }),
-
+            // TODO: ADD2WMPACKAGE
+            Toggle::make(__('Show Download Tiles Button'), 'show_download_tiles_button')
+                ->trueValue('On')
+                ->falseValue('Off')
+                ->default(false)
+                ->hideFromIndex()
+                ->help(__('Enable to Download Tiles Button on the app'))
+                ->canSee(function ($request) {
+                    return $request->user()->hasRole('Admin');
+                }),
         ];
     }
 
