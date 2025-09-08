@@ -142,8 +142,8 @@ trait TrackElasticIndexTrait
     private function getTaxonomyIcons($taxonomyCollection)
     {
         $provider = new WebmappAppIconProvider();
-
         $taxonomy_icons = [];
+
         foreach ($taxonomyCollection as $taxonomy) {
             if (isset($taxonomy['icon'])) {
                 $label = $provider->getIdentifier($taxonomy['icon']);
@@ -155,6 +155,7 @@ trait TrackElasticIndexTrait
                 }
             }
         }
+        
         return $taxonomy_icons;
     }
 
