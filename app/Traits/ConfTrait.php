@@ -7,6 +7,7 @@ use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\OverlayLayer;
+use App\Providers\WebmappAppIconProvider;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -149,7 +150,7 @@ trait ConfTrait
         return $data;
     }
 
-    public function get_unique_taxonomies($taxonomy_relation)
+    public function get_unique_taxonomies_from_layers_and_tracks($taxonomy_relation)
     {
         $all_taxonomies = collect();
 
@@ -162,6 +163,23 @@ trait ConfTrait
         $unique_taxonomies = $all_taxonomies->unique('id')->values()->all();
 
         return $unique_taxonomies;
+    }
+
+    public function get_unique_poi_types_taxonomies($app_user_id)
+    {
+        $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id ORDER BY a.name ASC;");
+        $array_poi_types = [];
+        foreach ($poi_types as $poi_type) {
+            $array_poi_types[] = [
+                'identifier' => 'poi_type_' . $poi_type->identifier,
+                'name' => json_decode($poi_type->name, true),
+                'id' => $poi_type->id,
+                'color' => $poi_type->color ?? null,
+                'icon' => $poi_type->icon ?? null,
+            ];
+        }
+
+        return $array_poi_types;
     }
 
     private function collect_taxonomies_from_layers(Collection $all_taxonomies, $taxonomy_relation)
@@ -207,6 +225,7 @@ trait ConfTrait
             'identifier' => $taxonomy->identifier,
             'name' => $taxonomy->getTranslations('name'),
             'color' => $taxonomy->color ?? null,
+            'icon' => $taxonomy->icon ?? null,
         ], function ($value) {
             return ! is_null($value);
         });
@@ -214,6 +233,8 @@ trait ConfTrait
 
     private function config_section_map(): array
     {
+        $provider = new WebmappAppIconProvider();
+
         $data = [];
         // MAP section (zoom)
         $data['MAP']['defZoom'] = $this->map_def_zoom;
@@ -470,7 +491,13 @@ trait ConfTrait
         //  Activity Filter
         if ($this->filter_activity) {
             $app_user_id = $this->user_id;
-            $options = $this->get_unique_taxonomies('taxonomyActivities');
+            $options = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyActivities');
+            $options = array_map(function ($item) use ($provider) {
+                if (isset($item['icon'])) {
+                    $item['icon_name'] = $provider->getIdentifier($item['icon']);
+                }
+                return $item;
+            }, $options);
 
             $data['MAP']['filters']['activities'] = [
                 'type' => 'select',
@@ -482,7 +509,7 @@ trait ConfTrait
         //  Theme Filter
         if ($this->filter_theme) {
             $app_user_id = $this->user_id;
-            $options = $this->get_unique_taxonomies('taxonomyThemes');
+            $options = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyThemes');
 
             $data['MAP']['filters']['themes'] = [
                 'type' => 'select',
@@ -496,20 +523,13 @@ trait ConfTrait
             $app_user_id = $this->user_id;
             $options = [];
 
-            $poi_types = DB::select("SELECT distinct a.id, a.identifier, a.name, a.color, a.icon from taxonomy_poi_typeables as txa inner join ec_pois as t on t.id=txa.taxonomy_poi_typeable_id inner join taxonomy_poi_types as a on a.id=taxonomy_poi_type_id where txa.taxonomy_poi_typeable_type='App\Models\EcPoi' and t.user_id=$app_user_id ORDER BY a.name ASC;");
-
-            foreach ($poi_types as $poi_type) {
-                $a = [
-                    'identifier' => 'poi_type_'.$poi_type->identifier,
-                    'name' => json_decode($poi_type->name, true),
-                    'id' => $poi_type->id,
-                    'icon' => $poi_type->icon,
-                ];
-                if ($poi_type->color) {
-                    $a['color'] = $poi_type->color;
+            $options = $this->get_unique_poi_types_taxonomies($app_user_id);
+            $options = array_map(function ($item) use ($provider) {
+                if (isset($item['icon'])) {
+                    $item['icon_name'] = $provider->getIdentifier($item['icon']);
                 }
-                array_push($options, $a);
-            }
+                return $item;
+            }, $options);
 
             $data['MAP']['filters']['poi_types'] = [
                 'type' => 'select',

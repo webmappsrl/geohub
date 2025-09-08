@@ -104,6 +104,17 @@ return [
             'root' => 'geohub/conf',
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
+        'wmfeicons' => [
+            'driver' => 's3',
+            'key' => env('AWS_DUMPS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_DUMPS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_FE_CONF_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'root' => 'geohub/icons',
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+        ],
         'wmfepois' => [
             'driver' => 's3',
             'key' => env('AWS_DUMPS_ACCESS_KEY_ID'),

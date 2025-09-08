@@ -7,6 +7,7 @@ use App\Enums\AppZoom;
 use App\Nova\Actions\elasticIndex;
 use App\Nova\Actions\GenerateAllAwsTracks;
 use App\Nova\Actions\GenerateAppConfigAction;
+use App\Nova\Actions\GenerateAppIconsAction;
 use App\Nova\Actions\GenerateAppPoisAction;
 use App\Nova\Actions\GeneratePBF;
 use App\Nova\Actions\generateQrCodeAction;
@@ -1803,6 +1804,12 @@ class App extends Resource
                     return true;
                 })->onlyOnDetail(),
             (new GenerateAppConfigAction)
+                ->canSee(function ($request) {
+                    return true;
+                })->canRun(function ($request, $zone) {
+                    return true;
+                })->onlyOnDetail(),
+            (new GenerateAppIconsAction)
                 ->canSee(function ($request) {
                     return true;
                 })->canRun(function ($request, $zone) {

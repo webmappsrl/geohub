@@ -385,6 +385,24 @@ EOF;
         }
     }
 
+    public function icons(int $id)
+    {
+        $app = App::find($id);
+        if (is_null($app)) {
+            return response()->json(['code' => 404, 'error' => '404 not found'], 404);
+        }
+        $iconsUri = $id.'.json';
+        if (Storage::disk('icons')->exists($iconsUri)) {
+            $json = Storage::disk('icons')->get($iconsUri);
+
+            return response()->json(json_decode($json));
+        } else {
+            $json = $app->buildIconsJson();
+
+            return response()->json($json);
+        }
+    }
+
     public function baseConfig(int $id)
     {
         $app = App::find($id);

@@ -7,6 +7,7 @@ use App\Traits\ClassificationTrait;
 use App\Traits\ConfTrait;
 use App\Traits\ElasticIndexTrait;
 use App\Traits\HasTranslationsFixed;
+use App\Traits\IconTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,7 @@ class App extends Model
 {
     use ClassificationTrait;
     use ConfTrait;
+    use IconTrait;
     use ElasticIndexTrait;
     use HasFactory;
     use HasTranslationsFixed;
@@ -287,6 +289,17 @@ class App extends Model
         Storage::disk('conf')->put($confUri, json_encode($json));
 
         return $json;
+    }
+
+    public function buildIconsJson()
+    {
+        $iconUri = $this->id.'.json';
+        $iconsJson = $this->icons();
+        $jidoTime = $this->config_get_jido_time();
+        if (! is_null($jidoTime)) {
+            $iconsJson['JIDO_UPDATE_TIME'] = $jidoTime;
+        }
+        Storage::disk('wmfeicons')->put($iconUri, json_encode($iconsJson));
     }
 
     public function getAllPoiTaxonomies()
