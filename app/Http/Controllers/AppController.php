@@ -392,8 +392,8 @@ EOF;
             return response()->json(['code' => 404, 'error' => '404 not found'], 404);
         }
         $iconsUri = $id.'.json';
-        if (Storage::disk('icons')->exists($iconsUri)) {
-            $json = Storage::disk('icons')->get($iconsUri);
+        if (Storage::disk('wmfeicons')->exists($iconsUri)) {
+            $json = Storage::disk('wmfeicons')->get($iconsUri);
 
             return response()->json(json_decode($json));
         } else {
