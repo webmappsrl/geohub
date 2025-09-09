@@ -64,6 +64,7 @@ class WebmappAppIconProvider extends IconProvider
                 break;
             }
         }
+
         return $identifier;
     }
 

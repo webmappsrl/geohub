@@ -171,7 +171,7 @@ trait ConfTrait
         $array_poi_types = [];
         foreach ($poi_types as $poi_type) {
             $array_poi_types[] = [
-                'identifier' => 'poi_type_' . $poi_type->identifier,
+                'identifier' => 'poi_type_'.$poi_type->identifier,
                 'name' => json_decode($poi_type->name, true),
                 'id' => $poi_type->id,
                 'color' => $poi_type->color ?? null,
@@ -233,7 +233,7 @@ trait ConfTrait
 
     private function config_section_map(): array
     {
-        $provider = new WebmappAppIconProvider();
+        $provider = new WebmappAppIconProvider;
 
         $data = [];
         // MAP section (zoom)
@@ -496,6 +496,7 @@ trait ConfTrait
                 if (isset($item['icon'])) {
                     $item['icon_name'] = $provider->getIdentifier($item['icon']);
                 }
+
                 return $item;
             }, $options);
 
@@ -528,6 +529,7 @@ trait ConfTrait
                 if (isset($item['icon'])) {
                     $item['icon_name'] = $provider->getIdentifier($item['icon']);
                 }
+
                 return $item;
             }, $options);
 

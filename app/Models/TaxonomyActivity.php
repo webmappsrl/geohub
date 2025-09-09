@@ -105,7 +105,7 @@ class TaxonomyActivity extends Model
                 unset($json[$key]);
             }
         }
-        $iconProvider = new WebmappAppIconProvider();
+        $iconProvider = new WebmappAppIconProvider;
         $json['icon_name'] = $iconProvider->getIdentifier($json['icon']);
 
         return $json;

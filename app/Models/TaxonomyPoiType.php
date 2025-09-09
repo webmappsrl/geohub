@@ -118,7 +118,7 @@ class TaxonomyPoiType extends Model
 
         $data['color'] = $json['color'];
         $data['icon'] = $json['icon'];
-        $iconProvider = new WebmappAppIconProvider();
+        $iconProvider = new WebmappAppIconProvider;
         $data['icon_name'] = $iconProvider->getIdentifier($json['icon']);
 
         return $data;

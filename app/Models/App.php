@@ -30,10 +30,10 @@ class App extends Model
 {
     use ClassificationTrait;
     use ConfTrait;
-    use IconTrait;
     use ElasticIndexTrait;
     use HasFactory;
     use HasTranslationsFixed;
+    use IconTrait;
 
     protected $fillable = [
         'welcome',

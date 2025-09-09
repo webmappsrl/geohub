@@ -10,7 +10,7 @@ trait IconTrait
 
     public function icons()
     {
-        $iconProvider = new WebmappAppIconProvider();
+        $iconProvider = new WebmappAppIconProvider;
         $icons = [];
 
         $taxonomy_activities = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyActivities');
