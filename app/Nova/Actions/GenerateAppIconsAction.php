@@ -2,12 +2,12 @@
 
 namespace App\Nova\Actions;
 
+use App\Jobs\BuildIconsJsonJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
-use App\Jobs\BuildIconsJsonJob;
 
 class GenerateAppIconsAction extends Action
 {

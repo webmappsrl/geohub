@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\App;
 use App\Jobs\BuildIconsJsonJob;
+use App\Models\App;
+use Illuminate\Console\Command;
 
 class BuildIconsJsonCommand extends Command
 {

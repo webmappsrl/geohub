@@ -19,7 +19,6 @@ class BuildIconsJsonJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param App $app
      * @return void
      */
     public function __construct(App $app)
@@ -39,7 +38,7 @@ class BuildIconsJsonJob implements ShouldQueue
             $this->app->buildIconsJson();
             Log::info("Completed job for App ID: {$this->app->id}");
         } catch (\Exception $e) {
-            Log::error("Job failed for App ID: {$this->app->id} with error: " . $e->getMessage());
+            Log::error("Job failed for App ID: {$this->app->id} with error: ".$e->getMessage());
             throw $e; // Rethrow the exception to mark the job as failed
         }
     }
