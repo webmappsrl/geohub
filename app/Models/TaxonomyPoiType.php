@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Providers\WebmappAppIconProvider;
+use App\Services\AppIconService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -118,8 +118,8 @@ class TaxonomyPoiType extends Model
 
         $data['color'] = $json['color'];
         $data['icon'] = $json['icon'];
-        $iconProvider = new WebmappAppIconProvider;
-        $data['icon_name'] = $iconProvider->getIdentifier($json['icon']);
+        $iconService = app(AppIconService::class);
+        $data['icon_name'] = $iconService->getIconByIdentifier($json['icon']);
 
         return $data;
     }

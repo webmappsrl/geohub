@@ -7,7 +7,7 @@ use App\Models\App;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\OverlayLayer;
-use App\Providers\WebmappAppIconProvider;
+use App\Services\AppIconService;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -171,7 +171,7 @@ trait ConfTrait
         $array_poi_types = [];
         foreach ($poi_types as $poi_type) {
             $array_poi_types[] = [
-                'identifier' => 'poi_type_'.$poi_type->identifier,
+                'identifier' => 'poi_type_' . $poi_type->identifier,
                 'name' => json_decode($poi_type->name, true),
                 'id' => $poi_type->id,
                 'color' => $poi_type->color ?? null,
@@ -233,7 +233,7 @@ trait ConfTrait
 
     private function config_section_map(): array
     {
-        $provider = new WebmappAppIconProvider;
+        $iconService = app(AppIconService::class);
 
         $data = [];
         // MAP section (zoom)
@@ -262,7 +262,7 @@ trait ConfTrait
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
             } catch (\Exception $e) {
-                Log::warning('The overlays in the app '.$this->id.' are not correctly mapped. Error: '.$e->getMessage());
+                Log::warning('The overlays in the app ' . $this->id . ' are not correctly mapped. Error: ' . $e->getMessage());
             }
         }
 
@@ -276,7 +276,7 @@ trait ConfTrait
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
                 } catch (\Exception  $e) {
-                    Log::warning('The bbox value '.$layer->id.' are not correct. Error: '.$e->getMessage());
+                    Log::warning('The bbox value ' . $layer->id . ' are not correct. Error: ' . $e->getMessage());
                 }
                 // style
                 foreach (['color', 'fill_color', 'fill_opacity', 'stroke_width', 'stroke_opacity', 'zindex', 'line_dash'] as $field) {
@@ -494,7 +494,7 @@ trait ConfTrait
             $options = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyActivities');
             $options = array_map(function ($item) use ($provider) {
                 if (isset($item['icon'])) {
-                    $item['icon_name'] = $provider->getIdentifier($item['icon']);
+                    $item['icon_name'] = $iconService->getIconByIdentifier($item['icon']);
                 }
 
                 return $item;
@@ -527,7 +527,7 @@ trait ConfTrait
             $options = $this->get_unique_poi_types_taxonomies($app_user_id);
             $options = array_map(function ($item) use ($provider) {
                 if (isset($item['icon'])) {
-                    $item['icon_name'] = $provider->getIdentifier($item['icon']);
+                    $item['icon_name'] = $iconService->getIconByIdentifier($item['icon']);
                 }
 
                 return $item;
@@ -624,7 +624,7 @@ trait ConfTrait
         $data = [];
         if (in_array($this->api, ['elbrus'])) {
             // OPTIONS section
-            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/'.$this->id.'/';
+            $data['OPTIONS']['baseUrl'] = 'https://geohub.webmapp.it/api/app/elbrus/' . $this->id . '/';
         }
 
         $data['OPTIONS']['startUrl'] = $this->start_url;

@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Models\EcTrack;
-use App\Providers\WebmappAppIconProvider;
+use App\Services\AppIconService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +25,7 @@ trait TrackElasticIndexTrait
             $client = $this->getClient();
 
             if ($client->exists(['index' => $index_name, 'id' => $id])) {
-                Log::info('DELETE Elastic Indexing '.$index_name.' track '.$id);
+                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
                 $response = $client->delete($params);
                 Log::info($response);
             }
@@ -45,7 +45,7 @@ trait TrackElasticIndexTrait
                 $response = $client->index($params_index);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticSearch Error: '.$e->getMessage());
+            Log::error('ElasticSearch Error: ' . $e->getMessage());
             throw $e; // Rilancia l'eccezione per gestirla altrove, se necessario
         }
 
@@ -71,13 +71,13 @@ trait TrackElasticIndexTrait
                 });
             }
         } catch (Exception $e) {
-            throw new Exception('ERROR '.$e->getMessage());
+            throw new Exception('ERROR ' . $e->getMessage());
         }
     }
 
     public function elasticIndex($index_name, $layers): void
     {
-        Log::info('Update Elastic Indexing track '.$this->id);
+        Log::info('Update Elastic Indexing track ' . $this->id);
 
         $geom = $this->getGeometry();
 
@@ -141,12 +141,12 @@ trait TrackElasticIndexTrait
 
     private function getTaxonomyIcons($taxonomyCollection)
     {
-        $provider = new WebmappAppIconProvider;
+        $iconService = app(AppIconService::class);
         $taxonomy_icons = [];
 
         foreach ($taxonomyCollection as $taxonomy) {
             if (isset($taxonomy['icon'])) {
-                $label = $provider->getIdentifier($taxonomy['icon']);
+                $label = $iconService->getIconByIdentifier($taxonomy['icon']);
                 if (! is_null($label)) {
                     $taxonomy_icons[$taxonomy['identifier']] = [
                         'label' => $taxonomy->getTranslations('name'),
@@ -234,14 +234,14 @@ trait TrackElasticIndexTrait
     private function executeElasticIndexing($index_name, $params)
     {
         $params_update = [
-            'index' => 'geohub_'.$index_name,
+            'index' => 'geohub_' . $index_name,
             'id' => $this->id,
             'body' => [
                 'doc' => $params,
             ],
         ];
         $params_index = [
-            'index' => 'geohub_'.$index_name,
+            'index' => 'geohub_' . $index_name,
             'id' => $this->id,
             'body' => $params,
         ];

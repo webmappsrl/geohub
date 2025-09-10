@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Providers\WebmappAppIconProvider;
+use App\Services\AppIconService;
 
 trait IconTrait
 {
@@ -10,7 +10,7 @@ trait IconTrait
 
     public function icons()
     {
-        $iconProvider = new WebmappAppIconProvider;
+        $iconService = app(AppIconService::class);
         $icons = [];
 
         $taxonomy_activities = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyActivities');
@@ -21,7 +21,7 @@ trait IconTrait
             if (! isset($taxonomy['icon'])) {
                 continue;
             }
-            $label = $iconProvider->getIdentifier($taxonomy['icon']);
+            $label = $iconService->getIconByIdentifier($taxonomy['icon']);
             if (! is_null($label)) {
                 $icons[$label] = $taxonomy['icon'];
             }
