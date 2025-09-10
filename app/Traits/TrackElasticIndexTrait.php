@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\EcTrack;
+use App\Providers\WebmappAppIconProvider;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -86,6 +87,7 @@ trait TrackElasticIndexTrait
         log::info($taxonomy_activities);
         $taxonomy_wheres = $this->getTaxonomyWheres();
         $taxonomy_themes = $this->getTaxonomyArray($this->taxonomyThemes);
+        $taxonomy_icons = $this->getTaxonomyIcons($this->taxonomyActivities->merge($this->taxonomyThemes));
 
         [$start, $end] = $this->getStartEndCoordinates($geom);
 
@@ -98,7 +100,9 @@ trait TrackElasticIndexTrait
             $feature_image,
             $taxonomy_activities,
             $taxonomy_wheres,
-            $taxonomy_themes
+            $taxonomy_themes,
+            $taxonomy_icons
+
         );
         $this->elasticIndexDoc($index_name, $this->id, $params);
     }
@@ -133,6 +137,26 @@ trait TrackElasticIndexTrait
     private function getTaxonomyArray($taxonomyCollection)
     {
         return $taxonomyCollection->count() > 0 ? array_values(array_unique($taxonomyCollection->pluck('identifier')->toArray())) : [];
+    }
+
+    private function getTaxonomyIcons($taxonomyCollection)
+    {
+        $provider = new WebmappAppIconProvider;
+        $taxonomy_icons = [];
+
+        foreach ($taxonomyCollection as $taxonomy) {
+            if (isset($taxonomy['icon'])) {
+                $label = $provider->getIdentifier($taxonomy['icon']);
+                if (! is_null($label)) {
+                    $taxonomy_icons[$taxonomy['identifier']] = [
+                        'label' => $taxonomy->getTranslations('name'),
+                        'icon_name' => $label,
+                    ];
+                }
+            }
+        }
+
+        return $taxonomy_icons;
     }
 
     private function getTaxonomyWheres()
@@ -177,7 +201,7 @@ trait TrackElasticIndexTrait
         }
     }
 
-    private function buildParamsArray($index_name, $layers, $start, $end, $feature_image, $taxonomy_activities, $taxonomy_wheres, $taxonomy_themes)
+    private function buildParamsArray($index_name, $layers, $start, $end, $feature_image, $taxonomy_activities, $taxonomy_wheres, $taxonomy_themes, $taxonomy_icons)
     {
         $index_array = explode('_', $index_name);
         $app_id = end($index_array);
@@ -194,6 +218,7 @@ trait TrackElasticIndexTrait
             'taxonomyActivities' => $taxonomy_activities,
             'taxonomyWheres' => $taxonomy_wheres,
             'taxonomyThemes' => $taxonomy_themes,
+            'taxonomyIcons' => $taxonomy_icons,
             'feature_image' => $feature_image,
             'strokeColor' => $this->hexToRgba($this->color),
             'distance' => $this->setEmptyValueToZero($this->distance),

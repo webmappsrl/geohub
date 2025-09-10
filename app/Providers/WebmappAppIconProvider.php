@@ -7,11 +7,12 @@ use Bernhardh\NovaIconSelect\IconProvider;
 
 class WebmappAppIconProvider extends IconProvider
 {
+    private $icons;
+
     public function __construct()
     {
 
-        $json = file_get_contents('css/icons/webmapp-icons/selection.json');
-        $allIconmoonSelection = App::all()->filter(function ($i, $k) {
+        $appIcons = App::all()->filter(function ($i, $k) {
             return $i['iconmoon_selection'] != null;
         })->map(function ($item, $key) {
             $appInstance = str_replace('it.webmapp.', '', $item['app_id']);
@@ -49,16 +50,35 @@ class WebmappAppIconProvider extends IconProvider
 
             return null;
         })->toArray();
-        $content = json_decode($json, true);
-        $options = [];
-        foreach ($content['icons'] as $icon) {
-            $options[] = [
-                'label' => str_replace('-', ' ', $icon['properties']['name']),
-                'value' => 'webmapp-icon-'.$icon['properties']['name'],
-                'search' => explode('-', $icon['properties']['name']),
-            ];
+        $this->icons = array_merge(...$appIcons);
+
+        $this->setOptions($this->icons);
+    }
+
+    public function getIdentifier($svg)
+    {
+        $identifier = null;
+        foreach ($this->icons as $item) {
+            if ($item['value'] == $svg) {
+                $identifier = $item['label'];
+                break;
+            }
         }
 
-        $this->setOptions(array_merge(...$allIconmoonSelection));
+        return $identifier;
+    }
+
+    public function getIcons()
+    {
+        if (is_null($this->icons)) {
+            $this->__construct();
+        }
+
+        $iconsArray = [];
+        foreach ($this->icons as $icon) {
+            $iconsArray[$icon['label']] = $icon['value'];
+        }
+
+        return $iconsArray;
     }
 }
