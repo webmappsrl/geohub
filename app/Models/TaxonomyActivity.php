@@ -106,7 +106,9 @@ class TaxonomyActivity extends Model
             }
         }
         $iconService = app(AppIconService::class);
-        $json['icon_name'] = $iconService->getIconByIdentifier($json['icon']);
+        if (isset($json['icon'])) {
+            $json['icon_name'] = $iconService->getIconByIdentifier($json['icon']);
+        }
 
         return $json;
     }
