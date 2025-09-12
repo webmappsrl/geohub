@@ -492,7 +492,7 @@ trait ConfTrait
         if ($this->filter_activity) {
             $app_user_id = $this->user_id;
             $options = $this->get_unique_taxonomies_from_layers_and_tracks('taxonomyActivities');
-            $options = array_map(function ($item) use ($provider) {
+            $options = array_map(function ($item) use ($iconService) {
                 if (isset($item['icon'])) {
                     $item['icon_name'] = $iconService->getIconByIdentifier($item['icon']);
                 }
@@ -525,7 +525,7 @@ trait ConfTrait
             $options = [];
 
             $options = $this->get_unique_poi_types_taxonomies($app_user_id);
-            $options = array_map(function ($item) use ($provider) {
+            $options = array_map(function ($item) use ($iconService) {
                 if (isset($item['icon'])) {
                     $item['icon_name'] = $iconService->getIconByIdentifier($item['icon']);
                 }

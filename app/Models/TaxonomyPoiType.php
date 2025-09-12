@@ -119,7 +119,9 @@ class TaxonomyPoiType extends Model
         $data['color'] = $json['color'];
         $data['icon'] = $json['icon'];
         $iconService = app(AppIconService::class);
-        $data['icon_name'] = $iconService->getIconByIdentifier($json['icon']);
+        if (isset($json['icon'])) {
+            $data['icon_name'] = $iconService->getIconByIdentifier($json['icon']);
+        }
 
         return $data;
     }
