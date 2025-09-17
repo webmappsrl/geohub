@@ -706,6 +706,17 @@ class EcTrack extends Resource
                 ],
             ]),
             new Panel('Map', [
+                Heading::make(
+                    <<<'HTML'
+                        <ul>
+                            <li><p><strong>Interactive Map File Format:</strong> Ensure that the uploaded file contains "LineString" geometry types for proper display in the interactive map.</p></li>
+                            <li><p><strong>Supported geometry type:</strong> <span style="color: #16a34a; font-family: monospace;">LineString</span> - Compatible format for map visualization.</p></li>
+                            <li><p><strong>NON compatible format:</strong> <span style="color: #dc2626; font-family: monospace;">MultiLineString</span> - Not supported and may cause visualization errors.</p></li>
+                            <li><p><strong>Documentation:</strong> <a href="https://drive.google.com/drive/folders/1ll0j-AAfp4aWPf1a3BWzMdI8BHC8X80F?usp=sharing" target="_blank" style="color: #2563eb; text-decoration: underline;">View complete documentation</a> for more details on supported formats.</p></li>
+                        </ul>
+                    HTML
+                )->asHtml()->onlyOnForms(),
+
                 MapMultiLinestringNova3::make(__('Map'), 'geometry')->withMeta([
                     'center' => ['51', '4'],
                     'attribution' => '<a href="https://webmapp.it/">Webmapp</a> contributors',
