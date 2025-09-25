@@ -201,6 +201,81 @@ class AuthController extends Controller
     }
 
     /**
+     * Update user data consent
+     */
+    public function updateDataConsent(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'consent' => 'required|boolean',
+            'app_id' => 'required|string',
+        ], [
+            'consent.required' => 'Il campo consenso è obbligatorio.',
+            'consent.boolean' => 'Il campo consenso deve essere true o false.',
+            'app_id.required' => 'Il campo app_id è obbligatorio.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->first(),
+                'code' => 400,
+            ], 400);
+        }
+
+        try {
+            $user = auth('api')->user();
+            $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'));
+
+            return response()->json([
+                'success' => 'Consenso dati aggiornato con successo.',
+                'consent' => $request->boolean('consent'),
+                'consent_date' => now()->toISOString(),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Errore durante l\'aggiornamento del consenso: ' . $e->getMessage(),
+                'code' => 500,
+            ], 500);
+        }
+    }
+
+    /**
+     * Get user data consent status
+     */
+    public function getDataConsent(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'app_id' => 'required|string',
+        ], [
+            'app_id.required' => 'Il campo app_id è obbligatorio.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->first(),
+                'code' => 400,
+            ], 400);
+        }
+
+        try {
+            $user = auth('api')->user();
+            $appId = $request->input('app_id');
+            $latestConsent = $user->getLatestDataConsent($appId);
+            $consentHistory = $user->getDataConsentHistory($appId);
+
+            return response()->json([
+                'has_consent' => $user->hasDataConsent($appId),
+                'latest_consent' => $latestConsent,
+                'consent_history' => $consentHistory,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Errore durante il recupero del consenso: ' . $e->getMessage(),
+                'code' => 500,
+            ], 500);
+        }
+    }
+
+    /**
      * Refresh a token.
      */
     public function refresh(): JsonResponse

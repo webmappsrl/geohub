@@ -43,6 +43,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'sku',
         'app_id',
+        'properties',
     ];
 
     /**
@@ -62,6 +63,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'properties' => 'array',
     ];
 
     /**
@@ -172,6 +174,115 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $result;
+    }
+
+    /**
+     * Update user data consent
+     *
+     * @param bool $consent
+     * @param string $appId
+     * @return void
+     */
+    public function updateDataConsent(bool $consent, string $appId): void
+    {
+        $properties = $this->properties ?? [];
+
+        // Initialize data_consent if not exists
+        if (!isset($properties['data_consent'])) {
+            $properties['data_consent'] = [];
+        }
+
+        // Add new consent entry to the history
+        $properties['data_consent'][] = [
+            'consent' => $consent,
+            'consent_date' => now()->toISOString(),
+            'app_id' => $appId,
+            'user_id' => $this->id
+        ];
+
+        $this->update(['properties' => $properties]);
+    }
+
+    /**
+     * Get latest data consent for specific app
+     *
+     * @param string $appId
+     * @return array|null
+     */
+    public function getLatestDataConsent(string $appId): ?array
+    {
+        $properties = $this->properties ?? [];
+        $dataConsent = $properties['data_consent'] ?? [];
+
+        // Filter by app_id and get the latest
+        $appConsents = array_filter($dataConsent, function ($consent) use ($appId) {
+            return $consent['app_id'] === $appId;
+        });
+
+        if (empty($appConsents)) {
+            return null;
+        }
+
+        // Sort by consent_date descending and return the latest
+        usort($appConsents, function ($a, $b) {
+            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        });
+
+        return $appConsents[0];
+    }
+
+    /**
+     * Check if user has data consent for specific app
+     *
+     * @param string $appId
+     * @return bool
+     */
+    public function hasDataConsent(string $appId): bool
+    {
+        $latestConsent = $this->getLatestDataConsent($appId);
+        return $latestConsent ? $latestConsent['consent'] : false;
+    }
+
+    /**
+     * Get all data consent history for specific app
+     *
+     * @param string $appId
+     * @return array
+     */
+    public function getDataConsentHistory(string $appId): array
+    {
+        $properties = $this->properties ?? [];
+        $dataConsent = $properties['data_consent'] ?? [];
+
+        // Filter by app_id
+        $appConsents = array_filter($dataConsent, function ($consent) use ($appId) {
+            return $consent['app_id'] === $appId;
+        });
+
+        // Sort by consent_date descending (most recent first)
+        usort($appConsents, function ($a, $b) {
+            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        });
+
+        return array_values($appConsents);
+    }
+
+    /**
+     * Get all data consent history for all apps
+     *
+     * @return array
+     */
+    public function getAllDataConsentHistory(): array
+    {
+        $properties = $this->properties ?? [];
+        $dataConsent = $properties['data_consent'] ?? [];
+
+        // Sort by consent_date descending (most recent first)
+        usort($dataConsent, function ($a, $b) {
+            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        });
+
+        return $dataConsent;
     }
 
     /**
