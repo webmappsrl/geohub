@@ -179,7 +179,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Update user data consent
      */
-    public function updateDataConsent(bool $consent, string $appId): void
+    public function updateDataConsent(bool $consent, string $appId, ?string $shard = null): void
     {
         $properties = $this->properties ?? [];
 
@@ -189,12 +189,19 @@ class User extends Authenticatable implements JWTSubject
         }
 
         // Add new consent entry to the history
-        $properties['data_consent'][] = [
+        $consentEntry = [
             'consent' => $consent,
             'consent_date' => now()->toISOString(),
             'app_id' => $appId,
             'user_id' => $this->id,
         ];
+
+        // Add shard information if provided
+        if ($shard !== null) {
+            $consentEntry['shard'] = $shard;
+        }
+
+        $properties['data_consent'][] = $consentEntry;
 
         $this->update(['properties' => $properties]);
     }

@@ -213,6 +213,7 @@ class AuthController extends Controller
             'properties.*' => 'sometimes',
             'app_id' => 'sometimes|string',
             'consent' => 'sometimes|boolean',
+            'shard' => 'sometimes|string',
         ], [
             'name.string' => 'Il campo nome deve essere una stringa.',
             'name.max' => 'Il campo nome non può superare i 255 caratteri.',
@@ -221,6 +222,7 @@ class AuthController extends Controller
             'password.min' => 'La password deve essere di almeno 6 caratteri.',
             'properties.array' => 'Il campo properties deve essere un array.',
             'consent.boolean' => 'Il campo consenso deve essere true o false.',
+            'shard.string' => 'Il campo shard deve essere una stringa.',
         ]);
 
         if ($validator->fails()) {
@@ -256,7 +258,8 @@ class AuthController extends Controller
 
             // Handle data consent if provided
             if ($request->has('consent') && $request->has('app_id')) {
-                $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'));
+                $shard = $request->input('shard');
+                $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'), $shard);
             }
 
             // Update user with basic fields
