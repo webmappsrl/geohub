@@ -3,12 +3,11 @@
 namespace App\Traits;
 
 use App\Services\AppIconService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait IconTrait
 {
-
     public function icons()
     {
         $iconService = app(AppIconService::class);
@@ -48,7 +47,7 @@ trait IconTrait
                 'morphable_id' => 'taxonomy_activityable_id',
                 'morphable_type' => 'taxonomy_activityable_type',
                 'model_type' => 'App\\Models\\EcTrack',
-                'model_table' => 'ec_tracks'
+                'model_table' => 'ec_tracks',
             ],
             [
                 'table' => 'taxonomy_themes',
@@ -57,7 +56,7 @@ trait IconTrait
                 'morphable_id' => 'taxonomy_themeable_id',
                 'morphable_type' => 'taxonomy_themeable_type',
                 'model_type' => 'App\\Models\\EcTrack',
-                'model_table' => 'ec_tracks'
+                'model_table' => 'ec_tracks',
             ],
             [
                 'table' => 'taxonomy_poi_types',
@@ -66,8 +65,8 @@ trait IconTrait
                 'morphable_id' => 'taxonomy_poi_typeable_id',
                 'morphable_type' => 'taxonomy_poi_typeable_type',
                 'model_type' => 'App\\Models\\EcPoi',
-                'model_table' => 'ec_pois'
-            ]
+                'model_table' => 'ec_pois',
+            ],
         ];
 
         foreach ($taxonomyQueries as $query) {
@@ -89,7 +88,7 @@ trait IconTrait
     {
         foreach ($taxonomies as $taxonomy) {
             $label = $iconService->getIconByIdentifier($taxonomy->icon);
-            if (!is_null($label)) {
+            if (! is_null($label)) {
                 $icons[$label] = $taxonomy->icon;
             }
         }

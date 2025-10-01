@@ -207,7 +207,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
+            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
             'password' => 'sometimes|string|min:6',
             'properties' => 'sometimes|array',
             'properties.*' => 'sometimes',
@@ -260,7 +260,7 @@ class AuthController extends Controller
             }
 
             // Update user with basic fields
-            if (!empty($updateData)) {
+            if (! empty($updateData)) {
                 $user->update($updateData);
             }
 
@@ -282,7 +282,7 @@ class AuthController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
                 'code' => 500,
             ], 500);
         }
@@ -335,7 +335,7 @@ class AuthController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante il recupero dei dati utente: ' . $e->getMessage(),
+                'error' => 'Errore durante il recupero dei dati utente: '.$e->getMessage(),
                 'code' => 500,
             ], 500);
         }

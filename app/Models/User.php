@@ -178,17 +178,13 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Update user data consent
-     *
-     * @param bool $consent
-     * @param string $appId
-     * @return void
      */
     public function updateDataConsent(bool $consent, string $appId): void
     {
         $properties = $this->properties ?? [];
 
         // Initialize data_consent if not exists
-        if (!isset($properties['data_consent'])) {
+        if (! isset($properties['data_consent'])) {
             $properties['data_consent'] = [];
         }
 
@@ -197,7 +193,7 @@ class User extends Authenticatable implements JWTSubject
             'consent' => $consent,
             'consent_date' => now()->toISOString(),
             'app_id' => $appId,
-            'user_id' => $this->id
+            'user_id' => $this->id,
         ];
 
         $this->update(['properties' => $properties]);
@@ -205,9 +201,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get latest data consent for specific app
-     *
-     * @param string $appId
-     * @return array|null
      */
     public function getLatestDataConsent(string $appId): ?array
     {
@@ -233,21 +226,16 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Check if user has data consent for specific app
-     *
-     * @param string $appId
-     * @return bool
      */
     public function hasDataConsent(string $appId): bool
     {
         $latestConsent = $this->getLatestDataConsent($appId);
+
         return $latestConsent ? $latestConsent['consent'] : false;
     }
 
     /**
      * Get all data consent history for specific app
-     *
-     * @param string $appId
-     * @return array
      */
     public function getDataConsentHistory(string $appId): array
     {
@@ -269,8 +257,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get all data consent history for all apps
-     *
-     * @return array
      */
     public function getAllDataConsentHistory(): array
     {

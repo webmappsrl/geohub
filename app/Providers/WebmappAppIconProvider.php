@@ -4,11 +4,11 @@ namespace App\Providers;
 
 use App\Services\AppIconService;
 use Bernhardh\NovaIconSelect\IconProvider;
-use Illuminate\Support\Facades\Log;
 
 class WebmappAppIconProvider extends IconProvider
 {
     private $icons;
+
     private ?AppIconService $iconService = null;
 
     public function __construct()
@@ -25,6 +25,7 @@ class WebmappAppIconProvider extends IconProvider
         if ($this->iconService === null) {
             $this->iconService = app(AppIconService::class);
         }
+
         return $this->iconService;
     }
 
