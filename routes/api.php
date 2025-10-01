@@ -100,8 +100,8 @@ Route::name('api.')->group(function () {
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('me', [AuthController::class, 'me'])->name('me');
         Route::post('delete', [AuthController::class, 'delete'])->name('delete');
-        Route::post('data-consent', [AuthController::class, 'updateDataConsent'])->name('data-consent');
-        Route::get('data-consent', [AuthController::class, 'getDataConsent'])->name('get-data-consent');
+        Route::post('user', [AuthController::class, 'updateUser'])->name('user');
+        Route::get('user', [AuthController::class, 'getUser'])->name('get-user');
     });
 
     /**

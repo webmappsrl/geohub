@@ -201,17 +201,26 @@ class AuthController extends Controller
     }
 
     /**
-     * Update user data consent
+     * Update user data (complete user editing)
      */
-    public function updateDataConsent(Request $request): JsonResponse
+    public function updateUser(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'consent' => 'required|boolean',
-            'app_id' => 'required|string',
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
+            'password' => 'sometimes|string|min:6',
+            'properties' => 'sometimes|array',
+            'properties.*' => 'sometimes',
+            'app_id' => 'sometimes|string',
+            'consent' => 'sometimes|boolean',
         ], [
-            'consent.required' => 'Il campo consenso è obbligatorio.',
+            'name.string' => 'Il campo nome deve essere una stringa.',
+            'name.max' => 'Il campo nome non può superare i 255 caratteri.',
+            'email.email' => 'Il campo email deve essere un indirizzo email valido.',
+            'email.unique' => 'Un utente è già stato registrato con questa email.',
+            'password.min' => 'La password deve essere di almeno 6 caratteri.',
+            'properties.array' => 'Il campo properties deve essere un array.',
             'consent.boolean' => 'Il campo consenso deve essere true o false.',
-            'app_id.required' => 'Il campo app_id è obbligatorio.',
         ]);
 
         if ($validator->fails()) {
@@ -223,30 +232,71 @@ class AuthController extends Controller
 
         try {
             $user = auth('api')->user();
-            $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'));
+            $updateData = [];
+
+            // Update basic user fields
+            if ($request->has('name')) {
+                $updateData['name'] = $request->input('name');
+            }
+            if ($request->has('email')) {
+                $updateData['email'] = strtolower($request->input('email'));
+            }
+            if ($request->has('password')) {
+                $updateData['password'] = bcrypt($request->input('password'));
+            }
+
+            // Handle properties update
+            if ($request->has('properties')) {
+                $currentProperties = $user->properties ?? [];
+                $newProperties = $request->input('properties');
+
+                // Merge with existing properties
+                $updateData['properties'] = array_merge($currentProperties, $newProperties);
+            }
+
+            // Handle data consent if provided
+            if ($request->has('consent') && $request->has('app_id')) {
+                $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'));
+            }
+
+            // Update user with basic fields
+            if (!empty($updateData)) {
+                $user->update($updateData);
+            }
+
+            // Return updated user data
+            $roles = array_map('strtolower', $user->roles->pluck('name')->toArray());
+            $partnerships = $user->partnerships->pluck('name')->toArray();
+
+            $result = array_merge($user->toArray(), [
+                'roles' => $roles,
+                'partnerships' => $partnerships,
+                'referrer' => $user->sku,
+            ]);
+
+            unset($result['password']);
 
             return response()->json([
-                'success' => 'Consenso dati aggiornato con successo.',
-                'consent' => $request->boolean('consent'),
-                'consent_date' => now()->toISOString(),
+                'success' => 'Utente aggiornato con successo.',
+                'user' => $result,
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento del consenso: ' . $e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }
     }
 
     /**
-     * Get user data consent status
+     * Get user data (complete user data retrieval)
      */
-    public function getDataConsent(Request $request): JsonResponse
+    public function getUser(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'app_id' => 'required|string',
+            'app_id' => 'sometimes|string',
         ], [
-            'app_id.required' => 'Il campo app_id è obbligatorio.',
+            'app_id.string' => 'Il campo app_id deve essere una stringa.',
         ]);
 
         if ($validator->fails()) {
@@ -258,18 +308,34 @@ class AuthController extends Controller
 
         try {
             $user = auth('api')->user();
-            $appId = $request->input('app_id');
-            $latestConsent = $user->getLatestDataConsent($appId);
-            $consentHistory = $user->getDataConsentHistory($appId);
+            $roles = array_map('strtolower', $user->roles->pluck('name')->toArray());
+            $partnerships = $user->partnerships->pluck('name')->toArray();
 
-            return response()->json([
-                'has_consent' => $user->hasDataConsent($appId),
-                'latest_consent' => $latestConsent,
-                'consent_history' => $consentHistory,
+            $result = array_merge($user->toArray(), [
+                'roles' => $roles,
+                'partnerships' => $partnerships,
+                'referrer' => $user->sku,
             ]);
+
+            // Se è specificato app_id, aggiungi informazioni sul data consent
+            if ($request->has('app_id')) {
+                $appId = $request->input('app_id');
+                $latestConsent = $user->getLatestDataConsent($appId);
+                $consentHistory = $user->getDataConsentHistory($appId);
+
+                $result['data_consent_info'] = [
+                    'has_consent' => $user->hasDataConsent($appId),
+                    'latest_consent' => $latestConsent,
+                    'consent_history' => $consentHistory,
+                ];
+            }
+
+            unset($result['password']);
+
+            return response()->json($result);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante il recupero del consenso: ' . $e->getMessage(),
+                'error' => 'Errore durante il recupero dei dati utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }
