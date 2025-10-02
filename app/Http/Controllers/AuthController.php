@@ -207,13 +207,12 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
+            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
             'password' => 'sometimes|string|min:6',
             'properties' => 'sometimes|array',
             'properties.*' => 'sometimes',
-            'app_id' => 'sometimes|string',
-            'consent' => 'sometimes|boolean',
-            'shard' => 'sometimes|string',
+            'app_id' => 'sometimes|integer',
+            'privacy_agree' => 'sometimes|boolean',
         ], [
             'name.string' => 'Il campo nome deve essere una stringa.',
             'name.max' => 'Il campo nome non può superare i 255 caratteri.',
@@ -221,8 +220,7 @@ class AuthController extends Controller
             'email.unique' => 'Un utente è già stato registrato con questa email.',
             'password.min' => 'La password deve essere di almeno 6 caratteri.',
             'properties.array' => 'Il campo properties deve essere un array.',
-            'consent.boolean' => 'Il campo consenso deve essere true o false.',
-            'shard.string' => 'Il campo shard deve essere una stringa.',
+            'privacy_agree.boolean' => 'Il campo privacy agree deve essere true o false.',
         ]);
 
         if ($validator->fails()) {
@@ -256,10 +254,9 @@ class AuthController extends Controller
                 $updateData['properties'] = array_merge($currentProperties, $newProperties);
             }
 
-            // Handle data consent if provided
-            if ($request->has('consent') && $request->has('app_id')) {
-                $shard = $request->input('shard');
-                $user->updateDataConsent($request->boolean('consent'), $request->input('app_id'), $shard);
+            // Handle privacy agree if provided
+            if ($request->has('privacy_agree') && $request->has('app_id')) {
+                $user->updatePrivacyAgree($request->boolean('privacy_agree'), (int) $request->input('app_id'));
             }
 
             // Update user with basic fields
@@ -285,7 +282,7 @@ class AuthController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }
@@ -297,9 +294,9 @@ class AuthController extends Controller
     public function getUser(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'app_id' => 'sometimes|string',
+            'app_id' => 'sometimes|integer',
         ], [
-            'app_id.string' => 'Il campo app_id deve essere una stringa.',
+            'app_id.integer' => 'Il campo app_id deve essere un numero intero.',
         ]);
 
         if ($validator->fails()) {
@@ -320,16 +317,16 @@ class AuthController extends Controller
                 'referrer' => $user->sku,
             ]);
 
-            // Se è specificato app_id, aggiungi informazioni sul data consent
+            // Se è specificato app_id, aggiungi informazioni sul privacy agree
             if ($request->has('app_id')) {
-                $appId = $request->input('app_id');
-                $latestConsent = $user->getLatestDataConsent($appId);
-                $consentHistory = $user->getDataConsentHistory($appId);
+                $appId = (int) $request->input('app_id');
+                $latestPrivacyAgree = $user->getLatestPrivacyAgree($appId);
+                $privacyAgreeHistory = $user->getPrivacyAgreeHistory($appId);
 
-                $result['data_consent_info'] = [
-                    'has_consent' => $user->hasDataConsent($appId),
-                    'latest_consent' => $latestConsent,
-                    'consent_history' => $consentHistory,
+                $result['privacy_agree_info'] = [
+                    'has_agree' => $user->hasPrivacyAgree($appId),
+                    'latest_agree' => $latestPrivacyAgree,
+                    'agree_history' => $privacyAgreeHistory,
                 ];
             }
 
@@ -338,7 +335,7 @@ class AuthController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante il recupero dei dati utente: '.$e->getMessage(),
+                'error' => 'Errore durante il recupero dei dati utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }

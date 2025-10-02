@@ -177,105 +177,100 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Update user data consent
+     * Update user privacy agree
      */
-    public function updateDataConsent(bool $consent, string $appId, ?string $shard = null): void
+    public function updatePrivacyAgree(bool $privacyAgree, int $appId): void
     {
         $properties = $this->properties ?? [];
 
-        // Initialize data_consent if not exists
-        if (! isset($properties['data_consent'])) {
-            $properties['data_consent'] = [];
+        // Initialize privacy if not exists
+        if (! isset($properties['privacy'])) {
+            $properties['privacy'] = [];
         }
 
-        // Add new consent entry to the history
-        $consentEntry = [
-            'consent' => $consent,
-            'consent_date' => now()->toISOString(),
+        // Add new privacy agree entry to the history
+        $privacyEntry = [
+            'agree' => $privacyAgree,
+            'date' => now()->toISOString(),
             'app_id' => $appId,
             'user_id' => $this->id,
         ];
 
-        // Add shard information if provided
-        if ($shard !== null) {
-            $consentEntry['shard'] = $shard;
-        }
-
-        $properties['data_consent'][] = $consentEntry;
+        $properties['privacy'][] = $privacyEntry;
 
         $this->update(['properties' => $properties]);
     }
 
     /**
-     * Get latest data consent for specific app
+     * Get latest privacy agree for specific app
      */
-    public function getLatestDataConsent(string $appId): ?array
+    public function getLatestPrivacyAgree(int $appId): ?array
     {
         $properties = $this->properties ?? [];
-        $dataConsent = $properties['data_consent'] ?? [];
+        $privacy = $properties['privacy'] ?? [];
 
         // Filter by app_id and get the latest
-        $appConsents = array_filter($dataConsent, function ($consent) use ($appId) {
-            return $consent['app_id'] === $appId;
+        $appPrivacy = array_filter($privacy, function ($privacy) use ($appId) {
+            return $privacy['app_id'] === $appId;
         });
 
-        if (empty($appConsents)) {
+        if (empty($appPrivacy)) {
             return null;
         }
 
-        // Sort by consent_date descending and return the latest
-        usort($appConsents, function ($a, $b) {
-            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        // Sort by date descending and return the latest
+        usort($appPrivacy, function ($a, $b) {
+            return strtotime($b['date']) - strtotime($a['date']);
         });
 
-        return $appConsents[0];
+        return $appPrivacy[0];
     }
 
     /**
-     * Check if user has data consent for specific app
+     * Check if user has privacy agree for specific app
      */
-    public function hasDataConsent(string $appId): bool
+    public function hasPrivacyAgree(int $appId): bool
     {
-        $latestConsent = $this->getLatestDataConsent($appId);
+        $latestPrivacyAgree = $this->getLatestPrivacyAgree($appId);
 
-        return $latestConsent ? $latestConsent['consent'] : false;
+        return $latestPrivacyAgree ? $latestPrivacyAgree['agree'] : false;
     }
 
     /**
-     * Get all data consent history for specific app
+     * Get all privacy agree history for specific app
      */
-    public function getDataConsentHistory(string $appId): array
+    public function getPrivacyAgreeHistory(int $appId): array
     {
         $properties = $this->properties ?? [];
-        $dataConsent = $properties['data_consent'] ?? [];
+        $privacy = $properties['privacy'] ?? [];
 
         // Filter by app_id
-        $appConsents = array_filter($dataConsent, function ($consent) use ($appId) {
-            return $consent['app_id'] === $appId;
+        $appPrivacy = array_filter($privacy, function ($privacy) use ($appId) {
+            return $privacy['app_id'] === $appId;
         });
 
-        // Sort by consent_date descending (most recent first)
-        usort($appConsents, function ($a, $b) {
-            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        // Sort by date descending (most recent first)
+        usort($appPrivacy, function ($a, $b) {
+            return strtotime($b['date']) - strtotime($a['date']);
         });
 
-        return array_values($appConsents);
+        return array_values($appPrivacy);
     }
 
     /**
-     * Get all data consent history for all apps
+     * Get all privacy agree history for all apps
      */
-    public function getAllDataConsentHistory(): array
+    public function getAllPrivacyAgreeHistory(): array
     {
         $properties = $this->properties ?? [];
-        $dataConsent = $properties['data_consent'] ?? [];
+        $privacy = $properties['privacy'] ?? [];
 
-        // Sort by consent_date descending (most recent first)
-        usort($dataConsent, function ($a, $b) {
-            return strtotime($b['consent_date']) - strtotime($a['consent_date']);
+        // Sort by date descending (most recent first)
+        usort($privacy, function ($a, $b) {
+            return strtotime($b['date']) - strtotime($a['date']);
         });
 
-        return $dataConsent;
+        return $privacy;
     }
 
     /**
