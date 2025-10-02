@@ -264,78 +264,21 @@ class AuthController extends Controller
                 $user->update($updateData);
             }
 
-            // Return updated user data
-            $roles = array_map('strtolower', $user->roles->pluck('name')->toArray());
-            $partnerships = $user->partnerships->pluck('name')->toArray();
+            // Subscribe to me() method to get consistent user data structure
+            $meRequest = new Request();
+            $meRequest->merge($request->all());
 
-            $result = array_merge($user->toArray(), [
-                'roles' => $roles,
-                'partnerships' => $partnerships,
-                'referrer' => $user->sku,
-            ]);
+            // "Subscribe" to me() - call it and get the response
+            $meResponse = $this->me($meRequest);
+            $meData = $meResponse->getData(true);
 
-            unset($result['password']);
+            // Log the "subscribe" behavior
+            \Log::info('Subscribe to me() in updateUser - User data updated:', $meData);
 
-            return response()->json([
-                'success' => 'Utente aggiornato con successo.',
-                'user' => $result,
-            ]);
+            return $meResponse;
         } catch (Exception $e) {
             return response()->json([
                 'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
-                'code' => 500,
-            ], 500);
-        }
-    }
-
-    /**
-     * Get user data (complete user data retrieval)
-     */
-    public function getUser(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'app_id' => 'sometimes|integer',
-        ], [
-            'app_id.integer' => 'Il campo app_id deve essere un numero intero.',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors()->first(),
-                'code' => 400,
-            ], 400);
-        }
-
-        try {
-            $user = auth('api')->user();
-            $roles = array_map('strtolower', $user->roles->pluck('name')->toArray());
-            $partnerships = $user->partnerships->pluck('name')->toArray();
-
-            $result = array_merge($user->toArray(), [
-                'roles' => $roles,
-                'partnerships' => $partnerships,
-                'referrer' => $user->sku,
-            ]);
-
-            // Se è specificato app_id, aggiungi informazioni sul privacy agree
-            if ($request->has('app_id')) {
-                $appId = (int) $request->input('app_id');
-                $latestPrivacyAgree = $user->getLatestPrivacyAgree($appId);
-                $privacyAgreeHistory = $user->getPrivacyAgreeHistory($appId);
-
-                $result['privacy_agree_info'] = [
-                    'has_agree' => $user->hasPrivacyAgree($appId),
-                    'latest_agree' => $latestPrivacyAgree,
-                    'agree_history' => $privacyAgreeHistory,
-                ];
-            }
-
-            unset($result['password']);
-
-            return response()->json($result);
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Errore durante il recupero dei dati utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }

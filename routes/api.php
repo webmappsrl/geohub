@@ -101,7 +101,6 @@ Route::name('api.')->group(function () {
         Route::post('me', [AuthController::class, 'me'])->name('me');
         Route::post('delete', [AuthController::class, 'delete'])->name('delete');
         Route::post('user', [AuthController::class, 'updateUser'])->name('user');
-        Route::get('user', [AuthController::class, 'getUser'])->name('get-user');
     });
 
     /**
@@ -276,7 +275,7 @@ Route::name('api.')->group(function () {
             ])->name('track.taxonomies');
             Route::get('/{app_id}/taxonomies/{taxonomy_name}.json', [AppElbrusTaxonomyController::class, 'getTerms'])->name('taxonomies');
             Route::get('/{app_id}/tiles/map.mbtiles', function ($app_id) {
-                return redirect('https://k.webmapp.it/elbrus/'.$app_id.'.mbtiles');
+                return redirect('https://k.webmapp.it/elbrus/' . $app_id . '.mbtiles');
             });
         });
         Route::prefix('webmapp')->name('webmapp.')->group(function () {
