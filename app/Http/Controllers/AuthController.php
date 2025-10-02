@@ -207,7 +207,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
+            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
             'password' => 'sometimes|string|min:6',
             'properties' => 'sometimes|array',
             'properties.*' => 'sometimes',
@@ -265,7 +265,7 @@ class AuthController extends Controller
             }
 
             // Subscribe to me() method to get consistent user data structure
-            $meRequest = new Request();
+            $meRequest = new Request;
             $meRequest->merge($request->all());
 
             // "Subscribe" to me() - call it and get the response
@@ -278,7 +278,7 @@ class AuthController extends Controller
             return $meResponse;
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
                 'code' => 500,
             ], 500);
         }
