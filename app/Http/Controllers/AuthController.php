@@ -35,6 +35,7 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required',
                 'name' => 'required|string|max:255',
+                'privacy_agree' => 'sometimes|boolean',
             ],
             [
                 'email.email' => 'Il campo email deve essere un indirizzo email valido.',
@@ -332,6 +333,11 @@ class AuthController extends Controller
         $this->assignRole($user);
 
         $this->assignPartnerships($user);
+
+        // Handle privacy agree if provided during signup
+        if ($request->has('privacy_agree') && $request->has('app_id')) {
+            $user->updatePrivacyAgree($request->boolean('privacy_agree'), (int) $request->input('app_id'));
+        }
 
         $user->referrer = $user->sku;
 
