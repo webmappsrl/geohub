@@ -265,20 +265,10 @@ class AuthController extends Controller
             }
 
             // Subscribe to me() method to get consistent user data structure
-            $meRequest = new Request;
-            $meRequest->merge($request->all());
-
-            // "Subscribe" to me() - call it and get the response
-            $meResponse = $this->me($meRequest);
-            $meData = $meResponse->getData(true);
-
-            // Log the "subscribe" behavior
-            \Log::info('Subscribe to me() in updateUser - User data updated:', $meData);
-
-            return $meResponse;
+            return response()->json($this->me($request)->getData(true));
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }
