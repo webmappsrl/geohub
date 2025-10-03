@@ -268,7 +268,7 @@ class AuthController extends Controller
             return response()->json($this->me($request)->getData(true));
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
                 'code' => 500,
             ], 500);
         }
