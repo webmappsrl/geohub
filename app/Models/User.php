@@ -201,7 +201,6 @@ class User extends Authenticatable implements JWTSubject
         $this->update(['properties' => $properties]);
     }
 
-
     /**
      * Set the emulated user id
      *
