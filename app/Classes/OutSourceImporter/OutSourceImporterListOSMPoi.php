@@ -35,9 +35,9 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract
         $queries = [
             'caiparma_luoghi_di_posa' => [
                 [
-                    'url' => 'https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A25%5D%3B%0A%20%20node%5B%22source%3Aref%22%3D%229224001%22%5D%5B%22information%22%3D%22guidepost%22%5D%3B%20%0Aout%20meta%3B%0A',
+                    'url' => 'https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0A%20%20node%5B%22source%3Aref%22%3D%229224001%22%5D%5B%22information%22%3D%22guidepost%22%5D%3B%20%0Aout%20meta%3B%0A',
                     'type' => 'node',
-                    'share' => 'https://overpass-turbo.eu/s/1p6a',
+                    'share' => 'https://overpass-turbo.eu/s/2dCn',
                 ],
             ],
             'caiparma_punti_acqua' => [
