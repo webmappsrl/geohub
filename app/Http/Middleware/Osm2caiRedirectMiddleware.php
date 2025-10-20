@@ -29,14 +29,13 @@ class Osm2caiRedirectMiddleware
             $appId = $this->getAppId($request);
 
             if (in_array($appId, self::REDIRECT_APP_IDS)) {
-                Log::info("🔄 Osm2caiRedirectMiddleware: UGC store rilevato", [
+                Log::info("🚫 Osm2caiRedirectMiddleware: UGC store rilevato", [
                     'app_id' => $appId,
                     'path' => $request->path(),
                     'method' => $request->method()
                 ]);
 
-                // Invia webhook a osm2cai
-                $this->sendWebhookToOsm2cai($request, $appId);
+                return $this->returnAppMigrationError();
             }
         }
 
@@ -494,5 +493,13 @@ class Osm2caiRedirectMiddleware
             ]);
             return null;
         }
+    }
+
+    /**
+     * Restituisce errore per app in migrazione
+     */
+    private function returnAppMigrationError()
+    {
+        return response(['error' => 'App needs to be updated to continue syncing.'], 403);
     }
 }
