@@ -176,7 +176,6 @@ class User extends Authenticatable implements JWTSubject
         return $result;
     }
 
-
     /**
      * Set the emulated user id
      *

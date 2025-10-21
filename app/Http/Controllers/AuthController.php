@@ -220,7 +220,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
+            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
             'password' => 'sometimes|string|min:6',
             'properties' => 'sometimes|array',
             'properties.*' => 'sometimes',
@@ -292,7 +292,7 @@ class AuthController extends Controller
             return response()->json($user);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
                 'code' => 500,
             ], 500);
         }
@@ -356,7 +356,6 @@ class AuthController extends Controller
         $this->assignRole($user);
 
         $this->assignPartnerships($user);
-
 
         // Handle privacy object if provided during signup (new format)
         $privacy = $request->input('privacy');
