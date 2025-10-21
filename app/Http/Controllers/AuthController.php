@@ -9,6 +9,7 @@ use App\Services\UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -35,6 +36,11 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required',
                 'name' => 'required|string|max:255',
+                'privacy_agree' => 'sometimes|boolean',
+                'privacy' => 'sometimes|array',
+                'privacy.agree' => 'required_with:privacy|boolean',
+                'privacy.date' => 'required_with:privacy|date',
+                'privacy.app_id' => 'required_with:privacy|integer',
             ],
             [
                 'email.email' => 'Il campo email deve essere un indirizzo email valido.',
@@ -42,6 +48,13 @@ class AuthController extends Controller
                 'email.required' => 'Il campo email è obbligatorio.',
                 'password.required' => 'Il campo password è obbligatorio.',
                 'name.required' => 'Il campo nome è obbligatorio.',
+                'privacy.array' => 'Il campo privacy deve essere un oggetto.',
+                'privacy.agree.required_with' => 'Il campo agree è obbligatorio quando privacy è fornito.',
+                'privacy.agree.boolean' => 'Il campo agree deve essere true o false.',
+                'privacy.date.required_with' => 'Il campo date è obbligatorio quando privacy è fornito.',
+                'privacy.date.date' => 'Il campo date deve essere una data valida.',
+                'privacy.app_id.required_with' => 'Il campo app_id è obbligatorio quando privacy è fornito.',
+                'privacy.app_id.integer' => 'Il campo app_id deve essere un numero intero.',
             ]
         );
 
@@ -201,6 +214,91 @@ class AuthController extends Controller
     }
 
     /**
+     * Update user data (complete user editing)
+     */
+    public function updateUser(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
+            'password' => 'sometimes|string|min:6',
+            'properties' => 'sometimes|array',
+            'properties.*' => 'sometimes',
+            'app_id' => 'sometimes|integer',
+            'privacy' => 'sometimes|array',
+            'privacy.agree' => 'required_with:privacy|boolean',
+            'privacy.date' => 'required_with:privacy|date',
+            'privacy.app_id' => 'required_with:privacy|integer',
+        ], [
+            'name.string' => 'Il campo nome deve essere una stringa.',
+            'name.max' => 'Il campo nome non può superare i 255 caratteri.',
+            'email.email' => 'Il campo email deve essere un indirizzo email valido.',
+            'email.unique' => 'Un utente è già stato registrato con questa email.',
+            'password.min' => 'La password deve essere di almeno 6 caratteri.',
+            'properties.array' => 'Il campo properties deve essere un array.',
+            'privacy.array' => 'Il campo privacy deve essere un oggetto.',
+            'privacy.agree.required_with' => 'Il campo agree è obbligatorio quando privacy è fornito.',
+            'privacy.agree.boolean' => 'Il campo agree deve essere true o false.',
+            'privacy.date.required_with' => 'Il campo date è obbligatorio quando privacy è fornito.',
+            'privacy.date.date' => 'Il campo date deve essere una data valida.',
+            'privacy.app_id.required_with' => 'Il campo app_id è obbligatorio quando privacy è fornito.',
+            'privacy.app_id.integer' => 'Il campo app_id deve essere un numero intero.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->first(),
+                'code' => 400,
+            ], 400);
+        }
+
+        try {
+            $userId = auth('api')->user()->id;
+            $user = User::find($userId);
+            $updateData = [];
+
+            // Update basic user fields
+            if ($request->has('name')) {
+                $updateData['name'] = $request->input('name');
+            }
+            if ($request->has('email')) {
+                $updateData['email'] = strtolower($request->input('email'));
+            }
+            if ($request->has('password')) {
+                $updateData['password'] = bcrypt($request->input('password'));
+            }
+
+            // Handle properties update
+            if ($request->has('properties')) {
+                $currentProperties = $user->properties ?? [];
+                $newProperties = $request->input('properties');
+
+                // Merge with existing properties
+                $updateData['properties'] = array_merge($currentProperties, $newProperties);
+            }
+
+            // Handle privacy object if provided (new format)
+            if ($request->has('privacy')) {
+                Log::info('privacy to update', $request->input('privacy'));
+                $privacy = $request->input('privacy');
+                $user = $this->_updatePrivacyAgree($user, $privacy);
+            }
+
+            // Update user with basic fields
+            if (! empty($updateData)) {
+                $user->update($updateData);
+            }
+
+            return response()->json($user);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
+                'code' => 500,
+            ], 500);
+        }
+    }
+
+    /**
      * Refresh a token.
      */
     public function refresh(): JsonResponse
@@ -258,6 +356,12 @@ class AuthController extends Controller
         $this->assignRole($user);
 
         $this->assignPartnerships($user);
+
+        // Handle privacy object if provided during signup (new format)
+        $privacy = $request->input('privacy');
+        if ($privacy) {
+            $user = $this->_updatePrivacyAgree($user, $privacy);
+        }
 
         $user->referrer = $user->sku;
 
@@ -321,5 +425,25 @@ class AuthController extends Controller
         } catch (Exception $e) {
             throw new Exception('Errore durante l\'assegnazione delle partnership. Per favore, riprova.');
         }
+    }
+
+    /**
+     * Update user privacy agree
+     */
+    private function _updatePrivacyAgree($user, array $privacyAgree)
+    {
+        $properties = $user->properties ?? [];
+
+        // Initialize privacy if not exists
+        if (! isset($properties['privacy'])) {
+            $properties['privacy'] = [];
+        }
+
+        $properties['privacy'][] = $privacyAgree;
+
+        $user->properties = $properties;
+        $user->saveQuietly();
+
+        return $user;
     }
 }

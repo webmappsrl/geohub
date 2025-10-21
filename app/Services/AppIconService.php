@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Log;
 class AppIconService
 {
     private const CACHE_KEY = 'webmapp_app_icons';
+
     private const CACHE_LOOKUP_KEY = 'webmapp_app_icons_lookup';
+
     private const CACHE_TTL = 3600; // 1 ora
 
     /**
@@ -150,6 +152,7 @@ class AppIconService
     public function refreshIcons(): array
     {
         $this->clearCache();
+
         return $this->getAllIcons();
     }
 }

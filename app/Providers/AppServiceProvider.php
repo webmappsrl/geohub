@@ -77,7 +77,7 @@ HEADER;
 </kml>
 HEADER;
 
-            return Response::make($header . $value . $footer, $status, $headers, $options);
+            return Response::make($header.$value.$footer, $status, $headers, $options);
         });
 
         /**
@@ -94,7 +94,7 @@ HEADER;
 </gpx>
 HEADER;
 
-            return Response::make($header . $value . $footer, $status, $headers, $options);
+            return Response::make($header.$value.$footer, $status, $headers, $options);
         });
     }
 }

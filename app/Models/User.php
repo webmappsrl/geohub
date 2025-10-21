@@ -43,6 +43,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'sku',
         'app_id',
+        'properties',
     ];
 
     /**
@@ -62,6 +63,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'properties' => 'array',
     ];
 
     /**
