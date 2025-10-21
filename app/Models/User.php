@@ -176,29 +176,6 @@ class User extends Authenticatable implements JWTSubject
         return $result;
     }
 
-    /**
-     * Update user privacy agree
-     */
-    public function updatePrivacyAgree(bool $privacyAgree, int $appId): void
-    {
-        $properties = $this->properties ?? [];
-
-        // Initialize privacy if not exists
-        if (! isset($properties['privacy'])) {
-            $properties['privacy'] = [];
-        }
-
-        // Add new privacy agree entry to the history
-        $privacyEntry = [
-            'agree' => $privacyAgree,
-            'date' => now()->toISOString(),
-            'app_id' => $appId,
-        ];
-
-        $properties['privacy'][] = $privacyEntry;
-
-        $this->update(['properties' => $properties]);
-    }
 
     /**
      * Set the emulated user id
