@@ -182,7 +182,7 @@ class SendOsm2caiWebhookJob implements ShouldQueue
     private function sendWebhook(?int $geohubId): void
     {
         // URL del webhook di osm2cai2
-        $webhookUrl = 'https://osm2cai2.dev.maphub.it/api/webhook/ugc/' . $this->ugcType;
+        $webhookUrl = config('app.ugc_webhook_url') . '/api/webhook/ugc/' . $this->ugcType;
 
         // Prepara i dati multipart
         $multipartFields = $this->prepareMultipartWebhookData($geohubId);

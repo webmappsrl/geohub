@@ -29,13 +29,14 @@ class Osm2caiRedirectMiddleware
             $appId = $this->getAppId($request);
 
             if (in_array($appId, self::REDIRECT_APP_IDS)) {
-                Log::info("🚫 Osm2caiRedirectMiddleware: UGC store rilevato", [
+                Log::info("🔄 Osm2caiRedirectMiddleware: UGC store rilevato", [
                     'app_id' => $appId,
                     'path' => $request->path(),
                     'method' => $request->method()
                 ]);
 
-                return $this->returnAppMigrationError();
+                // Invia webhook a osm2cai
+                $this->sendWebhookToOsm2cai($request, $appId);
             }
         }
 

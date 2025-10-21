@@ -289,6 +289,6 @@ return [
     |
     */
 
-    'ugc_redirect_url' => env('UGC_REDIRECT_URL', 'https://osm2cai2.dev.maphub.it'),
+    'ugc_webhook_url' => env('UGC_WEBHOOK_URL', 'https://osm2cai.uat.maphub.it'),
 
 ];
