@@ -193,7 +193,6 @@ class User extends Authenticatable implements JWTSubject
             'agree' => $privacyAgree,
             'date' => now()->toISOString(),
             'app_id' => $appId,
-            'user_id' => $this->id,
         ];
 
         $properties['privacy'][] = $privacyEntry;
