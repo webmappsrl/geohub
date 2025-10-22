@@ -251,12 +251,12 @@ class SendOsm2caiWebhookJob implements ShouldQueue
 
         // Mappa l'app_id da geohub a osm2cai
         $mappedAppId = $this->mapAppId($this->appId);
-        if (!isset($feature['properties']['app_id'])) {
-            $feature['properties']['app_id'] = $mappedAppId;
-        } else {
+        if ($mappedAppId) {
             $feature['properties']['app_id'] = $mappedAppId;
         }
-
+        if ($this->appId) {
+            $feature['properties']['geohub_app_id'] = $this->appId;
+        }
         // Aggiungi il geohub_id se trovato
         if ($geohubId) {
             $feature['properties']['geohub_id'] = $geohubId;
