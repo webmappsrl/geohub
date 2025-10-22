@@ -11,7 +11,7 @@ return [
 
     'prefix' => env(
         'HORIZON_PREFIX',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_horizon:'
+        Str::slug(env('APP_NAME', 'laravel'), '_') . '_horizon:'
     ),
 
     'middleware' => ['web'],
@@ -86,6 +86,18 @@ return [
             'timeout' => 120,
             'nice' => 0,
         ],
+        'supervisor-osm2cai-webhooks' => [
+            'connection' => 'redis',
+            'queue' => ['osm2cai-webhooks'],
+            'balance' => 'simple',
+            'maxProcesses' => 3,
+            'maxTime' => 3600,
+            'maxJobs' => 1000,
+            'memory' => 256,
+            'tries' => 3,
+            'timeout' => 120,
+            'nice' => 0,
+        ],
     ],
 
     'environments' => [
@@ -104,6 +116,9 @@ return [
             'supervisor-layers' => [
                 'maxProcesses' => 5,
             ],
+            'supervisor-osm2cai-webhooks' => [
+                'maxProcesses' => 5,
+            ],
         ],
         'local' => [
             'supervisor-default' => [
@@ -115,6 +130,10 @@ return [
                 'balance' => 'simple',
             ],
             'supervisor-layers' => [
+                'maxProcesses' => 1,
+                'balance' => 'simple',
+            ],
+            'supervisor-osm2cai-webhooks' => [
                 'maxProcesses' => 1,
                 'balance' => 'simple',
             ],
