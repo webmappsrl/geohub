@@ -35,7 +35,7 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract
 
         // If there were network errors, throw exception immediately
         if ($hasErrors) {
-            throw new Exception("Network errors occurred while fetching POI data for endpoint: {$this->endpoint}. Last error: " . ($lastException ? $lastException->getMessage() : 'Unknown error'));
+            throw new Exception("Network errors occurred while fetching POI data for endpoint: {$this->endpoint}. Last error: ".($lastException ? $lastException->getMessage() : 'Unknown error'));
         }
 
         // If no data was retrieved (but no errors), this might be a real empty result

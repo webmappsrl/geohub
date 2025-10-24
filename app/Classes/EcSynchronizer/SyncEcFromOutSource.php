@@ -13,8 +13,8 @@ use App\Models\User;
 use Exception;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SyncEcFromOutSource
 {
@@ -349,7 +349,8 @@ class SyncEcFromOutSource
     {
         // Skip processing if either array is empty
         if (count($ids_updated_at_ec) == 0 || count($ids_updated_at_osf) == 0) {
-            Log::channel('single')->info("Skipping deleteOldEcFeatures processing - empty arrays: OSF count: " . count($ids_updated_at_osf) . ", EC count: " . count($ids_updated_at_ec));
+            Log::channel('single')->info('Skipping deleteOldEcFeatures processing - empty arrays: OSF count: '.count($ids_updated_at_osf).', EC count: '.count($ids_updated_at_ec));
+
             return;
         }
 
@@ -358,7 +359,7 @@ class SyncEcFromOutSource
 
         // Delete entries that are not in $ids_updated_at_osf
         if (! empty($deleteEntriesEc)) {
-            Log::channel('single')->info("Deleting " . count($deleteEntriesEc) . " old EC features of type '{$type}' that are no longer in OSF");
+            Log::channel('single')->info('Deleting '.count($deleteEntriesEc)." old EC features of type '{$type}' that are no longer in OSF");
 
             // Assuming you have a model named EcFeature, adjust the model name accordingly
             // get All Ec Features

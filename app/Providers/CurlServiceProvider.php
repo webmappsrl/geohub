@@ -59,7 +59,7 @@ class CurlServiceProvider extends ServiceProvider
 
         // Check HTTP status code
         if ($httpcode !== 200) {
-            throw new \Exception("HTTP Error {$httpcode} for URL: {$url}. Response: " . substr($response, 0, 500));
+            throw new \Exception("HTTP Error {$httpcode} for URL: {$url}. Response: ".substr($response, 0, 500));
         }
 
         // Check if response is empty

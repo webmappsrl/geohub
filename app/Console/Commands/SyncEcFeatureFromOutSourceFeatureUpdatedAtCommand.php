@@ -114,9 +114,9 @@ class SyncEcFeatureFromOutSourceFeatureUpdatedAtCommand extends Command
 
                 // Add safety check before calling deleteOldEcFeatures
                 if (count($ids_updated_at_osf) == 0 || count($ids_updated_at_ec) == 0) {
-                    Log::channel('single')->info("Skipping deleteOldEcFeatures - empty arrays detected: OSF count: " . count($ids_updated_at_osf) . ", EC count: " . count($ids_updated_at_ec));
+                    Log::channel('single')->info('Skipping deleteOldEcFeatures - empty arrays detected: OSF count: '.count($ids_updated_at_osf).', EC count: '.count($ids_updated_at_ec));
                 } else {
-                    Log::channel('single')->info("Processing deleteOldEcFeatures for type: {$type} - OSF entries: " . count($ids_updated_at_osf) . ", EC entries: " . count($ids_updated_at_ec));
+                    Log::channel('single')->info("Processing deleteOldEcFeatures for type: {$type} - OSF entries: ".count($ids_updated_at_osf).', EC entries: '.count($ids_updated_at_ec));
                     $SyncEcFromOutSource->deleteOldEcFeatures($ids_updated_at_osf, $ids_updated_at_ec, $type);
                 }
 

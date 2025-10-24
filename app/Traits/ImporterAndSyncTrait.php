@@ -26,7 +26,7 @@ trait ImporterAndSyncTrait
      * It uses the Curl Service Provider class and excecutes a curl.
      *
      * @param string the complete url.
-     * @param bool $json
+     * @param  bool  $json
      * @return array|string|null The result of curl.
      */
     public function curlRequest($url, $json = true)
@@ -53,7 +53,6 @@ trait ImporterAndSyncTrait
      *
      * @param  string  $url  The Overpass API URL (example: goto https://overpass-turbo.eu/s/1p6K and use export function to find the following url https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0A%20%20way%5B%22tourism%22%3D%22wilderness_hut%22%5D%2844.2659%2C9.3164%2C45.0981%2C10.5711%29%3B%0Aout%20meta%3B%0A)
      * @param  string  $type  Can be node, way or relation
-     * @return array
      */
     public function curlRequestOverpass(string $url, string $type): array
     {
@@ -72,7 +71,7 @@ trait ImporterAndSyncTrait
                 $response = $this->curlRequest($url, false);
 
                 // If request succeeds and returns data
-                if ($response !== null && !empty(trim($response))) {
+                if ($response !== null && ! empty(trim($response))) {
                     $ar = explode("\n", $response);
                     $first = true;
 
@@ -81,14 +80,14 @@ trait ImporterAndSyncTrait
                             $first = false;
                         } else {
                             $parts = preg_split('/\s+/', $item);
-                            if (!empty($parts[0])) {
-                                $ret[$type . '/' . $parts[0]] = date('Y-m-d H:i:s', strtotime($parts[1]));
+                            if (! empty($parts[0])) {
+                                $ret[$type.'/'.$parts[0]] = date('Y-m-d H:i:s', strtotime($parts[1]));
                             }
                         }
                     }
 
                     // If we got valid data, exit the loop
-                    if (!empty($ret)) {
+                    if (! empty($ret)) {
                         // Log success on first attempt (no retry needed)
                         if ($retryCount == 0) {
                             Log::channel('single')->info("CURL request completed successfully on first attempt for URL: {$url}");
@@ -122,7 +121,7 @@ trait ImporterAndSyncTrait
         }
 
         // Log final result
-        if (!empty($ret)) {
+        if (! empty($ret)) {
             Log::channel('single')->info("Request completed successfully after {$retryCount} attempts for URL: {$url}");
         }
 
