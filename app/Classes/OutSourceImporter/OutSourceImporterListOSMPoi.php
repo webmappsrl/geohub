@@ -14,12 +14,33 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract
 
     public function getPoiList(): array
     {
-        // $url = $this->endpoint;
-        // Log::info('Starting POI List CURL request ...');
         $queries = $this->getQueriesByName(preg_replace('|osmpoi:|', '', $this->endpoint));
         $ret = [];
+        $hasErrors = false;
+        $lastException = null;
+
         foreach ($queries as $query) {
-            $ret = array_merge($ret, $this->curlRequestOverpass($query['url'], $query['type']));
+            try {
+                $result = $this->curlRequestOverpass($query['url'], $query['type']);
+                $ret = array_merge($ret, $result);
+                Log::info("Successfully processed query for type: {$query['type']}");
+            } catch (Exception $e) {
+                Log::error("Failed to process query for type: {$query['type']}. Error: {$e->getMessage()}");
+                $hasErrors = true;
+                $lastException = $e;
+                // Stop processing other queries if there are network errors
+                break;
+            }
+        }
+
+        // If there were network errors, throw exception immediately
+        if ($hasErrors) {
+            throw new Exception("Network errors occurred while fetching POI data for endpoint: {$this->endpoint}. Last error: " . ($lastException ? $lastException->getMessage() : 'Unknown error'));
+        }
+
+        // If no data was retrieved (but no errors), this might be a real empty result
+        if (empty($ret)) {
+            throw new Exception("No POI data could be retrieved from any of the configured queries for endpoint: {$this->endpoint}");
         }
 
         return $ret;

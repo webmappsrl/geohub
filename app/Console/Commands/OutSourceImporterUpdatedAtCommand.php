@@ -318,7 +318,13 @@ class OutSourceImporterUpdatedAtCommand extends Command
         } else {
             // TODO: Update OutSourceImporterListOSMPoi constructor to accept $this->logChannel
             $features = new OutSourceImporterListOSMPoi('poi', $this->endpoint, $this->logChannel);
-            $features_list = $features->getList();
+            try {
+                $features_list = $features->getList();
+                $this->logChannel->info("Features list content - count: " . count($features_list) . ", data: ", $features_list);
+            } catch (Exception $e) {
+                $this->logChannel->error('Error during getList of OSMPoi: ' . $e->getMessage());
+                return Command::FAILURE;
+            }
         }
 
         if ($features_list) {
@@ -326,12 +332,17 @@ class OutSourceImporterUpdatedAtCommand extends Command
 
             $this->logChannel->info('Found '.count($features_list).' OSMPoi items to process. Existing OSF items for this endpoint: '.count($osf_list));
 
-            // Identify entries to delete from OutSourceFeatures
-            $deleteEntries = array_diff(array_keys($osf_list), array_keys($features_list));
+            if (count($osf_list) == 0 || count($features_list) == 0) {
+                $this->logChannel->info("Skipping deleteOldEcFeatures processing - empty arrays: OSF count: " . count($osf_list) . ", EC count: " . count($features_list));
+                $deleteEntries = [];
+            } else {
+                // Identify entries to delete from OutSourceFeatures
+                $deleteEntries = array_diff(array_keys($osf_list), array_keys($features_list));
+            }
 
             // Delete entries that are not in $features_list
-            if (! empty($deleteEntries)) {
-                $this->logChannel->info('Found '.count($deleteEntries).' OSMPoi entries to delete from OutSourceFeatures and related EcPoi.');
+            if (! empty($deleteEntries) && count($features_list) > 0) {
+                $this->logChannel->info('Found ' . count($deleteEntries) . ' OSMPoi entries to delete from OutSourceFeatures and related EcPoi.');
                 // Delete EcPoi entries where it's OutSourceFeature with relation on out_source_feature_id has the source_id in $deleteEntries
                 $deleteEntriesString = array_map(function ($entry) {
                     return "'$entry'";

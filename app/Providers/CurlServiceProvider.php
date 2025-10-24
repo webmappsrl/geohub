@@ -46,14 +46,27 @@ class CurlServiceProvider extends ServiceProvider
         ]);
 
         $response = curl_exec($curl);
-
         $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curl);
+        $curlErrno = curl_errno($curl);
+
         curl_close($curl);
 
-        if ($httpcode == 200) {
-            return $response;
+        // Check for cURL errors first
+        if ($curlErrno !== 0) {
+            throw new \Exception("cURL Error #{$curlErrno}: {$curlError} for URL: {$url}");
         }
 
-        return false;
+        // Check HTTP status code
+        if ($httpcode !== 200) {
+            throw new \Exception("HTTP Error {$httpcode} for URL: {$url}. Response: " . substr($response, 0, 500));
+        }
+
+        // Check if response is empty
+        if (empty($response)) {
+            throw new \Exception("Empty response received for URL: {$url}");
+        }
+
+        return $response;
     }
 }

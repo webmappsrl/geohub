@@ -26,7 +26,8 @@ trait ImporterAndSyncTrait
      * It uses the Curl Service Provider class and excecutes a curl.
      *
      * @param string the complete url.
-     * @return array The result of curl.
+     * @param bool $json
+     * @return array|string|null The result of curl.
      */
     public function curlRequest($url, $json = true)
     {
@@ -42,6 +43,7 @@ trait ImporterAndSyncTrait
             return $obj;
         } catch (Exception $e) {
             Log::info('Error Excecuting CURL: '.$e);
+            throw $e; // Re-throw the exception instead of returning empty values
         }
     }
 
@@ -51,22 +53,77 @@ trait ImporterAndSyncTrait
      *
      * @param  string  $url  The Overpass API URL (example: goto https://overpass-turbo.eu/s/1p6K and use export function to find the following url https://overpass-api.de/api/interpreter?data=%5Bout%3Acsv%28%3A%3Aid%2C%3A%3Atimestamp%29%5D%5Btimeout%3A200%5D%3B%0A%20%20way%5B%22tourism%22%3D%22wilderness_hut%22%5D%2844.2659%2C9.3164%2C45.0981%2C10.5711%29%3B%0Aout%20meta%3B%0A)
      * @param  string  $type  Can be node, way or relation
-     * @return void
+     * @return array
      */
     public function curlRequestOverpass(string $url, string $type): array
     {
-        $ar = explode("\n", $this->curlRequest($url, false));
-        $first = true;
+        Log::channel('single')->info("Starting curlRequestOverpass for URL: {$url} with type: {$type}");
+
+        $maxRetries = 5;
+        $retryCount = 0;
         $ret = [];
-        foreach ($ar as $item) {
-            if ($first) {
-                $first = false;
-            } else {
-                $parts = preg_split('/\s+/', $item);
-                if (! empty($parts[0])) {
-                    $ret[$type.'/'.$parts[0]] = date('Y-m-d H:i:s', strtotime($parts[1]));
+        $lastException = null;
+
+        while ($retryCount < $maxRetries) {
+            // TEST: Simulate network error for testing
+            // $url = 'https://httpstat.us/500';
+
+            try {
+                $response = $this->curlRequest($url, false);
+
+                // If request succeeds and returns data
+                if ($response !== null && !empty(trim($response))) {
+                    $ar = explode("\n", $response);
+                    $first = true;
+
+                    foreach ($ar as $item) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $parts = preg_split('/\s+/', $item);
+                            if (!empty($parts[0])) {
+                                $ret[$type . '/' . $parts[0]] = date('Y-m-d H:i:s', strtotime($parts[1]));
+                            }
+                        }
+                    }
+
+                    // If we got valid data, exit the loop
+                    if (!empty($ret)) {
+                        // Log success on first attempt (no retry needed)
+                        if ($retryCount == 0) {
+                            Log::channel('single')->info("CURL request completed successfully on first attempt for URL: {$url}");
+                        }
+                        break;
+                    }
+                }
+
+                // If we reach here, the response was empty or invalid
+                throw new \Exception("Empty or invalid response received from URL: {$url}");
+            } catch (Exception $e) {
+                $lastException = $e;
+                $retryCount++;
+
+                // If not the last attempt, wait before retrying
+                if ($retryCount < $maxRetries) {
+                    // Progressive delay: 1s, 2s, 4s, 8s
+                    $delay = pow(2, $retryCount - 1);
+                    sleep($delay);
+
+                    Log::channel('single')->warning("Attempt {$retryCount} failed for URL: {$url}. Error: {$e->getMessage()}. Retrying in {$delay} seconds...");
+                } else {
+                    Log::channel('single')->error("All {$maxRetries} attempts failed for URL: {$url}. Last error: {$e->getMessage()}");
                 }
             }
+        }
+
+        // If all retries failed, throw the last exception
+        if (empty($ret) && $lastException !== null) {
+            throw new \Exception("Failed to fetch data from Overpass API after {$maxRetries} attempts. URL: {$url}. Last error: {$lastException->getMessage()}");
+        }
+
+        // Log final result
+        if (!empty($ret)) {
+            Log::channel('single')->info("Request completed successfully after {$retryCount} attempts for URL: {$url}");
         }
 
         return $ret;
