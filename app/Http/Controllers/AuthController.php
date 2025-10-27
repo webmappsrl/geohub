@@ -40,7 +40,6 @@ class AuthController extends Controller
                 'privacy' => 'sometimes|array',
                 'privacy.agree' => 'required_with:privacy|boolean',
                 'privacy.date' => 'required_with:privacy|date',
-                'privacy.app_id' => 'required_with:privacy|integer',
             ],
             [
                 'email.email' => 'Il campo email deve essere un indirizzo email valido.',
@@ -53,8 +52,6 @@ class AuthController extends Controller
                 'privacy.agree.boolean' => 'Il campo agree deve essere true o false.',
                 'privacy.date.required_with' => 'Il campo date è obbligatorio quando privacy è fornito.',
                 'privacy.date.date' => 'Il campo date deve essere una data valida.',
-                'privacy.app_id.required_with' => 'Il campo app_id è obbligatorio quando privacy è fornito.',
-                'privacy.app_id.integer' => 'Il campo app_id deve essere un numero intero.',
             ]
         );
 
@@ -192,10 +189,17 @@ class AuthController extends Controller
 
         $user = $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('referrer'), null);
 
-        $result = array_merge($user->toArray(), [
+        $appId = $request->header('app-id');
+        if ($appId) {
+            $user = $this->filterUserPrivacyByAppId($user, $appId);
+        } else {
+            $user = $user->toArray();
+        }
+
+        $result = array_merge($user, [
             'roles' => $roles,
             'partnerships' => $partnerships,
-            'referrer' => $user->sku,
+            'referrer' => $user['sku'],
         ]);
 
         unset($result['password']);
@@ -220,7 +224,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,'.auth('api')->id(),
+            'email' => 'sometimes|email|unique:users,email,' . auth('api')->id(),
             'password' => 'sometimes|string|min:6',
             'properties' => 'sometimes|array',
             'properties.*' => 'sometimes',
@@ -228,7 +232,6 @@ class AuthController extends Controller
             'privacy' => 'sometimes|array',
             'privacy.agree' => 'required_with:privacy|boolean',
             'privacy.date' => 'required_with:privacy|date',
-            'privacy.app_id' => 'required_with:privacy|integer',
         ], [
             'name.string' => 'Il campo nome deve essere una stringa.',
             'name.max' => 'Il campo nome non può superare i 255 caratteri.',
@@ -241,8 +244,6 @@ class AuthController extends Controller
             'privacy.agree.boolean' => 'Il campo agree deve essere true o false.',
             'privacy.date.required_with' => 'Il campo date è obbligatorio quando privacy è fornito.',
             'privacy.date.date' => 'Il campo date deve essere una data valida.',
-            'privacy.app_id.required_with' => 'Il campo app_id è obbligatorio quando privacy è fornito.',
-            'privacy.app_id.integer' => 'Il campo app_id deve essere un numero intero.',
         ]);
 
         if ($validator->fails()) {
@@ -281,7 +282,8 @@ class AuthController extends Controller
             if ($request->has('privacy')) {
                 Log::info('privacy to update', $request->input('privacy'));
                 $privacy = $request->input('privacy');
-                $user = $this->_updatePrivacyAgree($user, $privacy);
+                $appId = $request->header('app-id');
+                $user = $this->_updatePrivacyAgree($user, $privacy, $appId);
             }
 
             // Update user with basic fields
@@ -289,10 +291,13 @@ class AuthController extends Controller
                 $user->update($updateData);
             }
 
+            $appIdForResponse = $request->header('app-id');
+            $user = $this->filterUserPrivacyByAppId($user, $appIdForResponse);
+
             return response()->json($user);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'Errore durante l\'aggiornamento dell\'utente: '.$e->getMessage(),
+                'error' => 'Errore durante l\'aggiornamento dell\'utente: ' . $e->getMessage(),
                 'code' => 500,
             ], 500);
         }
@@ -430,7 +435,7 @@ class AuthController extends Controller
     /**
      * Update user privacy agree
      */
-    private function _updatePrivacyAgree($user, array $privacyAgree)
+    private function _updatePrivacyAgree($user, array $privacyAgree, $appId)
     {
         $properties = $user->properties ?? [];
 
@@ -439,11 +444,41 @@ class AuthController extends Controller
             $properties['privacy'] = [];
         }
 
-        $properties['privacy'][] = $privacyAgree;
+        // Initialize app_id array if not exists
+        if (! isset($properties['privacy'][$appId])) {
+            $properties['privacy'][$appId] = [];
+        }
+
+        $properties['privacy'][$appId][] = $privacyAgree;
 
         $user->properties = $properties;
         $user->saveQuietly();
 
         return $user;
+    }
+
+    /**
+     * Format user data for API response with privacy filtered by app_id.
+     */
+    private function filterUserPrivacyByAppId(User $user, string $appId): array
+    {
+        $userArray = $user->toArray();
+
+        if (! isset($userArray['properties'])) {
+            $userArray['properties'] = [];
+        }
+
+        if (isset($userArray['properties']['privacy'])) {
+            $privacy = $userArray['properties']['privacy'];
+            $userArray['properties']['privacy'] = isset($privacy[$appId])
+                ? array_values($privacy[$appId])
+                : [];
+        } else {
+            $userArray['properties']['privacy'] = [];
+        }
+
+        unset($userArray['password']);
+
+        return $userArray;
     }
 }
