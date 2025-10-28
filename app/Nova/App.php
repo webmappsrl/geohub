@@ -32,7 +32,6 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Nova\Multiselect\Multiselect;
 use NovaAttachMany\AttachMany;
 use OptimistDigital\MultiselectField\Multiselect as MultiselectFieldMultiselect;
-use Robertboes\NovaSliderField\NovaSliderField;
 use Titasgailius\SearchRelations\SearchesRelations;
 use Webmapp\WmEmbedmapsField\WmEmbedmapsField;
 use Wm\MapMultiPurposeNova3\MapMultiPurposeNova3;
@@ -1200,7 +1199,7 @@ class App extends Resource
             Image::make(__('Logo Homepage'), 'logo_homepage')
                 ->rules('image', 'mimes:svg')
                 ->disk('public')
-                ->path('api/app/' . $this->model()->id . '/resources')
+                ->path('api/app/'.$this->model()->id.'/resources')
                 ->storeAs(function () {
                     return 'logo_homepage.svg';
                 })
