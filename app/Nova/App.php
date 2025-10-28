@@ -619,14 +619,14 @@ class App extends Resource
                     return $request->user()->hasRole('Admin');
                 }),
             // TODO: ADD2WMPACKAGE
-            NovaSliderField::make(__('Min Zoom Features In Viewport'), 'min_zoom_features_in_viewport')
+            Number::make(__('Min Zoom Features In Viewport'), 'min_zoom_features_in_viewport')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(10)
                 ->onlyOnForms()
                 ->help(__('Minimum zoom level for enable the Features In Viewport')),
             // TODO: ADD2WMPACKAGE
-            NovaSliderField::make(__('Max Zoom Features In Viewport'), 'max_zoom_features_in_viewport')
+            Number::make(__('Max Zoom Features In Viewport'), 'max_zoom_features_in_viewport')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(12)
@@ -812,7 +812,7 @@ class App extends Resource
                 ->onlyOnForms()
                 ->hideWhenCreating()
                 ->help(__('SVG icon shown in the filter')),
-            NovaSliderField::make(__('Max Zoom'), 'map_max_zoom')
+            Number::make(__('Max Zoom'), 'map_max_zoom')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(16)
@@ -823,7 +823,7 @@ class App extends Resource
                 ->max(19)
                 ->default(6)
                 ->help(__('Set max stroke width of line string, the max stroke width is applied when the app is on max level zoom')),
-            NovaSliderField::make(__('Min Zoom'), 'map_min_zoom')
+            Number::make(__('Min Zoom'), 'map_min_zoom')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(12)
@@ -833,10 +833,10 @@ class App extends Resource
                 ->max(19)
                 ->default(3)
                 ->help(__('Set min stroke width of line string, the min stroke width is applied when the app is on min level zoom')),
-            NovaSliderField::make(__('Def Zoom'), 'map_def_zoom')
+            Number::make(__('Def Zoom'), 'map_def_zoom')
                 ->min(1)
                 ->max(19)
-                ->interval(0.1)
+                ->step(0.1)
                 ->default(12)
                 ->onlyOnForms()
                 ->help(__('The default zoom level when the map is first loaded.')),
@@ -1095,46 +1095,46 @@ class App extends Resource
     protected function pois_tab(): array
     {
         return [
-            NovaSliderField::make(__('Poi Min Radius'), 'poi_min_radius')
+            Number::make(__('Poi Min Radius'), 'poi_min_radius')
                 ->min(0.1)
                 ->max(3.5)
                 ->default(0.5)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Min Radius: Select the minimum radius for POIs.')),
-            NovaSliderField::make(__('Poi Max Radius'), 'poi_max_radius')
+            Number::make(__('Poi Max Radius'), 'poi_max_radius')
                 ->min(0.1)
                 ->max(3.5)
                 ->default(1.2)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Max Radius: Select the maximum radius for POIs.')),
-            NovaSliderField::make(__('Poi Icon Zoom'), 'poi_icon_zoom')
+            Number::make(__('Poi Icon Zoom'), 'poi_icon_zoom')
                 ->min(5)
                 ->max(19)
                 ->default(16)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Icon Zoom: Set the zoom level at which the POI icons are displayed.')),
-            NovaSliderField::make(__('Poi Icon Radius'), 'poi_icon_radius')
+            Number::make(__('Poi Icon Radius'), 'poi_icon_radius')
                 ->min(0.1)
                 ->max(3.5)
                 ->default(1.5)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Icon Radius: Select the radius for the POI icons.')),
-            NovaSliderField::make(__('Poi Min Zoom'), 'poi_min_zoom')
+            Number::make(__('Poi Min Zoom'), 'poi_min_zoom')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(13)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Min Zoom: Set the minimum zoom level at which POIs are visible.')),
-            NovaSliderField::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')
+            Number::make(__('Poi Label Min Zoom'), 'poi_label_min_zoom')
                 ->min(AppZoom::MIN_ZOOM)
                 ->max(AppZoom::MAX_ZOOM)
                 ->default(10.5)
-                ->interval(0.1)
+                ->step(0.1)
                 ->onlyOnForms()
                 ->help(__('Poi Label Min Zoom: Set the minimum zoom level at which POI labels are visible.')),
             Number::make(__('Poi Min Radius'), 'poi_min_radius')
@@ -1200,7 +1200,7 @@ class App extends Resource
             Image::make(__('Logo Homepage'), 'logo_homepage')
                 ->rules('image', 'mimes:svg')
                 ->disk('public')
-                ->path('api/app/'.$this->model()->id.'/resources')
+                ->path('api/app/' . $this->model()->id . '/resources')
                 ->storeAs(function () {
                     return 'logo_homepage.svg';
                 })
