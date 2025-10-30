@@ -364,8 +364,9 @@ class AuthController extends Controller
 
         // Handle privacy object if provided during signup (new format)
         $privacy = $request->input('privacy');
-        if ($privacy) {
-            $user = $this->_updatePrivacyAgree($user, $privacy);
+        $appId = $request->header('app-id');
+        if ($privacy && $appId) {
+            $user = $this->_updatePrivacyAgree($user, $privacy, $appId);
         }
 
         $user->referrer = $user->sku;
