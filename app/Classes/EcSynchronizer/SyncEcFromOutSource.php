@@ -13,6 +13,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class SyncEcFromOutSource
@@ -346,11 +347,20 @@ class SyncEcFromOutSource
 
     public function deleteOldEcFeatures($ids_updated_at_osf, $ids_updated_at_ec, $type)
     {
+        // Skip processing if either array is empty
+        if (count($ids_updated_at_ec) == 0 || count($ids_updated_at_osf) == 0) {
+            Log::channel('single')->info('Skipping deleteOldEcFeatures processing - empty arrays: OSF count: '.count($ids_updated_at_osf).', EC count: '.count($ids_updated_at_ec));
+
+            return;
+        }
+
         // Identify entries to delete from $ids_updated_at_ec
         $deleteEntriesEc = array_diff(array_keys($ids_updated_at_ec), array_keys($ids_updated_at_osf));
 
         // Delete entries that are not in $ids_updated_at_osf
         if (! empty($deleteEntriesEc)) {
+            Log::channel('single')->info('Deleting '.count($deleteEntriesEc)." old EC features of type '{$type}' that are no longer in OSF");
+
             // Assuming you have a model named EcFeature, adjust the model name accordingly
             // get All Ec Features
             switch ($this->type) {
@@ -363,7 +373,10 @@ class SyncEcFromOutSource
                 default:
                     break;
             }
-            $eloquentQuery->whereIn('id', $deleteEntriesEc)->delete();
+            $deletedCount = $eloquentQuery->whereIn('id', $deleteEntriesEc)->delete();
+            Log::channel('single')->info("Successfully deleted {$deletedCount} old EC features of type '{$type}'");
+        } else {
+            Log::channel('single')->info("No old EC features to delete for type '{$type}' - all EC features are still present in OSF");
         }
     }
 
