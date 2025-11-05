@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -17,14 +16,21 @@ class SendOsm2caiWebhookJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $timeout = 120; // 2 minuti di timeout
+
     public $tries = 3; // Riprova 3 volte
 
     private array $requestData;
+
     private int $appId;
+
     private ?string $uuid;
+
     private string $ugcType;
+
     private array $files;
+
     private array $headers;
+
     private ?string $userEmail;
 
     /**
@@ -46,24 +52,24 @@ class SendOsm2caiWebhookJob implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("🚀 SendOsm2caiWebhookJob: Inizio job", [
+        Log::info('🚀 SendOsm2caiWebhookJob: Inizio job', [
             'app_id' => $this->appId,
             'uuid' => $this->uuid,
             'ugc_type' => $this->ugcType,
-            'files_count' => count($this->files)
+            'files_count' => count($this->files),
         ]);
 
         // Delay di 30 secondi per aspettare il salvataggio dell'UGC POI
-        Log::info("⏳ SendOsm2caiWebhookJob: Inizio delay di 30 secondi", [
+        Log::info('⏳ SendOsm2caiWebhookJob: Inizio delay di 30 secondi', [
             'app_id' => $this->appId,
-            'uuid' => $this->uuid
+            'uuid' => $this->uuid,
         ]);
 
         sleep(30);
 
-        Log::info("✅ SendOsm2caiWebhookJob: Delay completato", [
+        Log::info('✅ SendOsm2caiWebhookJob: Delay completato', [
             'app_id' => $this->appId,
-            'uuid' => $this->uuid
+            'uuid' => $this->uuid,
         ]);
 
         // Stampa gli ultimi 10 UGC POI creati
@@ -74,15 +80,15 @@ class SendOsm2caiWebhookJob implements ShouldQueue
         if ($this->uuid) {
             $geohubId = $this->findUgcByUuid($this->uuid, $this->appId);
             if ($geohubId) {
-                Log::info("✅ SendOsm2caiWebhookJob: UGC POI trovato", [
+                Log::info('✅ SendOsm2caiWebhookJob: UGC POI trovato', [
                     'uuid' => $this->uuid,
                     'geohub_id' => $geohubId,
-                    'app_id' => $this->appId
+                    'app_id' => $this->appId,
                 ]);
             } else {
-                Log::warning("⚠️ SendOsm2caiWebhookJob: UGC POI non trovato", [
+                Log::warning('⚠️ SendOsm2caiWebhookJob: UGC POI non trovato', [
                     'uuid' => $this->uuid,
-                    'app_id' => $this->appId
+                    'app_id' => $this->appId,
                 ]);
             }
         }
@@ -115,7 +121,7 @@ class SendOsm2caiWebhookJob implements ShouldQueue
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
 
-                if (!$ugc) {
+                if (! $ugc) {
                     $ugc = \App\Models\UgcTrack::where('app_id', $appId)
                         ->whereJsonContains('properties->uuid', $uuid)
                         ->first();
@@ -124,11 +130,12 @@ class SendOsm2caiWebhookJob implements ShouldQueue
 
             return $ugc ? $ugc->id : null;
         } catch (\Exception $e) {
-            Log::error("❌ SendOsm2caiWebhookJob: Errore nella ricerca UGC tramite UUID", [
+            Log::error('❌ SendOsm2caiWebhookJob: Errore nella ricerca UGC tramite UUID', [
                 'uuid' => $uuid,
                 'app_id' => $appId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -161,17 +168,17 @@ class SendOsm2caiWebhookJob implements ShouldQueue
                 $poiList[] = [
                     'geohub_id' => $poi->id,
                     'uuid' => $uuid,
-                    'created_at' => $poi->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $poi->created_at->format('Y-m-d H:i:s'),
                 ];
             }
 
-            Log::info("📋 SendOsm2caiWebhookJob: Ultimi 10 UGC POI creati", [
+            Log::info('📋 SendOsm2caiWebhookJob: Ultimi 10 UGC POI creati', [
                 'poi_list' => $poiList,
-                'total_count' => count($poiList)
+                'total_count' => count($poiList),
             ]);
         } catch (\Exception $e) {
-            Log::error("❌ SendOsm2caiWebhookJob: Errore nel recupero ultimi UGC POI", [
-                'error' => $e->getMessage()
+            Log::error('❌ SendOsm2caiWebhookJob: Errore nel recupero ultimi UGC POI', [
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -182,18 +189,18 @@ class SendOsm2caiWebhookJob implements ShouldQueue
     private function sendWebhook(?int $geohubId): void
     {
         // URL del webhook di osm2cai2
-        $webhookUrl = config('app.ugc_webhook_url') . '/api/webhook/ugc/' . $this->ugcType;
+        $webhookUrl = config('app.ugc_webhook_url').'/api/webhook/ugc/'.$this->ugcType;
 
         // Prepara i dati multipart
         $multipartFields = $this->prepareMultipartWebhookData($geohubId);
 
-        Log::info("📤 SendOsm2caiWebhookJob: Invio webhook multipart", [
+        Log::info('📤 SendOsm2caiWebhookJob: Invio webhook multipart', [
             'webhook_url' => $webhookUrl,
             'ugc_type' => $this->ugcType,
             'action' => 'create',
             'fields_count' => count($multipartFields),
             'has_images' => collect($multipartFields)->contains('name', 'images[0]'),
-            'geohub_id' => $geohubId
+            'geohub_id' => $geohubId,
         ]);
 
         try {
@@ -203,22 +210,22 @@ class SendOsm2caiWebhookJob implements ShouldQueue
                 'User-Agent' => $this->headers['User-Agent'] ?? 'Geohub-Webhook/1.0',
                 'X-Geohub-Redirect' => 'true',
                 'X-Geohub-Source' => 'geohub',
-                'X-Geohub-Original-App-Id' => $this->appId
+                'X-Geohub-Original-App-Id' => $this->appId,
             ];
 
             // Aggiungi l'header di autorizzazione se presente
-            if (!empty($this->headers['Authorization'])) {
+            if (! empty($this->headers['Authorization'])) {
                 $webhookHeaders['Authorization'] = $this->headers['Authorization'];
             }
 
             // Aggiungi l'email dell'utente se disponibile
             if ($this->userEmail) {
                 $webhookHeaders['X-Geohub-User-Email'] = $this->userEmail;
-                Log::info("📧 SendOsm2caiWebhookJob: Email utente aggiunta al webhook", [
-                    'email' => $this->userEmail
+                Log::info('📧 SendOsm2caiWebhookJob: Email utente aggiunta al webhook', [
+                    'email' => $this->userEmail,
                 ]);
             } else {
-                Log::info("📧 SendOsm2caiWebhookJob: Nessuna email utente disponibile");
+                Log::info('📧 SendOsm2caiWebhookJob: Nessuna email utente disponibile');
             }
 
             // Invia la richiesta multipart
@@ -227,15 +234,15 @@ class SendOsm2caiWebhookJob implements ShouldQueue
                 ->asMultipart()
                 ->post($webhookUrl, $multipartFields);
 
-            Log::info("📥 SendOsm2caiWebhookJob: Risposta webhook multipart", [
+            Log::info('📥 SendOsm2caiWebhookJob: Risposta webhook multipart', [
                 'status_code' => $response->status(),
                 'response_body' => $response->body(),
-                'success' => $response->successful()
+                'success' => $response->successful(),
             ]);
         } catch (\Exception $e) {
-            Log::error("❌ SendOsm2caiWebhookJob: Errore webhook multipart", [
+            Log::error('❌ SendOsm2caiWebhookJob: Errore webhook multipart', [
                 'error' => $e->getMessage(),
-                'app_id' => $this->appId
+                'app_id' => $this->appId,
             ]);
             throw $e; // Rilancia l'eccezione per il retry
         }
@@ -266,24 +273,24 @@ class SendOsm2caiWebhookJob implements ShouldQueue
         $multipartFields = [
             [
                 'name' => 'action',
-                'contents' => 'create'
+                'contents' => 'create',
             ],
             [
                 'name' => 'feature',
                 'contents' => json_encode($feature, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                'filename' => 'feature.json'
-            ]
+                'filename' => 'feature.json',
+            ],
         ];
 
         // Aggiungi le immagini se presenti
-        if (!empty($this->files)) {
+        if (! empty($this->files)) {
             foreach ($this->files as $index => $fileInfo) {
-                $filePath = storage_path('app/' . $fileInfo['temp_path']);
+                $filePath = storage_path('app/'.$fileInfo['temp_path']);
                 if (file_exists($filePath)) {
                     $multipartFields[] = [
                         'name' => "images[{$index}]",
                         'contents' => fopen($filePath, 'r'),
-                        'filename' => $fileInfo['original_name']
+                        'filename' => $fileInfo['original_name'],
                     ];
                 }
             }
@@ -318,8 +325,8 @@ class SendOsm2caiWebhookJob implements ShouldQueue
             'properties' => [],
             'geometry' => [
                 'type' => 'Point',
-                'coordinates' => [0, 0]
-            ]
+                'coordinates' => [0, 0],
+            ],
         ];
 
         // Copia le proprietà dai dati della richiesta
@@ -362,8 +369,6 @@ class SendOsm2caiWebhookJob implements ShouldQueue
         return $mapping[$originalAppId] ?? $originalAppId;
     }
 
-
-
     /**
      * Pulisce i file temporanei
      */
@@ -373,14 +378,14 @@ class SendOsm2caiWebhookJob implements ShouldQueue
             try {
                 if (Storage::disk('local')->exists($fileInfo['temp_path'])) {
                     Storage::disk('local')->delete($fileInfo['temp_path']);
-                    Log::info("🗑️ SendOsm2caiWebhookJob: File temporaneo eliminato", [
-                        'file' => $fileInfo['temp_path']
+                    Log::info('🗑️ SendOsm2caiWebhookJob: File temporaneo eliminato', [
+                        'file' => $fileInfo['temp_path'],
                     ]);
                 }
             } catch (\Exception $e) {
                 Log::warning("⚠️ SendOsm2caiWebhookJob: Errore nell'eliminazione file temporaneo", [
                     'file' => $fileInfo['temp_path'],
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }

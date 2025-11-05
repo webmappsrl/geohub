@@ -20,14 +20,13 @@ class DownloadPoiTypesTaxonomiesAction extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, $models)
     {
         $taxonomiesData = $this->getTaxonomiesData();
-        $filename = 'poi_types_taxonomies_' . date('Y-m-d') . '.xlsx';
+        $filename = 'poi_types_taxonomies_'.date('Y-m-d').'.xlsx';
 
         $response = Excel::download(
             new TaxonomiesOnlyExport($taxonomiesData),
@@ -42,10 +41,6 @@ class DownloadPoiTypesTaxonomiesAction extends Action
 
     /**
      * Get the download URL for the file.
-     *
-     * @param  string  $filePath
-     * @param  string  $filename
-     * @return string
      */
     protected function getDownloadUrl(string $filePath, string $filename): string
     {
@@ -100,12 +95,13 @@ class DownloadPoiTypesTaxonomiesAction extends Action
                     if (is_array($nameArray)) {
                         // Get all available translations, filtering out empty/null values
                         foreach ($nameArray as $lang => $value) {
-                            if (!empty($value) && $value !== null) {
+                            if (! empty($value) && $value !== null) {
                                 $names[$lang] = $value;
                             }
                         }
                     }
                 }
+
                 return [
                     'id' => $poiType->id,
                     'identifier' => $poiType->identifier,
@@ -184,10 +180,12 @@ class TaxonomiesOnlyExport implements WithMultipleSheets
 /**
  * Sheet class for POI Types Taxonomies.
  */
-class AvailableTaxonomiesSheet implements FromArray, WithTitle, WithStyles
+class AvailableTaxonomiesSheet implements FromArray, WithStyles, WithTitle
 {
     protected $poiTypes;
+
     protected $poiThemes;
+
     protected $availableLanguages;
 
     public function __construct(array $poiTypes, array $poiThemes, array $availableLanguages = [])
@@ -207,7 +205,7 @@ class AvailableTaxonomiesSheet implements FromArray, WithTitle, WithStyles
 
         // Add columns for each available language
         foreach ($this->availableLanguages as $lang) {
-            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+            $header[] = 'Available POI Type Names '.strtoupper($lang);
         }
 
         // Add theme identifiers column

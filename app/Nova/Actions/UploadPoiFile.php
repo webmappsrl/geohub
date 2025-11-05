@@ -286,7 +286,7 @@ class UploadPoiFile extends Action
         // Build header row
         $header = ['POI Type ID', 'Available POI Type Identifiers'];
         foreach ($taxonomiesData['languages'] as $lang) {
-            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+            $header[] = 'Available POI Type Names '.strtoupper($lang);
         }
         $header[] = 'Available POI Theme Identifiers';
 
@@ -294,7 +294,7 @@ class UploadPoiFile extends Action
         $col = 1;
         foreach ($header as $headerValue) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter . '1', $headerValue);
+            $referenceSheet->setCellValue($columnLetter.'1', $headerValue);
             $col++;
         }
 
@@ -328,24 +328,24 @@ class UploadPoiFile extends Action
 
             // POI Type ID
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeId);
+            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeId);
             $col++;
 
             // POI Type Identifier
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeIdentifier);
+            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeIdentifier);
             $col++;
 
             // POI Type Names for each language
             foreach ($taxonomiesData['languages'] as $lang) {
                 $columnLetter = Coordinate::stringFromColumnIndex($col);
-                $referenceSheet->setCellValue($columnLetter . $row, $poiTypeNames[$lang] ?? '');
+                $referenceSheet->setCellValue($columnLetter.$row, $poiTypeNames[$lang] ?? '');
                 $col++;
             }
 
             // POI Theme Identifier
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter . $row, $taxonomiesData['poiThemes'][$i] ?? '');
+            $referenceSheet->setCellValue($columnLetter.$row, $taxonomiesData['poiThemes'][$i] ?? '');
         }
 
         // Auto-size all columns
@@ -379,12 +379,13 @@ class UploadPoiFile extends Action
                     if (is_array($nameArray)) {
                         // Get all available translations, filtering out empty/null values
                         foreach ($nameArray as $lang => $value) {
-                            if (!empty($value) && $value !== null) {
+                            if (! empty($value) && $value !== null) {
                                 $names[$lang] = $value;
                             }
                         }
                     }
                 }
+
                 return [
                     'id' => $poiType->id,
                     'identifier' => $poiType->identifier,
@@ -472,21 +473,21 @@ class UploadPoiFile extends Action
         return implode('</br>', [
             __('Please upload a valid .xlsx file.'),
             '',
-            '<strong>' . __('File Structure:') . '</strong>',
+            '<strong>'.__('File Structure:').'</strong>',
             __('The file contains two sheets:'),
-            '<strong>' . __('1. First Sheet (Main Data):') . '</strong>',
+            '<strong>'.__('1. First Sheet (Main Data):').'</strong>',
             __('This sheet contains the POI data to be imported. The first row contains the column headers, and starting from the second row, the file should contain POI data.'),
-            __('The file must contain the following headers: ') . $validHeaders . '.',
+            __('The file must contain the following headers: ').$validHeaders.'.',
             __('This sheet includes all the information about each POI: identification data (id, name, description), location data (lat, lng, address), contact information (phone, email), media (feature image, gallery), taxonomy references (poi_type, theme), and other optional fields.'),
             '',
-            '<strong>' . __('How the First Sheet Works After Import:') . '</strong>',
+            '<strong>'.__('How the First Sheet Works After Import:').'</strong>',
             __('After the import process, the system generates a new file with the same first sheet but with additional information:'),
             __('- Successfully imported POIs: The system automatically populates the "id" column with the database ID assigned to each POI that was imported successfully.'),
             __('- POIs with errors: If a POI cannot be imported due to validation errors or other issues, the entire row is highlighted in yellow and an "errors" column is added (or used if it already exists) containing a detailed error message explaining why the import failed.'),
             __('This allows you to easily identify which POIs were imported successfully (by checking the "id" column) and which ones need to be corrected (by checking the yellow highlighted rows and the "errors" column).'),
             __('You can then correct the errors in the file and re-upload it to import the remaining POIs.'),
             '',
-            '<strong>' . __('2. Second Sheet (POI Types Taxonomies):') . '</strong>',
+            '<strong>'.__('2. Second Sheet (POI Types Taxonomies):').'</strong>',
             __('This sheet contains the reference data for POI types and themes. It includes:'),
             __('- POI Type ID: The unique identifier of each POI type'),
             __('- Available POI Type Identifiers: The Geohub identifiers that can be used in the main sheet'),
@@ -494,16 +495,16 @@ class UploadPoiFile extends Action
             __('- Available POI Theme Identifiers: The Geohub identifiers for themes that can be used in the main sheet'),
             __('This sheet serves as a reference guide to help you use the correct identifiers when importing POI data.'),
             '',
-            '<strong>' . __('First Sheet Instructions:') . '</strong>',
+            '<strong>'.__('First Sheet Instructions:').'</strong>',
             __('The first row should contain the headers.'),
             __('Starting from the second row, the file should contain pois data.'),
             __('Please provide ID only if the poi already exist in the database.'),
             '',
-            __('Mandatory fields are: ') . '<strong>name_it, poi_type (' . __('at least one, referenced by Geohub identifier') . '), theme(' . __('at least one, referenced by Geohub identifier') . '), lat, lng. (' . __('use "." to indicate float: 43.1234') . ').</strong>',
+            __('Mandatory fields are: ').'<strong>name_it, poi_type ('.__('at least one, referenced by Geohub identifier').'), theme('.__('at least one, referenced by Geohub identifier').'), lat, lng. ('.__('use "." to indicate float: 43.1234').').</strong>',
             __('Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).'),
-            __('Please follow this example: ') . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">' . __('Example') . '</a>',
+            __('Please follow this example: ').'<a href="'.asset('importer-examples/import-poi-example.xlsx').'" target="_blank">'.__('Example').'</a>',
             __('If the import fails, the file will be downloaded with the errors highlighted.'),
-            __('For more information, please check the ') . '<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">' . __('documentation') . '</a>',
+            __('For more information, please check the ').'<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">'.__('documentation').'</a>',
         ]);
     }
 }

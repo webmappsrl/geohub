@@ -4,8 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
-use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
 use App\Nova\Actions\DownloadExcelEcPoiAction;
+use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Actions\UploadPoiFile;
 use App\Nova\Fields\NovaWyswyg;
