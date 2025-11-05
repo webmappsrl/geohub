@@ -4,6 +4,11 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
+<<<<<<< Updated upstream
+=======
+use App\Nova\Actions\DownloadPoiFileAction;
+use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
+>>>>>>> Stashed changes
 use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
 use App\Nova\Actions\RegenerateEcPoi;
@@ -147,7 +152,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -269,7 +274,7 @@ class EcPoi extends Resource
                             $out = 'No related Url';
                         }
 
-                        return $out.$help;
+                        return $out . $help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -845,6 +850,7 @@ HTML;
             new BulkEditThemesEcResourceAction,
             new BulkEditPOIColorAction,
             (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
+            (new DownloadPoiFileAction)->standalone(),
             (new DownloadPoiTypesTaxonomiesAction)->standalone(),
             (new UploadPoiFile)->standalone(),
         ];
