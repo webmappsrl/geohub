@@ -5,12 +5,14 @@ namespace App\Nova\Actions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -276,27 +278,81 @@ class UploadPoiFile extends Action
      */
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
-        $referenceSheet = $spreadsheet->getSheetByName('Available References')
-            ?? $spreadsheet->createSheet()->setTitle('Available References');
+        $referenceSheet = $spreadsheet->getSheetByName('POI Types Taxonomies')
+            ?? $spreadsheet->createSheet()->setTitle('POI Types Taxonomies');
 
-        $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers')
-            ->setCellValue('B1', 'Available POI Theme Identifiers')
-            ->getStyle('A1:B1')->getFont()->setBold(true);
+        $taxonomiesData = $this->getTaxonomiesData();
 
-        $importer = new \App\Imports\EcPoiFromCSV;
-        $maxRows = max(count($importer->poiTypes), count($importer->poiThemes));
+        // Build header row
+        $header = ['POI Type ID', 'Available POI Type Identifiers'];
+        foreach ($taxonomiesData['languages'] as $lang) {
+            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+        }
+        $header[] = 'Available POI Theme Identifiers';
 
-        for ($i = 0; $i < $maxRows; $i++) {
-            if (isset($importer->poiTypes[$i])) {
-                $referenceSheet->setCellValue('A'.($i + 2), $importer->poiTypes[$i]);
-            }
-            if (isset($importer->poiThemes[$i])) {
-                $referenceSheet->setCellValue('B'.($i + 2), $importer->poiThemes[$i]);
-            }
+        // Set header row
+        $col = 1;
+        foreach ($header as $headerValue) {
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->setCellValue($columnLetter . '1', $headerValue);
+            $col++;
         }
 
-        $referenceSheet->getColumnDimension('A')->setAutoSize(true);
-        $referenceSheet->getColumnDimension('B')->setAutoSize(true);
+        // Make header row bold
+        $totalColumns = count($header);
+        $lastColumn = Coordinate::stringFromColumnIndex($totalColumns);
+        $referenceSheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true);
+
+        // Populate data rows
+        $maxRows = max(count($taxonomiesData['poiTypes']), count($taxonomiesData['poiThemes']));
+
+        for ($i = 0; $i < $maxRows; $i++) {
+            $row = $i + 2; // Start from row 2 (row 1 is header)
+            $col = 1;
+
+            $poiTypeId = '';
+            $poiTypeIdentifier = '';
+            $poiTypeNames = [];
+
+            if (isset($taxonomiesData['poiTypes'][$i])) {
+                $poiType = $taxonomiesData['poiTypes'][$i];
+                if (is_array($poiType)) {
+                    $poiTypeId = $poiType['id'] ?? '';
+                    $poiTypeIdentifier = $poiType['identifier'] ?? '';
+                    $poiTypeNames = $poiType['names'] ?? [];
+                } else {
+                    // Backward compatibility: if it's just a string
+                    $poiTypeIdentifier = $poiType;
+                }
+            }
+
+            // POI Type ID
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeId);
+            $col++;
+
+            // POI Type Identifier
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeIdentifier);
+            $col++;
+
+            // POI Type Names for each language
+            foreach ($taxonomiesData['languages'] as $lang) {
+                $columnLetter = Coordinate::stringFromColumnIndex($col);
+                $referenceSheet->setCellValue($columnLetter . $row, $poiTypeNames[$lang] ?? '');
+                $col++;
+            }
+
+            // POI Theme Identifier
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->setCellValue($columnLetter . $row, $taxonomiesData['poiThemes'][$i] ?? '');
+        }
+
+        // Auto-size all columns
+        for ($col = 1; $col <= $totalColumns; $col++) {
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->getColumnDimension($columnLetter)->setAutoSize(true);
+        }
 
         $spreadsheet->setActiveSheetIndex(0);
 
@@ -304,6 +360,77 @@ class UploadPoiFile extends Action
         IOFactory::createWriter($spreadsheet, 'Xlsx')->save($filePath);
 
         return $filePath;
+    }
+
+    /**
+     * Get POI types taxonomies data for the sheet.
+     */
+    private function getTaxonomiesData(): array
+    {
+        // Get POI types with id, identifier and name, ordered by id ascending
+        $poiTypesData = DB::table('taxonomy_poi_types')
+            ->select('id', 'identifier', 'name')
+            ->orderBy('id', 'asc')
+            ->get()
+            ->map(function ($poiType) {
+                $names = [];
+                if ($poiType->name) {
+                    $nameArray = is_string($poiType->name) ? json_decode($poiType->name, true) : $poiType->name;
+                    if (is_array($nameArray)) {
+                        // Get all available translations, filtering out empty/null values
+                        foreach ($nameArray as $lang => $value) {
+                            if (!empty($value) && $value !== null) {
+                                $names[$lang] = $value;
+                            }
+                        }
+                    }
+                }
+                return [
+                    'id' => $poiType->id,
+                    'identifier' => $poiType->identifier,
+                    'names' => $names,
+                ];
+            })
+            ->toArray();
+
+        // Collect all available languages from all POI types
+        $availableLanguages = [];
+        foreach ($poiTypesData as $poiType) {
+            if (isset($poiType['names']) && is_array($poiType['names'])) {
+                $availableLanguages = array_merge($availableLanguages, array_keys($poiType['names']));
+            }
+        }
+        $availableLanguages = array_unique($availableLanguages);
+        // Sort languages in a consistent order based on project supported languages
+        // Project supported languages: it, en, fr, de, es, nl, sq (from config/tab-translatable.php)
+        $languageOrder = ['it', 'en', 'fr', 'de', 'es', 'nl', 'sq'];
+        $sortedLanguages = [];
+        // First, add languages in the predefined order (if they exist in available languages)
+        foreach ($languageOrder as $lang) {
+            if (in_array($lang, $availableLanguages)) {
+                $sortedLanguages[] = $lang;
+            }
+        }
+        // Add any remaining languages not in the predefined order (in alphabetical order)
+        $remainingLanguages = array_diff($availableLanguages, $sortedLanguages);
+        sort($remainingLanguages);
+        $sortedLanguages = array_merge($sortedLanguages, $remainingLanguages);
+
+        // Get POI themes identifiers
+        $poiThemes = [];
+        if (auth()->check() && auth()->user()) {
+            foreach (auth()->user()->apps as $app) {
+                $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
+                $poiThemes = array_merge($poiThemes, $themes);
+            }
+        }
+        $poiThemes = array_unique($poiThemes);
+
+        return [
+            'poiTypes' => $poiTypesData,
+            'poiThemes' => $poiThemes,
+            'languages' => $sortedLanguages,
+        ];
     }
 
     /**
@@ -344,16 +471,39 @@ class UploadPoiFile extends Action
     {
         return implode('</br>', [
             __('Please upload a valid .xlsx file.'),
-            '<strong>'.__('The first row should contain the headers.'),
+            '',
+            '<strong>' . __('File Structure:') . '</strong>',
+            __('The file contains two sheets:'),
+            '<strong>' . __('1. First Sheet (Main Data):') . '</strong>',
+            __('This sheet contains the POI data to be imported. The first row contains the column headers, and starting from the second row, the file should contain POI data.'),
+            __('The file must contain the following headers: ') . $validHeaders . '.',
+            __('This sheet includes all the information about each POI: identification data (id, name, description), location data (lat, lng, address), contact information (phone, email), media (feature image, gallery), taxonomy references (poi_type, theme), and other optional fields.'),
+            '',
+            '<strong>' . __('How the First Sheet Works After Import:') . '</strong>',
+            __('After the import process, the system generates a new file with the same first sheet but with additional information:'),
+            __('- Successfully imported POIs: The system automatically populates the "id" column with the database ID assigned to each POI that was imported successfully.'),
+            __('- POIs with errors: If a POI cannot be imported due to validation errors or other issues, the entire row is highlighted in yellow and an "errors" column is added (or used if it already exists) containing a detailed error message explaining why the import failed.'),
+            __('This allows you to easily identify which POIs were imported successfully (by checking the "id" column) and which ones need to be corrected (by checking the yellow highlighted rows and the "errors" column).'),
+            __('You can then correct the errors in the file and re-upload it to import the remaining POIs.'),
+            '',
+            '<strong>' . __('2. Second Sheet (POI Types Taxonomies):') . '</strong>',
+            __('This sheet contains the reference data for POI types and themes. It includes:'),
+            __('- POI Type ID: The unique identifier of each POI type'),
+            __('- Available POI Type Identifiers: The Geohub identifiers that can be used in the main sheet'),
+            __('- Available POI Type Names: The names of POI types in different languages (IT, EN, FR, etc.)'),
+            __('- Available POI Theme Identifiers: The Geohub identifiers for themes that can be used in the main sheet'),
+            __('This sheet serves as a reference guide to help you use the correct identifiers when importing POI data.'),
+            '',
+            '<strong>' . __('First Sheet Instructions:') . '</strong>',
+            __('The first row should contain the headers.'),
             __('Starting from the second row, the file should contain pois data.'),
-            __('The file must contain the following headers: ').$validHeaders.'</strong>',
             __('Please provide ID only if the poi already exist in the database.'),
             '',
-            __('Mandatory fields are: ').'<strong>name_it, poi_type ('.__('at least one, referenced by Geohub identifier').'), theme('.__('at least one, referenced by Geohub identifier').'), lat, lng. ('.__('use "." to indicate float: 43.1234').').</strong>',
+            __('Mandatory fields are: ') . '<strong>name_it, poi_type (' . __('at least one, referenced by Geohub identifier') . '), theme(' . __('at least one, referenced by Geohub identifier') . '), lat, lng. (' . __('use "." to indicate float: 43.1234') . ').</strong>',
             __('Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).'),
-            __('Please follow this example: ').'<a href="'.asset('importer-examples/import-poi-example.xlsx').'" target="_blank">'.__('Example').'</a>',
+            __('Please follow this example: ') . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">' . __('Example') . '</a>',
             __('If the import fails, the file will be downloaded with the errors highlighted.'),
-            __('For more information, please check the ').'<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">'.__('documentation').'</a>',
+            __('For more information, please check the ') . '<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">' . __('documentation') . '</a>',
         ]);
     }
 }
