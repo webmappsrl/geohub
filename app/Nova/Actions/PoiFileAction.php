@@ -22,7 +22,7 @@ abstract class PoiFileAction extends Action
     {
         return array_filter(
             config('services.importers.ecPois.validHeaders'),
-            fn($header) => $header !== self::ERROR_COLUMN_NAME
+            fn ($header) => $header !== self::ERROR_COLUMN_NAME
         );
     }
 
@@ -45,12 +45,13 @@ abstract class PoiFileAction extends Action
                     if (is_array($nameArray)) {
                         // Get all available translations, filtering out empty/null values
                         foreach ($nameArray as $lang => $value) {
-                            if (!empty($value) && $value !== null) {
+                            if (! empty($value) && $value !== null) {
                                 $names[$lang] = $value;
                             }
                         }
                     }
                 }
+
                 return [
                     'id' => $poiType->id,
                     'identifier' => $poiType->identifier,

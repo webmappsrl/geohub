@@ -3,7 +3,6 @@
 namespace App\Nova\Actions;
 
 use App\Models\EcPoi;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -24,7 +23,6 @@ class DownloadPoiFileAction extends PoiFileAction
     /**
      * Handle the action request.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return mixed
      */
     public function handleRequest(ActionRequest $request)
@@ -33,7 +31,7 @@ class DownloadPoiFileAction extends PoiFileAction
         $selectedResources = $request->resources ?? '';
 
         // If resources are selected, get them with necessary relationships
-        if (!empty($selectedResources) && $selectedResources !== 'all') {
+        if (! empty($selectedResources) && $selectedResources !== 'all') {
             $resourceIds = explode(',', $selectedResources);
             $pois = EcPoi::with(['taxonomyPoiTypes', 'taxonomyThemes', 'featureImage', 'ecMedia'])
                 ->whereIn('id', $resourceIds)
@@ -42,7 +40,7 @@ class DownloadPoiFileAction extends PoiFileAction
             $pois = collect();
         }
 
-        $filename = 'poi-file-template_' . date('Y-m-d_His') . '.xlsx';
+        $filename = 'poi-file-template_'.date('Y-m-d_His').'.xlsx';
 
         $response = Excel::download(
             new PoiFileTemplateExport($this->getValidHeaders(), $this->getTaxonomiesData(), $pois),
@@ -59,13 +57,12 @@ class DownloadPoiFileAction extends PoiFileAction
      * Perform the action on the given models.
      * This method is kept for compatibility but handleRequest is used instead.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
      * @param  \Illuminate\Support\Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, $models)
     {
-        $filename = 'poi-file-template_' . date('Y-m-d_His') . '.xlsx';
+        $filename = 'poi-file-template_'.date('Y-m-d_His').'.xlsx';
 
         // Check if POIs are selected
         $pois = $models->isNotEmpty() ? $models : collect();
@@ -83,10 +80,6 @@ class DownloadPoiFileAction extends PoiFileAction
 
     /**
      * Get the download URL for the file.
-     *
-     * @param  string  $filePath
-     * @param  string  $filename
-     * @return string
      */
     protected function getDownloadUrl(string $filePath, string $filename): string
     {
@@ -134,7 +127,9 @@ class PoiFileTemplateExport implements WithMultipleSheets
     use Exportable;
 
     protected $validHeaders;
+
     protected $taxonomiesData;
+
     protected $pois;
 
     public function __construct(array $validHeaders, array $taxonomiesData, $pois = null)
@@ -160,9 +155,10 @@ class PoiFileTemplateExport implements WithMultipleSheets
 /**
  * Sheet class for POI data (with headers and optionally POI data rows).
  */
-class PoiDataSheet implements FromArray, WithTitle, WithStyles
+class PoiDataSheet implements FromArray, WithStyles, WithTitle
 {
     protected $headers;
+
     protected $pois;
 
     public function __construct(array $headers, $pois = null)
@@ -201,9 +197,9 @@ class PoiDataSheet implements FromArray, WithTitle, WithStyles
         $lng = 0;
         if ($poi->geometry) {
             try {
-                $lngResult = DB::select("SELECT ST_X(ST_AsText(?)) As wkt", [$poi->geometry]);
-                $latResult = DB::select("SELECT ST_Y(ST_AsText(?)) As wkt", [$poi->geometry]);
-                if (!empty($lngResult) && !empty($latResult)) {
+                $lngResult = DB::select('SELECT ST_X(ST_AsText(?)) As wkt', [$poi->geometry]);
+                $latResult = DB::select('SELECT ST_Y(ST_AsText(?)) As wkt', [$poi->geometry]);
+                if (! empty($lngResult) && ! empty($latResult)) {
                     $lng = $lngResult[0]->wkt ?? 0;
                     $lat = $latResult[0]->wkt ?? 0;
                 }
@@ -241,6 +237,7 @@ class PoiDataSheet implements FromArray, WithTitle, WithStyles
                 if (strpos($media->url, 'ecmedia') !== false) {
                     return $media->url;
                 }
+
                 return Storage::disk('public')->url($media->url);
             })->toArray();
             $gallery = implode(',', $galleryUrls);
@@ -361,10 +358,12 @@ class PoiDataSheet implements FromArray, WithTitle, WithStyles
 /**
  * Sheet class for POI Types Taxonomies.
  */
-class PoiTypesTaxonomiesSheet implements FromArray, WithTitle, WithStyles
+class PoiTypesTaxonomiesSheet implements FromArray, WithStyles, WithTitle
 {
     protected $poiTypes;
+
     protected $poiThemes;
+
     protected $availableLanguages;
 
     public function __construct(array $poiTypes, array $poiThemes, array $availableLanguages = [])
@@ -384,7 +383,7 @@ class PoiTypesTaxonomiesSheet implements FromArray, WithTitle, WithStyles
 
         // Add columns for each available language
         foreach ($this->availableLanguages as $lang) {
-            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+            $header[] = 'Available POI Type Names '.strtoupper($lang);
         }
 
         // Add theme identifiers column

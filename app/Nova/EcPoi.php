@@ -4,8 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
-use App\Nova\Actions\DownloadPoiFileAction;
 use App\Nova\Actions\DownloadExcelEcPoiAction;
+use App\Nova\Actions\DownloadPoiFileAction;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Actions\UploadPoiFile;
 use App\Nova\Fields\NovaWyswyg;
@@ -147,7 +147,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -269,7 +269,7 @@ class EcPoi extends Resource
                             $out = 'No related Url';
                         }
 
-                        return $out . $help;
+                        return $out.$help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
