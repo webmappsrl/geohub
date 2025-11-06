@@ -4,13 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
-<<<<<<< Updated upstream
-=======
 use App\Nova\Actions\DownloadPoiFileAction;
-use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
->>>>>>> Stashed changes
 use App\Nova\Actions\DownloadExcelEcPoiAction;
-use App\Nova\Actions\DownloadPoiTypesTaxonomiesAction;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Actions\UploadPoiFile;
 use App\Nova\Fields\NovaWyswyg;
@@ -851,7 +846,6 @@ HTML;
             new BulkEditPOIColorAction,
             (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
             (new DownloadPoiFileAction)->standalone(),
-            (new DownloadPoiTypesTaxonomiesAction)->standalone(),
             (new UploadPoiFile)->standalone(),
         ];
     }

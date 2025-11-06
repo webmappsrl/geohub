@@ -5,7 +5,6 @@ namespace App\Nova\Actions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
@@ -17,11 +16,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UploadPoiFile extends Action
+class UploadPoiFile extends PoiFileAction
 {
     use InteractsWithQueue, Queueable;
-
-    private const ERROR_COLUMN_NAME = 'errors';
 
     private const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
 
@@ -66,7 +63,7 @@ class UploadPoiFile extends Action
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 
-            return Action::danger(__('Si è verificato un errore durante l\'elaborazione del file: ').$e->getMessage());
+            return Action::danger(__('Si è verificato un errore durante l\'elaborazione del file: ') . $e->getMessage());
         }
     }
 
@@ -104,7 +101,7 @@ class UploadPoiFile extends Action
      */
     private function determineFileName(array $importerErrors): string
     {
-        return ! empty($importerErrors) ? 'poi-file-errors-'.now()->format('Y-m-d').'.xlsx' : 'poi-file-imported-'.now()->format('Y-m-d').'.xlsx';
+        return ! empty($importerErrors) ? 'poi-file-errors-' . now()->format('Y-m-d') . '.xlsx' : 'poi-file-imported-' . now()->format('Y-m-d') . '.xlsx';
     }
 
     /**
@@ -118,7 +115,7 @@ class UploadPoiFile extends Action
         $lastColumn = $worksheet->getHighestColumn(1);
 
         for ($col = 'A'; $col <= $lastColumn; $col++) {
-            if ($worksheet->getCell($col.'1')->getValue() !== null) {
+            if ($worksheet->getCell($col . '1')->getValue() !== null) {
                 return true;
             }
         }
@@ -136,7 +133,7 @@ class UploadPoiFile extends Action
     {
         for ($col = 'B'; $col <= $worksheet->getHighestDataColumn(2); $col++) {
 
-            if ($worksheet->getCell($col.'2')->getValue() !== null) {
+            if ($worksheet->getCell($col . '2')->getValue() !== null) {
                 return true;
             }
         }
@@ -171,13 +168,13 @@ class UploadPoiFile extends Action
     private function findOrCreateColumn(Worksheet $worksheet, string $header, string &$lastColumn): string
     {
         for ($col = 'A'; $col <= $lastColumn; $col++) {
-            if ($worksheet->getCell($col.'1')->getValue() === $header) {
+            if ($worksheet->getCell($col . '1')->getValue() === $header) {
                 return $col;
             }
         }
 
         $newColumn = ++$lastColumn;
-        $worksheet->setCellValue($newColumn.'1', $header);
+        $worksheet->setCellValue($newColumn . '1', $header);
 
         return $newColumn;
     }
@@ -195,7 +192,7 @@ class UploadPoiFile extends Action
     {
         for ($row = 2; $row <= $highestRow; $row++) {
             if (! $this->hasError($row, $errors)) {
-                $worksheet->setCellValue($errorColumn.$row, '');
+                $worksheet->setCellValue($errorColumn . $row, '');
                 $worksheet->getStyle("A{$row}:{$lastColumn}{$row}")->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE);
             }
@@ -231,7 +228,7 @@ class UploadPoiFile extends Action
     private function addNewErrors(Worksheet $worksheet, string $errorColumn, string $lastColumn, array $errors): void
     {
         foreach ($errors as $error) {
-            $worksheet->setCellValue($errorColumn.$error['row'], $error['message']);
+            $worksheet->setCellValue($errorColumn . $error['row'], $error['message']);
             $this->highlightErrorRow($worksheet, $error['row'], $lastColumn);
         }
     }
@@ -248,7 +245,7 @@ class UploadPoiFile extends Action
         $idColumn = $this->findOrCreateColumn($worksheet, 'id', $lastColumn);
 
         foreach ($poiIds as $poiId) {
-            $worksheet->getCell($idColumn.$poiId['row'])
+            $worksheet->getCell($idColumn . $poiId['row'])
                 ->setValueExplicit(
                     (string) $poiId['id'],
                     \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
@@ -286,7 +283,7 @@ class UploadPoiFile extends Action
         // Build header row
         $header = ['POI Type ID', 'Available POI Type Identifiers'];
         foreach ($taxonomiesData['languages'] as $lang) {
-            $header[] = 'Available POI Type Names '.strtoupper($lang);
+            $header[] = 'Available POI Type Names ' . strtoupper($lang);
         }
         $header[] = 'Available POI Theme Identifiers';
 
@@ -294,7 +291,7 @@ class UploadPoiFile extends Action
         $col = 1;
         foreach ($header as $headerValue) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.'1', $headerValue);
+            $referenceSheet->setCellValue($columnLetter . '1', $headerValue);
             $col++;
         }
 
@@ -328,24 +325,24 @@ class UploadPoiFile extends Action
 
             // POI Type ID
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeId);
+            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeId);
             $col++;
 
             // POI Type Identifier
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeIdentifier);
+            $referenceSheet->setCellValue($columnLetter . $row, $poiTypeIdentifier);
             $col++;
 
             // POI Type Names for each language
             foreach ($taxonomiesData['languages'] as $lang) {
                 $columnLetter = Coordinate::stringFromColumnIndex($col);
-                $referenceSheet->setCellValue($columnLetter.$row, $poiTypeNames[$lang] ?? '');
+                $referenceSheet->setCellValue($columnLetter . $row, $poiTypeNames[$lang] ?? '');
                 $col++;
             }
 
             // POI Theme Identifier
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $taxonomiesData['poiThemes'][$i] ?? '');
+            $referenceSheet->setCellValue($columnLetter . $row, $taxonomiesData['poiThemes'][$i] ?? '');
         }
 
         // Auto-size all columns
@@ -362,77 +359,6 @@ class UploadPoiFile extends Action
         return $filePath;
     }
 
-    /**
-     * Get POI types taxonomies data for the sheet.
-     */
-    private function getTaxonomiesData(): array
-    {
-        // Get POI types with id, identifier and name, ordered by id ascending
-        $poiTypesData = DB::table('taxonomy_poi_types')
-            ->select('id', 'identifier', 'name')
-            ->orderBy('id', 'asc')
-            ->get()
-            ->map(function ($poiType) {
-                $names = [];
-                if ($poiType->name) {
-                    $nameArray = is_string($poiType->name) ? json_decode($poiType->name, true) : $poiType->name;
-                    if (is_array($nameArray)) {
-                        // Get all available translations, filtering out empty/null values
-                        foreach ($nameArray as $lang => $value) {
-                            if (! empty($value) && $value !== null) {
-                                $names[$lang] = $value;
-                            }
-                        }
-                    }
-                }
-
-                return [
-                    'id' => $poiType->id,
-                    'identifier' => $poiType->identifier,
-                    'names' => $names,
-                ];
-            })
-            ->toArray();
-
-        // Collect all available languages from all POI types
-        $availableLanguages = [];
-        foreach ($poiTypesData as $poiType) {
-            if (isset($poiType['names']) && is_array($poiType['names'])) {
-                $availableLanguages = array_merge($availableLanguages, array_keys($poiType['names']));
-            }
-        }
-        $availableLanguages = array_unique($availableLanguages);
-        // Sort languages in a consistent order based on project supported languages
-        // Project supported languages: it, en, fr, de, es, nl, sq (from config/tab-translatable.php)
-        $languageOrder = ['it', 'en', 'fr', 'de', 'es', 'nl', 'sq'];
-        $sortedLanguages = [];
-        // First, add languages in the predefined order (if they exist in available languages)
-        foreach ($languageOrder as $lang) {
-            if (in_array($lang, $availableLanguages)) {
-                $sortedLanguages[] = $lang;
-            }
-        }
-        // Add any remaining languages not in the predefined order (in alphabetical order)
-        $remainingLanguages = array_diff($availableLanguages, $sortedLanguages);
-        sort($remainingLanguages);
-        $sortedLanguages = array_merge($sortedLanguages, $remainingLanguages);
-
-        // Get POI themes identifiers
-        $poiThemes = [];
-        if (auth()->check() && auth()->user()) {
-            foreach (auth()->user()->apps as $app) {
-                $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
-                $poiThemes = array_merge($poiThemes, $themes);
-            }
-        }
-        $poiThemes = array_unique($poiThemes);
-
-        return [
-            'poiTypes' => $poiTypesData,
-            'poiThemes' => $poiThemes,
-            'languages' => $sortedLanguages,
-        ];
-    }
 
     /**
      * Get the fields available on the action.
@@ -441,25 +367,22 @@ class UploadPoiFile extends Action
      */
     public function fields(): array
     {
-        $validHeaders = $this->getValidHeaders();
+        $validHeaders = $this->getValidHeadersString();
 
         return [
             File::make('Upload File', 'file')
-                ->help('<strong>'.__('Read the instruction below').'</strong>'.'</br>'.'</br>'.$this->buildHelpText($validHeaders)),
+                ->help('<strong>' . __('Read the instruction below') . '</strong>' . '</br>' . '</br>' . $this->buildHelpText($validHeaders)),
         ];
     }
 
     /**
-     * Get valid headers from configuration.
+     * Get valid headers from configuration as a comma-separated string.
      *
      * @return string Comma-separated list of valid headers
      */
-    private function getValidHeaders(): string
+    private function getValidHeadersString(): string
     {
-        return implode(', ', array_filter(
-            config('services.importers.ecPois.validHeaders'),
-            fn ($header) => $header !== self::ERROR_COLUMN_NAME
-        ));
+        return implode(', ', parent::getValidHeaders());
     }
 
     /**
@@ -473,21 +396,21 @@ class UploadPoiFile extends Action
         return implode('</br>', [
             __('Please upload a valid .xlsx file.'),
             '',
-            '<strong>'.__('File Structure:').'</strong>',
+            '<strong>' . __('File Structure:') . '</strong>',
             __('The file contains two sheets:'),
-            '<strong>'.__('1. First Sheet (Main Data):').'</strong>',
+            '<strong>' . __('1. First Sheet (Main Data):') . '</strong>',
             __('This sheet contains the POI data to be imported. The first row contains the column headers, and starting from the second row, the file should contain POI data.'),
-            __('The file must contain the following headers: ').$validHeaders.'.',
+            __('The file must contain the following headers: ') . $validHeaders . '.',
             __('This sheet includes all the information about each POI: identification data (id, name, description), location data (lat, lng, address), contact information (phone, email), media (feature image, gallery), taxonomy references (poi_type, theme), and other optional fields.'),
             '',
-            '<strong>'.__('How the First Sheet Works After Import:').'</strong>',
+            '<strong>' . __('How the First Sheet Works After Import:') . '</strong>',
             __('After the import process, the system generates a new file with the same first sheet but with additional information:'),
             __('- Successfully imported POIs: The system automatically populates the "id" column with the database ID assigned to each POI that was imported successfully.'),
             __('- POIs with errors: If a POI cannot be imported due to validation errors or other issues, the entire row is highlighted in yellow and an "errors" column is added (or used if it already exists) containing a detailed error message explaining why the import failed.'),
             __('This allows you to easily identify which POIs were imported successfully (by checking the "id" column) and which ones need to be corrected (by checking the yellow highlighted rows and the "errors" column).'),
             __('You can then correct the errors in the file and re-upload it to import the remaining POIs.'),
             '',
-            '<strong>'.__('2. Second Sheet (POI Types Taxonomies):').'</strong>',
+            '<strong>' . __('2. Second Sheet (POI Types Taxonomies):') . '</strong>',
             __('This sheet contains the reference data for POI types and themes. It includes:'),
             __('- POI Type ID: The unique identifier of each POI type'),
             __('- Available POI Type Identifiers: The Geohub identifiers that can be used in the main sheet'),
@@ -495,16 +418,16 @@ class UploadPoiFile extends Action
             __('- Available POI Theme Identifiers: The Geohub identifiers for themes that can be used in the main sheet'),
             __('This sheet serves as a reference guide to help you use the correct identifiers when importing POI data.'),
             '',
-            '<strong>'.__('First Sheet Instructions:').'</strong>',
+            '<strong>' . __('First Sheet Instructions:') . '</strong>',
             __('The first row should contain the headers.'),
             __('Starting from the second row, the file should contain pois data.'),
             __('Please provide ID only if the poi already exist in the database.'),
             '',
-            __('Mandatory fields are: ').'<strong>name_it, poi_type ('.__('at least one, referenced by Geohub identifier').'), theme('.__('at least one, referenced by Geohub identifier').'), lat, lng. ('.__('use "." to indicate float: 43.1234').').</strong>',
+            __('Mandatory fields are: ') . '<strong>name_it, poi_type (' . __('at least one, referenced by Geohub identifier') . '), theme(' . __('at least one, referenced by Geohub identifier') . '), lat, lng. (' . __('use "." to indicate float: 43.1234') . ').</strong>',
             __('Please use comma "," to separate multiple data in a column (eg. 2 different contact_phone).'),
-            __('Please follow this example: ').'<a href="'.asset('importer-examples/import-poi-example.xlsx').'" target="_blank">'.__('Example').'</a>',
+            __('Please follow this example: ') . '<a href="' . asset('importer-examples/import-poi-example.xlsx') . '" target="_blank">' . __('Example') . '</a>',
             __('If the import fails, the file will be downloaded with the errors highlighted.'),
-            __('For more information, please check the ').'<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">'.__('documentation').'</a>',
+            __('For more information, please check the ') . '<a href="https://orchestrator.maphub.it/resources/documentations/48" target="_blank">' . __('documentation') . '</a>',
         ]);
     }
 }
