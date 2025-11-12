@@ -4,7 +4,6 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
-use App\Nova\Actions\DownloadExcelEcPoiAction;
 use App\Nova\Actions\DownloadPoiFileAction;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Actions\UploadPoiFile;
@@ -844,7 +843,6 @@ HTML;
             new RegenerateEcPoi,
             new BulkEditThemesEcResourceAction,
             new BulkEditPOIColorAction,
-            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
             (new DownloadPoiFileAction)->standalone(),
             (new UploadPoiFile)->standalone(),
         ];

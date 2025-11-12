@@ -20,8 +20,6 @@ class UploadPoiFile extends PoiFileAction
 {
     use InteractsWithQueue, Queueable;
 
-    private const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
-
     /**
      * Handle the action's execution.
      *
@@ -275,74 +273,41 @@ class UploadPoiFile extends PoiFileAction
      */
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
-        $referenceSheet = $spreadsheet->getSheetByName('POI Types Taxonomies')
-            ?? $spreadsheet->createSheet()->setTitle('POI Types Taxonomies');
+        $referenceSheet = $spreadsheet->getSheetByName(self::TAXONOMIES_SHEET_TITLE)
+            ?? $spreadsheet->createSheet()->setTitle(self::TAXONOMIES_SHEET_TITLE);
 
         $taxonomiesData = $this->getTaxonomiesData();
 
-        // Build header row
-        $header = ['POI Type ID', 'Available POI Type Identifiers'];
-        foreach ($taxonomiesData['languages'] as $lang) {
-            $header[] = 'Available POI Type Names '.strtoupper($lang);
-        }
-        $header[] = 'Available POI Theme Identifiers';
+        $header = self::buildTaxonomiesSheetHeader($taxonomiesData['languages']);
 
         // Set header row
         $col = 1;
         foreach ($header as $headerValue) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.'1', $headerValue);
+            $referenceSheet->setCellValue($columnLetter . '1', $headerValue);
             $col++;
         }
 
         // Make header row bold
-        $totalColumns = count($header);
+        $totalColumns = self::getTaxonomiesSheetColumnsCount($taxonomiesData['languages']);
         $lastColumn = Coordinate::stringFromColumnIndex($totalColumns);
         $referenceSheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true);
 
-        // Populate data rows
-        $maxRows = max(count($taxonomiesData['poiTypes']), count($taxonomiesData['poiThemes']));
+        $dataRows = self::buildTaxonomiesSheetRows(
+            $taxonomiesData['poiTypes'],
+            $taxonomiesData['poiThemes'],
+            $taxonomiesData['languages']
+        );
 
-        for ($i = 0; $i < $maxRows; $i++) {
-            $row = $i + 2; // Start from row 2 (row 1 is header)
+        foreach ($dataRows as $index => $rowData) {
+            $row = $index + 2; // Start from row 2 (row 1 is header)
             $col = 1;
 
-            $poiTypeId = '';
-            $poiTypeIdentifier = '';
-            $poiTypeNames = [];
-
-            if (isset($taxonomiesData['poiTypes'][$i])) {
-                $poiType = $taxonomiesData['poiTypes'][$i];
-                if (is_array($poiType)) {
-                    $poiTypeId = $poiType['id'] ?? '';
-                    $poiTypeIdentifier = $poiType['identifier'] ?? '';
-                    $poiTypeNames = $poiType['names'] ?? [];
-                } else {
-                    // Backward compatibility: if it's just a string
-                    $poiTypeIdentifier = $poiType;
-                }
-            }
-
-            // POI Type ID
-            $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeId);
-            $col++;
-
-            // POI Type Identifier
-            $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $poiTypeIdentifier);
-            $col++;
-
-            // POI Type Names for each language
-            foreach ($taxonomiesData['languages'] as $lang) {
+            foreach ($rowData as $cellValue) {
                 $columnLetter = Coordinate::stringFromColumnIndex($col);
-                $referenceSheet->setCellValue($columnLetter.$row, $poiTypeNames[$lang] ?? '');
+                $referenceSheet->setCellValue($columnLetter.$row, $cellValue);
                 $col++;
             }
-
-            // POI Theme Identifier
-            $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter.$row, $taxonomiesData['poiThemes'][$i] ?? '');
         }
 
         // Auto-size all columns

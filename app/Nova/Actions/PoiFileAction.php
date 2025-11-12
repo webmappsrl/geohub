@@ -12,6 +12,8 @@ use Laravel\Nova\Actions\Action;
 abstract class PoiFileAction extends Action
 {
     protected const ERROR_COLUMN_NAME = 'errors';
+    public const TAXONOMIES_SHEET_TITLE = 'POI Types Taxonomies';
+    public const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
 
     /**
      * Get valid headers from configuration.
@@ -98,5 +100,77 @@ abstract class PoiFileAction extends Action
             'poiThemes' => $poiThemes,
             'languages' => $sortedLanguages,
         ];
+    }
+
+    /**
+     * Build header row for the taxonomies sheet.
+     *
+     * @param  array  $languages  Array of language codes
+     * @return array Header row array
+     */
+    public static function buildTaxonomiesSheetHeader(array $languages): array
+    {
+        $header = ['POI Type ID', 'Available POI Type Identifiers'];
+        foreach ($languages as $lang) {
+            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+        }
+        $header[] = 'Available POI Theme Identifiers';
+
+        return $header;
+    }
+
+    /**
+     * Build data rows for the taxonomies sheet.
+     *
+     * @param  array  $poiTypes  Array of POI types data
+     * @param  array  $poiThemes  Array of POI themes identifiers
+     * @param  array  $languages  Array of language codes
+     * @return array Array of data rows
+     */
+    public static function buildTaxonomiesSheetRows(array $poiTypes, array $poiThemes, array $languages): array
+    {
+        $rows = [];
+        $maxRows = max(count($poiTypes), count($poiThemes));
+
+        for ($i = 0; $i < $maxRows; $i++) {
+            $poiTypeId = '';
+            $poiTypeIdentifier = '';
+            $poiTypeNames = [];
+
+            if (isset($poiTypes[$i])) {
+                if (is_array($poiTypes[$i])) {
+                    $poiTypeId = $poiTypes[$i]['id'] ?? '';
+                    $poiTypeIdentifier = $poiTypes[$i]['identifier'] ?? '';
+                    $poiTypeNames = $poiTypes[$i]['names'] ?? [];
+                } else {
+                    // Backward compatibility: if it's just a string
+                    $poiTypeIdentifier = $poiTypes[$i];
+                }
+            }
+
+            $row = [$poiTypeId, $poiTypeIdentifier];
+
+            foreach ($languages as $lang) {
+                $row[] = $poiTypeNames[$lang] ?? '';
+            }
+
+            $row[] = $poiThemes[$i] ?? '';
+
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Calculate the total number of columns for the taxonomies sheet.
+     *
+     * @param  array  $languages  Array of language codes
+     * @return int Total number of columns
+     */
+    public static function getTaxonomiesSheetColumnsCount(array $languages): int
+    {
+        // 2 (ID + Identifier) + languages count + 1 (Themes)
+        return 2 + count($languages) + 1;
     }
 }

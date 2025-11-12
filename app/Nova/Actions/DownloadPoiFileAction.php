@@ -378,55 +378,14 @@ class PoiTypesTaxonomiesSheet implements FromArray, WithStyles, WithTitle
      */
     public function array(): array
     {
-        // Build header row
-        $header = ['POI Type ID', 'Available POI Type Identifiers'];
+        $header = PoiFileAction::buildTaxonomiesSheetHeader($this->availableLanguages);
+        $rows = PoiFileAction::buildTaxonomiesSheetRows(
+            $this->poiTypes,
+            $this->poiThemes,
+            $this->availableLanguages
+        );
 
-        // Add columns for each available language
-        foreach ($this->availableLanguages as $lang) {
-            $header[] = 'Available POI Type Names '.strtoupper($lang);
-        }
-
-        // Add theme identifiers column
-        $header[] = 'Available POI Theme Identifiers';
-
-        $data = [$header];
-
-        $maxRows = max(count($this->poiTypes), count($this->poiThemes));
-
-        for ($i = 0; $i < $maxRows; $i++) {
-            $poiTypeId = '';
-            $poiTypeIdentifier = '';
-            $poiTypeNames = [];
-
-            if (isset($this->poiTypes[$i])) {
-                if (is_array($this->poiTypes[$i])) {
-                    $poiTypeId = $this->poiTypes[$i]['id'] ?? '';
-                    $poiTypeIdentifier = $this->poiTypes[$i]['identifier'] ?? '';
-                    $poiTypeNames = $this->poiTypes[$i]['names'] ?? [];
-                } else {
-                    // Backward compatibility: if it's just a string
-                    $poiTypeIdentifier = $this->poiTypes[$i];
-                }
-            }
-
-            // Build row: ID, Identifier, then names for each language, then themes
-            $row = [
-                $poiTypeId,
-                $poiTypeIdentifier,
-            ];
-
-            // Add name for each available language (empty if not available for this POI type)
-            foreach ($this->availableLanguages as $lang) {
-                $row[] = $poiTypeNames[$lang] ?? '';
-            }
-
-            // Add theme identifier
-            $row[] = $this->poiThemes[$i] ?? '';
-
-            $data[] = $row;
-        }
-
-        return $data;
+        return array_merge([$header], $rows);
     }
 
     /**
@@ -434,7 +393,7 @@ class PoiTypesTaxonomiesSheet implements FromArray, WithStyles, WithTitle
      */
     public function title(): string
     {
-        return 'POI Types Taxonomies';
+        return PoiFileAction::TAXONOMIES_SHEET_TITLE;
     }
 
     /**
@@ -442,8 +401,7 @@ class PoiTypesTaxonomiesSheet implements FromArray, WithStyles, WithTitle
      */
     public function styles(Worksheet $sheet)
     {
-        // Calculate total number of columns: 2 (ID, Identifier) + languages + 1 (Themes)
-        $totalColumns = 2 + count($this->availableLanguages) + 1;
+        $totalColumns = PoiFileAction::getTaxonomiesSheetColumnsCount($this->availableLanguages);
         $lastColumn = Coordinate::stringFromColumnIndex($totalColumns);
 
         // Make header row bold
