@@ -12,7 +12,9 @@ use Laravel\Nova\Actions\Action;
 abstract class PoiFileAction extends Action
 {
     protected const ERROR_COLUMN_NAME = 'errors';
+
     public const TAXONOMIES_SHEET_TITLE = 'POI Types Taxonomies';
+
     public const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
 
     /**
@@ -112,7 +114,7 @@ abstract class PoiFileAction extends Action
     {
         $header = ['POI Type ID', 'Available POI Type Identifiers'];
         foreach ($languages as $lang) {
-            $header[] = 'Available POI Type Names ' . strtoupper($lang);
+            $header[] = 'Available POI Type Names '.strtoupper($lang);
         }
         $header[] = 'Available POI Theme Identifiers';
 

@@ -284,7 +284,7 @@ class UploadPoiFile extends PoiFileAction
         $col = 1;
         foreach ($header as $headerValue) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
-            $referenceSheet->setCellValue($columnLetter . '1', $headerValue);
+            $referenceSheet->setCellValue($columnLetter.'1', $headerValue);
             $col++;
         }
 
