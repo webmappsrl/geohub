@@ -146,7 +146,7 @@ class EcPoi extends Resource
                 //     return '<a href="'.route('api.ec.poi.json', ['id' => $this->id]).'" target="_blank">[x]</a>';
                 // })->asHtml(),
                 Text::make('API', function () {
-                    return '<a href="/api/ec/poi/'.$this->id.'" target="_blank">[x]</a>';
+                    return '<a href="/api/ec/poi/' . $this->id . '" target="_blank">[x]</a>';
                 })->asHtml(),
             ];
         } else {
@@ -268,7 +268,7 @@ class EcPoi extends Resource
                             $out = 'No related Url';
                         }
 
-                        return $out.$help;
+                        return $out . $help;
                     })->asHtml(),
                     ExternalImage::make(__('Feature Image'), function () {
                         $url = isset($this->model()->featureImage) ? $this->model()->featureImage->url : '';
@@ -438,7 +438,7 @@ class EcPoi extends Resource
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->rules('nullable', 'max:255')
-                                ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
+                                ->help(__('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
                             NovaWyswyg::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
                             })
