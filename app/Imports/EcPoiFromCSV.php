@@ -24,6 +24,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 
     public $poiThemes = [];
 
+    private $appPoiThemes = [];
+
     private $user;
 
     public function __construct()
@@ -31,10 +33,16 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         $this->poiTypes = DB::table('taxonomy_poi_types')->pluck('identifier')->toArray();
         $this->user = auth()->user();
 
-        // Carica TUTTI i temi disponibili nel database, non solo quelli delle app dell'utente
-        $poiThemes = DB::table('taxonomy_themes')->pluck('identifier')->toArray();
+        // Carica i temi delle app dell'utente (per validare che almeno uno appartenga alle app)
+        $appPoiThemes = [];
+        foreach (auth()->user()->apps as $app) {
+            $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
+            $appPoiThemes = array_merge($appPoiThemes, $themes);
+        }
+        $this->appPoiThemes = array_unique($appPoiThemes);
 
-        $this->poiThemes = $poiThemes;
+        // Carica TUTTI i temi disponibili nel database (per validare che esistano)
+        $this->poiThemes = DB::table('taxonomy_themes')->pluck('identifier')->toArray();
     }
 
     /**
@@ -75,7 +83,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
                 // if the poi is new we need to add the id to the excel file.
                 $this->poiIds[] = ['row' => $this->currentRow, 'id' => $id];
             } elseif (! in_array($ecPoiData['id'], $userPois) && in_array($ecPoiData['id'], $allPois)) {
-                throw new \Exception(__('The poi with ID ').$ecPoiData['id'].__(' is already in the database but it is not in your list. Please check the file and try again.'));
+                throw new \Exception(__('The poi with ID ') . $ecPoiData['id'] . __(' is already in the database but it is not in your list. Please check the file and try again.'));
             } else {
                 $this->updateEcPoi($ecPoiData);
             }
@@ -102,7 +110,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         });
 
         if (! empty($invalidHeaders)) {
-            $errorMessage = __('Invalid headers found:').implode(', ', $invalidHeaders).__('. Please check the file and try again.');
+            $errorMessage = __('Invalid headers found:') . implode(', ', $invalidHeaders) . __('. Please check the file and try again.');
             Log::error($errorMessage);
             throw new \Exception($errorMessage);
         }
@@ -141,7 +149,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             $poiTypes = array_map('trim', explode(',', $value));
             foreach ($poiTypes as $poiType) {
                 if (! in_array($poiType, $this->poiTypes)) {
-                    throw new \Exception(__('Invalid Poi type found: ').$poiType.__('. Please check the support sheet for valid Poi types and try again.'));
+                    throw new \Exception(__('Invalid Poi type found: ') . $poiType . __('. Please check the support sheet for valid Poi types and try again.'));
                 }
             }
         }
@@ -150,10 +158,24 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             // Split themes by comma and validate each one
             $themes = array_map('trim', explode(',', $value));
 
+            // Verifica che tutti i temi esistano nel database
             foreach ($themes as $theme) {
                 if (! in_array($theme, $this->poiThemes)) {
-                    throw new \Exception(__('Invalid theme found: ').$theme.__('. Please check the support sheet for valid themes and try again.'));
+                    throw new \Exception(__('Invalid theme found: ') . $theme . __('. Please check the support sheet for valid themes and try again.'));
                 }
+            }
+
+            // Verifica che almeno uno dei temi appartenga alle app dell'utente
+            $hasAppTheme = false;
+            foreach ($themes as $theme) {
+                if (in_array($theme, $this->appPoiThemes)) {
+                    $hasAppTheme = true;
+                    break;
+                }
+            }
+
+            if (! $hasAppTheme) {
+                throw new \Exception(__('At least one theme must belong to your apps. Please check the themes and try again.'));
             }
         }
 
@@ -185,7 +207,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
      */
     private function addGeometry(array &$ecPoiData): void
     {
-        $geom = '{"type":"Point","coordinates":['.$ecPoiData['lng'].','.$ecPoiData['lat'].']}';
+        $geom = '{"type":"Point","coordinates":[' . $ecPoiData['lng'] . ',' . $ecPoiData['lat'] . ']}';
         $geom = DB::select("SELECT ST_AsText(ST_GeomFromGeoJSON('$geom')) As wkt")[0]->wkt;
         $ecPoiData['geometry'] = $geom;
 
@@ -202,8 +224,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         $storage = Storage::disk('public');
         try {
             $featureImage = trim($ecPoiData['feature_image']);
-            $filename = uniqid('media_', true).'.png';
-            $fileurl = hash('sha256', $featureImage).'.png';
+            $filename = uniqid('media_', true) . '.png';
+            $fileurl = hash('sha256', $featureImage) . '.png';
             $contents = file_get_contents($featureImage);
             if (! $storage->exists($fileurl)) {
                 $storage->put($fileurl, $contents); // salvo l'image sullo storage come concatenazione nome estensione
@@ -215,7 +237,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
                 $ecMedia->save();
             }
         } catch (Exception $e) {
-            Log::error(__('featureImage: create ec media -> ').$e->getMessage());
+            Log::error(__('featureImage: create ec media -> ') . $e->getMessage());
         }
         $ecPoi->featureImage()->associate($ecMedia);
         unset($ecPoiData['feature_image']);
@@ -233,8 +255,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             foreach ($galleryToIterate as $imagePath) {
                 $imagePath = trim($imagePath);
                 $contents = file_get_contents($imagePath);
-                $filename = uniqid('media_', true).'.png';
-                $fileurl = hash('sha256', $imagePath).'.png';
+                $filename = uniqid('media_', true) . '.png';
+                $fileurl = hash('sha256', $imagePath) . '.png';
 
                 // check if the image already exists
                 if (! $storage->exists($fileurl)) {
@@ -249,7 +271,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
                 $galleryToSave[] = $ecMedia->id;
             }
         } catch (Exception $e) {
-            Log::error(__('Gallery: create ec media -> ').$e->getMessage());
+            Log::error(__('Gallery: create ec media -> ') . $e->getMessage());
         }
         if (! empty($galleryToSave)) {
             $ecPoi->ecMedia()->sync($galleryToSave);
@@ -361,7 +383,7 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         if (count($poiThemes) > 0) {
             $ecPoi->taxonomyThemes()->sync($poiThemes);
         } else {
-            throw new \Exception(__('Invalid Poi theme found: ').$ecPoiData['theme'].__('. Please check the file and try again.'));
+            throw new \Exception(__('Invalid Poi theme found: ') . $ecPoiData['theme'] . __('. Please check the file and try again.'));
         }
 
         // unset the poi_type and theme
@@ -399,8 +421,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
                 ->pluck('id')
                 ->toArray() ?? [];
         } catch (\Illuminate\Database\QueryException $e) {
-            Log::error(__('A database error occurred: ').$e->getMessage());
-            throw new \Exception($name.__(' not found in the database. Please check the file and try again.'));
+            Log::error(__('A database error occurred: ') . $e->getMessage());
+            throw new \Exception($name . __(' not found in the database. Please check the file and try again.'));
         }
 
         return $modelsId;
