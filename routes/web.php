@@ -132,3 +132,14 @@ Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, '
 Route::get('/password-reset-success', function () {
     return view('vendor.nova.auth.passwords.success');
 })->name('nova.password.reset.success');
+
+// Temporary route for POI file download
+Route::get('/download-poi-file/{fileName}', function ($fileName) {
+    $filePath = storage_path('app/public/poi-file-updated.xlsx');
+
+    if (!file_exists($filePath)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->download($filePath, $fileName);
+})->where('fileName', '.*\.xlsx$');

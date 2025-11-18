@@ -53,10 +53,13 @@ class UploadPoiFile extends PoiFileAction
             $this->populatePoiIds($worksheet, $importer->poiIds);
 
             $filePath = $this->saveUpdatedSpreadsheet($spreadsheet);
+            $fileName = $this->determineFileName($importer->errors);
+
+            $downloadUrl = url('/download-poi-file/' . urlencode($fileName));
 
             return Action::download(
-                Storage::url('poi-file-updated.xlsx'),
-                $this->determineFileName($importer->errors)
+                $downloadUrl,
+                $fileName
             );
         } catch (\Exception $e) {
             Log::error($e->getMessage());
