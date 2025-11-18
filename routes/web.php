@@ -137,7 +137,7 @@ Route::get('/password-reset-success', function () {
 Route::get('/download-poi-file/{fileName}', function ($fileName) {
     $filePath = storage_path('app/public/poi-file-updated.xlsx');
 
-    if (!file_exists($filePath)) {
+    if (! file_exists($filePath)) {
         abort(404, 'File not found');
     }
 

@@ -55,7 +55,7 @@ class UploadPoiFile extends PoiFileAction
             $filePath = $this->saveUpdatedSpreadsheet($spreadsheet);
             $fileName = $this->determineFileName($importer->errors);
 
-            $downloadUrl = url('/download-poi-file/' . urlencode($fileName));
+            $downloadUrl = url('/download-poi-file/'.urlencode($fileName));
 
             return Action::download(
                 $downloadUrl,
