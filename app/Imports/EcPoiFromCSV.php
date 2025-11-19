@@ -24,6 +24,8 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
 
     public $poiThemes = [];
 
+    private $appPoiThemes = [];
+
     private $user;
 
     public function __construct()
@@ -31,14 +33,16 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
         $this->poiTypes = DB::table('taxonomy_poi_types')->pluck('identifier')->toArray();
         $this->user = auth()->user();
 
-        $poiThemes = [];
-
+        // Carica i temi delle app dell'utente (per validare che almeno uno appartenga alle app)
+        $appPoiThemes = [];
         foreach (auth()->user()->apps as $app) {
             $themes = $app->taxonomyThemes()->pluck('identifier')->toArray();
-            $poiThemes = array_merge($poiThemes, $themes);
+            $appPoiThemes = array_merge($appPoiThemes, $themes);
         }
+        $this->appPoiThemes = array_unique($appPoiThemes);
 
-        $this->poiThemes = $poiThemes;
+        // Carica TUTTI i temi disponibili nel database (per validare che esistano)
+        $this->poiThemes = DB::table('taxonomy_themes')->pluck('identifier')->toArray();
     }
 
     /**
@@ -141,15 +145,37 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
             if (empty(trim($value))) {
                 throw new \Exception(__('At least one Poi type is mandatory. Please check the file and try again.'));
             }
-            // if the poi type is not inside the poiTypes array, throw an error
-            if (! in_array($value, $this->poiTypes)) {
-                throw new \Exception(__('Invalid Poi type found: ').$value.__('. Please check the support sheet for valid Poi types and try again.'));
+            // Split poi types by comma and validate each one
+            $poiTypes = array_map('trim', explode(',', $value));
+            foreach ($poiTypes as $poiType) {
+                if (! in_array($poiType, $this->poiTypes)) {
+                    throw new \Exception(__('Invalid Poi type found: ').$poiType.__('. Please check the support sheet for valid Poi types and try again.'));
+                }
             }
         }
 
         if ($key == 'theme') {
-            if (! in_array($value, $this->poiThemes)) {
-                throw new \Exception(__('Invalid theme found: ').$value.__('. Please check the support sheet for valid themes and try again.'));
+            // Split themes by comma and validate each one
+            $themes = array_map('trim', explode(',', $value));
+
+            // Verifica che tutti i temi esistano nel database
+            foreach ($themes as $theme) {
+                if (! in_array($theme, $this->poiThemes)) {
+                    throw new \Exception(__('Invalid theme found: ').$theme.__('. Please check the support sheet for valid themes and try again.'));
+                }
+            }
+
+            // Verifica che almeno uno dei temi appartenga alle app dell'utente
+            $hasAppTheme = false;
+            foreach ($themes as $theme) {
+                if (in_array($theme, $this->appPoiThemes)) {
+                    $hasAppTheme = true;
+                    break;
+                }
+            }
+
+            if (! $hasAppTheme) {
+                throw new \Exception(__('At least one theme must belong to your apps. Please check the themes and try again.'));
             }
         }
 
@@ -382,22 +408,20 @@ class EcPoiFromCSV implements ToModel, WithHeadingRow, WithMultipleSheets
     {
         $name = $table == 'taxonomy_poi_types' ? 'poi_type' : 'theme';
         if (strpos($taxonomy, ',') !== false) {
-            $taxonomies = explode($taxonomy, ',');
+            // Fix: i parametri di explode erano invertiti
+            $taxonomies = array_map('trim', explode(',', $taxonomy));
         } else {
-            $taxonomies = [$taxonomy];
+            $taxonomies = [trim($taxonomy)];
         }
+
         try {
             $modelsId = DB::table($table)
                 ->select('id')
-                ->where(function ($query) use ($taxonomies) {
-                    foreach ($taxonomies as $taxonomy) {
-                        $query->where('identifier', $taxonomy);
-                    }
-                })
+                ->whereIn('identifier', $taxonomies)
                 ->pluck('id')
                 ->toArray() ?? [];
         } catch (\Illuminate\Database\QueryException $e) {
-            \Log::error(__('A database error occurred: ').$e->getMessage());
+            Log::error(__('A database error occurred: ').$e->getMessage());
             throw new \Exception($name.__(' not found in the database. Please check the file and try again.'));
         }
 

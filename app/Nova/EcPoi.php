@@ -4,7 +4,7 @@ namespace App\Nova;
 
 use App\Nova\Actions\BulkEditPOIColorAction;
 use App\Nova\Actions\BulkEditThemesEcResourceAction;
-use App\Nova\Actions\DownloadExcelEcPoiAction;
+use App\Nova\Actions\DownloadPoiFileAction;
 use App\Nova\Actions\RegenerateEcPoi;
 use App\Nova\Actions\UploadPoiFile;
 use App\Nova\Fields\NovaWyswyg;
@@ -438,7 +438,7 @@ class EcPoi extends Resource
                                 ->help(__($isOsmidSet ? 'This field is not editable because the OSM ID is already set.' : 'Displayed name of the POI.')),
                             Textarea::make(__('Excerpt'), 'excerpt')
                                 ->rules('nullable', 'max:255')
-                                ->help(_('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
+                                ->help(__('Provide a brief summary or excerpt for the POI. This should be a concise description.')),
                             NovaWyswyg::make('Description')->canSee(function () use ($osmid) {
                                 return is_null($osmid);
                             })
@@ -843,7 +843,7 @@ HTML;
             new RegenerateEcPoi,
             new BulkEditThemesEcResourceAction,
             new BulkEditPOIColorAction,
-            (new DownloadExcelEcPoiAction)->allFields()->except('geometry')->withHeadings(),
+            (new DownloadPoiFileAction)->standalone(),
             (new UploadPoiFile)->standalone(),
         ];
     }

@@ -11,17 +11,14 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UploadPoiFile extends Action
+class UploadPoiFile extends PoiFileAction
 {
     use InteractsWithQueue, Queueable;
-
-    private const ERROR_COLUMN_NAME = 'errors';
-
-    private const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
 
     /**
      * Handle the action's execution.
@@ -56,10 +53,13 @@ class UploadPoiFile extends Action
             $this->populatePoiIds($worksheet, $importer->poiIds);
 
             $filePath = $this->saveUpdatedSpreadsheet($spreadsheet);
+            $fileName = $this->determineFileName($importer->errors);
+
+            $downloadUrl = url('/download-poi-file/'.urlencode($fileName));
 
             return Action::download(
-                Storage::url('poi-file-updated.xlsx'),
-                $this->determineFileName($importer->errors)
+                $downloadUrl,
+                $fileName
             );
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -276,27 +276,48 @@ class UploadPoiFile extends Action
      */
     private function saveUpdatedSpreadsheet(Spreadsheet $spreadsheet): string
     {
-        $referenceSheet = $spreadsheet->getSheetByName('Available References')
-            ?? $spreadsheet->createSheet()->setTitle('Available References');
+        $referenceSheet = $spreadsheet->getSheetByName(self::TAXONOMIES_SHEET_TITLE)
+            ?? $spreadsheet->createSheet()->setTitle(self::TAXONOMIES_SHEET_TITLE);
 
-        $referenceSheet->setCellValue('A1', 'Available POI Type Identifiers')
-            ->setCellValue('B1', 'Available POI Theme Identifiers')
-            ->getStyle('A1:B1')->getFont()->setBold(true);
+        $taxonomiesData = $this->getTaxonomiesData();
 
-        $importer = new \App\Imports\EcPoiFromCSV;
-        $maxRows = max(count($importer->poiTypes), count($importer->poiThemes));
+        $header = self::buildTaxonomiesSheetHeader($taxonomiesData['languages']);
 
-        for ($i = 0; $i < $maxRows; $i++) {
-            if (isset($importer->poiTypes[$i])) {
-                $referenceSheet->setCellValue('A'.($i + 2), $importer->poiTypes[$i]);
-            }
-            if (isset($importer->poiThemes[$i])) {
-                $referenceSheet->setCellValue('B'.($i + 2), $importer->poiThemes[$i]);
+        // Set header row
+        $col = 1;
+        foreach ($header as $headerValue) {
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->setCellValue($columnLetter.'1', $headerValue);
+            $col++;
+        }
+
+        // Make header row bold
+        $totalColumns = self::getTaxonomiesSheetColumnsCount($taxonomiesData['languages']);
+        $lastColumn = Coordinate::stringFromColumnIndex($totalColumns);
+        $referenceSheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true);
+
+        $dataRows = self::buildTaxonomiesSheetRows(
+            $taxonomiesData['poiTypes'],
+            $taxonomiesData['poiThemes'],
+            $taxonomiesData['languages']
+        );
+
+        foreach ($dataRows as $index => $rowData) {
+            $row = $index + 2; // Start from row 2 (row 1 is header)
+            $col = 1;
+
+            foreach ($rowData as $cellValue) {
+                $columnLetter = Coordinate::stringFromColumnIndex($col);
+                $referenceSheet->setCellValue($columnLetter.$row, $cellValue);
+                $col++;
             }
         }
 
-        $referenceSheet->getColumnDimension('A')->setAutoSize(true);
-        $referenceSheet->getColumnDimension('B')->setAutoSize(true);
+        // Auto-size all columns
+        for ($col = 1; $col <= $totalColumns; $col++) {
+            $columnLetter = Coordinate::stringFromColumnIndex($col);
+            $referenceSheet->getColumnDimension($columnLetter)->setAutoSize(true);
+        }
 
         $spreadsheet->setActiveSheetIndex(0);
 
@@ -313,7 +334,7 @@ class UploadPoiFile extends Action
      */
     public function fields(): array
     {
-        $validHeaders = $this->getValidHeaders();
+        $validHeaders = $this->getValidHeadersString();
 
         return [
             File::make('Upload File', 'file')
@@ -322,16 +343,13 @@ class UploadPoiFile extends Action
     }
 
     /**
-     * Get valid headers from configuration.
+     * Get valid headers from configuration as a comma-separated string.
      *
      * @return string Comma-separated list of valid headers
      */
-    private function getValidHeaders(): string
+    private function getValidHeadersString(): string
     {
-        return implode(', ', array_filter(
-            config('services.importers.ecPois.validHeaders'),
-            fn ($header) => $header !== self::ERROR_COLUMN_NAME
-        ));
+        return implode(', ', parent::getValidHeaders());
     }
 
     /**
@@ -344,9 +362,32 @@ class UploadPoiFile extends Action
     {
         return implode('</br>', [
             __('Please upload a valid .xlsx file.'),
-            '<strong>'.__('The first row should contain the headers.'),
+            '',
+            '<strong>'.__('File Structure:').'</strong>',
+            __('The file contains two sheets:'),
+            '<strong>'.__('1. First Sheet (Main Data):').'</strong>',
+            __('This sheet contains the POI data to be imported. The first row contains the column headers, and starting from the second row, the file should contain POI data.'),
+            __('The file must contain the following headers: ').$validHeaders.'.',
+            __('This sheet includes all the information about each POI: identification data (id, name, description), location data (lat, lng, address), contact information (phone, email), media (feature image, gallery), taxonomy references (poi_type, theme), and other optional fields.'),
+            '',
+            '<strong>'.__('How the First Sheet Works After Import:').'</strong>',
+            __('After the import process, the system generates a new file with the same first sheet but with additional information:'),
+            __('- Successfully imported POIs: The system automatically populates the "id" column with the database ID assigned to each POI that was imported successfully.'),
+            __('- POIs with errors: If a POI cannot be imported due to validation errors or other issues, the entire row is highlighted in yellow and an "errors" column is added (or used if it already exists) containing a detailed error message explaining why the import failed.'),
+            __('This allows you to easily identify which POIs were imported successfully (by checking the "id" column) and which ones need to be corrected (by checking the yellow highlighted rows and the "errors" column).'),
+            __('You can then correct the errors in the file and re-upload it to import the remaining POIs.'),
+            '',
+            '<strong>'.__('2. Second Sheet (POI Types Taxonomies):').'</strong>',
+            __('This sheet contains the reference data for POI types and themes. It includes:'),
+            __('- POI Type ID: The unique identifier of each POI type'),
+            __('- Available POI Type Identifiers: The Geohub identifiers that can be used in the main sheet'),
+            __('- Available POI Type Names: The names of POI types in different languages (IT, EN, FR, etc.)'),
+            __('- Available POI Theme Identifiers: The Geohub identifiers for themes that can be used in the main sheet'),
+            __('This sheet serves as a reference guide to help you use the correct identifiers when importing POI data.'),
+            '',
+            '<strong>'.__('First Sheet Instructions:').'</strong>',
+            __('The first row should contain the headers.'),
             __('Starting from the second row, the file should contain pois data.'),
-            __('The file must contain the following headers: ').$validHeaders.'</strong>',
             __('Please provide ID only if the poi already exist in the database.'),
             '',
             __('Mandatory fields are: ').'<strong>name_it, poi_type ('.__('at least one, referenced by Geohub identifier').'), theme('.__('at least one, referenced by Geohub identifier').'), lat, lng. ('.__('use "." to indicate float: 43.1234').').</strong>',

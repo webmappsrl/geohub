@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Jobs\SendOsm2caiWebhookJob;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\SendOsm2caiWebhookJob;
 
 class Osm2caiRedirectMiddleware
 {
@@ -18,8 +18,6 @@ class Osm2caiRedirectMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -29,10 +27,10 @@ class Osm2caiRedirectMiddleware
             $appId = $this->getAppId($request);
 
             if (in_array($appId, self::REDIRECT_APP_IDS)) {
-                Log::info("🔄 Osm2caiRedirectMiddleware: UGC store rilevato", [
+                Log::info('🔄 Osm2caiRedirectMiddleware: UGC store rilevato', [
                     'app_id' => $appId,
                     'path' => $request->path(),
-                    'method' => $request->method()
+                    'method' => $request->method(),
                 ]);
 
                 // Invia webhook a osm2cai
@@ -77,6 +75,7 @@ class Osm2caiRedirectMiddleware
                 return (int) $data['appId'];
             }
         }
+
         return null;
     }
 
@@ -92,10 +91,10 @@ class Osm2caiRedirectMiddleware
         $feature = $this->extractFeatureFromRequest($request);
         $uuid = $feature['properties']['uuid'] ?? null;
 
-        Log::info("🔍 Osm2caiRedirectMiddleware: UUID estratto dalla request", [
+        Log::info('🔍 Osm2caiRedirectMiddleware: UUID estratto dalla request', [
             'uuid' => $uuid,
             'app_id' => $appId,
-            'ugc_type' => $ugcType
+            'ugc_type' => $ugcType,
         ]);
 
         // Prepara i dati della request per il job (senza UploadedFile)
@@ -108,23 +107,23 @@ class Osm2caiRedirectMiddleware
             'Content-Type' => $request->header('Content-Type'),
             'User-Agent' => $request->header('User-Agent'),
             'app-id' => $request->header('app-id'),
-            'App-id' => $request->header('App-id')
+            'App-id' => $request->header('App-id'),
         ];
 
-        Log::info("📋 Osm2caiRedirectMiddleware: Headers salvati per il job", [
-            'has_authorization' => !empty($headers['Authorization']),
+        Log::info('📋 Osm2caiRedirectMiddleware: Headers salvati per il job', [
+            'has_authorization' => ! empty($headers['Authorization']),
             'authorization_length' => strlen($headers['Authorization'] ?? ''),
-            'headers_count' => count(array_filter($headers))
+            'headers_count' => count(array_filter($headers)),
         ]);
 
         // Estrai l'email dell'utente
         $userEmail = $this->getUserEmail($request);
         if ($userEmail) {
-            Log::info("📧 Osm2caiRedirectMiddleware: Email utente estratta", [
-                'email' => $userEmail
+            Log::info('📧 Osm2caiRedirectMiddleware: Email utente estratta', [
+                'email' => $userEmail,
             ]);
         } else {
-            Log::warning("⚠️ Osm2caiRedirectMiddleware: Email utente non trovata");
+            Log::warning('⚠️ Osm2caiRedirectMiddleware: Email utente non trovata');
         }
 
         // Gestisci i file separatamente
@@ -138,7 +137,7 @@ class Osm2caiRedirectMiddleware
                         'temp_path' => $tempPath,
                         'original_name' => $file->getClientOriginalName(),
                         'mime_type' => $file->getMimeType(),
-                        'size' => $file->getSize()
+                        'size' => $file->getSize(),
                     ];
                 }
             }
@@ -147,10 +146,10 @@ class Osm2caiRedirectMiddleware
         // Rimuovi i file dalla request data per evitare problemi di serializzazione
         unset($requestData['images']);
 
-        Log::info("🚀 Osm2caiRedirectMiddleware: Dispatch job per webhook", [
+        Log::info('🚀 Osm2caiRedirectMiddleware: Dispatch job per webhook', [
             'app_id' => $appId,
             'ugc_type' => $ugcType,
-            'uuid' => $uuid
+            'uuid' => $uuid,
         ]);
 
         // Dispatch del job con delay di 30 secondi sulla coda dedicata
@@ -165,10 +164,9 @@ class Osm2caiRedirectMiddleware
     private function hasImages(Request $request): bool
     {
         $data = $request->all();
-        return isset($data['images']) && is_array($data['images']) && !empty($data['images']);
+
+        return isset($data['images']) && is_array($data['images']) && ! empty($data['images']);
     }
-
-
 
     /**
      * Invia webhook multipart (con immagini)
@@ -178,12 +176,12 @@ class Osm2caiRedirectMiddleware
         // Prepara i dati multipart
         $multipartFields = $this->prepareMultipartWebhookData($request, $appId);
 
-        Log::info("📤 Osm2caiRedirectMiddleware: Invio webhook multipart", [
+        Log::info('📤 Osm2caiRedirectMiddleware: Invio webhook multipart', [
             'webhook_url' => $webhookUrl,
             'ugc_type' => $ugcType,
             'action' => 'create',
             'fields_count' => count($multipartFields),
-            'has_images' => collect($multipartFields)->contains('name', 'images[0]')
+            'has_images' => collect($multipartFields)->contains('name', 'images[0]'),
         ]);
 
         try {
@@ -193,7 +191,7 @@ class Osm2caiRedirectMiddleware
                 'User-Agent' => 'Geohub-Webhook/1.0',
                 'X-Geohub-Redirect' => 'true',
                 'X-Geohub-Source' => 'geohub',
-                'X-Geohub-Original-App-Id' => $appId
+                'X-Geohub-Original-App-Id' => $appId,
             ];
 
             // Aggiungi l'email dell'utente se disponibile
@@ -208,15 +206,15 @@ class Osm2caiRedirectMiddleware
                 ->asMultipart()
                 ->post($webhookUrl, $multipartFields);
 
-            Log::info("📥 Osm2caiRedirectMiddleware: Risposta webhook multipart", [
+            Log::info('📥 Osm2caiRedirectMiddleware: Risposta webhook multipart', [
                 'status_code' => $response->status(),
                 'response_body' => $response->body(),
-                'success' => $response->successful()
+                'success' => $response->successful(),
             ]);
         } catch (\Exception $e) {
-            Log::error("❌ Osm2caiRedirectMiddleware: Errore webhook multipart", [
+            Log::error('❌ Osm2caiRedirectMiddleware: Errore webhook multipart', [
                 'error' => $e->getMessage(),
-                'app_id' => $appId
+                'app_id' => $appId,
             ]);
         }
     }
@@ -234,7 +232,7 @@ class Osm2caiRedirectMiddleware
 
         // Mappa l'app_id da geohub a osm2cai
         $mappedAppId = $this->mapAppId($appId);
-        if (!isset($feature['properties']['app_id'])) {
+        if (! isset($feature['properties']['app_id'])) {
             $feature['properties']['app_id'] = $mappedAppId;
         } else {
             $feature['properties']['app_id'] = $mappedAppId;
@@ -247,21 +245,21 @@ class Osm2caiRedirectMiddleware
 
             if ($geohubId) {
                 $feature['properties']['geohub_id'] = $geohubId;
-                Log::info("✅ Osm2caiRedirectMiddleware: geohub_id aggiunto al feature", [
+                Log::info('✅ Osm2caiRedirectMiddleware: geohub_id aggiunto al feature', [
                     'uuid' => $uuid,
                     'geohub_id' => $geohubId,
-                    'app_id' => $appId
+                    'app_id' => $appId,
                 ]);
             } else {
-                Log::warning("⚠️ Osm2caiRedirectMiddleware: UGC non trovato per UUID", [
+                Log::warning('⚠️ Osm2caiRedirectMiddleware: UGC non trovato per UUID', [
                     'uuid' => $uuid,
-                    'app_id' => $appId
+                    'app_id' => $appId,
                 ]);
             }
         } else {
-            Log::warning("⚠️ Osm2caiRedirectMiddleware: UUID non presente nel feature", [
+            Log::warning('⚠️ Osm2caiRedirectMiddleware: UUID non presente nel feature', [
                 'app_id' => $appId,
-                'available_properties' => array_keys($feature['properties'] ?? [])
+                'available_properties' => array_keys($feature['properties'] ?? []),
             ]);
         }
 
@@ -269,13 +267,13 @@ class Osm2caiRedirectMiddleware
         $multipartFields = [
             [
                 'name' => 'action',
-                'contents' => 'create'
+                'contents' => 'create',
             ],
             [
                 'name' => 'feature',
                 'contents' => json_encode($feature, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                'filename' => 'feature.json'
-            ]
+                'filename' => 'feature.json',
+            ],
         ];
 
         // Aggiungi le immagini se presenti
@@ -285,7 +283,7 @@ class Osm2caiRedirectMiddleware
                     $multipartFields[] = [
                         'name' => "images[{$index}]",
                         'contents' => fopen($file->getRealPath(), 'r'),
-                        'filename' => $file->getClientOriginalName()
+                        'filename' => $file->getClientOriginalName(),
                     ];
                 }
             }
@@ -332,13 +330,13 @@ class Osm2caiRedirectMiddleware
         $feature = $this->extractFeatureFromRequest($request);
 
         // Assicurati che l'app_id sia presente nel feature (osm2cai si aspetta app_id)
-        if (!isset($feature['properties']['app_id'])) {
+        if (! isset($feature['properties']['app_id'])) {
             $feature['properties']['app_id'] = $appId;
         }
 
         return [
             'action' => 'create',
-            'feature' => $feature
+            'feature' => $feature,
         ];
     }
 
@@ -368,8 +366,8 @@ class Osm2caiRedirectMiddleware
             'properties' => [],
             'geometry' => [
                 'type' => 'Point',
-                'coordinates' => [0, 0]
-            ]
+                'coordinates' => [0, 0],
+            ],
         ];
 
         // Copia le proprietà dai dati della richiesta
@@ -422,7 +420,7 @@ class Osm2caiRedirectMiddleware
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
 
-                if (!$ugc) {
+                if (! $ugc) {
                     $ugc = \App\Models\UgcTrack::where('app_id', $appId)
                         ->whereJsonContains('properties->uuid', $uuid)
                         ->first();
@@ -430,28 +428,30 @@ class Osm2caiRedirectMiddleware
             }
 
             if ($ugc) {
-                Log::info("✅ Osm2caiRedirectMiddleware: UGC trovato tramite UUID", [
+                Log::info('✅ Osm2caiRedirectMiddleware: UGC trovato tramite UUID', [
                     'uuid' => $uuid,
                     'ugc_id' => $ugc->id,
                     'ugc_type' => $ugcType,
-                    'app_id' => $appId
+                    'app_id' => $appId,
                 ]);
+
                 return $ugc->id;
             }
 
-            Log::warning("❌ Osm2caiRedirectMiddleware: UGC non trovato tramite UUID", [
+            Log::warning('❌ Osm2caiRedirectMiddleware: UGC non trovato tramite UUID', [
                 'uuid' => $uuid,
                 'ugc_type' => $ugcType,
-                'app_id' => $appId
+                'app_id' => $appId,
             ]);
 
             return null;
         } catch (\Exception $e) {
-            Log::error("❌ Osm2caiRedirectMiddleware: Errore nella ricerca UGC tramite UUID", [
+            Log::error('❌ Osm2caiRedirectMiddleware: Errore nella ricerca UGC tramite UUID', [
                 'uuid' => $uuid,
                 'app_id' => $appId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -490,8 +490,9 @@ class Osm2caiRedirectMiddleware
             return null;
         } catch (\Exception $e) {
             Log::warning("⚠️ Osm2caiRedirectMiddleware: Errore nell'estrazione email utente", [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
