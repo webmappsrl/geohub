@@ -27,7 +27,7 @@ trait ElasticIndexTrait
 
             return $client;
         } catch (\Exception $e) {
-            Log::error('Connection to Elasticsearch failed: '.$e->getMessage());
+            Log::error('Connection to Elasticsearch failed: ' . $e->getMessage());
         }
     }
 
@@ -44,7 +44,32 @@ trait ElasticIndexTrait
                     'mappings' => [
                         'properties' => [
                             'name' => [
-                                'type' => 'text',
+                                'type' => 'object',
+                                'properties' => [
+                                    'it' => ['type' => 'text'],
+                                    'en' => ['type' => 'text'],
+                                    'fr' => ['type' => 'text'],
+                                    'de' => ['type' => 'text'],
+                                    'es' => ['type' => 'text'],
+                                    'nl' => ['type' => 'text'],
+                                    'sq' => ['type' => 'text'],
+                                ],
+                            ],
+                            'name_keyword' => [
+                                'type' => 'keyword',
+                            ],
+                            'doc' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'keyword' => [
+                                                'type' => 'keyword',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -55,15 +80,16 @@ trait ElasticIndexTrait
             ];
 
             // Creazione dell'indice
-
-            if (! $client->indices()->exists(['index' => $indexName])) {
-                $response = $client->indices()->create($params);
-                Log::info('Indice creato con successo: '.json_encode($response));
-            } else {
-                Log::info('Indice già esistente');
+            // Se l'indice esiste già, lo cancelliamo e lo ricreiamo per assicurarci che abbia il mapping corretto
+            if ($client->indices()->exists(['index' => $indexName])) {
+                Log::info("Indice '$indexName' già esistente, lo ricreo con il nuovo mapping");
+                $client->indices()->delete(['index' => $indexName]);
             }
+
+            $response = $client->indices()->create($params);
+            Log::info('Indice creato con successo: ' . json_encode($response));
         } catch (\Exception $e) {
-            Log::error('Errore nella creazione dell\'indice: '.$e->getMessage());
+            Log::error('Errore nella creazione dell\'indice: ' . $e->getMessage());
             throw $e; // Rilancia l'eccezione se necessario
         }
     }
@@ -72,7 +98,7 @@ trait ElasticIndexTrait
     {
         try {
             $client = $this->getClient();
-            Log::info('ping:'.$client->ping());
+            Log::info('ping:' . $client->ping());
             // Verifica se l'indice esiste prima di tentare di cancellarlo
             if ($client->indices()->exists(['index' => $indexName])) {
                 $response = $client->indices()->delete(['index' => $indexName]);
@@ -85,7 +111,7 @@ trait ElasticIndexTrait
                 return response()->json(['status' => 'error', 'message' => "Indice '$indexName' non esiste."], 404);
             }
         } catch (\Exception $e) {
-            Log::error('Errore durante la cancellazione dell\'indice: '.$e->getMessage());
+            Log::error('Errore durante la cancellazione dell\'indice: ' . $e->getMessage());
 
             return response()->json(['status' => 'error', 'message' => 'Errore durante la cancellazione dell\'indice.'], 500);
         }
@@ -102,12 +128,12 @@ trait ElasticIndexTrait
                 'id' => $id,
             ];
             if ($client->exists($params)) {
-                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  '.$params['index'].' doc'.$params['id']);
+                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  ' . $params['index'] . ' doc' . $params['id']);
                 $response = $client->delete($params);
                 Log::info($response);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: '.$e->getMessage());
+            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: ' . $e->getMessage());
             throw $e;
         }
     }
@@ -134,7 +160,7 @@ trait ElasticIndexTrait
 
             return response()->json(['status' => 'success', 'message' => 'Documento indicizzato/aggiornato con successo.', 'data' => $response], 200);
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => updateElasticIndexDoc: '.json_encode($doc));
+            Log::error('ElasticIndexTrait => updateElasticIndexDoc: ' . json_encode($doc));
             throw $e;
         }
     }
