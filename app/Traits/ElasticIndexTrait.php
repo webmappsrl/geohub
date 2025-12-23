@@ -145,41 +145,22 @@ trait ElasticIndexTrait
         try {
             $client = $this->getClient();
 
-            // Usa sempre index() che sovrascrive il documento se esiste già (comportamento upsert)
-            // Il documento $doc contiene già tutti i campi incluso 'doc' se necessario
+            // Parametri per la cancellazione dell'indice
             $params = [
                 'index' => $indexName,
                 'id' => $id,
-                'body' => $doc,
+                'body' => [
+                    'doc' => $doc,
+                    'doc_as_upsert' => true, // Crea il documento se non esiste (upsert)
+                ],
             ];
-
+            // Indicizza o aggiorna il documento
             $response = $client->index($params);
             Log::info("Documento con ID '$id' indicizzato/aggiornato con successo nell'indice '$indexName'.");
 
             return response()->json(['status' => 'success', 'message' => 'Documento indicizzato/aggiornato con successo.', 'data' => $response], 200);
         } catch (\Exception $e) {
-            // Se l'errore è un mapper_parsing_exception, probabilmente l'indice ha un mapping vecchio
-            // Ricrea l'indice con il mapping corretto e riprova
-            if (strpos($e->getMessage(), 'mapper_parsing_exception') !== false) {
-                Log::warning("Errore di mapping per l'indice '$indexName', ricreo l'indice con il mapping corretto");
-                try {
-                    $this->createElasticIndex($indexName);
-                    // Riprova l'indicizzazione dopo aver ricreato l'indice
-                    $params = [
-                        'index' => $indexName,
-                        'id' => $id,
-                        'body' => $doc,
-                    ];
-                    $response = $client->index($params);
-                    Log::info("Documento con ID '$id' indicizzato/aggiornato con successo nell'indice '$indexName' dopo ricreazione.");
-                    return response()->json(['status' => 'success', 'message' => 'Documento indicizzato/aggiornato con successo.', 'data' => $response], 200);
-                } catch (\Exception $retryException) {
-                    Log::error('ElasticIndexTrait => elasticIndexDoc (retry): ' . $retryException->getMessage());
-                    throw $retryException;
-                }
-            }
-
-            Log::error('ElasticIndexTrait => elasticIndexDoc: ' . json_encode($doc));
+            Log::error('ElasticIndexTrait => updateElasticIndexDoc: ' . json_encode($doc));
             throw $e;
         }
     }
