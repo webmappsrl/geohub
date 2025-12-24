@@ -30,13 +30,21 @@ class DownloadPoiFileAction extends PoiFileAction
         // Check if resources are selected in the request
         $selectedResources = $request->resources ?? '';
 
-        // If resources are selected, get them with necessary relationships
-        if (! empty($selectedResources) && $selectedResources !== 'all') {
+        // If "select all matching" is used, get all POIs matching the filters
+        if ($request->forAllMatchingResources()) {
+            $pois = $request->toQuery()
+                ->with(['taxonomyPoiTypes', 'taxonomyThemes', 'featureImage', 'ecMedia'])
+                ->get();
+        }
+        // If specific resources are selected, get them with necessary relationships
+        elseif (! empty($selectedResources) && $selectedResources !== 'all') {
             $resourceIds = explode(',', $selectedResources);
             $pois = EcPoi::with(['taxonomyPoiTypes', 'taxonomyThemes', 'featureImage', 'ecMedia'])
                 ->whereIn('id', $resourceIds)
                 ->get();
-        } else {
+        }
+        // No resources selected
+        else {
             $pois = collect();
         }
 
@@ -243,13 +251,13 @@ class PoiDataSheet implements FromArray, WithStyles, WithTitle
             $gallery = implode(',', $galleryUrls);
         }
 
-        // Get translations
-        $nameIt = $poi->getTranslation('name', 'it', '');
-        $nameEn = $poi->getTranslation('name', 'en', '');
-        $descriptionIt = $poi->getTranslation('description', 'it', '');
-        $descriptionEn = $poi->getTranslation('description', 'en', '');
-        $excerptIt = $poi->getTranslation('excerpt', 'it', '');
-        $excerptEn = $poi->getTranslation('excerpt', 'en', '');
+        // Get translations and clean HTML tags
+        $nameIt = html_entity_decode(strip_tags($poi->getTranslation('name', 'it', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $nameEn = html_entity_decode(strip_tags($poi->getTranslation('name', 'en', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $descriptionIt = html_entity_decode(strip_tags($poi->getTranslation('description', 'it', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $descriptionEn = html_entity_decode(strip_tags($poi->getTranslation('description', 'en', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $excerptIt = html_entity_decode(strip_tags($poi->getTranslation('excerpt', 'it', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $excerptEn = html_entity_decode(strip_tags($poi->getTranslation('excerpt', 'en', '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         // Get related_url (can be array or string)
         $relatedUrl = '';
