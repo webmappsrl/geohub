@@ -27,7 +27,7 @@ trait ElasticIndexTrait
 
             return $client;
         } catch (\Exception $e) {
-            Log::error('Connection to Elasticsearch failed: ' . $e->getMessage());
+            Log::error('Connection to Elasticsearch failed: '.$e->getMessage());
         }
     }
 
@@ -87,9 +87,9 @@ trait ElasticIndexTrait
             }
 
             $response = $client->indices()->create($params);
-            Log::info('Indice creato con successo: ' . json_encode($response));
+            Log::info('Indice creato con successo: '.json_encode($response));
         } catch (\Exception $e) {
-            Log::error('Errore nella creazione dell\'indice: ' . $e->getMessage());
+            Log::error('Errore nella creazione dell\'indice: '.$e->getMessage());
             throw $e; // Rilancia l'eccezione se necessario
         }
     }
@@ -98,7 +98,7 @@ trait ElasticIndexTrait
     {
         try {
             $client = $this->getClient();
-            Log::info('ping:' . $client->ping());
+            Log::info('ping:'.$client->ping());
             // Verifica se l'indice esiste prima di tentare di cancellarlo
             if ($client->indices()->exists(['index' => $indexName])) {
                 $response = $client->indices()->delete(['index' => $indexName]);
@@ -111,7 +111,7 @@ trait ElasticIndexTrait
                 return response()->json(['status' => 'error', 'message' => "Indice '$indexName' non esiste."], 404);
             }
         } catch (\Exception $e) {
-            Log::error('Errore durante la cancellazione dell\'indice: ' . $e->getMessage());
+            Log::error('Errore durante la cancellazione dell\'indice: '.$e->getMessage());
 
             return response()->json(['status' => 'error', 'message' => 'Errore durante la cancellazione dell\'indice.'], 500);
         }
@@ -128,12 +128,12 @@ trait ElasticIndexTrait
                 'id' => $id,
             ];
             if ($client->exists($params)) {
-                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  ' . $params['index'] . ' doc' . $params['id']);
+                Log::info('ElasticIndexTrait => deleteElasticIndexDoc:  '.$params['index'].' doc'.$params['id']);
                 $response = $client->delete($params);
                 Log::info($response);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: ' . $e->getMessage());
+            Log::error('ElasticIndexTrait => deleteElasticIndexDoc: '.$e->getMessage());
             throw $e;
         }
     }
