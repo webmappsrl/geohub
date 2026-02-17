@@ -560,6 +560,12 @@ class SyncEcFromOutSource
                         $ec_track->color = $out_source->tags['color'];
                     }
 
+                    // Adding ref to Ec Track
+                    if (! empty($out_source->tags['ref']) && isset($out_source->tags['ref'])) {
+                        $this->logChannel->info('Attaching EC Track ref.');
+                        $ec_track->ref = $out_source->tags['ref'];
+                    }
+
                     // Attach feature image to Track
                     if (! empty($out_source->tags['feature_image']) && isset($out_source->tags['feature_image'])) {
                         $this->logChannel->info('Attaching EC Track FEATURE_IMAGE.');

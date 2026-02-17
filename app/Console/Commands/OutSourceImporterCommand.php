@@ -284,7 +284,7 @@ class OutSourceImporterCommand extends Command
                 foreach ($features_list as $id => $feature) {
                     $count++;
                     $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                 }
@@ -293,7 +293,7 @@ class OutSourceImporterCommand extends Command
                 $count = 1;
                 foreach ($features_list as $id => $updated_at) {
                     $this->logChannel->info('Start importing '.$this->type.' number '.$count.' out of '.count($features_list));
-                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, []);
+                    $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, [], $this->logChannel);
                     $OSF_id = $OSF->importFeature();
                     $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() returns $OSF_id");
                     $count++;
