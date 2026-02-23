@@ -15,6 +15,8 @@ abstract class PoiFileAction extends Action
 
     public const TAXONOMIES_SHEET_TITLE = 'POI Types Taxonomies';
 
+    public const ERRORS_SHEET_TITLE = 'Errors';
+
     public const ERROR_HIGHLIGHT_COLOR = 'FFFF00';
 
     /**
