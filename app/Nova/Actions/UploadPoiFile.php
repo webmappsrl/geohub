@@ -110,6 +110,7 @@ class UploadPoiFile extends PoiFileAction
     {
         $spreadsheet = new Spreadsheet;
         $this->addErrorsSheet($spreadsheet, $errorMessages);
+        $spreadsheet->removeSheetByIndex(0);
         $filePath = storage_path('app/public/poi-file-updated.xlsx');
         IOFactory::createWriter($spreadsheet, 'Xlsx')->save($filePath);
         $fileName = 'poi-file-errors-'.now()->format('Y-m-d').'.xlsx';
