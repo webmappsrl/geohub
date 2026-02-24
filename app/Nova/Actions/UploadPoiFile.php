@@ -149,32 +149,19 @@ class UploadPoiFile extends PoiFileAction
     }
 
     /**
-     * Build table rows for the "Errors" sheet from a server/exception error.
+     * Build table rows for server errors in the "Errors" sheet. Only user-friendly messages
+     * (no exception message, type or file/line) so the client is not shown technical details.
      *
-     * @param  \Throwable  $e  Exception or Error
-     * @return array<int, array<int, string>>  Table rows: first row = [Tipo, Dettaglio], then one row per detail
+     * @param  \Throwable  $e  Exception or Error (used for report(); sheet content is generic)
+     * @return array<int, array<int, string>>  Table rows: header [Tipo, Dettaglio] + 2 message rows
      */
     private function formatServerErrorForSheet(\Throwable $e): array
     {
-        $rows = [
+        return [
             [__('Type'), __('Detail')],
             [__('Error'), __('An error occurred while processing the file.')],
             [__('Verification'), __('Verify that the file is in a valid Excel (.xlsx) format and that the structure is correct.')],
-            [__('Technical detail'), $e->getMessage()],
-            [__('Exception type'), class_basename($e)],
         ];
-
-        $previous = $e->getPrevious();
-        while ($previous instanceof \Throwable) {
-            $rows[] = [__('Previous cause'), $previous->getMessage()];
-            $previous = $previous->getPrevious();
-        }
-
-        if (config('app.debug')) {
-            $rows[] = [__('Position (only in debug)'), $e->getFile().' ('.__('row').' '.$e->getLine().')'];
-        }
-
-        return $rows;
     }
 
     /**
