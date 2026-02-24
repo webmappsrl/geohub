@@ -44,6 +44,7 @@ class UploadPoiFile extends PoiFileAction
             $structuralErrorRows = $this->buildStructuralErrorTable($validHeaders, $validHeadersOrdered, $fileHeadersNormalized);
             if (! empty($structuralErrorRows)) {
                 $this->addErrorsSheet($spreadsheet, $structuralErrorRows);
+
                 return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
@@ -52,6 +53,7 @@ class UploadPoiFile extends PoiFileAction
                     [__('Type'), __('Detail')],
                     [__('File structure'), __('The first row must contain the column headers.')],
                 ]);
+
                 return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
@@ -60,6 +62,7 @@ class UploadPoiFile extends PoiFileAction
                     [__('Type'), __('Detail')],
                     [__('File structure'), __('The second row cannot be empty. Insert the POI data starting from the second row.')],
                 ]);
+
                 return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
@@ -96,6 +99,7 @@ class UploadPoiFile extends PoiFileAction
     {
         return ! empty($file);
     }
+
     /**
      * Create a minimal Excel file with only an "Errors" sheet and return Nova download response.
      *
@@ -123,7 +127,7 @@ class UploadPoiFile extends PoiFileAction
      * @param  array  $validHeaders  Expected headers
      * @param  array  $validHeadersOrdered  Expected headers as ordered list
      * @param  array  $fileHeadersNormalized  Headers read from file (normalized)
-     * @return array<int, array<int, string>>  Table rows: first row = [Tipo, Dettaglio], then one row per error
+     * @return array<int, array<int, string>> Table rows: first row = [Tipo, Dettaglio], then one row per error
      */
     private function buildStructuralErrorTable(array $validHeaders, array $validHeadersOrdered, array $fileHeadersNormalized): array
     {
@@ -153,7 +157,7 @@ class UploadPoiFile extends PoiFileAction
      * (no exception message, type or file/line) so the client is not shown technical details.
      *
      * @param  \Throwable  $e  Exception or Error (used for report(); sheet content is generic)
-     * @return array<int, array<int, string>>  Table rows: header [Tipo, Dettaglio] + 2 message rows
+     * @return array<int, array<int, string>> Table rows: header [Tipo, Dettaglio] + 2 message rows
      */
     private function formatServerErrorForSheet(\Throwable $e): array
     {
@@ -168,7 +172,7 @@ class UploadPoiFile extends PoiFileAction
      * Build table rows for per-row import errors. Columns: Riga | Motivo.
      *
      * @param  array<int, array{row: int|string, message: string}>  $importerErrors  Errors from importer
-     * @return array<int, array<int, string|int>>  Table rows: first row = [Riga, Motivo], then one row per error
+     * @return array<int, array<int, string|int>> Table rows: first row = [Riga, Motivo], then one row per error
      */
     private function formatImportErrorsForSheet(array $importerErrors): array
     {
@@ -229,7 +233,7 @@ class UploadPoiFile extends PoiFileAction
      * Normalization must match config headers (e.g. "name_it") so missing-column and order checks work.
      *
      * @param  Worksheet  $worksheet  The worksheet to read
-     * @return array<int, string>  List of header names in file order (normalized)
+     * @return array<int, string> List of header names in file order (normalized)
      */
     private function getFileHeadersFromWorksheet(Worksheet $worksheet): array
     {
