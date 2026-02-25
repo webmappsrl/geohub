@@ -286,7 +286,7 @@ class OutSourceImporterCommand extends Command
                     $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, $categorie_fruibilita_sentieri, $this->logChannel);
                     $OSF_id = $OSF->importFeature();
-                    $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() for source_id {$id} returned OSF_id: " . ($OSF_id ?? 'null'));
+                    $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() for source_id {$id} returned OSF_id: " . (is_array($OSF_id) ? json_encode($OSF_id) : ($OSF_id ?? 'null')));
                 }
             }
             if ($this->type == 'poi') {
@@ -295,7 +295,7 @@ class OutSourceImporterCommand extends Command
                     $this->logChannel->info('Start importing ' . $this->type . ' number ' . $count . ' out of ' . count($features_list));
                     $OSF = new OutSourceImporterFeatureSentieriSardegna($this->type, $this->endpoint, $id, $this->only_related_url, [], $this->logChannel);
                     $OSF_id = $OSF->importFeature();
-                    $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() for source_id {$id} returned OSF_id: " . ($OSF_id ?? 'null'));
+                    $this->logChannel->info("OutSourceImporterFeatureSentieriSardegna::importFeature() for source_id {$id} returned OSF_id: " . (is_array($OSF_id) ? json_encode($OSF_id) : ($OSF_id ?? 'null')));
                     $count++;
                 }
             }
