@@ -5,8 +5,6 @@ namespace App\Nova\Actions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
@@ -36,35 +34,58 @@ class UploadPoiFile extends PoiFileAction
 
         try {
             $spreadsheet = $this->loadSpreadsheet($file);
+            $this->removeErrorsSheetIfPresent($spreadsheet);
             $worksheet = $spreadsheet->getActiveSheet();
 
+            $fileHeadersNormalized = $this->getFileHeadersFromWorksheet($worksheet);
+            $validHeaders = $this->getValidHeaders();
+            $validHeadersOrdered = array_values($validHeaders);
+
+            $structuralErrorRows = $this->buildStructuralErrorTable($validHeaders, $validHeadersOrdered, $fileHeadersNormalized);
+            if (! empty($structuralErrorRows)) {
+                $this->addErrorsSheet($spreadsheet, $structuralErrorRows);
+
+                return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
+            }
+
             if (! $this->hasHeaders($worksheet)) {
-                return Action::danger(__('The first row must contain column headers. Please read the instructions and check the file before trying again.'));
+                $this->addErrorsSheet($spreadsheet, [
+                    [__('Type'), __('Detail')],
+                    [__('File structure'), __('The first row must contain the column headers.')],
+                ]);
+
+                return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
             if (! $this->hasValidData($worksheet)) {
-                return Action::danger(__('The second row cannot be empty. Please read the instructions and check the file before trying again.'));
+                $this->addErrorsSheet($spreadsheet, [
+                    [__('Type'), __('Detail')],
+                    [__('File structure'), __('The second row cannot be empty. Insert the POI data starting from the second row.')],
+                ]);
+
+                return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
             $importer = new \App\Imports\EcPoiFromCSV;
             Excel::import($importer, $file);
 
-            $this->processImportErrors($worksheet, $importer->errors);
-            $this->populatePoiIds($worksheet, $importer->poiIds);
+            // Use sheet index 0 explicitly so the data sheet (with column "errors" and yellow highlighting) is the one we modify and save
+            $dataSheet = $spreadsheet->getSheet(0);
+            $this->processImportErrors($dataSheet, $importer->errors);
+            $this->populatePoiIds($dataSheet, $importer->poiIds);
 
-            $filePath = $this->saveUpdatedSpreadsheet($spreadsheet);
-            $fileName = $this->determineFileName($importer->errors);
+            if (! empty($importer->errors)) {
+                $importErrorTable = $this->formatImportErrorsForSheet($importer->errors);
+                $this->addErrorsSheet($spreadsheet, $importErrorTable);
+            }
 
-            $downloadUrl = url('/download-poi-file/'.urlencode($fileName));
+            return $this->downloadUpdatedSpreadsheet($spreadsheet, ! empty($importer->errors));
+        } catch (\Throwable $e) {
+            report($e);
 
-            return Action::download(
-                $downloadUrl,
-                $fileName
-            );
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            $serverErrorTable = $this->formatServerErrorForSheet($e);
 
-            return Action::danger(__('Si è verificato un errore durante l\'elaborazione del file: ').$e->getMessage());
+            return $this->returnErrorFile($serverErrorTable);
         }
     }
 
@@ -77,6 +98,179 @@ class UploadPoiFile extends PoiFileAction
     private function isValidFile($file): bool
     {
         return ! empty($file);
+    }
+
+    /**
+     * Create a minimal Excel file with only an "Errors" sheet and return Nova download response.
+     *
+     * @param  array<string>  $errorMessages  List of error messages (one per row in the sheet)
+     * @return mixed Nova download response (Action::download returns array for JSON)
+     */
+    private function returnErrorFile(array $errorMessages)
+    {
+        $spreadsheet = new Spreadsheet;
+        $this->addErrorsSheet($spreadsheet, $errorMessages);
+        $spreadsheet->removeSheetByIndex(0);
+        $filePath = storage_path('app/public/poi-file-updated.xlsx');
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save($filePath);
+        $fileName = 'poi-file-errors-'.now()->format('Y-m-d').'.xlsx';
+
+        return Action::download(
+            url('/download-poi-file/'.urlencode($fileName)),
+            $fileName
+        );
+    }
+
+    /**
+     * Build table rows for structural errors (missing columns, wrong order).
+     * Returns empty array if no structural errors; otherwise [headerRow, ...dataRows].
+     *
+     * @param  array  $validHeaders  Expected headers
+     * @param  array  $validHeadersOrdered  Expected headers as ordered list
+     * @param  array  $fileHeadersNormalized  Headers read from file (normalized)
+     * @return array<int, array<int, string>> Table rows: first row = [Tipo, Dettaglio], then one row per error
+     */
+    private function buildStructuralErrorTable(array $validHeaders, array $validHeadersOrdered, array $fileHeadersNormalized): array
+    {
+        $rows = [];
+        $missingColumns = array_diff($validHeaders, $fileHeadersNormalized);
+        if (! empty($missingColumns)) {
+            $rows[] = [__('Missing columns'), implode(', ', $missingColumns)];
+        }
+
+        $orderInFile = array_values(array_intersect($fileHeadersNormalized, $validHeaders));
+        if ($orderInFile !== $validHeadersOrdered) {
+            $rows[] = [
+                __('Columns order'),
+                __('The columns order is not correct.').' '.__('Expected order:').' '.implode(', ', $validHeadersOrdered),
+            ];
+        }
+
+        if (empty($rows)) {
+            return [];
+        }
+
+        return array_merge([[__('Type'), __('Detail')]], $rows);
+    }
+
+    /**
+     * Build table rows for server errors in the "Errors" sheet. Only user-friendly messages
+     * (no exception message, type or file/line) so the client is not shown technical details.
+     *
+     * @param  \Throwable  $e  Exception or Error (used for report(); sheet content is generic)
+     * @return array<int, array<int, string>> Table rows: header [Tipo, Dettaglio] + 2 message rows
+     */
+    private function formatServerErrorForSheet(\Throwable $e): array
+    {
+        return [
+            [__('Type'), __('Detail')],
+            [__('Error'), __('An error occurred while processing the file.')],
+            [__('Verification'), __('Verify that the file is in a valid Excel (.xlsx) format and that the structure is correct.')],
+        ];
+    }
+
+    /**
+     * Build table rows for per-row import errors. Columns: Riga | Motivo.
+     *
+     * @param  array<int, array{row: int|string, message: string}>  $importerErrors  Errors from importer
+     * @return array<int, array<int, string|int>> Table rows: first row = [Riga, Motivo], then one row per error
+     */
+    private function formatImportErrorsForSheet(array $importerErrors): array
+    {
+        $rows = [[__('Row'), __('Reasons')]];
+        foreach ($importerErrors as $err) {
+            $rows[] = [$err['row'] ?? '', $err['message'] ?? ''];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Remove the "Errors" sheet from the workbook if present (e.g. from a previous upload).
+     * So when the user re-uploads a corrected file, old errors are discarded and only new ones are shown.
+     */
+    private function removeErrorsSheetIfPresent(Spreadsheet $spreadsheet): void
+    {
+        for ($i = 0; $i < $spreadsheet->getSheetCount(); $i++) {
+            if ($spreadsheet->getSheet($i)->getTitle() === self::ERRORS_SHEET_TITLE) {
+                $spreadsheet->removeSheetByIndex($i);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Add the "Errors" worksheet with a table. First row = header (bold), rest = data.
+     *
+     * @param  Spreadsheet  $spreadsheet  The spreadsheet to modify
+     * @param  array<int, array<int, string|int|float>>  $tableRows  Table rows: first row = headers, then data rows
+     */
+    private function addErrorsSheet(Spreadsheet $spreadsheet, array $tableRows): void
+    {
+        $errorsSheet = $spreadsheet->createSheet();
+        $errorsSheet->setTitle(self::ERRORS_SHEET_TITLE);
+
+        $maxCol = 0;
+        foreach ($tableRows as $rowIndex => $row) {
+            $colIndex = 1;
+            foreach ($row as $cellValue) {
+                $colLetter = Coordinate::stringFromColumnIndex($colIndex);
+                $errorsSheet->setCellValue($colLetter.($rowIndex + 1), $cellValue);
+                $maxCol = max($maxCol, $colIndex);
+                $colIndex++;
+            }
+        }
+
+        $headerRange = 'A1:'.Coordinate::stringFromColumnIndex($maxCol).'1';
+        $errorsSheet->getStyle($headerRange)->getFont()->setBold(true);
+
+        for ($col = 1; $col <= $maxCol; $col++) {
+            $errorsSheet->getColumnDimension(Coordinate::stringFromColumnIndex($col))->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Get header names from the first row of the worksheet, normalized (trimmed, lowercase, spaces → underscore).
+     * Normalization must match config headers (e.g. "name_it") so missing-column and order checks work.
+     *
+     * @param  Worksheet  $worksheet  The worksheet to read
+     * @return array<int, string> List of header names in file order (normalized)
+     */
+    private function getFileHeadersFromWorksheet(Worksheet $worksheet): array
+    {
+        $headers = [];
+        $lastColumn = $worksheet->getHighestColumn(1);
+        if ($lastColumn === '') {
+            return [];
+        }
+        for ($col = 'A'; $col <= $lastColumn; $col++) {
+            $value = $worksheet->getCell($col.'1')->getValue();
+            if ($value !== null && trim((string) $value) !== '') {
+                $normalized = strtolower(trim((string) $value));
+                $normalized = preg_replace('/\s+/', '_', $normalized);
+                $headers[] = $normalized;
+            }
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Save the spreadsheet to storage and return Nova download response.
+     *
+     * @param  Spreadsheet  $spreadsheet  The spreadsheet to save
+     * @param  bool  $hasErrors  Whether the file contains import errors (affects filename)
+     * @return mixed Nova download response (Action::download returns array for JSON)
+     */
+    private function downloadUpdatedSpreadsheet(Spreadsheet $spreadsheet, bool $hasErrors)
+    {
+        $this->saveUpdatedSpreadsheet($spreadsheet);
+        $fileName = $this->determineFileName($hasErrors ? [['row' => 1]] : []);
+
+        return Action::download(
+            url('/download-poi-file/'.urlencode($fileName)),
+            $fileName
+        );
     }
 
     /**
@@ -168,8 +362,11 @@ class UploadPoiFile extends PoiFileAction
      */
     private function findOrCreateColumn(Worksheet $worksheet, string $header, string &$lastColumn): string
     {
+        $headerNormalized = strtolower(trim($header));
         for ($col = 'A'; $col <= $lastColumn; $col++) {
-            if ($worksheet->getCell($col.'1')->getValue() === $header) {
+            $cellValue = $worksheet->getCell($col.'1')->getValue();
+            $cellValue = is_scalar($cellValue) ? strtolower(trim((string) $cellValue)) : '';
+            if ($cellValue === $headerNormalized) {
                 return $col;
             }
         }
@@ -280,10 +477,8 @@ class UploadPoiFile extends PoiFileAction
             ?? $spreadsheet->createSheet()->setTitle(self::TAXONOMIES_SHEET_TITLE);
 
         $taxonomiesData = $this->getTaxonomiesData();
-
         $header = self::buildTaxonomiesSheetHeader($taxonomiesData['languages']);
 
-        // Set header row
         $col = 1;
         foreach ($header as $headerValue) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
@@ -291,7 +486,6 @@ class UploadPoiFile extends PoiFileAction
             $col++;
         }
 
-        // Make header row bold
         $totalColumns = self::getTaxonomiesSheetColumnsCount($taxonomiesData['languages']);
         $lastColumn = Coordinate::stringFromColumnIndex($totalColumns);
         $referenceSheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true);
@@ -303,9 +497,8 @@ class UploadPoiFile extends PoiFileAction
         );
 
         foreach ($dataRows as $index => $rowData) {
-            $row = $index + 2; // Start from row 2 (row 1 is header)
+            $row = $index + 2;
             $col = 1;
-
             foreach ($rowData as $cellValue) {
                 $columnLetter = Coordinate::stringFromColumnIndex($col);
                 $referenceSheet->setCellValue($columnLetter.$row, $cellValue);
@@ -313,7 +506,6 @@ class UploadPoiFile extends PoiFileAction
             }
         }
 
-        // Auto-size all columns
         for ($col = 1; $col <= $totalColumns; $col++) {
             $columnLetter = Coordinate::stringFromColumnIndex($col);
             $referenceSheet->getColumnDimension($columnLetter)->setAutoSize(true);

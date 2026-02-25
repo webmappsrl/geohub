@@ -160,7 +160,7 @@ trait ElasticIndexTrait
 
             return response()->json(['status' => 'success', 'message' => 'Documento indicizzato/aggiornato con successo.', 'data' => $response], 200);
         } catch (\Exception $e) {
-            Log::error('ElasticIndexTrait => updateElasticIndexDoc: ' . json_encode($doc));
+            Log::error('ElasticIndexTrait => updateElasticIndexDoc: '.json_encode($doc));
             throw $e;
         }
     }

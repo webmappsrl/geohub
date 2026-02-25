@@ -211,7 +211,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding originale public url to related_url
         if (isset($track['properties']['url'])) {
-            $this->tags['related_url']['sardegnasentieri.it'] = $track['properties']['url'];
+            $this->tags['related_url']['Scheda completa'] = $track['properties']['url'];
         }
 
         // Processing the theme
@@ -443,7 +443,7 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
 
         // Adding originale public url to related_url
         if (isset($poi['properties']['url'])) {
-            $this->tags['related_url']['sardegnasentieri.it'] = $poi['properties']['url'];
+            $this->tags['related_url']['Scheda completa'] = $poi['properties']['url'];
         }
     }
 
