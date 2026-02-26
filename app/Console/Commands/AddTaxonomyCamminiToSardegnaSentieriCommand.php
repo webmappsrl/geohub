@@ -6,7 +6,6 @@ use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\TaxonomyTheme;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class AddTaxonomyCamminiToSardegnaSentieriCommand extends Command
 {
