@@ -217,7 +217,6 @@ class OutSourceImporterFeatureSentieriSardegna extends OutSourceImporterFeatureA
         // Processing the theme
         if ($track['properties']['type'] == 'itinerario') {
             $this->tags['theme'][] = 'sardegnas-itinerario';
-            $this->tags['color'] = '#608d0d';
         } else {
             $this->tags['theme'][] = 'sardegnas-sentiero';
         }
