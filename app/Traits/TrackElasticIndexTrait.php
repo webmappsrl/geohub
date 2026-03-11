@@ -25,7 +25,7 @@ trait TrackElasticIndexTrait
             $client = $this->getClient();
 
             if ($client->exists(['index' => $index_name, 'id' => $id])) {
-                Log::info('DELETE Elastic Indexing '.$index_name.' track '.$id);
+                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
                 $response = $client->delete($params);
                 Log::info($response);
             }
@@ -45,7 +45,7 @@ trait TrackElasticIndexTrait
                 $response = $client->index($params_index);
             }
         } catch (\Exception $e) {
-            Log::error('ElasticSearch Error: '.$e->getMessage());
+            Log::error('ElasticSearch Error: ' . $e->getMessage());
             throw $e; // Rilancia l'eccezione per gestirla altrove, se necessario
         }
 
@@ -71,13 +71,13 @@ trait TrackElasticIndexTrait
                 });
             }
         } catch (Exception $e) {
-            throw new Exception('ERROR '.$e->getMessage());
+            throw new Exception('ERROR ' . $e->getMessage());
         }
     }
 
     public function elasticIndex($index_name, $layers): void
     {
-        Log::info('Update Elastic Indexing track '.$this->id);
+        Log::info('Update Elastic Indexing track ' . $this->id);
 
         $geom = $this->getGeometry();
 
@@ -165,12 +165,22 @@ trait TrackElasticIndexTrait
         if ($this->taxonomyWheres->count() > 0) {
             if ($this->taxonomy_wheres_show_first) {
                 $taxonomy_wheres = $this->taxonomyWheres->pluck('name', 'id')->toArray();
-                $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first];
+                $first_show_name = $taxonomy_wheres[$this->taxonomy_wheres_show_first] ?? null;
                 unset($taxonomy_wheres[$this->taxonomy_wheres_show_first]);
                 $taxonomy_wheres = array_values($taxonomy_wheres);
-                array_push($taxonomy_wheres, $first_show_name);
+                if ($first_show_name !== null) {
+                    array_push($taxonomy_wheres, $first_show_name);
+                }
             } else {
-                $taxonomy_wheres = $this->taxonomyWheres->pluck('name')->toArray();
+                $sortedTaxonomyWheres = $this->taxonomyWheres
+                    ->filter(function ($item) {
+                        return ! is_null($item->admin_level);
+                    })
+                    ->sortBy(function ($item) {
+                        return (int) $item->admin_level;
+                    });
+
+                $taxonomy_wheres = $sortedTaxonomyWheres->pluck('name')->toArray();
             }
         }
 
@@ -245,14 +255,14 @@ trait TrackElasticIndexTrait
     private function executeElasticIndexing($index_name, $params)
     {
         $params_update = [
-            'index' => 'geohub_'.$index_name,
+            'index' => 'geohub_' . $index_name,
             'id' => $this->id,
             'body' => [
                 'doc' => $params,
             ],
         ];
         $params_index = [
-            'index' => 'geohub_'.$index_name,
+            'index' => 'geohub_' . $index_name,
             'id' => $this->id,
             'body' => $params,
         ];
