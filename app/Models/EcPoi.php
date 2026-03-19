@@ -333,7 +333,7 @@ class EcPoi extends Model
                 ->sortBy(function ($item) {
                     return (int) $item->admin_level;
                 });
-            $array['taxonomyWhere'] = $sortedTaxonomyWheres->pluck('name')->toArray();
+            $array['taxonomyWheres'] = $sortedTaxonomyWheres->pluck('name')->toArray();
         }
 
         $propertiesToClear = ['geometry'];
