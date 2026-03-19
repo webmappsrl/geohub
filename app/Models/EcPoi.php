@@ -324,6 +324,18 @@ class EcPoi extends Model
         // TODO non so se modificare taxonomy rompe qualcosa per ora ho inseritono una nuova proprietà
         $array['taxonomyIdentifiers'] = $taxonomiesidentifiers;
 
+        // taxonomyWhere: elenco dei where associati al POI, ordinato per admin_level come in TrackElasticIndexTrait::getTaxonomyWheres
+        if ($this->taxonomyWheres->count() > 0) {
+            $sortedTaxonomyWheres = $this->taxonomyWheres
+                ->filter(function ($item) {
+                    return ! is_null($item->admin_level);
+                })
+                ->sortBy(function ($item) {
+                    return (int) $item->admin_level;
+                });
+            $array['taxonomyWhere'] = $sortedTaxonomyWheres->pluck('name')->toArray();
+        }
+
         $propertiesToClear = ['geometry'];
         foreach ($array as $property => $value) {
             if (
