@@ -372,6 +372,17 @@ class EcTrack extends Model
 
         $array['taxonomy'] = $taxonomies;
 
+        if ($this->taxonomyWheres->count() > 0) {
+            $sortedTaxonomyWheres = $this->taxonomyWheres
+                ->filter(function ($item) {
+                    return ! is_null($item->admin_level);
+                })
+                ->sortBy(function ($item) {
+                    return (int) $item->admin_level;
+                });
+            $array['taxonomyWheres'] = $sortedTaxonomyWheres->pluck('name')->toArray();
+        }
+
         $durations = [];
         $activityTerms = $this->taxonomyActivities()->whereIn('identifier', ['hiking', 'cycling'])->get()->toArray();
         if (count($activityTerms) > 0) {
