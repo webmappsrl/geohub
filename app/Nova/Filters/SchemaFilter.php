@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
- // Importa il modello App se non già fatto
+// Importa il modello App se non già fatto
 
 class SchemaFilter extends Filter
 {
