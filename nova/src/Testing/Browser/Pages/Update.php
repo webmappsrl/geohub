@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Testing\Browser\Pages;
 
+use Facebook\WebDriver\Exception\TimeOutException;
 use Laravel\Dusk\Browser;
 use Laravel\Nova\Nova;
 
@@ -52,7 +53,7 @@ class Update extends Page
      * @param  string  $uriKey
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function runInlineCreate(Browser $browser, $uriKey, callable $fieldCallback)
     {
@@ -73,7 +74,7 @@ class Update extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function update(Browser $browser)
     {
@@ -87,7 +88,7 @@ class Update extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function updateAndContinueEditing(Browser $browser)
     {

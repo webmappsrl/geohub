@@ -10,7 +10,7 @@ class ResourceCollection extends Collection
     /**
      * Return the authorized resources of the collection.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public function authorized(Request $request)
     {
@@ -22,7 +22,7 @@ class ResourceCollection extends Collection
     /**
      * Return the resources available to be displayed in the navigation.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public function availableForNavigation(Request $request)
     {
@@ -34,7 +34,7 @@ class ResourceCollection extends Collection
     /**
      * Return the searchable resources for the collection.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public function searchable()
     {
@@ -46,7 +46,7 @@ class ResourceCollection extends Collection
     /**
      * Sort the resources by their group property.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public function grouped()
     {
@@ -58,7 +58,7 @@ class ResourceCollection extends Collection
     /**
      * Group the resources for display in navigation.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public function groupedForNavigation(Request $request)
     {

@@ -2,7 +2,9 @@
 
 namespace Laravel\Nova\Fields;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Resource;
 use Laravel\Nova\Util;
 
 class ID extends Field
@@ -67,7 +69,7 @@ class ID extends Field
     /**
      * Create a new, resolved ID field for the given model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return static
      */
     public static function forModel($model)

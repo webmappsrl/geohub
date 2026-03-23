@@ -261,7 +261,7 @@ trait ConfTrait
             $data['MAP']['layers'][0]['tilesUrl'] = 'https://api.webmapp.it/tiles/';
             try {
                 $data['MAP']['overlays'] = json_decode($this->external_overlays);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::warning('The overlays in the app '.$this->id.' are not correctly mapped. Error: '.$e->getMessage());
             }
         }
@@ -275,7 +275,7 @@ trait ConfTrait
                     if (isset($item['bbox'])) {
                         $item['bbox'] = array_map('floatval', json_decode(strval($item['bbox']), true));
                     }
-                } catch (\Exception  $e) {
+                } catch (Exception  $e) {
                     Log::warning('The bbox value '.$layer->id.' are not correct. Error: '.$e->getMessage());
                 }
                 // style

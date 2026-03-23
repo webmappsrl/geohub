@@ -2,6 +2,8 @@
 
 namespace Laravel\Nova\Metrics;
 
+use Cake\Chronos\ChronosInterface;
+use Carbon\CarbonInterface;
 use DateInterval;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -83,7 +85,7 @@ abstract class Metric extends Card
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return \DateTimeInterface|\DateInterval|float|int
+     * @return \DateTimeInterface|DateInterval|float|int
      */
     public function cacheFor()
     {
@@ -133,8 +135,8 @@ abstract class Metric extends Card
     /**
      * Convert datetime to application timezone.
      *
-     * @param  \Cake\Chronos\ChronosInterface|\Carbon\CarbonInterface  $datetime
-     * @return \Cake\Chronos\ChronosInterface|\Carbon\CarbonInterface
+     * @param  ChronosInterface|CarbonInterface  $datetime
+     * @return ChronosInterface|CarbonInterface
      */
     protected function asQueryDatetime($datetime)
     {

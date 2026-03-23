@@ -2,6 +2,8 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Database\Eloquent\Builder;
+
 trait QueriesResources
 {
     use DecodesFilters;
@@ -9,7 +11,7 @@ trait QueriesResources
     /**
      * Transform the request into a query.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function toQuery()
     {
@@ -24,7 +26,7 @@ trait QueriesResources
     /**
      * Get a new query builder for the underlying model.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function newQuery()
     {
@@ -43,7 +45,7 @@ trait QueriesResources
     /**
      * Get a new query builder for the underlying model.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function newQueryWithoutScopes()
     {

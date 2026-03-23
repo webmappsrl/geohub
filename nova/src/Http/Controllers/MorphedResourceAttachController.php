@@ -3,6 +3,8 @@
 namespace Laravel\Nova\Http\Controllers;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Pivot;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class MorphedResourceAttachController extends ResourceAttachController
@@ -10,8 +12,8 @@ class MorphedResourceAttachController extends ResourceAttachController
     /**
      * Initialize a fresh pivot model for the relationship.
      *
-     * @param  \Illuminate\Database\Eloquent\Relations\MorphToMany  $relationship
-     * @return \Illuminate\Database\Eloquent\Pivot
+     * @param  MorphToMany  $relationship
+     * @return Pivot
      */
     protected function initializePivot(NovaRequest $request, $relationship)
     {

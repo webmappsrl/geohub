@@ -21,7 +21,7 @@ class GenerateAllAwsTracks extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param  \Illuminate\Support\Collection  $models
+     * @param  Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $apps)

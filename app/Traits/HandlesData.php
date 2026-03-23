@@ -66,7 +66,7 @@ trait HandlesData
                 //        $track->geometry = DB::select("SELECT ST_GeomFromGeoJSON('" . json_encode($responseData['geometry']) . "') As wkt")[0]->wkt;
                 //    }
                 $track->saveQuietly();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error('An error occurred during DEM operation: '.$e->getMessage());
             }
         } else {
@@ -153,7 +153,7 @@ trait HandlesData
 
             $track->manual_data = $manualData;
             $track->saveQuietly();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($track->id.': HandlesData: An error occurred during a store operation: '.$e->getMessage());
         }
     }

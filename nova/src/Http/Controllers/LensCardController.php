@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\LensCardRequest;
 
@@ -10,7 +11,7 @@ class LensCardController extends Controller
     /**
      * List the cards for the given lens.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index(LensCardRequest $request)
     {

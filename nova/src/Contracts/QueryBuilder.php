@@ -2,6 +2,9 @@
 
 namespace Laravel\Nova\Contracts;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\LazyCollection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\TrashedStatus;
 
@@ -10,7 +13,7 @@ interface QueryBuilder
     /**
      * Build a "whereKey" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  string  $key
      */
     public function whereKey($query, $key);
@@ -18,7 +21,7 @@ interface QueryBuilder
     /**
      * Build a "search" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  string|null  $search
      * @param  string  $withTrashed
      * @return $this
@@ -38,14 +41,14 @@ interface QueryBuilder
     /**
      * Get the results of the search.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function get();
 
     /**
      * Get a lazy collection for the given query.
      *
-     * @return \Illuminate\Support\LazyCollection
+     * @return LazyCollection
      */
     public function cursor();
 
@@ -60,7 +63,7 @@ interface QueryBuilder
     /**
      * Convert the query builder to an Eloquent query builder (skip using Scout).
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function toBase();
 

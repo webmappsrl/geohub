@@ -4,8 +4,10 @@ namespace App\Nova;
 
 use App\Nova\Actions\DownloadMyUgcMediaAction;
 use App\Nova\Actions\EmulateUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Avatar;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -41,8 +43,8 @@ class User extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -109,8 +111,8 @@ class User extends Resource
                     return $user->hasRole('Admin');
                 })
                 ->help(__('Select the role of the user. It is important to select "Contributor" for users who use the apps.')),
-            \Laravel\Nova\Fields\HasMany::make('Apps'),
-            \Laravel\Nova\Fields\HasMany::make('EcTracks'),
+            HasMany::make('Apps'),
+            HasMany::make('EcTracks'),
         ];
     }
 

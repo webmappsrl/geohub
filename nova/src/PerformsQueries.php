@@ -4,6 +4,7 @@ namespace Laravel\Nova;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Query\ApplySoftDeleteConstraint;
+use Laravel\Scout\Builder;
 
 trait PerformsQueries
 {
@@ -102,7 +103,7 @@ trait PerformsQueries
      *
      * @param  string|null  $search
      * @param  string  $withTrashed
-     * @return \Laravel\Scout\Builder
+     * @return Builder
      */
     public static function buildIndexQueryUsingScout(NovaRequest $request, $search = null,
         $withTrashed = TrashedStatus::DEFAULT)
@@ -178,8 +179,8 @@ trait PerformsQueries
     /**
      * Build a Scout search query for the given resource.
      *
-     * @param  \Laravel\Scout\Builder  $query
-     * @return \Laravel\Scout\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function scoutQuery(NovaRequest $request, $query)
     {

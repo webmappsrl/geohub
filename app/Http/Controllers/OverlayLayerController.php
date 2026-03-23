@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOverlayLayerRequest;
 use App\Http\Requests\UpdateOverlayLayerRequest;
 use App\Models\OverlayLayer;
+use Illuminate\Http\Response;
 
 class OverlayLayerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,7 +22,7 @@ class OverlayLayerController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -31,7 +32,7 @@ class OverlayLayerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StoreOverlayLayerRequest $request)
     {
@@ -41,7 +42,7 @@ class OverlayLayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(OverlayLayer $overlayLayer)
     {
@@ -51,7 +52,7 @@ class OverlayLayerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(OverlayLayer $overlayLayer)
     {
@@ -61,7 +62,7 @@ class OverlayLayerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(UpdateOverlayLayerRequest $request, OverlayLayer $overlayLayer)
     {
@@ -71,7 +72,7 @@ class OverlayLayerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(OverlayLayer $overlayLayer)
     {

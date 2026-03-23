@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Imports\EcTrackFromCSV;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
@@ -31,13 +32,13 @@ class UploadTrackFile extends Action
 
         try {
             // import the file
-            Excel::import(new \App\Imports\EcTrackFromCSV, $file);
+            Excel::import(new EcTrackFromCSV, $file);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 
             return Action::danger($e->getMessage());
         }
-        Excel::import(new \App\Imports\EcTrackFromCSV, $file);
+        Excel::import(new EcTrackFromCSV, $file);
 
         return Action::message('Data imported successfully');
     }

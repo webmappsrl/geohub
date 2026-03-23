@@ -2,14 +2,16 @@
 
 namespace Laravel\Nova\Query;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Laravel\Nova\Filters\Filter;
 
 class ApplyFilter
 {
     /**
      * The filter instance.
      *
-     * @var \Laravel\Nova\Filters\Filter
+     * @var Filter
      */
     public $filter;
 
@@ -23,7 +25,7 @@ class ApplyFilter
     /**
      * Create a new invokable filter applier.
      *
-     * @param  \Laravel\Nova\Filters\Filter  $filter
+     * @param  Filter  $filter
      * @param  mixed  $value
      * @return void
      */
@@ -36,8 +38,8 @@ class ApplyFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function __invoke(Request $request, $query)
     {

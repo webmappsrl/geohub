@@ -9,6 +9,7 @@ use DigitalCreative\MegaFilter\HasMegaFilterTrait;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\TabsOnEdit;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Khalin\Nova\Field\Link;
@@ -67,8 +68,8 @@ class EcMedia extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {

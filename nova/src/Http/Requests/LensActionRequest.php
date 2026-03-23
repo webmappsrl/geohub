@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Http\Requests;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use LogicException;
 
 class LensActionRequest extends ActionRequest
@@ -12,7 +13,7 @@ class LensActionRequest extends ActionRequest
     /**
      * Transform the request into a query.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function toQuery()
     {
@@ -26,7 +27,7 @@ class LensActionRequest extends ActionRequest
     /**
      * Get the all actions for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function resolveActions()
     {

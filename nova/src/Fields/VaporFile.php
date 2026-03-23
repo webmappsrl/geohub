@@ -4,6 +4,7 @@ namespace Laravel\Nova\Fields;
 
 use Closure;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Contracts\Deletable as DeletableContract;
 use Laravel\Nova\Contracts\Storable as StorableContract;
@@ -83,7 +84,7 @@ class VaporFile extends Field implements DeletableContract, Downloadable, Storab
      * @param  string  $disk
      * @return $this
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function disk($disk)
     {
@@ -140,7 +141,7 @@ class VaporFile extends Field implements DeletableContract, Downloadable, Storab
     /**
      * Store the file on disk.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  string  $requestAttribute
      * @return string
      */
@@ -160,7 +161,7 @@ class VaporFile extends Field implements DeletableContract, Downloadable, Storab
     /**
      * Merge the specified extra file information columns into the storable attributes.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     protected function mergeExtraStorageColumns($request, array $attributes)

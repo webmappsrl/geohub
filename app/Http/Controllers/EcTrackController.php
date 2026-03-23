@@ -458,7 +458,7 @@ class EcTrackController extends Controller
         if (is_null($track)) {
             return response()->json(['error' => 'Track not found'], 404);
         }
-        $trackGeometry = Db::select("select ST_AsGeoJSON(geometry) as geometry from ec_tracks where id = $idTrack");
+        $trackGeometry = DB::select("select ST_AsGeoJSON(geometry) as geometry from ec_tracks where id = $idTrack");
         $trackGeometry = json_decode($trackGeometry[0]->geometry);
 
         // feature must have properties field as follow: {"type":"Feature","properties":{"id":1, "type":"track/poi", "strokeColor": "", "fillColor": ""},"geometry":{"type":"LineString","coordinates":[[11.123,45.123],[11.123,45.123]]}}
@@ -481,7 +481,7 @@ class EcTrackController extends Controller
         // if the track has related pois we add them to the feature collection, else we return the track feature only
         if (count($track->ecPois) > 0) {
             foreach ($track->ecPois as $poi) {
-                $poiGeometry = Db::select("select ST_AsGeoJSON(geometry) as geometry from ec_pois where id = $poi->id");
+                $poiGeometry = DB::select("select ST_AsGeoJSON(geometry) as geometry from ec_pois where id = $poi->id");
                 $poiGeometry = json_decode($poiGeometry[0]->geometry);
                 $poiFeature = [
                     'type' => 'Feature',

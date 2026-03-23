@@ -12,6 +12,7 @@ use App\Nova\Filters\ShareUgcPoiFilter;
 use App\Nova\Filters\UgcCreationDateFilter;
 use App\Nova\Filters\UgcUserRelationFilter;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -56,8 +57,8 @@ class UgcPoi extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {

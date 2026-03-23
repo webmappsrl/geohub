@@ -3,6 +3,7 @@
 namespace Laravel\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 abstract class Tool
 {
@@ -43,7 +44,7 @@ abstract class Tool
     /**
      * Build the view that renders the navigation links for the tool.
      *
-     * @return \Illuminate\View\View|string
+     * @return View|string
      */
     public function renderNavigation()
     {

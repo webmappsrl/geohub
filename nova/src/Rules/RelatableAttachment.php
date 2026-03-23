@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Rules;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Nova;
 
 class RelatableAttachment extends Relatable
@@ -10,7 +11,7 @@ class RelatableAttachment extends Relatable
      * Authorize that the user is allowed to relate this resource.
      *
      * @param  string  $resource
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return bool
      */
     protected function authorize($resource, $model)
@@ -29,7 +30,7 @@ class RelatableAttachment extends Relatable
     /**
      * Determine if the relationship is "full".
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $attribute
      * @param  mixed  $value
      * @return bool

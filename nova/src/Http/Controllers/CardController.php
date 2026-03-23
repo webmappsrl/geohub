@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\CardRequest;
 
@@ -10,7 +11,7 @@ class CardController extends Controller
     /**
      * List the cards for the given resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(CardRequest $request)
     {

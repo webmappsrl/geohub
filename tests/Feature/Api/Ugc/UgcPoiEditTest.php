@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class UgcPoiEditTest extends TestCase
@@ -97,7 +98,7 @@ class UgcPoiEditTest extends TestCase
     /**
      * Call the edit endpoint
      */
-    private function callEditEndpoint(array $data, array $images = [], bool $authenticated = true): \Illuminate\Testing\TestResponse
+    private function callEditEndpoint(array $data, array $images = [], bool $authenticated = true): TestResponse
     {
         if ($authenticated) {
             $this->actingAs($this->user, 'api');

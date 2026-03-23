@@ -88,7 +88,7 @@ class Layer extends Resource
             NovaTabTranslatable::make([
                 Text::make(__('Name'), 'name'),
             ]),
-            AttachMany::make('Associated apps', 'associatedApps', \App\Nova\App::class),
+            AttachMany::make('Associated apps', 'associatedApps', App::class),
             AttachMany::make('taxonomyActivities'),
             AttachMany::make('TaxonomyThemes'),
             AttachMany::make('TaxonomyTargets'),
@@ -440,7 +440,7 @@ class Layer extends Resource
                 ->hideFromDetail()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
-            AttachMany::make('Associated Apps', 'associatedApps', \App\Nova\App::class)
+            AttachMany::make('Associated Apps', 'associatedApps', App::class)
                 ->showPreview()
                 ->help(__('It is possible to share the content of tracks from one app to another. Select the app that shares its track content in this layer. Additional taxonomy filters can be added, for example, if "Activities" and "MTB" are also selected, only the MTB tracks of the associated app will be shown. Click "Preview" to display the selected ones.')),
             AttachMany::make('taxonomyActivities')

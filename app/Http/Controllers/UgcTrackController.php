@@ -136,7 +136,7 @@ class UgcTrackController extends Controller
         $track->raw_data = json_encode($data['properties']);
         try {
             $track->save();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio della track:'.$e->getMessage());
 
             return response(['error' => 'Error saving Track'], 500);
@@ -159,7 +159,7 @@ class UgcTrackController extends Controller
         $hoquService = app(HoquServiceProvider::class);
         try {
             $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $track->id, 'type' => 'track']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
@@ -247,7 +247,7 @@ class UgcTrackController extends Controller
             Log::channel('ugc')->info('POST STORE TRACK OK:'.$track->id);
 
             return response(['id' => $track->id, 'message' => 'Created successfully'], 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('ugc')->error('Errore durante la creazione della TRACK: '.$e->getMessage());
             DB::rollBack();
 
@@ -269,7 +269,7 @@ class UgcTrackController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UgcTrack  $ugcTrack
+     * @param  UgcTrack  $ugcTrack
      */
     public function edit(Request $request): Response
     {
@@ -451,7 +451,7 @@ class UgcTrackController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UgcTrack  $ugcTrack
+     * @param  UgcTrack  $ugcTrack
      * @return Response
      */
     public function destroy($id)

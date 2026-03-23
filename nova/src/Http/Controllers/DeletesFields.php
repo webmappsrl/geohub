@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Contracts\Deletable;
 use Laravel\Nova\DeleteField;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -11,7 +12,7 @@ trait DeletesFields
     /**
      * Delete the deletable fields on the given model / resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return void
      */
     protected function forceDeleteFields(NovaRequest $request, $model)
@@ -22,7 +23,7 @@ trait DeletesFields
     /**
      * Delete the deletable fields on the given model / resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  bool  $skipSoftDeletes
      * @return void
      */

@@ -9,11 +9,11 @@ class UserService
     /**
      * Undocumented function
      *
-     * @param  \App\Models\User  $user
+     * @param  User  $user
      * @param  string|null  $sku
      * @param  string|null  $appId
      * @param  bool  $save  - If the model should be saved
-     * @return \App\Models\User - the eventually updated User model
+     * @return User - the eventually updated User model
      */
     public function assigUserSkuAndAppIdIfNeeded($user, $sku = null, $appId = null, $save = true): User
     {

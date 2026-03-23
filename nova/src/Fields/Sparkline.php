@@ -18,7 +18,7 @@ class Sparkline extends Field
     /**
      * The data used in the chart.
      *
-     * @var array|\Closure|\Laravel\Nova\Metrics\Trend
+     * @var array|Closure|Trend
      */
     public $data = [];
 
@@ -32,21 +32,21 @@ class Sparkline extends Field
     /**
      * Indicates if the element should be shown on the creation view.
      *
-     * @var \Closure|bool
+     * @var Closure|bool
      */
     public $showOnCreation = false;
 
     /**
      * Indicates if the element should be shown on the update view.
      *
-     * @var \Closure|bool
+     * @var Closure|bool
      */
     public $showOnUpdate = false;
 
     /**
      * Set the data for the Spark Line.
      *
-     * @param  array|\Closure|\Laravel\Nova\Metrics\Trend  $data
+     * @param  array|Closure|Trend  $data
      * @return $this
      */
     public function data($data)

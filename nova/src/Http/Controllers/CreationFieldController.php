@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -10,7 +11,7 @@ class CreationFieldController extends Controller
     /**
      * List the creation fields for the given resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(NovaRequest $request)
     {

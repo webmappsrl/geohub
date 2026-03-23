@@ -17,7 +17,7 @@ class Slug extends Field
     /**
      * The field the slug should be generated from.
      *
-     * @var string|\Laravel\Nova\Fields\Field
+     * @var string|Field
      */
     public $from;
 
@@ -50,7 +50,7 @@ class Slug extends Field
     /**
      * The field the slug should be generated from.
      *
-     * @param  string|\Laravel\Nova\Fields\Field  $from
+     * @param  string|Field  $from
      * @return $this
      */
     public function from($from)

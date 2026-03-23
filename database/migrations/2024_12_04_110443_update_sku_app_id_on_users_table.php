@@ -28,12 +28,12 @@ class UpdateSkuAppIdOnUsersTable extends Migration
 ) as t'));
 
         /**
-         * @var \App\Services\UserService
+         * @var UserService
          */
         $userService = app()->make(UserService::class);
         foreach ($usersArr as $user) {
             /**
-             * @var \App\Models\User
+             * @var User
              */
             $model = User::find($user->user_id);
             // $user->timestamps = false;

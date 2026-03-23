@@ -3,10 +3,15 @@
 namespace App\Http\Middleware;
 
 use App\Jobs\SendOsm2caiWebhookJob;
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Osm2caiRedirectMiddleware
 {
@@ -279,7 +284,7 @@ class Osm2caiRedirectMiddleware
         // Aggiungi le immagini se presenti
         if (isset($data['images']) && is_array($data['images'])) {
             foreach ($data['images'] as $index => $file) {
-                if ($file instanceof \Illuminate\Http\UploadedFile) {
+                if ($file instanceof UploadedFile) {
                     $multipartFields[] = [
                         'name' => "images[{$index}]",
                         'contents' => fopen($file->getRealPath(), 'r'),
@@ -407,21 +412,21 @@ class Osm2caiRedirectMiddleware
 
             // Cerca nei modelli appropriati
             if ($ugcType === 'poi') {
-                $ugc = \App\Models\UgcPoi::where('app_id', $appId)
+                $ugc = UgcPoi::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
             } elseif ($ugcType === 'track') {
-                $ugc = \App\Models\UgcTrack::where('app_id', $appId)
+                $ugc = UgcTrack::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
             } else {
                 // Fallback: cerca in tutti i modelli UGC
-                $ugc = \App\Models\UgcPoi::where('app_id', $appId)
+                $ugc = UgcPoi::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
 
                 if (! $ugc) {
-                    $ugc = \App\Models\UgcTrack::where('app_id', $appId)
+                    $ugc = UgcTrack::where('app_id', $appId)
                         ->whereJsonContains('properties->uuid', $uuid)
                         ->first();
                 }
@@ -474,13 +479,13 @@ class Osm2caiRedirectMiddleware
                 $token = substr($token, 7); // Rimuovi "Bearer "
 
                 // Decodifica il token JWT per ottenere l'ID utente
-                $payload = \Tymon\JWTAuth\Facades\JWTAuth::manager()->decode(
-                    \Tymon\JWTAuth\Facades\JWTAuth::token($token),
-                    \Tymon\JWTAuth\Facades\JWTAuth::manager()->getJWTProvider()
+                $payload = JWTAuth::manager()->decode(
+                    JWTAuth::token($token),
+                    JWTAuth::manager()->getJWTProvider()
                 );
 
                 if (isset($payload['sub'])) {
-                    $user = \App\Models\User::find($payload['sub']);
+                    $user = User::find($payload['sub']);
                     if ($user && $user->email) {
                         return $user->email;
                     }

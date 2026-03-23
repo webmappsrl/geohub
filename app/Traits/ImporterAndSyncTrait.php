@@ -97,7 +97,7 @@ trait ImporterAndSyncTrait
                 }
 
                 // If we reach here, the response was empty or invalid
-                throw new \Exception("Empty or invalid response received from URL: {$url}");
+                throw new Exception("Empty or invalid response received from URL: {$url}");
             } catch (Exception $e) {
                 $lastException = $e;
                 $retryCount++;
@@ -117,7 +117,7 @@ trait ImporterAndSyncTrait
 
         // If all retries failed, throw the last exception
         if (empty($ret) && $lastException !== null) {
-            throw new \Exception("Failed to fetch data from Overpass API after {$maxRetries} attempts. URL: {$url}. Last error: {$lastException->getMessage()}");
+            throw new Exception("Failed to fetch data from Overpass API after {$maxRetries} attempts. URL: {$url}. Last error: {$lastException->getMessage()}");
         }
 
         // Log final result

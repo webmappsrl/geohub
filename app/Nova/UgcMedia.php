@@ -6,6 +6,7 @@ use App\Models\App;
 use App\Nova\Actions\CopyUgc;
 use App\Nova\Filters\AppFilter;
 use App\Nova\Filters\UgcCreationDateFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -57,8 +58,8 @@ class UgcMedia extends Resource
     /**
      * Build an "index" query for the given resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {

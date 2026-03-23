@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\GeometryFeatureTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -34,8 +35,8 @@ class UgcTrack extends Feature
     /**
      * Scope a query to only include current user EcTracks.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeCurrentUser($query)
     {

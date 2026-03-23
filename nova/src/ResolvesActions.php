@@ -3,6 +3,7 @@
 namespace Laravel\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -12,7 +13,7 @@ trait ResolvesActions
     /**
      * Get the actions that are available for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableActions(NovaRequest $request)
     {
@@ -22,7 +23,7 @@ trait ResolvesActions
     /**
      * Get the actions that are available for the given index request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableActionsOnIndex(NovaRequest $request)
     {
@@ -35,7 +36,7 @@ trait ResolvesActions
     /**
      * Get the actions that are available for the given detail request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableActionsOnDetail(NovaRequest $request)
     {
@@ -48,7 +49,7 @@ trait ResolvesActions
     /**
      * Get the actions for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function resolveActions(NovaRequest $request)
     {
@@ -58,7 +59,7 @@ trait ResolvesActions
     /**
      * Get the "pivot" actions that are available for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availablePivotActions(NovaRequest $request)
     {
@@ -68,7 +69,7 @@ trait ResolvesActions
     /**
      * Get the "pivot" actions for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function resolvePivotActions(NovaRequest $request)
     {

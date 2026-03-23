@@ -2,6 +2,7 @@
 
 namespace Webmapp\Import;
 
+use Illuminate\View\View;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
 
@@ -21,7 +22,7 @@ class Import extends Tool
     /**
      * Build the view that renders the navigation links for the tool.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function renderNavigation()
     {

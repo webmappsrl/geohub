@@ -144,7 +144,7 @@ class UgcPoiController extends Controller
         $poi->raw_data = json_encode($data['properties']);
         try {
             $poi->save();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('ugc')->info('Errore nel salvataggio del poi:'.$e->getMessage());
 
             return response(['error' => 'Error saving POI'], 500);
@@ -167,7 +167,7 @@ class UgcPoiController extends Controller
         $hoquService = app(HoquServiceProvider::class);
         try {
             $hoquService->store('update_ugc_taxonomy_wheres', ['id' => $poi->id, 'type' => 'poi']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
@@ -256,7 +256,7 @@ class UgcPoiController extends Controller
             Log::channel('ugc')->info('POST STORE POI OK:'.$poi->id);
 
             return response(['id' => $poi->id, 'message' => 'Created successfully'], 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('ugc')->error('Errore durante la creazione del POI: '.$e->getMessage());
             DB::rollBack();
 
@@ -436,7 +436,7 @@ class UgcPoiController extends Controller
             Log::channel('ugc')->info('POST UPDATE POI OK:'.$ugcPoi->id);
 
             return response(['id' => $ugcPoi->id, 'message' => 'Updated successfully'], 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('ugc')->error('Errore durante la modifica del POI: '.$e->getMessage());
             DB::rollBack();
 

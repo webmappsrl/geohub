@@ -10,7 +10,7 @@ trait AuthorizedToSee
     /**
      * The callback used to authorize viewing the filter or action.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     public $seeCallback;
 

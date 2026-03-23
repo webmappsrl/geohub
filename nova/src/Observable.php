@@ -14,7 +14,7 @@ class Observable
     /**
      * Construct a new observable for an Eloquent model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|string  $eloquent
+     * @param  Model|string  $eloquent
      * @param  mixed  $classes
      */
     public function __construct($eloquent, $classes)
@@ -73,7 +73,7 @@ class Observable
      * @param  object|string  $class
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function resolveObserverClassName($class)
     {

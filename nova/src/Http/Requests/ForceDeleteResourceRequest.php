@@ -23,7 +23,7 @@ class ForceDeleteResourceRequest extends DeletionRequest
     /**
      * Get the models that may be deleted.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function deletableModels(Collection $models)
     {

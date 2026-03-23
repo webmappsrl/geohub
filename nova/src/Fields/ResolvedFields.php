@@ -10,7 +10,7 @@ class ResolvedFields extends Fluent
     /**
      * The post-storage callbacks for the fields.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     public $callbacks;
 
@@ -29,7 +29,7 @@ class ResolvedFields extends Fluent
     /**
      * Get the post-storage callbacks for the fields.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function callbacks()
     {

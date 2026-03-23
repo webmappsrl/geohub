@@ -16,7 +16,7 @@ class TrendDateExpressionFactory
      * @param  string  $column
      * @param  string  $unit
      * @param  string  $timezone
-     * @return \Laravel\Nova\Metrics\TrendDateExpression
+     * @return TrendDateExpression
      */
     public static function make(Builder $query, $column, $unit, $timezone)
     {

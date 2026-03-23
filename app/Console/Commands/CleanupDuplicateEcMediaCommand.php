@@ -9,6 +9,7 @@ use App\Models\Layer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CleanupDuplicateEcMediaCommand extends Command
 {
@@ -172,7 +173,7 @@ class CleanupDuplicateEcMediaCommand extends Command
                     try {
                         $mediaToDelete->delete();
                         $actualDeletedCount++;
-                    } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+                    } catch (HttpException $e) {
                         $this->output->newLine(); // Ensure error message is on a new line from progress bar
                         $this->error("Error deleting Media ID {$mediaToDelete->id} (OSF ID: $osfId) due to HttpException: ".$e->getMessage());
                         Log::channel('stderr')->error("    - OSF ID: $osfId - Failed to delete Media ID {$mediaToDelete->id} due to HttpException: ".$e->getMessage());

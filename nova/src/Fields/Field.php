@@ -10,6 +10,7 @@ use JsonSerializable;
 use Laravel\Nova\Contracts\Resolvable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\HasHelpText;
+use Laravel\Nova\Resource;
 
 abstract class Field extends FieldElement implements JsonSerializable, Resolvable
 {
@@ -39,14 +40,14 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * The callback to be used to resolve the field's display value.
      *
-     * @var \Closure
+     * @var Closure
      */
     public $displayCallback;
 
     /**
      * The callback to be used to resolve the field's value.
      *
-     * @var \Closure
+     * @var Closure
      */
     public $resolveCallback;
 
@@ -262,7 +263,7 @@ abstract class Field extends FieldElement implements JsonSerializable, Resolvabl
     /**
      * Resolve the default value for an Action field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  NovaRequest  $request
      * @return void
      */
     public function resolveForAction($request)

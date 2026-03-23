@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Role;
 class AuthController extends Controller
 {
     /**
-     * @var \App\Services\UserService
+     * @var UserService
      */
     protected $userService;
 

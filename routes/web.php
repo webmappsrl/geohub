@@ -7,6 +7,7 @@ use App\Models\EcPoi;
 use App\Models\EcTrack;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,7 +128,7 @@ Route::get('/w/osf/{type}/{endpoint_slug}/{source_id}', function ($type, $endpoi
         'type' => $osf_type.'.'.$type,
     ]);
 });
-Route::get('/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware('auth')->name('logs');
+Route::get('/logs', [LogViewerController::class, 'index'])->middleware('auth')->name('logs');
 
 Route::get('/password-reset-success', function () {
     return view('vendor.nova.auth.passwords.success');

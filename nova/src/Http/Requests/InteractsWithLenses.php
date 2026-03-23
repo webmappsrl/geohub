@@ -2,12 +2,15 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Support\Collection;
+use Laravel\Nova\Lenses\Lens;
+
 trait InteractsWithLenses
 {
     /**
      * Get the lens instance for the given request.
      *
-     * @return \Laravel\Nova\Lenses\Lens
+     * @return Lens
      */
     public function lens()
     {
@@ -19,7 +22,7 @@ trait InteractsWithLenses
     /**
      * Get all of the possible lenses for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableLenses()
     {

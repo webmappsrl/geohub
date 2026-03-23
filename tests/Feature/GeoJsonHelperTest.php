@@ -86,7 +86,7 @@ class GeoJsonHelperTest extends TestCase
     public function convert_collection_to_feature_with_feature_collection_returns_feature()
     {
         $c = GeoJsonStubs::getFeatureCollectionPoints();
-        $this->assertTrue(GeoJsonHelper::isGeojsonFeature(GeojsonHelper::convertCollectionToFirstFeature($c)));
+        $this->assertTrue(GeoJsonHelper::isGeojsonFeature(GeoJsonHelper::convertCollectionToFirstFeature($c)));
     }
 
     /**

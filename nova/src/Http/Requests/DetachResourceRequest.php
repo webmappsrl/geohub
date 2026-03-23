@@ -33,7 +33,7 @@ class DetachResourceRequest extends DeletionRequest
      * Get the models that may be detached.
      *
      * @param  \Laravel\Nova\Resource  $parentResource
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function detachableModels(Collection $models, $parentResource)
     {

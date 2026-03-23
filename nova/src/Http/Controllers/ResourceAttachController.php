@@ -3,6 +3,10 @@
 namespace Laravel\Nova\Http\Controllers;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +28,7 @@ class ResourceAttachController extends Controller
     /**
      * Attach a related resource to the given resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle(NovaRequest $request)
     {
@@ -66,7 +70,7 @@ class ResourceAttachController extends Controller
     /**
      * Validate the attachment request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $resource
      * @return void
      */
@@ -103,8 +107,8 @@ class ResourceAttachController extends Controller
     /**
      * Initialize a fresh pivot model for the relationship.
      *
-     * @param  \Illuminate\Database\Eloquent\Relations\BelongsToMany  $relationship
-     * @return \Illuminate\Database\Eloquent\Relations\Pivot
+     * @param  BelongsToMany  $relationship
+     * @return Pivot
      *
      * @throws \Exception
      */
