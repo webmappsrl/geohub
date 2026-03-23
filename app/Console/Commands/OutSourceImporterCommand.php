@@ -20,6 +20,7 @@ use App\Classes\OutSourceImporter\OutSourceImporterListStorageCSV;
 use App\Classes\OutSourceImporter\OutSourceImporterListWP;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -335,7 +336,7 @@ class OutSourceImporterCommand extends Command
     /**
      * Gets the log channel based on the provider.
      */
-    private function getLogChannel(string $provider): \Illuminate\Log\Logger
+    private function getLogChannel(string $provider): Logger
     {
         $providerLower = strtolower($provider);
         // Use the configuration to get the channel name, with a fallback to the default channel,

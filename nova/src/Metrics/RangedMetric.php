@@ -2,6 +2,8 @@
 
 namespace Laravel\Nova\Metrics;
 
+use Illuminate\Support\Collection;
+
 abstract class RangedMetric extends Metric
 {
     /**
@@ -21,7 +23,7 @@ abstract class RangedMetric extends Metric
     /**
      * Get the ranges available for the metric.
      *
-     * @return \Illuminate\Support\Collection|array
+     * @return Collection|array
      */
     public function ranges()
     {

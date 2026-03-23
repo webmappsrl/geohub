@@ -23,7 +23,7 @@ class RestoreResourceRequest extends DeletionRequest
     /**
      * Get the models that may be restored.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function restorableModels(Collection $models)
     {

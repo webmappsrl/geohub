@@ -6,6 +6,7 @@ use App\Models\UgcMedia;
 use App\Models\UgcPoi;
 use App\Models\UgcTrack;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 
 class UpdateUgcPropertiesWithDateCommand extends Command
 {
@@ -53,7 +54,7 @@ class UpdateUgcPropertiesWithDateCommand extends Command
     /**
      * Update properties with createdAt and updatedAt dates.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $items
+     * @param  Collection  $items
      * @return void
      */
     private function updateProperties($items)

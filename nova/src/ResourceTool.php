@@ -12,7 +12,7 @@ class ResourceTool extends Panel
     /**
      * The resource tool element.
      *
-     * @var \Laravel\Nova\Element
+     * @var Element
      */
     public $element;
 

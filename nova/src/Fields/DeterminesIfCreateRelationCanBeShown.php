@@ -9,7 +9,7 @@ trait DeterminesIfCreateRelationCanBeShown
     /**
      * The callback used to determine if the create relation button should be shown.
      *
-     * @var bool|\Laravel\Nova\Fields\Closure
+     * @var bool|Closure
      */
     public $showCreateRelationButtonCallback;
 

@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\FilterDecoder;
 
 trait DecodesFilters
@@ -9,7 +10,7 @@ trait DecodesFilters
     /**
      * Get the filters for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function filters()
     {
@@ -19,7 +20,7 @@ trait DecodesFilters
     /**
      * Get all of the possibly available filters for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function availableFilters()
     {

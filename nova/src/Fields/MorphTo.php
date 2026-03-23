@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Fields;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -74,7 +75,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * The column that should be displayed for the field.
      *
-     * @var \Closure|array
+     * @var Closure|array
      */
     public $display;
 
@@ -239,7 +240,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Resolve the resource class for the field.
      *
-     * @param  \Illuminate\Database\Eloquent\Model
+     * @param  Model
      * @return string|null
      */
     protected function resolveResourceClass($model)
@@ -265,7 +266,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the validation rule to verify that the selected model is relatable.
      *
-     * @return \Laravel\Nova\Rules\Relatable|null
+     * @return Relatable|null
      */
     protected function getRelatableRule(NovaRequest $request)
     {
@@ -324,7 +325,7 @@ class MorphTo extends Field implements RelatableField
      *
      * @param  string  $relatedResource
      * @param  bool  $withTrashed
-     * @return \Laravel\Nova\Contracts\QueryBuilder
+     * @return QueryBuilder
      */
     public function buildMorphableQuery(NovaRequest $request, $relatedResource, $withTrashed = false)
     {
@@ -351,7 +352,7 @@ class MorphTo extends Field implements RelatableField
      * Get the morphable query method name.
      *
      * @param  string  $relatedResource
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return array
      */
     protected function morphableQueryCallable(NovaRequest $request, $relatedResource, $model)
@@ -364,7 +365,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Get the morphable query method name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return string
      */
     protected function morphableQueryMethod(NovaRequest $request, $model)
@@ -433,7 +434,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Set the column that should be displayed for the field.
      *
-     * @param  \Closure|array|string  $display
+     * @param  Closure|array|string  $display
      * @return $this
      */
     public function display($display)
@@ -452,8 +453,8 @@ class MorphTo extends Field implements RelatableField
     /**
      * Ensure the given displayer is a Closure.
      *
-     * @param  \Closure|string  $display
-     * @return \Closure
+     * @param  Closure|string  $display
+     * @return Closure
      */
     protected function ensureDisplayerIsClosure($display)
     {
@@ -468,7 +469,7 @@ class MorphTo extends Field implements RelatableField
      * Get the column that should be displayed for a given type.
      *
      * @param  string  $type
-     * @return \Closure|null
+     * @return Closure|null
      */
     public function displayFor($type)
     {
@@ -520,7 +521,7 @@ class MorphTo extends Field implements RelatableField
     /**
      * Set the default relation resource class to be selected.
      *
-     * @param  \Closure|string  $resourceClass
+     * @param  Closure|string  $resourceClass
      * @return $this
      */
     public function defaultResource($resourceClass)

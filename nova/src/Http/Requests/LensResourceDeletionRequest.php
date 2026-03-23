@@ -34,7 +34,7 @@ class LensResourceDeletionRequest extends NovaRequest
     /**
      * Get the query for the models that were selected by the user.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     protected function toSelectedResourceQuery()
     {
@@ -46,7 +46,7 @@ class LensResourceDeletionRequest extends NovaRequest
     /**
      * Transform the request into a query.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function toQuery()
     {

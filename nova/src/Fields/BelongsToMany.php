@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Fields;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Nova\Contracts\Deletable as DeletableContract;
@@ -170,7 +171,7 @@ class BelongsToMany extends Field implements DeletableContract, ListableField, P
      * Build an attachable query for the field.
      *
      * @param  bool  $withTrashed
-     * @return \Laravel\Nova\Contracts\QueryBuilder
+     * @return QueryBuilder
      */
     public function buildAttachableQuery(NovaRequest $request, $withTrashed = false)
     {
@@ -193,7 +194,7 @@ class BelongsToMany extends Field implements DeletableContract, ListableField, P
     /**
      * Get the attachable query method name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return array
      */
     protected function attachableQueryCallable(NovaRequest $request, $model)
@@ -206,7 +207,7 @@ class BelongsToMany extends Field implements DeletableContract, ListableField, P
     /**
      * Get the attachable query method name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return string
      */
     protected function attachableQueryMethod(NovaRequest $request, $model)

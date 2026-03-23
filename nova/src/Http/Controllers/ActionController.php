@@ -2,16 +2,19 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Resource;
 
 class ActionController extends Controller
 {
     /**
      * List the actions for the given resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(NovaRequest $request)
     {
@@ -33,7 +36,7 @@ class ActionController extends Controller
     /**
      * Perform an action on the specified resources.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(ActionRequest $request)
     {
@@ -46,7 +49,7 @@ class ActionController extends Controller
      * Get available actions for request.
      *
      * @param  \Laravel\Nova\Resource  $resource
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function availableActions(NovaRequest $request, $resource)
     {

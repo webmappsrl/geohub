@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Fields;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class BooleanGroup extends Field
@@ -47,7 +48,7 @@ class BooleanGroup extends Field
     /**
      * Set the options for the field.
      *
-     * @param  array|\Closure|\Illuminate\Support\Collection
+     * @param  array|\Closure|Collection
      * @return $this
      */
     public function options($options)

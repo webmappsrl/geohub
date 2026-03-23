@@ -2,6 +2,7 @@
 
 namespace App\Nova\Filters;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
@@ -10,9 +11,9 @@ class HasImageGallery extends BooleanFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function apply(Request $request, $query, $value)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Imports\EcPoiFromCSV;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
@@ -10,8 +11,10 @@ use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class UploadPoiFile extends PoiFileAction
@@ -66,7 +69,7 @@ class UploadPoiFile extends PoiFileAction
                 return $this->downloadUpdatedSpreadsheet($spreadsheet, true);
             }
 
-            $importer = new \App\Imports\EcPoiFromCSV;
+            $importer = new EcPoiFromCSV;
             Excel::import($importer, $file);
 
             // Use sheet index 0 explicitly so the data sheet (with column "errors" and yellow highlighting) is the one we modify and save
@@ -392,7 +395,7 @@ class UploadPoiFile extends PoiFileAction
             if (! $this->hasError($row, $errors)) {
                 $worksheet->setCellValue($errorColumn.$row, '');
                 $worksheet->getStyle("A{$row}:{$lastColumn}{$row}")->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE);
+                    ->setFillType(Fill::FILL_NONE);
             }
         }
     }
@@ -434,7 +437,7 @@ class UploadPoiFile extends PoiFileAction
     /**
      * Populate POI IDs in the worksheet.
      *
-     * @param  \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet  $worksheet  The worksheet to modify
+     * @param  Worksheet  $worksheet  The worksheet to modify
      * @param  array<array{row: int|string, id: int|string}>  $poiIds  Array of POI IDs with row numbers
      */
     private function populatePoiIds(Worksheet $worksheet, array $poiIds): void
@@ -446,7 +449,7 @@ class UploadPoiFile extends PoiFileAction
             $worksheet->getCell($idColumn.$poiId['row'])
                 ->setValueExplicit(
                     (string) $poiId['id'],
-                    \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+                    DataType::TYPE_STRING
                 );
         }
     }
@@ -461,7 +464,7 @@ class UploadPoiFile extends PoiFileAction
     private function highlightErrorRow(Worksheet $worksheet, $row, string $lastColumn): void
     {
         $worksheet->getStyle("A{$row}:{$lastColumn}{$row}")->getFill()
-            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()->setRGB(self::ERROR_HIGHLIGHT_COLOR);
     }
 

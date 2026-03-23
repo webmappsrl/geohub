@@ -83,7 +83,6 @@ class Panel extends MergeValue implements JsonSerializable
     /**
      * Get the default panel name for the given resource.
      *
-     * @param  \Laravel\Nova\Resource  $resource
      * @return string
      */
     public static function defaultNameForDetail(Resource $resource)
@@ -97,7 +96,6 @@ class Panel extends MergeValue implements JsonSerializable
     /**
      * Get the default panel name for a create panel.
      *
-     * @param  \Laravel\Nova\Resource  $resource
      * @return string
      */
     public static function defaultNameForCreate(Resource $resource)
@@ -110,7 +108,6 @@ class Panel extends MergeValue implements JsonSerializable
     /**
      * Get the default panel name for the update panel.
      *
-     * @param  \Laravel\Nova\Resource  $resource
      * @return string
      */
     public static function defaultNameForUpdate(Resource $resource)

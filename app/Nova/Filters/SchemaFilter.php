@@ -3,8 +3,11 @@
 namespace App\Nova\Filters;
 
 use App\Models\App;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Laravel\Nova\Filters\Filter; // Importa il modello App se non già fatto
+use Laravel\Nova\Filters\Filter;
+
+ // Importa il modello App se non già fatto
 
 class SchemaFilter extends Filter
 {
@@ -20,9 +23,9 @@ class SchemaFilter extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function apply(Request $request, $query, $value)
     {

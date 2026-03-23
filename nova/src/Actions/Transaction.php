@@ -15,7 +15,7 @@ class Transaction
      * @param  callable|null  $finished
      * @return mixed
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public static function run($callback, $finished = null)
     {

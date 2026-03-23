@@ -3,6 +3,8 @@
 namespace Laravel\Nova;
 
 use BadMethodCallException;
+use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Laravel\Nova\Actions\ActionEvent;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Middleware\RedirectIfAuthenticated;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -203,7 +206,7 @@ class Nova
     /**
      * Register the Nova routes.
      *
-     * @return \Laravel\Nova\PendingRouteRegistration
+     * @return PendingRouteRegistration
      */
     public static function routes()
     {
@@ -243,7 +246,7 @@ class Nova
     /**
      * Return the base collection of Nova resources.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     private static function resourceCollection()
     {
@@ -253,7 +256,7 @@ class Nova
     /**
      * Return Nova's authorized resources.
      *
-     * @return \Laravel\Nova\ResourceCollection
+     * @return ResourceCollection
      */
     public static function authorizedResources(Request $request)
     {
@@ -327,7 +330,7 @@ class Nova
     /**
      * Get the available resource groups for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function groups(Request $request)
     {
@@ -352,7 +355,7 @@ class Nova
     /**
      * Get the grouped resources available for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function groupedResourcesForNavigation(Request $request)
     {
@@ -408,7 +411,7 @@ class Nova
     /**
      * Get a new resource instance with the given model instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return \Laravel\Nova\Resource
      */
     public static function newResourceFromModel($model)
@@ -458,7 +461,7 @@ class Nova
      * Get a fresh model instance for the resource with the given key.
      *
      * @param  string  $key
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public static function modelInstanceForKey($key)
     {
@@ -470,7 +473,7 @@ class Nova
     /**
      * Create a new user instance.
      *
-     * @param  \Illuminate\Console\Command  $command
+     * @param  Command  $command
      * @return mixed
      */
     public static function createUser($command)
@@ -688,7 +691,7 @@ class Nova
     /**
      * Get the available dashboard cards for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function allAvailableDashboardCards(NovaRequest $request)
     {
@@ -708,7 +711,7 @@ class Nova
      * Get the available dashboard for the given request.
      *
      * @param  string  $dashboard
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function dashboardForKey($dashboard, NovaRequest $request)
     {
@@ -982,7 +985,7 @@ class Nova
     /**
      * Return the configured ActionResource class.
      *
-     * @return \Laravel\Nova\Actions\ActionResource
+     * @return ActionResource
      */
     public static function actionResource()
     {
@@ -992,7 +995,7 @@ class Nova
     /**
      * Return a new instance of the configured ActionEvent.
      *
-     * @return \Laravel\Nova\Actions\ActionEvent
+     * @return ActionEvent
      */
     public static function actionEvent()
     {

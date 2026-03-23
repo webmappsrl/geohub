@@ -95,7 +95,7 @@ class Date extends Field
      */
     public function incrementPickerHourBy($increment)
     {
-        throw new \Exception('The `incrementPickerHourBy` option is not available on Date fields.');
+        throw new Exception('The `incrementPickerHourBy` option is not available on Date fields.');
     }
 
     /**
@@ -106,7 +106,7 @@ class Date extends Field
      */
     public function incrementPickerMinuteBy($increment)
     {
-        throw new \Exception('The `incrementPickerMinuteBy` option is not available on Date fields.');
+        throw new Exception('The `incrementPickerMinuteBy` option is not available on Date fields.');
     }
 
     /**

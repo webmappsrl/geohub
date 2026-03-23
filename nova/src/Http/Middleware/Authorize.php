@@ -2,6 +2,8 @@
 
 namespace Laravel\Nova\Http\Middleware;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Laravel\Nova\Nova;
 
 class Authorize
@@ -9,9 +11,9 @@ class Authorize
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \Closure  $next
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle($request, $next)
     {

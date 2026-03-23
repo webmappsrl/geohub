@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\ResetPasswordController;
 use App\Models\User;
 use App\Nova\Metrics\NewUgcMedia;
 use App\Nova\Metrics\NewUgcMediaByLoggedUser;
@@ -38,7 +39,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         parent::boot();
 
-        $this->app->singleton(\Laravel\Nova\Http\Controllers\ResetPasswordController::class, \App\Http\Controllers\ResetPasswordController::class);
+        $this->app->singleton(\Laravel\Nova\Http\Controllers\ResetPasswordController::class, ResetPasswordController::class);
     }
 
     /**

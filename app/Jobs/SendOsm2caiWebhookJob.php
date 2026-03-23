@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\UgcPoi;
+use App\Models\UgcTrack;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -108,21 +110,21 @@ class SendOsm2caiWebhookJob implements ShouldQueue
         try {
             // Cerca nei modelli appropriati
             if ($this->ugcType === 'poi') {
-                $ugc = \App\Models\UgcPoi::where('app_id', $appId)
+                $ugc = UgcPoi::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
             } elseif ($this->ugcType === 'track') {
-                $ugc = \App\Models\UgcTrack::where('app_id', $appId)
+                $ugc = UgcTrack::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
             } else {
                 // Fallback: cerca in tutti i modelli UGC
-                $ugc = \App\Models\UgcPoi::where('app_id', $appId)
+                $ugc = UgcPoi::where('app_id', $appId)
                     ->whereJsonContains('properties->uuid', $uuid)
                     ->first();
 
                 if (! $ugc) {
-                    $ugc = \App\Models\UgcTrack::where('app_id', $appId)
+                    $ugc = UgcTrack::where('app_id', $appId)
                         ->whereJsonContains('properties->uuid', $uuid)
                         ->first();
                 }
@@ -146,7 +148,7 @@ class SendOsm2caiWebhookJob implements ShouldQueue
     private function logLastUgcPois(): void
     {
         try {
-            $lastPois = \App\Models\UgcPoi::orderBy('created_at', 'desc')
+            $lastPois = UgcPoi::orderBy('created_at', 'desc')
                 ->limit(10)
                 ->get(['id', 'properties', 'created_at']);
 

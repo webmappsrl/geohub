@@ -2,6 +2,8 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,7 @@ class ResourceUpdateController extends Controller
     /**
      * Create a new resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function handle(UpdateResourceRequest $request)
     {
@@ -62,7 +64,7 @@ class ResourceUpdateController extends Controller
     /**
      * Determine if the model has been updated since it was retrieved.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return bool
      */
     protected function modelHasBeenUpdatedSinceRetrieval(UpdateResourceRequest $request, $model)

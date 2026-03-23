@@ -15,7 +15,7 @@ class FieldCollection extends Collection
      *
      * @param  string  $attribute
      * @param  mixed  $default
-     * @return \Laravel\Nova\Fields\Field|null
+     * @return Field|null
      */
     public function findFieldByAttribute($attribute, $default = null)
     {
@@ -28,7 +28,7 @@ class FieldCollection extends Collection
     /**
      * Filter elements should be displayed for the given request.
      *
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function authorized(Request $request)
     {
@@ -41,7 +41,7 @@ class FieldCollection extends Collection
      * Filter elements should be displayed for the given request.
      *
      * @param  mixed  $resource
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function resolve($resource)
     {
@@ -56,7 +56,7 @@ class FieldCollection extends Collection
      * Resolve value of fields for display.
      *
      * @param  mixed  $resource
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function resolveForDisplay($resource)
     {
@@ -71,7 +71,7 @@ class FieldCollection extends Collection
      * Filter fields for showing on detail.
      *
      * @param  mixed  $resource
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function filterForDetail(NovaRequest $request, $resource)
     {
@@ -84,7 +84,7 @@ class FieldCollection extends Collection
      * Filter fields for showing on index.
      *
      * @param  mixed  $resource
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function filterForIndex(NovaRequest $request, $resource)
     {
@@ -96,7 +96,7 @@ class FieldCollection extends Collection
     /**
      * Reject if the field is readonly.
      *
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function withoutReadonly(NovaRequest $request)
     {
@@ -108,7 +108,7 @@ class FieldCollection extends Collection
     /**
      * Reject fields which use their own index listings.
      *
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function withoutListableFields()
     {
@@ -120,7 +120,7 @@ class FieldCollection extends Collection
     /**
      * Filter the fields to only many-to-many relationships.
      *
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @return FieldCollection
      */
     public function filterForManyToManyRelations()
     {

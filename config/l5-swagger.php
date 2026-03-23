@@ -1,5 +1,7 @@
 <?php
 
+use OpenApi\scan;
+
 return [
     'default' => 'default',
     'documentations' => [
@@ -106,14 +108,14 @@ return [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'analysis' => null,
 
@@ -121,7 +123,7 @@ return [
              * Custom query path processors classes.
              *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
-             * @see \OpenApi\scan
+             * @see scan
              */
             'processors' => [
                 // new \App\SwaggerProcessors\SchemaQueryParameter(),
@@ -130,7 +132,7 @@ return [
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
              *
-             * @see \OpenApi\scan
+             * @see scan
              */
             'pattern' => null,
 

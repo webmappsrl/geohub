@@ -108,7 +108,7 @@ class ExportFormDataXLSX extends Action
             \Maatwebsite\Excel\Excel::XLSX
         );
 
-        return action::download($this->getDownloadUrl($response->getFile()->getPathname()), $this->type.'.xlsx');
+        return Action::download($this->getDownloadUrl($response->getFile()->getPathname()), $this->type.'.xlsx');
     }
 
     public function fields()

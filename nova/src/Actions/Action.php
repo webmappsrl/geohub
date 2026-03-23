@@ -3,10 +3,12 @@
 namespace Laravel\Nova\Actions;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Validation\ValidationException;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
 use Laravel\Nova\Exceptions\MissingActionHandlerException;
@@ -107,7 +109,7 @@ class Action implements JsonSerializable
     /**
      * The callback used to authorize running the action.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     public $runCallback;
 
@@ -149,7 +151,7 @@ class Action implements JsonSerializable
     /**
      * Determine if the action is executable for the given request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return bool
      */
     public function authorizedToRun(Request $request, $model)
@@ -327,7 +329,7 @@ class Action implements JsonSerializable
     /**
      * Mark the action event record for the model as finished.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return int
      */
     protected function markAsFinished($model)
@@ -338,7 +340,7 @@ class Action implements JsonSerializable
     /**
      * Mark the action event record for the model as failed.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  \Throwable|string  $e
      * @return int
      */
@@ -362,7 +364,7 @@ class Action implements JsonSerializable
      *
      * @return array
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function validateFields(ActionRequest $request)
     {

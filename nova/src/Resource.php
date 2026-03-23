@@ -4,6 +4,7 @@ namespace Laravel\Nova;
 
 use ArrayAccess;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
@@ -53,7 +54,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * The underlying model resource instance.
      *
-     * @var \Illuminate\Database\Eloquent\Model|null
+     * @var Model|null
      */
     public $resource;
 
@@ -207,7 +208,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * Create a new resource instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $resource
+     * @param  Model|null  $resource
      * @return void
      */
     public function __construct($resource)
@@ -225,7 +226,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * Get the underlying model instance for the resource.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function model()
     {
@@ -447,7 +448,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * Prepare the resource for JSON serialization.
      *
-     * @param  \Illuminate\Support\Collection  $fields
+     * @param  Collection  $fields
      * @return array
      */
     public function serializeForIndex(NovaRequest $request, $fields = null)
@@ -469,7 +470,6 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * Prepare the resource for JSON serialization.
      *
-     * @param  \Laravel\Nova\Resource  $resource
      * @return array
      */
     public function serializeForDetail(NovaRequest $request, Resource $resource)

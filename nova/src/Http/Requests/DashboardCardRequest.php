@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\Nova;
 
 class DashboardCardRequest extends NovaRequest
@@ -10,7 +11,7 @@ class DashboardCardRequest extends NovaRequest
      * Get all of the possible cards for the request.
      *
      * @param  string  $dashboard
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableCards($dashboard)
     {

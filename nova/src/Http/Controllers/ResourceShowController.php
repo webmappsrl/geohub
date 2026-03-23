@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\ResourceDetailRequest;
 
@@ -10,7 +11,7 @@ class ResourceShowController extends Controller
     /**
      * Display the resource for administration.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle(ResourceDetailRequest $request)
     {

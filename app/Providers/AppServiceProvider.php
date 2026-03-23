@@ -8,8 +8,9 @@ use App\Models\UgcTrack;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use Spatie\NovaTranslatable\Translatable;
 
-\Spatie\NovaTranslatable\Translatable::defaultLocales(['it', 'en']);
+Translatable::defaultLocales(['it', 'en']);
 
 define('CONTENT_TYPE_AUDIO_MAPPING', [
     'mpeg' => 'audio/mpeg',

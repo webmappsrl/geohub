@@ -72,7 +72,7 @@ class UpdateTracksInfoForPBFCommand extends Command
             try {
                 UpdateTrackPBFInfoJob::dispatch($track);
                 Log::info($c.'/'.count($tracks));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error('An error occurred during updating EcTrack PBF Info dispatch: '.$e->getMessage());
             }
         }

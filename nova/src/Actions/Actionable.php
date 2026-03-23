@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Actions;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Laravel\Nova\Nova;
 
 trait Actionable
@@ -9,7 +10,7 @@ trait Actionable
     /**
      * Get all of the action events for the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
     public function actions()
     {

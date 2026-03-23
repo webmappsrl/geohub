@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Contracts\RelatableField;
@@ -20,8 +21,8 @@ class LensRequest extends NovaRequest
     /**
      * Apply the specified filters to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function withFilters($query)
     {
@@ -31,8 +32,8 @@ class LensRequest extends NovaRequest
     /**
      * Apply the specified filters to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function filter($query)
     {
@@ -44,8 +45,8 @@ class LensRequest extends NovaRequest
     /**
      * Apply the specified ordering to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function withOrdering($query)
     {
@@ -90,7 +91,7 @@ class LensRequest extends NovaRequest
     /**
      * Get all of the possibly available filters for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function availableFilters()
     {
@@ -100,7 +101,7 @@ class LensRequest extends NovaRequest
     /**
      * Map the given models to the appropriate resource for the request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function toResources(Collection $models)
     {

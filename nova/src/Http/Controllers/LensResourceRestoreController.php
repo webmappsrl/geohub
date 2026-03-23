@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Http\Requests\RestoreLensResourceRequest;
@@ -12,7 +13,7 @@ class LensResourceRestoreController extends Controller
     /**
      * Force delete the given resource(s).
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle(RestoreLensResourceRequest $request)
     {

@@ -3,6 +3,8 @@
 namespace Laravel\Nova\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -13,21 +15,21 @@ class Relatable implements Rule
     /**
      * The request instance.
      *
-     * @var \Laravel\Nova\Http\Requests\NovaRequest
+     * @var NovaRequest
      */
     public $request;
 
     /**
      * The query builder instance.
      *
-     * @var \Illuminate\Database\Eloquent\Builder
+     * @var Builder
      */
     public $query;
 
     /**
      * Create a new rule instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @return void
      */
     public function __construct(NovaRequest $request, $query)
@@ -73,7 +75,7 @@ class Relatable implements Rule
     /**
      * Determine if the relationship is "full".
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $attribute
      * @param  mixed  $value
      * @return bool
@@ -105,7 +107,7 @@ class Relatable implements Rule
      * Authorize that the user is allowed to relate this resource.
      *
      * @param  string  $resource
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return bool
      */
     protected function authorize($resource, $model)

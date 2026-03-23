@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\App;
+
 class LayerPBFJob extends TrackPBFJob
 {
     public function __construct($z, $x, $y, $app_id, $author_id)
@@ -18,7 +20,7 @@ class LayerPBFJob extends TrackPBFJob
     protected function generateSQL($boundingBox): string
     {
         // Recupera l'app con i layer associati
-        $app = \App\Models\App::with('layers')->find($this->app_id);
+        $app = App::with('layers')->find($this->app_id);
         if (! $app) {
             throw new \Exception("App not found: {$this->app_id}");
         }

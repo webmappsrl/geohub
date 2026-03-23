@@ -3,6 +3,7 @@
 namespace Laravel\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 trait ResolvesFilters
@@ -10,7 +11,7 @@ trait ResolvesFilters
     /**
      * Get the filters that are available for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function availableFilters(NovaRequest $request)
     {
@@ -20,7 +21,7 @@ trait ResolvesFilters
     /**
      * Get the filters for the given request.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function resolveFilters(NovaRequest $request)
     {

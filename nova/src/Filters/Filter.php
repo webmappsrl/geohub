@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Filters;
 
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
@@ -33,9 +34,9 @@ abstract class Filter implements FilterContract, JsonSerializable
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     abstract public function apply(Request $request, $query, $value);
 

@@ -25,7 +25,7 @@ trait TrackElasticIndexTrait
             $client = $this->getClient();
 
             if ($client->exists(['index' => $index_name, 'id' => $id])) {
-                Log::info('DELETE Elastic Indexing ' . $index_name . ' track ' . $id);
+                Log::info('DELETE Elastic Indexing '.$index_name.' track '.$id);
                 $response = $client->delete($params);
                 Log::info($response);
             }
@@ -44,8 +44,8 @@ trait TrackElasticIndexTrait
             } else {
                 $response = $client->index($params_index);
             }
-        } catch (\Exception $e) {
-            Log::error('ElasticSearch Error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('ElasticSearch Error: '.$e->getMessage());
             throw $e; // Rilancia l'eccezione per gestirla altrove, se necessario
         }
 
@@ -71,20 +71,20 @@ trait TrackElasticIndexTrait
                 });
             }
         } catch (Exception $e) {
-            throw new Exception('ERROR ' . $e->getMessage());
+            throw new Exception('ERROR '.$e->getMessage());
         }
     }
 
     public function elasticIndex($index_name, $layers): void
     {
-        Log::info('Update Elastic Indexing track ' . $this->id);
+        Log::info('Update Elastic Indexing track '.$this->id);
 
         $geom = $this->getGeometry();
 
         $feature_image = $this->getFeatureImage();
 
         $taxonomy_activities = $this->getTaxonomyArray($this->taxonomyActivities);
-        log::info($taxonomy_activities);
+        Log::info($taxonomy_activities);
         $taxonomy_wheres = $this->getTaxonomyWheres();
         $taxonomy_themes = $this->getTaxonomyArray($this->taxonomyThemes);
         $taxonomy_icons = $this->getTaxonomyIcons($this->taxonomyActivities->merge($this->taxonomyThemes));
@@ -255,14 +255,14 @@ trait TrackElasticIndexTrait
     private function executeElasticIndexing($index_name, $params)
     {
         $params_update = [
-            'index' => 'geohub_' . $index_name,
+            'index' => 'geohub_'.$index_name,
             'id' => $this->id,
             'body' => [
                 'doc' => $params,
             ],
         ];
         $params_index = [
-            'index' => 'geohub_' . $index_name,
+            'index' => 'geohub_'.$index_name,
             'id' => $this->id,
             'body' => $params,
         ];

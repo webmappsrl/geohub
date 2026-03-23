@@ -102,7 +102,7 @@ class Currency extends Number
      *
      * @param  mixed  $value
      * @param  null|string  $currency
-     * @return \Brick\Money\Money
+     * @return Money
      */
     public function toMoneyInstance($value, $currency = null)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\App;
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class ClassificationController extends Controller
@@ -11,7 +12,7 @@ class ClassificationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function getRankedUsersNearPois(int $id)
     {

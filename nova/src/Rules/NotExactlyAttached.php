@@ -3,6 +3,9 @@
 namespace Laravel\Nova\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
@@ -13,21 +16,21 @@ class NotExactlyAttached implements Rule
     /**
      * The request instance.
      *
-     * @var \Laravel\Nova\Http\Requests\NovaRequest
+     * @var NovaRequest
      */
     public $request;
 
     /**
      * The model instance.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     public $model;
 
     /**
      * Create a new rule instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return void
      */
     public function __construct(NovaRequest $request, $model)
@@ -45,7 +48,7 @@ class NotExactlyAttached implements Rule
      */
     public function passes($attribute, $value)
     {
-        /** @var \Illuminate\Database\Eloquent\Relations\MorphToMany|\Illuminate\Database\Eloquent\Relations\BelongsToMany $relation */
+        /** @var MorphToMany|BelongsToMany $relation */
         $relation = $this->model->{$this->request->viaRelationship}();
 
         $pivot = $relation->newPivot();

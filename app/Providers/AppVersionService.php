@@ -22,10 +22,10 @@ class AppVersionService
             return tap([
                 'ios' => $this->fetchIosVersion($app),
                 'android' => $this->fetchAndroidVersion($app),
-            ], fn($data) => Cache::put($key, $data, self::CACHE_TTL));
+            ], fn ($data) => Cache::put($key, $data, self::CACHE_TTL));
         }
 
-        return Cache::remember($key, self::CACHE_TTL, fn() => [
+        return Cache::remember($key, self::CACHE_TTL, fn () => [
             'ios' => $this->fetchIosVersion($app),
             'android' => $this->fetchAndroidVersion($app),
         ]);
@@ -60,7 +60,7 @@ class AppVersionService
                 ];
             }
         } catch (\Exception $e) {
-            Log::warning("AppVersionService: iOS lookup failed for app {$app->id}: " . $e->getMessage());
+            Log::warning("AppVersionService: iOS lookup failed for app {$app->id}: ".$e->getMessage());
         }
 
         return null;
@@ -92,7 +92,7 @@ class AppVersionService
                 'store_url' => $app->android_store_link,
             ];
         } catch (\Exception $e) {
-            Log::warning("AppVersionService: Android scrape failed for app {$app->id}: " . $e->getMessage());
+            Log::warning("AppVersionService: Android scrape failed for app {$app->id}: ".$e->getMessage());
         }
 
         return null;

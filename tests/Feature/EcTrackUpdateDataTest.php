@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Ec;
 
 use App\Models\EcTrack;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -145,7 +146,7 @@ class UpdateTrackDataTest extends TestCase
         $data = $this->baseData();
         $data['osmid'] = 'invalid';
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
         $ecTrack = EcTrack::forceCreate($data)->refresh();
     }
 

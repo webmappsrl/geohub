@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class UgcMediaDestroyTest extends TestCase
@@ -48,7 +49,7 @@ class UgcMediaDestroyTest extends TestCase
     /**
      * Call the destroy endpoint
      */
-    private function callDestroyEndpoint(int $mediaId, bool $authenticated = true): \Illuminate\Testing\TestResponse
+    private function callDestroyEndpoint(int $mediaId, bool $authenticated = true): TestResponse
     {
         if ($authenticated) {
             $this->actingAs($this->user, 'api');

@@ -11,7 +11,7 @@ class StorePendingAttachment
     /**
      * The field instance.
      *
-     * @var \Laravel\Nova\Fields\Trix
+     * @var Trix
      */
     public $field;
 

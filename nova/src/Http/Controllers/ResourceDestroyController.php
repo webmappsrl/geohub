@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Http\Controllers;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Actions\Actionable;
@@ -16,7 +17,7 @@ class ResourceDestroyController extends Controller
     /**
      * Destroy the given resource(s).
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle(DeleteResourceRequest $request)
     {

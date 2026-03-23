@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Testing\Browser\Pages;
 
+use Facebook\WebDriver\Exception\TimeOutException;
 use Laravel\Dusk\Browser;
 use Laravel\Nova\Nova;
 
@@ -67,7 +68,7 @@ class UpdateAttached extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function assert(Browser $browser)
     {

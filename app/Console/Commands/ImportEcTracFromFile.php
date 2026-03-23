@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Imports\EcTrackFromCSV;
 use Illuminate\Console\Command;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ImportEcTracFromFile extends Command
 {
@@ -41,7 +43,7 @@ class ImportEcTracFromFile extends Command
         $filePath = 'storage/importer/'.$this->argument('path');
         $this->info("Importing EcTrack data from file: $filePath");
         try {
-            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\EcTrackFromCSV, $filePath);
+            Excel::import(new EcTrackFromCSV, $filePath);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
 

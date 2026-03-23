@@ -12,6 +12,7 @@ use App\Traits\ValidationTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -104,7 +105,7 @@ class UgcMediaController extends Controller
 
         foreach ($images as $index => $image) {
             // **Verifica che sia un `UploadedFile` valido**
-            if (! $image instanceof \Illuminate\Http\UploadedFile) {
+            if (! $image instanceof UploadedFile) {
                 Log::channel('ugc')->warning("File index {$index} non è un UploadedFile valido.", ['image' => $image]);
 
                 return false;
@@ -298,7 +299,7 @@ class UgcMediaController extends Controller
         }
 
         foreach ($photos as $index => $photo) {
-            if (! $photo instanceof \Illuminate\Http\UploadedFile) {
+            if (! $photo instanceof UploadedFile) {
                 Log::channel('ugc')->warning("File index {$index} non è un UploadedFile valido.", ['photo' => $photo]);
                 throw new Exception("File index {$index} non è un UploadedFile valido.");
             }

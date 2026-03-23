@@ -2,6 +2,9 @@
 
 namespace Laravel\Nova;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 trait FillsFields
@@ -9,7 +12,7 @@ trait FillsFields
     /**
      * Fill a new model instance using the given request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return array
      */
     public static function fill(NovaRequest $request, $model)
@@ -23,7 +26,7 @@ trait FillsFields
     /**
      * Fill a new model instance using the given request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return array
      */
     public static function fillForUpdate(NovaRequest $request, $model)
@@ -37,8 +40,8 @@ trait FillsFields
     /**
      * Fill a new pivot model instance using the given request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Database\Eloquent\Relations\Pivot  $pivot
+     * @param  Model  $model
+     * @param  Pivot  $pivot
      * @return array
      */
     public static function fillPivot(NovaRequest $request, $model, $pivot)
@@ -54,8 +57,8 @@ trait FillsFields
     /**
      * Fill a new pivot model instance using the given request.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Database\Eloquent\Relations\Pivot  $pivot
+     * @param  Model  $model
+     * @param  Pivot  $pivot
      * @return array
      */
     public static function fillPivotForUpdate(NovaRequest $request, $model, $pivot)
@@ -71,8 +74,8 @@ trait FillsFields
     /**
      * Fill the given fields for the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  \Illuminate\Support\Collection  $fields
+     * @param  Model  $model
+     * @param  Collection  $fields
      * @return array
      */
     protected static function fillFields(NovaRequest $request, $model, $fields)

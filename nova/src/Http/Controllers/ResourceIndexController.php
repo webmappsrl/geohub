@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\ResourceIndexRequest;
 
@@ -10,7 +11,7 @@ class ResourceIndexController extends Controller
     /**
      * List the resources for administration.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function handle(ResourceIndexRequest $request)
     {

@@ -10,7 +10,7 @@ class GlobalSearch
     /**
      * The request instance.
      *
-     * @var \Laravel\Nova\Http\Requests\NovaRequest
+     * @var NovaRequest
      */
     public $request;
 
@@ -69,7 +69,6 @@ class GlobalSearch
      * Transform the result from resource.
      *
      * @param  string  $resourceClass
-     * @param  \Laravel\Nova\Resource  $resource
      * @return array
      */
     protected function transformResult($resourceClass, Resource $resource)

@@ -14,7 +14,7 @@ class CallQueuedAction
     /**
      * The Eloquent model/data collection.
      *
-     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     * @var \Illuminate\Database\Eloquent\Collection|Collection
      */
     public $models;
 

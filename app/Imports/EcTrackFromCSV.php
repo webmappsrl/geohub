@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\EcTrack;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -10,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class EcTrackFromCSV implements ToModel, WithHeadingRow
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
     public function model(array $row)
     {

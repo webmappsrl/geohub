@@ -6,6 +6,7 @@ use App\Jobs\UpdateEcMedia;
 use App\Models\EcMedia;
 use App\Models\EcTrack;
 use App\Models\TaxonomyTheme;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -69,7 +70,7 @@ class SicaiCicloImp extends Command
 
         // Check if user exists
         $uid = $this->argument('uid');
-        $user = \App\Models\User::find($uid);
+        $user = User::find($uid);
 
         if (! $user) {
             $this->error("User with ID {$uid} does not exist.");

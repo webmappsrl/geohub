@@ -3,6 +3,7 @@
 namespace App\Nova\Actions;
 
 use App\Models\EcPoi;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -65,7 +66,7 @@ class DownloadPoiFileAction extends PoiFileAction
      * Perform the action on the given models.
      * This method is kept for compatibility but handleRequest is used instead.
      *
-     * @param  \Illuminate\Support\Collection  $models
+     * @param  Collection  $models
      * @return mixed
      */
     public function handle(ActionFields $fields, $models)

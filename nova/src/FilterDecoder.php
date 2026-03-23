@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\Query\ApplyFilter;
 
 class FilterDecoder
@@ -16,7 +17,7 @@ class FilterDecoder
     /**
      * The filters available via the request.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $availableFilters;
 
@@ -35,7 +36,7 @@ class FilterDecoder
     /**
      * Decode the given filters.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function filters()
     {

@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Contracts\RelatableField;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -11,7 +12,7 @@ class AssociatableController extends Controller
     /**
      * List the available related resources for a given resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(NovaRequest $request)
     {

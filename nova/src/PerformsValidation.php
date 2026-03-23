@@ -2,7 +2,9 @@
 
 namespace Laravel\Nova;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Contracts\PivotableField;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -13,7 +15,7 @@ trait PerformsValidation
      *
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public static function validateForCreation(NovaRequest $request)
     {
@@ -75,7 +77,7 @@ trait PerformsValidation
      * @param  \Laravel\Nova\Resource|null  $resource
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public static function validateForUpdate(NovaRequest $request, $resource = null)
     {
@@ -139,7 +141,7 @@ trait PerformsValidation
      *
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public static function validateForAttachment(NovaRequest $request)
     {
@@ -175,7 +177,7 @@ trait PerformsValidation
      *
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public static function validateForAttachmentUpdate(NovaRequest $request)
     {
@@ -267,7 +269,7 @@ trait PerformsValidation
     /**
      * Map field attributes to field names.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private static function attributeNamesForFields(NovaRequest $request)
     {

@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Testing\Browser\Pages;
 
+use Facebook\WebDriver\Exception\TimeOutException;
 use Laravel\Dusk\Browser;
 use Laravel\Nova\Nova;
 
@@ -40,7 +41,7 @@ class Detail extends Page
      * @param  string  $uriKey
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function runAction(Browser $browser, $uriKey)
     {
@@ -59,7 +60,7 @@ class Detail extends Page
      * @param  string  $uriKey
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function runInstantAction(Browser $browser, $uriKey)
     {
@@ -77,7 +78,7 @@ class Detail extends Page
      * @param  string  $uriKey
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function cancelAction(Browser $browser, $uriKey)
     {
@@ -95,7 +96,7 @@ class Detail extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function edit(Browser $browser)
     {
@@ -108,7 +109,7 @@ class Detail extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function delete(Browser $browser)
     {
@@ -126,7 +127,7 @@ class Detail extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function restore(Browser $browser)
     {
@@ -144,7 +145,7 @@ class Detail extends Page
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function forceDelete(Browser $browser)
     {

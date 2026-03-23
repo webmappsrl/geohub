@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Query;
 
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\LazyCollection;
 use Laravel\Nova\Contracts\QueryBuilder;
@@ -30,7 +31,7 @@ class Builder implements QueryBuilder
     /**
      * The query builder instance.
      *
-     * @var \Laravel\Scout\Builder|\Illuminate\Database\Eloquent\Builder
+     * @var ScoutBuilder|\Illuminate\Database\Eloquent\Builder
      */
     protected $queryBuilder;
 
@@ -161,7 +162,7 @@ class Builder implements QueryBuilder
     /**
      * Get the results of the search.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function get()
     {
@@ -171,7 +172,7 @@ class Builder implements QueryBuilder
     /**
      * Get a lazy collection for the given query.
      *
-     * @return \Illuminate\Support\LazyCollection
+     * @return LazyCollection
      */
     public function cursor()
     {
@@ -273,8 +274,8 @@ class Builder implements QueryBuilder
     /**
      * Apply any query callbacks to the query builder.
      *
-     * @param  \Laravel\Scout\Builder|\Illuminate\Database\Eloquent\Builder  $queryBuilder
-     * @return \Laravel\Scout\Builder|\Illuminate\Database\Eloquent\Builder
+     * @param  ScoutBuilder|\Illuminate\Database\Eloquent\Builder  $queryBuilder
+     * @return ScoutBuilder|\Illuminate\Database\Eloquent\Builder
      */
     protected function applyQueryCallbacks($queryBuilder)
     {

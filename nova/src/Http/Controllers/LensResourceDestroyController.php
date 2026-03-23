@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Actions\Actionable;
@@ -15,7 +16,7 @@ class LensResourceDestroyController extends Controller
     /**
      * Destroy the given resource(s).
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle(DeleteLensResourceRequest $request)
     {

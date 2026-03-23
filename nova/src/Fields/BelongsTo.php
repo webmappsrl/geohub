@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Fields;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -250,7 +251,7 @@ class BelongsTo extends Field implements RelatableField
      * Build an associatable query for the field.
      *
      * @param  bool  $withTrashed
-     * @return \Laravel\Nova\Contracts\QueryBuilder
+     * @return QueryBuilder
      */
     public function buildAssociatableQuery(NovaRequest $request, $withTrashed = false)
     {
@@ -275,7 +276,7 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Get the associatable query method name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return array
      */
     protected function associatableQueryCallable(NovaRequest $request, $model)
@@ -288,7 +289,7 @@ class BelongsTo extends Field implements RelatableField
     /**
      * Get the associatable query method name.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return string
      */
     protected function associatableQueryMethod(NovaRequest $request, $model)

@@ -2,12 +2,14 @@
 
 namespace Laravel\Nova\Http\Requests;
 
+use Illuminate\Database\Eloquent\Builder;
+
 trait CountsResources
 {
     /**
      * Build a new count query for the given query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @return \Illuminate\Database\Query\Builder
      */
     public function buildCountQuery($query)

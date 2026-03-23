@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Actions;
 
 use DateTime;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
@@ -60,8 +61,8 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for a resource creation.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Authenticatable  $user
+     * @param  Model  $model
      * @return static
      */
     public static function forResourceCreate($user, $model)
@@ -87,8 +88,8 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for a resource update.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Authenticatable  $user
+     * @param  Model  $model
      * @return static
      */
     public static function forResourceUpdate($user, $model)
@@ -114,8 +115,8 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for an attached resource.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  \Illuminate\Database\Eloquent\Model  $pivot
+     * @param  Model  $parent
+     * @param  Model  $pivot
      * @return static
      */
     public static function forAttachedResource(NovaRequest $request, $parent, $pivot)
@@ -141,8 +142,8 @@ class ActionEvent extends Model
     /**
      * Create a new action event instance for an attached resource update.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  \Illuminate\Database\Eloquent\Model  $pivot
+     * @param  Model  $parent
+     * @param  Model  $pivot
      * @return static
      */
     public static function forAttachedResourceUpdate(NovaRequest $request, $parent, $pivot)
@@ -168,8 +169,8 @@ class ActionEvent extends Model
     /**
      * Create new action event instances for resource deletes.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Illuminate\Support\Collection
+     * @param  Authenticatable  $user
+     * @return Collection
      */
     public static function forResourceDelete($user, Collection $models)
     {
@@ -179,8 +180,8 @@ class ActionEvent extends Model
     /**
      * Create new action event instances for resource restorations.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Illuminate\Support\Collection
+     * @param  Authenticatable  $user
+     * @return Collection
      */
     public static function forResourceRestore($user, Collection $models)
     {
@@ -191,8 +192,8 @@ class ActionEvent extends Model
      * Create new action event instances for resource soft deletions.
      *
      * @param  string  $action
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Illuminate\Support\Collection
+     * @param  Authenticatable  $user
+     * @return Collection
      */
     public static function forSoftDeleteAction($action, $user, Collection $models)
     {
@@ -223,10 +224,10 @@ class ActionEvent extends Model
     /**
      * Create new action event instances for resource detachments.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @param  Authenticatable  $user
+     * @param  Model  $parent
      * @param  string  $pivotClass
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function forResourceDetach($user, $parent, Collection $models, $pivotClass)
     {
@@ -322,7 +323,7 @@ class ActionEvent extends Model
     /**
      * Prune the action events for the given types.
      *
-     * @param  \Illuminate\Support\Collection  $models
+     * @param  Collection  $models
      * @param  int  $limit
      */
     public static function prune($models, $limit = 25)
@@ -374,7 +375,7 @@ class ActionEvent extends Model
      * Mark a given action event record as finished.
      *
      * @param  string  $batchId
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @return int
      */
     public static function markAsFinished($batchId, $model)
@@ -402,7 +403,7 @@ class ActionEvent extends Model
      * Mark a given action event record as failed.
      *
      * @param  string  $batchId
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  \Throwable|string  $e
      * @return int
      */
@@ -415,7 +416,7 @@ class ActionEvent extends Model
      * Update the status of a given action event.
      *
      * @param  string  $batchId
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $status
      * @param  \Throwable|string  $e
      * @return int

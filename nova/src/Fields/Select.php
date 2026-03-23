@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Fields;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Select extends Field
@@ -18,7 +19,7 @@ class Select extends Field
     /**
      * Set the options for the select menu.
      *
-     * @param  array|\Closure|\Illuminate\Support\Collection
+     * @param  array|\Closure|Collection
      * @return $this
      */
     public function options($options)

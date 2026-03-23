@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\App;
+use App\Models\EcTrack;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -177,7 +178,7 @@ class TrackPBFJob implements ShouldQueue
         $layerIds = $app->layers->pluck('id')->toArray();
 
         // Ottieni le tracce con i layer associati che appartengono ai layer dell'app
-        $tracks = \App\Models\EcTrack::with('associatedLayers')
+        $tracks = EcTrack::with('associatedLayers')
             ->whereHas('associatedLayers', function ($query) use ($layerIds) {
                 $query->whereIn('layers.id', $layerIds); // Filtra i layer specifici
             })

@@ -2,10 +2,9 @@
 
 namespace App\Nova\Fields;
 
-
 use App\Models\App;
-use Laravel\Nova\Fields\Text;
 use App\Providers\AppVersionService;
+use Laravel\Nova\Fields\Text;
 
 class StoreVersionField extends Text
 {

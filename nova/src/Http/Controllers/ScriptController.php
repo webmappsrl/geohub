@@ -3,19 +3,21 @@
 namespace Laravel\Nova\Http\Controllers;
 
 use DateTime;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ScriptController extends Controller
 {
     /**
      * Serve the requested script.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function show(NovaRequest $request)
     {

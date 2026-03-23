@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\Ec;
 
 use App\Models\App;
+use App\Models\EcTrack;
 use App\Providers\HoquServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -49,7 +50,7 @@ class EcTrack3DTest extends TestCase
      */
     public function test_api_ec_track()
     {
-        $track = \App\Models\EcTrack::factory()->create();
+        $track = EcTrack::factory()->create();
         $response = $this->get('api/ec/track/'.$track->id);
         $this->assertEquals(200, $response->getStatusCode());
         $geojson = json_decode($response->getContent(), true);
@@ -61,7 +62,7 @@ class EcTrack3DTest extends TestCase
      */
     public function test_api_ec_track_geojson()
     {
-        $track = \App\Models\EcTrack::factory()->create();
+        $track = EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/'.$track->id.'.geojson');
         $this->assertEquals(200, $response->getStatusCode());
         $geojson = json_decode($response->getContent(), true);
@@ -73,7 +74,7 @@ class EcTrack3DTest extends TestCase
      */
     public function test_api_ec_track_download()
     {
-        $track = \App\Models\EcTrack::factory()->create();
+        $track = EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/download/'.$track->id);
         $this->assertEquals(200, $response->getStatusCode());
         $geojson = json_decode($response->getContent(), true);
@@ -85,7 +86,7 @@ class EcTrack3DTest extends TestCase
      */
     public function test_api_ec_track_download_geojson()
     {
-        $track = \App\Models\EcTrack::factory()->create();
+        $track = EcTrack::factory()->create();
         $response = $this->getJson('api/ec/track/download/'.$track->id.'.geojson');
         $this->assertEquals(200, $response->getStatusCode());
         $geojson = json_decode($response->getContent(), true);
@@ -98,7 +99,7 @@ class EcTrack3DTest extends TestCase
     public function test_api_app_elbrus_ec_track_geojson()
     {
         $app = App::factory()->create();
-        $track = \App\Models\EcTrack::factory()->create();
+        $track = EcTrack::factory()->create();
         $response = $this->getJson('/api/app/elbrus/'.$app->id.'/geojson/ec_track_'.$track->id.'.geojson', []);
 
         $this->assertEquals(200, $response->getStatusCode());

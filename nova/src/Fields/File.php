@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Fields;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Contracts\Deletable as DeletableContract;
 use Laravel\Nova\Contracts\Storable as StorableContract;
@@ -141,7 +142,7 @@ class File extends Field implements DeletableContract, Downloadable, StorableCon
     /**
      * Store the file on disk.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  string  $requestAttribute
      * @return string
      */
@@ -159,7 +160,7 @@ class File extends Field implements DeletableContract, Downloadable, StorableCon
     /**
      * Merge the specified extra file information columns into the storable attributes.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     protected function mergeExtraStorageColumns($request, array $attributes)

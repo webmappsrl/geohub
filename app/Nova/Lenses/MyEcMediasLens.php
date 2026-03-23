@@ -4,6 +4,7 @@ namespace App\Nova\Lenses;
 
 use App\Models\User;
 use Chaseconey\ExternalImage\ExternalImage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Kongulov\NovaTabTranslatable\NovaTabTranslatable;
@@ -18,7 +19,7 @@ class MyEcMediasLens extends Lens
     /**
      * Get the query builder / paginator for the lens.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @return mixed
      */
     public static function query(LensRequest $request, $query)

@@ -3,6 +3,7 @@
 namespace Laravel\Nova\Actions;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\ActionRequest;
 
 class ActionModelCollection extends EloquentCollection
@@ -30,7 +31,7 @@ class ActionModelCollection extends EloquentCollection
     /**
      * Remove models the user does not have permission to execute the action against.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     protected function filterByResourceAuthorization(ActionRequest $request)
     {

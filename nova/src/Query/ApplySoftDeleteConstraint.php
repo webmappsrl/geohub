@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Query;
 
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\TrashedStatus;
 
 class ApplySoftDeleteConstraint
@@ -9,9 +10,9 @@ class ApplySoftDeleteConstraint
     /**
      * Apply the trashed state constraint to the query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      * @param  string  $withTrashed
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function __invoke($query, $withTrashed)
     {

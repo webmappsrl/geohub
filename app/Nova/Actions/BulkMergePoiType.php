@@ -18,8 +18,8 @@ class BulkMergePoiType extends Action
     /**
      * Executes the action on a set of selected models.
      *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields  Form data fields (e.g., the selected main_poi_type)
-     * @param  \Illuminate\Support\Collection  $models  Collection of models (TaxonomyPoiType) selected for the action
+     * @param  ActionFields  $fields  Form data fields (e.g., the selected main_poi_type)
+     * @param  Collection  $models  Collection of models (TaxonomyPoiType) selected for the action
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)

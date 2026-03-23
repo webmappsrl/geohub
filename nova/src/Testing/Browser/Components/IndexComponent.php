@@ -2,6 +2,7 @@
 
 namespace Laravel\Nova\Testing\Browser\Components;
 
+use Facebook\WebDriver\Exception\TimeOutException;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
@@ -47,7 +48,7 @@ class IndexComponent extends BaseComponent
      * @param  int|null  $seconds
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function waitForTable(Browser $browser, $seconds = null)
     {
@@ -128,7 +129,7 @@ class IndexComponent extends BaseComponent
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function openFilterSelector(Browser $browser)
     {
@@ -219,7 +220,7 @@ class IndexComponent extends BaseComponent
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function openActionSelector(Browser $browser)
     {
@@ -233,7 +234,7 @@ class IndexComponent extends BaseComponent
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function runAction(Browser $browser, $uriKey, $fieldCallback = null)
     {
@@ -378,7 +379,7 @@ class IndexComponent extends BaseComponent
      *
      * @return void
      *
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     * @throws TimeOutException
      */
     public function assert(Browser $browser)
     {

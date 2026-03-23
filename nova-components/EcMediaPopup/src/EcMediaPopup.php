@@ -29,7 +29,7 @@ class EcMediaPopup extends Field
      * }
      *
      * @param  json  $uploadFeature
-     * @return ecMedia || null
+     * @return EcMedia || null
      */
     private function storeEcMediaByFeature($uploadFeature)
     {

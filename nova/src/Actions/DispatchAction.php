@@ -72,7 +72,7 @@ class DispatchAction
     /**
      * Extract the queue connection for the action.
      *
-     * @param  \Laravel\Nova\Actions\Action  $action
+     * @param  Action  $action
      * @return string|null
      */
     protected static function connection($action)
@@ -83,7 +83,7 @@ class DispatchAction
     /**
      * Extract the queue name for the action.
      *
-     * @param  \Laravel\Nova\Actions\Action  $action
+     * @param  Action  $action
      * @return string|null
      */
     protected static function queue($action)
