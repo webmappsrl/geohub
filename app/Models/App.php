@@ -517,7 +517,10 @@ class App extends Model
         $res = [];
         if ($this->layers->count() > 0) {
             foreach ($this->layers as $layer) {
-                $tracks = $layer->ecTracks->pluck('id')->toArray();
+                $tracks = $layer->ecTracks()
+                    ->where('draft', false)
+                    ->pluck('ec_tracks.id')
+                    ->toArray();
                 $layer->computeBB($this->map_bbox);
                 if (count($tracks) > 0) {
                     foreach ($tracks as $track) {

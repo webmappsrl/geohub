@@ -241,6 +241,7 @@ class TrackPBFJob implements ShouldQueue
         JOIN ec_track_layer etl ON ec.id = etl.ec_track_id
         JOIN layers l ON etl.layer_id = l.id
         WHERE l.id IN ({$layerIdsSQL}) -- Filtra per i layer associati all'app
+        AND ec.draft = false
         GROUP BY ec.id, ec.geometry
     ),
     mvtgeom AS (

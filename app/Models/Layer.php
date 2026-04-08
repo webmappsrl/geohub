@@ -198,7 +198,9 @@ class Layer extends Model
     public function getPbfTracks()
     {
         // Chiamata a getTracks per ottenere la collection delle tracce filtrate
-        $allEcTracks = $this->ecTracks;
+        $allEcTracks = $this->ecTracks()
+            ->where('draft', false)
+            ->get();
 
         // Verifica che ci siano tracce disponibili
         if ($allEcTracks->isEmpty()) {

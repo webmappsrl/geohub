@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Jobs\DeleteEcTrackElasticIndexJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -44,6 +45,13 @@ class UpdateEcTrackElasticIndexJob implements ShouldQueue
         $trackId = $this->ecTrack->id;
         $prefix = config('services.elastic.prefix') ?? 'geohub_app';
         Log::info("Inizio UpdateEcTrackElasticIndexJob per ecTrack ID: {$trackId}");
+
+        if ($this->ecTrack->draft) {
+            $ecTrackLayers = $this->ecTrack->getLayersByApp();
+            DeleteEcTrackElasticIndexJob::dispatch($ecTrackLayers, $trackId);
+
+            return;
+        }
         if (! empty($this->app_id) && ! empty($this->layer_ids)) {
             $indexName = $prefix.'_'.$this->app_id;
             $this->ecTrack->elasticIndex($indexName, $this->layer_ids);

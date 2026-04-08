@@ -228,6 +228,8 @@ class EcTrack extends Resource
                         ->help(__('The date and time when the track was last modified.')),
                     Number::make('OSM ID', 'osmid')
                         ->help(__('The OpenStreetMap ID associated with the track. This ID cannot be modified once set, as the data will synchronize with OSM.')),
+                    Boolean::make('Draft', 'draft')
+                        ->help(__('If the track is draft, it will not be visible in the app.')),
                     Heading::make(
                         <<<'HTML'
                             <ul>
@@ -594,6 +596,8 @@ class EcTrack extends Resource
                         })->help(__('Author who created the track: this affects the publication of the content, which will be available for apps associated with the indicated author')),
                     Number::make('OSM ID', 'osmid')
                         ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
+                    Boolean::make('Draft', 'draft')
+                        ->help(__('If the track is draft, it will not be visible in the app.')),
                 ],
                 'Media' => [
 
