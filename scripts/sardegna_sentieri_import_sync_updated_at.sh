@@ -14,3 +14,5 @@ php artisan geohub:sync-ec-from-out-source-updated-at poi sardegnasentieri@webma
 php artisan geohub:sync-ec-from-out-source-updated-at track sardegnasentieri@webmapp.it --endpoint="https://www.sardegnasentieri.it/ss/list-tracks/?_format=json" --provider=OutSourceImporterFeatureSentieriSardegna --name_format="{name}"
 
 php artisan geohub:index-tracks 32 --no-elastic
+
+php artisan pbf:generate 32 --no_pbf_layer

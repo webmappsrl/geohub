@@ -97,6 +97,20 @@ class EcTrack extends Resource
     }
 
     /**
+     * Draft è gestito solo per tracce pubblicate su layer dell'app Sardegna Sentieri (id 32).
+     */
+    protected function ecTrackBelongsToApp32(): bool
+    {
+        $model = $this->resource;
+
+        if (! $model || ! $model->exists) {
+            return false;
+        }
+        
+        return $model->associatedLayers()->where('app_id', 32)->exists();
+    }
+
+    /**
      * Build an "index" query for the given resource.
      *
      * @param  Builder  $query
@@ -229,6 +243,9 @@ class EcTrack extends Resource
                     Number::make('OSM ID', 'osmid')
                         ->help(__('The OpenStreetMap ID associated with the track. This ID cannot be modified once set, as the data will synchronize with OSM.')),
                     Boolean::make('Draft', 'draft')
+                        ->canSee(function ($request) {
+                            return $this->ecTrackBelongsToApp32();
+                        })
                         ->help(__('If the track is draft, it will not be visible in the app.')),
                     Heading::make(
                         <<<'HTML'
@@ -597,6 +614,9 @@ class EcTrack extends Resource
                     Number::make('OSM ID', 'osmid')
                         ->help(__('OpenStreetMap ID associated with the track: once applied, it is not possible to modify data here in GeoHub as they will be synchronized with OSM')),
                     Boolean::make('Draft', 'draft')
+                        ->canSee(function ($request) {
+                            return $this->ecTrackBelongsToApp32();
+                        })
                         ->help(__('If the track is draft, it will not be visible in the app.')),
                 ],
                 'Media' => [
