@@ -11,13 +11,15 @@ $appIcon = asset('images/webmapp-logo-icon-only.png');
 $trackFeatureCollectionUrl = url('/api/ec/track/pdf/' . $track->id);
 
 if (request('app_id')) {
-$app = App::find(request('app_id'));
-$appName = $app->name;
-if (isset($app->splash)) {
-$appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
-}
-$appUrl = 'https://' . $app->id . '.app.webmapp.it';
-$qrCode = $app->qr_code;
+    $app = App::find(request('app_id'));
+    if ($app) {
+        $appName = $app->name;
+        if (isset($app->splash)) {
+            $appIcon = 'https://geohub.webmapp.it/storage/' . $app->splash;
+        }
+        $appUrl = 'https://' . $app->id . '.app.webmapp.it';
+        $qrCode = $app->qr_code;
+    }
 }
 
 @endphp
@@ -27,11 +29,11 @@ $qrCode = $app->qr_code;
 
 <head>
     <meta charset="utf-8" />
-    <base href="/track/pdf/{{ $track->id }}">
+    <base href="{{ url('/track/pdf/' . $track->id) }}/">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet"
-        href="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/styles.css">
+        href="https://cdn.jsdelivr.net/gh/webmappsrl/feature-collection-widget-map@refs/heads/master/dist_05_04_24/styles.css" />
     <link rel="stylesheet" href="{{ asset('css/custom-pdf.css') }}">
 </head>
 
@@ -59,7 +61,7 @@ $qrCode = $app->qr_code;
     </div>
     <div class="map">
         <feature-collection-widget-map padding="200" pointPosition="true" pointRadius="10" strokeWidth="2" strokeColor="rgba(255, 92, 0, 1)"
-            geojsonurl={{ $trackFeatureCollectionUrl }}>
+            geojsonurl="{{ $trackFeatureCollectionUrl }}">
         </feature-collection-widget-map>
     </div>
     <header class="pdf-header">
@@ -220,32 +222,46 @@ $qrCode = $app->qr_code;
 
         </tfoot>
     </table>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/runtime.js" defer>
-    </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/polyfills.js" defer>
-    </script>
-    <script src="https://cdn.statically.io/gh/webmappsrl/feature-collection-widget-map/master/dist_15_01_2024/main.js" defer></script>
-    <script defer>
-        //handling the loading of the map
-        window.onload = (event) => {
-            let printButton = document.getElementById('print-button');
-            let notReadyColor = '#be4d25'
-            let readyColor = '#4da73a'
+    <script src="https://cdn.jsdelivr.net/gh/webmappsrl/feature-collection-widget-map@refs/heads/master/dist_05_04_24/runtime.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/webmappsrl/feature-collection-widget-map@refs/heads/master/dist_05_04_24/polyfills.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/webmappsrl/feature-collection-widget-map@refs/heads/master/dist_05_04_24/main.js" defer></script>
+    <script>
+        // Non usare window.onload: immagini/tile lente possono bloccare onload → "Generating PDF" infinito.
+        // DOMContentLoaded scatta dopo gli script esterni con defer (main.js incluso).
+        // Ritardo prima di print() per dare tempo alle tile OSM (spesso la mappa è vuota nel PDF altrimenti).
+        (function () {
+            var printDelayMs = 9000;
+            var printButton = document.getElementById('print-button');
+            var readyColor = '#4da73a';
 
-            // https://stackoverflow.com/questions/62832750/print-page-once-the-page-is-completely-loaded
+            if (!printButton) {
+                return;
+            }
 
-            setTimeout(() => {
+            function enablePrintUi() {
                 printButton.innerHTML = 'Print';
                 printButton.style.backgroundColor = readyColor;
                 printButton.disabled = false;
-                printButton.classList.remove("loading");
-                window.print();
-            }, "6000");
+                printButton.classList.remove('loading');
+            }
 
-            printButton.addEventListener('click', function() {
+            function scheduleAutoPrint() {
+                setTimeout(function () {
+                    enablePrintUi();
+                    window.print();
+                }, printDelayMs);
+            }
+
+            printButton.addEventListener('click', function () {
                 window.print();
             });
-        };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', scheduleAutoPrint);
+            } else {
+                scheduleAutoPrint();
+            }
+        })();
     </script>
 
 </body>
