@@ -61,7 +61,7 @@ class ReerMatchingWorkbookExport implements WithMultipleSheets
     }
 }
 
-class ReerNamedSheetExport implements FromArray, WithHeadings, WithTitle, ShouldAutoSize
+class ReerNamedSheetExport implements FromArray, ShouldAutoSize, WithHeadings, WithTitle
 {
     /** @var string */
     private $title;

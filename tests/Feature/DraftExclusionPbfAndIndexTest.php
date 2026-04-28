@@ -123,4 +123,3 @@ class DraftExclusionPbfAndIndexTest extends TestCase
         $this->assertEquals([188, 236], $indexed['layerIds']);
     }
 }
-

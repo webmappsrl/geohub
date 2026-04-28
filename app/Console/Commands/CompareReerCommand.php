@@ -6,10 +6,10 @@ use App\Exports\ReerMatchingWorkbookExport;
 use App\Models\App;
 use App\Models\EcTrack;
 use App\Models\User;
+use Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Generator;
 use Throwable;
 
 class CompareReerCommand extends Command
@@ -526,6 +526,7 @@ class CompareReerCommand extends Command
                             $i = $posBracket;
                         }
                     }
+
                     continue;
                 }
 
@@ -535,16 +536,19 @@ class CompareReerCommand extends Command
 
                 if ($escape) {
                     $escape = false;
+
                     continue;
                 }
                 if ($ch === '\\') {
                     if ($inString) {
                         $escape = true;
                     }
+
                     continue;
                 }
                 if ($ch === '"') {
                     $inString = ! $inString;
+
                     continue;
                 }
                 if ($inString) {
@@ -561,6 +565,7 @@ class CompareReerCommand extends Command
 
                         return;
                     }
+
                     continue;
                 }
 

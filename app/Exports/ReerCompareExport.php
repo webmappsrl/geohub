@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ReerCompareExport implements FromArray, WithHeadings, ShouldAutoSize
+class ReerCompareExport implements FromArray, ShouldAutoSize, WithHeadings
 {
     /**
      * @var array<int, array<int, mixed>>
@@ -36,4 +36,3 @@ class ReerCompareExport implements FromArray, WithHeadings, ShouldAutoSize
         return $this->rows;
     }
 }
-
