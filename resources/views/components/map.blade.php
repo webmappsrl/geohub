@@ -62,14 +62,27 @@
     var polyline = L.polyline({{$geometry}}, {color: 'white',weight:7}).addTo(map);
     var polyline2 = L.polyline({{$geometry}}, {color: 'red',weight:3}).addTo(map);
     for (const [poiID, value] of Object.entries(pois_collection)) {
-        var greenIcon = L.icon({
-            radius: 200,
-            className: 'poi-'+poiID,
-            iconUrl: value.image,
-            iconSize:     [38, 38], // size of the icon
-            iconAnchor:   [22, 38], // point of the icon which will correspond to marker's location
-        });
-        L.marker(JSON.parse(value.geometry), {icon: greenIcon,id:'poi-'+poiID}).addTo(map).on('click', openmodal)
+        var poiLatLng = JSON.parse(value.geometry);
+        if (value.image) {
+            var greenIcon = L.icon({
+                radius: 200,
+                className: 'poi-'+poiID,
+                iconUrl: value.image,
+                iconSize:     [38, 38], // size of the icon
+                iconAnchor:   [22, 38], // point of the icon which will correspond to marker's location
+            });
+            L.marker(poiLatLng, {icon: greenIcon,id:'poi-'+poiID}).addTo(map).on('click', openmodal)
+        } else {
+            L.circleMarker(poiLatLng, {
+                className: 'poi-'+poiID,
+                id: 'poi-'+poiID,
+                radius: 8,
+                color: '#ffffff',
+                weight: 2,
+                fillColor: '#ff0000',
+                fillOpacity: 1,
+            }).addTo(map).on('click', openmodal)
+        }
     }
     
     var startIcon = L.icon({
