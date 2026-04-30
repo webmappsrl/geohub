@@ -1,18 +1,19 @@
 @props(['poi'])
 @php
-    if (!$poi->featureImage) {
-        $featured_image = asset('images/32.jpg');
-        $featured_image_full = asset('images/32.jpg');
-    } else {
+    $featured_image = null;
+    $featured_image_full = null;
+    if ($poi->featureImage) {
         $featured_image = $poi->featureImage->thumbnail('118x117');
         $featured_image_full = $poi->featureImage->thumbnail('1440x500');
     }
 @endphp
 <div x-data="{ open: false }">
     <div id="poi-{{$poi->id}}" class="px-8 py-4 grid grid-cols-3 gap-4 items-center hover:bg-gray-100 cursor-pointer" @click="open = true;document.body.style.overflowY = 'hidden'">
-        <div class="bg-cover bg-center bg-no-repeat rounded-lg col-span-1" style="width:120px;height:120px;background-image:url('{{$featured_image}}')">
-        </div>
-        <div class="col-span-2 pl-4">
+        @if ($featured_image)
+            <div class="bg-cover bg-center bg-no-repeat rounded-lg col-span-1" style="width:120px;height:120px;background-image:url('{{$featured_image}}')">
+            </div>
+        @endif
+        <div class="{{ $featured_image ? 'col-span-2 pl-4' : 'col-span-3' }}">
             <h4 style="display: -webkit-inline-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;
             overflow: hidden;">
                 {{$poi->name}}
@@ -48,7 +49,9 @@
             <h2 class="pb-8">
                 {{$poi->name}}
             </h2> 
-            <img class="pb-8" src="{{$featured_image_full}}" alt="{{$poi->name}}">              
+            @if ($featured_image_full)
+                <img class="pb-8" src="{{$featured_image_full}}" alt="{{$poi->name}}">
+            @endif
             <div>
                 {!! $poi->description !!}
             </div>
