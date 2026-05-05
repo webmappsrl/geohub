@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Throwable;
 
 /**
@@ -79,7 +80,7 @@ class ExportReerWorkbookPostApplyCommand extends Command
         return base_path($path);
     }
 
-    private function updateTracksSheet(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet): int
+    private function updateTracksSheet(Worksheet $sheet): int
     {
         $rows = $sheet->toArray();
         if ($rows === []) {

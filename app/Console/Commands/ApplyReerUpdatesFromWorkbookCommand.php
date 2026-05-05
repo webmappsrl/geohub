@@ -128,6 +128,7 @@ class ApplyReerUpdatesFromWorkbookCommand extends Command
             $trackId = $this->parseTrackId($idRaw);
             if ($trackId === null) {
                 $this->warn('Riga '.($idx + 2).': ID_GEOHUB non valido, skip.');
+
                 continue;
             }
             $kmz = ($colIndex['kmz'] !== null) ? trim((string) ($row[$colIndex['kmz']] ?? '')) : '';

@@ -514,5 +514,4 @@ class CompareReerCommand extends Command
 
         file_put_contents($path, implode("\n", $lines));
     }
-
 }
