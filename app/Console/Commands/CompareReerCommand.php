@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Concerns\StreamsReerGeoJsonFeatures;
 use App\Exports\ReerMatchingWorkbookExport;
 use App\Models\App;
 use App\Models\EcTrack;
@@ -9,11 +10,12 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Generator;
 use Throwable;
 
 class CompareReerCommand extends Command
 {
+    use StreamsReerGeoJsonFeatures;
+
     /**
      * Confronto geometrico PostGIS tra tracce GeoHub e REER (GeoJSON ufficiale).
      *
@@ -27,6 +29,7 @@ class CompareReerCommand extends Command
         {--dwithin-m=50 : Tolleranza ST_DWithin in metri}
         {--hausdorff-m=20 : Soglia Hausdorff (metri) per "presente e aggiornato"}
         {--topn=10 : Candidati REER (KNN) su cui calcolare Hausdorff}
+        {--match-chunk=40 : Tracce per batch matching (log avanzamento; batch piccoli = meno silenzio lungo)}
         {--out-xlsx=report_reer_geohub.xlsx : Workbook Excel in storage/app}
         {--out-csv= : (Opzionale) CSV foglio principale in storage/app}
         {--out-md= : (Opzionale) Relazione Markdown in storage/app}
@@ -45,6 +48,7 @@ class CompareReerCommand extends Command
         $dwithinM = (float) $this->option('dwithin-m');
         $hausdorffOkM = (float) $this->option('hausdorff-m');
         $topN = max(1, (int) $this->option('topn'));
+        $matchChunk = max(5, min(500, (int) $this->option('match-chunk')));
         $outXlsx = (string) $this->option('out-xlsx');
         $outCsv = (string) ($this->option('out-csv') ?? '');
         $outMd = (string) ($this->option('out-md') ?? '');
@@ -122,7 +126,7 @@ class CompareReerCommand extends Command
             ');
 
             $inserted = 0;
-            foreach ($this->streamGeoJsonFeatures($geojsonPath) as $feature) {
+            foreach ($this->streamReerGeoJsonFeatures($geojsonPath) as $feature) {
                 $props = $feature['properties'] ?? null;
                 $geom = $feature['geometry'] ?? null;
                 if (! is_array($props) || ! is_array($geom)) {
@@ -268,43 +272,65 @@ class CompareReerCommand extends Command
             $conn->statement('CREATE INDEX tmp_reer_features_3857_geom_gix ON tmp_reer_features_3857 USING GIST (geom_3857)');
             $conn->statement('ANALYZE tmp_reer_features_3857');
 
-            $this->info('Matching spaziale (ST_DWithin + Hausdorff su top candidati)...');
-            $result = $conn->select("
-                SELECT
-                    t.track_id,
-                    b.reer_id,
-                    b.id_percorso,
-                    b.download_kmz,
-                    b.hausdorff_m
-                FROM tmp_geohub_tracks t
-                LEFT JOIN LATERAL (
-                    SELECT reer_id, id_percorso, download_kmz, hausdorff_m
-                    FROM (
-                        SELECT
-                            r.id AS reer_id,
-                            r.id_percorso,
-                            r.download_kmz,
-                            ST_HausdorffDistance(t.geom_3857, r.geom_3857) AS hausdorff_m
-                        FROM tmp_reer_features_3857 r
-                        WHERE ST_DWithin(t.geom_3857, r.geom_3857, {$dwithinM})
-                        ORDER BY t.geom_3857 <-> r.geom_3857
-                        LIMIT {$topN}
-                    ) c
-                    ORDER BY hausdorff_m ASC
-                    LIMIT 1
-                ) b ON TRUE
-                ORDER BY t.track_id
-            ");
+            $this->info('Matching spaziale (ST_DWithin + Hausdorff su top candidati), batch da '.$matchChunk.' tracce...');
+            $result = [];
+            $processed = 0;
+            foreach (array_chunk($trackIds, $matchChunk) as $chunk) {
+                $idsSql = implode(',', array_map('intval', $chunk));
+                $batch = $conn->select("
+                    SELECT
+                        t.track_id,
+                        b.reer_id,
+                        b.id_percorso,
+                        b.download_kmz,
+                        b.hausdorff_m
+                    FROM tmp_geohub_tracks t
+                    LEFT JOIN LATERAL (
+                        SELECT reer_id, id_percorso, download_kmz, hausdorff_m
+                        FROM (
+                            SELECT
+                                r.id AS reer_id,
+                                r.id_percorso,
+                                r.download_kmz,
+                                ST_HausdorffDistance(t.geom_3857, r.geom_3857) AS hausdorff_m
+                            FROM tmp_reer_features_3857 r
+                            WHERE ST_DWithin(t.geom_3857, r.geom_3857, {$dwithinM})
+                            ORDER BY t.geom_3857 <-> r.geom_3857
+                            LIMIT {$topN}
+                        ) c
+                        ORDER BY hausdorff_m ASC
+                        LIMIT 1
+                    ) b ON TRUE
+                    WHERE t.track_id IN ({$idsSql})
+                    ORDER BY t.track_id
+                ");
+                foreach ($batch as $row) {
+                    $result[] = $row;
+                }
+                $processed += count($chunk);
+                $this->line(" - Hausdorff: tracce {$processed}/{$totalTracks}");
+            }
 
             $this->info('Rilevo match ambigui (più candidati entro buffer)...');
-            $ambigui = $conn->select("
-                SELECT t.track_id, COUNT(*)::int AS candidati
-                FROM tmp_geohub_tracks t
-                INNER JOIN tmp_reer_features_3857 r ON ST_DWithin(t.geom_3857, r.geom_3857, {$dwithinM})
-                GROUP BY t.track_id
-                HAVING COUNT(*) > 1
-                ORDER BY candidati DESC, t.track_id
-            ");
+            $ambigui = [];
+            $ambigProcessed = 0;
+            foreach (array_chunk($trackIds, $matchChunk) as $chunk) {
+                $idsSql = implode(',', array_map('intval', $chunk));
+                $batch = $conn->select("
+                    SELECT t.track_id, COUNT(*)::int AS candidati
+                    FROM tmp_geohub_tracks t
+                    INNER JOIN tmp_reer_features_3857 r ON ST_DWithin(t.geom_3857, r.geom_3857, {$dwithinM})
+                    WHERE t.track_id IN ({$idsSql})
+                    GROUP BY t.track_id
+                    HAVING COUNT(*) > 1
+                    ORDER BY candidati DESC, t.track_id
+                ");
+                foreach ($batch as $a) {
+                    $ambigui[] = $a;
+                }
+                $ambigProcessed += count($chunk);
+                $this->line(" - Ambigui: tracce {$ambigProcessed}/{$totalTracks}");
+            }
 
             $mainRows = [];
             $matchedReerInternalIds = [];
@@ -489,99 +515,4 @@ class CompareReerCommand extends Command
         file_put_contents($path, implode("\n", $lines));
     }
 
-    /**
-     * @return Generator<int, array<string, mixed>>
-     */
-    private function streamGeoJsonFeatures(string $path): Generator
-    {
-        $fp = fopen($path, 'rb');
-        if (! $fp) {
-            throw new \RuntimeException("Impossibile aprire il file: {$path}");
-        }
-
-        $buffer = '';
-        $inFeaturesArray = false;
-        $inString = false;
-        $escape = false;
-        $depth = 0;
-        $collecting = false;
-        $obj = '';
-
-        while (! feof($fp)) {
-            $chunk = fread($fp, 1024 * 1024);
-            if ($chunk === false) {
-                break;
-            }
-            $buffer .= $chunk;
-
-            $len = strlen($buffer);
-            for ($i = 0; $i < $len; $i++) {
-                $ch = $buffer[$i];
-
-                if (! $inFeaturesArray) {
-                    if (substr($buffer, $i, 10) === '"features"') {
-                        $posBracket = strpos($buffer, '[', $i);
-                        if ($posBracket !== false) {
-                            $inFeaturesArray = true;
-                            $i = $posBracket;
-                        }
-                    }
-                    continue;
-                }
-
-                if ($collecting) {
-                    $obj .= $ch;
-                }
-
-                if ($escape) {
-                    $escape = false;
-                    continue;
-                }
-                if ($ch === '\\') {
-                    if ($inString) {
-                        $escape = true;
-                    }
-                    continue;
-                }
-                if ($ch === '"') {
-                    $inString = ! $inString;
-                    continue;
-                }
-                if ($inString) {
-                    continue;
-                }
-
-                if (! $collecting) {
-                    if ($ch === '{') {
-                        $collecting = true;
-                        $depth = 1;
-                        $obj = '{';
-                    } elseif ($ch === ']') {
-                        fclose($fp);
-
-                        return;
-                    }
-                    continue;
-                }
-
-                if ($ch === '{') {
-                    $depth++;
-                } elseif ($ch === '}') {
-                    $depth--;
-                    if ($depth === 0) {
-                        $feature = json_decode($obj, true);
-                        if (is_array($feature)) {
-                            yield $feature;
-                        }
-                        $collecting = false;
-                        $obj = '';
-                    }
-                }
-            }
-
-            $buffer = $collecting ? '' : substr($buffer, max(0, $len - 1024));
-        }
-
-        fclose($fp);
-    }
 }
