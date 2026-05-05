@@ -214,7 +214,7 @@ class ApplyReerUpdatesFromWorkbookCommand extends Command
                 if ($useGeojson && $c['id_percorso'] !== '') {
                     $gKey = strtolower($c['id_percorso']);
                     if (isset($geomIndex[$gKey])) {
-                        $geometry = $this->geometryRawFromGeoJson($geomIndex[$gKey]);
+                        $geometry = $this->geometryWktFromGeoJson($geomIndex[$gKey]);
                     }
                 }
 
@@ -430,12 +430,25 @@ class ApplyReerUpdatesFromWorkbookCommand extends Command
     }
 
     /**
+     * WKT per assegnazione a EcTrack::geometry: il mutatore aggiunge "SRID=4326;" e non accetta DB::raw().
+     *
      * @param  array<string, mixed>  $geometry
-     * @return \Illuminate\Database\Query\Expression
      */
-    private function geometryRawFromGeoJson(array $geometry)
+    private function geometryWktFromGeoJson(array $geometry): string
     {
-        return DB::raw("(ST_Force3D(ST_GeomFromGeoJSON('".json_encode($geometry)."')))");
+        $geomJson = json_encode($geometry);
+        if (! is_string($geomJson)) {
+            throw new RuntimeException('Impossibile serializzare geometria GeoJSON.');
+        }
+        $row = DB::selectOne(
+            'SELECT ST_AsText(ST_Force3D(ST_LineMerge(ST_SetSRID(ST_GeomFromGeoJSON(?), 4326)))) AS wkt',
+            [$geomJson]
+        );
+        if (! $row || ! isset($row->wkt) || ! is_string($row->wkt) || $row->wkt === '') {
+            throw new RuntimeException('PostGIS: geometria GeoJSON non valida o vuota.');
+        }
+
+        return $row->wkt;
     }
 
     private function parseIdPercorsoFromKmzUrl(string $url): ?string
