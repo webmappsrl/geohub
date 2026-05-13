@@ -106,7 +106,7 @@ class EcTrack extends Resource
         if (! $model || ! $model->exists) {
             return false;
         }
-        
+
         return $model->associatedLayers()->where('app_id', 32)->exists();
     }
 
