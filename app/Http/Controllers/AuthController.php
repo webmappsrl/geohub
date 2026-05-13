@@ -135,6 +135,10 @@ class AuthController extends Controller
             $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('referrer'));
         }
 
+        if ($request->input('sku') != null || $request->input('appId') != null) {
+            $this->userService->assigUserSkuAndAppIdIfNeeded($user, $request->input('sku'), $request->input('appId'));
+        }
+
         $token = auth('api')->attempt($credentials);
 
         return $this->loginResponse($token);
