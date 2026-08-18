@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Facades\OsmClient;
+use App\Jobs\UpdateEcMedia;
+use App\Jobs\UpdateModelWithGeometryTaxonomyWhere;
 use App\Models\EcMedia;
 use App\Models\EcPoi;
 use App\Models\User;
@@ -554,8 +556,8 @@ class UpdatePOIFromOsmTest extends TestCase
         ]);
 
         Bus::assertChained([
-            \App\Jobs\UpdateEcMedia::class,
-            \App\Jobs\UpdateModelWithGeometryTaxonomyWhere::class,
+            UpdateEcMedia::class,
+            UpdateModelWithGeometryTaxonomyWhere::class,
         ]);
     }
 
