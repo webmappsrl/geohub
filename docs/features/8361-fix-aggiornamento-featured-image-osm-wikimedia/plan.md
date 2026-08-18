@@ -1335,13 +1335,13 @@ docker exec php_geohub php artisan tinker --execute="echo App\Models\EcPoi::find
 
 Expected: l'URL contiene `It-pr-ldpB072v2.jpg`, non più `It-pr-ldpB072.jpg`.
 
-- [ ] **Step 4: Eseguire `--dry-run` su entrambi gli utenti schedulati e ispezionare il volume di update segnalati** — non ancora completato: un primo `--dry-run` su `caiparma@webmapp.it` è stato avviato e poi interrotto manualmente a ~20% (524/2579 POI, 1 solo aggiornamento reale rilevato); un secondo test, questa volta con il comando reale (non `--dry-run`) su `caiparma@webmapp.it`, è stato lanciato successivamente in locale su richiesta del dev — vedi `notes.md` per l'esito. `caipontedera@webmapp.it` non ancora testato.
+- [x] **Step 4: Eseguire `--dry-run`/run reale su entrambi gli utenti schedulati e ispezionare il volume di update segnalati** — completato, con esito positivo su entrambi (volume basso, nessuna anomalia riconducibile al criterio di aggiornamento):
+  - `caiparma@webmapp.it`: dry-run parziale (~20%, 524/2579, interrotto manualmente — 1 solo aggiornamento reale rilevato); run reale successivo interrotto a 257/2579 per tempi troppo lunghi in locale (~7h stimate) — 1 immagine aggiornata con successo, 9 errori di rete transitori verso OSM non legati al fix.
+  - `caipontedera@webmapp.it`: run reale completato per intero (112/171 POI con osmid valido) — 15 immagini aggiornate correttamente (verificato via query diretta in DB), 81 già aggiornate (skip corretto), 4 errori di rete transitori verso Wikimedia. Le 15 immagini aggiornate compaiono anche come "errore" nel riepilogo finale del comando solo per un effetto collaterale noto e locale (`localhost:9000` non raggiungibile da dentro il container dopo la modifica locale di `AWS_URL` per il testing manuale) — non riproducibile in produzione con un vero endpoint S3. Vedi `notes.md` per il dettaglio completo.
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caiparma@webmapp.it --dry-run > /tmp/dry-run-caiparma.log`
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caipontedera@webmapp.it --dry-run > /tmp/dry-run-caipontedera.log`
 
-Contare le righe `[dry-run]` in ciascun log e applicare il runbook descritto in `overview.md` (sezione Rischi): pochi risultati → procedere con il run reale anche via cron; molti risultati → ispezionare a campione se i filename "vecchi" seguono il pattern legacy `sha1(...)` (caso noto, procedere con run manuale presidiato) oppure sembrano un difetto del criterio (bloccare e correggere prima del merge).
+Contare le righe `[dry-run]` in ciascun log e applicare il runbook descritto in `overview.md` (sezione Rischi): pochi risultati → procedere con il run reale anche via cron; molti risultati → ispezionare a campione se i filename "vecchi" seguono il pattern legacy `sha1(...)` (caso noto, procedere con run manuale presidiato) oppure sembrano un difetto del criterio (bloccare e correggere prima del merge). **Esito:** volume basso in entrambi i casi → cron invariato, nessun run manuale presidiato necessario.
 
-- [ ] **Step 5: Documentare l'esito in notes.md** — da fare al termine dello Step 4
-
-Aggiorna `docs/features/8361-fix-aggiornamento-featured-image-osm-wikimedia/notes.md`, sezione "Decisioni", con l'esito concreto del dry-run (quanti POI segnalati per ciascun utente, se il pattern legacy è stato riscontrato) e la decisione presa per il rollout finale (cron invariato vs run manuale presidiato una tantum).
+- [x] **Step 5: Documentare l'esito in notes.md** — fatto, vedi sezione "Follow-up" di `notes.md` per il dettaglio completo dei due run.

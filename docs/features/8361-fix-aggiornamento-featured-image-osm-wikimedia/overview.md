@@ -41,7 +41,6 @@ Caso concreto: POI `102105` (B072;LDP041), tag OSM `wikimedia_commons=File:It-pr
 - **Rischio residuo, non risolto da questo fix:** il job `UpdateEcMedia::enrichJob()` (dispacciato dopo il salvataggio per generare thumbnails ed EXIF) esegue un **secondo** download interno dell'immagine appena scritta su storage, senza header custom e senza validazione della risposta. Se questo secondo download fallisce, l'errore resta solo nel log (`Log::error` nel `catch()` della chain), non visibile in console né in `$errorPois` — il requisito "errori visibili" di questo ticket copre solo il download sincrono nel comando, non questo secondo download asincrono nel job. Accettato come limite noto, fuori scope per questo ciclo.
 
 ## Out of scope
-- Bug analogo sulle tracce OSM (`UpdateTrackFromOsm.php`: la catena post-sync DEM/AWS/Elastic viene ricostruita dentro il loop e parte solo per l'ultima traccia aggiornata con successo) — gestito con un ticket Orchestrator separato, da creare a fine workflow solo dopo conferma esplicita finale dell'utente
 - Supporto al tag OSM `image` (URL diretto Commons) come fonte alternativa a `wikimedia_commons` — non richiesto dal ticket
 - Persistenza dello sha1 fornito da Wikimedia per il confronto file — richiederebbe una migration sulla tabella `ec_media`, esplicitamente escluso su richiesta del dev; si usa il confronto per filename
 
