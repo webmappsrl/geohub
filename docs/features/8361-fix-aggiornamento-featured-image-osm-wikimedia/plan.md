@@ -36,7 +36,7 @@
 - Produces: `UpdatePOIFromOsm::getPoiGeometryWkt(EcPoi $poi): string` — query sicura parametrizzata, consumata internamente da `updateFeatureImageFromWikimedia()`
 - Produces: `UpdatePOIFromOsm::updateFeatureImageFromWikimedia(EcPoi $poi, array $osmPoi): void` — sostituisce il vecchio blocco inline in `updatePoiData()`; Task 2 modificherà il suo criterio "is up to date", Task 3 aggiungerà il dispatch della chain di enrichment, Task 5 aggiungerà il ramo `--dry-run`
 
-- [ ] **Step 1: Aggiungi la configurazione dello User-Agent**
+- [x] **Step 1: Aggiungi la configurazione dello User-Agent**
 
 Modifica `config/geohub.php`, aggiungendo questa riga dopo `'node_executable'`:
 
@@ -45,7 +45,7 @@ Modifica `config/geohub.php`, aggiungendo questa riga dopo `'node_executable'`:
     'wikimedia_user_agent' => env('WIKIMEDIA_USER_AGENT', 'GeoHub-POI-Updater/1.0 (https://geohub.webmapp.it; info@webmapp.it)'),
 ```
 
-- [ ] **Step 2: Scrivi i test che falliscono**
+- [x] **Step 2: Scrivi i test che falliscono**
 
 Aggiungi in cima a `tests/Feature/UpdatePOIFromOsmTest.php` gli use statement mancanti:
 
@@ -338,12 +338,12 @@ Aggiungi questi nuovi metodi di test alla classe:
     }
 ```
 
-- [ ] **Step 3: Esegui i test per verificare che falliscano**
+- [x] **Step 3: Esegui i test per verificare che falliscano**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: FAIL — `test_wikimedia_image_download_uses_configured_user_agent`, `test_wikimedia_image_download_failure_is_visible`, `test_media_geometry_is_updated_via_safe_query`, `test_existing_description_is_preserved_on_update` falliscono (il codice attuale usa `file_get_contents` senza header custom verificabile via `Http::fake`, non valida la risposta, interpola la geometria in modo diverso, e azzera sempre `description`). `test_poi_without_wikimedia_commons_tag_is_not_touched` dovrebbe già passare (comportamento invariato) — se fallisce, verificare l'helper prima di continuare.
 
-- [ ] **Step 4: Implementa il fix minimo**
+- [x] **Step 4: Implementa il fix minimo**
 
 Sostituisci in `app/Console/Commands/UpdatePOIFromOsm.php` il blocco che va da `if (array_key_exists('properties', $osmPoi) && array_key_exists('wikimedia_commons', $osmPoi['properties'])) {` (riga 152) fino alla chiusura di quel blocco `if` (riga 252, la riga con il solo `}` prima di `// Update the 'ele' attribute...`), con questa singola riga:
 
@@ -474,12 +474,12 @@ Poi aggiungi questi due nuovi metodi privati alla classe `UpdatePOIFromOsm`, sub
 
 Nota: `$poi->featureImage()->associate($ec_media)` associa la relazione in memoria ma non salva il POI — questo comportamento è invariato rispetto al codice originale (il salvataggio avviene più avanti in `updatePoiData()` con `$poi->save()`).
 
-- [ ] **Step 5: Esegui i test per verificare che passino**
+- [x] **Step 5: Esegui i test per verificare che passino**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test nuovi e sui 5 test preesistenti (questi ultimi fanno rete reale verso OSM, comportamento invariato).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add config/geohub.php app/Console/Commands/UpdatePOIFromOsm.php tests/Feature/UpdatePOIFromOsmTest.php
@@ -498,7 +498,7 @@ git commit -m "fix(oc:8361): use proper User-Agent and safe geometry query for W
 - Consumes: `updateFeatureImageFromWikimedia()` da Task 1
 - Produces: `UpdatePOIFromOsm::shouldUpdateFeatureImage(EcMedia $currentFeatureImage, array $page): bool` — usato internamente, sostituisce il confronto inline sulle date
 
-- [ ] **Step 1: Scrivi i test che falliscono**
+- [x] **Step 1: Scrivi i test che falliscono**
 
 Aggiungi questi metodi di test:
 
@@ -621,12 +621,12 @@ Aggiungi questi metodi di test:
     }
 ```
 
-- [ ] **Step 2: Esegui i test per verificare che falliscano**
+- [x] **Step 2: Esegui i test per verificare che falliscano**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: FAIL su `test_force_update_on_filename_change_even_with_newer_local_date` (il criterio attuale confronta solo le date, quindi salterebbe l'update) e potenzialmente su `test_filename_comparison_converges_for_non_ascii_titles` se l'encoding non è ancora normalizzato.
 
-- [ ] **Step 3: Implementa il criterio combinato**
+- [x] **Step 3: Implementa il criterio combinato**
 
 In `app/Console/Commands/UpdatePOIFromOsm.php`, dentro `updateFeatureImageFromWikimedia()`, sostituisci:
 
@@ -677,12 +677,12 @@ Poi aggiungi questo nuovo metodo privato, subito dopo `updateFeatureImageFromWik
     }
 ```
 
-- [ ] **Step 4: Esegui i test per verificare che passino**
+- [x] **Step 4: Esegui i test per verificare che passino**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test, inclusi quelli di Task 1.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Console/Commands/UpdatePOIFromOsm.php tests/Feature/UpdatePOIFromOsmTest.php
@@ -700,7 +700,7 @@ git commit -m "fix(oc:8361): force featured image update on Commons filename cha
 **Interfaces:**
 - Consumes: `EcMedia::updateDataChain(EcMedia $model): void` — già esistente in `app/Models/EcMedia.php:221`, oggi chiamato solo da `static::created()`
 
-- [ ] **Step 1: Scrivi i test che falliscono**
+- [x] **Step 1: Scrivi i test che falliscono**
 
 Aggiungi in cima al file l'ulteriore use statement:
 
@@ -801,12 +801,12 @@ Aggiungi questi metodi di test:
     }
 ```
 
-- [ ] **Step 2: Esegui i test per verificare che falliscano**
+- [x] **Step 2: Esegui i test per verificare che falliscano**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: FAIL solo su `test_enrichment_chain_is_dispatched_when_updating_existing_media` (oggi la chain non viene dispacciata sull'update di un media esistente). `test_enrichment_job_does_not_touch_geometry_when_image_has_no_exif_gps` e `test_enrichment_job_overwrites_geometry_when_image_has_gps` esercitano il job `UpdateEcMedia` tramite l'hook `EcMedia::created` già esistente (non tramite il comando), quindi **dovrebbero già passare** anche prima di questo task — sono test di conferma/regressione sul comportamento preesistente del job, non guidano un'implementazione nuova. Eseguili comunque ora per avere una baseline verde prima di procedere.
 
-- [ ] **Step 3: Implementa il dispatch della chain sul ramo di update**
+- [x] **Step 3: Implementa il dispatch della chain sul ramo di update**
 
 In `app/Console/Commands/UpdatePOIFromOsm.php`, dentro `updateFeatureImageFromWikimedia()`, nel ramo `if ($currentFeatureImage) { ... }`, aggiungi la chiamata dopo `$currentFeatureImage->save();`:
 
@@ -822,12 +822,12 @@ In `app/Console/Commands/UpdatePOIFromOsm.php`, dentro `updateFeatureImageFromWi
                 } else {
 ```
 
-- [ ] **Step 4: Esegui i test per verificare che passino**
+- [x] **Step 4: Esegui i test per verificare che passino**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Console/Commands/UpdatePOIFromOsm.php tests/Feature/UpdatePOIFromOsmTest.php
@@ -845,7 +845,7 @@ git commit -m "fix(oc:8361): re-dispatch EcMedia enrichment chain when an existi
 **Interfaces:**
 - Nessuna nuova interfaccia pubblica: modifica solo il flow di controllo interno di `updatePoiData()`
 
-- [ ] **Step 1: Scrivi il test che fallisce**
+- [x] **Step 1: Scrivi il test che fallisce**
 
 Aggiungi questo metodo di test:
 
@@ -910,12 +910,12 @@ Aggiungi questo metodo di test:
     }
 ```
 
-- [ ] **Step 2: Esegui il test per verificare che fallisca**
+- [x] **Step 2: Esegui il test per verificare che fallisca**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: FAIL — con `properties` null, `array_key_exists('ref', $osmPoi['properties'])` in `updatePoiName()`/`updatePoiAttribute()` solleva un `TypeError` (non un `Exception`), non catturato da nessun try/catch esistente: il test PHPUnit fallisce con un errore fatale non gestito, e `$healthyPoi` non viene mai processato perché il loop si interrompe.
 
-- [ ] **Step 3: Implementa la protezione**
+- [x] **Step 3: Implementa la protezione**
 
 In `app/Console/Commands/UpdatePOIFromOsm.php`, aggiungi l'import in cima al file:
 
@@ -962,12 +962,12 @@ con:
 
 Nota tecnica (perché `catch (Throwable $e)` e non `catch (Exception $e)`): `array_key_exists($key, null)` solleva un `TypeError`, che in PHP implementa `\Throwable` ma NON estende `\Exception` — un catch su `Exception` non lo intercetterebbe. Il guard esplicito su `is_array($osmPoi['properties'])` previene già il caso concreto testato; il catch su `Throwable` resta come rete di sicurezza per qualunque altro errore imprevisto nello stesso blocco.
 
-- [ ] **Step 4: Esegui il test per verificare che passi**
+- [x] **Step 4: Esegui il test per verificare che passi**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Console/Commands/UpdatePOIFromOsm.php tests/Feature/UpdatePOIFromOsmTest.php
@@ -986,7 +986,7 @@ git commit -m "fix(oc:8361): do not let a poi with invalid OSM properties crash 
 - Produces: opzione CLI `--dry-run` sul comando `geohub:update_pois_from_osm`
 - Consumes: `updateFeatureImageFromWikimedia()`, `shouldUpdateFeatureImage()`, `generatePoisJson()` (tutti da task precedenti)
 
-- [ ] **Step 1: Scrivi i test che falliscono**
+- [x] **Step 1: Scrivi i test che falliscono**
 
 Aggiungi questi metodi di test:
 
@@ -1075,12 +1075,12 @@ Aggiungi questi metodi di test:
     }
 ```
 
-- [ ] **Step 2: Esegui i test per verificare che falliscano**
+- [x] **Step 2: Esegui i test per verificare che falliscano**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: FAIL — l'opzione `--dry-run` non esiste ancora sul comando (Artisan risponde con errore "The '--dry-run' option does not exist").
 
-- [ ] **Step 3: Implementa il flag**
+- [x] **Step 3: Implementa il flag**
 
 In `app/Console/Commands/UpdatePOIFromOsm.php`, modifica la signature:
 
@@ -1135,12 +1135,12 @@ Dentro `updateFeatureImageFromWikimedia()`, nel loop `foreach ($pages as $pageId
 
 (subito prima di `$this->info('[updating] Feature image for poi '.$poi->name);`)
 
-- [ ] **Step 4: Esegui i test per verificare che passino**
+- [x] **Step 4: Esegui i test per verificare che passino**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Console/Commands/UpdatePOIFromOsm.php tests/Feature/UpdatePOIFromOsmTest.php
@@ -1158,7 +1158,7 @@ git commit -m "feat(oc:8361): add --dry-run flag to preview featured image updat
 **Interfaces:**
 - Consumes: `config('geohub.wikimedia_user_agent')` (da Task 1)
 
-- [ ] **Step 1: Scrivi il test che fallisce**
+- [x] **Step 1: Scrivi il test che fallisce**
 
 Il costruttore di `OutSourceImporterFeatureAbstract` (ereditato da `OutSourceImporterFeatureOSMPoi`) richiede 5 argomenti posizionali senza default: `string $type, string $endpoint, string $source_id, bool $only_related_url, Illuminate\Log\Logger $logChannel` — nessuno di questi esegue chiamate di rete o query DB, sono solo assegnazioni di proprietà, quindi è sicuro istanziare l'oggetto direttamente nel test.
 
@@ -1218,12 +1218,12 @@ class PrepareMediaTagsJsonTest extends TestCase
 }
 ```
 
-- [ ] **Step 2: Esegui il test per verificare che fallisca**
+- [x] **Step 2: Esegui il test per verificare che fallisca**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=PrepareMediaTagsJsonTest`
 Expected: FAIL — il metodo usa ancora `file_get_contents()` con `stream_context_create()`, non passa mai dalla facade `Http`, quindi `Http::assertSent()` non trova nessuna richiesta registrata.
 
-- [ ] **Step 3: Implementa il fix**
+- [x] **Step 3: Implementa il fix**
 
 In `app/Classes/OutSourceImporter/OutSourceImporterFeatureOSMPoi.php`, aggiungi l'import in cima al file (dopo `use Illuminate\Support\Facades\DB;`):
 
@@ -1293,12 +1293,12 @@ con:
         }
 ```
 
-- [ ] **Step 4: Esegui il test per verificare che passi**
+- [x] **Step 4: Esegui il test per verificare che passi**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=PrepareMediaTagsJsonTest`
 Expected: PASS. Esegui anche l'intera suite `OutSourceImporter` per verificare l'assenza di regressioni: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=OutSourceImporter`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Classes/OutSourceImporter/OutSourceImporterFeatureOSMPoi.php tests/Feature/OutSourceImporter/OutSourceImporterFeatureOSMPoi/PrepareMediaTagsJsonTest.php
@@ -1311,7 +1311,7 @@ git commit -m "fix(oc:8361): use proper User-Agent for Wikimedia media download 
 
 **Files:** nessuno — task operativo di verifica su ambiente locale/staging prima del merge, secondo il runbook descritto in `overview.md`.
 
-- [ ] **Step 1: Eseguire la suite completa dei test del comando**
+- [x] **Step 1: Eseguire la suite completa dei test del comando**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=UpdatePOIFromOsmTest`
 Expected: PASS su tutti i test (Task 1-5).
@@ -1319,12 +1319,12 @@ Expected: PASS su tutti i test (Task 1-5).
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan test --filter=PrepareMediaTagsJsonTest`
 Expected: PASS (Task 6).
 
-- [ ] **Step 2: Eseguire `--dry-run` sul caso concreto del ticket**
+- [x] **Step 2: Eseguire `--dry-run` sul caso concreto del ticket**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caiparma@webmapp.it --ec_poi_id=102105 --dry-run`
 Expected: output `[dry-run] Feature image for poi ... would be updated - current: File:It-pr-ldpB072.jpg -> new: File:It-pr-ldpB072v2.jpg` (o filename analoghi, verifica il POI reale al momento dell'esecuzione).
 
-- [ ] **Step 3: Eseguire il run reale sul solo POI 102105 e verificare il risultato**
+- [x] **Step 3: Eseguire il run reale sul solo POI 102105 e verificare il risultato**
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caiparma@webmapp.it --ec_poi_id=102105`
 Verificare via query diretta che `ec_media` 102071 (o il nuovo id se ricreato) punti al file aggiornato:
@@ -1335,13 +1335,13 @@ docker exec php_geohub php artisan tinker --execute="echo App\Models\EcPoi::find
 
 Expected: l'URL contiene `It-pr-ldpB072v2.jpg`, non più `It-pr-ldpB072.jpg`.
 
-- [ ] **Step 4: Eseguire `--dry-run` su entrambi gli utenti schedulati e ispezionare il volume di update segnalati**
+- [ ] **Step 4: Eseguire `--dry-run` su entrambi gli utenti schedulati e ispezionare il volume di update segnalati** — in corso: dry-run su `caiparma@webmapp.it` avviato, ancora in esecuzione; `caipontedera@webmapp.it` non ancora avviato
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caiparma@webmapp.it --dry-run > /tmp/dry-run-caiparma.log`
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caipontedera@webmapp.it --dry-run > /tmp/dry-run-caipontedera.log`
 
 Contare le righe `[dry-run]` in ciascun log e applicare il runbook descritto in `overview.md` (sezione Rischi): pochi risultati → procedere con il run reale anche via cron; molti risultati → ispezionare a campione se i filename "vecchi" seguono il pattern legacy `sha1(...)` (caso noto, procedere con run manuale presidiato) oppure sembrano un difetto del criterio (bloccare e correggere prima del merge).
 
-- [ ] **Step 5: Documentare l'esito in notes.md**
+- [ ] **Step 5: Documentare l'esito in notes.md** — da fare al termine dello Step 4
 
 Aggiorna `docs/features/8361-fix-aggiornamento-featured-image-osm-wikimedia/notes.md`, sezione "Decisioni", con l'esito concreto del dry-run (quanti POI segnalati per ciascun utente, se il pattern legacy è stato riscontrato) e la decisione presa per il rollout finale (cron invariato vs run manuale presidiato una tantum).

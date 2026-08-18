@@ -731,10 +731,11 @@ class UpdatePOIFromOsmTest extends TestCase
                 'geometry' => ['type' => 'Point', 'coordinates' => [10.43, 43.70]],
             ]));
 
-        // Saving the poi's geometry fires EcPoiObserver::saved() -> EcPoi::updateDataChain(),
-        // which dispatches UpdateEcPoiDemJob (a real Http::get() to the DEM elevation service)
-        // synchronously under QUEUE_CONNECTION=sync — unrelated to dry-run, fake it so this
-        // test stays hermetic (same pattern already used by test_poi_without_wikimedia_commons_tag_is_not_touched).
+        // In --dry-run mode the whole attribute/geometry/save block in updatePoiData() is
+        // skipped, so the poi is never saved and EcPoiObserver::saved() never fires here —
+        // no real HTTP call is expected. Http::fake() is kept as a defensive hermeticity
+        // guard (same pattern as test_poi_without_wikimedia_commons_tag_is_not_touched),
+        // not because a network call is currently expected on this path.
         Http::fake();
 
         Artisan::call('geohub:update_pois_from_osm', [
