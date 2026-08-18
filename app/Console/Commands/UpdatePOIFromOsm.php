@@ -331,7 +331,6 @@ class UpdatePOIFromOsm extends Command
                     ]);
                     $ec_media->url = Storage::disk($ec_storage_name)->url($media_path);
                     $ec_media->save();
-                    $ec_media->updateDataChain($ec_media);
                     $poi->featureImage()->associate($ec_media);
                 }
 
