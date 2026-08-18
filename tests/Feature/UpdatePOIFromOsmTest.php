@@ -745,4 +745,50 @@ class UpdatePOIFromOsmTest extends TestCase
 
         $this->assertStringNotContainsString('Generating App POIs', Artisan::output());
     }
+
+    /**
+     * Test that console output is also persisted to the dedicated
+     * 'update_pois_from_osm' daily log file, so a run (scheduled or
+     * manual) leaves a record on disk, not just on stdout.
+     *
+     * @return void
+     */
+    public function test_command_output_is_persisted_to_the_dedicated_log_channel()
+    {
+        $logPath = storage_path('logs/update_pois_from_osm-'.now()->format('Y-m-d').'.log');
+        if (file_exists($logPath)) {
+            unlink($logPath);
+        }
+
+        $user = User::factory()->create();
+        $poi = EcPoi::factory()->create([
+            'user_id' => $user->id,
+            'osmid' => '181818181',
+        ]);
+
+        OsmClient::shouldReceive('getGeojson')
+            ->once()
+            ->andReturn(json_encode([
+                'version' => 0.6,
+                'generator' => 'test',
+                '_osmid' => '181818181',
+                'type' => 'Feature',
+                '_api_url' => 'https://api.openstreetmap.org/api/0.6/node/181818181.json',
+                'properties' => ['name' => 'Log channel test POI'],
+                'geometry' => ['type' => 'Point', 'coordinates' => [10.43, 43.70]],
+            ]));
+
+        Artisan::call('geohub:update_pois_from_osm', [
+            'user_email' => $user->email,
+            '--ec_poi_id' => $poi->id,
+        ]);
+
+        $this->assertFileExists($logPath);
+        // The poi's name is only updated from OSM data (updatePoiName()) partway through
+        // updatePoiData(), so the final "... updated." line — not the first "Updating poi
+        // ..." line — is the one that reflects the OSM-provided name.
+        $this->assertStringContainsString('Poi Log channel test POI (osmid: 181818181) updated.', file_get_contents($logPath));
+
+        unlink($logPath);
+    }
 }

@@ -55,6 +55,13 @@ return [
             'days' => 14,
         ],
 
+        'update_pois_from_osm' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/update_pois_from_osm.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

@@ -23,6 +23,15 @@ Due finder indipendenti (side-effect/bug e deviazioni-dal-piano) e un terzo (alt
 - **Correzione applicata**: rimossa la riga `$ec_media->updateDataChain($ec_media);` aggiunta sul ramo creazione — il dispatch automatico già scatenato da `EcMedia::create()` è sufficiente e corretto in produzione (coda asincrona). Nessun test esistente esercitava questo ramo (confermato da due finder via grep), quindi la rimozione non rompe nulla. Verificato con `php artisan test --filter=UpdatePOIFromOsmTest` dopo la rimozione.
 - **Nota per il ciclo futuro**: se in ambienti locali con `QUEUE_CONNECTION=sync` un POI riceve per la prima volta una featured image tramite questo comando, le thumbnails potrebbero non generarsi automaticamente (comportamento preesistente a questo ticket, non introdotto né risolto qui) — rimediabile a mano con `$ecMedia->updateDataChain($ecMedia)` se necessario, come fatto manualmente su POI 102105 in questa sessione dopo aver sistemato i permessi del bucket MinIO locale.
 
+### Richiesta post-review — canale di log dedicato
+Durante la verifica del rollout (Task 7), il dev ha notato che l'output del comando (`$this->info()`/`$this->error()`, incluso l'output del `--dry-run`) non finiva in nessun file di log persistente — solo stdout/console, e per il cron notturno nessun log a tutto (nessun `->appendOutputTo()` sullo scheduler in `Kernel.php`). Richiesto (e aggiunto a questo ticket) un modo corretto di monitorare i run, sia manuali che schedulati:
+
+- Aggiunto canale di log dedicato `update_pois_from_osm` in `config/logging.php` (driver `daily`, path `storage/logs/update_pois_from_osm.log` → file effettivi `update_pois_from_osm-YYYY-MM-DD.log`, retention 14 giorni — stessa convenzione del canale `daily` principale dell'app).
+- Aggiunti due metodi privati `logInfo()`/`logError()` in `UpdatePOIFromOsm.php` che scrivono sia in console (`$this->info()`/`$this->error()`, invariato) sia sul nuovo canale — **sempre**, sia nei run manuali sia in quello schedulato (nessuna modifica necessaria a `Kernel.php`, dato che il logging ora vive nel comando stesso, non nello scheduler).
+- Sostituite tutte le chiamate dirette `$this->info()`/`$this->error()` nel file con `$this->logInfo()`/`$this->logError()`, e redirette le chiamate diagnostiche interne (`Log::info`/`Log::error` già esistenti, non legate all'output console) allo stesso canale dedicato, per avere un unico posto dove vedere tutto ciò che riguarda un run. Rimosse 2 chiamate `Log::error`/`Log::info` ridondanti (duplicavano un `$this->error()`/`$this->info()` immediatamente adiacente, ora coperto da `logError()`/`logInfo()`).
+- Nuovo test `test_command_output_is_persisted_to_the_dedicated_log_channel` verifica che il file di log giornaliero venga creato e contenga l'output atteso.
+- Non è stato applicato lo stesso pattern a `OutSourceImporterFeatureOSMPoi.php` — usa già un proprio sistema di canali per-provider (`config/out_source_logging.php`, `$this->logChannel`), non richiesto dal dev, fuori scope di questa richiesta puntuale.
+
 ## Bug trovati
 Nessuno oltre a quelli già documentati in `overview.md` e a quelli emersi ed elencati sopra nella revisione finale.
 
