@@ -748,14 +748,22 @@ class UpdatePOIFromOsmTest extends TestCase
 
     /**
      * Test that console output is also persisted to the dedicated
-     * 'update_pois_from_osm' daily log file, so a run (scheduled or
-     * manual) leaves a record on disk, not just on stdout.
+     * 'update_pois_from_osm' daily log channel, so a run (scheduled or
+     * manual) leaves a record on disk, not just on stdout. Uses an
+     * overridden test-only path — see the comment below.
      *
      * @return void
      */
     public function test_command_output_is_persisted_to_the_dedicated_log_channel()
     {
-        $logPath = storage_path('logs/update_pois_from_osm-'.now()->format('Y-m-d').'.log');
+        // Use a test-only base filename, never the real 'update_pois_from_osm' one:
+        // that daily-rotated path is shared with real (manual/scheduled) runs on the
+        // same machine, and this test used to unlink() it at start/end — which
+        // deleted a real run's log file mid-write when both happened to execute on
+        // the same day. Overriding the channel's path here keeps this test's file
+        // I/O fully isolated from anything else using the real channel.
+        config(['logging.channels.update_pois_from_osm.path' => storage_path('logs/update_pois_from_osm_test.log')]);
+        $logPath = storage_path('logs/update_pois_from_osm_test-'.now()->format('Y-m-d').'.log');
         if (file_exists($logPath)) {
             unlink($logPath);
         }
