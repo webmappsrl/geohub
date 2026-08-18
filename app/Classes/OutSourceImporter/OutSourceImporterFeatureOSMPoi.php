@@ -7,6 +7,7 @@ use App\Providers\OsmServiceProvider;
 use App\Traits\ImporterAndSyncTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
@@ -130,9 +131,17 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
             if (isset($media['imageinfo']) && isset($media['imageinfo'][0])) {
                 $url_encoded = $media['imageinfo'][0]['url'];
             }
-            $options = ['http' => ['user_agent' => 'custom user agent string']];
-            $context = stream_context_create($options);
-            $contents = file_get_contents($url_encoded, false, $context);
+            $imageResponse = Http::withHeaders([
+                'User-Agent' => config('geohub.wikimedia_user_agent'),
+            ])->timeout(30)->withOptions(['connect_timeout' => 10])->get($url_encoded);
+
+            if (! $imageResponse->successful() || empty($imageResponse->body())) {
+                $this->logChannel->error('Error downloading OSF media from Wikimedia Commons: HTTP status '.$imageResponse->status());
+
+                return $tags;
+            }
+
+            $contents = $imageResponse->body();
             $basename = explode('.', basename($url_encoded));
             $s3_osfmedia = Storage::disk($storage_name);
             $osf_name_tmp = sha1($basename[0]).'.'.$basename[1];
