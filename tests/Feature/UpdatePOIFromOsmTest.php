@@ -137,7 +137,7 @@ class UpdatePOIFromOsmTest extends TestCase
 
         $this->artisan('geohub:update_pois_from_osm', [
             'user_email' => $user->email,
-        ])->expectsOutput('Error while retrieving data from OSM for poi '.$poi->name.' (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
+        ])->expectsOutput('Error while retrieving data from OSM for poi:'.$poi->id.' "'.$poi->name.'" (osmid: '.$poi->osmid.') (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
     }
 
     /**
@@ -801,7 +801,7 @@ class UpdatePOIFromOsmTest extends TestCase
         // The poi's name is only updated from OSM data (updatePoiName()) partway through
         // updatePoiData(), so the final "... updated." line — not the first "Updating poi
         // ..." line — is the one that reflects the OSM-provided name.
-        $this->assertStringContainsString('Poi Log channel test POI (osmid: 181818181) updated.', file_get_contents($logPath));
+        $this->assertStringContainsString('poi:'.$poi->id.' "Log channel test POI" (osmid: 181818181) updated.', file_get_contents($logPath));
 
         unlink($logPath);
     }

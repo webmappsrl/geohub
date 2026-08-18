@@ -101,6 +101,15 @@ class UpdatePOIFromOsm extends Command
     }
 
     /**
+     * Consistent poi identification string for log messages: poi id, name,
+     * and osmid.
+     */
+    private function poiContext(EcPoi $poi): string
+    {
+        return 'poi:'.$poi->id.' "'.$poi->name.'" (osmid: '.$poi->osmid.')';
+    }
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -151,7 +160,7 @@ class UpdatePOIFromOsm extends Command
         // print to terminal all the pois not updated
         if (! empty($this->errorPois)) {
             foreach ($this->errorPois as $poi) {
-                $this->logError('Poi '.$poi->name.' (osmid: '.$poi->osmid.' ) not updated.');
+                $this->logError($this->poiContext($poi).' not updated.');
             }
         }
         if (! $this->dryRun) {
@@ -187,20 +196,20 @@ class UpdatePOIFromOsm extends Command
     // Update the data for a single poi
     private function updatePoiData(EcPoi $poi)
     {
-        $this->logInfo('Updating poi '.$poi->name.' ('.$poi->osmid.')...');
+        $this->logInfo('Updating '.$this->poiContext($poi).'...');
 
         try {
             // Retrieve the geojson data from OSM based on the poi's osmid
             $osmPoi = json_decode(OsmClient::getGeojson('node/'.$poi->osmid), true);
             // if $osmPoi['_api_url'] is empty log error and skip the poi
             if (empty($osmPoi['_api_url'])) {
-                $this->logError('Error while retrieving data from OSM for poi '.$poi->name.' (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
+                $this->logError('Error while retrieving data from OSM for '.$this->poiContext($poi).' (https://api.openstreetmap.org/api/0.6/node/'.$poi->osmid.'.json). Url not valid');
                 array_push($this->errorPois, $poi);
 
                 return;
             }
         } catch (Exception $e) {
-            $this->logError('Error while retrieving data from OSM for poi '.$poi->name.' ('.$poi->osmid.'). Error: '.$e->getMessage());
+            $this->logError('Error while retrieving data from OSM for '.$this->poiContext($poi).'. Error: '.$e->getMessage());
             array_push($this->errorPois, $poi);
 
             return;
@@ -213,14 +222,14 @@ class UpdatePOIFromOsm extends Command
         if (! $this->dryRun) {
             try {
                 if (! isset($osmPoi['properties']) || ! is_array($osmPoi['properties'])) {
-                    throw new Exception('Missing or invalid "properties" in OSM data for poi '.$poi->name);
+                    throw new Exception('Missing or invalid "properties" in OSM data for '.$this->poiContext($poi));
                 }
                 $this->updatePoiAttribute($poi, $osmPoi, 'ele', 'ele');
                 $this->updatePoiAttribute($poi, $osmPoi, 'ref', 'ref');
                 $this->updatePoiName($poi, $osmPoi);
                 $this->updatePoiGeometry($poi, $osmPoi);
             } catch (Throwable $e) {
-                $this->logError('Error updating attributes for poi '.$poi->name.' ('.$poi->osmid.'). Error: '.$e->getMessage());
+                $this->logError('Error updating attributes for '.$this->poiContext($poi).'. Error: '.$e->getMessage());
                 array_push($this->errorPois, $poi);
 
                 return;
@@ -229,11 +238,11 @@ class UpdatePOIFromOsm extends Command
             // Set the 'skip_geomixer_tech' field to true if the 'ele' attribute was updated
             if ($poi->isDirty('ele')) {
                 $poi->skip_geomixer_tech = true;
-                $this->logInfo('Poi '.$poi->name.' (osmid: '.$poi->osmid.') ele updated. Skip_geomixer_tech set to true.');
+                $this->logInfo($this->poiContext($poi).' ele updated. Skip_geomixer_tech set to true.');
             }
             // Save the updated poi
             $poi->save();
-            $this->logInfo('Poi '.$poi->name.' (osmid: '.$poi->osmid.') updated.');
+            $this->logInfo($this->poiContext($poi).' updated.');
         }
     }
 
@@ -255,7 +264,7 @@ class UpdatePOIFromOsm extends Command
                 $poi->$poiAttributeKey = $value;
             }
         } catch (Exception $e) {
-            $this->logChannelOnly('error', 'Error: '.$poi->id."\n ERROR: ".$e->getMessage());
+            $this->logChannelOnly('error', 'Error updating attribute for '.$this->poiContext($poi)."\n ERROR: ".$e->getMessage());
         }
     }
 
@@ -295,14 +304,14 @@ class UpdatePOIFromOsm extends Command
             $responseData = json_decode($metadataResponse->body(), true);
 
             if ($responseData === null) {
-                $this->logError('Invalid JSON response from Wikimedia Commons for poi '.$poi->name);
+                $this->logError('Invalid JSON response from Wikimedia Commons for '.$this->poiContext($poi));
                 array_push($this->errorPois, $poi);
 
                 return;
             }
 
             if (! isset($responseData['query']['pages'])) {
-                $this->logError('No pages found in Wikimedia Commons response for poi '.$poi->name);
+                $this->logError('No pages found in Wikimedia Commons response for '.$this->poiContext($poi));
                 array_push($this->errorPois, $poi);
 
                 return;
@@ -310,14 +319,14 @@ class UpdatePOIFromOsm extends Command
 
             $pages = $responseData['query']['pages'];
         } catch (Exception $e) {
-            $this->logError('Error while retrieving metadata from Wikimedia Commons for poi '.$poi->name.' ('.$wikimediaCommonsTitle.'). Error: '.$e->getMessage());
+            $this->logError('Error while retrieving metadata from Wikimedia Commons for '.$this->poiContext($poi).' ('.$wikimediaCommonsTitle.'). Error: '.$e->getMessage());
             array_push($this->errorPois, $poi);
 
             return;
         }
 
         if (empty($pages)) {
-            $this->logError('No pages data available for poi '.$poi->name);
+            $this->logError('No pages data available for '.$this->poiContext($poi));
             array_push($this->errorPois, $poi);
 
             return;
@@ -325,7 +334,7 @@ class UpdatePOIFromOsm extends Command
 
         foreach ($pages as $page) {
             if (! isset($page['imageinfo'][0])) {
-                $this->logError('No imageinfo available for page in poi '.$poi->name);
+                $this->logError('No imageinfo available for page in '.$this->poiContext($poi));
 
                 continue;
             }
@@ -334,18 +343,18 @@ class UpdatePOIFromOsm extends Command
             $currentFeatureImage = $poi->featureImage;
 
             if ($currentFeatureImage && ! $this->shouldUpdateFeatureImage($currentFeatureImage, $page)) {
-                $this->logInfo('[is up to date] Feature image for poi '.$poi->name.'.');
+                $this->logInfo('[is up to date] Feature image for '.$this->poiContext($poi).'.');
 
                 continue;
             }
 
             if ($this->dryRun) {
-                $this->logInfo('[dry-run] Feature image for poi '.$poi->name.' would be updated - current: '.($currentFeatureImage ? rawurldecode(basename($currentFeatureImage->url)) : '(none)').' -> new: '.$page['title']);
+                $this->logInfo('[dry-run] Feature image for '.$this->poiContext($poi).' would be updated - current: '.($currentFeatureImage ? rawurldecode(basename($currentFeatureImage->url)) : '(none)').' -> new: '.$page['title']);
 
                 continue;
             }
 
-            $this->logInfo('[updating] Feature image for poi '.$poi->name);
+            $this->logInfo('[updating] Feature image for '.$this->poiContext($poi));
 
             try {
                 $imageResponse = Http::withHeaders([
@@ -353,7 +362,7 @@ class UpdatePOIFromOsm extends Command
                 ])->timeout(30)->withOptions(['connect_timeout' => 10])->get($imageUrl);
 
                 if (! $imageResponse->successful() || empty($imageResponse->body())) {
-                    $this->logError('Error downloading image from Wikimedia Commons for poi '.$poi->name.' ('.$imageUrl.'). HTTP status: '.$imageResponse->status());
+                    $this->logError('Error downloading image from Wikimedia Commons for '.$this->poiContext($poi).' ('.$imageUrl.'). HTTP status: '.$imageResponse->status());
                     array_push($this->errorPois, $poi);
 
                     continue;
@@ -362,7 +371,7 @@ class UpdatePOIFromOsm extends Command
                 $ec_storage_name = config('geohub.ec_media_storage_name');
                 $media_path = 'ec_media/'.$page['title'];
                 Storage::disk($ec_storage_name)->put($media_path, $imageResponse->body());
-                $this->logChannelOnly('info', 'Updating EC Media.');
+                $this->logChannelOnly('info', 'Updating EC Media for '.$this->poiContext($poi).'.');
 
                 if ($currentFeatureImage) {
                     $currentFeatureImage->geometry = $this->getPoiGeometryWkt($poi);
@@ -383,11 +392,11 @@ class UpdatePOIFromOsm extends Command
                 }
 
                 if ($poi->ecMedia()->count() < 1 && $poi->feature_image) {
-                    $this->logChannelOnly('info', 'Updating: '.$poi->id);
+                    $this->logChannelOnly('info', 'Syncing ecMedia pivot for '.$this->poiContext($poi).'.');
                     $poi->ecMedia()->sync($poi->featureImage);
                 }
             } catch (Exception $e) {
-                $this->logError('Error updating EcMedia for poi '.$poi->name.' (id: '.$poi->id.'): '.$e->getMessage());
+                $this->logError('Error updating EcMedia for '.$this->poiContext($poi).': '.$e->getMessage());
                 array_push($this->errorPois, $poi);
             }
         }
