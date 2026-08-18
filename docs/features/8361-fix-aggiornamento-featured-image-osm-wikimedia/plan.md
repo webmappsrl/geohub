@@ -1335,7 +1335,7 @@ docker exec php_geohub php artisan tinker --execute="echo App\Models\EcPoi::find
 
 Expected: l'URL contiene `It-pr-ldpB072v2.jpg`, non più `It-pr-ldpB072.jpg`.
 
-- [ ] **Step 4: Eseguire `--dry-run` su entrambi gli utenti schedulati e ispezionare il volume di update segnalati** — in corso: dry-run su `caiparma@webmapp.it` avviato, ancora in esecuzione; `caipontedera@webmapp.it` non ancora avviato
+- [ ] **Step 4: Eseguire `--dry-run` su entrambi gli utenti schedulati e ispezionare il volume di update segnalati** — non ancora completato: un primo `--dry-run` su `caiparma@webmapp.it` è stato avviato e poi interrotto manualmente a ~20% (524/2579 POI, 1 solo aggiornamento reale rilevato); un secondo test, questa volta con il comando reale (non `--dry-run`) su `caiparma@webmapp.it`, è stato lanciato successivamente in locale su richiesta del dev — vedi `notes.md` per l'esito. `caipontedera@webmapp.it` non ancora testato.
 
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caiparma@webmapp.it --dry-run > /tmp/dry-run-caiparma.log`
 Run: `docker exec -w /var/www/html/geohub php_geohub php artisan geohub:update_pois_from_osm caipontedera@webmapp.it --dry-run > /tmp/dry-run-caipontedera.log`

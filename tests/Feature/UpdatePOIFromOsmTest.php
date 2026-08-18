@@ -778,6 +778,12 @@ class UpdatePOIFromOsmTest extends TestCase
                 'geometry' => ['type' => 'Point', 'coordinates' => [10.43, 43.70]],
             ]));
 
+        // This POI has no wikimedia_commons tag, but its attributes/geometry still get
+        // saved (not dry-run), which fires EcPoiObserver::saved() -> UpdateEcPoiDemJob, a
+        // real Http::get() to the DEM elevation service — fake it so this test stays
+        // hermetic (same pattern as test_poi_without_wikimedia_commons_tag_is_not_touched).
+        Http::fake();
+
         Artisan::call('geohub:update_pois_from_osm', [
             'user_email' => $user->email,
             '--ec_poi_id' => $poi->id,

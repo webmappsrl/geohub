@@ -59,7 +59,15 @@ class UpdatePOIFromOsm extends Command
     private function logInfo(string $message): void
     {
         $this->info($message);
-        Log::channel('update_pois_from_osm')->info($message);
+
+        try {
+            Log::channel('update_pois_from_osm')->info($message);
+        } catch (Throwable $e) {
+            // A failure writing to the dedicated log channel (disk full, permissions,
+            // a lock during daily rotation) must never abort the command itself —
+            // that would be exactly the kind of silent, batch-halting failure this
+            // ticket set out to eliminate, just moved to a different code path.
+        }
     }
 
     /**
@@ -70,7 +78,26 @@ class UpdatePOIFromOsm extends Command
     private function logError(string $message): void
     {
         $this->error($message);
-        Log::channel('update_pois_from_osm')->error($message);
+
+        try {
+            Log::channel('update_pois_from_osm')->error($message);
+        } catch (Throwable $e) {
+            // See logInfo(): a broken log channel must not abort the command.
+        }
+    }
+
+    /**
+     * Persist a diagnostic-only message to the dedicated log channel, without
+     * printing it to the console — for internal notes that were never meant
+     * to be user-visible output.
+     */
+    private function logChannelOnly(string $level, string $message): void
+    {
+        try {
+            Log::channel('update_pois_from_osm')->{$level}($message);
+        } catch (Throwable $e) {
+            // See logInfo(): a broken log channel must not abort the command.
+        }
     }
 
     /**
@@ -228,7 +255,7 @@ class UpdatePOIFromOsm extends Command
                 $poi->$poiAttributeKey = $value;
             }
         } catch (Exception $e) {
-            Log::channel('update_pois_from_osm')->info('Error: '.$poi->id."\n ERROR: ".$e->getMessage());
+            $this->logChannelOnly('error', 'Error: '.$poi->id."\n ERROR: ".$e->getMessage());
         }
     }
 
@@ -335,7 +362,7 @@ class UpdatePOIFromOsm extends Command
                 $ec_storage_name = config('geohub.ec_media_storage_name');
                 $media_path = 'ec_media/'.$page['title'];
                 Storage::disk($ec_storage_name)->put($media_path, $imageResponse->body());
-                Log::channel('update_pois_from_osm')->info('Updating EC Media.');
+                $this->logChannelOnly('info', 'Updating EC Media.');
 
                 if ($currentFeatureImage) {
                     $currentFeatureImage->geometry = $this->getPoiGeometryWkt($poi);
@@ -356,7 +383,7 @@ class UpdatePOIFromOsm extends Command
                 }
 
                 if ($poi->ecMedia()->count() < 1 && $poi->feature_image) {
-                    Log::channel('update_pois_from_osm')->info('Updating: '.$poi->id);
+                    $this->logChannelOnly('info', 'Updating: '.$poi->id);
                     $poi->ecMedia()->sync($poi->featureImage);
                 }
             } catch (Exception $e) {
