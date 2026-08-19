@@ -15,6 +15,7 @@ return [
     'pbf_min_zoom' => env('PBF_MIN_ZOOM', 5),
     'pbf_max_zoom' => env('PBF_MAX_ZOOM', 13),
     'node_executable' => env('NODE_EXECUTABLE', '/usr/bin/node'),
+    'wikimedia_user_agent' => env('WIKIMEDIA_USER_AGENT', 'GeoHub-POI-Updater/1.0 (https://geohub.webmapp.it; info@webmapp.it)'),
     'ec_media' => [
         'thumbnail_sizes' => [
             ['width' => 108, 'height' => 148],
