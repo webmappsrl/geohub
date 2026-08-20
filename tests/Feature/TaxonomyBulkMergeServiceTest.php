@@ -21,7 +21,7 @@ class TaxonomyBulkMergeServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new TaxonomyBulkMergeService();
+        $this->service = new TaxonomyBulkMergeService;
     }
 
     private function createEcTrack(): EcTrack
