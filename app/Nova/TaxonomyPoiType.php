@@ -2,7 +2,7 @@
 
 namespace App\Nova;
 
-use App\Nova\Actions\BulkMergePoiType;
+use App\Nova\Actions\BulkMergeTaxonomy;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
@@ -254,7 +254,14 @@ class TaxonomyPoiType extends Resource
     public function actions(Request $request)
     {
         return [
-            new BulkMergePoiType,
+            new BulkMergeTaxonomy(
+                \App\Models\TaxonomyPoiType::class,
+                'taxonomy_poi_typeables',
+                'taxonomy_poi_type_id',
+                'taxonomy_poi_typeable_id',
+                'taxonomy_poi_typeable_type',
+                'Bulk Merge Poi Type'
+            ),
         ];
     }
 }

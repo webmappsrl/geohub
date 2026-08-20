@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\BulkMergeTaxonomy;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
@@ -303,6 +304,15 @@ class TaxonomyTheme extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new BulkMergeTaxonomy(
+                \App\Models\TaxonomyTheme::class,
+                'taxonomy_themeables',
+                'taxonomy_theme_id',
+                'taxonomy_themeable_id',
+                'taxonomy_themeable_type',
+                'Bulk Merge Theme'
+            ),
+        ];
     }
 }
