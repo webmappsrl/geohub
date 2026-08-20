@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\BulkMergeTaxonomy;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
 use Chaseconey\ExternalImage\ExternalImage;
@@ -245,6 +246,15 @@ class TaxonomyActivity extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new BulkMergeTaxonomy(
+                \App\Models\TaxonomyActivity::class,
+                'taxonomy_activityables',
+                'taxonomy_activity_id',
+                'taxonomy_activityable_id',
+                'taxonomy_activityable_type',
+                'Bulk Merge Activity'
+            ),
+        ];
     }
 }
