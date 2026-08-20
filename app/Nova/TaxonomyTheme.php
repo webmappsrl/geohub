@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Models\TaxonomyTheme as TaxonomyThemeModel;
 use App\Nova\Actions\BulkMergeTaxonomy;
 use App\Providers\WebmappAppIconProvider;
 use Bernhardh\NovaIconSelect\NovaIconSelect;
@@ -307,7 +306,7 @@ class TaxonomyTheme extends Resource
     {
         return [
             new BulkMergeTaxonomy(
-                TaxonomyThemeModel::class,
+                \App\Models\TaxonomyTheme::class,
                 'taxonomy_themeables',
                 'taxonomy_theme_id',
                 'taxonomy_themeable_id',

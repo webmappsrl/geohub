@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 
 class TaxonomyBulkMergeService
@@ -22,6 +23,16 @@ class TaxonomyBulkMergeService
 
         if (! $models->contains(fn ($model) => (int) $model->id === $mainId)) {
             throw new InvalidArgumentException("Main taxonomy id {$mainId} is not among the selected models.");
+        }
+
+        if (! Schema::hasTable($pivotTable)) {
+            throw new InvalidArgumentException("Pivot table \"{$pivotTable}\" does not exist.");
+        }
+
+        foreach ([$foreignKey, $morphIdColumn, $morphTypeColumn] as $column) {
+            if (! Schema::hasColumn($pivotTable, $column)) {
+                throw new InvalidArgumentException("Pivot table \"{$pivotTable}\" has no column \"{$column}\".");
+            }
         }
 
         $duplicates = $models->filter(fn ($model) => (int) $model->id !== $mainId);

@@ -55,7 +55,7 @@
 - Consumes: Eloquent models + `DB` facade; factories `TaxonomyTheme`, `TaxonomyActivity`, `TaxonomyPoiType`, `EcTrack`
 - Produces: `TaxonomyBulkMergeService::merge(Collection $models, int $mainId, string $pivotTable, string $foreignKey, string $morphIdColumn, string $morphTypeColumn): void` — throws `\InvalidArgumentException` se main non è tra i models o models &lt; 2
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```php
 <?php
@@ -244,13 +244,13 @@ class TaxonomyBulkMergeServiceTest extends TestCase
 }
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `php artisan test --filter=TaxonomyBulkMergeServiceTest`
 
 Expected: FAIL (class `TaxonomyBulkMergeService` not found)
 
-- [ ] **Step 3: Implement `TaxonomyBulkMergeService`**
+- [x] **Step 3: Implement `TaxonomyBulkMergeService`**
 
 ```php
 <?php
@@ -306,7 +306,7 @@ class TaxonomyBulkMergeService
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `php artisan test --filter=TaxonomyBulkMergeServiceTest`
 
@@ -337,7 +337,7 @@ EOF
 - Consumes: `TaxonomyBulkMergeService::merge(...)`
 - Produces: `BulkMergeTaxonomy` costruttore `(string $modelClass, string $pivotTable, string $foreignKey, string $morphIdColumn, string $morphTypeColumn, string $actionName)`
 
-- [ ] **Step 1: Implement action**
+- [x] **Step 1: Implement action**
 
 ```php
 <?php
@@ -481,7 +481,7 @@ EOF
 - Consumes: `BulkMergeTaxonomy` constructor
 - Produces: action visibile nelle tre index Nova
 
-- [ ] **Step 1: Register on TaxonomyTheme**
+- [x] **Step 1: Register on TaxonomyTheme**
 
 In `actions()`:
 
@@ -506,7 +506,7 @@ public function actions(Request $request)
 
 (Usa alias del Model se la resource si chiama già `TaxonomyTheme`.)
 
-- [ ] **Step 2: Register on TaxonomyActivity**
+- [x] **Step 2: Register on TaxonomyActivity**
 
 ```php
 new BulkMergeTaxonomy(
@@ -519,7 +519,7 @@ new BulkMergeTaxonomy(
 ),
 ```
 
-- [ ] **Step 3: Replace Poi Type action**
+- [x] **Step 3: Replace Poi Type action**
 
 ```php
 new BulkMergeTaxonomy(
@@ -534,13 +534,13 @@ new BulkMergeTaxonomy(
 
 Rimuovi `use App\Nova\Actions\BulkMergePoiType` e cancella il file `BulkMergePoiType.php`.
 
-- [ ] **Step 4: Grep for leftover references**
+- [x] **Step 4: Grep for leftover references**
 
 Run: `rg -n "BulkMergePoiType" app tests`
 
 Expected: nessun match (o solo docs)
 
-- [ ] **Step 5: Re-run service tests**
+- [x] **Step 5: Re-run service tests**
 
 Run: `php artisan test --filter=TaxonomyBulkMergeServiceTest`
 
@@ -564,7 +564,7 @@ EOF
 
 **Files:** nessuno (verifica + note)
 
-- [ ] **Step 1: Smoke in Nova (local)**
+- [x] **Step 1: Smoke in Nova (local)** — eseguito su Theme con caso reale 136→6 (vedi notes.md); Activity/Poi Type non ancora verificati
 
 1. Taxonomy Theme index: seleziona 2 temi di test → action **Bulk Merge Theme**
 2. Verifica Select Main: solo i 2 selezionati; Heading con conteggio delete = 1
@@ -572,7 +572,7 @@ EOF
 4. Verifica DB: pivot sul Main, duplicato eliminato
 5. Ripeti smoke minimo su Activity e Poi Type (2 termini di test, non produzione)
 
-- [ ] **Step 2: Checklist post-deploy (operativa, non codice)**
+- [x] **Step 2: Checklist post-deploy (operativa, non codice)**
 
 Documentare in `notes.md` al termine (o lasciare qui come reminder):
 

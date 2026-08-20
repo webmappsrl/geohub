@@ -192,4 +192,61 @@ class TaxonomyBulkMergeServiceTest extends TestCase
             'taxonomy_themeable_type'
         );
     }
+
+    public function test_merge_rejects_unknown_pivot_column(): void
+    {
+        $main = TaxonomyTheme::factory()->create();
+        $dup = TaxonomyTheme::factory()->create();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->service->merge(
+            collect([$main, $dup]),
+            $main->id,
+            'taxonomy_themeables',
+            'not_a_real_column',
+            'taxonomy_themeable_id',
+            'taxonomy_themeable_type'
+        );
+    }
+
+    public function test_theme_merge_with_three_selected_resolves_chained_conflict(): void
+    {
+        $main = TaxonomyTheme::factory()->create();
+        $dup1 = TaxonomyTheme::factory()->create();
+        $dup2 = TaxonomyTheme::factory()->create();
+        $track = $this->createEcTrack();
+
+        DB::table('taxonomy_themeables')->insert([
+            [
+                'taxonomy_theme_id' => $dup1->id,
+                'taxonomy_themeable_id' => $track->id,
+                'taxonomy_themeable_type' => EcTrack::class,
+            ],
+            [
+                'taxonomy_theme_id' => $dup2->id,
+                'taxonomy_themeable_id' => $track->id,
+                'taxonomy_themeable_type' => EcTrack::class,
+            ],
+        ]);
+
+        $this->service->merge(
+            collect([$main, $dup1, $dup2]),
+            $main->id,
+            'taxonomy_themeables',
+            'taxonomy_theme_id',
+            'taxonomy_themeable_id',
+            'taxonomy_themeable_type'
+        );
+
+        $rows = DB::table('taxonomy_themeables')
+            ->where('taxonomy_themeable_id', $track->id)
+            ->where('taxonomy_themeable_type', EcTrack::class)
+            ->get();
+
+        $this->assertCount(1, $rows);
+        $this->assertEquals($main->id, $rows->first()->taxonomy_theme_id);
+        $this->assertDatabaseMissing('taxonomy_themes', ['id' => $dup1->id]);
+        $this->assertDatabaseMissing('taxonomy_themes', ['id' => $dup2->id]);
+    }
 }

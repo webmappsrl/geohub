@@ -6,6 +6,7 @@ use App\Services\TaxonomyBulkMergeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Heading;
@@ -54,10 +55,6 @@ class BulkMergeTaxonomy extends Action
 
     public function handle(ActionFields $fields, Collection $models)
     {
-        if ($models->count() < 2) {
-            return Action::danger('Select at least two taxonomy terms to merge.');
-        }
-
         $mainId = (int) $fields->get('main_taxonomy');
 
         try {
@@ -72,6 +69,13 @@ class BulkMergeTaxonomy extends Action
         } catch (\InvalidArgumentException $e) {
             return Action::danger($e->getMessage());
         } catch (\Throwable $e) {
+            Log::error('BulkMergeTaxonomy merge failed', [
+                'model' => $this->modelClass,
+                'pivot_table' => $this->pivotTable,
+                'main_id' => $mainId,
+                'exception' => $e,
+            ]);
+
             return Action::danger('Error while merging: '.$e->getMessage());
         }
 

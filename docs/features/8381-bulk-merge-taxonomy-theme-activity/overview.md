@@ -16,17 +16,17 @@ Su cai_parma il cliente vede due Theme “Itinerari consigliati” (id 6 `recomm
 
 ## Requisiti
 
-- [ ] Core merge in servizio/action parametrizzata (pivot table + FK column), riusata da Theme, Activity e Poi Type
-- [ ] Refactor di `BulkMergePoiType`: stessa logica/UX del generico (non lasciare due implementazioni divergenti)
-- [ ] Select “Main” elenca tutti i termini; il Main deve essere tra i **modelli selezionati** (minimo 2 selezionati; enforcement in handle/servizio — Nova 3 non espone la selezione in `fields()`)
-- [ ] Se un’entità ha già Main e duplicato sulla pivot: tenere solo l’associazione al Main, eliminare quella del duplicato (senza copia duration Activity)
-- [ ] Aggiornare le pivot corrette: `taxonomy_themeables`, `taxonomy_activityables`, `taxonomy_poi_typeables`
-- [ ] Escludere il Main dalla delete; eliminare solo i termini selezionati non-Main
-- [ ] Transazione DB + messaggio successo/errore Nova
-- [ ] Conferma Nova esplicita prima del merge (Main id/identifier + quanti termini verranno eliminati) — operazione irreversibile
-- [ ] Test automatici sul merge (remap pivot, conflitto pivot, delete non-Main, Activity con duration invariate sul Main)
-- [ ] Smoke manuale in Nova dopo implementazione
-- [ ] Out of scope esplicito: Target, When, Where; merge dati 136→6 non automatizzato in questo ticket
+- [x] Core merge in servizio/action parametrizzata (pivot table + FK column), riusata da Theme, Activity e Poi Type
+- [x] Refactor di `BulkMergePoiType`: stessa logica/UX del generico (non lasciare due implementazioni divergenti)
+- [x] Select “Main” elenca tutti i termini; il Main deve essere tra i **modelli selezionati** (minimo 2 selezionati; enforcement in handle/servizio — Nova 3 non espone la selezione in `fields()`)
+- [x] Se un’entità ha già Main e duplicato sulla pivot: tenere solo l’associazione al Main, eliminare quella del duplicato (senza copia duration Activity)
+- [x] Aggiornare le pivot corrette: `taxonomy_themeables`, `taxonomy_activityables`, `taxonomy_poi_typeables`
+- [x] Escludere il Main dalla delete; eliminare solo i termini selezionati non-Main
+- [x] Transazione DB + messaggio successo/errore Nova
+- [x] Conferma Nova esplicita prima del merge (Main id/identifier + quanti termini verranno eliminati) — operazione irreversibile
+- [x] Test automatici sul merge (remap pivot, conflitto pivot, delete non-Main, Activity con duration invariate sul Main)
+- [x] Smoke manuale in Nova dopo implementazione (Theme, con caso reale 136→6; Activity/Poi Type non ancora verificati)
+- [x] Out of scope esplicito: Target, When, Where; merge dati 136→6 non automatizzato in questo ticket
 
 ## Rischi
 
