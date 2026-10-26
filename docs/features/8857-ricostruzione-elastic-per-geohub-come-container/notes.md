@@ -89,5 +89,8 @@
 - Valutare la sostituzione del passthrough con un endpoint dentro Geohub, quando sarà accettabile
   rilasciare le app (ticket separato).
 - Valutare la rimozione di `--inspect` dal `Dockerfile` del passthrough.
-- Il nodo nuovo non ha né snapshot né monitoraggio: il ticket nasce da una perdita di dati e non
-  introduce nulla che impedisca di ripeterla. Vale un ticket a sé.
+- **Nessuno snapshot degli indici, ed è voluto** (deciso dal dev): il contenuto di Elastic è un
+  dato derivato, ricostruibile dal database in pochi minuti con `geohub:index-tracks
+  --info-elastic`, come dimostrato durante questo ripristino. È un container di servizio senza
+  dati propri, e la macchina segue già le politiche di gestione di Geohub. Un backup dedicato
+  proteggerebbe qualcosa che non ha bisogno di protezione.
