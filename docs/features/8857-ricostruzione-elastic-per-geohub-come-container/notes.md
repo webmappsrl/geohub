@@ -88,7 +88,12 @@
 
 - Valutare la sostituzione del passthrough con un endpoint dentro Geohub, quando sarà accettabile
   rilasciare le app (ticket separato).
-- Valutare la rimozione di `--inspect` dal `Dockerfile` del passthrough.
+- **`--inspect` rimosso dal `Dockerfile`** (`v1.0.2-oc8857`): l'immagine avviava Node con il
+  debugger in ascolto su tutte le interfacce. Nello stack di produzione la porta non era
+  pubblicata, ma un debugger acceso in un servizio in esercizio resta un rischio. Era stato
+  introdotto nel branch `develop`, cioè proprio il ramo portato in produzione con questo
+  ripristino: non è un problema ereditato. Il debug in sviluppo resta, riattivato con un
+  `command` nel compose di sviluppo.
 - **Nessuno snapshot degli indici, ed è voluto** (deciso dal dev): il contenuto di Elastic è un
   dato derivato, ricostruibile dal database in pochi minuti con `geohub:index-tracks
   --info-elastic`, come dimostrato durante questo ripristino. È un container di servizio senza
