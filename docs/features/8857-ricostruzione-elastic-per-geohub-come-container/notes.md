@@ -4,13 +4,37 @@
 
 ## Deviazioni dal piano
 
-- **Dei 8 task del piano, in questa sessione sono stati eseguiti solo il 2 e l'8.** Gli altri sono
-  operazioni sulla macchina, su Apache e sul DNS, che vanno fatte dal dev: restano nel piano come
-  istruzioni con i comandi e l'esito atteso.
+- **Tutti gli 8 task sono stati eseguiti**, contrariamente a quanto previsto all'inizio: il dev ha
+  chiesto di procedere anche sulla macchina. L'unico passo fatto da lui è stato il cambio del
+  record DNS, perché il dominio è gestito da un pannello esterno.
+- **Il nodo Elastic pubblica la porta sul loopback della macchina**, non su nessuna porta come
+  diceva il requisito originale. Geohub in produzione gira nativo, fuori dalla rete Docker, e
+  senza questo non riesce a indicizzare. Da fuori la macchina il nodo resta invisibile, verificato
+  con una connessione dall'esterno.
+- **Il reindex completo è stato lanciato prima che il dev verificasse l'app pilota.** Il piano
+  prevedeva la sua verifica fra pilota e reindex totale; la verifica è stata fatta solo da chi
+  eseguiva, e il dev ha trovato la ricerca vuota proprio perché l'indice del pilota era già stato
+  cancellato e stava ripopolando. Errore di esecuzione, non del piano.
 - Il compose del task 2 vive nel repo `elastic-passthrough`, non qui: è stato clonato in locale
   accanto agli altri repo e il file è su un branch dedicato, non committato.
 
 ## Bug trovati
+
+- **`.env.example` scritto con la variabile sbagliata.** Era stato dedotto dalla versione vecchia
+  di `master`, che leggeva `TOKEN`; il codice in esercizio legge invece `USERNAME` e `PASSWORD` e
+  costruisce da sé l'header Basic. Scoperto a servizio avviato, dal `security_exception` di
+  Elasticsearch: `unable to authenticate user [undefined]`. Corretto.
+- **Un indice ricostruito da zero non conosce i campi che non esistono più.** Il passthrough
+  ordina per nome italiano e inglese; su un'app senza nomi in inglese il campo
+  `doc.name.en.keyword` non esiste e Elasticsearch rifiuta l'intera query invece di saltare
+  l'ordinamento, restituendo un errore al posto dei risultati. Sull'indice vecchio, cresciuto
+  negli anni, bastava che una sola traccia avesse avuto un nome inglese perché il campo restasse
+  noto. Risolto aggiungendo `unmapped_type` ai quattro ordinamenti del passthrough
+  (`v1.0.1-oc8857`), invece di modificare il mapping in Geohub.
+- **I documenti sono annidati sotto `doc.`**: `ElasticIndexTrait::elasticIndexDoc()` costruisce un
+  corpo in forma di update (`doc` + `doc_as_upsert`) e poi chiama la Index API, che lo salva così
+  com'è. Il passthrough si è adattato a questa forma e interroga `doc.*`. Non è stato toccato:
+  cambiarlo richiederebbe di riallineare entrambi i lati insieme.
 
 - **`JIDO_UPDATE_TIME` non viene rigenerato dal comando di indicizzazione**, al contrario di
   quanto era stato affermato durante la challenge. `BuildConfJson()` rilegge il valore esistente
@@ -45,6 +69,20 @@
 - Aggiunto `.env.example` nel repo del passthrough (solo i nomi delle variabili, nessun valore):
   il piano non lo prevedeva, ma senza di esso chi rimette in piedi lo stack deve dedurre le
   variabili leggendo il codice.
+
+## Esito dell'esecuzione
+
+- Stack in esercizio sulla macchina di Geohub al tag `v1.0.1-oc8857`, con `git status` pulito.
+- Persistenza del volume provata con un riavvio reale del container.
+- `elastic-json.webmapp.it` risponde in HTTPS con certificato Let's Encrypt, attraverso un vhost
+  dell'Apache già presente; il record DNS è stato spostato dal dev, con TTL già a 300 secondi.
+- Reindicizzazione completa: **65 app su 68 con conteggi identici** fra indice e database. Le 15
+  app con indice vuoto hanno zero tracce attese, quindi sono corrette.
+- Tre app (17, 29, 53) avevano qualche traccia indietro, con ogni probabilità creata o modificata
+  mentre il reindex era già passato su di loro. Le app 17 e 29 sono state reindicizzate su
+  richiesta del dev e ora coincidono (122 e 415). Resta l'app 53 con una traccia indietro, lasciata
+  così deliberatamente: si sistema al primo salvataggio o con un reindex mirato.
+- Esito finale: **67 app su 68 con conteggi identici** fra indice e database.
 
 ## Follow-up
 

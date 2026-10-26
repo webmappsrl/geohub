@@ -30,6 +30,15 @@ Due cose fanno sbagliare chi non le conosce:
   `buildAllRoutine()` e riscrive anche `config.json` e il geojson dei POI dell'app,
   sovrascrivendoli senza conservare il file precedente. Per il solo Elastic il flag è
   obbligatorio.
+- **Un indice ricostruito da zero conosce solo i campi presenti nei documenti di oggi.** Il
+  servizio di lettura ordina per nome italiano e inglese: su un'app che non ha nomi in inglese
+  quel campo non esiste nell'indice, ed Elasticsearch rifiuta l'intera query invece di saltare
+  l'ordinamento. Un indice cresciuto negli anni non lo manifesta, perché basta che una sola
+  traccia abbia avuto un nome inglese. Gli ordinamenti del passthrough dichiarano per questo
+  `unmapped_type`, dalla versione `v1.0.1-oc8857`.
+- **I documenti sono annidati sotto `doc.`**, perché `elasticIndexDoc()` costruisce un corpo in
+  forma di update e poi lo salva con la Index API. Le query di lettura sono scritte di
+  conseguenza: cambiare questa forma vuol dire cambiare i due lati insieme.
 - **Le job di indicizzazione non creano l'indice con il mapping definito**: indicizzano e basta.
   Se l'indice non esiste, Elasticsearch lo crea deducendo il mapping dai dati, quindi senza
   `name_keyword` di tipo `keyword` e senza `max_result_window: 50000`. La ricerca risponde, ma
@@ -51,6 +60,9 @@ Due cose fanno sbagliare chi non le conosce:
 - **La versione in produzione del passthrough si identifica con un tag** (oc:8857): durante il
   ripristino il codice realmente in esecuzione non era confrontabile con nessun branch, e questo
   ha fatto perdere tempo in ricostruzioni a naso.
+- **Il nodo si affaccia sul loopback della macchina, non su nessuna porta** (oc:8857): Geohub
+  gira nativo, fuori dalla rete Docker, e senza quell'affaccio non riesce a indicizzare. Dalla
+  rete esterna il nodo resta irraggiungibile.
 
 ## Come ci siamo arrivati
 
