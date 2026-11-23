@@ -142,7 +142,8 @@ class OutSourceImporterFeatureOSMPoi extends OutSourceImporterFeatureAbstract
             }
 
             $contents = $imageResponse->body();
-            $basename = explode('.', basename($url_encoded));
+            // Commons urls carry utm_* query parameters: build the file name from the path only.
+            $basename = explode('.', basename(parse_url($url_encoded, PHP_URL_PATH) ?: $url_encoded));
             $s3_osfmedia = Storage::disk($storage_name);
             $osf_name_tmp = sha1($basename[0]).'.'.$basename[1];
             $s3_osfmedia->put($osf_name_tmp, $contents);

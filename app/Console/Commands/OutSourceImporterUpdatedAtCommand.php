@@ -333,7 +333,11 @@ class OutSourceImporterUpdatedAtCommand extends Command
 
             $this->logChannel->info('Found '.count($features_list).' OSMPoi items to process. Existing OSF items for this endpoint: '.count($osf_list));
 
-            if (count($osf_list) == 0 || count($features_list) == 0) {
+            if ($this->single_feature) {
+                // The list holds only the requested feature: diffing it against the endpoint would delete every other POI.
+                $this->logChannel->info('Skipping deleteOldEcFeatures processing - single feature import: '.$this->single_feature);
+                $deleteEntries = [];
+            } elseif (count($osf_list) == 0 || count($features_list) == 0) {
                 $this->logChannel->info('Skipping deleteOldEcFeatures processing - empty arrays: OSF count: '.count($osf_list).', EC count: '.count($features_list));
                 $deleteEntries = [];
             } else {
