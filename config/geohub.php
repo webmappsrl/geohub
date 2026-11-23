@@ -16,6 +16,10 @@ return [
     'pbf_max_zoom' => env('PBF_MAX_ZOOM', 13),
     'node_executable' => env('NODE_EXECUTABLE', '/usr/bin/node'),
     'wikimedia_user_agent' => env('WIKIMEDIA_USER_AGENT', 'GeoHub-POI-Updater/1.0 (https://geohub.webmapp.it; info@webmapp.it)'),
+    // overpass-api.de answers 406 to requests without a User-Agent: every request made by CurlServiceProvider identifies itself with this.
+    'http_user_agent' => env('GEOHUB_HTTP_USER_AGENT', 'GeoHub/1.0 (https://geohub.webmapp.it; info@webmapp.it)'),
+    // Overpass instance used by the OSM POI importers; set it in .env to switch instance without a deploy.
+    'overpass_interpreter_url' => env('OVERPASS_INTERPRETER_URL', 'https://overpass-api.de/api/interpreter'),
     'ec_media' => [
         'thumbnail_sizes' => [
             ['width' => 108, 'height' => 148],

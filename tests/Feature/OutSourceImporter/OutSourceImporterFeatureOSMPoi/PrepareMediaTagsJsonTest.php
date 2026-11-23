@@ -48,4 +48,43 @@ class PrepareMediaTagsJsonTest extends TestCase
                 && $request->hasHeader('User-Agent', config('geohub.wikimedia_user_agent'));
         });
     }
+
+    /**
+     * Commons imageinfo urls now carry utm_* query parameters: they must not end up in the stored file name.
+     *
+     * @return void
+     */
+    public function test_media_file_name_ignores_the_url_query_string()
+    {
+        $storageName = config('geohub.osf_media_storage_name');
+        Storage::fake($storageName);
+
+        Http::fake([
+            'upload.wikimedia.org/*' => Http::response(
+                file_get_contents(base_path('tests/Fixtures/EcMedia/test_resize.jpg')),
+                200
+            ),
+        ]);
+
+        $importer = new OutSourceImporterFeatureOSMPoi('poi', 'osmpoi:test', 'node/999', false, Log::channel('stack'));
+
+        $media = [
+            'query' => [
+                'pages' => [
+                    '1' => [
+                        'title' => 'File:It-pr-ldpx0125.jpg',
+                        'imageinfo' => [
+                            ['url' => 'https://upload.wikimedia.org/wikipedia/commons/8/85/It-pr-ldpx0125.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $tags = $importer->prepareMediaTagsJson($media);
+
+        $expected = sha1('It-pr-ldpx0125').'.jpg';
+        $this->assertSame($expected, $tags['url']);
+        Storage::disk($storageName)->assertExists($expected);
+    }
 }
