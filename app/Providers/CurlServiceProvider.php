@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Exceptions\CurlRequestException;
 use Illuminate\Support\ServiceProvider;
 
 class CurlServiceProvider extends ServiceProvider
@@ -43,6 +44,7 @@ class CurlServiceProvider extends ServiceProvider
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_USERAGENT => config('geohub.http_user_agent'),
         ]);
 
         $response = curl_exec($curl);
@@ -54,17 +56,17 @@ class CurlServiceProvider extends ServiceProvider
 
         // Check for cURL errors first
         if ($curlErrno !== 0) {
-            throw new \Exception("cURL Error #{$curlErrno}: {$curlError} for URL: {$url}");
+            throw new CurlRequestException("cURL Error #{$curlErrno}: {$curlError} for URL: {$url}", 0, $curlErrno);
         }
 
         // Check HTTP status code
         if ($httpcode !== 200) {
-            throw new \Exception("HTTP Error {$httpcode} for URL: {$url}. Response: ".substr($response, 0, 500));
+            throw new CurlRequestException("HTTP Error {$httpcode} for URL: {$url}. Response: ".substr($response, 0, 500), $httpcode);
         }
 
         // Check if response is empty
         if (empty($response)) {
-            throw new \Exception("Empty response received for URL: {$url}");
+            throw new CurlRequestException("Empty response received for URL: {$url}", $httpcode);
         }
 
         return $response;

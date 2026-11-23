@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Exceptions\CurlRequestException;
 use App\Models\OutSourceFeature;
 use App\Providers\CurlServiceProvider;
 use Exception;
@@ -58,15 +59,15 @@ trait ImporterAndSyncTrait
     {
         Log::channel('single')->info("Starting curlRequestOverpass for URL: {$url} with type: {$type}");
 
-        $maxRetries = 5;
+        // Kept low on purpose: retries add load to an overloaded public server.
+        $maxRetries = 3;
+        // Operators ask to wait at least 30s before the next query after an error: we use 40s.
+        $minWait = 40;
         $retryCount = 0;
         $ret = [];
         $lastException = null;
 
         while ($retryCount < $maxRetries) {
-            // TEST: Simulate network error for testing
-            // $url = 'https://httpstat.us/500';
-
             try {
                 $response = $this->curlRequest($url, false);
 
@@ -102,13 +103,18 @@ trait ImporterAndSyncTrait
                 $lastException = $e;
                 $retryCount++;
 
-                // If not the last attempt, wait before retrying
-                if ($retryCount < $maxRetries) {
-                    // Progressive delay: 1s, 2s, 4s, 8s
-                    $delay = pow(2, $retryCount - 1);
-                    sleep($delay);
+                // Retrying a refused client only hastens an IP ban: overpass-api.de bans clients
+                // that "repeatedly run into a 429 or 406" (operators, OSM community forum, Aug 2026).
+                if (! $this->isOverpassFailureRetryable($e)) {
+                    Log::channel('single')->error("Attempt {$retryCount} failed for URL: {$url} with a non-retryable error, giving up. Error: {$e->getMessage()}");
+                    break;
+                }
 
+                if ($retryCount < $maxRetries) {
+                    // Exponential backoff from the minimum wait: 40s, 80s.
+                    $delay = $minWait * (2 ** ($retryCount - 1));
                     Log::channel('single')->warning("Attempt {$retryCount} failed for URL: {$url}. Error: {$e->getMessage()}. Retrying in {$delay} seconds...");
+                    $this->waitBeforeOverpassRetry($delay);
                 } else {
                     Log::channel('single')->error("All {$maxRetries} attempts failed for URL: {$url}. Last error: {$e->getMessage()}");
                 }
@@ -117,16 +123,43 @@ trait ImporterAndSyncTrait
 
         // If all retries failed, throw the last exception
         if (empty($ret) && $lastException !== null) {
-            throw new Exception("Failed to fetch data from Overpass API after {$maxRetries} attempts. URL: {$url}. Last error: {$lastException->getMessage()}");
+            // The importer runs several Overpass queries in a row (one per endpoint): pause here too,
+            // so the next query of the run does not hit the server right after this error.
+            Log::channel('single')->info("Waiting {$minWait} seconds before giving up, to space out the next Overpass query.");
+            $this->waitBeforeOverpassRetry($minWait);
+            throw new Exception("Failed to fetch data from Overpass API after {$retryCount} attempts. URL: {$url}. Last error: {$lastException->getMessage()}");
         }
 
         // Log final result
         if (! empty($ret)) {
-            Log::channel('single')->info("Request completed successfully after {$retryCount} attempts for URL: {$url}");
+            $attempts = $retryCount + 1;
+            Log::channel('single')->info("Request completed successfully after {$attempts} attempts for URL: {$url}");
         }
 
         return $ret;
 
+    }
+
+    /**
+     * Rate limits (429), server errors and timeouts can pass; a rejected client (400, 403, 406)
+     * or a refused connection (IP ban) cannot, and retrying them makes things worse.
+     */
+    protected function isOverpassFailureRetryable(Exception $e): bool
+    {
+        if (! $e instanceof CurlRequestException) {
+            return true;
+        }
+
+        if ($e->getCurlErrno() === CURLE_COULDNT_CONNECT) {
+            return false;
+        }
+
+        return ! in_array($e->getHttpStatus(), [400, 403, 406], true);
+    }
+
+    protected function waitBeforeOverpassRetry(int $seconds): void
+    {
+        sleep($seconds);
     }
 
     /**

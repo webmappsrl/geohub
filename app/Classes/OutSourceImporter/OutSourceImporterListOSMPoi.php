@@ -21,7 +21,7 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract
 
         foreach ($queries as $query) {
             try {
-                $result = $this->curlRequestOverpass($query['url'], $query['type']);
+                $result = $this->curlRequestOverpass(self::resolveOverpassUrl($query['url']), $query['type']);
                 $ret = array_merge($ret, $result);
                 Log::info("Successfully processed query for type: {$query['type']}");
             } catch (Exception $e) {
@@ -49,6 +49,22 @@ class OutSourceImporterListOSMPoi extends OutSourceImporterListAbstract
     public function getMediaList(): array
     {
         return [];
+    }
+
+    /**
+     * The queries below are exported from overpass-turbo and point to overpass-api.de:
+     * swap that host for the instance configured in geohub.overpass_interpreter_url.
+     */
+    public static function resolveOverpassUrl(string $url): string
+    {
+        $defaultInterpreter = 'https://overpass-api.de/api/interpreter';
+        $interpreter = rtrim(config('geohub.overpass_interpreter_url') ?: $defaultInterpreter, '/');
+
+        if (strpos($url, $defaultInterpreter) !== 0) {
+            return $url;
+        }
+
+        return $interpreter.substr($url, strlen($defaultInterpreter));
     }
 
     private function getQueriesByName($name)

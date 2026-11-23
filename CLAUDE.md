@@ -10,3 +10,4 @@ operativi vivono nei ticket Orchestrator e sulle macchine.
 |---|---|---|
 | Sicurezza PHP del server (post PHP2Shell) | Da dove arrivano i fix PHP di prod, perché non si fa l'upgrade major, riesame agosto 2027 | [docs/knowledge/php2shell-sicurezza-server-geohub.md](docs/knowledge/php2shell-sicurezza-server-geohub.md) |
 | Ricerca delle tracce con Elastic | Chi scrive e chi legge gli indici, perché il nodo è privato, come si ripristina il servizio | [docs/knowledge/elastic-geohub.md](docs/knowledge/elastic-geohub.md) |
+| Import dei POI da OSM | Da quali servizi esterni dipende (Overpass, API OSM, Wikimedia), le loro regole su User-Agent e retry, come si reimporta un POI | [docs/knowledge/import-poi-osm-servizi-esterni.md](docs/knowledge/import-poi-osm-servizi-esterni.md) |
